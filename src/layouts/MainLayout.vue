@@ -14,6 +14,11 @@
 <!--          <img src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg">-->
 <!--        </q-avatar>-->
 
+        <img
+          alt="Quasar logo"
+          src="~assets/nanodi.svg"
+          style="width: 30px; height: 25px"
+        >
         <q-toolbar-title>
           纳昂达可视化解读系统
         </q-toolbar-title>
@@ -71,14 +76,18 @@
         :class="$q.dark.isActive ? 'drawer_dark' : 'drawer_normal'"
       >
         <div style="height: calc(100% - 117px);padding:10px;">
-          <q-toolbar>
-            <q-avatar>
-              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
-            </q-avatar>
+<!--          <q-toolbar>-->
+<!--            <q-avatar>-->
+<!--              <img src="https://cdn.quasar.dev/img/boy-avatar.png" />-->
+<!--              <img-->
+<!--                alt="Quasar logo"-->
+<!--                src="~assets/nanodi.svg"-->
+<!--              >-->
+<!--            </q-avatar>-->
 
-            <q-toolbar-title>生信分析</q-toolbar-title>
-          </q-toolbar>
-          <hr />
+<!--            <q-toolbar-title>生信分析</q-toolbar-title>-->
+<!--          </q-toolbar>-->
+<!--          <hr />-->
           <q-scroll-area style="height:100%;">
             <q-list padding>
               <q-item
