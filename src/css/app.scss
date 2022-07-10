@@ -1,0 +1,53 @@
+// app global css in SCSS form
+@import "./quasar.variables.scss";
+
+.gin-quasar-admin-logo {
+    cursor: pointer;
+    user-select: none;
+
+    img {
+        transform: rotate(0deg);
+        transition: transform 1s ease-in-out;
+    }
+
+    &:hover img {
+        transform: rotate(-360deg);
+    }
+}
+
+.gin-quasar-admin-init-db-page {
+    height: 100vh;
+    background: linear-gradient(60deg, $primary 0%, $positive 100%);
+    overflow: hidden;
+}
+
+.gin-quasar-admin-banner {
+    height: 93vh;
+    background: linear-gradient(60deg, $primary 0%, $positive 100%);
+    overflow: hidden;
+}
+
+.q-tab,
+.q-btn {
+    text-transform: none;
+}
+
+.gqa-form {
+    & .q-field {
+        &__bottom--animated {
+            left: -5px;
+            bottom: 15px !important;
+            z-index: 10;
+
+            & .q-field__messages {
+                & div {
+                    width: max-content;
+                    border-radius: 5px;
+                    background: $negative;
+                    color: #fff;
+                    padding: 5px;
+                }
+            }
+        }
+    }
+}
