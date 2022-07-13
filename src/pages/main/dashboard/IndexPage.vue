@@ -7,24 +7,33 @@
             style="justify-content: space-around"
         >
             <q-card class="my-card">
-                <q-card-section class="title"> 15 T </q-card-section>
+                <q-card-section class="text-primary text-h5 text-bold">
+                    15 T
+                </q-card-section>
 
                 <q-card-section class="desc"> 本周磁盘空间使用 </q-card-section>
             </q-card>
             <q-card class="my-card">
-                <q-card-section class="title"> 100 / 105 </q-card-section>
+                <q-card-section class="text-secondary text-h5 text-bold">
+                    <span class="text-primary">100</span> / 105
+                </q-card-section>
                 <q-card-section class="desc">
                     本周任务数(成功/总数)
                 </q-card-section>
             </q-card>
             <q-card class="my-card">
-                <q-card-section class="title"> 100 / 1.5T </q-card-section>
+                <q-card-section class="text-primary text-h5 text-bold">
+                    <span>100</span> /
+                    <span class="text-secondary">1.5T</span>
+                </q-card-section>
                 <q-card-section class="desc">
                     本周新增样本数(数量/大小)</q-card-section
                 >
             </q-card>
             <q-card class="my-card">
-                <q-card-section class="title"> 100 份 </q-card-section>
+                <q-card-section class="text-secondary text-h5 text-bold">
+                    100 份
+                </q-card-section>
                 <q-card-section class="desc"> 本周新增报告数量</q-card-section>
             </q-card>
         </div>
@@ -90,7 +99,9 @@
                                     "
                                 >
                                     <q-card class="my-card">
-                                        <q-card-section class="title">
+                                        <q-card-section
+                                            class="text-primary text-h5 text-bold"
+                                        >
                                             15
                                         </q-card-section>
 
@@ -99,7 +110,9 @@
                                         </q-card-section>
                                     </q-card>
                                     <q-card class="my-card">
-                                        <q-card-section class="title">
+                                        <q-card-section
+                                            class="text-negative text-h5 text-bold"
+                                        >
                                             3
                                         </q-card-section>
                                         <q-card-section class="desc">
@@ -107,7 +120,9 @@
                                         </q-card-section>
                                     </q-card>
                                     <q-card class="my-card">
-                                        <q-card-section class="title">
+                                        <q-card-section
+                                            class="text-secondary text-h5 text-bold"
+                                        >
                                             5
                                         </q-card-section>
                                         <q-card-section class="desc">
@@ -115,7 +130,9 @@
                                         >
                                     </q-card>
                                     <q-card class="my-card">
-                                        <q-card-section class="title">
+                                        <q-card-section
+                                            class="text-warning text-h5 text-bold"
+                                        >
                                             30
                                         </q-card-section>
                                         <q-card-section class="desc">
