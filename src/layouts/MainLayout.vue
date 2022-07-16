@@ -99,11 +99,7 @@
                         v-for="(menuItem, index) in menuList"
                         :key="index"
                     >
-                        <q-item
-                            clickable
-                            v-ripple
-                            @click="router.push(menuItem.path)"
-                        >
+                        <q-item clickable v-ripple :to="menuItem.path">
                             <q-item-section avatar>
                                 <q-icon :name="menuItem.icon" />
                             </q-item-section>
@@ -144,23 +140,34 @@ const menuList = [
         path: "/main/files",
     },
     {
-        icon: "save",
-        label: "样本管理",
+        icon: "hub",
+        label: "Panel 分析流程",
         separator: false,
-        path: "/main/samples",
+        path: "/main/panel",
     },
-
     {
-        icon: "personal_injury",
-        label: "患者管理",
+        icon: "hub",
+        label: "(暂时不做)群体分析流程",
         separator: false,
-        path: "/main/patients",
+        path: "/main/group",
     },
     {
         icon: "auto_mode",
         label: "任务管理",
-        separator: true,
+        separator: false,
         path: "/main/tasks",
+    },
+    {
+        icon: "rate_review",
+        label: "数据库注释",
+        separator: false,
+        path: "/main/tools/comment",
+    },
+    {
+        icon: "biotech",
+        label: "基因组浏览器",
+        separator: true,
+        path: "/main/tools/browse",
     },
     {
         icon: "settings",

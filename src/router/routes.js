@@ -51,6 +51,22 @@ const routes = [
                 component: () =>
                     import("pages/main/user-profile/UserProfilePage.vue"),
             },
+            {
+                path: "panel",
+                component: () => import("pages/main/panel-flows/FlowsPage.vue"),
+            },
+            {
+                path: "group",
+                component: () => import("pages/main/group-flows/FlowsPage.vue"),
+            },
+            {
+                path: "tools/comment",
+                component: () => import("pages/main/group-flows/FlowsPage.vue"),
+            },
+            {
+                path: "tools/browse",
+                component: () => import("pages/main/group-flows/FlowsPage.vue"),
+            },
         ],
     },
 
