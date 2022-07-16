@@ -159,7 +159,7 @@ import PieChart2 from "./charts/PieChart2.vue";
 import LineChart2 from "./charts/LineChart2.vue";
 import LineChart from "./charts/LineChart.vue";
 import PageTitle from "src/components/page-title/PageTitle.vue";
-import UserTable from "./userTable.vue";
+import UserTable from "./UserTable.vue";
 </script>
 
 <style lang="scss">
