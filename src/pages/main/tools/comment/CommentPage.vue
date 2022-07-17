@@ -2,22 +2,30 @@
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="数据库标注" />
         <div class="row">
-            <div class="col-2">
-                <q-select
-                    v-model="database"
-                    :options="options"
-                    stack-label
-                    :display-value="`数据库: ${database ? database : '*none*'}`"
-                >
-                </q-select>
+            <div class="col-2"></div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="row">
+                    <div class="col-2">
+                        <q-select
+                            v-model="database"
+                            :options="options"
+                            stack-label
+                            :display-value="`数据库: ${
+                                database ? database : '*none*'
+                            }`"
+                        >
+                        </q-select>
+                    </div>
+                    <div class="col-10">
+                        <q-input v-model="text" label="输入文本: 回车查询">
+                            <template v-slot:append>
+                                <q-icon name="search" />
+                            </template>
+                        </q-input>
+                    </div>
+                </div>
             </div>
-            <div class="col-10">
-                <q-input v-model="text" label="输入文本: 回车查询">
-                    <template v-slot:append>
-                        <q-icon name="search" />
-                    </template>
-                </q-input>
-            </div>
+            <div class="col-2"></div>
         </div>
     </q-page>
 </template>
