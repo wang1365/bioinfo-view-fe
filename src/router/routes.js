@@ -61,11 +61,11 @@ const routes = [
             },
             {
                 path: "tools/comment",
-                component: () => import("pages/main/group-flows/FlowsPage.vue"),
+                component: () => import("pages/main/tools/comment/CommentPage.vue"),
             },
             {
                 path: "tools/browse",
-                component: () => import("pages/main/group-flows/FlowsPage.vue"),
+                component: () => import("pages/main/tools/browse/BrowsePage.vue"),
             },
         ],
     },
