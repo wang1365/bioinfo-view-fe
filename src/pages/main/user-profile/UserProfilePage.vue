@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="个人中心" />
-        <q-card class="column full-height full-width">
+        <q-card class="column full-height full-width bg-blue-7">
             <q-card-section class="row items-center q-pb-none">
                 <div class="text-h6">
                     用户中心
@@ -12,7 +12,7 @@
             <q-card-section>
                 <div class="row q-pa-md items-center justify-around" style="max-width: 95vw">
                     <div class="col-4 column items-center">
-                        <q-avatar icon="email" size="200px" />
+                        <q-avatar icon="diversity_1" size="200px" />
 
                         <div class="text-subtitle1 q-mt-md q-mb-md">
                             <GqaShowName showMyName />
@@ -27,9 +27,15 @@
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
-                                    <q-icon size="lg" name="face" class="text-warning" />
+                                    <q-icon size="lg" name="person_add" class="text-warning" />
                                 </q-item-section>
                                 <q-item-section>姓名: 管理员</q-item-section>
+                            </q-item>
+                            <q-item clickable>
+                                <q-item-section avatar>
+                                    <q-icon size="lg" name="face" class="text-warning" />
+                                </q-item-section>
+                                <q-item-section>角色: 管理员</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
@@ -53,6 +59,9 @@
                     </div>
                 </div>
             </q-card-section>
+            <q-card-actions align="right">
+                <q-btn icon="logout" color="white" text-color="black" size="1rem" label="退出" @click="router.push('/login')"></q-btn>
+            </q-card-actions>
             <ChangePasswordDialog ref="changePasswordDialog" />
             <ChangeNicknameDialog ref="changeNicknameDialog" />
         </q-card>
@@ -62,6 +71,8 @@
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
 import { ref, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
 
 const showProfile = ref(false)
+const router = useRouter()
 </script>

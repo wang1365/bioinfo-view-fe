@@ -1,12 +1,15 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
+    <q-page padding class="q-pa-sm full-height overflow-hidden">
         <PageTitle title="用户管理"/>
         <q-table
-            class="my-sticky-header-column-table"
+            table-class="q-pa-xs"
             :rows="rows"
             :columns="columns"
             row-key="name"
+            bordered flat
+            table-header-class="text-primary text-bold"
             v-model:pagination="pagination"
+            rows-per-page-label="每页条数"
             :rows-per-page-options="[10,20,50,100]"
         >
             <template v-slot:body-cell-operation="props">
@@ -71,13 +74,11 @@ import _ from 'lodash'
 const columns = [
     {
         name: 'id',
-        required: true,
         label: 'ID',
         align: 'center',
         style: 'width:80px',
         field: row => row.id,
-        format: val => `${val}`,
-        sortable: true
+        format: val => `${val}`
     },
     {name: '账号', align: 'center', label: '账号', field: 'calories', sortable: true},
     {name: '姓名', label: '姓名', field: 'name', sortable: true, align: 'center'},
@@ -196,8 +197,8 @@ const clickDelete = () => {
 .my-sticky-header-column-table
     /* height or max-height is important */
     //height: 310px
-    height: 800px
-    padding: 20px
+    //height: 800px
+    //padding: 20px
 
     /* specifying max-width so the example can
       highlight the sticky column on any browser window */
