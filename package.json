@@ -21,7 +21,8 @@
         "quasar": "^2.6.0",
         "vue": "^3.0.0",
         "vue-router": "^4.0.0",
-        "echarts": "^5.3.2"
+        "echarts": "^5.3.2",
+        "lodash": "^4.17.20"
     },
     "devDependencies": {
         "@babel/eslint-parser": "^7.13.14",

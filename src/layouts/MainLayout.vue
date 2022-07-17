@@ -1,5 +1,5 @@
 <template>
-    <q-layout view="hHh LpR fFf">
+    <q-layout view="hHh lpR fFf">
         <q-header elevated class="bg-primary text-white">
             <q-toolbar>
                 <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -89,7 +89,6 @@
         <q-drawer
             v-model="leftDrawerOpen"
             side="left"
-            overlay
             behavior="desktop"
             elevated
         >
