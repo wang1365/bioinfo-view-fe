@@ -1,13 +1,15 @@
 <template>
-    <q-layout view="hHh lpR fFf">
-        <q-header elevated class="bg-primary text-white">
+    <q-layout view="hHh lpR lFf">
+<!--        <q-header reveal elevated class="bg-primary text-white header_normal">-->
+        <q-header reveal elevated class="header_normal">
             <q-toolbar>
                 <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
                 <q-toolbar-title>
                     <q-avatar @click="router.push('/')">
                         <img
-                            src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg"
+                            src="~assets/nanodi.svg"
+                            style="width: 30px; height: 25px"
                         />
                     </q-avatar>
                     纳昂达可视化解读
@@ -89,9 +91,12 @@
         <q-drawer
             v-model="leftDrawerOpen"
             side="left"
-            behavior="desktop"
+            class="left-navigation text-white"
+            show-if-above
+            style="background-image: url('images/lake.jpg') !important;"
             elevated
         >
+            <div class="full-height drawer_normal" >
             <q-scroll-area class="fit">
                 <q-list>
                     <template
@@ -114,6 +119,7 @@
                 </q-list>
             </q-scroll-area>
             <!-- drawer content -->
+            </div>
         </q-drawer>
 
         <q-page-container>
@@ -198,4 +204,46 @@ function showProfile() {
 function logout() {
     router.push("/login");
 }
+
 </script>
+
+
+<style>
+.q-drawer {
+    /*background-image: url(https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg) !important;*/
+    background-image: url("/images/lake.jpg") !important;
+    background-size: cover !important;
+}
+
+.drawer_normal {
+    background-color: rgba(1, 1, 1, 0.75);
+}
+
+.drawer_dark {
+    background-color: #010101f2;
+}
+
+.navigation-item {
+    border-radius: 5px;
+}
+
+.tab-active {
+    background-color: green;
+}
+
+body {
+    background: #f1f1f1 !important;
+}
+
+.header_normal {
+    background: linear-gradient(
+        145deg,
+        rgb(21, 57, 102) 70%,
+        rgb(32, 106, 80) 15%
+    );
+}
+
+.header_dark {
+    background: linear-gradient(145deg, rgb(61, 14, 42) 15%, rgb(14, 43, 78) 70%);
+}
+</style>
