@@ -11,7 +11,7 @@
                 <q-form class="q-gutter-md" ref="passwordFormRef">
                     <q-input filled v-model.trim="passwordForm.old_password" autocomplete="off"
                              label="原密码" :type="isPwd ? 'password' : 'text'"
-                             :rules="[val => val && val.length > 0 || $t('NeedInput')]">
+                             :rules="[val => val && val.length > 0 || '请输入密码']">
                         <template v-slot:append>
                             <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                                     @click="isPwd = !isPwd" />
@@ -20,7 +20,7 @@
 
                     <q-input filled v-model.trim="passwordForm.new_password_1" autocomplete="off"
                              label="新密码" :type="isPwd ? 'password' : 'text'"
-                             :rules="[val => val && val.length > 0 || $t('NeedInput')]">
+                             :rules="[val => val && val.length > 0 || '请输入密码']">
                         <template v-slot:append>
                             <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                                     @click="isPwd = !isPwd" />
@@ -29,7 +29,7 @@
 
                     <q-input filled v-model.trim="passwordForm.new_password_2" autocomplete="off"
                              label="确认密码" :type="isPwd ? 'password' : 'text'"
-                             :rules="[val => val && val.length > 0 || $t('NeedInput')]">
+                             :rules="[val => val && val.length > 0 || '请输入密码']">
                         <template v-slot:append>
                             <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
                                     @click="isPwd = !isPwd" />
