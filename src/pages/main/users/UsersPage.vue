@@ -1,13 +1,20 @@
 <template>
-    <q-page padding class="q-pa-sm full-height overflow-hidden">
+    <q-page padding class="full-height overflow-hidden">
         <PageTitle title="用户管理"/>
+        <div class="row justify-end q-gutter-md items-center q-py-xs">
+            <div class="col-4" ><q-input label="用户账号、姓名、邮箱搜索" clearable v-model="searchKeyword">
+                <template v-slot:prepend><q-icon name="face"></q-icon></template>
+            </q-input></div>
+            <div class="col-1"><q-btn class="on-right" size="md" color="primary" icon="search" label="搜索"></q-btn></div>
+        </div>
+        <q-separator/>
         <q-table
-            table-class="q-pa-xs"
             :rows="rows"
             :columns="columns"
             row-key="name"
-            bordered flat
-            table-header-class="text-primary text-bold"
+            color="primary"
+            dense
+            wrap-cells
             v-model:pagination="pagination"
             rows-per-page-label="每页条数"
             :rows-per-page-options="[10,20,50,100]"
@@ -26,7 +33,6 @@
                     icon="first_page"
                     color="grey-8"
                     round
-                    dense
                     flat
                     :disable="scope.isFirstPage"
                     @click="scope.firstPage"
@@ -36,7 +42,6 @@
                     icon="chevron_left"
                     color="grey-8"
                     round
-                    dense
                     flat
                     :disable="scope.isFirstPage"
                     @click="scope.prevPage"
@@ -69,6 +74,7 @@
 
 <script setup>
 import {useQuasar} from 'quasar'
+import {ref} from 'vue'
 import _ from 'lodash'
 
 const columns = [
@@ -83,9 +89,11 @@ const columns = [
     {name: '账号', align: 'center', label: '账号', field: 'calories', sortable: true},
     {name: '姓名', label: '姓名', field: 'name', sortable: true, align: 'center'},
     {name: '邮箱', label: '邮箱', field: 'email', align: 'center'},
-    {name: 'role', label: '角色', field: 'roles', align: 'center', format: (roles)=> getRoleName(roles)},
+    {name: 'role', label: '角色', field: 'roles', align: 'center', format: (roles) => getRoleName(roles)},
     {name: 'operation', label: '操作', align: 'center', style: 'width:220px'}
 ]
+
+const searchKeyword = ref('')
 
 const getRoleName = (roles) => {
     if (!_.isArray(roles)) {
@@ -216,6 +224,8 @@ const clickDelete = () => {
         background: #fff
 
     /* this will be the loading indicator */
+
+
 
 
 
