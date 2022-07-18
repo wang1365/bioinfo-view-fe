@@ -60,6 +60,7 @@
                 </div>
             </q-card-section>
             <q-card-actions align="right">
+                <q-btn icon="password" color="white" text-color="black" size="1rem" label="修改密码" @click="showPasswordDialog"></q-btn>
                 <q-btn icon="logout" color="white" text-color="black" size="1rem" label="退出" @click="router.push('/login')"></q-btn>
             </q-card-actions>
             <ChangePasswordDialog ref="changePasswordDialog" />
@@ -70,9 +71,13 @@
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
+import ChangePasswordDialog from './ChangePasswordDialog'
 import { ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-
+const changePasswordDialog = ref(null)
+const showPasswordDialog = () => {
+    changePasswordDialog.value.show()
+}
 const showProfile = ref(false)
 const router = useRouter()
 </script>
