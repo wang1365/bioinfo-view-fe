@@ -23,8 +23,8 @@ const routes = [
                 component: () => import("pages/main/dashboard/IndexPage.vue"),
             },
             {
-                path: "files",
-                component: () => import("pages/main/files/FilesPage.vue"),
+                path: "projects",
+                component: () => import("pages/main/projects/ProjectsPage.vue"),
             },
             {
                 path: "samples",

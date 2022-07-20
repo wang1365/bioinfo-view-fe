@@ -108,10 +108,10 @@
                         </div>
                         <div class="q-py-md"></div>
 
-                        <div class="row justify-between">
-                            <div class="col-4">
-                                <div class="q-pr-md q-py-md">
-                                    <q-card style="max-width: 100%">
+                        <div class="row  justify-center">
+                            <div class=" col-lg-4 col-md-6 col-sm-11 col-xs-12">
+                                <div class="q-pa-sm">
+                                    <q-card >
                                         <q-item>
                                             <q-item-section avatar>
                                                 <q-skeleton type="QAvatar" />
@@ -131,9 +131,9 @@
                                     </q-card>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="q-py-md q-px-sm">
-                                    <q-card style="max-width: 100%">
+                            <div class="col-lg-4 col-md-6 col-sm-11 col-xs-12">
+                                <div class="q-pa-sm">
+                                    <q-card>
                                         <q-item>
                                             <q-item-section avatar>
                                                 <q-skeleton type="QAvatar" />
@@ -153,9 +153,9 @@
                                     </q-card>
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="q-pl-md q-py-md">
-                                    <q-card style="max-width: 100%">
+                            <div class="col-lg-4 col-md-6 col-sm-11 col-xs-12">
+                                <div class="q-pa-sm">
+                                    <q-card >
                                         <q-item>
                                             <q-item-section avatar>
                                                 <q-skeleton type="QAvatar" />
@@ -178,7 +178,7 @@
                         </div>
                         <div class="q-py-lg"></div>
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
                                 <q-skeleton
                                     type="text"
                                     width="60%"
@@ -214,21 +214,22 @@
                                     width="57%"
                                     height="40px"
                                 ></q-skeleton>
+
                             </div>
-                            <div class="col-7">
-                                <q-card class="bg-secondary">
+                            <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                                <q-card class="bg-secondary ">
                                     <div style="height: 280px"></div>
                                 </q-card>
                             </div>
                         </div>
                         <div class="q-py-md"></div>
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
                                 <q-card class="bg-accent">
                                     <div style="height: 280px"></div>
                                 </q-card>
                             </div>
-                            <div class="col-5 q-pl-lg">
+                            <div class="col-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
                                 <q-skeleton
                                     type="text"
                                     width="60%"
@@ -268,7 +269,7 @@
                         </div>
                         <div class="q-py-md"></div>
                         <div class="row">
-                            <div class="col-5">
+                            <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
                                 <q-skeleton
                                     type="text"
                                     width="60%"
@@ -305,7 +306,7 @@
                                     height="40px"
                                 ></q-skeleton>
                             </div>
-                            <div class="col-7">
+                            <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
                                 <q-card class="bg-info">
                                     <div style="height: 280px"></div>
                                 </q-card>
@@ -331,8 +332,8 @@
                                 </div>
                             </div>
                             <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
-                                <div class="row">
-                                    <div class="col-4">
+                                <div class="row justify-center">
+                                    <div class="col-lg-4 col-md-6 col-sm-10 col-xs-12">
                                         <q-skeleton
                                             type="text"
                                             width="250px"
@@ -369,7 +370,7 @@
                                             height="40px"
                                         ></q-skeleton>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-lg-4 col-md-6 col-sm-10 col-xs-12">
                                         <q-skeleton
                                             type="text"
                                             width="250px"
@@ -396,7 +397,7 @@
                                             height="40px"
                                         ></q-skeleton>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-lg-4 col-md-6 col-sm-10 col-xs-12">
                                         <q-skeleton
                                             type="text"
                                             width="250px"

@@ -6,6 +6,7 @@
         :columns="columns"
         row-key="name"
     />
+
 </template>
 
 <script setup>

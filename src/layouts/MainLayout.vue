@@ -140,9 +140,9 @@ const menuList = [
     },
     {
         icon: "folder",
-        label: "文件管理",
+        label: "项目管理",
         separator: false,
-        path: "/main/files",
+        path: "/main/projects",
     },
     {
         icon: "hub",
