@@ -95,7 +95,6 @@
             show-if-above
             style="background-image: url('images/lake.jpg') !important"
             elevated
-            overlay
         >
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
@@ -125,13 +124,6 @@
 
         <q-page-container>
             <router-view />
-            <q-page-scroller
-                position="bottom-right"
-                :scroll-offset="150"
-                :offset="[18, 100]"
-            >
-                <q-btn fab icon="keyboard_arrow_up" color="positive" />
-            </q-page-scroller>
         </q-page-container>
     </q-layout>
 </template>

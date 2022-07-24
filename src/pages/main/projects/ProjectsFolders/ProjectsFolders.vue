@@ -34,7 +34,7 @@
                             <td>创建人</td>
                             <td>创建时间</td>
                             <td>文件大小</td>
-                            <td>操作</td>
+                            <td class="text-right">操作</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,7 +43,7 @@
                             <td>创建人</td>
                             <td>创建时间</td>
                             <td>文件大小</td>
-                            <td class="q-gutter-x-sm">
+                            <td class="q-gutter-x-sm text-right">
                                 <q-btn
                                     color="primary"
                                     label="上传数据"

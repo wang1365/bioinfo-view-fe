@@ -34,7 +34,7 @@
                             <td>年龄</td>
                             <td>诊疗医生</td>
                             <td>性别</td>
-                            <td>操作</td>
+                            <td class="text-right">操作</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -44,7 +44,7 @@
                             <td>年龄-{{ i }}</td>
                             <td>诊疗医生-{{ i }}</td>
                             <td>性别-{{ i }}</td>
-                            <td class="q-gutter-x-sm">
+                            <td class="q-gutter-x-sm text-right">
                                 <q-btn
                                     color="primary"
                                     label="编辑"
