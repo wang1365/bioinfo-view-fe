@@ -34,6 +34,10 @@ export default route(function (/* { store, ssrContext } */) {
             process.env.MODE === "ssr" ? void 0 : process.env.VUE_ROUTER_BASE
         ),
     });
-
+    Router.beforeEach((to, from) => {
+        // ...
+        // 返回 false 以取消导航
+        console.log(to);
+    });
     return Router;
 });

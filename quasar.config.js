@@ -32,7 +32,7 @@ module.exports = configure(function (ctx) {
         extras: [
             // 'ionicons-v4',
             // 'mdi-v5',
-            // 'fontawesome-v6',
+            // "fontawesome-v6",
             // 'eva-icons',
             // 'themify',
             // 'line-awesome',
@@ -85,7 +85,9 @@ module.exports = configure(function (ctx) {
         // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-framework
         framework: {
             config: {
-                notify: { /* look at QUASARCONFOPTIONS from the API card (bottom of page) */ }
+                notify: {
+                    /* look at QUASARCONFOPTIONS from the API card (bottom of page) */
+                },
             },
 
             // iconSet: 'material-icons', // Quasar icon set
@@ -99,14 +101,12 @@ module.exports = configure(function (ctx) {
             // directives: [],
 
             // Quasar plugins
-            plugins: [
-                'Notify'
-            ],
+            plugins: ["Notify", "Dialog"],
         },
 
         // animations: 'all', // --- includes all animations
         // https://quasar.dev/options/animations
-        animations: [],
+        animations: "all",
 
         // https://v2.quasar.dev/quasar-cli-webpack/developing-ssr/configuring-ssr
         ssr: {

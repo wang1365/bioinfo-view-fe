@@ -1,6 +1,6 @@
 <template>
     <q-layout view="hHh lpR lFf">
-<!--        <q-header reveal elevated class="bg-primary text-white header_normal">-->
+        <!--        <q-header reveal elevated class="bg-primary text-white header_normal">-->
         <q-header reveal elevated class="header_normal">
             <q-toolbar>
                 <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -93,37 +93,45 @@
             side="left"
             class="left-navigation text-white"
             show-if-above
-            style="background-image: url('images/lake.jpg') !important;"
+            style="background-image: url('images/lake.jpg') !important"
             elevated
+            overlay
         >
-            <div class="full-height drawer_normal" >
-            <q-scroll-area class="fit">
-                <q-list>
-                    <template
-                        v-for="(menuItem, index) in menuList"
-                        :key="index"
-                    >
-                        <q-item clickable v-ripple :to="menuItem.path">
-                            <q-item-section avatar>
-                                <q-icon :name="menuItem.icon" />
-                            </q-item-section>
-                            <q-item-section>
-                                {{ menuItem.label }}
-                            </q-item-section>
-                        </q-item>
-                        <q-separator
-                            :key="'sep' + index"
-                            v-if="menuItem.separator"
-                        />
-                    </template>
-                </q-list>
-            </q-scroll-area>
-            <!-- drawer content -->
+            <div class="full-height drawer_normal">
+                <q-scroll-area class="fit">
+                    <q-list>
+                        <template
+                            v-for="(menuItem, index) in menuList"
+                            :key="index"
+                        >
+                            <q-item clickable v-ripple :to="menuItem.path">
+                                <q-item-section avatar>
+                                    <q-icon :name="menuItem.icon" />
+                                </q-item-section>
+                                <q-item-section>
+                                    {{ menuItem.label }}
+                                </q-item-section>
+                            </q-item>
+                            <q-separator
+                                :key="'sep' + index"
+                                v-if="menuItem.separator"
+                            />
+                        </template>
+                    </q-list>
+                </q-scroll-area>
+                <!-- drawer content -->
             </div>
         </q-drawer>
 
         <q-page-container>
             <router-view />
+            <q-page-scroller
+                position="bottom-right"
+                :scroll-offset="150"
+                :offset="[18, 100]"
+            >
+                <q-btn fab icon="keyboard_arrow_up" color="positive" />
+            </q-page-scroller>
         </q-page-container>
     </q-layout>
 </template>
@@ -204,9 +212,7 @@ function showProfile() {
 function logout() {
     router.push("/login");
 }
-
 </script>
-
 
 <style>
 .q-drawer {
@@ -244,6 +250,10 @@ body {
 }
 
 .header_dark {
-    background: linear-gradient(145deg, rgb(61, 14, 42) 15%, rgb(14, 43, 78) 70%);
+    background: linear-gradient(
+        145deg,
+        rgb(61, 14, 42) 15%,
+        rgb(14, 43, 78) 70%
+    );
 }
 </style>

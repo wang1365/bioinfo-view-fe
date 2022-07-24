@@ -1,0 +1,135 @@
+<template>
+    <q-card class="q-mt-md">
+        <q-section>
+            <q-toolbar class="q-gutter-x-sm">
+                <q-icon size="md" color="primary" name="groups_2" />
+                <q-toolbar-title class="text-h6"> 患者数据 </q-toolbar-title>
+                <q-btn
+                    color="primary"
+                    label="新建患者"
+                    icon="groups_2"
+                    @click="showPatientNew = true"
+                />
+                <q-btn color="positive" label="批量上传" icon="file_upload" />
+                <q-btn color="positive" label="模板下载" icon="file_download">
+                    <q-tooltip>批量上传使用的模板文件 </q-tooltip>
+                </q-btn>
+            </q-toolbar>
+        </q-section>
+        <q-section>
+            <!-- <q-toolbar class="q-gutter-x-sm">
+                    <q-input dense v-model="text" label="输入文本: 回车查询">
+                        <template v-slot:append>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input>
+                    <q-space />
+                </q-toolbar> -->
+            <div class="q-pa-md">
+                <table>
+                    <thead>
+                        <tr class="text-body1 text-weight-bold">
+                            <td>患者识别号</td>
+                            <td>送检机构</td>
+                            <td>年龄</td>
+                            <td>诊疗医生</td>
+                            <td>性别</td>
+                            <td>操作</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="i in 6" :key="i">
+                            <td>患者-{{ i }}</td>
+                            <td>送检机构-{{ i }}</td>
+                            <td>年龄-{{ i }}</td>
+                            <td>诊疗医生-{{ i }}</td>
+                            <td>性别-{{ i }}</td>
+                            <td class="q-gutter-x-sm">
+                                <q-btn
+                                    color="primary"
+                                    label="编辑"
+                                    icon="edit"
+                                    size="sm"
+                                    @click="showPatientEdit = true"
+                                />
+                                <q-btn
+                                    color="secondary"
+                                    label="关联样本"
+                                    icon="link"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="info"
+                                    label="患者信息"
+                                    icon="visibility"
+                                    @click="showPatientInfo = true"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="red"
+                                    label="删除"
+                                    icon="delete"
+                                    size="sm"
+                                    @click="confirm()"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="row q-mt-md">
+                    <q-space></q-space>
+                    <q-pagination
+                        :model-value="current"
+                        :max="10"
+                        :max-pages="6"
+                        boundary-numbers
+                    />
+                </div>
+            </div>
+        </q-section>
+        <q-section class="q-pd-md"> </q-section>
+    </q-card>
+    <q-dialog v-model="showPatientNew">
+        <PatientNew />
+    </q-dialog>
+    <q-dialog v-model="showPatientInfo">
+        <PatientInfo />
+    </q-dialog>
+    <q-dialog v-model="showPatientEdit">
+        <PatientEdit />
+    </q-dialog>
+</template>
+<script setup>
+import { useQuasar } from "quasar";
+import PatientInfo from "./PatientInfo.vue";
+import PatientEdit from "./PatientEdit.vue";
+import PatientNew from "./PatientNew.vue";
+import { ref } from "vue";
+const showPatientInfo = ref(false);
+const showPatientEdit = ref(false);
+const showPatientNew = ref(false);
+const uploadData = ref(false);
+const current = ref(5);
+
+const $q = useQuasar();
+
+const confirm = () => {
+    $q.dialog({
+        title: "确认删除吗?",
+        cancel: true,
+        persistent: true,
+    })
+        .onOk(() => {
+            // console.log('>>>> OK')
+        })
+        .onOk(() => {
+            // console.log('>>>> second OK catcher')
+        })
+        .onCancel(() => {
+            // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+            // console.log('I am triggered on both OK and Cancel')
+        });
+};
+</script>

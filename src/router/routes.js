@@ -3,11 +3,15 @@ const routes = [
         path: "/",
         component: () => import("layouts/HomeLayout.vue"),
         children: [],
+        meta: { pageTitle: "首页" },
     },
     {
         path: "/login",
         component: () => import("layouts/LoginLayout/index.vue"),
         children: [],
+        meta: {
+            pageTitle: "登陆页",
+        },
     },
 
     {
@@ -61,11 +65,13 @@ const routes = [
             },
             {
                 path: "tools/comment",
-                component: () => import("pages/main/tools/comment/CommentPage.vue"),
+                component: () =>
+                    import("pages/main/tools/comment/CommentPage.vue"),
             },
             {
                 path: "tools/browse",
-                component: () => import("pages/main/tools/browse/BrowsePage.vue"),
+                component: () =>
+                    import("pages/main/tools/browse/BrowsePage.vue"),
             },
         ],
     },

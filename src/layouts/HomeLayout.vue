@@ -108,10 +108,10 @@
                         </div>
                         <div class="q-py-md"></div>
 
-                        <div class="row  justify-center">
-                            <div class=" col-lg-4 col-md-6 col-sm-11 col-xs-12">
+                        <div class="row justify-center">
+                            <div class="col-lg-4 col-md-6 col-sm-11 col-xs-12">
                                 <div class="q-pa-sm">
-                                    <q-card >
+                                    <q-card>
                                         <q-item>
                                             <q-item-section avatar>
                                                 <q-skeleton type="QAvatar" />
@@ -153,9 +153,9 @@
                                     </q-card>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 col-sm-11 col-xs-12">
+                            <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                                 <div class="q-pa-sm">
-                                    <q-card >
+                                    <q-card>
                                         <q-item>
                                             <q-item-section avatar>
                                                 <q-skeleton type="QAvatar" />
@@ -178,7 +178,9 @@
                         </div>
                         <div class="q-py-lg"></div>
                         <div class="row">
-                            <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                            <div
+                                class="col-lg-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
+                            >
                                 <q-skeleton
                                     type="text"
                                     width="60%"
@@ -214,22 +216,27 @@
                                     width="57%"
                                     height="40px"
                                 ></q-skeleton>
-
                             </div>
-                            <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
-                                <q-card class="bg-secondary ">
+                            <div
+                                class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
+                            >
+                                <q-card class="bg-secondary">
                                     <div style="height: 280px"></div>
                                 </q-card>
                             </div>
                         </div>
                         <div class="q-py-md"></div>
                         <div class="row">
-                            <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                            <div
+                                class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
+                            >
                                 <q-card class="bg-accent">
                                     <div style="height: 280px"></div>
                                 </q-card>
                             </div>
-                            <div class="col-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                            <div
+                                class="col-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
+                            >
                                 <q-skeleton
                                     type="text"
                                     width="60%"
@@ -269,7 +276,9 @@
                         </div>
                         <div class="q-py-md"></div>
                         <div class="row">
-                            <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                            <div
+                                class="col-lg-5 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
+                            >
                                 <q-skeleton
                                     type="text"
                                     width="60%"
@@ -306,7 +315,9 @@
                                     height="40px"
                                 ></q-skeleton>
                             </div>
-                            <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm">
+                            <div
+                                class="col-lg-7 col-md-6 col-sm-12 col-xs-12 q-pa-sm"
+                            >
                                 <q-card class="bg-info">
                                     <div style="height: 280px"></div>
                                 </q-card>
@@ -333,35 +344,37 @@
                             </div>
                             <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
                                 <div class="row justify-center">
-                                    <div class="col-lg-4 col-md-6 col-sm-10 col-xs-12">
+                                    <div
+                                        class="col-lg-4 col-md-6 col-sm-12 col-xs-12 self-center"
+                                    >
                                         <q-skeleton
                                             type="text"
-                                            width="250px"
+                                            width="80%"
                                             height="80px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="250px"
+                                            width="70%"
                                             height="2px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="160px"
+                                            width="65%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="170px"
+                                            width="75%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="150px"
+                                            width="40%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="170px"
+                                            width="55%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton
@@ -370,62 +383,76 @@
                                             height="40px"
                                         ></q-skeleton>
                                     </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-10 col-xs-12">
+                                    <div
+                                        class="col-lg-4 col-md-6 col-sm-12 col-xs-12"
+                                    >
                                         <q-skeleton
                                             type="text"
-                                            width="250px"
+                                            width="80%"
                                             height="80px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="250px"
+                                            width="70%"
                                             height="2px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
+                                            width="65%"
+                                            height="40px"
+                                        ></q-skeleton>
+                                        <q-skeleton
+                                            type="text"
+                                            width="75%"
+                                            height="40px"
+                                        ></q-skeleton>
+                                        <q-skeleton
+                                            type="text"
+                                            width="40%"
+                                            height="40px"
+                                        ></q-skeleton>
+                                        <q-skeleton
+                                            type="text"
+                                            width="55%"
+                                            height="40px"
+                                        ></q-skeleton>
+                                        <q-skeleton
+                                            type="text"
                                             width="160px"
-                                            height="40px"
-                                        ></q-skeleton>
-                                        <q-skeleton
-                                            type="text"
-                                            width="170px"
-                                            height="40px"
-                                        ></q-skeleton>
-                                        <q-skeleton
-                                            type="text"
-                                            width="150px"
                                             height="40px"
                                         ></q-skeleton>
                                     </div>
-                                    <div class="col-lg-4 col-md-6 col-sm-10 col-xs-12">
+                                    <div
+                                        class="col-lg-4 col-md-12 col-sm-12 col-xs-12"
+                                    >
                                         <q-skeleton
                                             type="text"
-                                            width="250px"
+                                            width="80%"
                                             height="80px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="250px"
+                                            width="70%"
                                             height="2px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="160px"
+                                            width="65%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="170px"
+                                            width="75%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="150px"
+                                            width="40%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton
                                             type="text"
-                                            width="170px"
+                                            width="55%"
                                             height="40px"
                                         ></q-skeleton>
                                         <q-skeleton

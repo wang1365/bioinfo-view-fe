@@ -1,5 +1,5 @@
 <template>
-    <p class="title">{{ props.title }}</p>
+    <p class="text-h5">{{ props.title }}</p>
     <q-separator />
 </template>
 
@@ -10,9 +10,3 @@ const props = defineProps({
     title: String,
 });
 </script>
-
-<style lang="scss">
-.title {
-    font-size: 1.5em;
-}
-</style>
