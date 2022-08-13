@@ -104,23 +104,26 @@
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
                     <q-list>
-                        <template
-                            v-for="(menuItem, index) in menuList"
-                            :key="index"
-                        >
-                            <q-item clickable v-ripple :to="menuItem.path">
-                                <q-item-section avatar>
-                                    <q-icon :name="menuItem.icon" />
-                                </q-item-section>
-                                <q-item-section>
-                                    {{ menuItem.label }}
-                                </q-item-section>
-                            </q-item>
-                            <q-separator
-                                :key="'sep' + index"
-                                v-if="menuItem.separator"
-                            />
+                        <template v-for="(item, index) in menuList" :key="index">
+                            <SideBarLeftItem :addRoutesItem="item" :initLevel="0" />
                         </template>
+<!--                        <template-->
+<!--                            v-for="(menuItem, index) in menuList"-->
+<!--                            :key="index"-->
+<!--                        >-->
+<!--                            <q-item clickable v-ripple :to="menuItem.path">-->
+<!--                                <q-item-section avatar>-->
+<!--                                    <q-icon :name="menuItem.icon" />-->
+<!--                                </q-item-section>-->
+<!--                                <q-item-section>-->
+<!--                                    {{ menuItem.label }}-->
+<!--                                </q-item-section>-->
+<!--                            </q-item>-->
+<!--                            <q-separator-->
+<!--                                :key="'sep' + index"-->
+<!--                                v-if="menuItem.separator"-->
+<!--                            />-->
+<!--                        </template>-->
                     </q-list>
                 </q-scroll-area>
                 <!-- drawer content -->
@@ -135,6 +138,7 @@
 
 <script setup>
 import Fullscreen from './Fullscreen.vue'
+import SideBarLeftItem from './SideBarLeft/SideBarLeftItem.vue'
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const menuList = [
@@ -187,15 +191,15 @@ const menuList = [
         path: "/main/settings",
         children: [
             {
-                icon: "settings",
+                icon: "handyman",
                 label: "系统设置",
                 separator: false,
-                path: "/main/settings",
+                path: "/main/settings/system",
             },{
-                icon: "settings",
-                label: "系统设置",
+                icon: "wallpaper",
+                label: "界面配置",
                 separator: false,
-                path: "/main/settings",
+                path: "/main/settings/ui",
             },
         ]
     },
