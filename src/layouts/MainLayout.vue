@@ -5,7 +5,7 @@
             <q-toolbar>
                 <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-                <q-toolbar-title>
+                <q-toolbar-title shrink class="text-bold text-italic cursor-pointer" style="padding: 0 5px;">
                     <q-avatar @click="router.push('/')">
                         <img
                             src="~assets/nanodi.svg"
@@ -14,77 +14,82 @@
                     </q-avatar>
                     纳昂达可视化解读
                 </q-toolbar-title>
-                <q-btn dense flat>
-                    <q-icon name="person_pin" />
-                    &nbsp;&nbsp;&nbsp;&nbsp;管理员
-                    <q-menu class="row items-center justify-around q-pa-md">
-                        <div class="column">
-                            <div class="text-h6">摘要</div>
-                            <q-list>
-                                <q-item clickable>
-                                    <q-item-section avatar>
-                                        <q-icon
-                                            size="lg"
-                                            name="star"
-                                            class="text-warning"
-                                        />
-                                    </q-item-section>
-                                    <q-item-section>等级:23</q-item-section>
-                                </q-item>
-                                <q-item clickable>
-                                    <q-item-section avatar>
-                                        <q-icon
-                                            size="lg"
-                                            name="star"
-                                            class="text-warning"
-                                        />
-                                    </q-item-section>
-                                    <q-item-section>积分:88888</q-item-section>
-                                </q-item>
-                                <q-item clickable>
-                                    <q-item-section avatar>
-                                        <q-icon
-                                            size="lg"
-                                            name="star"
-                                            class="text-warning"
-                                        />
-                                    </q-item-section>
-                                    <q-item-section>成就:888</q-item-section>
-                                </q-item>
-                            </q-list>
-                        </div>
-
-                        <q-separator vertical inset class="q-mx-lg" />
-
-                        <div class="column items-center">
-                            <q-icon></q-icon>
-                            <div class="text-subtitle1 q-mt-md q-mb-md">
-                                管理员
+                <q-space />
+                <div class="q-gutter-sm row items-center no-wrap">
+                    <Fullscreen />
+                    <q-btn dense flat>
+                        <q-icon name="person_pin" />
+                        &nbsp;&nbsp;&nbsp;&nbsp;管理员
+                        <q-menu class="row items-center justify-around q-pa-md">
+                            <div class="column">
+                                <div class="text-h6">摘要</div>
+                                <q-list>
+                                    <q-item clickable>
+                                        <q-item-section avatar>
+                                            <q-icon
+                                                size="lg"
+                                                name="star"
+                                                class="text-warning"
+                                            />
+                                        </q-item-section>
+                                        <q-item-section>等级:23</q-item-section>
+                                    </q-item>
+                                    <q-item clickable>
+                                        <q-item-section avatar>
+                                            <q-icon
+                                                size="lg"
+                                                name="star"
+                                                class="text-warning"
+                                            />
+                                        </q-item-section>
+                                        <q-item-section>积分:88888</q-item-section>
+                                    </q-item>
+                                    <q-item clickable>
+                                        <q-item-section avatar>
+                                            <q-icon
+                                                size="lg"
+                                                name="star"
+                                                class="text-warning"
+                                            />
+                                        </q-item-section>
+                                        <q-item-section>成就:888</q-item-section>
+                                    </q-item>
+                                </q-list>
                             </div>
 
-                            <div class="row q-gutter-md">
-                                <q-btn
-                                    icon="person_pin"
-                                    color="primary"
-                                    label="个人中心"
-                                    push
-                                    size="sm"
-                                    v-close-popup
-                                    @click="showProfile"
-                                />
-                                <q-btn
-                                    icon="logout"
-                                    color="primary"
-                                    label="退出"
-                                    push
-                                    size="sm"
-                                    v-close-popup
-                                    @click="logout"
-                                />
+                            <q-separator vertical inset class="q-mx-lg" />
+
+                            <div class="column items-center">
+                                <q-icon></q-icon>
+                                <div class="text-subtitle1 q-mt-md q-mb-md">
+                                    管理员
+                                </div>
+
+                                <div class="row q-gutter-md">
+                                    <q-btn
+                                        icon="person_pin"
+                                        color="primary"
+                                        label="个人中心"
+                                        push
+                                        size="sm"
+                                        v-close-popup
+                                        @click="showProfile"
+                                    />
+                                    <q-btn
+                                        icon="logout"
+                                        color="primary"
+                                        label="退出"
+                                        push
+                                        size="sm"
+                                        v-close-popup
+                                        @click="logout"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    </q-menu>
-                </q-btn>
+                        </q-menu>
+                    </q-btn>
+                </div>
+
             </q-toolbar>
         </q-header>
 
@@ -129,6 +134,7 @@
 </template>
 
 <script setup>
+import Fullscreen from './Fullscreen.vue'
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const menuList = [
@@ -179,6 +185,19 @@ const menuList = [
         label: "系统设置",
         separator: false,
         path: "/main/settings",
+        children: [
+            {
+                icon: "settings",
+                label: "系统设置",
+                separator: false,
+                path: "/main/settings",
+            },{
+                icon: "settings",
+                label: "系统设置",
+                separator: false,
+                path: "/main/settings",
+            },
+        ]
     },
     {
         icon: "people",
