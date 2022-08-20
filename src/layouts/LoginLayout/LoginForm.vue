@@ -116,13 +116,15 @@ import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { globalStore } from "src/stores/global";
+import { api } from "src/boot/axios";
+
 const { t } = useI18n();
 const store = globalStore();
 
 const isPwd = ref(true);
 const form = ref({
-    username: "",
-    password: "",
+    username: "super@super.com",
+    password: "1234qwer",
     captcha: "",
     captcha_id: "",
 });
@@ -150,7 +152,32 @@ onMounted(() => {
 
 const onSubmit = async () => {
     loading.value = true;
-    router.push(route.query.redirect || "/main");
-    loading.value = false;
+    api.post("/account/login", {
+        username: form.value.username,
+        password: form.value.password,
+    })
+        .then((resp) => {
+            loading.value = false;
+            console.log(resp.data);
+            store.currentUserToken = resp.data.data.access_token;
+            api.get("/account/me", {
+                headers: {
+                    Authorization: store.currentUserToken,
+                },
+            })
+                .then((resp) => {
+                    store.currentUser = resp.data.data;
+                    console.log(store.currentUser);
+                    router.push(route.query.redirect || "/main");
+                })
+                .catch((e) => {
+                    console.log(e);
+                    alert("获取用户信息失败!");
+                });
+        })
+        .catch((e) => {
+            alert(e.response.data.msg);
+            loading.value = false;
+        });
 };
 </script>

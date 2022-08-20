@@ -5,7 +5,11 @@
             <q-toolbar>
                 <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-                <q-toolbar-title shrink class="text-bold text-italic cursor-pointer" style="padding: 0 5px;">
+                <q-toolbar-title
+                    shrink
+                    class="text-bold text-italic cursor-pointer"
+                    style="padding: 0 5px"
+                >
                     <q-avatar @click="router.push('/')">
                         <img
                             src="~assets/nanodi.svg"
@@ -42,7 +46,9 @@
                                                 class="text-warning"
                                             />
                                         </q-item-section>
-                                        <q-item-section>积分:88888</q-item-section>
+                                        <q-item-section
+                                            >积分:88888</q-item-section
+                                        >
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
@@ -52,7 +58,9 @@
                                                 class="text-warning"
                                             />
                                         </q-item-section>
-                                        <q-item-section>成就:888</q-item-section>
+                                        <q-item-section
+                                            >成就:888</q-item-section
+                                        >
                                     </q-item>
                                 </q-list>
                             </div>
@@ -89,7 +97,6 @@
                         </q-menu>
                     </q-btn>
                 </div>
-
             </q-toolbar>
         </q-header>
 
@@ -104,26 +111,32 @@
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
                     <q-list>
-                        <template v-for="(item, index) in menuList" :key="index">
-                            <SideBarLeftItem :addRoutesItem="item" :initLevel="0" />
+                        <template
+                            v-for="(item, index) in menuList"
+                            :key="index"
+                        >
+                            <SideBarLeftItem
+                                :addRoutesItem="item"
+                                :initLevel="0"
+                            />
                         </template>
-<!--                        <template-->
-<!--                            v-for="(menuItem, index) in menuList"-->
-<!--                            :key="index"-->
-<!--                        >-->
-<!--                            <q-item clickable v-ripple :to="menuItem.path">-->
-<!--                                <q-item-section avatar>-->
-<!--                                    <q-icon :name="menuItem.icon" />-->
-<!--                                </q-item-section>-->
-<!--                                <q-item-section>-->
-<!--                                    {{ menuItem.label }}-->
-<!--                                </q-item-section>-->
-<!--                            </q-item>-->
-<!--                            <q-separator-->
-<!--                                :key="'sep' + index"-->
-<!--                                v-if="menuItem.separator"-->
-<!--                            />-->
-<!--                        </template>-->
+                        <!--                        <template-->
+                        <!--                            v-for="(menuItem, index) in menuList"-->
+                        <!--                            :key="index"-->
+                        <!--                        >-->
+                        <!--                            <q-item clickable v-ripple :to="menuItem.path">-->
+                        <!--                                <q-item-section avatar>-->
+                        <!--                                    <q-icon :name="menuItem.icon" />-->
+                        <!--                                </q-item-section>-->
+                        <!--                                <q-item-section>-->
+                        <!--                                    {{ menuItem.label }}-->
+                        <!--                                </q-item-section>-->
+                        <!--                            </q-item>-->
+                        <!--                            <q-separator-->
+                        <!--                                :key="'sep' + index"-->
+                        <!--                                v-if="menuItem.separator"-->
+                        <!--                            />-->
+                        <!--                        </template>-->
                     </q-list>
                 </q-scroll-area>
                 <!-- drawer content -->
@@ -137,10 +150,12 @@
 </template>
 
 <script setup>
-import Fullscreen from './Fullscreen.vue'
-import SideBarLeftItem from './SideBarLeft/SideBarLeftItem.vue'
-import { ref } from "vue";
+import Fullscreen from "./Fullscreen.vue";
+import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue";
+import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
+import { globalStore } from "src/stores/global";
+const store = globalStore();
 const menuList = [
     {
         icon: "inbox",
@@ -155,17 +170,23 @@ const menuList = [
         path: "/main/projects",
     },
     {
+        icon: "groups_2",
+        label: "患者管理",
+        separator: false,
+        path: "/main/patients",
+    },
+    {
         icon: "hub",
         label: "Panel 分析流程",
         separator: false,
         path: "/main/panel",
     },
-    {
-        icon: "hub",
-        label: "(暂时不做)群体分析流程",
-        separator: false,
-        path: "/main/group",
-    },
+    // {
+    //     icon: "hub",
+    //     label: "(暂时不做)群体分析流程",
+    //     separator: false,
+    //     path: "/main/group",
+    // },
     {
         icon: "auto_mode",
         label: "任务管理",
@@ -195,13 +216,14 @@ const menuList = [
                 label: "系统设置",
                 separator: false,
                 path: "/main/settings/system",
-            },{
+            },
+            {
                 icon: "wallpaper",
                 label: "界面配置",
                 separator: false,
                 path: "/main/settings/ui",
             },
-        ]
+        ],
     },
     {
         icon: "people",
@@ -227,6 +249,9 @@ function showProfile() {
 function logout() {
     router.push("/login");
 }
+onBeforeMount(() => {
+    console.log(store.currentUser);
+});
 </script>
 
 <style>

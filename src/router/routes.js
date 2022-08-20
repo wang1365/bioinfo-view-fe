@@ -30,6 +30,10 @@ const routes = [
                 path: "projects",
                 component: () => import("pages/main/projects/ProjectsPage.vue"),
             },
+             {
+                path: "patients",
+                component: () => import("pages/main/patients/PatientsPage.vue"),
+            },
             {
                 path: "samples",
                 component: () => import("pages/main/samples/SamplesPage.vue"),
