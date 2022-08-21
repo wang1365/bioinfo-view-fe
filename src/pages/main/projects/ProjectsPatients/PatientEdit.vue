@@ -361,7 +361,7 @@
             <q-list>
                 <q-item>
                     <q-section class="q-gutter-x-sm">
-                        <q-btn label="关闭" v-close-popup />
+                        <q-btn label="关闭" @click="close()" />
                         <q-btn color="primary" label="保存" @click="save()" />
                     </q-section>
                 </q-item>
@@ -374,7 +374,12 @@
 import { useQuasar } from "quasar";
 import { api, getTokenCookie } from "src/boot/axios";
 import { onMounted, ref } from "vue";
+const emit = defineEmits(["refresh"]);
 const $q = useQuasar();
+
+const close = () => {
+    emit("refresh");
+};
 const props = defineProps({
     id: {
         type: String,

@@ -4,27 +4,49 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="groups_2" />
                 <q-toolbar-title class="text-h6"> 患者数据 </q-toolbar-title>
+                <q-input dense v-model="text" label="输入文本: 回车查询">
+                    <template v-slot:append>
+                        <q-icon name="search" />
+                    </template>
+                </q-input>
                 <q-btn
                     color="primary"
                     label="新建患者"
                     icon="groups_2"
                     @click="showPatientNew = true"
                 />
-                <q-btn color="positive" label="批量上传" icon="file_upload" />
-                <q-btn color="positive" label="模板下载" icon="file_download">
+                <q-btn color="positive">
+                    <label for="file">
+                        <q-icon name="file_upload"></q-icon>
+                        批量上传
+                        <span
+                            style="
+                                width: 0;
+                                height: 0;
+                                overflow: hidden;
+                                display: inline-block;
+                            "
+                        >
+                            <input
+                                id="file"
+                                type="file"
+                                style="rgba(0,0,0,0)"
+                                @change="fileSelected($event)"
+                            />
+                        </span>
+                    </label>
+                </q-btn>
+                <q-btn
+                    color="positive"
+                    label="模板下载"
+                    icon="file_download"
+                    @click="downlaodTemplate()"
+                >
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
                 </q-btn>
             </q-toolbar>
         </q-section>
         <q-section>
-            <!-- <q-toolbar class="q-gutter-x-sm">
-                    <q-input dense v-model="text" label="输入文本: 回车查询">
-                        <template v-slot:append>
-                            <q-icon name="search" />
-                        </template>
-                    </q-input>
-                    <q-space />
-                </q-toolbar> -->
             <div class="q-pa-md">
                 <table>
                     <thead>
@@ -79,9 +101,9 @@
                 <div class="row q-mt-md">
                     <q-space></q-space>
                     <q-pagination
-                        :model-value="current"
-                        :max="10"
-                        :max-pages="6"
+                        :model-value="currentPage"
+                        @update:model-value="pageChange($event)"
+                        :max="maxPages"
                         boundary-numbers
                     />
                 </div>
@@ -90,13 +112,30 @@
         <q-section class="q-pd-md"> </q-section>
     </q-card>
     <q-dialog v-model="showPatientNew" persistent>
-        <PatientNew />
+        <PatientNew
+            @refresh="
+                refreshPage();
+                showPatientNew = false;
+            "
+        />
     </q-dialog>
     <q-dialog v-model="showPatientInfo" persistent>
-        <PatientInfo :id="infoId" />
+        <PatientInfo
+            :id="infoId"
+            @refresh="
+                refreshPage();
+                showPatientInfo = false;
+            "
+        />
     </q-dialog>
     <q-dialog v-model="showPatientEdit" persistent>
-        <PatientEdit :id="editId" />
+        <PatientEdit
+            :id="editId"
+            @refresh="
+                refreshPage();
+                showPatientEdit = false;
+            "
+        />
     </q-dialog>
 </template>
 <script setup>
@@ -115,22 +154,23 @@ const uploadData = ref(false);
 const current = ref(5);
 const infoId = ref(0);
 const editId = ref(0);
+const currentPage = ref(1);
+const pageSize = ref(4);
+const total = ref(0);
+const maxPages = ref(0);
 
 const $q = useQuasar();
 const store = globalStore();
 const patients = ref([]);
 onMounted(() => {
-    api.get("/patient/patients", {
-        headers: {
-            Authorization: $q.cookies.get("token"),
-        },
-    }).then((resp) => {
-        console.log(resp);
-        for (const iterator of resp.data.data.results) {
-            patients.value.push(iterator);
-        }
-    });
+    loadPage();
 });
+
+const pageChange = async (event) => {
+    console.log(event);
+    currentPage.value = event;
+    loadPage();
+};
 const confirm = async (patient) => {
     $q.dialog({
         title: "确认删除吗?",
@@ -141,27 +181,70 @@ const confirm = async (patient) => {
             headers: { Authorization: getTokenCookie() },
         }).then((resp) => {
             console.log(resp.data);
+            refreshPage();
         });
     });
 };
 const edit = async (patient) => {
     editId.value = patient.id;
     showPatientEdit.value = true;
-    // api.get(`/patient/patients/${patient.id}`, {
-    //     headers: { Authorization: getTokenCookie() },
-    // }).then((resp) => {
-    //     console.log(resp.data);
-    //
-    // });
 };
 const info = async (patient) => {
     infoId.value = patient.id;
     showPatientInfo.value = true;
-    // api.get(`/patient/patients/${patient.id}`, {
-    //     headers: { Authorization: getTokenCookie() },
-    // }).then((resp) => {
-    //     console.log(resp.data);
-    // });
 };
-const refreshPage = async () => {};
+const refreshPage = async () => {
+    console.log("refresh page");
+    currentPage.value = 1;
+    loadPage();
+};
+const loadPage = async () => {
+    api.get(
+        `/patient/patients?page=${currentPage.value}&size=${pageSize.value}`,
+        {
+            headers: {
+                Authorization: $q.cookies.get("token"),
+            },
+        }
+    ).then((resp) => {
+        console.log(resp);
+        total.value = resp.data.data.count;
+        patients.value = [];
+        if (total.value % pageSize.value == 0) {
+            maxPages.value = total.value / pageSize.value;
+        } else {
+            maxPages.value = total.value / pageSize.value + 1;
+        }
+        for (const iterator of resp.data.data.results) {
+            patients.value.push(iterator);
+        }
+    });
+};
+
+const downlaodTemplate = () => {
+    var link = document.createElement("a");
+    link.href = api.defaults.baseURL + "/patient/patients/dl_patient_template";
+    link.download = "患者批量上传模板.csv";
+    link.click();
+};
+const fileSelected = (event) => {
+    console.log(event);
+    console.log(event.target.files[0]);
+    let data = new FormData();
+    data.append(file, event.target.files[0]);
+    api.post("/patient/patients/import_patients", data, {
+        headers: { Authorization: getTokenCookie() },
+    })
+        .then((resp) => {
+            $q.notify({
+                message: "上传完成",
+                timeout: 300,
+                position: "center",
+            });
+            refreshPage();
+        })
+        .catch((e) => {
+            console.log(e.response.data);
+        });
+};
 </script>

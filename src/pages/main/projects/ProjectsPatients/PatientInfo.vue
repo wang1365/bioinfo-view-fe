@@ -60,7 +60,11 @@
 <script setup>
 import { api, getTokenCookie } from "src/boot/axios";
 import { onMounted, ref } from "vue";
+const emit = defineEmits(["refresh"]);
 
+const close = () => {
+    emit("refresh");
+};
 const props = defineProps({
     id: {
         type: String,
