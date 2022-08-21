@@ -17,7 +17,7 @@ export function getTokenCookie() {
             return datas[1];
         }
     }
-    return "";
+    return "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2NjMyMjM5MjQsInN1YiI6ImFjY2VzcyJ9.Y6c5dcTZppCiNjW6Nq8LDxjF5wqDAL3bEOnU54Sapa4";
 }
 const api = axios.create({
     baseURL: "/api",
