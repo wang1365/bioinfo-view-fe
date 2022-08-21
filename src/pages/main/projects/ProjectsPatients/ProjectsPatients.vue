@@ -38,19 +38,19 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="i in 6" :key="i">
-                            <td>患者-{{ i }}</td>
-                            <td>送检机构-{{ i }}</td>
-                            <td>年龄-{{ i }}</td>
-                            <td>诊疗医生-{{ i }}</td>
-                            <td>性别-{{ i }}</td>
+                        <tr v-for="(patient, index) in patients" :key="index">
+                            <td>{{ patient.name }}</td>
+                            <td>{{ patient.inspection_agency }}</td>
+                            <td>{{ patient.age }}</td>
+                            <td>{{ patient.medical_doctor }}</td>
+                            <td>{{ patient.gender }}</td>
                             <td class="q-gutter-x-sm text-right">
                                 <q-btn
                                     color="primary"
                                     label="编辑"
                                     icon="edit"
                                     size="sm"
-                                    @click="showPatientEdit = true"
+                                    @click="edit(patient)"
                                 />
                                 <q-btn
                                     color="secondary"
@@ -62,7 +62,7 @@
                                     color="info"
                                     label="患者信息"
                                     icon="visibility"
-                                    @click="showPatientInfo = true"
+                                    @click="info(patient)"
                                     size="sm"
                                 />
                                 <q-btn
@@ -70,7 +70,7 @@
                                     label="删除"
                                     icon="delete"
                                     size="sm"
-                                    @click="confirm()"
+                                    @click="confirm(patient)"
                                 />
                             </td>
                         </tr>
@@ -89,14 +89,14 @@
         </q-section>
         <q-section class="q-pd-md"> </q-section>
     </q-card>
-    <q-dialog v-model="showPatientNew">
+    <q-dialog v-model="showPatientNew" persistent>
         <PatientNew />
     </q-dialog>
-    <q-dialog v-model="showPatientInfo">
-        <PatientInfo />
+    <q-dialog v-model="showPatientInfo" persistent>
+        <PatientInfo :id="infoId" />
     </q-dialog>
-    <q-dialog v-model="showPatientEdit">
-        <PatientEdit />
+    <q-dialog v-model="showPatientEdit" persistent>
+        <PatientEdit :id="editId" />
     </q-dialog>
 </template>
 <script setup>
@@ -104,32 +104,64 @@ import { useQuasar } from "quasar";
 import PatientInfo from "./PatientInfo.vue";
 import PatientEdit from "./PatientEdit.vue";
 import PatientNew from "./PatientNew.vue";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { api, getTokenCookie } from "src/boot/axios";
+import { globalStore } from "src/stores/global";
+
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
 const uploadData = ref(false);
 const current = ref(5);
+const infoId = ref(0);
+const editId = ref(0);
 
 const $q = useQuasar();
-
-const confirm = () => {
+const store = globalStore();
+const patients = ref([]);
+onMounted(() => {
+    api.get("/patient/patients", {
+        headers: {
+            Authorization: $q.cookies.get("token"),
+        },
+    }).then((resp) => {
+        console.log(resp);
+        for (const iterator of resp.data.data.results) {
+            patients.value.push(iterator);
+        }
+    });
+});
+const confirm = async (patient) => {
     $q.dialog({
         title: "确认删除吗?",
         cancel: true,
         persistent: true,
-    })
-        .onOk(() => {
-            // console.log('>>>> OK')
-        })
-        .onOk(() => {
-            // console.log('>>>> second OK catcher')
-        })
-        .onCancel(() => {
-            // console.log('>>>> Cancel')
-        })
-        .onDismiss(() => {
-            // console.log('I am triggered on both OK and Cancel')
+    }).onOk(() => {
+        api.delete(`/patient/patients/${patient.id}`, {
+            headers: { Authorization: getTokenCookie() },
+        }).then((resp) => {
+            console.log(resp.data);
         });
+    });
 };
+const edit = async (patient) => {
+    editId.value = patient.id;
+    showPatientEdit.value = true;
+    // api.get(`/patient/patients/${patient.id}`, {
+    //     headers: { Authorization: getTokenCookie() },
+    // }).then((resp) => {
+    //     console.log(resp.data);
+    //
+    // });
+};
+const info = async (patient) => {
+    infoId.value = patient.id;
+    showPatientInfo.value = true;
+    // api.get(`/patient/patients/${patient.id}`, {
+    //     headers: { Authorization: getTokenCookie() },
+    // }).then((resp) => {
+    //     console.log(resp.data);
+    // });
+};
+const refreshPage = async () => {};
 </script>

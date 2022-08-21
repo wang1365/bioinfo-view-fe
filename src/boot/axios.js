@@ -7,7 +7,24 @@ import axios from "axios";
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: "http://localhost:8000" });
+export function getTokenCookie() {
+    let cookies = document.cookie.split("; ");
+    console.log(cookies);
+    for (const cookie of cookies) {
+        let datas = cookie.split("=");
+        console.log(datas);
+        if (datas[0] === "token") {
+            return datas[1];
+        }
+    }
+    return "";
+}
+const api = axios.create({
+    baseURL: "http://192.168.31.11:8000",
+    headers: {
+        Authorization: getTokenCookie(),
+    },
+});
 
 export default boot(({ app }) => {
     // for use inside Vue files (Options API) through this.$axios and this.$api

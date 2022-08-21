@@ -117,7 +117,9 @@ import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import { globalStore } from "src/stores/global";
 import { api } from "src/boot/axios";
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
 const { t } = useI18n();
 const store = globalStore();
 
@@ -160,6 +162,8 @@ const onSubmit = async () => {
             loading.value = false;
             console.log(resp.data);
             store.currentUserToken = resp.data.data.access_token;
+
+            $q.cookies.set("token", store.currentUserToken);
             api.get("/account/me", {
                 headers: {
                     Authorization: store.currentUserToken,
