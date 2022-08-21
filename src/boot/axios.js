@@ -20,7 +20,7 @@ export function getTokenCookie() {
     return "";
 }
 const api = axios.create({
-    baseURL: "http://192.168.31.11:8000",
+    baseURL: "/api",
     headers: {
         Authorization: getTokenCookie(),
     },
