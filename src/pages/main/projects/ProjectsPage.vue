@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="项目管理" />
-        <!-- <ProjectsFolders /> -->
+        <ProjectsFolders />
         <ProjectsSamples />
         <!-- <ProjectsPatients /> -->
     </q-page>

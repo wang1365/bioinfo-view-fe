@@ -169,11 +169,23 @@ const menuList = [
         separator: false,
         path: "/main/projects",
     },
+      {
+        icon: "description",
+        label: "样本管理",
+        separator: false,
+        path: "/main/samples",
+    },
     {
         icon: "groups_2",
         label: "患者管理",
         separator: false,
         path: "/main/patients",
+    },
+        {
+        icon: "save",
+        label: "数据管理",
+        separator: false,
+        path: "/main/data",
     },
     {
         icon: "hub",
@@ -250,7 +262,7 @@ function logout() {
     router.push("/login");
 }
 onBeforeMount(() => {
-    console.log(store.currentUser);
+//    console.log(store.currentUser);
 });
 </script>
 

@@ -167,7 +167,6 @@ onMounted(() => {
 });
 
 const pageChange = async (event) => {
-    console.log(event);
     currentPage.value = event;
     loadPage();
 };
@@ -177,10 +176,7 @@ const confirm = async (patient) => {
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        api.delete(`/patient/patients/${patient.id}`, {
-            headers: { Authorization: getTokenCookie() },
-        }).then((resp) => {
-            console.log(resp.data);
+        api.delete(`/patient/patients/${patient.id}`).then((resp) => {
             refreshPage();
         });
     });
@@ -201,13 +197,8 @@ const refreshPage = async () => {
 const loadPage = async () => {
     api.get(
         `/patient/patients?page=${currentPage.value}&size=${pageSize.value}`,
-        {
-            headers: {
-                Authorization: $q.cookies.get("token"),
-            },
-        }
+
     ).then((resp) => {
-        console.log(resp);
         total.value = resp.data.data.count;
         patients.value = [];
         if (total.value % pageSize.value == 0) {
@@ -228,13 +219,9 @@ const downlaodTemplate = () => {
     link.click();
 };
 const fileSelected = (event) => {
-    console.log(event);
-    console.log(event.target.files[0]);
     let data = new FormData();
     data.append(file, event.target.files[0]);
-    api.post("/patient/patients/import_patients", data, {
-        headers: { Authorization: getTokenCookie() },
-    })
+    api.post("/patient/patients/import_patients", data)
         .then((resp) => {
             $q.notify({
                 message: "上传完成",

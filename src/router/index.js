@@ -37,7 +37,7 @@ export default route(function (/* { store, ssrContext } */) {
     Router.beforeEach((to, from) => {
         // ...
         // 返回 false 以取消导航
-        console.log(to);
+//        console.log(to);
     });
     return Router;
 });

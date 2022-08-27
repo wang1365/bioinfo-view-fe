@@ -93,9 +93,7 @@ const patient = ref({
 });
 onMounted(() => {
     console.log(props.id);
-    api.get(`/patient/patients/${props.id}`, {
-        headers: { Authorization: getTokenCookie() },
-    }).then((resp) => {
+    api.get(`/patient/patients/${props.id}`).then((resp) => {
         let data = resp.data;
         console.log(data);
         patient.value = data;

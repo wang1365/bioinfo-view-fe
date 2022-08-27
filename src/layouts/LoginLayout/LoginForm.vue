@@ -160,7 +160,6 @@ const onSubmit = async () => {
     })
         .then((resp) => {
             loading.value = false;
-            console.log(resp.data);
             store.currentUserToken = resp.data.data.access_token;
 
             $q.cookies.set("token", store.currentUserToken);
@@ -171,11 +170,9 @@ const onSubmit = async () => {
             })
                 .then((resp) => {
                     store.currentUser = resp.data.data;
-                    console.log(store.currentUser);
                     router.push(route.query.redirect || "/main");
                 })
                 .catch((e) => {
-                    console.log(e);
                     alert("获取用户信息失败!");
                 });
         })
