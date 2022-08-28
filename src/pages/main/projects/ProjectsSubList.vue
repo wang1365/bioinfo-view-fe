@@ -3,10 +3,10 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
-                <q-toolbar-title class="text-h6"> 文件夹 </q-toolbar-title>
+                <q-toolbar-title class="text-h6"> 项目 </q-toolbar-title>
                 <q-btn
                     color="primary"
-                    label="新建文件夹"
+                    label="新建项目"
                     icon="folder"
                     @click="newFolder = true"
                 />
@@ -30,19 +30,19 @@
                 <table>
                     <thead>
                         <tr class="text-body1 text-weight-bold">
-                            <td>文件夹名称</td>
+                            <td>项目名称</td>
                             <td>创建人</td>
                             <td>创建时间</td>
-                            <td>文件大小</td>
+                            <td>样本数量</td>
                             <td class="text-right">操作</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="i in 6" :key="i">
-                            <td>文件夹名称{{ i }}</td>
+                            <td>项目名称{{ i }}</td>
                             <td>创建人</td>
                             <td>创建时间</td>
-                            <td>文件大小</td>
+                            <td>样本数量</td>
                             <td class="q-gutter-x-sm text-right">
                                 <q-btn
                                     color="primary"
@@ -75,17 +75,17 @@
         </q-section>
         <q-section class="q-pd-md"> </q-section>
     </q-card>
-    <q-dialog v-model="newFolder">
+    <q-dialog v-model="newFolder" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>新建文件夹</q-toolbar-title>
+                <q-toolbar-title>新建项目</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-card-section>
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="text" label="文件夹名称"
+                            <q-input v-model="text" label="项目名称"
                         /></q-section>
                     </q-item>
                 </q-list>

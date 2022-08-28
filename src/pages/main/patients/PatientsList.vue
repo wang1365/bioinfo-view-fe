@@ -196,8 +196,7 @@ const refreshPage = async () => {
 };
 const loadPage = async () => {
     api.get(
-        `/patient/patients?page=${currentPage.value}&size=${pageSize.value}`,
-
+        `/patient/patients?page=${currentPage.value}&size=${pageSize.value}`
     ).then((resp) => {
         total.value = resp.data.data.count;
         patients.value = [];

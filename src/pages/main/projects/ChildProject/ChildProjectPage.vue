@@ -1,17 +1,17 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="项目管理" />
-        <ProjectsList />
-        <ProjectsSamples />
-        <!-- <ProjectsPatients /> -->
+        <PageTitle title="项目详情" />
+        <ChildProjectDetail />
+        <ChildProjectSamples />
+        <ChildProjectList />
     </q-page>
 </template>
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
-import ProjectsList from "./ProjectsList.vue";
-import ProjectsTree from "./ProjectsTree.vue";
-import ProjectsSamples from "./ProjectsSamples.vue";
+import ChildProjectDetail from "./ChildProjectDetail.vue";
+import ChildProjectList from "./ChildProjectList.vue";
+import ChildProjectSamples from "./ChildProjectSamples.vue";
 </script>
 
 <style lang="scss">

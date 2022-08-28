@@ -30,7 +30,14 @@ const routes = [
                 path: "projects",
                 component: () => import("pages/main/projects/ProjectsPage.vue"),
             },
-             {
+            {
+                path: "projects/:id",
+                component: () =>
+                    import(
+                        "pages/main/projects/ChildProject/ChildProjectPage.vue"
+                    ),
+            },
+            {
                 path: "patients",
                 component: () => import("pages/main/patients/PatientsPage.vue"),
             },
@@ -39,8 +46,8 @@ const routes = [
                 component: () => import("pages/main/samples/SamplesPage.vue"),
             },
             {
-                path: "patients",
-                component: () => import("pages/main/patients/PatientsPage.vue"),
+                path: "data",
+                component: () => import("pages/main/data/DataPage.vue"),
             },
             {
                 path: "tasks",
@@ -51,13 +58,15 @@ const routes = [
                 children: [
                     {
                         path: "system",
-                        component: () => import("pages/main/settings/SettingsPage.vue"),
+                        component: () =>
+                            import("pages/main/settings/SettingsPage.vue"),
                     },
                     {
                         path: "ui",
-                        component: () => import("pages/main/settings/UiSettingsPage.vue"),
+                        component: () =>
+                            import("pages/main/settings/UiSettingsPage.vue"),
                     },
-                ]
+                ],
             },
             {
                 path: "users",
