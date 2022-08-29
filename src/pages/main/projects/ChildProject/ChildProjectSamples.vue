@@ -8,7 +8,7 @@
                     color="primary"
                     label="选择样本"
                     icon="description"
-                    @click="showSampleNew = true"
+                    @click="showSampleSelect = true"
                 />
             </q-toolbar>
         </q-section>
@@ -17,19 +17,19 @@
                 <table>
                     <thead>
                         <tr class="text-body1 text-weight-bold">
-                            <td class="q-pa-md text-center">
+                            <!-- <td class="q-pa-md text-center">
                                 <q-checkbox
                                     v-model="selected"
                                     color="negative"
                                 />
-                            </td>
+                            </td> -->
                             <td class="text-center">样本名称</td>
                             <td>胚系突变分析</td>
                             <td>体细胞突变分析</td>
                             <td>融合分析</td>
                             <td>拷贝数变异分析</td>
                             <td>HRD</td>
-                            <td>报告下载</td>
+                            <!-- <td>报告下载</td> -->
                             <td>操作</td>
                         </tr>
                     </thead>
@@ -39,12 +39,12 @@
                             v-for="item in data"
                             v-bind:key="item.name"
                         >
-                            <td class="q-pa-md text-center">
+                            <!-- <td class="q-pa-md text-center">
                                 <q-checkbox
                                     v-model="item.selected"
                                     color="negative"
                                 />
-                            </td>
+                            </td> -->
                             <td>
                                 <div class="text-left">
                                     <span class="text-body1">
@@ -79,7 +79,7 @@
                             <td class="text-center">可分析</td>
                             <td class="text-center">不可分析</td>
                             <td class="text-center">可分析</td>
-                            <td class="text-center q-gutter-x-sm">
+                            <!-- <td class="text-center q-gutter-x-sm">
                                 <q-btn
                                     color="primary"
                                     label="下载"
@@ -92,7 +92,7 @@
                                     icon="cloud_download"
                                     size="sm"
                                 />
-                            </td>
+                            </td> -->
                             <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="info"
@@ -105,7 +105,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="row q-mt-md">
+                <!-- <div class="row q-mt-md">
                     <q-space></q-space>
                     <q-pagination
                         :model-value="current"
@@ -113,29 +113,24 @@
                         :max-pages="6"
                         boundary-numbers
                     />
-                </div>
+                </div> -->
             </div>
         </q-section>
     </q-card>
-    <q-dialog v-model="showSampleNew">
-        <SampleNew />
+    <q-dialog v-model="showSampleSelect">
+        <ChildProjectSampleSelect />
     </q-dialog>
     <q-dialog v-model="showSampleInfo">
         <SampleInfo />
     </q-dialog>
-    <q-dialog v-model="showSampleEdit">
-        <SampleEdit />
-    </q-dialog>
 </template>
 <script setup>
 import { useQuasar } from "quasar";
-// import SampleInfo from "./SampleInfo.vue";
-// import SampleEdit from "./SampleEdit.vue";
-// import SampleNew from "./SampleNew.vue";
+import SampleInfo from "./SampleInfo.vue";
+import ChildProjectSampleSelect from "./ChildProjectSampleSelect.vue";
 import { ref } from "vue";
-const showSampleEdit = ref(false);
+const showSampleSelect = ref(false);
 const showSampleInfo = ref(false);
-const showSampleNew = ref(false);
 
 const current = ref(5);
 const selected = ref([]);
