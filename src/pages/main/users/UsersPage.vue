@@ -23,7 +23,7 @@
                 <q-td key="operation" :props="props">
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn size="xs" color="primary" label="编辑" @click="clickEdit"></q-btn>
-                        <q-btn size="xs" color="red" text-color="white" label="删除" @click="clickDelete"></q-btn>
+                        <q-btn size="xs" color="red" text-color="white" label="删除" @click="clickDelete(props.row)"></q-btn>
                     </div>
                 </q-td>
             </template>
@@ -76,8 +76,9 @@
 import { useQuasar } from 'quasar'
 import { onMounted, ref } from 'vue'
 import _ from 'lodash'
-import { listUser } from 'src/api/user'
+import { listUser, batchDeleteUser } from 'src/api/user'
 
+const $q = useQuasar()
 const columns = [
     {
         name: 'id',
@@ -98,10 +99,7 @@ const columns = [
 
 let rows = ref([])
 onMounted(() => {
-    listUser().then(data => {
-        console.log('====>查询用户成功', data)
-        rows.value = data.item_list
-    })
+    refreshUsers()
 })
 const searchKeyword = ref('')
 
@@ -131,18 +129,21 @@ const pagination = {
 }
 import PageTitle from "components/page-title/PageTitle.vue";
 
-const $q = useQuasar()
 const clickEdit = () => {
     $q.notify('暂不支持用户编辑')
 }
-const clickDelete = () => {
-    this.$q.dialog({
+const clickDelete = (row) => {
+    console.log('ddddd', row)
+    $q.dialog({
         title: '确认删除',
-        message: '是否要删除改用户?',
+        message: `是否要删除用户"${row.username}"?`,
         cancel: true,
         persistent: true
     }).onOk(() => {
-        // console.log('>>>> OK')
+        batchDeleteUser({'ids': [row.id]}).then(() => {
+            $q.notify('删除成功')
+
+        })
     }).onOk(() => {
         // console.log('>>>> second OK catcher')
     }).onCancel(() => {
@@ -151,6 +152,12 @@ const clickDelete = () => {
         // console.log('I am triggered on both OK and Cancel')
     })
     $q.notify('暂不支持用户删除')
+}
+const refreshUsers = () => {
+    listUser().then(data => {
+        console.log('====>查询用户成功', data)
+        rows.value = data.item_list
+    })
 }
 </script>
 

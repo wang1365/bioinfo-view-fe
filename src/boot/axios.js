@@ -1,6 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
-import { Notify} from "quasar";
+import { Notify } from "quasar";
 import { useRouter } from "vue-router";
 
 // Be careful when using SSR for cross-request state pollution
@@ -39,7 +39,6 @@ const api = axios.create({
 
 // 响应拦截
 api.interceptors.response.use(response => {
-
     const responseData = response.data
     const { code } = responseData
     if (code === 0) {
