@@ -1,5 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios from "axios";
+import { Notify} from "quasar";
 import { useRouter } from "vue-router";
 
 // Be careful when using SSR for cross-request state pollution
@@ -34,6 +35,33 @@ const api = axios.create({
         },
     ],
 });
+
+
+// 响应拦截
+api.interceptors.response.use(response => {
+
+    const responseData = response.data
+    const { code } = responseData
+    if (code === 0) {
+        // 业务处理成功，只返回数据
+        return responseData.data
+    } else {
+        Notify.create({
+            type: 'negative',
+            message:`服务器错误：${responseData.msg}`
+        })
+    }
+}, error => {
+    if (error.response.status === 404) {
+        const error = '请求地址不存在 [' + error.response.request.responseURL + ']'
+        console.log(error)
+        Notify.create({
+            type: 'negative',
+            message: error,
+        })
+    }
+    return Promise.reject(error)
+})
 
 export default boot(({ app }) => {
     // for use inside Vue files (Options API) through this.$axios and this.$api

@@ -160,7 +160,7 @@ const onSubmit = async () => {
     })
         .then((resp) => {
             loading.value = false;
-            store.currentUserToken = resp.data.data.access_token;
+            store.currentUserToken = resp.access_token;
 
             $q.cookies.set("token", store.currentUserToken);
             api.get("/account/me", {
@@ -169,7 +169,7 @@ const onSubmit = async () => {
                 },
             })
                 .then((resp) => {
-                    store.currentUser = resp.data.data;
+                    store.currentUser = resp;
                     router.push(route.query.redirect || "/main");
                 })
                 .catch((e) => {

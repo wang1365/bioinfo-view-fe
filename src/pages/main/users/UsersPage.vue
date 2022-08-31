@@ -73,9 +73,10 @@
 </template>
 
 <script setup>
-import {useQuasar} from 'quasar'
-import {ref} from 'vue'
+import { useQuasar } from 'quasar'
+import { onMounted, ref } from 'vue'
 import _ from 'lodash'
+import { listUser } from 'src/api/user'
 
 const columns = [
     {
@@ -86,13 +87,22 @@ const columns = [
         field: row => row.id,
         format: val => `${val}`
     },
-    {name: '账号', align: 'center', label: '账号', field: 'calories', sortable: true},
-    {name: '姓名', label: '姓名', field: 'name', sortable: true, align: 'center'},
-    {name: '邮箱', label: '邮箱', field: 'email', align: 'center'},
-    {name: 'role', label: '角色', field: 'roles', align: 'center', format: (roles) => getRoleName(roles)},
+    {name: 'username', label: '姓名', field: 'username', sortable: true, align: 'center'},
+    {name: 'department', align: 'center', label: '部门', field: 'calories', sortable: true},
+
+    {name: 'email', label: '邮箱', field: 'email', align: 'center'},
+    {name: 'role', label: '角色', align: 'center', field: 'role', format: (v) => getRoleName(v)},
+    {name: 'is_active', label: '状态', field: 'is_active', align: 'center', format: (v) => `${v ? '启用' : '禁用'}`},
     {name: 'operation', label: '操作', align: 'center', style: 'width:220px'}
 ]
 
+let rows = ref([])
+onMounted(() => {
+    listUser().then(data => {
+        console.log('====>查询用户成功', data)
+        rows.value = data.item_list
+    })
+})
 const searchKeyword = ref('')
 
 const getRoleName = (roles) => {
@@ -101,87 +111,16 @@ const getRoleName = (roles) => {
     }
     return roles.map(function (t) {
             return {
-                'system-admin': '系统管理员',
+                'super': '系统管理员',
                 'admin': '管理员',
-            }[t] || ''
+            }[t] || '普通用户'
         }
     ).join(',')
 }
 
-const rows = [
-    {
-        id: 1,
-        name: '用户1',
-        roles: ['system-admin'],
-        calories: 159,
-        email: '14@bioinfo.com',
-        iron: '1@bioinfo.com'
-    },
-    {
-        id: 2,
-        name: '用户2',
-        roles: ['admin'],
-        calories: 237,
-        email: '8@bioinfo.com',
-        iron: '1@bioinfo.com'
-    },
-    {
-        id: 3,
-        name: '用户3',
-        calories: 238,
-        email: '6@bioinfo.com',
-        iron: '7@bioinfo.com'
-    },
-    {
-        id: 4,
-        name: 'Cupcake',
-        calories: 305,
-        email: '3@bioinfo.com',
-        iron: '8@bioinfo.com'
-    },
-    {
-        id: 5,
-        name: 'Gingerbread',
-        calories: 356,
-        email: '7@bioinfo.com',
-        iron: '16@bioinfo.com'
-    },
-    {
-        id: 6,
-        name: 'Jelly bean',
-        calories: 375,
-        email: '0@bioinfo.com',
-        iron: '0@bioinfo.com'
-    },
-    {
-        id: 7,
-        name: 'Lollipop',
-        calories: 392,
-        email: '0@bioinfo.com',
-        iron: '2@bioinfo.com'
-    },
-    {
-        id: 8,
-        name: 'Honeycomb',
-        calories: 408,
-        email: '0@bioinfo.com',
-        iron: '45@bioinfo.com'
-    },
-    {
-        id: 9,
-        name: 'Donut',
-        calories: 452,
-        email: '2@bioinfo.com',
-        iron: '22@bioinfo.com'
-    },
-    {
-        id: 10,
-        name: 'KitKat',
-        calories: 518,
-        email: '12@bioinfo.com',
-        iron: '6@bioinfo.com'
-    }
-]
+const getStatus = (isActive) => {
+    return isActive ? '√' : 'x'
+}
 
 const pagination = {
     sortBy: 'desc',
@@ -197,6 +136,20 @@ const clickEdit = () => {
     $q.notify('暂不支持用户编辑')
 }
 const clickDelete = () => {
+    this.$q.dialog({
+        title: '确认删除',
+        message: '是否要删除改用户?',
+        cancel: true,
+        persistent: true
+    }).onOk(() => {
+        // console.log('>>>> OK')
+    }).onOk(() => {
+        // console.log('>>>> second OK catcher')
+    }).onCancel(() => {
+        // console.log('>>>> Cancel')
+    }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+    })
     $q.notify('暂不支持用户删除')
 }
 </script>
