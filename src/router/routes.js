@@ -57,6 +57,11 @@ const routes = [
                 path: "settings",
                 children: [
                     {
+                        path: "flowManagement",
+                        component: () =>
+                            import("pages/main/settings/flow/index"),
+                    },
+                    {
                         path: "system",
                         component: () =>
                             import("pages/main/settings/SettingsPage.vue"),

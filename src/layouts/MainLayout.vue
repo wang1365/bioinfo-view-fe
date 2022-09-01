@@ -224,6 +224,13 @@ const menuList = [
         path: "/main/settings",
         children: [
             {
+                icon: "mediation",
+                label: "流程管理",
+                roles: ["super"],
+                separator: false,
+                path: "/main/settings/flowManagement",
+            },
+            {
                 icon: "handyman",
                 label: "系统设置",
                 separator: false,
@@ -250,6 +257,7 @@ const menuList = [
         path: "/main/profile",
     },
 ];
+
 const router = useRouter();
 const leftDrawerOpen = ref(false);
 function toggleLeftDrawer() {
