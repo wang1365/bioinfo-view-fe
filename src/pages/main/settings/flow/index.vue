@@ -19,9 +19,9 @@
             </template>
         </q-table>
 
-<!--        <flow-dialog ref="dlgCreate" :visible.sync="isCreateDlgShow" action="create" @close="refreshFlows" />-->
-<!--        <flow-dialog ref="dlgEdit" :visible.sync="isDlgShow" action="edit" @close="refreshFlows" />-->
-<!--        <flow-dialog ref="dlgInfo" :visible.sync="isInfoDlgShow" action="info" @close="refreshFlows" />-->
+        <flow-dialog ref="dlgCreate"  action="create" @handleFinish="refreshFlows" />
+        <flow-dialog ref="dlgEdit"  action="edit" @handleFinish="refreshFlows" />
+        <flow-dialog ref="dlgInfo" action="info" @handleFinish="refreshFlows" />
 
     </q-page>
 </template>
@@ -31,6 +31,10 @@ import { getFlows, deleteFlow } from 'src/api/flow'
 import { ref, onMounted }from 'vue'
 import { useQuasar } from 'quasar'
 import PageTitle from "components/page-title/PageTitle";
+import FlowDialog from './FlowDialog'
+const dlgCreate = ref(null)
+const dlgEdit = ref(null)
+const dlgInfo = ref(null)
 
 const $q = useQuasar()
 const rows = []
@@ -124,11 +128,11 @@ const showDeleteDlg = (row) => {
 
 const showInfoDlg = (row) => {
     isInfoDlgShow.value = true
-    this.$refs.dlgInfo.setData(row)
+    dlgInfo.value.setData(row)
 }
 
 const addFlow = () => {
-    this.$refs.dlgCreate.setData({
+    dlgCreate.value.setData({
         name: '',
         location: '',
         alignment_tool: '',
@@ -139,7 +143,7 @@ const addFlow = () => {
         builtin_parameters: [],
         sample_type: 'multiple'
     })
-    this.$refs.dlgCreate.reset()
+    dlgCreate.value.reset()
     isCreateDlgShow.value = true
 }
 
