@@ -1,13 +1,29 @@
 <template>
     <q-page padding class="full-height overflow-hidden">
-        <PageTitle title="用户管理"/>
+        <PageTitle title="用户管理" />
         <div class="row justify-end q-gutter-md items-center q-py-xs">
-            <div class="col-4" ><q-input label="用户账号、姓名、邮箱搜索" clearable v-model="searchKeyword">
-                <template v-slot:prepend><q-icon name="face"></q-icon></template>
-            </q-input></div>
-            <div class="col-1"><q-btn class="on-right" size="md" color="primary" icon="search" label="搜索"></q-btn></div>
+            <div class="col-4">
+                <q-input
+                    label="用户账号、姓名、邮箱搜索"
+                    clearable
+                    v-model="searchKeyword"
+                >
+                    <template v-slot:prepend
+                        ><q-icon name="face"></q-icon
+                    ></template>
+                </q-input>
+            </div>
+            <div class="col-1">
+                <q-btn
+                    class="on-right"
+                    size="md"
+                    color="primary"
+                    icon="search"
+                    label="搜索"
+                ></q-btn>
+            </div>
         </div>
-        <q-separator/>
+        <q-separator />
         <q-table
             :rows="rows"
             :columns="columns"
@@ -17,13 +33,24 @@
             wrap-cells
             v-model:pagination="pagination"
             rows-per-page-label="每页条数"
-            :rows-per-page-options="[10,20,50,100]"
+            :rows-per-page-options="[10, 20, 50, 100]"
         >
             <template v-slot:body-cell-operation="props">
                 <q-td key="operation" :props="props">
                     <div class="q-pa-md q-gutter-sm">
-                        <q-btn size="xs" color="primary" label="编辑" @click="clickEdit"></q-btn>
-                        <q-btn size="xs" color="red" text-color="white" label="删除" @click="clickDelete(props.row)"></q-btn>
+                        <q-btn
+                            size="xs"
+                            color="primary"
+                            label="编辑"
+                            @click="clickEdit"
+                        ></q-btn>
+                        <q-btn
+                            size="xs"
+                            color="red"
+                            text-color="white"
+                            label="删除"
+                            @click="clickDelete(props.row)"
+                        ></q-btn>
                     </div>
                 </q-td>
             </template>
@@ -73,92 +100,122 @@
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar'
-import { onMounted, ref } from 'vue'
-import _ from 'lodash'
-import { listUser, batchDeleteUser } from 'src/api/user'
+import { useQuasar } from "quasar";
+import { onMounted, ref } from "vue";
+import _ from "lodash";
+import { listUser, batchDeleteUser } from "src/api/user";
 
-const $q = useQuasar()
+const $q = useQuasar();
 const columns = [
     {
-        name: 'id',
-        label: 'ID',
-        align: 'center',
-        style: 'width:80px',
-        field: row => row.id,
-        format: val => `${val}`
+        name: "id",
+        label: "ID",
+        align: "center",
+        style: "width:80px",
+        field: (row) => row.id,
+        format: (val) => `${val}`,
     },
-    {name: 'username', label: '姓名', field: 'username', sortable: true, align: 'center'},
-    {name: 'department', align: 'center', label: '部门', field: 'calories', sortable: true},
+    {
+        name: "username",
+        label: "姓名",
+        field: "username",
+        sortable: true,
+        align: "center",
+    },
+    {
+        name: "department",
+        align: "center",
+        label: "部门",
+        field: "calories",
+        sortable: true,
+    },
 
-    {name: 'email', label: '邮箱', field: 'email', align: 'center'},
-    {name: 'role', label: '角色', align: 'center', field: 'role', format: (v) => getRoleName(v)},
-    {name: 'is_active', label: '状态', field: 'is_active', align: 'center', format: (v) => `${v ? '启用' : '禁用'}`},
-    {name: 'operation', label: '操作', align: 'center', style: 'width:220px'}
-]
+    { name: "email", label: "邮箱", field: "email", align: "center" },
+    {
+        name: "role",
+        label: "角色",
+        align: "center",
+        field: "role",
+        format: (v) => getRoleName(v),
+    },
+    {
+        name: "is_active",
+        label: "状态",
+        field: "is_active",
+        align: "center",
+        format: (v) => `${v ? "启用" : "禁用"}`,
+    },
+    { name: "operation", label: "操作", align: "center", style: "width:220px" },
+];
 
-let rows = ref([])
+let rows = ref([]);
 onMounted(() => {
-    refreshUsers()
-})
-const searchKeyword = ref('')
+    refreshUsers();
+});
+const searchKeyword = ref("");
 
 const getRoleName = (roles) => {
     if (!_.isArray(roles)) {
-        return ''
+        return "";
     }
-    return roles.map(function (t) {
-            return {
-                'super': '系统管理员',
-                'admin': '管理员',
-            }[t] || '普通用户'
-        }
-    ).join(',')
-}
+    return roles
+        .map(function (t) {
+            return (
+                {
+                    super: "系统管理员",
+                    admin: "管理员",
+                }[t] || "普通用户"
+            );
+        })
+        .join(",");
+};
 
 const getStatus = (isActive) => {
-    return isActive ? '√' : 'x'
-}
+    return isActive ? "√" : "x";
+};
 
 const pagination = {
-    sortBy: 'desc',
+    sortBy: "desc",
     descending: false,
     page: 1,
-    rowsPerPage: 10
+    rowsPerPage: 10,
     // rowsNumber: xx if getting data from a server
-}
+};
 import PageTitle from "components/page-title/PageTitle.vue";
 
 const clickEdit = () => {
-    $q.notify('暂不支持用户编辑')
-}
+    $q.notify("暂不支持用户编辑");
+};
 const clickDelete = (row) => {
-    console.log('ddddd', row)
+    console.log("ddddd", row);
     $q.dialog({
-        title: '确认删除',
+        title: "确认删除",
         message: `是否要删除用户"${row.username}"?`,
         cancel: true,
-        persistent: true
-    }).onOk(() => {
-        batchDeleteUser({'ids': [row.id]}).then(() => {
-            $q.notify('删除成功')
-
+        persistent: true,
+    })
+        .onOk(() => {
+            batchDeleteUser({ ids: [row.id] }).then(() => {
+                $q.notify("删除成功");
+            });
         })
-    }).onOk(() => {
-        // console.log('>>>> second OK catcher')
-    }).onCancel(() => {
-        // console.log('>>>> Cancel')
-    }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
-    })
-    $q.notify('暂不支持用户删除')
-}
+        .onOk(() => {
+            // console.log('>>>> second OK catcher')
+        })
+        .onCancel(() => {
+            // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+            // console.log('I am triggered on both OK and Cancel')
+        });
+    $q.notify("暂不支持用户删除");
+};
 const refreshUsers = () => {
-    listUser().then(data => {
-        console.log('====>查询用户成功', data)
-        rows.value = data.item_list
-    })
-}
+    listUser().then((data) => {
+        console.log("====>查询用户成功", data);
+        rows.value = data.item_list;
+    });
+};
 </script>
 
 <style lang="sass">

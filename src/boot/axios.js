@@ -29,38 +29,41 @@ const api = axios.create({
     transformResponse: [
         function (data) {
             // 对 data 进行任意转换处理
-            var jsonData= JSON.parse(data)
-            console.log('response data======:',jsonData)
+            var jsonData = JSON.parse(data);
+            console.log("response data======:", jsonData);
             return jsonData;
         },
     ],
 });
 
-
 // 响应拦截
-api.interceptors.response.use(response => {
-    const responseData = response.data
-    const { code } = responseData
-    if (code === 0) {
-        // 业务处理成功，只返回数据
-        return responseData.data
-    } else {
-        Notify.create({
-            type: 'negative',
-            message:`服务器错误：${responseData.msg}`
-        })
+api.interceptors.response.use(
+    (response) => {
+        const responseData = response.data;
+        const { code } = responseData;
+        if (code === 0) {
+            // 业务处理成功，只返回数据
+            return responseData.data;
+        } else {
+            Notify.create({
+                type: "negative",
+                message: `服务器错误：${responseData.msg}`,
+            });
+        }
+    },
+    (error) => {
+        if (error.response.status === 404) {
+            const error =
+                "请求地址不存在 [" + error.response.request.responseURL + "]";
+            console.log(error);
+            Notify.create({
+                type: "negative",
+                message: error,
+            });
+        }
+        return Promise.reject(error);
     }
-}, error => {
-    if (error.response.status === 404) {
-        const error = '请求地址不存在 [' + error.response.request.responseURL + ']'
-        console.log(error)
-        Notify.create({
-            type: 'negative',
-            message: error,
-        })
-    }
-    return Promise.reject(error)
-})
+);
 
 export default boot(({ app }) => {
     // for use inside Vue files (Options API) through this.$axios and this.$api

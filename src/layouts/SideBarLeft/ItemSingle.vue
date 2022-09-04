@@ -1,6 +1,12 @@
 <template>
-    <q-item clickable exact @click="toPath(addRoutesItem)" :inset-level="initLevel" :active="checkActive">
-<!--        :active-class="darkThemeSelect">-->
+    <q-item
+        clickable
+        exact
+        @click="toPath(addRoutesItem)"
+        :inset-level="initLevel"
+        :active="checkActive"
+    >
+        <!--        :active-class="darkThemeSelect">-->
         <q-item-section avatar>
             <q-icon :name="addRoutesItem.icon" />
         </q-item-section>
@@ -9,17 +15,17 @@
 </template>
 
 <script setup>
-import { computed, toRefs } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { computed, toRefs } from "vue";
+import { useRouter, useRoute } from "vue-router";
 // import useDarkTheme from 'src/composables/useDarkTheme';
 //
 // const { darkThemeSelect } = useDarkTheme()
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 const props = defineProps({
     addRoutesItem: {
         default: function () {
-            return null
+            return null;
         },
         type: Object,
     },
@@ -27,24 +33,24 @@ const props = defineProps({
         type: Number,
         default: 0,
     },
-})
-const { addRoutesItem, initLevel } = toRefs(props)
+});
+const { addRoutesItem, initLevel } = toRefs(props);
 
 const toPath = (addRoutesItem) => {
-    if (addRoutesItem.is_link === 'yes') {
-        window.open(addRoutesItem.path)
+    if (addRoutesItem.is_link === "yes") {
+        window.open(addRoutesItem.path);
     } else {
-        router.push(addRoutesItem.path)
+        router.push(addRoutesItem.path);
     }
-}
+};
 
 const checkActive = computed(() => {
     if (route.path === addRoutesItem.value.path) {
-        return true
+        return true;
     } else {
-        return false
+        return false;
     }
-})
+});
 </script>
 
 <style lang="scss" scoped>

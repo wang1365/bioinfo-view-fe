@@ -1,5 +1,9 @@
 <template>
-    <q-expansion-item :group="addRoutesItem.name" v-model="itemOpen" :header-inset-level="initLevel">
+    <q-expansion-item
+        :group="addRoutesItem.name"
+        v-model="itemOpen"
+        :header-inset-level="initLevel"
+    >
         <template v-slot:header>
             <q-item-section avatar>
                 <q-icon :name="addRoutesItem.icon" />
@@ -11,14 +15,14 @@
 </template>
 
 <script setup>
-import { watch, onMounted, ref, toRefs } from 'vue';
-import { useRoute } from 'vue-router';
+import { watch, onMounted, ref, toRefs } from "vue";
+import { useRoute } from "vue-router";
 
-const route = useRoute()
+const route = useRoute();
 const props = defineProps({
     addRoutesItem: {
         default: function () {
-            return null
+            return null;
         },
         type: Object,
     },
@@ -26,22 +30,22 @@ const props = defineProps({
         type: Number,
         default: 0,
     },
-})
-const { addRoutesItem, initLevel } = toRefs(props)
+});
+const { addRoutesItem, initLevel } = toRefs(props);
 watch(route, () => {
-    changeOpen()
-})
+    changeOpen();
+});
 onMounted(() => {
-    changeOpen()
-})
-const itemOpen = ref(false)
+    changeOpen();
+});
+const itemOpen = ref(false);
 const changeOpen = () => {
     for (let item of addRoutesItem.value.children) {
         if (item.path === route.path || item.parent_code === route.name) {
-            itemOpen.value = true
-            return
+            itemOpen.value = true;
+            return;
         }
     }
-    itemOpen.value = false
-}
+    itemOpen.value = false;
+};
 </script>

@@ -16,7 +16,11 @@
         <q-separator></q-separator>
         <div class="q-py-md">
             <q-list bordered class="rounded-borders">
-                <q-expansion-item expand-separator icon="memory" label="内存预警设置">
+                <q-expansion-item
+                    expand-separator
+                    icon="memory"
+                    label="内存预警设置"
+                >
                     <q-card>
                         <q-card-section>
                             预警值设置:
@@ -28,12 +32,20 @@
                             <span class="text-info q-mx-sm">admin@bio.com</span>
                         </q-card-section>
                         <q-card-section>
-                            <q-btn icon="edit" size="sm" color="primary"></q-btn>
+                            <q-btn
+                                icon="edit"
+                                size="sm"
+                                color="primary"
+                            ></q-btn>
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
 
-                <q-expansion-item expand-separator icon="auto_mode" label="最大并行任务数设置">
+                <q-expansion-item
+                    expand-separator
+                    icon="auto_mode"
+                    label="最大并行任务数设置"
+                >
                     <q-card>
                         <q-card-section>
                             Lorem ipsum dolor sit amet, consectetur adipisicing
@@ -44,7 +56,11 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
-                <q-expansion-item expand-separator icon="running_with_errors" label="用户磁盘空间限制">
+                <q-expansion-item
+                    expand-separator
+                    icon="running_with_errors"
+                    label="用户磁盘空间限制"
+                >
                     <q-card>
                         <q-card-section>
                             Lorem ipsum dolor sit amet, consectetur adipisicing

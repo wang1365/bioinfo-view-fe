@@ -4,12 +4,7 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6"> 子项目 </q-toolbar-title>
-                <q-btn
-                    color="primary"
-                    label="新建子项目"
-                    icon="folder"
-                    @click="openNewProject = true"
-                />
+                <q-btn color="primary" label="新建子项目" icon="folder" @click="openNewProject = true" />
             </q-toolbar>
         </q-section>
         <q-section>
@@ -36,43 +31,22 @@
                             <td>{{ item.samples.length }}</td>
                             <td>{{ item.task_count }}</td>
                             <td class="q-gutter-x-sm text-right">
-                                <q-btn
-                                    color="info"
-                                    label="详情"
-                                    icon="arrow_outward"
-                                    @click="gotoChild(item)"
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="primary"
-                                    label="修改"
-                                    icon="edit"
-                                    @click="
+                                <q-btn color="info" label="详情" icon="arrow_outward" @click="gotoChild(item)"
+                                    size="sm" />
+                                <q-btn color="primary" label="修改" icon="edit" @click="
                                         updateProjectName = item.name;
                                         currentProject = item;
                                         openEditProject = true;
-                                    "
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="red"
-                                    label="删除"
-                                    icon="delete"
-                                    @click="confirm()"
-                                    size="sm"
-                                />
+                                    " size="sm" />
+                                <q-btn color="red" label="删除" icon="delete" @click="confirm()" size="sm" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <q-pagination
-                        :model-value="currentPage"
-                        @update:model-value="pageChange($event)"
-                        :max="maxPages"
-                        boundary-numbers
-                    />
+                    <q-pagination :model-value="currentPage" @update:model-value="pageChange($event)" :max="maxPages"
+                        boundary-numbers />
                 </div>
             </div>
         </q-section>
@@ -88,14 +62,11 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="newProjectName" label="项目名称"
-                        /></q-section>
+                            <q-input v-model="newProjectName" label="项目名称" />
+                        </q-section>
                     </q-item>
                     <q-item>
-                        <q-section
-                            v-if="newProjectNameError"
-                            class="full-width text-red"
-                        >
+                        <q-section v-if="newProjectNameError" class="full-width text-red">
                             {{ newProjectNameError }}
                         </q-section>
                     </q-item>
@@ -106,11 +77,7 @@
                     <q-item>
                         <q-section class="q-gutter-x-sm">
                             <q-btn label="取消" v-close-popup />
-                            <q-btn
-                                color="primary"
-                                label="确认"
-                                @click="createProject()"
-                            />
+                            <q-btn color="primary" label="确认" @click="createProject()" />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -127,16 +94,11 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input
-                                v-model="updateProjectName"
-                                label="项目名称"
-                        /></q-section>
+                            <q-input v-model="updateProjectName" label="项目名称" />
+                        </q-section>
                     </q-item>
                     <q-item>
-                        <q-section
-                            v-if="updateProjectNameError"
-                            class="full-width text-red"
-                        >
+                        <q-section v-if="updateProjectNameError" class="full-width text-red">
                             {{ updateProjectNameError }}
                         </q-section>
                     </q-item>
@@ -147,11 +109,7 @@
                     <q-item>
                         <q-section class="q-gutter-x-sm">
                             <q-btn label="取消" v-close-popup />
-                            <q-btn
-                                color="primary"
-                                label="确认"
-                                @click="updateProject()"
-                            />
+                            <q-btn color="primary" label="确认" @click="updateProject()" />
                         </q-section>
                     </q-item>
                 </q-list>

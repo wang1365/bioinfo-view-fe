@@ -2,37 +2,65 @@
     <q-dialog v-model="passwordDialog" persistent>
         <q-card style="min-width: 350px">
             <q-card-section>
-                <div class="text-h6">
-                    修改密码
-                </div>
+                <div class="text-h6">修改密码</div>
             </q-card-section>
 
             <q-card-section class="q-pt-none">
                 <q-form class="q-gutter-md" ref="passwordFormRef">
-                    <q-input filled v-model.trim="passwordForm.old_password" autocomplete="off"
-                             label="原密码" :type="isPwd ? 'password' : 'text'"
-                             :rules="[val => val && val.length > 0 || '请输入密码']">
+                    <q-input
+                        filled
+                        v-model.trim="passwordForm.old_password"
+                        autocomplete="off"
+                        label="原密码"
+                        :type="isPwd ? 'password' : 'text'"
+                        :rules="[
+                            (val) => (val && val.length > 0) || '请输入密码',
+                        ]"
+                    >
                         <template v-slot:append>
-                            <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                    @click="isPwd = !isPwd" />
+                            <q-icon
+                                :name="isPwd ? 'visibility_off' : 'visibility'"
+                                class="cursor-pointer"
+                                @click="isPwd = !isPwd"
+                            />
                         </template>
                     </q-input>
 
-                    <q-input filled v-model.trim="passwordForm.new_password_1" autocomplete="off"
-                             label="新密码" :type="isPwd ? 'password' : 'text'"
-                             :rules="[val => val && val.length > 0 || '请输入密码']">
+                    <q-input
+                        filled
+                        v-model.trim="passwordForm.new_password_1"
+                        autocomplete="off"
+                        label="新密码"
+                        :type="isPwd ? 'password' : 'text'"
+                        :rules="[
+                            (val) => (val && val.length > 0) || '请输入密码',
+                        ]"
+                    >
                         <template v-slot:append>
-                            <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                    @click="isPwd = !isPwd" />
+                            <q-icon
+                                :name="isPwd ? 'visibility_off' : 'visibility'"
+                                class="cursor-pointer"
+                                @click="isPwd = !isPwd"
+                            />
                         </template>
                     </q-input>
 
-                    <q-input filled v-model.trim="passwordForm.new_password_2" autocomplete="off"
-                             label="确认密码" :type="isPwd ? 'password' : 'text'"
-                             :rules="[val => val && val.length > 0 || '请输入密码']">
+                    <q-input
+                        filled
+                        v-model.trim="passwordForm.new_password_2"
+                        autocomplete="off"
+                        label="确认密码"
+                        :type="isPwd ? 'password' : 'text'"
+                        :rules="[
+                            (val) => (val && val.length > 0) || '请输入密码',
+                        ]"
+                    >
                         <template v-slot:append>
-                            <q-icon :name="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer"
-                                    @click="isPwd = !isPwd" />
+                            <q-icon
+                                :name="isPwd ? 'visibility_off' : 'visibility'"
+                                class="cursor-pointer"
+                                @click="isPwd = !isPwd"
+                            />
                         </template>
                     </q-input>
                 </q-form>
@@ -47,30 +75,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useQuasar } from 'quasar'
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { ref } from "vue";
+import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
-const $q = useQuasar()
-const { t } = useI18n()
-const router = useRouter()
-const passwordDialog = ref(false)
+const $q = useQuasar();
+const { t } = useI18n();
+const router = useRouter();
+const passwordDialog = ref(false);
 const passwordForm = ref({
-    old_password: '',
-    new_password_1: '',
-    new_password_2: '',
-})
-const isPwd = ref(true)
-const changePasswordUrl = 'user/change-password'
+    old_password: "",
+    new_password_1: "",
+    new_password_2: "",
+});
+const isPwd = ref(true);
+const changePasswordUrl = "user/change-password";
 
 const show = () => {
-    passwordDialog.value = true
-}
+    passwordDialog.value = true;
+};
 defineExpose({
-    show
-})
-const passwordFormRef = ref(null)
+    show,
+});
+const passwordFormRef = ref(null);
 const handleChangePassword = async () => {
     // const success = await passwordFormRef.value.validate()
     // if (success) {
@@ -97,5 +125,5 @@ const handleChangePassword = async () => {
     //         message: t('FixForm'),
     //     })
     // }
-}
+};
 </script>
