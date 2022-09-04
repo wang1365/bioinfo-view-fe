@@ -162,10 +162,8 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { onMounted, ref } from "vue";
-import { api } from "src/boot/axios";
 import { useRouter } from "vue-router";
 import { useApi } from "src/api/apiBase";
-import { application } from "express";
 const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 
 const openNewProject = ref(false);
