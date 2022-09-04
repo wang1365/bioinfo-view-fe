@@ -164,6 +164,9 @@ import { useQuasar } from "quasar";
 import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
 import { useRoute, useRouter } from "vue-router";
+import { useApi } from "src/api/apiBase";
+
+const { apiGet } = useApi();
 
 const route = useRoute();
 
@@ -191,9 +194,8 @@ onMounted(() => {
     loadPage();
 });
 const getProjectDetail = async () => {
-    console.log(route.params);
-    api.get(`/project/${route.params.id}`).then((resp) => {
-        projectDetail.value = resp.data.data;
+    apiGet(`/project/${route.params.id}`, (res) => {
+        projectDetail.value = res.data;
     });
 };
 const pageChange = async (event) => {
@@ -230,30 +232,29 @@ const updateProject = () => {
         refreshPage();
     });
 };
-const edit = async (patient) => {
-    editId.value = patient.id;
-    showPatientEdit.value = true;
-};
+
 const refreshPage = async () => {
-    console.log("refresh page");
     currentPage.value = 1;
     loadPage();
 };
 const loadPage = async () => {
-    api.get(`/project?page=${currentPage.value}&size=${pageSize.value}`).then(
-        (resp) => {
-            total.value = resp.data.data.count;
-            dataItems.value = [];
-            if (total.value % pageSize.value == 0) {
-                maxPages.value = total.value / pageSize.value;
-            } else {
-                maxPages.value = total.value / pageSize.value + 1;
+    if (currentPage.value) {
+        apiGet(
+            `/project?page=${currentPage.value}&size=${pageSize.value}`,
+            (res) => {
+                total.value = res.data.count;
+                dataItems.value = [];
+                if (total.value % pageSize.value == 0) {
+                    maxPages.value = total.value / pageSize.value;
+                } else {
+                    maxPages.value = total.value / pageSize.value + 1;
+                }
+                for (const iterator of res.data.results) {
+                    dataItems.value.push(iterator);
+                }
             }
-            for (const iterator of resp.data.data.results) {
-                dataItems.value.push(iterator);
-            }
-        }
-    );
+        );
+    }
 };
 
 const confirm = () => {

@@ -25,7 +25,12 @@ const api = axios.create({
     },
     withCredentials: true,
 });
-
+export function defaultErrorHandler(data) {
+    Notify.create({
+        type: "negative",
+        message: `服务器错误：${data.msg}`,
+    });
+}
 export function defaultHttpErrorHandler(error) {
     Notify.create({
         type: "negative",
@@ -34,32 +39,40 @@ export function defaultHttpErrorHandler(error) {
     console.log(error);
 }
 export function defaultHandler(router, resp, onSuccess, onError) {
+    const res = resp.data;
     const code = resp.data.code;
-    const data = resp.data.data;
-    if (code === 200 || code === 0) {
-        onSuccess(data);
-    } else if (code === 401) {
+    const statusCode = res.status_code;
+    if (code === 0) {
+        onSuccess(res);
+    } else if (statusCode === 401) {
         Notify.create({
             type: "negative",
             message: "未登录",
         });
         router.push("/login");
-    } else if (code === 403) {
+    } else if (statusCode === 403) {
         Notify.create({
             type: "negative",
             message: "无权限",
         });
         router.push("/login");
-    } else if (code === 400) {
+    } else if (statusCode === 400) {
         if (onError) {
-            onError(data);
+            onError(res);
+        } else {
+            defaultErrorHandler(res);
         }
-    } else if (code === 404) {
+    } else if (statusCode === 404) {
         Notify.create({
             type: "negative",
             message: "路由不存在",
         });
         console.log(resp.request);
+    } else {
+        Notify.create({
+            type: "negative",
+            message: `服务异常: ${res.msg}`,
+        });
     }
 }
 
@@ -124,6 +137,26 @@ export function useApi() {
                 }
             });
     }
+    function apiPatch(
+        url,
+        onSuccess,
+        data = {},
+        config = {},
+        onError = null,
+        onHttpError = null
+    ) {
+        api.patch(url, data, config)
+            .then((resp) => {
+                defaultHandler(router, resp, onSuccess, onError);
+            })
+            .catch((error) => {
+                if (onHttpError) {
+                    onHttpError(error);
+                } else {
+                    defaultHttpErrorHandler(error);
+                }
+            });
+    }
     function apiDelete(
         url,
         onSuccess,
@@ -147,5 +180,6 @@ export function useApi() {
                 }
             });
     }
+
     return { apiGet, apiPost, apiPut, apiDelete };
 }

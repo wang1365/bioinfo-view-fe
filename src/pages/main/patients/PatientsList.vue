@@ -100,11 +100,9 @@
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <q-pagination
-                        :model-value="currentPage"
-                        @update:model-value="pageChange($event)"
-                        :max="maxPages"
-                        boundary-numbers
+                    <PaginatorVue
+                        :total="total"
+                        @pageChange="pageChange($event)"
                     />
                 </div>
             </div>
@@ -143,10 +141,13 @@ import { useQuasar } from "quasar";
 import PatientInfo from "./PatientInfo.vue";
 import PatientEdit from "./PatientEdit.vue";
 import PatientNew from "./PatientNew.vue";
+import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { onMounted, ref } from "vue";
 import { api, getTokenCookie } from "src/boot/axios";
 import { globalStore } from "src/stores/global";
+import { useApi } from "src/api/apiBase";
 
+const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
@@ -155,7 +156,7 @@ const current = ref(5);
 const infoId = ref(0);
 const editId = ref(0);
 const currentPage = ref(1);
-const pageSize = ref(4);
+const pageSize = ref(10);
 const total = ref(0);
 const maxPages = ref(0);
 
@@ -167,7 +168,8 @@ onMounted(() => {
 });
 
 const pageChange = async (event) => {
-    currentPage.value = event;
+    currentPage.value = event.currentPage;
+    pageSize.value = event.pageSize;
     loadPage();
 };
 const confirm = async (patient) => {
@@ -176,7 +178,7 @@ const confirm = async (patient) => {
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        api.delete(`/patient/patients/${patient.id}`).then((resp) => {
+        apiDelete(`/patient/patients/${patient.id}`, (_) => {
             refreshPage();
         });
     });
@@ -195,20 +197,21 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
-    api.get(
-        `/patient/patients?page=${currentPage.value}&size=${pageSize.value}`
-    ).then((resp) => {
-        total.value = resp.data.data.count;
-        patients.value = [];
-        if (total.value % pageSize.value == 0) {
-            maxPages.value = total.value / pageSize.value;
-        } else {
-            maxPages.value = total.value / pageSize.value + 1;
+    apiGet(
+        `/patient/patients?page=${currentPage.value}&size=${pageSize.value}`,
+        (res) => {
+            total.value = res.data.count;
+            patients.value = [];
+            if (total.value % pageSize.value == 0) {
+                maxPages.value = total.value / pageSize.value;
+            } else {
+                maxPages.value = total.value / pageSize.value + 1;
+            }
+            for (const iterator of res.data.results) {
+                patients.value.push(iterator);
+            }
         }
-        for (const iterator of resp.data.data.results) {
-            patients.value.push(iterator);
-        }
-    });
+    );
 };
 
 const downlaodTemplate = () => {

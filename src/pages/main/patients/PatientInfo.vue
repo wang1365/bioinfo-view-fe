@@ -58,13 +58,11 @@
 </template>
 
 <script setup>
-import { api, getTokenCookie } from "src/boot/axios";
+import { useApi } from "src/api/apiBase";
 import { onMounted, ref } from "vue";
-const emit = defineEmits(["refresh"]);
 
-const close = () => {
-    emit("refresh");
-};
+const { apiGet } = useApi();
+
 const props = defineProps({
     id: {
         type: String,
@@ -92,11 +90,8 @@ const patient = ref({
     survival_time: "",
 });
 onMounted(() => {
-    console.log(props.id);
-    api.get(`/patient/patients/${props.id}`).then((resp) => {
-        let data = resp.data;
-        console.log(data);
-        patient.value = data;
+    apiGet(`/patient/patients/${props.id}`, (res) => {
+        patient.value = res.data;
     });
 });
 </script>

@@ -372,8 +372,12 @@
 
 <script setup>
 import { useQuasar } from "quasar";
+import { useApi } from "src/api/apiBase";
 import { api, getTokenCookie } from "src/boot/axios";
+import { infoMessage } from "src/utils/notify";
 import { onMounted, ref } from "vue";
+
+const { apiGet, apiPut, apiPatch } = useApi();
 const emit = defineEmits(["refresh"]);
 const $q = useQuasar();
 
@@ -482,11 +486,9 @@ const errors = ref({
     },
 });
 onMounted(() => {
-    console.log(props.id);
-    api.get(`/patient/patients/${props.id}`).then((resp) => {
-        let data = resp.data;
-        console.log(data);
-        form.value = data;
+    apiGet(`/patient/patients/${props.id}`, (res) => {
+        console.log(res);
+        form.value = res.data;
     });
 });
 const save = async () => {
@@ -510,27 +512,21 @@ const save = async () => {
         recurrence_time: form.value.recurrence_time,
         survival_time: form.value.survival_time,
     };
-    console.log(data);
-    api.patch(`/patient/patients/${props.id}`, data, {
-        headers: {
-            Authorization: getTokenCookie(),
+    apiPatch(
+        `/patient/patients/${props.id}`,
+        (res) => {
+            infoMessage("更新成功");
+            emit("refresh");
         },
-    })
-        .then((resp) => {
-            $q.notify({
-                position: "center",
-                message: "保存成功",
-                timeout: 300,
-            });
-            for (const key in errors.value) {
-                errors.value[key].error = false;
-            }
-        })
-        .catch((e) => {
-            for (const key in e.response.data) {
+        data,
+        null,
+        (res) => {
+            const errorDetail = JSON.parse(res.data);
+            for (const key in errorDetail) {
                 errors.value[key].error = true;
-                errors.value[key].message = e.response.data[key][0];
+                errors.value[key].message = errorDetail[key][0];
             }
-        });
+        }
+    );
 };
 </script>

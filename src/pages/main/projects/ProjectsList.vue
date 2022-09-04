@@ -58,7 +58,7 @@
                                     color="red"
                                     label="删除"
                                     icon="delete"
-                                    @click="confirm()"
+                                    @click="confirm(item)"
                                     size="sm"
                                 />
                             </td>
@@ -67,11 +67,9 @@
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <q-pagination
-                        :model-value="currentPage"
-                        @update:model-value="pageChange($event)"
-                        :max="maxPages"
-                        boundary-numbers
+                    <PaginatorVue
+                        :total="total"
+                        @pageChange="pageChange($event)"
                     />
                 </div>
             </div>
@@ -164,6 +162,8 @@ import { useQuasar } from "quasar";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useApi } from "src/api/apiBase";
+import { infoMessage } from "src/utils/notify";
+import PaginatorVue from "src/components/paginator/Paginator.vue";
 const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 
 const openNewProject = ref(false);
@@ -179,7 +179,7 @@ const current = ref(5);
 const router = useRouter();
 const $q = useQuasar();
 const currentPage = ref(1);
-const pageSize = ref(4);
+const pageSize = ref(10);
 const total = ref(0);
 const maxPages = ref(0);
 const dataItems = ref([]);
@@ -188,7 +188,8 @@ onMounted(() => {
     loadPage();
 });
 const pageChange = async (event) => {
-    currentPage.value = event;
+    currentPage.value = event.currentPage;
+    pageSize.value = event.pageSize;
     loadPage();
 };
 const gotoChild = (item) => {
@@ -204,7 +205,9 @@ const createProject = () => {
         "/project",
         (_) => {
             newProjectNameError.value = "";
+            newProjectName.value = "";
             openNewProject.value = false;
+            infoMessage("创建成功");
             refreshPage();
         },
         { name: newProjectName.value }
@@ -221,6 +224,7 @@ const updateProject = () => {
         (_) => {
             openEditProject.value = false;
             updateProjectNameError.value = "";
+            infoMessage("更新成功");
             refreshPage();
         },
         {
@@ -228,50 +232,41 @@ const updateProject = () => {
         }
     );
 };
-const edit = async (patient) => {
-    editId.value = patient.id;
-    showPatientEdit.value = true;
-};
+
 const refreshPage = async () => {
-    console.log("refresh page");
     currentPage.value = 1;
     loadPage();
 };
 const loadPage = async () => {
-    apiGet(
-        `/project?page=${currentPage.value}&size=${pageSize.value}`,
-        (data) => {
-            total.value = data.count;
-            dataItems.value = [];
-            if (total.value % pageSize.value == 0) {
-                maxPages.value = total.value / pageSize.value;
-            } else {
-                maxPages.value = total.value / pageSize.value + 1;
+    if (currentPage.value) {
+        apiGet(
+            `/project?page=${currentPage.value}&size=${pageSize.value}`,
+            (res) => {
+                total.value = res.data.count;
+                dataItems.value = [];
+                if (total.value % pageSize.value == 0) {
+                    maxPages.value = total.value / pageSize.value;
+                } else {
+                    maxPages.value = total.value / pageSize.value + 1;
+                }
+                for (const iterator of res.data.results) {
+                    dataItems.value.push(iterator);
+                }
             }
-            for (const iterator of data.results) {
-                dataItems.value.push(iterator);
-            }
-        }
-    );
+        );
+    }
 };
 
-const confirm = () => {
+const confirm = (project) => {
     $q.dialog({
         title: "确认删除吗?",
         cancel: true,
         persistent: true,
-    })
-        .onOk(() => {
-            // console.log('>>>> OK')
-        })
-        .onOk(() => {
-            // console.log('>>>> second OK catcher')
-        })
-        .onCancel(() => {
-            // console.log('>>>> Cancel')
-        })
-        .onDismiss(() => {
-            // console.log('I am triggered on both OK and Cancel')
+    }).onOk(() => {
+        apiDelete(`/project/${project.id}`, (_) => {
+            infoMessage("删除成功");
+            refreshPage();
         });
+    });
 };
 </script>

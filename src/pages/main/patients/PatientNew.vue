@@ -372,9 +372,12 @@
 
 <script setup>
 import { api } from "src/boot/axios";
-import { globalStore } from "src/stores/global";
 import { ref, defineEmits } from "vue";
 import { useQuasar } from "quasar";
+import { useApi } from "src/api/apiBase";
+import { infoMessage } from "src/utils/notify";
+
+const { apiPost } = useApi();
 
 const emit = defineEmits(["refresh"]);
 const $q = useQuasar();
@@ -497,29 +500,21 @@ const save = async () => {
         recurrence_time: form.value.recurrence_time,
         survival_time: form.value.survival_time,
     };
-    console.log(data);
-    api.post("/patient/patients", data, {
-        headers: {
-            Authorization: $q.cookies.get("token"),
+    apiPost(
+        "/patient/patients",
+        (_) => {
+            infoMessage("创建成功");
+            emit("refresh");
         },
-    })
-        .then((resp) => {
-            console.log(resp);
-            $q.notify({
-                position: "center",
-                message: "创建成功",
-                timeout: 300,
-            });
-            for (const key in errors.value) {
-                errors.value[key].error = false;
-            }
-        })
-        .catch((e) => {
-            console.log(e.response.data);
-            for (const key in e.response.data) {
+        data,
+        null,
+        (res) => {
+            const errorDetail = JSON.parse(res.data);
+            for (const key in errorDetail) {
                 errors.value[key].error = true;
-                errors.value[key].message = e.response.data[key][0];
+                errors.value[key].message = errorDetail[key][0];
             }
-        });
+        }
+    );
 };
 </script>

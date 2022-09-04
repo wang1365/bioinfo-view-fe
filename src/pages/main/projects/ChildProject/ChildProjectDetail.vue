@@ -83,8 +83,10 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { api } from "src/boot/axios";
 import { useRoute } from "vue-router";
+import { useApi } from "src/api/apiBase";
+
+const { apiGet } = useApi();
 
 const route = useRoute();
 
@@ -93,9 +95,9 @@ onMounted(() => {
     getProjectDetail();
 });
 const getProjectDetail = async () => {
-    console.log(route.params);
-    api.get(`/project/${route.params.id}`).then((resp) => {
-        projectDetail.value = resp.data.data;
+    apiGet(`/project/${route.params.id}`, (res) => {
+        console.log(res);
+        projectDetail.value = res.data;
     });
 };
 </script>
