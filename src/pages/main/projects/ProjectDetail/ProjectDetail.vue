@@ -13,7 +13,7 @@
                     color="primary"
                     label="创建任务"
                     icon="auto_mode"
-                    @click="openNewProject = true"
+                    @click="openFlowSelector = true"
                 />
             </q-toolbar>
         </q-section>
@@ -80,23 +80,44 @@
             </div>
         </q-section>
     </q-card>
+    <q-dialog persistent v-model="openFlowSelector">
+        <FlowSelect @flowSelected="flowSelected($event)" />
+    </q-dialog>
+    <q-dialog persistent v-model="openCreateTask">
+        <CreateTask />
+    </q-dialog>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
 import { useApi } from "src/api/apiBase";
-
+import FlowSelect from "./ProjectTask/FlowSelect.vue";
+import CreateTask from "./ProjectTask/CreateTask.vue";
+import { useRoute } from "vue-router";
 const { apiGet } = useApi();
+
+const openFlowSelector = ref(false);
+const projectDetail = ref({});
+const openCreateTask = ref(false);
+const selectedFlowId = ref(0);
 
 const route = useRoute();
 
-const projectDetail = ref({});
+const flowSelected = (event) => {
+    openFlowSelector.value = false;
+    selectedFlowId.value = event.id;
+    getFlowDetail(event.id);
+};
+
+const getFlowDetail = (flowId) => {
+    apiGet(`/flow/flows/${flowId}/`, (res) => {
+        console.log(res);
+    });
+};
 onMounted(() => {
     getProjectDetail();
 });
 const getProjectDetail = async () => {
     apiGet(`/project/${route.params.id}`, (res) => {
-        console.log(res);
         projectDetail.value = res.data;
     });
 };

@@ -67,7 +67,7 @@ export function defaultHandler(router, resp, onSuccess, onError) {
             type: "negative",
             message: "路由不存在",
         });
-        console.log(resp.request);
+        console.log(resp.data.data);
     } else {
         Notify.create({
             type: "negative",
@@ -181,5 +181,5 @@ export function useApi() {
             });
     }
 
-    return { apiGet, apiPost, apiPut, apiDelete };
+    return { apiGet, apiPost, apiPut, apiDelete, apiPatch };
 }

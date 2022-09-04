@@ -118,16 +118,16 @@
         </q-section>
     </q-card>
     <q-dialog v-model="showSampleSelect">
-        <ChildProjectSampleSelect />
+        <ProjectDetailSampleSelect />
     </q-dialog>
     <q-dialog v-model="showSampleInfo">
-        <SampleInfo />
+        <ProjectDetailSampleInfo />
     </q-dialog>
 </template>
 <script setup>
 import { useQuasar } from "quasar";
-import SampleInfo from "./SampleInfo.vue";
-import ChildProjectSampleSelect from "./ChildProjectSampleSelect.vue";
+import ProjectDetailSampleInfo from "./ProjectDetailSampleInfo.vue";
+import ProjectDetailSampleSelect from "./ProjectDetailSampleSelect.vue";
 import { ref } from "vue";
 const showSampleSelect = ref(false);
 const showSampleInfo = ref(false);

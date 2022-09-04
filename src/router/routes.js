@@ -34,7 +34,7 @@ const routes = [
                 path: "projects/:id",
                 component: () =>
                     import(
-                        "pages/main/projects/ChildProject/ChildProjectPage.vue"
+                        "pages/main/projects/ProjectDetail/ProjectDetailPage.vue"
                     ),
             },
             {

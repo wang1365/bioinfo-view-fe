@@ -3,14 +3,12 @@
         <PageTitle title="项目管理" />
         <ProjectsList />
         <ProjectsSamples />
-        <!-- <ProjectsPatients /> -->
     </q-page>
 </template>
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
 import ProjectsList from "./ProjectsList.vue";
-import ProjectsTree from "./ProjectsTree.vue";
 import ProjectsSamples from "./ProjectsSamples.vue";
 </script>
 
