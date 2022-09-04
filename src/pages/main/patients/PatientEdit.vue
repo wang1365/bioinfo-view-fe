@@ -373,13 +373,11 @@
 <script setup>
 import { useQuasar } from "quasar";
 import { useApi } from "src/api/apiBase";
-import { api, getTokenCookie } from "src/boot/axios";
 import { infoMessage } from "src/utils/notify";
 import { onMounted, ref } from "vue";
 
-const { apiGet, apiPut, apiPatch } = useApi();
+const { apiGet, apiPut } = useApi();
 const emit = defineEmits(["refresh"]);
-const $q = useQuasar();
 
 const close = () => {
     emit("refresh");
@@ -512,9 +510,9 @@ const save = async () => {
         recurrence_time: form.value.recurrence_time,
         survival_time: form.value.survival_time,
     };
-    apiPatch(
+    apiPut(
         `/patient/patients/${props.id}`,
-        (res) => {
+        (_) => {
             infoMessage("更新成功");
             emit("refresh");
         },

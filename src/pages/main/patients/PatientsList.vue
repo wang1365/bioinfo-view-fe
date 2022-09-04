@@ -102,6 +102,7 @@
                     <q-space></q-space>
                     <PaginatorVue
                         :total="total"
+                        :currentPage="currentPage"
                         @pageChange="pageChange($event)"
                     />
                 </div>
