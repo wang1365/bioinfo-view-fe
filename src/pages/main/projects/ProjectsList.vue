@@ -164,6 +164,9 @@ import { useQuasar } from "quasar";
 import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
 import { useRouter } from "vue-router";
+import { useApi } from "src/api/apiBase";
+import { application } from "express";
+const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 
 const openNewProject = ref(false);
 
@@ -199,11 +202,15 @@ const createProject = () => {
         newProjectNameError.value = "项目名称不可为空";
         return;
     }
-    api.post("/project", { name: newProjectName.value }).then((resp) => {
-        newProjectNameError.value = "";
-        openNewProject.value = false;
-        refreshPage();
-    });
+    apiPost(
+        "/project",
+        (_) => {
+            newProjectNameError.value = "";
+            openNewProject.value = false;
+            refreshPage();
+        },
+        { name: newProjectName.value }
+    );
 };
 const updateProject = () => {
     updateProjectName.value = updateProjectName.value.trim();
@@ -211,14 +218,17 @@ const updateProject = () => {
         updateProjectNameError.value = "项目名称不可为空";
         return;
     }
-    api.put(`/project/${currentProject.value.id}`, {
-        name: updateProjectName.value,
-    }).then((resp) => {
-        openEditProject.value = false;
-        updateProjectNameError.value = "";
-        console.log(resp);
-        refreshPage();
-    });
+    apiPut(
+        `/project/${currentProject.value.id}`,
+        (_) => {
+            openEditProject.value = false;
+            updateProjectNameError.value = "";
+            refreshPage();
+        },
+        {
+            name: updateProjectName.value,
+        }
+    );
 };
 const edit = async (patient) => {
     editId.value = patient.id;
@@ -230,16 +240,17 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
-    api.get(`/project?page=${currentPage.value}&size=${pageSize.value}`).then(
-        (resp) => {
-            total.value = resp.data.data.count;
+    apiGet(
+        `/project?page=${currentPage.value}&size=${pageSize.value}`,
+        (data) => {
+            total.value = data.count;
             dataItems.value = [];
             if (total.value % pageSize.value == 0) {
                 maxPages.value = total.value / pageSize.value;
             } else {
                 maxPages.value = total.value / pageSize.value + 1;
             }
-            for (const iterator of resp.data.data.results) {
+            for (const iterator of data.results) {
                 dataItems.value.push(iterator);
             }
         }
