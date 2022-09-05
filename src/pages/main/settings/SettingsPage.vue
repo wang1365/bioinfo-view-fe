@@ -16,7 +16,7 @@
         <q-separator></q-separator>
         <div class="q-py-md">
             <q-list bordered class="rounded-borders">
-                <q-expansion-item
+                <!-- <q-expansion-item
                     expand-separator
                     icon="memory"
                     label="内存预警设置"
@@ -39,7 +39,7 @@
                             ></q-btn>
                         </q-card-section>
                     </q-card>
-                </q-expansion-item>
+                </q-expansion-item> -->
 
                 <q-expansion-item
                     expand-separator
@@ -56,7 +56,7 @@
                         </q-card-section>
                     </q-card>
                 </q-expansion-item>
-                <q-expansion-item
+                <!-- <q-expansion-item
                     expand-separator
                     icon="running_with_errors"
                     label="用户磁盘空间限制"
@@ -70,7 +70,7 @@
                             doloribus ullam aliquid.
                         </q-card-section>
                     </q-card>
-                </q-expansion-item>
+                </q-expansion-item> -->
             </q-list>
         </div>
     </q-page>

@@ -2,7 +2,7 @@
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="项目管理" />
         <ProjectsList />
-        <ProjectsSamples />
+        <!-- <ProjectsSamples /> -->
     </q-page>
 </template>
 
