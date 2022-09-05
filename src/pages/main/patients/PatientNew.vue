@@ -371,16 +371,13 @@
 </template>
 
 <script setup>
-import { api } from "src/boot/axios";
 import { ref, defineEmits } from "vue";
-import { useQuasar } from "quasar";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 
 const { apiPost } = useApi();
 
 const emit = defineEmits(["refresh"]);
-const $q = useQuasar();
 
 const close = () => {
     emit("refresh");

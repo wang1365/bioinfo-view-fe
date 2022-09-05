@@ -4,7 +4,12 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6"> 子项目 </q-toolbar-title>
-                <q-btn color="primary" label="新建子项目" icon="folder" @click="openNewProject = true" />
+                <q-btn
+                    color="primary"
+                    label="新建子项目"
+                    icon="folder"
+                    @click="openNewProject = true"
+                />
             </q-toolbar>
         </q-section>
         <q-section>
@@ -31,22 +36,42 @@
                             <td>{{ item.samples.length }}</td>
                             <td>{{ item.task_count }}</td>
                             <td class="q-gutter-x-sm text-right">
-                                <q-btn color="info" label="详情" icon="arrow_outward" @click="gotoChild(item)"
-                                    size="sm" />
-                                <q-btn color="primary" label="修改" icon="edit" @click="
+                                <q-btn
+                                    color="info"
+                                    label="详情"
+                                    icon="arrow_outward"
+                                    @click="gotoChild(item)"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="primary"
+                                    label="修改"
+                                    icon="edit"
+                                    @click="
                                         updateProjectName = item.name;
                                         currentProject = item;
                                         openEditProject = true;
-                                    " size="sm" />
-                                <q-btn color="red" label="删除" icon="delete" @click="confirm()" size="sm" />
+                                    "
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="red"
+                                    label="删除"
+                                    icon="delete"
+                                    @click="confirm(item)"
+                                    size="sm"
+                                />
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <q-pagination :model-value="currentPage" @update:model-value="pageChange($event)" :max="maxPages"
-                        boundary-numbers />
+                    <PaginatorVue
+                        :total="total"
+                        :currentPage="currentPage"
+                        @pageChange="pageChange($event)"
+                    />
                 </div>
             </div>
         </q-section>
@@ -62,11 +87,17 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="newProjectName" label="项目名称" />
+                            <q-input
+                                v-model="newProjectName"
+                                label="项目名称"
+                            />
                         </q-section>
                     </q-item>
                     <q-item>
-                        <q-section v-if="newProjectNameError" class="full-width text-red">
+                        <q-section
+                            v-if="newProjectNameError"
+                            class="full-width text-red"
+                        >
                             {{ newProjectNameError }}
                         </q-section>
                     </q-item>
@@ -77,7 +108,11 @@
                     <q-item>
                         <q-section class="q-gutter-x-sm">
                             <q-btn label="取消" v-close-popup />
-                            <q-btn color="primary" label="确认" @click="createProject()" />
+                            <q-btn
+                                color="primary"
+                                label="确认"
+                                @click="createProject()"
+                            />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -94,11 +129,17 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="updateProjectName" label="项目名称" />
+                            <q-input
+                                v-model="updateProjectName"
+                                label="项目名称"
+                            />
                         </q-section>
                     </q-item>
                     <q-item>
-                        <q-section v-if="updateProjectNameError" class="full-width text-red">
+                        <q-section
+                            v-if="updateProjectNameError"
+                            class="full-width text-red"
+                        >
                             {{ updateProjectNameError }}
                         </q-section>
                     </q-item>
@@ -109,7 +150,11 @@
                     <q-item>
                         <q-section class="q-gutter-x-sm">
                             <q-btn label="取消" v-close-popup />
-                            <q-btn color="primary" label="确认" @click="updateProject()" />
+                            <q-btn
+                                color="primary"
+                                label="确认"
+                                @click="updateProject()"
+                            />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -123,8 +168,12 @@ import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
 import { useRoute, useRouter } from "vue-router";
 import { useApi } from "src/api/apiBase";
+import PaginatorVue from "src/components/paginator/Paginator.vue";
+import { infoMessage } from "src/utils/notify";
 
-const { apiGet } = useApi();
+const props = defineProps({ projectDetail: Object });
+
+const { apiGet, apiDelete } = useApi();
 
 const route = useRoute();
 
@@ -137,39 +186,37 @@ const newProjectNameError = ref("");
 const updateProjectName = ref("");
 const updateProjectNameError = ref("");
 
-const projectDetail = ref({});
-const current = ref(5);
 const router = useRouter();
 const $q = useQuasar();
 const currentPage = ref(1);
-const pageSize = ref(4);
+const pageSize = ref(10);
 const total = ref(0);
-const maxPages = ref(0);
 const dataItems = ref([]);
 
 onMounted(() => {
-    getProjectDetail();
     loadPage();
 });
-const getProjectDetail = async () => {
-    apiGet(`/project/${route.params.id}`, (res) => {
-        projectDetail.value = res.data;
-    });
-};
+
 const pageChange = async (event) => {
-    currentPage.value = event;
+    currentPage.value = event.currentPage;
+    pageSize.value = event.pageSize;
     loadPage();
 };
+
 const gotoChild = (item) => {
     router.push(`/main/projects/${item.id}`);
 };
+
 const createProject = () => {
     newProjectName.value = newProjectName.value.trim();
     if (!newProjectName.value) {
         newProjectNameError.value = "项目名称不可为空";
         return;
     }
-    api.post("/project", { name: newProjectName.value }).then((resp) => {
+    api.post("/project", {
+        name: newProjectName.value,
+        parent: props.projectDetail.id,
+    }).then((resp) => {
         newProjectNameError.value = "";
         openNewProject.value = false;
         refreshPage();
@@ -195,18 +242,14 @@ const refreshPage = async () => {
     currentPage.value = 1;
     loadPage();
 };
+
 const loadPage = async () => {
     if (currentPage.value) {
         apiGet(
-            `/project?page=${currentPage.value}&size=${pageSize.value}`,
+            `/project?page=${currentPage.value}&size=${pageSize.value}&parent_id=${route.params.id}`,
             (res) => {
                 total.value = res.data.count;
                 dataItems.value = [];
-                if (total.value % pageSize.value == 0) {
-                    maxPages.value = total.value / pageSize.value;
-                } else {
-                    maxPages.value = total.value / pageSize.value + 1;
-                }
                 for (const iterator of res.data.results) {
                     dataItems.value.push(iterator);
                 }
@@ -215,23 +258,16 @@ const loadPage = async () => {
     }
 };
 
-const confirm = () => {
+const confirm = (project) => {
     $q.dialog({
         title: "确认删除吗?",
         cancel: true,
         persistent: true,
-    })
-        .onOk(() => {
-            // console.log('>>>> OK')
-        })
-        .onOk(() => {
-            // console.log('>>>> second OK catcher')
-        })
-        .onCancel(() => {
-            // console.log('>>>> Cancel')
-        })
-        .onDismiss(() => {
-            // console.log('I am triggered on both OK and Cancel')
+    }).onOk(() => {
+        apiDelete(`/project/${project.id}`, (_) => {
+            infoMessage("删除成功");
+            refreshPage();
         });
+    });
 };
 </script>

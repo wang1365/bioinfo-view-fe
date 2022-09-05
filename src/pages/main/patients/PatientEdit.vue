@@ -371,7 +371,6 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { onMounted, ref } from "vue";

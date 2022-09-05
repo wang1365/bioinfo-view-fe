@@ -3,10 +3,10 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
-                <q-toolbar-title class="text-h6"> 项目样本 </q-toolbar-title>
+                <q-toolbar-title class="text-h6"> 项目数据 </q-toolbar-title>
                 <q-btn
                     color="primary"
-                    label="选择样本"
+                    label="选择数据"
                     icon="description"
                     @click="showSampleSelect = true"
                 />
@@ -79,25 +79,18 @@
                             <td class="text-center">可分析</td>
                             <td class="text-center">不可分析</td>
                             <td class="text-center">可分析</td>
-                            <!-- <td class="text-center q-gutter-x-sm">
-                                <q-btn
-                                    color="primary"
-                                    label="下载"
-                                    icon="cloud_download"
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="grey"
-                                    label="下载"
-                                    icon="cloud_download"
-                                    size="sm"
-                                />
-                            </td> -->
                             <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="info"
-                                    label="样本信息"
+                                    label="数据详情"
                                     icon="visibility"
+                                    @click="showSampleInfo = true"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="red"
+                                    label="删除"
+                                    icon="delete"
                                     @click="showSampleInfo = true"
                                     size="sm"
                                 />
@@ -105,15 +98,14 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- <div class="row q-mt-md">
+                <div class="row q-mt-md">
                     <q-space></q-space>
-                    <q-pagination
-                        :model-value="current"
-                        :max="10"
-                        :max-pages="6"
-                        boundary-numbers
+                    <PaginatorVue
+                        :total="total"
+                        :currentPage="currentPage"
+                        @pageChange="pageChange($event)"
                     />
-                </div> -->
+                </div>
             </div>
         </q-section>
     </q-card>
@@ -128,11 +120,44 @@
 import { useQuasar } from "quasar";
 import ProjectDetailSampleInfo from "./ProjectDetailSampleInfo.vue";
 import ProjectDetailSampleSelect from "./ProjectDetailSampleSelect.vue";
-import { ref } from "vue";
+import PaginatorVue from "src/components/paginator/Paginator.vue";
+import { ref, defineProps } from "vue";
+
+const props = defineProps({ projectDetail: Object });
+const currentPage = ref(1);
+const pageSize = ref(10);
+const total = ref(0);
+const dataItems = ref([]);
+
+const pageChange = async (event) => {
+    currentPage.value = event.currentPage;
+    pageSize.value = event.pageSize;
+    loadPage();
+};
+
+const refreshPage = async () => {
+    currentPage.value = 1;
+    loadPage();
+};
+
+const loadPage = async () => {
+    if (currentPage.value) {
+        apiGet(
+            `/project?page=${currentPage.value}&size=${pageSize.value}&parent_id=${route.params.id}`,
+            (res) => {
+                total.value = res.data.count;
+                dataItems.value = [];
+                for (const iterator of res.data.results) {
+                    dataItems.value.push(iterator);
+                }
+            }
+        );
+    }
+};
+
 const showSampleSelect = ref(false);
 const showSampleInfo = ref(false);
 
-const current = ref(5);
 const selected = ref([]);
 
 const $q = useQuasar();

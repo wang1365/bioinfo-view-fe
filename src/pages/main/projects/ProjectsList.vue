@@ -165,6 +165,7 @@ import { useRouter } from "vue-router";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
+
 const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 
 const openNewProject = ref(false);
@@ -176,13 +177,11 @@ const newProjectNameError = ref("");
 const updateProjectName = ref("");
 const updateProjectNameError = ref("");
 
-const current = ref(5);
 const router = useRouter();
 const $q = useQuasar();
 const currentPage = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
-const maxPages = ref(0);
 const dataItems = ref([]);
 
 onMounted(() => {
@@ -245,11 +244,6 @@ const loadPage = async () => {
             (res) => {
                 total.value = res.data.count;
                 dataItems.value = [];
-                if (total.value % pageSize.value == 0) {
-                    maxPages.value = total.value / pageSize.value;
-                } else {
-                    maxPages.value = total.value / pageSize.value + 1;
-                }
                 for (const iterator of res.data.results) {
                     dataItems.value.push(iterator);
                 }

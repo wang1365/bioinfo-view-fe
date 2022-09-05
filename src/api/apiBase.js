@@ -56,7 +56,7 @@ export function defaultHandler(router, resp, onSuccess, onError) {
             message: "无权限",
         });
         router.push("/login");
-    } else if (statusCode === 400) {
+    } else if (statusCode === 400 || code === 1) {
         if (onError) {
             onError(res);
         } else {

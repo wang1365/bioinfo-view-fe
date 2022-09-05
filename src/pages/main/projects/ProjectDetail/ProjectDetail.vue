@@ -4,9 +4,9 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="auto_mode" />
                 <q-toolbar-title class="text-h6">
-                    {{ projectDetail.name }}-
+                    {{ props.projectDetail.name }}-
                     <span class="text-subtitle1">{{
-                        projectDetail.create_time
+                        props.projectDetail.create_time
                     }}</span>
                 </q-toolbar-title>
                 <q-btn
@@ -27,7 +27,7 @@
                     <q-card-section
                         class="text-primary text-center text-h5 text-bold"
                     >
-                        {{ projectDetail.running_task_count }}
+                        {{ props.projectDetail.running_task_count }}
                     </q-card-section>
 
                     <q-card-section class="desc"> 正在运行 </q-card-section>
@@ -36,7 +36,7 @@
                     <q-card-section
                         class="text-secondary text-center text-h5 text-bold"
                     >
-                        {{ projectDetail.pending_task_count }}
+                        {{ props.projectDetail.pending_task_count }}
                     </q-card-section>
 
                     <q-card-section class="desc"> 等待中 </q-card-section>
@@ -45,7 +45,7 @@
                     <q-card-section
                         class="text-negative text-center text-h5 text-bold"
                     >
-                        {{ projectDetail.failured_task_count }}
+                        {{ props.projectDetail.failured_task_count }}
                     </q-card-section>
 
                     <q-card-section class="desc"> 运行失败 </q-card-section>
@@ -54,7 +54,7 @@
                     <q-card-section
                         class="text-grey text-center text-h5 text-bold"
                     >
-                        {{ projectDetail.canceled_task_count }}
+                        {{ props.projectDetail.canceled_task_count }}
                     </q-card-section>
 
                     <q-card-section class="desc"> 已取消 </q-card-section>
@@ -63,7 +63,7 @@
                     <q-card-section
                         class="text-info text-center text-h5 text-bold"
                     >
-                        {{ projectDetail.finished_task_count }}
+                        {{ props.projectDetail.finished_task_count }}
                     </q-card-section>
 
                     <q-card-section class="desc"> 已完成 </q-card-section>
@@ -72,7 +72,7 @@
                     <q-card-section
                         class="text-positive text-center text-h5 text-bold"
                     >
-                        {{ projectDetail.total_task_count }}
+                        {{ props.projectDetail.total_task_count }}
                     </q-card-section>
 
                     <q-card-section class="desc"> 总数 </q-card-section>
@@ -88,19 +88,16 @@
     </q-dialog>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref, defineProps } from "vue";
 import { useApi } from "src/api/apiBase";
 import FlowSelect from "./ProjectTask/FlowSelect.vue";
 import CreateTask from "./ProjectTask/CreateTask.vue";
-import { useRoute } from "vue-router";
 const { apiGet } = useApi();
+const props = defineProps({ projectDetail: Object });
 
 const openFlowSelector = ref(false);
-const projectDetail = ref({});
 const openCreateTask = ref(false);
 const selectedFlowId = ref(0);
-
-const route = useRoute();
 
 const flowSelected = (event) => {
     openFlowSelector.value = false;
@@ -111,14 +108,6 @@ const flowSelected = (event) => {
 const getFlowDetail = (flowId) => {
     apiGet(`/flow/flows/${flowId}/`, (res) => {
         console.log(res);
-    });
-};
-onMounted(() => {
-    getProjectDetail();
-});
-const getProjectDetail = async () => {
-    apiGet(`/project/${route.params.id}`, (res) => {
-        projectDetail.value = res.data;
     });
 };
 </script>
