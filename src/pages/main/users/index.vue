@@ -1,6 +1,6 @@
 <template>
     <q-page padding class="full-height overflow-hidden">
-        <PageTitle title="用户管理" />
+        <PageTitle title="用户管理"/>
         <div class="row justify-end q-gutter-md items-center q-py-xs">
             <div class="col-4">
                 <q-input
@@ -8,9 +8,9 @@
                     clearable
                     v-model="searchKeyword"
                 >
-                    <template v-slot:prepend
-                        ><q-icon name="face"></q-icon
-                    ></template>
+                    <template v-slot:prepend>
+                        <q-icon name="face"></q-icon>
+                    </template>
                 </q-input>
             </div>
             <div class="col-1">
@@ -22,8 +22,18 @@
                     label="搜索"
                 ></q-btn>
             </div>
+            <div class="col-1">
+                <q-btn
+                    class="on-plus"
+                    size="md"
+                    color="primary"
+                    icon="search"
+                    label="新建"
+                    @click="createUserDlg = true"
+                ></q-btn>
+            </div>
         </div>
-        <q-separator />
+        <q-separator/>
         <q-table
             :rows="rows"
             :columns="columns"
@@ -42,7 +52,14 @@
                             size="xs"
                             color="primary"
                             label="编辑"
-                            @click="clickEdit"
+                            @click="clickEdit(props.row)"
+                        ></q-btn>
+                        <q-btn
+                            size="xs"
+                            color="red"
+                            text-color="white"
+                            label="重置密码"
+                            @click="clickReset(props.row)"
                         ></q-btn>
                         <q-btn
                             size="xs"
@@ -96,15 +113,33 @@
                 />
             </template>
         </q-table>
+        <q-dialog v-model="createUserDlg">
+            <CreateUser></CreateUser>
+        </q-dialog>
+        <q-dialog v-model="editUserDlg">
+            <EditUser :user="currentUser"></EditUser>
+        </q-dialog>
+        <q-dialog v-model="resetPasswordDlg">
+            <ResetPassword :user="currentUser"></ResetPassword>
+        </q-dialog>
     </q-page>
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { onMounted, ref } from "vue";
-import _ from "lodash";
-import { listUser, batchDeleteUser } from "src/api/user";
+import {useQuasar} from "quasar"
+import {nextTick, onMounted, ref} from "vue"
+import _ from "lodash"
+import {listUser, batchDeleteUser} from "src/api/user"
+import PageTitle from "components/page-title/PageTitle.vue"
+import CreateUser from "./CreateUser"
+import EditUser from "pages/main/users/EditUser"
+import {deleteFlow} from "src/api/flow"
+import ResetPassword from "pages/main/users/ResetPassword"
 
+const createUserDlg = ref(false)
+const editUserDlg = ref(false)
+const resetPasswordDlg = ref(false)
+const currentUser = ref({})
 const $q = useQuasar();
 const columns = [
     {
@@ -130,7 +165,7 @@ const columns = [
         sortable: true,
     },
 
-    { name: "email", label: "邮箱", field: "email", align: "center" },
+    {name: "email", label: "邮箱", field: "email", align: "center"},
     {
         name: "role",
         label: "角色",
@@ -145,14 +180,14 @@ const columns = [
         align: "center",
         format: (v) => `${v ? "启用" : "禁用"}`,
     },
-    { name: "operation", label: "操作", align: "center", style: "width:220px" },
-];
+    {name: "operation", label: "操作", align: "center", style: "width:220px"},
+]
 
 let rows = ref([]);
 onMounted(() => {
     refreshUsers();
-});
-const searchKeyword = ref("");
+})
+const searchKeyword = ref("")
 
 const getRoleName = (roles) => {
     if (!_.isArray(roles)) {
@@ -168,11 +203,11 @@ const getRoleName = (roles) => {
             );
         })
         .join(",");
-};
+}
 
 const getStatus = (isActive) => {
-    return isActive ? "√" : "x";
-};
+    return isActive ? "√" : "x"
+}
 
 const pagination = {
     sortBy: "desc",
@@ -180,14 +215,29 @@ const pagination = {
     page: 1,
     rowsPerPage: 10,
     // rowsNumber: xx if getting data from a server
-};
-import PageTitle from "components/page-title/PageTitle.vue";
+}
 
-const clickEdit = () => {
-    $q.notify("暂不支持用户编辑");
-};
+const clickEdit = (row) => {
+    console.log('click edit', row)
+    currentUser.value = row
+    editUserDlg.value = true
+}
+
+const clickReset = (row) => {
+    // $q.dialog({
+    //     title: `是否重置用户${row.username}的密码”?`,
+    // }).onOk(() => {
+    //     resetPassword(row.id).then(() => {
+    //         $q.notify.create({ type: "positive", message: "删除成功" });
+    //         refreshFlows();
+    //     });
+    // });
+
+    currentUser.value = row
+    resetPasswordDlg.value = true
+}
+
 const clickDelete = (row) => {
-    console.log("ddddd", row);
     $q.dialog({
         title: "确认删除",
         message: `是否要删除用户"${row.username}"?`,
@@ -195,8 +245,8 @@ const clickDelete = (row) => {
         persistent: true,
     })
         .onOk(() => {
-            batchDeleteUser({ ids: [row.id] }).then(() => {
-                $q.notify("删除成功");
+            batchDeleteUser({ids: [row.id]}).then(() => {
+                $q.notify("删除成功")
             });
         })
         .onOk(() => {
@@ -207,15 +257,15 @@ const clickDelete = (row) => {
         })
         .onDismiss(() => {
             // console.log('I am triggered on both OK and Cancel')
-        });
-    $q.notify("暂不支持用户删除");
-};
+        })
+    $q.notify("暂不支持用户删除")
+}
 const refreshUsers = () => {
     listUser().then((data) => {
-        console.log("====>查询用户成功", data);
-        rows.value = data.item_list;
-    });
-};
+        console.log("====>查询用户成功", data)
+        rows.value = data.item_list
+    })
+}
 </script>
 
 <style lang="sass">
@@ -241,13 +291,6 @@ const refreshUsers = () => {
         background: #fff
 
     /* this will be the loading indicator */
-
-
-
-
-
-
-
 
     thead tr:last-child th
         /* height of all previous header rows */

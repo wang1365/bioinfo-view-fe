@@ -75,7 +75,7 @@ const routes = [
             },
             {
                 path: "users",
-                component: () => import("pages/main/users/UsersPage.vue"),
+                component: () => import("pages/main/users"),
             },
             {
                 path: "profile",

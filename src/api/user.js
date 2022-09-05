@@ -72,10 +72,10 @@ export function updateUser(userid, is_active, role, department) {
     });
 }
 
-export function resetPwd(userid) {
+export function resetPassword(userId, password) {
     return api({
-        url: "account/manager",
-        method: "patch",
-        data: { userid, reset: true },
+        url: "account/`${userId}`/reset_password",
+        method: "put",
+        data: { password },
     });
 }
