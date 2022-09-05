@@ -12,7 +12,7 @@ const ESLintPlugin = require("eslint-webpack-plugin");
 
 const { configure } = require("quasar/wrappers");
 
-console.log('ENV:', process.env)
+console.log("ENV:", process.env);
 module.exports = configure(function (ctx) {
     return {
         // https://v2.quasar.dev/quasar-cli-webpack/supporting-ts
@@ -84,12 +84,12 @@ module.exports = configure(function (ctx) {
             proxy: {
                 "/api": {
                     changeOrigin: true,
-                    target: process.env.host || "http://192.168.31.11:8000",
+                    target: process.env.host || "http://192.168.31.97:8000",
                     // target: process.env.host || "http://localhost:8000",
                     pathRewrite: {
-                        '^/api': ''  // base path替换
+                        "^/api": "", // base path替换
                     },
-                }
+                },
             },
         },
 
@@ -241,5 +241,5 @@ module.exports = configure(function (ctx) {
                     .use(ESLintPlugin, [{ extensions: ["js"] }]);
             },
         },
-    }
-})
+    };
+});
