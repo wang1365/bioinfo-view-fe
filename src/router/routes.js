@@ -55,21 +55,19 @@ const routes = [
             },
             {
                 path: "settings",
+                component: () => import("pages/main/settings/SettingBlank"),
                 children: [
                     {
                         path: "flowManagement",
-                        component: () =>
-                            import("pages/main/settings/flow/index"),
+                        component: () => import("pages/main/settings/flow"),
                     },
                     {
                         path: "system",
-                        component: () =>
-                            import("pages/main/settings/SettingsPage.vue"),
+                        component: () => import("pages/main/settings/SettingsPage.vue"),
                     },
                     {
                         path: "ui",
-                        component: () =>
-                            import("pages/main/settings/UiSettingsPage.vue"),
+                        component: () => import("pages/main/settings/UiSettingsPage.vue"),
                     },
                 ],
             },

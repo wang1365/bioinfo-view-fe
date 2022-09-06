@@ -9,7 +9,7 @@
             v-if="addRoutesItem.children && addRoutesItem.children.length"
         >
             <SideBarLeftItem
-                :key="item.id"
+                :key="item.path"
                 :addRoutesItem="item"
                 v-for="item in addRoutesItem.children"
                 :initLevel="initLevel + 0.3"

@@ -1,52 +1,126 @@
 <template>
-    <div>
-        <div class="q-pa-md">
-            <q-uploader
-                label="系统Logo设置(最大2M)"
-                max-file-size="20480"
-                auto-upload
-                color="purple"
-                @rejected="onRejected"
-                :url="getUrl"
-            />
-        </div>
-
-        <q-file
-            filled
-            bottom-slots
-            v-model="model"
-            label="系统Logo设置(最大2M)"
-            counter
-            class="q-pa-md"
-            max-file-size="20480"
-            bg-color="blue"
-            label-color="white"
-            standout
-        >
-            <template v-slot:prepend>
-                <q-icon name="cloud_upload" @click.stop />
-            </template>
-            <template v-slot:append>
-                <q-icon
-                    name="yard"
-                    @click.stop="model = null"
-                    class="cursor-pointer"
-                />
-            </template>
-
-            <template v-slot:hint> 图片大小 </template>
-        </q-file>
-    </div>
+    <q-page padding>
+        <PageTitle title="系统界面设置"></PageTitle>
+        <q-card class="width:600px">
+            <q-card-section>
+                <div class="text-h6">系统标题：</div>
+                <q-input v-model="title" outlined>
+                    <template v-slot:before>
+                        <q-icon name="flight_takeoff" />
+                    </template>
+                </q-input>
+            </q-card-section>
+            <q-separator/>
+            <q-card class="width:300px ">
+                <q-list>
+                    <q-item>
+                        <q-img
+                            :src="imageBase64"
+                            spinner-color="white"
+                            style="height: 200px; max-width: 200px"
+                        >
+                            <div class="absolute-top text-center">
+                                系统图标
+                            </div>
+                        </q-img>
+                    </q-item>
+                    <q-item>
+                        <q-file
+                            filled
+                            bottom-slots
+                            v-model="imageFile"
+                            label="+ 选择图片(最大2M)"
+                            counter
+                            class="q-pa-sm"
+                            max-file-size="2048000"
+                            bg-color="blue"
+                            label-color="white"
+                            accept=".jpg,.png,.svg"
+                            @rejected="onRejected"
+                        >
+                        </q-file>
+                    </q-item>
+                </q-list>
+            </q-card>
+            <q-separator/>
+            <q-card-actions align="left">
+                <q-card-section>
+                    <q-btn label="保存配置" color="primary" size="md" @click="clickSet"></q-btn>
+                </q-card-section>
+            </q-card-actions>
+        </q-card>
+    </q-page>
 </template>
 
 <script setup>
-const getUrl = (files) => {
-    return `http://localhost:4444/upload?count=${files.length}`;
-};
+import {ref, watch, onMounted} from 'vue'
+import PageTitle from "components/page-title/PageTitle"
+import {useQuasar} from 'quasar'
+import {listConfig} from 'src/api/config'
+
+const $q = useQuasar()
+
+const title = ref('纳昂达可视化解读系统')
+const imageFile = ref(null)
+const imageBase64 = ref('')
+
+const upload = () => {
+    clearTimeout(this.uploading)
+
+    const allDone = this.uploadProgress.every(progress => progress.percent === 1)
+
+    this.uploadProgress = this.uploadProgress.map(progress => ({
+        ...progress,
+        error: false,
+        color: 'green-2',
+        percent: allDone === true ? 0 : progress.percent
+    }))
+
+}
+
+function fileToBase64(file) {
+    console.log('开始图片转base64', file)
+    return new Promise(((resolve, reject) => {
+        const reader = new FileReader();
+        let result = ''
+        reader.readAsDataURL(file)
+        reader.onload = function (e) {
+            result = e.target.result
+        }
+        reader.onerror = function () {
+            console.log('图片解析BASE64失败，', file)
+            reject(error)
+        }
+        reader.onloadend = function () {
+            resolve(result)
+        }
+    }))
+
+}
+
+watch(imageFile, (val) => {
+    fileToBase64(imageFile.value).then(res => {
+        console.log('base64：', res)
+        imageBase64.value = res
+    })
+})
+
+onMounted(() => {
+    listConfig().then(res => {
+        console.log('========== 查询配置', res)
+    })
+})
+const clickSet = () => {
+
+}
+
+
+
 const onRejected = (rejectedEntries) => {
-    this.$q.notify({
+    console.log('xxxxxxxxx', rejectedEntries)
+    $q.notify({
         type: "negative",
         message: `${rejectedEntries.length} file(s) did not pass validation constraints`,
-    });
-};
+    })
+}
 </script>

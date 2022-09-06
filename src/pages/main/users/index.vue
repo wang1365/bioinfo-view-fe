@@ -148,6 +148,7 @@ const columns = [
     {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
     {name: "username", label: "账号", field: "username", sortable: true, align: "center",},
     {name: "nickname", label: "姓名", field: "nickname", sortable: true, align: "center",},
+    {name: "disk", label: "磁盘限额", field: "disk", sortable: true, align: "center",},
     // {name: "department",align: "center",label: "部门",field: "calories",sortable: true, },
     // {name: "email", label: "邮箱", field: "email", align: "center"},
     {name: "role", label: "角色", align: "center", field: "role", format: (v) => getRoleName(v),},

@@ -226,7 +226,7 @@ const menuList = [
             {
                 icon: "mediation",
                 label: "流程管理",
-                roles: ["super"],
+                // roles: ["super"],
                 separator: false,
                 path: "/main/settings/flowManagement",
             },

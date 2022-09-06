@@ -29,8 +29,8 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from "vue";
-defineProps({
+import { defineProps, computed, defineExpose, ref } from "vue";
+const props = defineProps({
     data: {
         type: Array,
         default: () => {
@@ -69,21 +69,23 @@ const columns = [
 ];
 
 const isEditMode = computed(() => {
-    return this.action === "edit";
+    return props.action === "edit";
 });
 const isInfoMode = computed(() => {
-    return this.action === "info";
+    return props.action === "info";
 });
 const isCreateMode = computed(() => {
-    return this.action === "create";
+    return props.action === "create";
 });
 
 const valueTypes = ["string", "file"];
-const params = this.data;
+const params = ref(props.data)
 
 const setData = (data) => {
-    params.vaue = data;
+    params.value = data;
 };
+
+defineExpose({ setData })
 const addParameter = () => {
     console.log("addParameter");
     this.$set(this.params, this.params.length, { choices: [] });

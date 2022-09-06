@@ -40,6 +40,7 @@ const toPath = (addRoutesItem) => {
     if (addRoutesItem.is_link === "yes") {
         window.open(addRoutesItem.path);
     } else {
+        console.log('Menu click => ', addRoutesItem.path)
         router.push(addRoutesItem.path);
     }
 };
