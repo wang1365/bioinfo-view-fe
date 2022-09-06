@@ -2,7 +2,7 @@
     <q-page padding>
         <PageTitle title="流程列表"/>
         <q-table
-            :rows="rows"
+            :rows="flows"
             :columns="columns"
             row-key="name"
             color="primary"
@@ -17,15 +17,18 @@
             <template v-slot:top>
                 <q-btn color="primary" label="新建流程" @click="addFlow"/>
             </template>
+            <template v-slot:body-cell-operation="props">
+                <q-td :props="props" align="center" class="q-gutter-xs">
+                    <q-btn label="查看" color="primary" size="sm" @click="showInfoDlg(props.row)"></q-btn>
+                    <q-btn label="编辑" color="orange" size="sm" @click="showEditDlg(props.row)"></q-btn>
+                    <q-btn label="删除" color="red-10" size="sm" @click="showDeleteDlg(props.row)"></q-btn>
+                </q-td>
+            </template>
         </q-table>
 
-        <flow-dialog
-            ref="dlgCreate"
-            action="create"
-            @handleFinish="refreshFlows"
-        />
-<!--        <flow-dialog ref="dlgEdit" action="edit" @handleFinish="refreshFlows"/>-->
-<!--        <flow-dialog ref="dlgInfo" action="info" @handleFinish="refreshFlows"/>-->
+        <flow-dialog ref="dlgCreate" action="create" @handleFinish="refreshFlows"/>
+        <flow-dialog ref="dlgEdit" action="edit" @handleFinish="refreshFlows"/>
+        <flow-dialog ref="dlgInfo" action="info" @handleFinish="refreshFlows"/>
     </q-page>
 </template>
 
@@ -36,12 +39,11 @@ import {useQuasar} from "quasar";
 import PageTitle from "components/page-title/PageTitle";
 import FlowDialog from "./FlowDialog";
 
-const dlgCreate = ref(null);
-const dlgEdit = ref(null);
-const dlgInfo = ref(null);
+const dlgCreate = ref(null)
+const dlgEdit = ref(null)
+const dlgInfo = ref(null)
 
-const $q = useQuasar();
-const rows = [];
+const $q = useQuasar()
 const columns = [
     {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
     {name: "name", label: "名 称", field: "name", sortable: true, align: "center",},
@@ -50,9 +52,9 @@ const columns = [
     {name: "memory", label: "内存(m)", align: "center", field: "memory"},
     {name: "docker_image", label: "Docker镜像", field: "docker_image", align: "center",},
     {name: "desp", label: "描述", align: "center", style: "width:220px"},
-    {name: "create_time", label: "创建时间", align: "center", style: "width:220px",},
-    {name: "operation", label: "操 作", align: "center", style: "width:220px",},
-];
+    {name: "create_time", label: "创建时间", field: "create_time", align: "center", style: "width:220px",},
+    {name: "operation", label: "操 作", align: "center", style: "width:250px",},
+]
 
 const pagination = ref({
     sortBy: "desc",
@@ -75,9 +77,6 @@ const flows = ref([
     },
 ]);
 const selectedFlow = ref({});
-const isDlgShow = ref(false);
-const isCreateDlgShow = ref(false);
-const isInfoDlgShow = ref(false);
 const mode = ref("info");
 const page = ref(1);
 const total = ref(0);
@@ -104,8 +103,8 @@ const getTagType = (row) => {
 };
 
 const showEditDlg = (row) => {
-    isDlgShow.value = true;
-    this.$refs.dlgEdit.setData(row);
+    dlgEdit.value.show()
+    dlgEdit.value.setData(row);
 };
 
 const showDeleteDlg = (row) => {
@@ -120,7 +119,7 @@ const showDeleteDlg = (row) => {
 };
 
 const showInfoDlg = (row) => {
-    isInfoDlgShow.value = true;
+    dlgCreate.value.show()
     dlgInfo.value.setData(row);
 };
 
