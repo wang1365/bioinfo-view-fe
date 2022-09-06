@@ -69,6 +69,20 @@
                             label="重置密码"
                             @click="clickReset(props.row)"
                         ></q-btn>
+                        <q-btn
+                            size="xs"
+                            color="red"
+                            text-color="white"
+                            label="配额"
+                            @click="clickSetResourceLimit(props.row)"
+                        ></q-btn>
+                        <q-btn
+                            size="xs"
+                            color="red"
+                            text-color="white"
+                            label="删除"
+                            @click="clickDelete(props.row)"
+                        ></q-btn>
 <!--                        <q-btn-->
 <!--                            v-if="allowReset(props)"-->
 <!--                            size="xs"-->
@@ -141,6 +155,7 @@ import {globalStore} from "src/stores/global";
 const createUserDlg = ref(null)
 const editUserDlg = ref(null)
 const resetPasswordDlg = ref(null)
+const resetResourceLimitDlg = ref(false)
 const user = ref({})
 const $q = useQuasar();
 const store = globalStore()
@@ -218,6 +233,10 @@ const clickReset = (row) => {
 
     user.value = row
     resetPasswordDlg.value.show()
+}
+
+const clickSetResourceLimit = (row) => {
+
 }
 
 const clickDelete = (row) => {
