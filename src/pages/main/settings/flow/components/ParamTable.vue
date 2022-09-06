@@ -1,10 +1,10 @@
 <template>
     <!--  <div class="param-item-main param-item">-->
     <div>
-        <h4>{{ title }}</h4>
         <div style="padding-left: 40px; padding-right: 40px">
             <q-table
                 ref="paramTable"
+                title="自定义参数"
                 :rows="params"
                 :columns="columns"
                 row-key="name"
@@ -15,8 +15,9 @@
                 wrap-cells
             >
                 <template v-slot:top>
-                    <q-btn v-if="!isInfoMode" color="primary" label="新增参数" @click="addParameter"/>
+                    <div class="text-primary text-h7">自定义参数</div>
                     <q-space/>
+                    <q-btn v-if="!isInfoMode" color="primary" label="新增参数" @click="addParameter"/>
                 </template>
 
                 <!--                <template v-slot:body-cell-id="props" v-if="!isInfoMode">-->
