@@ -7,6 +7,7 @@
                     label="用户账号、姓名、邮箱搜索"
                     clearable
                     @clear="refreshUsers"
+                    @keypress.enter="refreshUsers"
                     v-model="searchKeyword"
                 >
                     <template v-slot:prepend>
@@ -39,6 +40,9 @@
         <q-table
             :rows="rows"
             :columns="columns"
+            :loading="loading"
+            loading-label="正在查询数据..."
+            no-data-label="暂无数据"
             row-key="name"
             color="primary"
             dense
@@ -46,6 +50,7 @@
             v-model:pagination="pagination"
             rows-per-page-label="每页条数"
             :rows-per-page-options="[10, 20, 50, 100]"
+            @request="refreshUsersForEvent"
         >
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
@@ -75,44 +80,44 @@
                     </div>
                 </q-td>
             </template>
-            <template v-slot:pagination="scope">
-                <q-btn
-                    v-if="scope.pagesNumber > 2"
-                    icon="first_page"
-                    color="grey-8"
-                    round
-                    flat
-                    :disable="scope.isFirstPage"
-                    @click="scope.firstPage"
-                />
-                <q-btn
-                    icon="chevron_left"
-                    color="grey-8"
-                    round
-                    flat
-                    :disable="scope.isFirstPage"
-                    @click="scope.prevPage"
-                />
-                <q-btn
-                    icon="chevron_right"
-                    color="grey-8"
-                    round
-                    dense
-                    flat
-                    :disable="scope.isLastPage"
-                    @click="scope.nextPage"
-                />
-                <q-btn
-                    v-if="scope.pagesNumber > 2"
-                    icon="last_page"
-                    color="grey-8"
-                    round
-                    dense
-                    flat
-                    :disable="scope.isLastPage"
-                    @click="scope.lastPage"
-                />
-            </template>
+<!--            <template v-slot:pagination="scope">-->
+<!--                <q-btn-->
+<!--                    v-if="scope.pagesNumber > 2"-->
+<!--                    icon="first_page"-->
+<!--                    color="grey-8"-->
+<!--                    round-->
+<!--                    flat-->
+<!--                    :disable="scope.isFirstPage"-->
+<!--                    @click="scope.firstPage"-->
+<!--                />-->
+<!--                <q-btn-->
+<!--                    icon="chevron_left"-->
+<!--                    color="grey-8"-->
+<!--                    round-->
+<!--                    flat-->
+<!--                    :disable="scope.isFirstPage"-->
+<!--                    @click="scope.prevPage"-->
+<!--                />-->
+<!--                <q-btn-->
+<!--                    icon="chevron_right"-->
+<!--                    color="grey-8"-->
+<!--                    round-->
+<!--                    dense-->
+<!--                    flat-->
+<!--                    :disable="scope.isLastPage"-->
+<!--                    @click="scope.nextPage"-->
+<!--                />-->
+<!--                <q-btn-->
+<!--                    v-if="scope.pagesNumber > 2"-->
+<!--                    icon="last_page"-->
+<!--                    color="grey-8"-->
+<!--                    round-->
+<!--                    dense-->
+<!--                    flat-->
+<!--                    :disable="scope.isLastPage"-->
+<!--                    @click="scope.lastPage"-->
+<!--                />-->
+<!--            </template>-->
         </q-table>
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
         <EditUser ref="editUserDlg" :user="currentUser" @success="refreshUsers"></EditUser>
@@ -150,6 +155,7 @@ const columns = [
     {name: "operation", label: "操作", align: "center", style: "width:220px"},
 ]
 
+const loading = ref(false)
 let rows = ref([]);
 onMounted(() => {
     refreshUsers();
@@ -181,13 +187,13 @@ const getStatus = (isActive) => {
     return isActive ? "√" : "x"
 }
 
-const pagination = {
-    sortBy: "desc",
+const pagination = ref({
+    sortBy: "id",
     descending: false,
     page: 1,
     rowsPerPage: 10,
-    // rowsNumber: xx if getting data from a server
-}
+    rowsNumber: 0
+})
 
 const clickCreate = () => {
     createUserDlg.value.show()
@@ -237,10 +243,21 @@ const clickDelete = (row) => {
     $q.notify("暂不支持用户删除")
 }
 
+function refreshUsersForEvent(props) {
+    const { page, rowsPerPage, sortBy, descending } = props.pagination
+    pagination.value = props.pagination
+    refreshUsers()
+}
+
 function refreshUsers() {
-    listUser(searchKeyword.value).then((data) => {
+    loading.value = true
+    listUser(searchKeyword.value, pagination.value.page, pagination.value.rowsPerPage).then((data) => {
         console.log("====>查询用户成功", data)
         rows.value = data.item_list
+
+        pagination.value.rowsNumber = data.total_count
+    }).finally(() => {
+        loading.value = false
     })
 }
 </script>
