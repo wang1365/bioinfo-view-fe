@@ -87,7 +87,7 @@ onMounted(() => {
     refreshFlows();
 });
 const refreshFlows = () => {
-    getFlows(page, pageSize).then((data) => {
+    getFlows(1, 100).then((data) => {
         flows.value = data.results;
         total.value = data.count;
     });

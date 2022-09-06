@@ -9,7 +9,7 @@
                 :columns="columns"
                 row-key="name"
                 color="primary"
-                separator="vertical"
+                separator="cell"
                 dense
                 hide-no-data
                 wrap-cells
@@ -18,23 +18,109 @@
                     <q-btn v-if="!isInfoMode" color="primary" label="新增参数" @click="addParameter"/>
                     <q-space/>
                 </template>
-                <template v-slot:body-cell-key="props">
-                    <q-input v-model="props.row.key"/>
-                </template>
-                <template v-slot:body-cell-type="props">
-                    <q-input v-model="props.row.type"/>
-                </template>
-                <template v-slot:body-cell-required="props">
-                    <q-input v-model="props.row.required"/>
-                </template>
-                <template v-slot:body-cell-choices="props">
-                    <q-input v-model="props.row.choices"/>
-                </template>
-                <template v-slot:body-cell-description="props">
-                    <q-input v-model="props.row.description"/>
+
+                <!--                <template v-slot:body-cell-id="props" v-if="!isInfoMode">-->
+                <!--                    <q-td align="center">-->
+                <!--                        {{props.row.id}}-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
+                <!--                <template v-slot:body-cell-key="props" v-if="!isInfoMode">-->
+                <!--                    <q-td align="center">-->
+                <!--                        <q-input v-model="props.row.key"/>-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
+                <!--                <template v-slot:body-cell-type="props" v-if="!isInfoMode">-->
+                <!--                    <q-td align="center">-->
+                <!--                        <q-input v-model="props.row.type"/>-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
+                <!--                <template v-slot:body-cell-required="props" v-if="!isInfoMode">-->
+                <!--                    <q-td align="center">-->
+                <!--                        <q-checkbox v-model="props.row.required" color="teal" />-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
+                <!--                <template v-slot:body-cell-choices="props">-->
+                <!--                    <q-td align="center">-->
+                <!--                        <template v-for="item in props.row.choices" :key="item">-->
+                <!--                            <q-badge label="item" outline />-->
+                <!--                        </template>-->
+
+                <!--                        <q-btn size="xs" label="+"/>-->
+                <!--                        <q-btn size="xs" label="-"/>-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
+                <!--                <template v-slot:body-cell-description="props" v-if="!isInfoMode">-->
+                <!--                    <q-td>-->
+                <!--                        <q-input v-model="props.row.description"/>-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
+                <!--                <template v-slot:body-cell-operation="props" v-if="!isInfoMode">-->
+                <!--                    <q-td align="center">-->
+                <!--                        <q-btn label="删除" size="xs" color="red" glossy-->
+                <!--                               @click="clickDeleteRow(props.row, props.index)"></q-btn>-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
+
+                <template v-slot:body="props">
+                    <q-tr :props="props">
+                        <q-td align="center">
+                            {{ props.row.id }}
+                        </q-td>
+                        <q-td align="center">
+                            <q-input v-model="props.row.key"/>
+                        </q-td>
+                        <q-td align="center">
+                            <q-input v-model="props.row.type"/>
+                        </q-td>
+                        <q-td align="center">
+                            <q-checkbox v-model="props.row.required" color="teal"/>
+                        </q-td>
+                        <q-td align="center">
+                            <template v-for="(item, index) in props.row.choices" :key="item">
+                                <q-chip :label="item" size="sm" outline square removable color="orange"
+                                        @remove="deleteChoice(props.row, index)"/>
+                            </template>
+
+                            <q-btn size="xs" label="+" color="primary" @click="clickAddChoice(props.row)">
+<!--                                <q-popup-edit title="添加值域" buttons-->
+<!--                                              label-set="确定" label-cancel="取消"-->
+<!--                                              @save="confirmAddChoice"-->
+<!--                                              @cancel="confirmAddChoice"-->
+<!--                                              v-model="choice"-->
+<!--                                              @before-show="currentRow = props.row"-->
+<!--                                              :validate="validateChoice"-->
+<!--                                >-->
+<!--                                    <q-input color="accent" v-model="choice" dense autofocus>-->
+<!--                                        <template v-slot:prepend>-->
+<!--                                            <q-icon name="record_voice_over" color="accent"/>-->
+<!--                                        </template>-->
+<!--                                    </q-input>-->
+<!--                                </q-popup-edit>-->
+                            </q-btn>
+                        </q-td>
+                        <q-td>
+                            <q-input v-model="props.row.description"/>
+                        </q-td>
+                        <q-td align="center">
+                            <q-btn label="删除" size="xs" color="red" glossy
+                                   @click="clickDeleteRow(props.row, props.index)"></q-btn>
+                        </q-td>
+                    </q-tr>
                 </template>
             </q-table>
+            <q-dialog ref="choiceDlg" v-model="choiceDlgVisible" class="relative-position" @before-show="choice = ''">
+                <q-card>
+                    <q-card-section>
+                        <q-input v-model="choice" label="值域" clearable/>
+                    </q-card-section>
+                    <q-card-actions align="center">
+                        <q-btn label="确定" size="sm" color="primary" @click="confirmAddChoice"/>
+                        <q-btn label="取消" size="sm" v-close-popup />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
         </div>
+
     </div>
 </template>
 
@@ -65,6 +151,7 @@ const columns = [
     {name: "required", label: "必填", field: "required", align: "center"},
     {name: "choices", label: "值域", align: "center", field: "choices"},
     {name: "description", label: "说明", field: "description", align: "center",},
+    {name: "operation", label: "操作", align: "center",},
 ];
 
 const isEditMode = computed(() => {
@@ -79,43 +166,60 @@ const isCreateMode = computed(() => {
 
 const valueTypes = ["string", "file"];
 const params = ref(props.data)
+const currentRow = ref(null)
+const choice = ref('')
+const choiceDlgVisible = ref(false)
+const choiceDlg = ref(null)
 
+const validateChoice = (v) => {
+    return v !== null && v !== ''
+}
 const setData = (data) => {
-    params.value = data;
-};
+    params.value = data
+}
 
-defineExpose({setData})
+const getData = () => {
+    return params.value
+}
+
+defineExpose({setData, getData})
 const addParameter = () => {
     console.log("addParameter");
     // this.$set(params, params.value.length, { choices: [] });
-    params.value.push({})
-};
-const deleteParam = (row, index) => {
+    params.value.push({
+        key: '', type: '', required: false, choices: [], description: ''
+    })
+}
+const clickDeleteRow = (row, index) => {
     params.value.splice(index, 1);
-};
+}
 const deleteChoice = (row, idx) => {
     row.choices.splice(idx, 1);
-};
-const addChoice = (row) => {
-    row.newValue = "";
-    this.$set(row, "add", true);
-};
-const confirmAddChoice = (row) => {
-    const value = this._.get(row, "newChoice", "");
-    if (value !== "") {
-        if (row.choices === undefined) {
-            row.choices = [];
+}
+const clickAddChoice = (row) => {
+    // row.newValue = "";
+    // this.$set(row, "add", true);
+    currentRow.value = row
+    choiceDlgVisible.value = true
+}
+const confirmAddChoice = (value, initValue) => {
+    console.log('.............', value, initValue, currentRow.value)
+    // const value = this._.get(row, "newChoice", "");
+    if (choice.value !== "") {
+        if (currentRow.value.choices === undefined) {
+            currentRow.value.choices = [];
         }
-        row.choices.push(value);
+        currentRow.value.choices.push(choice.value);
     }
-    this.$set(row, "add", false);
-};
+    choiceDlgVisible.value = false
+    // this.$set(row, "add", false);
+}
 const resetFields = () => {
     params.value = [];
-};
+}
 const joinChoices = (choices) => {
     return choices.join("; ");
-};
+}
 </script>
 
 <style lang="scss" scoped>

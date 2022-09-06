@@ -1,6 +1,5 @@
 <template>
     <q-dialog
-        persistent
         full-width
         full-height
         transition-show="scale"
@@ -11,6 +10,7 @@
         @close="close"
     >
         <q-card>
+            <q-form @submit="onSubmit">
             <q-bar>
                 <q-icon name="mediation"/>
                 <div>流程管理</div>
@@ -83,18 +83,22 @@
             <param-table ref="paramsTable" :data="form.parameters" title="自定义参数" :action="action"/>
 
             <q-card-actions align="right">
-                <q-btn label="确 定" color="primary" @click="onConfirm"/>
+<!--                <q-btn label="确 定" color="primary" @click="onConfirm"/>-->
+                <q-btn label="确 定" color="primary" type="submit"/>
                 <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
             </q-card-actions>
+            </q-form>
         </q-card>
     </q-dialog>
 </template>
 
 <script setup>
-import ParamTable from "./components/ParamTable";
-import {createFlow, updateFlow} from "src/api/flow";
-import {defineProps, computed, ref, toRefs, defineExpose} from "vue";
+import ParamTable from "./components/ParamTable"
+import {createFlow, updateFlow} from "src/api/flow"
+import {defineProps, computed, ref, toRefs, defineExpose} from "vue"
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const dlgVisible = ref(false)
 const titles = ref({
     edit: "修改流程",
@@ -113,19 +117,18 @@ const props = defineProps({
         default: -1,
     },
 })
-const {action, id} = toRefs(props)
 
 const isEditMode = computed(() => {
-    return action === "edit";
+    return props.action === "edit";
 })
 const isInfoMode = computed(() => {
-    return action === "info";
+    return props.action === "info";
 })
 const isCreateMode = computed(() => {
-    return action === "create";
+    return props.action === "create";
 })
 const title = computed(() => {
-    return titles[action];
+    return titles[props.action];
 })
 const valueTypes = ["string", "file"];
 const form = ref({
@@ -186,50 +189,50 @@ const deleteParam = (row, index) => {
 }
 
 const close = () => {
-    if (!this.isInfoMode) {
-        this.reset();
+    if (!isInfoMode.value) {
+        this.reset()
     }
 
     this.$emit("update:visible", false);
 }
-const onConfirm = () => {
-    if (this.isInfoMode) {
+const onSubmit = () => {
+    if (isInfoMode.value) {
         this.close();
     }
 
-    for (const param of this.form.parameters) {
+    for (const param of form.value.parameters) {
         if (param.key === undefined || param.key === "" || param.key === null) {
-            this.$message.error("自定义参数名不允许为空");
+            $q.notify({message:"自定义参数名不允许为空"})
             return;
         }
     }
 
-    const items = this.form.parameters.map((t) => t.key);
+    const items = form.value.parameters.map((t) => t.key);
     if (items.length !== new Set(items).size) {
-        this.$message.error("存在相同名称的自定义参数");
+        $q.notify({message:"存在相同名称的自定义参数"})
         return;
     }
 
-    if (this.isCreateMode) {
-        this.$refs.form.validate((valid) => {
-            if (valid) {
-                this.form.parameters = this.$refs.params.params;
-                createFlow(this.form).then(() => {
-                    this.$message.success("流程创建成功");
-                    this.close();
+    if (isCreateMode.value) {
+        // this.$refs.form.validate((valid) => {
+        //     if (valid) {
+                form.value.parameters = paramsTable.value.getData();
+                createFlow(form.value).then(() => {
+                    $q.notify({message:"流程创建成功"})
+                    close()
                 });
-            }
-        });
+            // }
+        // });
     }
 
-    if (this.isEditMode) {
+    if (isEditMode.value) {
         this.$refs.form.validate((valid) => {
             ParamTable.vue;
             if (valid) {
-                this.form.parameters = this.$refs.params.params;
+                form.value.parameters = this.$refs.params.params;
                 updateFlow(this.form.id, this.form).then(() => {
-                    this.$message.success("修改成功");
-                    this.close();
+                    $q.notify({message:"修改成功"})
+                    close();
                 });
             }
         });
