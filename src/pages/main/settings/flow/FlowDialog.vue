@@ -1,7 +1,6 @@
 <template>
     <q-dialog
         full-height
-        full-width
         transition-show="scale"
         transition-hide="scale"
         v-model="dlgVisible"
@@ -9,9 +8,7 @@
         :content-style="{width: '800px'}"
         @close="close"
     >
-
-        <q-card>
-
+        <q-card class="my-card">
             <q-form @submit="onSubmit">
                 <q-bar>
                     <q-icon name="mediation"/>
@@ -27,7 +24,7 @@
                     <div class="row q-col-gutter-x-lg q-pl-lg">
 
                         <!--                    <div class="q-gutter-xs" style="max-width: 300px">-->
-                        <div class="col-3 q-pa-sm">
+                        <div class="col-5 q-pa-sm">
                             <q-input v-model="form.name" label="流程名称" stack-label clearable
                                      :rules="[ val => val !== null && val !== '' || '请输入流程名称' ]"/>
                             <q-input v-model="form.code" label="流程code" stack-label clearable
@@ -43,7 +40,7 @@
                             <q-input v-model="form.alignment_tool" label="对比软件" stack-label clearable
                                      :rules="[val => val !== null && val !== '' || '请输入对比软件']"/>
                         </div>
-                        <div class="col-3 q-pa-sm">
+                        <div class="col-6 q-pa-sm">
                             <q-expansion-item default-opened icon="perm_identity" label="样本数目" class="shadow-1">
                                 <q-radio v-model="form.sample_type" val="single" label="单样本" color="teal" keep-color/>
                                 <q-radio v-model="form.sample_type" val="double" label="配对样本" color="orange"
@@ -73,14 +70,12 @@
 
                 <!--        <param-table ref="builtinParams" :data="form.builtin_parameters" title="内置参数" />-->
                 <param-table ref="paramsTable" :data="form.parameters" title="自定义参数" :action="action"/>
-
-                <q-card-actions align="right">
-                    <!--                <q-btn label="确 定" color="primary" @click="onConfirm"/>-->
-                    <q-btn label="确 定" color="primary" type="submit"/>
-                    <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
-                </q-card-actions>
             </q-form>
-
+            <q-card-actions align="right">
+                <!--                <q-btn label="确 定" color="primary" @click="onConfirm"/>-->
+                <q-btn label="确 定" color="primary" type="submit"/>
+                <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
+            </q-card-actions>
         </q-card>
     </q-dialog>
 </template>
@@ -233,4 +228,9 @@ const onSubmit = () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.my-card {
+    width: 100%;
+    max-width: 900px;
+}
+</style>
