@@ -6,6 +6,7 @@
                 <q-input
                     label="用户账号、姓名、邮箱搜索"
                     clearable
+                    @clear="refreshUsers"
                     v-model="searchKeyword"
                 >
                     <template v-slot:prepend>
@@ -20,6 +21,7 @@
                     color="primary"
                     icon="search"
                     label="搜索"
+                    @click="refreshUsers"
                 ></q-btn>
             </div>
             <div class="col-1">
@@ -29,7 +31,7 @@
                     color="primary"
                     icon="search"
                     label="新建"
-                    @click="createUserDlg = true"
+                    @click="clickCreate"
                 ></q-btn>
             </div>
         </div>
@@ -46,7 +48,7 @@
             :rows-per-page-options="[10, 20, 50, 100]"
         >
             <template v-slot:body-cell-operation="props">
-                <q-td key="operation" :props="props">
+                <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn
                             size="xs"
@@ -55,19 +57,21 @@
                             @click="clickEdit(props.row)"
                         ></q-btn>
                         <q-btn
+                            v-if="allowReset(props.row)"
                             size="xs"
                             color="red"
                             text-color="white"
                             label="重置密码"
                             @click="clickReset(props.row)"
                         ></q-btn>
-                        <q-btn
-                            size="xs"
-                            color="red"
-                            text-color="white"
-                            label="删除"
-                            @click="clickDelete(props.row)"
-                        ></q-btn>
+<!--                        <q-btn-->
+<!--                            v-if="allowReset(props)"-->
+<!--                            size="xs"-->
+<!--                            color="red"-->
+<!--                            text-color="white"-->
+<!--                            label="删除"-->
+<!--                            @click="clickDelete(props.row)"-->
+<!--                        ></q-btn>-->
                     </div>
                 </q-td>
             </template>
@@ -81,7 +85,6 @@
                     :disable="scope.isFirstPage"
                     @click="scope.firstPage"
                 />
-
                 <q-btn
                     icon="chevron_left"
                     color="grey-8"
@@ -90,7 +93,6 @@
                     :disable="scope.isFirstPage"
                     @click="scope.prevPage"
                 />
-
                 <q-btn
                     icon="chevron_right"
                     color="grey-8"
@@ -100,7 +102,6 @@
                     :disable="scope.isLastPage"
                     @click="scope.nextPage"
                 />
-
                 <q-btn
                     v-if="scope.pagesNumber > 2"
                     icon="last_page"
@@ -113,15 +114,9 @@
                 />
             </template>
         </q-table>
-        <q-dialog v-model="createUserDlg">
-            <CreateUser></CreateUser>
-        </q-dialog>
-        <q-dialog v-model="editUserDlg">
-            <EditUser :user="currentUser"></EditUser>
-        </q-dialog>
-        <q-dialog v-model="resetPasswordDlg">
-            <ResetPassword :user="currentUser"></ResetPassword>
-        </q-dialog>
+        <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
+        <EditUser ref="editUserDlg" :user="currentUser" @success="refreshUsers"></EditUser>
+        <ResetPassword ref="resetPasswordDlg" :user="currentUser"></ResetPassword>
     </q-page>
 </template>
 
@@ -135,51 +130,23 @@ import CreateUser from "./CreateUser"
 import EditUser from "pages/main/users/EditUser"
 import {deleteFlow} from "src/api/flow"
 import ResetPassword from "pages/main/users/ResetPassword"
+import {storeToRefs} from 'pinia'
+import {globalStore} from "src/stores/global";
 
-const createUserDlg = ref(false)
-const editUserDlg = ref(false)
-const resetPasswordDlg = ref(false)
-const currentUser = ref({})
+const createUserDlg = ref(null)
+const editUserDlg = ref(null)
+const resetPasswordDlg = ref(null)
+const user = ref({})
 const $q = useQuasar();
+const store = globalStore()
 const columns = [
-    {
-        name: "id",
-        label: "ID",
-        align: "center",
-        style: "width:80px",
-        field: (row) => row.id,
-        format: (val) => `${val}`,
-    },
-    {
-        name: "username",
-        label: "姓名",
-        field: "username",
-        sortable: true,
-        align: "center",
-    },
-    {
-        name: "department",
-        align: "center",
-        label: "部门",
-        field: "calories",
-        sortable: true,
-    },
-
-    {name: "email", label: "邮箱", field: "email", align: "center"},
-    {
-        name: "role",
-        label: "角色",
-        align: "center",
-        field: "role",
-        format: (v) => getRoleName(v),
-    },
-    {
-        name: "is_active",
-        label: "状态",
-        field: "is_active",
-        align: "center",
-        format: (v) => `${v ? "启用" : "禁用"}`,
-    },
+    {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
+    {name: "username", label: "账号", field: "username", sortable: true, align: "center",},
+    {name: "nickname", label: "姓名", field: "nickname", sortable: true, align: "center",},
+    // {name: "department",align: "center",label: "部门",field: "calories",sortable: true, },
+    // {name: "email", label: "邮箱", field: "email", align: "center"},
+    {name: "role", label: "角色", align: "center", field: "role", format: (v) => getRoleName(v),},
+    {name: "is_active", label: "状态", field: "is_active", align: "center", format: (v) => `${v ? "启用" : "禁用"}`,},
     {name: "operation", label: "操作", align: "center", style: "width:220px"},
 ]
 
@@ -187,6 +154,7 @@ let rows = ref([]);
 onMounted(() => {
     refreshUsers();
 })
+
 const searchKeyword = ref("")
 
 const getRoleName = (roles) => {
@@ -205,6 +173,10 @@ const getRoleName = (roles) => {
         .join(",");
 }
 
+const allowReset = (row) => {
+    return row.id !== _.get(store, 'currentUser.id')
+}
+
 const getStatus = (isActive) => {
     return isActive ? "√" : "x"
 }
@@ -217,10 +189,14 @@ const pagination = {
     // rowsNumber: xx if getting data from a server
 }
 
+const clickCreate = () => {
+    createUserDlg.value.show()
+}
+
 const clickEdit = (row) => {
     console.log('click edit', row)
-    currentUser.value = row
-    editUserDlg.value = true
+    user.value = row
+    editUserDlg.value.show()
 }
 
 const clickReset = (row) => {
@@ -233,8 +209,8 @@ const clickReset = (row) => {
     //     });
     // });
 
-    currentUser.value = row
-    resetPasswordDlg.value = true
+    user.value = row
+    resetPasswordDlg.value.show()
 }
 
 const clickDelete = (row) => {
@@ -260,8 +236,9 @@ const clickDelete = (row) => {
         })
     $q.notify("暂不支持用户删除")
 }
-const refreshUsers = () => {
-    listUser().then((data) => {
+
+function refreshUsers() {
+    listUser(searchKeyword.value).then((data) => {
         console.log("====>查询用户成功", data)
         rows.value = data.item_list
     })
@@ -291,6 +268,9 @@ const refreshUsers = () => {
         background: #fff
 
     /* this will be the loading indicator */
+
+
+
 
     thead tr:last-child th
         /* height of all previous header rows */

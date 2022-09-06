@@ -1,11 +1,11 @@
 import { api } from "src/boot/axios";
 
 // 分页查询用户列表
-export function listUser(page = 1, size = 10) {
+export function listUser(keyword, page = 1, size = 10) {
     return api({
         url: "/account/",
         method: "get",
-        params: { page, size },
+        params: { keyword, page, size },
     });
 }
 
