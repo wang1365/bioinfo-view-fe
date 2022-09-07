@@ -1,36 +1,32 @@
 <template>
     <q-dialog
-        full-height
+        persistent
+        full-width
         transition-show="scale"
         transition-hide="scale"
         v-model="dlgVisible"
         :title="title"
         :content-style="{width: '800px'}"
-        @close="close"
     >
         <q-card class="my-card">
-            <q-form @submit="onSubmit">
-                <q-bar>
-                    <q-icon name="mediation"/>
-                    <div>流程管理</div>
-                    <q-space/>
-                    <q-btn dense flat icon="close" v-close-popup>
-                        <q-tooltip>Close</q-tooltip>
-                    </q-btn>
-                </q-bar>
-
-                <q-card-section>
-                    <!--                    <div class="q-col-gutter-xs" style="max-width: 300px">-->
+            <q-bar>
+                <q-icon name="mediation"/>
+                <div>流程管理</div>
+                <q-space/>
+                <q-btn dense flat icon="close" v-close-popup>
+                    <q-tooltip>取消</q-tooltip>
+                </q-btn>
+            </q-bar>
+            <q-form ref="qForm" @submit="onSubmit">
+                <q-card-section class="q-pa-sm">
                     <div class="row q-col-gutter-x-lg q-pl-lg">
-
-                        <!--                    <div class="q-gutter-xs" style="max-width: 300px">-->
                         <div class="col-5 q-pa-sm">
                             <q-input v-model="form.name" label="流程名称" stack-label clearable
                                      :rules="[ val => val !== null && val !== '' || '请输入流程名称' ]"/>
                             <q-input v-model="form.code" label="流程code" stack-label clearable
                                      :rules="[ val => val !== null && val !== '' || '请输入流程code']"/>
                             <q-input v-model="form.flow_category" label="分类名称" stack-label clearable
-                                     rules="[ val => val !== null && val !== '' || '请输入分类名称', ]"/>
+                                     :rules="[ val => val !== null && val !== '' || '请输入流程code']"/>
                             <q-input v-model="form.memory" :min="0" :step="100" label="内存(m)" stack-label clearable
                                      :rules="[val => val !== null && val !== '' || '请输入内存数值']"
                             />
@@ -39,6 +35,7 @@
                                      :rules="[val => val !== null && val !== '' ||  '请输入脚本路径']"/>
                             <q-input v-model="form.alignment_tool" label="对比软件" stack-label clearable
                                      :rules="[val => val !== null && val !== '' || '请输入对比软件']"/>
+
                         </div>
                         <div class="col-6 q-pa-sm">
                             <q-expansion-item default-opened icon="perm_identity" label="样本数目" class="shadow-1">
@@ -47,35 +44,38 @@
                                          keep-color/>
                                 <q-radio v-model="form.sample_type" val="multiple" label="多样本" color="cyan" keep-color/>
                             </q-expansion-item>
-
+                            <br/>
                             <q-expansion-item default-opened icon="perm_identity" label="支持非标准样本" class="shadow-1">
                                 <q-radio v-model="form.allow_nonstandard_samples" val="true" label="是" color="teal"
                                          keep-color/>
                                 <q-radio v-model="form.allow_nonstandard_samples" val="false" label="否" color="orange"
                                          keep-color/>
                             </q-expansion-item>
-                            <q-input v-model="form.desp" type="textarea" label="描 述" stack-label clearable/>
+                            <br/>
+                            <q-input v-model="form.desp" type="textarea" filled label="描 述"
+                                     stack-label clearable counter
+                            />
+                            <br/>
                             <q-input
                                 v-model="form.details"
-                                type="textarea"
+                                type="textarea" filled
                                 :autosize="{ minRows: 18, maxRows: 380 }"
                                 label="提示说明"
-                                stack-label clearable
+                                stack-label clearable counter
                             />
                         </div>
                     </div>
-
-
                 </q-card-section>
 
                 <!--        <param-table ref="builtinParams" :data="form.builtin_parameters" title="内置参数" />-->
                 <param-table ref="paramsTable" :data="form.parameters" title="自定义参数" :action="action"/>
+
+                <q-card-actions align="right">
+<!--                    <q-btn label="确 定" color="primary" @click="onConfirm"/>-->
+                                    <q-btn label="确 定" color="primary" type="submit"/>
+                    <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
+                </q-card-actions>
             </q-form>
-            <q-card-actions align="right">
-                <!--                <q-btn label="确 定" color="primary" @click="onConfirm"/>-->
-                <q-btn label="确 定" color="primary" type="submit"/>
-                <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
-            </q-card-actions>
         </q-card>
     </q-dialog>
 </template>
@@ -178,13 +178,27 @@ const deleteParam = (row, index) => {
 
 const close = () => {
     if (!isInfoMode.value) {
-        this.reset()
+        reset()
     }
 
-    this.$emit("update:visible", false);
+    dlgVisible.value = false
 }
+
+// const qForm = ref(null)
+// const onConfirm = () => {
+//     qForm.value.validate().then(success => {
+//         if (success) {
+//             // 是的，模型是正确的
+//             onSubmit()
+//         }
+//     })
+// }
+
+
 const onSubmit = () => {
+    console.log('start submit')
     if (isInfoMode.value) {
+        console.log('not support info log')
         this.close();
     }
 
@@ -214,23 +228,20 @@ const onSubmit = () => {
     }
 
     if (isEditMode.value) {
-        this.$refs.form.validate((valid) => {
-            ParamTable.vue;
-            if (valid) {
-                form.value.parameters = this.$refs.params.params;
-                updateFlow(this.form.id, this.form).then(() => {
-                    $q.notify({message: "修改成功"})
-                    close();
-                });
-            }
+        form.value.parameters = paramsTable.value.getData();
+        updateFlow(form.value.id, form.value).then(() => {
+            $q.notify({message: "修改成功"})
+            close();
         });
     }
+
+    console.log('unsupported mode', props.action)
 }
 </script>
 
 <style lang="scss" scoped>
 .my-card {
     width: 100%;
-    max-width: 900px;
+    max-width: 800px;
 }
 </style>

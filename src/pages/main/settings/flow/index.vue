@@ -22,6 +22,7 @@
                     <q-btn label="查看" color="primary" size="sm" @click="showInfoDlg(props.row)"></q-btn>
                     <q-btn label="编辑" color="orange" size="sm" @click="showEditDlg(props.row)"></q-btn>
                     <q-btn label="删除" color="red-10" size="sm" @click="showDeleteDlg(props.row)"></q-btn>
+                    <q-btn label="+" color="red-10" flat size="xs" @click="showCreateTaskDlg(props.row)"></q-btn>
                 </q-td>
             </template>
         </q-table>
@@ -29,6 +30,7 @@
         <flow-dialog ref="dlgCreate" action="create" @handleFinish="refreshFlows"/>
         <flow-dialog ref="dlgEdit" action="edit" @handleFinish="refreshFlows"/>
         <flow-dialog ref="dlgInfo" action="info" @handleFinish="refreshFlows"/>
+        <task-param-table ref="dlgCreateTask" :flowId="currentFlowId" @handleFinish="refreshFlows"/>
     </q-page>
 </template>
 
@@ -38,20 +40,23 @@ import {ref, onMounted} from "vue";
 import {useQuasar} from "quasar";
 import PageTitle from "components/page-title/PageTitle";
 import FlowDialog from "./FlowDialog";
+import TaskParamTable from './components/TaskParamTable'
 
 const dlgCreate = ref(null)
 const dlgEdit = ref(null)
 const dlgInfo = ref(null)
+const dlgCreateTask = ref(null)
+const currentFlowId = ref(null)
 
 const $q = useQuasar()
 const columns = [
     {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
     {name: "name", label: "名 称", field: "name", sortable: true, align: "center",},
-    {name: "code", align: "center", label: "code", field: "calories", sortable: true,},
+    {name: "code", label: "类型", field: "code", align: "center", sortable: true,},
     {name: "flow_category", label: "分 类", field: "flow_category", align: "center",},
     {name: "memory", label: "内存(m)", align: "center", field: "memory"},
     {name: "docker_image", label: "Docker镜像", field: "docker_image", align: "center",},
-    {name: "desp", label: "描述", align: "center", style: "width:220px"},
+    {name: "desp", label: "描述", field: "desp", align: "center", style: "width:220px"},
     {name: "create_time", label: "创建时间", field: "create_time", align: "center", style: "width:220px",},
     {name: "operation", label: "操 作", align: "center", style: "width:250px",},
 ]
@@ -118,8 +123,14 @@ const showDeleteDlg = (row) => {
     });
 };
 
+const showCreateTaskDlg = (row) => {
+    currentFlowId.value = row.id
+    dlgCreateTask.value.show()
+    dlgCreateTask.value.setData(row);
+};
+
 const showInfoDlg = (row) => {
-    dlgCreate.value.show()
+    dlgInfo.value.show()
     dlgInfo.value.setData(row);
 };
 
