@@ -52,15 +52,27 @@
             :rows-per-page-options="[10, 20, 50, 100]"
             @request="refreshUsersForEvent"
         >
+            <template v-slot:body-cell-disk="props">
+                <q-td align="center">
+                    {{ (props.row.used_disk || 0) + '/' + (props.row.disk_limit || '无限制')}}
+                </q-td>
+            </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn
                             size="xs"
                             color="primary"
-                            label="编辑"
+                            label="设置"
                             @click="clickEdit(props.row)"
                         ></q-btn>
+<!--                        <q-btn-->
+<!--                            size="xs"-->
+<!--                            color="primary"-->
+<!--                            text-color="white"-->
+<!--                            label="配额"-->
+<!--                            @click="clickSetResourceLimit(props.row)"-->
+<!--                        ></q-btn>-->
                         <q-btn
                             v-if="allowReset(props.row)"
                             size="xs"
@@ -69,13 +81,7 @@
                             label="重置密码"
                             @click="clickReset(props.row)"
                         ></q-btn>
-                        <q-btn
-                            size="xs"
-                            color="red"
-                            text-color="white"
-                            label="配额"
-                            @click="clickSetResourceLimit(props.row)"
-                        ></q-btn>
+
                         <q-btn
                             size="xs"
                             color="red"
@@ -134,8 +140,8 @@
 <!--            </template>-->
         </q-table>
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
-        <EditUser ref="editUserDlg" :user="currentUser" @success="refreshUsers"></EditUser>
-        <ResetPassword ref="resetPasswordDlg" :user="currentUser"></ResetPassword>
+        <EditUser ref="editUserDlg" :user="user" @success="refreshUsers"></EditUser>
+        <ResetPassword ref="resetPasswordDlg" :user="user"></ResetPassword>
     </q-page>
 </template>
 
@@ -156,19 +162,19 @@ const createUserDlg = ref(null)
 const editUserDlg = ref(null)
 const resetPasswordDlg = ref(null)
 const resetResourceLimitDlg = ref(false)
-const user = ref({})
+const user = ref(null)
 const $q = useQuasar();
 const store = globalStore()
 const columns = [
     {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
     {name: "username", label: "账号", field: "username", sortable: true, align: "center",},
     {name: "nickname", label: "姓名", field: "nickname", sortable: true, align: "center",},
-    {name: "disk", label: "磁盘限额", field: "disk", sortable: true, align: "center",},
+    {name: "disk", label: "磁盘使用(MB)", field: "disk", sortable: true, align: "center",},
     // {name: "department",align: "center",label: "部门",field: "calories",sortable: true, },
     // {name: "email", label: "邮箱", field: "email", align: "center"},
     {name: "role", label: "角色", align: "center", field: "role", format: (v) => getRoleName(v),},
     {name: "is_active", label: "状态", field: "is_active", align: "center", format: (v) => `${v ? "启用" : "禁用"}`,},
-    {name: "operation", label: "操作", align: "center", style: "width:220px"},
+    {name: "operation", label: "操作", align: "center", style: "width:350px"},
 ]
 
 const loading = ref(false)
@@ -218,6 +224,7 @@ const clickCreate = () => {
 const clickEdit = (row) => {
     console.log('click edit', row)
     user.value = row
+
     editUserDlg.value.show()
 }
 

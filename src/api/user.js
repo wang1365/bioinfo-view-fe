@@ -72,6 +72,14 @@ export function updateUser(userid, is_active, role, department) {
     });
 }
 
+export function patchUser(userId, nickname, disk_limit) {
+    return api({
+        url: `account/${userId}`,
+        method: "patch",
+        data: { nickname, disk_limit },
+    });
+}
+
 export function resetPassword(userId, password) {
     return api({
         url: "account/`${userId}`/reset_password",
