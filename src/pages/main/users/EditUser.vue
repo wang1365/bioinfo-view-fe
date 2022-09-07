@@ -35,6 +35,17 @@
                             lazy-rules
                         />
                     </q-item>
+                    <q-item>
+                        <q-toggle
+                            v-model="form.is_active"
+                            checked-icon="check"
+                            color="green"
+                            label="启用"
+                            left-label
+                            unchecked-icon="clear"
+                        />
+                    </q-item>
+
                     <!--                    <q-item>-->
                     <!--                        <q-input class="full-width"-->
                     <!--                            filled-->
@@ -103,6 +114,7 @@ const props = defineProps({
                 id: null,
                 username: '',
                 nickname: '',
+                is_active: true,
                 disk_limit: null
             };
         },
@@ -118,12 +130,13 @@ watch(user,  (v) => {
     form.value = {
         username: props.user.username,
         nickname: props.user.nickname,
-        disk_limit: props.user.disk_limit
+        disk_limit: props.user.disk_limit,
+        is_active: props.user.is_active
     }
 })
 
 const clickOk = () => {
-    patchUser(props.user.id, form.value.nickname, form.value.disk_limit).then(() => {
+    patchUser(props.user.id, form.value).then(() => {
         $q.notify({message: '修改用户成功', type: 'positive'})
         emit('success')
         dlgVisible.value = false

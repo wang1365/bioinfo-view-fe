@@ -72,11 +72,11 @@ export function updateUser(userid, is_active, role, department) {
     });
 }
 
-export function patchUser(userId, nickname, disk_limit) {
+export function patchUser(userId, data) {
     return api({
         url: `account/${userId}`,
         method: "patch",
-        data: { nickname, disk_limit },
+        data: data,
     });
 }
 

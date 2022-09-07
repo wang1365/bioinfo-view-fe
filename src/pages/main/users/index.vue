@@ -250,24 +250,17 @@ const clickDelete = (row) => {
     $q.dialog({
         title: "确认删除",
         message: `是否要删除用户"${row.username}"?`,
-        cancel: true,
-        persistent: true,
+        cancel: '取消',
+        ok: '确定',
     })
         .onOk(() => {
             batchDeleteUser({ids: [row.id]}).then(() => {
                 $q.notify("删除成功")
             });
         })
-        .onOk(() => {
-            // console.log('>>>> second OK catcher')
-        })
         .onCancel(() => {
             // console.log('>>>> Cancel')
         })
-        .onDismiss(() => {
-            // console.log('I am triggered on both OK and Cancel')
-        })
-    $q.notify("暂不支持用户删除")
 }
 
 function refreshUsersForEvent(props) {
