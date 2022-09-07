@@ -47,16 +47,16 @@
             </q-toolbar>
         </q-section>
         <q-section>
-            <div class="q-pa-md">
+            <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
-                        <tr class="text-body1 text-weight-bold">
+                        <tr>
                             <td>患者识别号</td>
                             <td>送检机构</td>
                             <td>年龄</td>
                             <td>诊疗医生</td>
                             <td>性别</td>
-                            <td class="text-right">操作</td>
+                            <td>操作</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,7 +66,7 @@
                             <td>{{ patient.age }}</td>
                             <td>{{ patient.medical_doctor }}</td>
                             <td>{{ patient.gender }}</td>
-                            <td class="q-gutter-x-sm text-right">
+                            <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="primary"
                                     label="编辑"

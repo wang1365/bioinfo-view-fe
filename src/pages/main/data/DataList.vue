@@ -10,17 +10,17 @@
                     icon="description"
                     @click="showDataNew = true"
                 />
-                <q-btn color="positive" label="批量上传" icon="file_upload" />
+                <!-- <q-btn color="positive" label="批量上传" icon="file_upload" />
                 <q-btn color="positive" label="模板下载" icon="file_download">
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
-                </q-btn>
+                </q-btn> -->
             </q-toolbar>
         </q-section>
         <q-section>
-            <div class="q-pa-md">
+            <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
-                        <tr class="text-body1 text-weight-bold">
+                        <tr>
                             <!-- <td class="q-pa-md text-center">
                                 <q-checkbox
                                     v-model="selected"
@@ -52,7 +52,7 @@
                     </thead>
                     <tbody>
                         <tr
-                            class="bg-grey-1 hover"
+                            class="hover"
                             v-for="item in dataItems"
                             v-bind:key="item.name"
                         >
@@ -63,40 +63,40 @@
                                 />
                             </td> -->
 
-                            <td class="text-center">
+                            <td>
                                 {{ item.project_index }}
                             </td>
-                            <td class="text-center">
+                            <td>
                                 {{ item.library_number }}
                             </td>
-                            <!-- <td class="text-center">{{ item.reagent_box }}</td>
-                            <td class="text-center">
-                                {{ item.nucleicx_type }}
+                            <!-- <td >{{ item.reagent_box }}</td>
+                            <td >
+                                {{ item.nucleic_break_type }}
                             </td>
-                            <td class="text-center">
+                            <td >
                                 {{ item.library_input }}
                             </td>
-                            <td class="text-center">{{ item.index_type }}</td>
-                            <td class="text-center">{{ item.index_number }}</td>
-                            <td class="text-center">{{ item.hybrid_input }}</td>
-                            <td class="text-center">{{ item.risk }}</td>
-                            <td class="text-center">
+                            <td >{{ item.index_type }}</td>
+                            <td >{{ item.index_number }}</td>
+                            <td >{{ item.hybrid_input }}</td>
+                            <td >{{ item.risk }}</td>
+                            <td >
                                 {{ item.nucleic_level }}
                             </td> -->
-                            <td class="text-center">
+                            <td>
                                 {{ item.sample_meta_id }}
                             </td>
-                            <td class="text-center">
+                            <td>
                                 {{ item.sample_identifier }}
                             </td>
-                            <td class="text-center">{{ item.identifier }}</td>
-                            <td class="text-center">{{ item.company }}</td>
-                            <td class="text-center">{{ item.nucleic_type }}</td>
-                            <td class="text-center">{{ item.fastq1_path }}</td>
-                            <td class="text-center">{{ item.fastq2_path }}</td>
-                            <!-- <td class="text-center">{{ item.user_id }}</td>
-                            <td class="text-center">{{ item.create_time }}</td>
-                            <td class="text-center">{{ item.modify_time }}</td> -->
+                            <td>{{ item.identifier }}</td>
+                            <td>{{ item.company }}</td>
+                            <td>{{ item.nucleic_type }}</td>
+                            <td>{{ item.fastq1_path }}</td>
+                            <td>{{ item.fastq2_path }}</td>
+                            <!-- <td >{{ item.user_id }}</td>
+                            <td >{{ item.create_time }}</td>
+                            <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="secondary"
@@ -222,7 +222,7 @@ const confirm = (item) => {
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/sample/samples/${item.id}`, (_) => {
+        apiDelete(`/sample/samples/${item.id}/`, (_) => {
             infoMessage("删除成功");
             refreshPage();
         });

@@ -75,9 +75,11 @@
                         </div>
                         <div class="col q-pr-sm">
                             <q-input
-                                v-model="form.nucleicx_type"
-                                :error="errors.nucleicx_type.error"
-                                :error-message="errors.nucleicx_type.message"
+                                v-model="form.nucleic_break_type"
+                                :error="errors.nucleic_break_type.error"
+                                :error-message="
+                                    errors.nucleic_break_type.message
+                                "
                                 label="核酸打断方式"
                             ></q-input>
                         </div>
@@ -253,7 +255,7 @@ const errors = ref({
         message: "必填",
         error: false,
     },
-    nucleicx_type: {
+    nucleic_break_type: {
         // 核酸打断方式
         message: "必填",
         error: false,
@@ -328,7 +330,7 @@ const form = ref({
     project_index: "",
     library_number: "",
     reagent_box: "asdf",
-    nucleicx_type: "",
+    nucleic_break_type: "",
     library_input: "asdfas",
     index_type: "",
     index_number: "",
@@ -352,7 +354,7 @@ const save = async () => {
         project_index: form.value.project_index,
         library_number: form.value.library_number,
         reagent_box: form.value.reagent_box,
-        nucleicx_type: form.value.nucleicx_type,
+        nucleic_break_type: form.value.nucleic_break_type,
         library_input: form.value.library_input,
         index_type: form.value.index_type,
         index_number: form.value.index_number,
