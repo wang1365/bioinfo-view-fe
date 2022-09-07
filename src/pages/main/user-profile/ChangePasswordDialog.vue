@@ -4,9 +4,8 @@
             <q-card-section>
                 <div class="text-h6">修改密码</div>
             </q-card-section>
-
-            <q-card-section class="q-pt-none">
-                <q-form class="q-gutter-md" ref="passwordFormRef">
+            <q-form class="q-gutter-md" ref="passwordFormRef" @submit="onSubmit">
+                <q-card-section class="q-pt-none">
                     <q-input
                         filled
                         v-model.trim="passwordForm.old_password"
@@ -63,25 +62,30 @@
                             />
                         </template>
                     </q-input>
-                </q-form>
-            </q-card-section>
 
-            <q-card-actions align="right" class="text-primary">
-                <q-btn flat label="取消" v-close-popup />
-                <q-btn flat label="确认" @click="handleChangePassword" />
-            </q-card-actions>
+                </q-card-section>
+
+                <q-card-actions align="right" class="text-primary">
+                    <q-btn label="取消" v-close-popup/>
+<!--                    <q-btn flat label="确认" @click="handleChangePassword"/>-->
+                    <q-btn label="确认" color="primary" type="submit"/>
+                </q-card-actions>
+            </q-form>
         </q-card>
     </q-dialog>
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { useQuasar } from "quasar";
-import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import {ref} from "vue";
+import {useQuasar} from "quasar";
+import {useI18n} from "vue-i18n";
+import {useRouter} from "vue-router";
+import {resetPassword} from 'src/api/user'
+import {globalStore} from 'src/stores/global'
 
 const $q = useQuasar();
-const { t } = useI18n();
+const store = globalStore();
+const {t} = useI18n();
 const router = useRouter();
 const passwordDialog = ref(false);
 const passwordForm = ref({
@@ -99,7 +103,15 @@ defineExpose({
     show,
 });
 const passwordFormRef = ref(null);
-const handleChangePassword = async () => {
+const onSubmit = () => {
+    resetPassword(store.currentUser.id, passwordForm.value.new_password_1).then(() => {
+        passwordDialog.value = false
+        $q.notify({
+            message:'修改密码成功'
+        })
+
+        // TODO 登出
+    })
     // const success = await passwordFormRef.value.validate()
     // if (success) {
     //     if (passwordForm.value.new_password_1 !== passwordForm.value.new_password_2) {
