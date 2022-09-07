@@ -53,9 +53,13 @@
                         <tr>
                             <td>患者识别号</td>
                             <td>送检机构</td>
-                            <td>年龄</td>
                             <td>诊疗医生</td>
                             <td>性别</td>
+                            <td>年龄</td>
+                            <td>临床诊断</td>
+                            <td>肿瘤分期</td>
+                            <td>遗传病</td>
+                            <td>家族史</td>
                             <td>操作</td>
                         </tr>
                     </thead>
@@ -63,9 +67,13 @@
                         <tr v-for="(patient, index) in patients" :key="index">
                             <td>{{ patient.name }}</td>
                             <td>{{ patient.inspection_agency }}</td>
-                            <td>{{ patient.age }}</td>
                             <td>{{ patient.medical_doctor }}</td>
                             <td>{{ patient.gender }}</td>
+                            <td>{{ patient.age }}</td>
+                            <td>{{ patient.diagnosis }}</td>
+                            <td>{{ patient.tumor_stage }}</td>
+                            <td>{{ patient.disease }}</td>
+                            <td>{{ patient.family_history }}</td>
                             <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="primary"

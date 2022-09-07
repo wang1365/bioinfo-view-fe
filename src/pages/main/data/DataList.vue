@@ -21,7 +21,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <!-- <td class="q-pa-md text-center">
+                            <!-- <td >
                                 <q-checkbox
                                     v-model="selected"
                                     color="negative"
@@ -94,7 +94,7 @@
                             <td>{{ item.nucleic_type }}</td>
                             <td>{{ item.fastq1_path }}</td>
                             <td>{{ item.fastq2_path }}</td>
-                            <!-- <td >{{ item.user_id }}</td>
+                            <!-- <td>{{ item.user_id }}</td>
                             <td >{{ item.create_time }}</td>
                             <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-x-sm">
