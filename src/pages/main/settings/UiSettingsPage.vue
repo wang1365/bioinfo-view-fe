@@ -35,7 +35,7 @@
                             max-file-size="2048000"
                             bg-color="blue"
                             label-color="white"
-                            accept=".jpg,.png,.svg"
+                            accept=".jpg,.png,.svg,.ico"
                             @rejected="onRejected"
                         >
                         </q-file>
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import {ref, watch, onMounted} from 'vue'
+import {ref, watch, onMounted, toRefs} from 'vue'
 import PageTitle from "components/page-title/PageTitle"
 import {useQuasar} from 'quasar'
 import { QSpinnerGears } from 'quasar'
