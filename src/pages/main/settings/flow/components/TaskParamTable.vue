@@ -9,7 +9,6 @@
                 :columns="columns"
                 row-key="name"
                 color="primary"
-                separator="cell"
                 dense
                 hide-no-data
                 wrap-cells
@@ -83,10 +82,10 @@ const dlgVisible = ref(false)
 
 
 const columns = [
-    {name: "required", label: "必填", field: "required"},
-    {name: "key", label: "参数名", field: "key", align: "center", headerStyle: 'width: 200px'},
-    {name: "value", label: "值类型", field: "type", align: "center", headerStyle: 'width: 400px'},
-    {name: "description", label: "说明", field: "description", align: "center", headerStyle: 'width: 400px'},
+    {name: "required", label: "必填", field: "required", required: true},
+    {name: "key", label: "参数名", field: "key", align: "center", headerStyle: 'width: 200px', required: true},
+    {name: "value", label: "值类型", field: "type", align: "center", headerStyle: 'width: 400px', required: true},
+    {name: "description", label: "说明", field: "description", align: "center", headerStyle: 'width: 400px', required: true},
 ];
 
 const form = ref([])

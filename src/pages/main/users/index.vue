@@ -30,7 +30,7 @@
                     class="on-plus"
                     size="md"
                     color="primary"
-                    icon="search"
+                    icon="add"
                     label="新建"
                     @click="clickCreate"
                 ></q-btn>
@@ -54,90 +54,90 @@
         >
             <template v-slot:body-cell-disk="props">
                 <q-td align="center">
-                    {{ (props.row.used_disk || 0) + '/' + (props.row.disk_limit || '无限制')}}
+                    {{ (props.row.used_disk || 0) + '/' + (props.row.disk_limit || '无限制') }}
+                </q-td>
+            </template>
+            <template v-slot:body-cell-role="props">
+                <q-td align="center">
+                    <q-chip v-if="_.get(props.row, 'role[0]') === 'super'" color="primary" text-color="white">
+                        <q-avatar icon="bookmark" color="red" text-color="white"/>
+                        超级管理员
+                    </q-chip>
+                    <span v-else>{{ getRoleName(props.row.role) }}</span>
+                </q-td>
+            </template>
+            <template v-slot:body-cell-is_active="props">
+                <q-td align="center">
+                    <q-chip v-if="props.row.is_active" label="启用" color="green" size="sm"/>
+                    <q-chip v-else label="禁用" color="orange" size="sm"/>
                 </q-td>
             </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn
-                            size="xs"
+                            size="xs" outline
                             color="primary"
                             label="设置"
                             @click="clickEdit(props.row)"
                         ></q-btn>
-<!--                        <q-btn-->
-<!--                            size="xs"-->
-<!--                            color="primary"-->
-<!--                            text-color="white"-->
-<!--                            label="配额"-->
-<!--                            @click="clickSetResourceLimit(props.row)"-->
-<!--                        ></q-btn>-->
                         <q-btn
                             v-if="allowReset(props.row)"
-                            size="xs"
+                            size="xs" outline
                             color="red"
-                            text-color="white"
+                            text-color="red"
                             label="重置密码"
                             @click="clickReset(props.row)"
                         ></q-btn>
 
                         <q-btn
-                            size="xs"
+                            size="xs" outline
                             color="red"
-                            text-color="white"
+                            text-color="red"
                             label="删除"
                             @click="clickDelete(props.row)"
                         ></q-btn>
-<!--                        <q-btn-->
-<!--                            v-if="allowReset(props)"-->
-<!--                            size="xs"-->
-<!--                            color="red"-->
-<!--                            text-color="white"-->
-<!--                            label="删除"-->
-<!--                            @click="clickDelete(props.row)"-->
-<!--                        ></q-btn>-->
                     </div>
                 </q-td>
             </template>
-<!--            <template v-slot:pagination="scope">-->
-<!--                <q-btn-->
-<!--                    v-if="scope.pagesNumber > 2"-->
-<!--                    icon="first_page"-->
-<!--                    color="grey-8"-->
-<!--                    round-->
-<!--                    flat-->
-<!--                    :disable="scope.isFirstPage"-->
-<!--                    @click="scope.firstPage"-->
-<!--                />-->
-<!--                <q-btn-->
-<!--                    icon="chevron_left"-->
-<!--                    color="grey-8"-->
-<!--                    round-->
-<!--                    flat-->
-<!--                    :disable="scope.isFirstPage"-->
-<!--                    @click="scope.prevPage"-->
-<!--                />-->
-<!--                <q-btn-->
-<!--                    icon="chevron_right"-->
-<!--                    color="grey-8"-->
-<!--                    round-->
-<!--                    dense-->
-<!--                    flat-->
-<!--                    :disable="scope.isLastPage"-->
-<!--                    @click="scope.nextPage"-->
-<!--                />-->
-<!--                <q-btn-->
-<!--                    v-if="scope.pagesNumber > 2"-->
-<!--                    icon="last_page"-->
-<!--                    color="grey-8"-->
-<!--                    round-->
-<!--                    dense-->
-<!--                    flat-->
-<!--                    :disable="scope.isLastPage"-->
-<!--                    @click="scope.lastPage"-->
-<!--                />-->
-<!--            </template>-->
+            <!--            <template v-slot:pagination="scope">-->
+            <!--                <q-btn-->
+            <!--                    v-if="scope.pagesNumber > 2"-->
+            <!--                    icon="first_page"-->
+            <!--                    color="grey-8"-->
+            <!--                    round-->
+            <!--                    flat-->
+            <!--                    :disable="scope.isFirstPage"-->
+            <!--                    @click="scope.firstPage"-->
+            <!--                />-->
+            <!--                <q-btn-->
+            <!--                    icon="chevron_left"-->
+            <!--                    color="grey-8"-->
+            <!--                    round-->
+            <!--                    flat-->
+            <!--                    :disable="scope.isFirstPage"-->
+            <!--                    @click="scope.prevPage"-->
+            <!--                />-->
+            <!--                <q-btn-->
+            <!--                    icon="chevron_right"-->
+            <!--                    color="grey-8"-->
+            <!--                    round-->
+            <!--                    dense-->
+            <!--                    flat-->
+            <!--                    :disable="scope.isLastPage"-->
+            <!--                    @click="scope.nextPage"-->
+            <!--                />-->
+            <!--                <q-btn-->
+            <!--                    v-if="scope.pagesNumber > 2"-->
+            <!--                    icon="last_page"-->
+            <!--                    color="grey-8"-->
+            <!--                    round-->
+            <!--                    dense-->
+            <!--                    flat-->
+            <!--                    :disable="scope.isLastPage"-->
+            <!--                    @click="scope.lastPage"-->
+            <!--                />-->
+            <!--            </template>-->
         </q-table>
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
         <EditUser ref="editUserDlg" :user="user" @success="refreshUsers"></EditUser>
@@ -264,7 +264,7 @@ const clickDelete = (row) => {
 }
 
 function refreshUsersForEvent(props) {
-    const { page, rowsPerPage, sortBy, descending } = props.pagination
+    const {page, rowsPerPage, sortBy, descending} = props.pagination
     pagination.value = props.pagination
     refreshUsers()
 }
@@ -305,6 +305,7 @@ function refreshUsers() {
         background: #fff
 
     /* this will be the loading indicator */
+
 
 
 

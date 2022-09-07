@@ -4,9 +4,9 @@
         <q-card class="width:600px">
             <q-card-section>
                 <div class="text-h6">系统标题：</div>
-                <q-input v-model="title" outlined>
+                <q-input v-model="form.title" outlined>
                     <template v-slot:before>
-                        <q-icon name="flight_takeoff" />
+                        <q-icon name="flight_takeoff"/>
                     </template>
                 </q-input>
             </q-card-section>
@@ -15,7 +15,7 @@
                 <q-list>
                     <q-item>
                         <q-img
-                            :src="imageBase64"
+                            :src="form.image"
                             spinner-color="white"
                             style="height: 200px; max-width: 200px"
                         >
@@ -56,13 +56,12 @@
 import {ref, watch, onMounted} from 'vue'
 import PageTitle from "components/page-title/PageTitle"
 import {useQuasar} from 'quasar'
-import {listConfig} from 'src/api/config'
+import {listUiConfig, createUiConfig, updateUiConfig} from 'src/api/ui'
 
 const $q = useQuasar()
 
-const title = ref('纳昂达可视化解读系统')
 const imageFile = ref(null)
-const imageBase64 = ref('')
+const form = ref({})
 
 const upload = () => {
     clearTimeout(this.uploading)
@@ -101,19 +100,49 @@ function fileToBase64(file) {
 watch(imageFile, (val) => {
     fileToBase64(imageFile.value).then(res => {
         console.log('base64：', res)
-        imageBase64.value = res
+        form.value.image = res
     })
 })
 
 onMounted(() => {
-    listConfig().then(res => {
-        console.log('========== 查询配置', res)
-    })
+    refreshUiConfig()
 })
-const clickSet = () => {
 
+const refreshUiConfig = () => {
+    listUiConfig().then(res => {
+        console.log('========== 查询配置', res)
+        if (res.length > 0) {
+            // 取第一条配置
+            form.value = res[0]
+        } else {
+            // 没有配置，则初始化
+            form.value = {
+                id: null,
+                title: '',
+                image: ''
+            }
+        }
+    })
 }
-
+const clickSet = () => {
+    if (!form.value.id) {
+        // 新增配置
+        createUiConfig(form.value).then(res => {
+            $q.notify({
+                message: '设置成功'
+            })
+            refreshUiConfig()
+        })
+    } else {
+        // 更新配置
+        updateUiConfig(form.value).then(res => {
+            $q.notify({
+                message: '设置成功'
+            })
+            refreshUiConfig()
+        })
+    }
+}
 
 
 const onRejected = (rejectedEntries) => {

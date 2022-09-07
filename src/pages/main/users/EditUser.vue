@@ -9,30 +9,27 @@
                     <q-item>
                         <q-input
                             class="full-width"
-                            disable filled stack-label
+                            readonly filled stack-label
                             v-model="form.username"
                             label="用户名"
-                            lazy-rules
                             :rules="[ val => val && val.length > 0 || '请输入用户名']"
                         />
                     </q-item>
                     <q-item>
                         <q-input
                             class="full-width"
-                            filled stack-label
+                            stack-label
                             v-model="form.nickname"
                             label="姓名"
-                            lazy-rules
                             :rules="[ val => val && val.length > 0 || '请输入用户名']"
                         />
                     </q-item>
                     <q-item>
                         <q-input
                             class="full-width"
-                            filled stack-label
+                            stack-label
                             v-model.number="form.disk_limit"
                             label="磁盘配额(MB)"
-                            lazy-rules
                         />
                     </q-item>
                     <q-item>

@@ -7,7 +7,6 @@
             :loading="loading"
             row-key="name"
             color="primary"
-            separator="vertical"
             dense
             hide-no-data
             wrap-cells
@@ -20,9 +19,9 @@
             </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
-                    <q-btn label="查看" color="primary" size="sm" @click="showInfoDlg(props.row)"></q-btn>
-                    <q-btn label="编辑" color="orange" size="sm" @click="showEditDlg(props.row)"></q-btn>
-                    <q-btn label="删除" color="red-10" size="sm" @click="showDeleteDlg(props.row)"></q-btn>
+                    <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>
+                    <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>
+                    <q-btn label="删除" color="red" outline size="sm" @click="showDeleteDlg(props.row)"></q-btn>
                     <q-btn label="+" color="red-10" flat size="xs" @click="showCreateTaskDlg(props.row)"></q-btn>
                 </q-td>
             </template>
@@ -30,7 +29,7 @@
 
         <flow-dialog ref="dlgCreate" action="create" @success="refreshFlows"/>
         <flow-dialog ref="dlgEdit" action="edit" @success="refreshFlows"/>
-        <flow-dialog ref="dlgInfo" action="info" />
+        <flow-dialog ref="dlgInfo" action="info"/>
         <task-param-table ref="dlgCreateTask" :flowId="currentFlowId" @handleFinish="refreshFlows"/>
     </q-page>
 </template>
@@ -52,15 +51,15 @@ const currentFlowId = ref(null)
 
 const $q = useQuasar()
 const columns = [
-    {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
-    {name: "name", label: "名 称", field: "name", sortable: true, align: "center",},
-    {name: "code", label: "类型", field: "code", align: "center", sortable: true,},
-    {name: "flow_category", label: "分 类", field: "flow_category", align: "center",},
-    {name: "memory", label: "内存(m)", align: "center", field: "memory"},
-    {name: "docker_image", label: "Docker镜像", field: "docker_image", align: "center",},
-    {name: "desp", label: "描述", field: "desp", align: "center", style: "width:220px"},
-    {name: "create_time", label: "创建时间", field: "create_time", align: "center", style: "width:220px",},
-    {name: "operation", label: "操 作", align: "center", style: "width:250px",},
+    {name: "id", label: "ID", align: "center", style: "width:80px", required: true, field: (row) => row.id},
+    {name: "name", label: "名 称", field: "name", sortable: true, align: "center", required: true,},
+    {name: "code", label: "类型", field: "code", align: "center", sortable: true, required: true,},
+    {name: "flow_category", label: "分 类", field: "flow_category", align: "center", required: true,},
+    {name: "memory", label: "内存(m)", align: "center", field: "memory", required: true,},
+    {name: "docker_image", label: "Docker镜像", field: "docker_image", align: "center", required: true,},
+    {name: "desp", label: "描述", field: "desp", align: "center", style: "width:220px", required: true,},
+    {name: "create_time", label: "创建时间", field: "create_time", align: "center", style: "width:220px", required: true,},
+    {name: "operation", label: "操 作", align: "center", style: "width:250px", required: true,},
 ]
 
 const pagination = ref({
