@@ -3,7 +3,7 @@
         <q-card-section>
             <div class="text-center">
                 <q-avatar size="100px">
-                    <img :src="store.logo" alt="" />
+                    <img :src="store.ui.image" alt="" />
                 </q-avatar>
             </div>
             <div class="text-h5 text-center text-primary">
@@ -118,6 +118,7 @@ import { useRouter, useRoute } from "vue-router";
 import { globalStore } from "src/stores/global";
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
+import { refreshSystemUi } from 'src/api/ui'
 
 const $q = useQuasar();
 const { t } = useI18n();

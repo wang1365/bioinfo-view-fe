@@ -5,11 +5,11 @@
             style="margin-bottom: 100px"
         >
             <q-avatar :size="'100px'" @click="home">
-                <img :src="store.logo" alt="" />
+                <img :src="store.ui.image" alt="" />
             </q-avatar>
             <br />
             <span class="text-weight-bold text-h3 text-white">
-                纳昂达可视化解读
+                {{ store.ui.title }}
             </span>
             <span class="text-white text-subtitle1" style="margin-top: 20px">
                 一站式解决基因文库分析结果.

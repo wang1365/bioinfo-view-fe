@@ -56,7 +56,8 @@
 import {ref, watch, onMounted} from 'vue'
 import PageTitle from "components/page-title/PageTitle"
 import {useQuasar} from 'quasar'
-import {listUiConfig, createUiConfig, updateUiConfig} from 'src/api/ui'
+import { QSpinnerGears } from 'quasar'
+import {listUiConfig, createUiConfig, updateUiConfig, refreshSystemUi} from 'src/api/ui'
 
 const $q = useQuasar()
 
@@ -74,7 +75,6 @@ const upload = () => {
         color: 'green-2',
         percent: allDone === true ? 0 : progress.percent
     }))
-
 }
 
 function fileToBase64(file) {
@@ -109,11 +109,17 @@ onMounted(() => {
 })
 
 const refreshUiConfig = () => {
+    $q.loading.show({
+        spinner: QSpinnerGears,
+        spinnerColor: 'red',
+        message: '正在加载系统配置...'
+    })
     listUiConfig().then(res => {
         console.log('========== 查询配置', res)
         if (res.length > 0) {
             // 取第一条配置
-            form.value = res[0]
+            form.value = res[res.length-1]
+            refreshSystemUi(form.value)
         } else {
             // 没有配置，则初始化
             form.value = {
@@ -122,7 +128,7 @@ const refreshUiConfig = () => {
                 image: ''
             }
         }
-    })
+    }).finally(() => $q.loading.hide())
 }
 const clickSet = () => {
     if (!form.value.id) {
@@ -131,6 +137,7 @@ const clickSet = () => {
             $q.notify({
                 message: '设置成功'
             })
+            refreshSystemUi(form.value)
             refreshUiConfig()
         })
     } else {
@@ -139,6 +146,7 @@ const clickSet = () => {
             $q.notify({
                 message: '设置成功'
             })
+            refreshSystemUi(form.value)
             refreshUiConfig()
         })
     }

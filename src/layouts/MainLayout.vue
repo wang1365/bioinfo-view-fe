@@ -12,11 +12,11 @@
                 >
                     <q-avatar @click="router.push('/')">
                         <img
-                            src="~assets/nanodi.svg"
+                            :src="store.ui.image"
                             style="width: 30px; height: 25px"
                         />
                     </q-avatar>
-                    纳昂达可视化解读
+                    {{store.ui.title}}
                 </q-toolbar-title>
                 <q-space />
                 <div class="q-gutter-sm row items-center no-wrap">

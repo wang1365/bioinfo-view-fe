@@ -7,6 +7,10 @@ export const globalStore = defineStore("global", {
         // logo: "/icons/nanodi.svg",
         currentUserToken: "",
         currentUser: null,
+        ui: {
+            title: '纳昂达可视化解读系统',
+            image: '~assets/nanodi.svg'
+        }
     }),
     getters: {
         doubleCount: (state) => state.counter * 2,

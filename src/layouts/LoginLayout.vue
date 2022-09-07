@@ -2,7 +2,7 @@
     <q-layout view="hHh LpR fFf">
         <q-header reveal elevated>
             <q-toolbar>
-                <q-toolbar-title> 纳昂达可视化解读 </q-toolbar-title>
+                <q-toolbar-title> {{store.ui.title}} </q-toolbar-title>
                 <q-btn dense flat>
                     <q-icon name="person_pin" />
                     &nbsp;&nbsp;&nbsp;&nbsp;管理员
@@ -97,9 +97,13 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
+import  { globalStore }from "src/stores/global";
+
 const { t } = useI18n();
 const router = useRouter();
 const leftDrawerOpen = ref(false);
+const store = globalStore();
+
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
 }
