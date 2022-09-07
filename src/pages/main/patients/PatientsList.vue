@@ -126,7 +126,7 @@
             "
         />
     </q-dialog>
-    <q-dialog v-model="showPatientInfo" persistent>
+    <q-dialog v-model="showPatientInfo">
         <PatientInfo
             :id="infoId"
             @refresh="

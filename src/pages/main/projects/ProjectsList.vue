@@ -82,6 +82,7 @@
                 <q-toolbar-title>新建项目</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
+            <q-separator></q-separator>
             <q-card-section>
                 <q-list>
                     <q-item>

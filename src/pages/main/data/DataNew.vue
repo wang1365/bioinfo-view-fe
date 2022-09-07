@@ -4,7 +4,7 @@
             <q-toolbar-title>新建数据</q-toolbar-title>
             <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
-
+        <q-separator></q-separator>
         <q-card-section>
             <q-list>
                 <q-item>

@@ -143,7 +143,7 @@
             "
         />
     </q-dialog>
-    <q-dialog persistent v-model="showDataInfo">
+    <q-dialog v-model="showDataInfo">
         <DataInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showDataEdit">
