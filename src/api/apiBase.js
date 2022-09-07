@@ -1,6 +1,7 @@
 import { useRouter } from "vue-router";
 import { Notify } from "quasar";
 import axios from "axios";
+import { errorMessage } from "src/utils/notify";
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -180,6 +181,31 @@ export function useApi() {
                 }
             });
     }
-
-    return { apiGet, apiPost, apiPut, apiDelete, apiPatch };
+    function downloadData(url, config = {}) {
+        api.get(url, config)
+            .then((resp) => {
+                let contentDiposition = resp.headers["content-disposition"];
+                if (contentDiposition) {
+                    let items = contentDiposition.split("; ");
+                    let filename = "模板";
+                    for (const item of items) {
+                        if (item.indexOf("filename") >= 0) {
+                            filename = item.split("=")[1];
+                            break;
+                        }
+                    }
+                    var a = document.createElement("a");
+                    var blob = new Blob([resp.data]);
+                    a.href = window.URL.createObjectURL(blob);
+                    a.download = filename;
+                    a.click();
+                } else {
+                    errorMessage("服务端没有返回文件名: content-disposition");
+                }
+            })
+            .catch((error) => {
+                defaultHttpErrorHandler(error);
+            });
+    }
+    return { apiGet, apiPost, apiPut, apiDelete, apiPatch, downloadData };
 }

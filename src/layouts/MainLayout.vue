@@ -16,7 +16,7 @@
                             style="width: 30px; height: 25px"
                         />
                     </q-avatar>
-                    {{store.ui.title}}
+                    {{ store.ui.title }}
                 </q-toolbar-title>
                 <q-space />
                 <div class="q-gutter-sm row items-center no-wrap">
@@ -187,12 +187,12 @@ const menuList = [
         separator: false,
         path: "/main/data",
     },
-    {
-        icon: "hub",
-        label: "Panel 分析流程",
-        separator: false,
-        path: "/main/panel",
-    },
+    // {
+    //     icon: "hub",
+    //     label: "Panel 分析流程",
+    //     separator: false,
+    //     path: "/main/panel",
+    // },
     // {
     //     icon: "hub",
     //     label: "(暂时不做)群体分析流程",

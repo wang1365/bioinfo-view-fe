@@ -15,6 +15,12 @@
                     icon="groups_2"
                     @click="showPatientNew = true"
                 />
+                <q-btn
+                    color="info"
+                    label="导出数据"
+                    icon="file_download"
+                    @click="exportData()"
+                />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
@@ -152,11 +158,11 @@ import PatientEdit from "./PatientEdit.vue";
 import PatientNew from "./PatientNew.vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { onMounted, ref } from "vue";
-import { api, getTokenCookie } from "src/boot/axios";
+import { api } from "src/boot/axios";
 import { globalStore } from "src/stores/global";
 import { useApi } from "src/api/apiBase";
 
-const { apiGet, apiPut, apiPost, apiDelete } = useApi();
+const { apiGet, downloadData, apiDelete } = useApi();
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
@@ -224,10 +230,7 @@ const loadPage = async () => {
 };
 
 const downlaodTemplate = () => {
-    var link = document.createElement("a");
-    link.href = api.defaults.baseURL + "/patient/patients/dl_patient_template";
-    link.download = "患者批量上传模板.csv";
-    link.click();
+    downloadData("/patient/patients/dl_patient_template", null);
 };
 const fileSelected = (event) => {
     let data = new FormData();
@@ -244,5 +247,8 @@ const fileSelected = (event) => {
         .catch((e) => {
             console.log(e.response.data);
         });
+};
+const exportData = () => {
+    downloadData("/patient/patients/dl_patient_template", null);
 };
 </script>

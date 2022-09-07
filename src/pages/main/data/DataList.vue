@@ -10,10 +10,41 @@
                     icon="description"
                     @click="showDataNew = true"
                 />
-                <!-- <q-btn color="positive" label="批量上传" icon="file_upload" />
-                <q-btn color="positive" label="模板下载" icon="file_download">
+                <q-btn
+                    color="info"
+                    label="导出数据"
+                    icon="file_download"
+                    @click="exportData()"
+                />
+                <q-btn color="positive">
+                    <label for="file">
+                        <q-icon name="file_upload"></q-icon>
+                        批量上传
+                        <span
+                            style="
+                                width: 0;
+                                height: 0;
+                                overflow: hidden;
+                                display: inline-block;
+                            "
+                        >
+                            <input
+                                id="file"
+                                type="file"
+                                style="rgba(0,0,0,0)"
+                                @change="fileSelected($event)"
+                            />
+                        </span>
+                    </label>
+                </q-btn>
+                <q-btn
+                    color="positive"
+                    label="模板下载"
+                    icon="file_download"
+                    @click="downloadTemplate()"
+                >
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
-                </q-btn> -->
+                </q-btn>
             </q-toolbar>
         </q-section>
         <q-section>
@@ -165,8 +196,9 @@ import { ref, onMounted } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
+import { api } from "src/boot/axios";
 
-const { apiGet, apiPut, apiPost, apiDelete } = useApi();
+const { apiGet, downloadData, apiDelete } = useApi();
 const showDataEdit = ref(false);
 const showDataInfo = ref(false);
 const showDataNew = ref(false);
@@ -227,5 +259,27 @@ const confirm = (item) => {
             refreshPage();
         });
     });
+};
+const exportData = () => {
+    downloadData("/sample/samples/export", null);
+};
+const downloadTemplate = () => {
+    downloadData("/sample/samples/template/download", null);
+};
+const fileSelected = (event) => {
+    let data = new FormData();
+    data.append(file, event.target.files[0]);
+    api.post("/sample/samples/upload", data)
+        .then((resp) => {
+            $q.notify({
+                message: "上传完成",
+                timeout: 300,
+                position: "center",
+            });
+            refreshPage();
+        })
+        .catch((e) => {
+            console.log(e.response.data);
+        });
 };
 </script>
