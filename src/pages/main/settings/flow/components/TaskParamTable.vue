@@ -27,12 +27,16 @@
                 <template v-slot:body-cell-value="props">
                     <q-td :props="props" style="width: 200px">
                         <div v-if="props.row.type === 'file'">
-                            <q-file
-                                v-model="props.row.file"
-                                label="上传"
-                                filled
-                                style="max-width: 300px"
-                            />
+                            <q-file filled bottom-slots v-model="props.row.file" label="上传文件" counter max-files="1">
+                                <template v-slot:before>
+                                    <q-icon name="folder_open" />
+                                </template>
+
+                                <template v-slot:hint/>
+                                <template v-slot:append>
+                                    <q-btn round dense flat icon="add" @click.stop />
+                                </template>
+                            </q-file>
                         </div>
                         <div v-else>
                             <q-input v-if="props.row.choices.length === 0"

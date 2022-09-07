@@ -4,6 +4,7 @@
         <q-table
             :rows="flows"
             :columns="columns"
+            :loading="loading"
             row-key="name"
             color="primary"
             separator="vertical"
@@ -27,9 +28,9 @@
             </template>
         </q-table>
 
-        <flow-dialog ref="dlgCreate" action="create" @handleFinish="refreshFlows"/>
-        <flow-dialog ref="dlgEdit" action="edit" @handleFinish="refreshFlows"/>
-        <flow-dialog ref="dlgInfo" action="info" @handleFinish="refreshFlows"/>
+        <flow-dialog ref="dlgCreate" action="create" @success="refreshFlows"/>
+        <flow-dialog ref="dlgEdit" action="edit" @success="refreshFlows"/>
+        <flow-dialog ref="dlgInfo" action="info" />
         <task-param-table ref="dlgCreateTask" :flowId="currentFlowId" @handleFinish="refreshFlows"/>
     </q-page>
 </template>
@@ -42,6 +43,7 @@ import PageTitle from "components/page-title/PageTitle";
 import FlowDialog from "./FlowDialog";
 import TaskParamTable from './components/TaskParamTable'
 
+const loading = ref(false)
 const dlgCreate = ref(null)
 const dlgEdit = ref(null)
 const dlgInfo = ref(null)
@@ -89,37 +91,51 @@ const pageSize = ref(10);
 
 onMounted(() => {
     refreshFlows();
-});
+})
+
 const refreshFlows = () => {
+    startLoading()
     getFlows(1, 100).then((data) => {
         flows.value = data.results;
         total.value = data.count;
-    });
-};
+    }).finally(stopLoading)
+}
+
 const getTagType = (row) => {
     const cat = row.flow_category;
     const data = {
         DNA: "success",
         RNA: "primary",
         AMP: "info",
-    };
+    }
 
-    return data[cat] || "info";
-};
+    return data[cat] || "info"
+}
 
 const showEditDlg = (row) => {
     dlgEdit.value.show()
-    dlgEdit.value.setData(row);
-};
+    dlgEdit.value.setData(row)
+}
+
+const startLoading = () => {
+    loading.value = true
+}
+
+const stopLoading = () => {
+    loading.value = false
+}
 
 const showDeleteDlg = (row) => {
     $q.dialog({
         title: `是否要删除流程“${row.name}”?`,
+        ok: '确认',
+        cancel: '取消'
     }).onOk(() => {
+        startLoading()
         deleteFlow(row.id).then(() => {
-            $q.notify.create({type: "positive", message: "删除成功"});
+            $q.notify({type: "positive", message: "删除成功"});
             refreshFlows();
-        });
+        }).finally(stopLoading)
     });
 };
 

@@ -83,7 +83,7 @@
 <script setup>
 import ParamTable from "./components/ParamTable"
 import {createFlow, updateFlow} from "src/api/flow"
-import {defineProps, computed, ref, toRefs, defineExpose} from "vue"
+import {defineProps, computed, ref, toRefs, defineExpose, defineEmits} from "vue"
 import {useQuasar} from 'quasar'
 
 const $q = useQuasar()
@@ -160,6 +160,7 @@ const show = () => {
     dlgVisible.value = true
 }
 defineExpose({setData, reset, show})
+const emit = defineEmits([ 'success'])
 
 const addParam = (key) => {
     const idx = form.value.parameters.findIndex((item) => item.key === key);
@@ -221,6 +222,7 @@ const onSubmit = () => {
         form.value.parameters = paramsTable.value.getData();
         createFlow(form.value).then(() => {
             $q.notify({message: "流程创建成功"})
+            emit('success')
             close()
         });
         // }
@@ -231,6 +233,7 @@ const onSubmit = () => {
         form.value.parameters = paramsTable.value.getData();
         updateFlow(form.value.id, form.value).then(() => {
             $q.notify({message: "修改成功"})
+            emit('success')
             close();
         });
     }
