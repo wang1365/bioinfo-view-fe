@@ -175,7 +175,13 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-btn
+                            <q-input
+                                v-model="form.fastq1_path"
+                                :error="errors.fastq1_path.error"
+                                :error-message="errors.fastq1_path.message"
+                                label="R1文件"
+                            ></q-input>
+                            <!-- <q-btn
                                 :label="'R1文件: ' + form.fastq1_path"
                                 outline
                                 color="primary"
@@ -189,10 +195,16 @@
                                 :label="errors.fastq1_path.message"
                                 class="full-width"
                                 disable
-                            />
+                            /> -->
                         </div>
                         <div class="col q-pf-sm">
-                            <q-btn
+                            <q-input
+                                v-model="form.fastq2_path"
+                                :error="errors.fastq2_path.error"
+                                :error-message="errors.fastq2_path.message"
+                                label="R2文件"
+                            ></q-input>
+                            <!-- <q-btn
                                 :label="'R2文件: ' + form.fastq1_path"
                                 outline
                                 color="secondary"
@@ -206,7 +218,7 @@
                                 :label="errors.fastq2_path.message"
                                 class="full-width"
                                 disable
-                            />
+                            /> -->
                         </div>
                     </div>
                 </q-item>
@@ -334,23 +346,23 @@ const errors = ref({
     },
 });
 const form = ref({
-    project_index: "",
-    library_number: "",
-    reagent_box: "asdf",
-    nucleic_break_type: "",
-    library_input: "asdfas",
-    index_type: "",
-    index_number: "",
-    hybrid_input: "",
-    risk: false,
+    project_index: "project_index",
+    library_number: "library_number",
+    reagent_box: "reagent_box",
+    nucleic_break_type: "nucleic_break_type",
+    library_input: "library_input",
+    index_type: "index_type",
+    index_number: "index_number",
+    hybrid_input: "hybrid_input",
+    risk: true,
     nucleic_level: "A",
-    sample_meta_id: "1111",
-    sample_identifier: "asdfasdf",
-    identifier: "asdfasdf",
-    company: "asdfasf",
+    sample_meta_id: "sample_meta_id",
+    sample_identifier: "sample_identifier",
+    identifier: "identifier",
+    company: "company",
     nucleic_type: "gDNA",
-    fastq1_path: "test",
-    fastq2_path: "test",
+    fastq1_path: "fastq1_path",
+    fastq2_path: "fastq2_path",
 });
 onMounted(() => {
     apiGet(`/sample/samples/${props.id}/`, (res) => {
