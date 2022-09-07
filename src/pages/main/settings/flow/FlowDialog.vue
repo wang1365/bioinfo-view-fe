@@ -33,8 +33,11 @@
                                      :rules="[val => val !== null && val !== '' || '请输入内存数值']"
                             />
 
-                            <q-input v-model="form.location" label="脚本路径" stack-label clearable :readonly="isInfoMode"
-                                     :rules="[val => val !== null && val !== '' ||  '请输入脚本路径']"/>
+                            <q-input v-model="form.tar_path" label="Docker存档地址" stack-label clearable :readonly="isInfoMode"
+                                     :rules="[val => val !== null && val !== '' ||  '请输入docker存档路径']"/>
+                            <q-input v-model="form.image_name" label="Docker镜像名称" stack-label clearable :readonly="isInfoMode"
+                                     :rules="[val => val !== null && val !== '' ||  '请输入docker镜像名称']"/>
+
                             <q-input v-model="form.alignment_tool" label="对比软件" stack-label clearable
                                      :readonly="isInfoMode"
                                      :rules="[val => val !== null && val !== '' || '请输入对比软件']"/>
@@ -132,7 +135,8 @@ const form = ref({
     name: "",
     code: "",
     allow_nonstandard_samples: true,
-    location: "",
+    tar_path: "",
+    image_name: "",
     memory: 1024,
     alignment_tool: "",
     desp: "",
@@ -142,10 +146,6 @@ const form = ref({
     builtin_parameters: [],
     sample_type: "multiple",
 })
-const formRules = {
-    name: [{message: "流程名称不能为空", trigger: "blur"}],
-    location: [{message: "脚本路径不能为空", trigger: "blur"}],
-}
 
 const paramsTable = ref(null)
 
