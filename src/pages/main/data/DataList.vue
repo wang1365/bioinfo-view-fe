@@ -10,18 +10,49 @@
                     icon="description"
                     @click="showDataNew = true"
                 />
-                <q-btn color="positive" label="批量上传" icon="file_upload" />
-                <q-btn color="positive" label="模板下载" icon="file_download">
+                <q-btn
+                    color="info"
+                    label="导出数据"
+                    icon="file_download"
+                    @click="exportData()"
+                />
+                <q-btn color="positive">
+                    <label for="file">
+                        <q-icon name="file_upload"></q-icon>
+                        批量上传
+                        <span
+                            style="
+                                width: 0;
+                                height: 0;
+                                overflow: hidden;
+                                display: inline-block;
+                            "
+                        >
+                            <input
+                                id="file"
+                                type="file"
+                                style="rgba(0,0,0,0)"
+                                @change="fileSelected($event)"
+                            />
+                        </span>
+                    </label>
+                </q-btn>
+                <q-btn
+                    color="positive"
+                    label="模板下载"
+                    icon="file_download"
+                    @click="downloadTemplate()"
+                >
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
                 </q-btn>
             </q-toolbar>
         </q-section>
         <q-section>
-            <div class="q-pa-md">
+            <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
-                        <tr class="text-body1 text-weight-bold">
-                            <!-- <td class="q-pa-md text-center">
+                        <tr>
+                            <!-- <td >
                                 <q-checkbox
                                     v-model="selected"
                                     color="negative"
@@ -52,7 +83,7 @@
                     </thead>
                     <tbody>
                         <tr
-                            class="bg-grey-1 hover"
+                            class="hover"
                             v-for="item in dataItems"
                             v-bind:key="item.name"
                         >
@@ -63,40 +94,40 @@
                                 />
                             </td> -->
 
-                            <td class="text-center">
+                            <td>
                                 {{ item.project_index }}
                             </td>
-                            <td class="text-center">
+                            <td>
                                 {{ item.library_number }}
                             </td>
-                            <!-- <td class="text-center">{{ item.reagent_box }}</td>
-                            <td class="text-center">
-                                {{ item.nucleicx_type }}
+                            <!-- <td >{{ item.reagent_box }}</td>
+                            <td >
+                                {{ item.nucleic_break_type }}
                             </td>
-                            <td class="text-center">
+                            <td >
                                 {{ item.library_input }}
                             </td>
-                            <td class="text-center">{{ item.index_type }}</td>
-                            <td class="text-center">{{ item.index_number }}</td>
-                            <td class="text-center">{{ item.hybrid_input }}</td>
-                            <td class="text-center">{{ item.risk }}</td>
-                            <td class="text-center">
+                            <td >{{ item.index_type }}</td>
+                            <td >{{ item.index_number }}</td>
+                            <td >{{ item.hybrid_input }}</td>
+                            <td >{{ item.risk }}</td>
+                            <td >
                                 {{ item.nucleic_level }}
                             </td> -->
-                            <td class="text-center">
+                            <td>
                                 {{ item.sample_meta_id }}
                             </td>
-                            <td class="text-center">
+                            <td>
                                 {{ item.sample_identifier }}
                             </td>
-                            <td class="text-center">{{ item.identifier }}</td>
-                            <td class="text-center">{{ item.company }}</td>
-                            <td class="text-center">{{ item.nucleic_type }}</td>
-                            <td class="text-center">{{ item.fastq1_path }}</td>
-                            <td class="text-center">{{ item.fastq2_path }}</td>
-                            <!-- <td class="text-center">{{ item.user_id }}</td>
-                            <td class="text-center">{{ item.create_time }}</td>
-                            <td class="text-center">{{ item.modify_time }}</td> -->
+                            <td>{{ item.identifier }}</td>
+                            <td>{{ item.company }}</td>
+                            <td>{{ item.nucleic_type }}</td>
+                            <td>{{ item.fastq1_path }}</td>
+                            <td>{{ item.fastq2_path }}</td>
+                            <!-- <td>{{ item.user_id }}</td>
+                            <td >{{ item.create_time }}</td>
+                            <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="secondary"
@@ -143,7 +174,7 @@
             "
         />
     </q-dialog>
-    <q-dialog persistent v-model="showDataInfo">
+    <q-dialog v-model="showDataInfo">
         <DataInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showDataEdit">
@@ -165,8 +196,9 @@ import { ref, onMounted } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
+import { api } from "src/boot/axios";
 
-const { apiGet, apiPut, apiPost, apiDelete } = useApi();
+const { apiGet, downloadData, apiDelete } = useApi();
 const showDataEdit = ref(false);
 const showDataInfo = ref(false);
 const showDataNew = ref(false);
@@ -222,10 +254,32 @@ const confirm = (item) => {
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/sample/samples/${item.id}`, (_) => {
+        apiDelete(`/sample/samples/${item.id}/`, (_) => {
             infoMessage("删除成功");
             refreshPage();
         });
     });
+};
+const exportData = () => {
+    downloadData("/sample/samples/export", null);
+};
+const downloadTemplate = () => {
+    downloadData("/sample/samples/template/download", null);
+};
+const fileSelected = (event) => {
+    let data = new FormData();
+    data.append(file, event.target.files[0]);
+    api.post("/sample/samples/upload", data)
+        .then((resp) => {
+            $q.notify({
+                message: "上传完成",
+                timeout: 300,
+                position: "center",
+            });
+            refreshPage();
+        })
+        .catch((e) => {
+            console.log(e.response.data);
+        });
 };
 </script>

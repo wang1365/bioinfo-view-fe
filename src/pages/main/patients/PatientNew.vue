@@ -4,7 +4,7 @@
             <q-toolbar-title>新建患者</q-toolbar-title>
             <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
-
+        <q-separator></q-separator>
         <q-card-section>
             <div class="text-h6 text-bold">患者信息</div>
             <q-separator></q-separator>

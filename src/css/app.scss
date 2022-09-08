@@ -51,3 +51,45 @@
         }
     }
 }
+
+.bio-data-table {
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        thead {
+            td {
+                font-size: 1.2em;
+                font-weight: bold;
+                padding: 5px;
+            }
+        }
+        td {
+            padding: 5px;
+            border-bottom: silver 1px solid;
+        }
+        tbody {
+            tr {
+                // &:nth-child(odd) {
+                //     td {
+                //         background-color: rgba(0, 0, 0, 0.05);
+                //     }
+                // }
+                // &:nth-child(even) {
+                //     td {
+                //         background-color: rgba(0, 0, 0, 0.08);
+                //     }
+                // }
+            }
+
+            tr {
+                padding: 5px;
+                border-bottom: solid silver 1px;
+                &:hover {
+                    td {
+                        background-color: rgba(0, 0, 0, 0.15);
+                    }
+                }
+            }
+        }
+    }
+}

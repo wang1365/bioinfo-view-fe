@@ -4,7 +4,7 @@
             <q-toolbar-title>新建数据</q-toolbar-title>
             <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
-
+        <q-separator></q-separator>
         <q-card-section>
             <q-list>
                 <q-item>
@@ -75,9 +75,11 @@
                         </div>
                         <div class="col q-pr-sm">
                             <q-input
-                                v-model="form.nucleicx_type"
-                                :error="errors.nucleicx_type.error"
-                                :error-message="errors.nucleicx_type.message"
+                                v-model="form.nucleic_break_type"
+                                :error="errors.nucleic_break_type.error"
+                                :error-message="
+                                    errors.nucleic_break_type.message
+                                "
                                 label="核酸打断方式"
                             ></q-input>
                         </div>
@@ -122,12 +124,6 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <!-- <q-input
-                                v-model="form.risk"
-                                :error="errors.risk.error"
-                                :error-message="errors.risk.message"
-                                label="风险上机"
-                            ></q-input> -->
                             <q-checkbox
                                 :error="errors.risk.error"
                                 :error-message="errors.risk.message"
@@ -139,12 +135,6 @@
                             />
                         </div>
                         <div class="col q-pr-sm">
-                            <!-- <q-input
-                                v-model="form.nucleic_type"
-                                :error="errors.nucleic_type.error"
-                                :error-message="errors.nucleic_type.message"
-                                label="核酸类型"
-                            ></q-input> -->
                             <q-select
                                 :error="errors.nucleic_type.error"
                                 :error-message="errors.nucleic_type.message"
@@ -154,12 +144,6 @@
                             />
                         </div>
                         <div class="col q-pr-sm">
-                            <!-- <q-input
-                                v-model="form.nucleic_level"
-                                :error="errors.nucleic_level.error"
-                                :error-message="errors.nucleic_level.message"
-                                label="核酸降解等级"
-                            ></q-input> -->
                             <q-select
                                 :error="errors.nucleic_level.error"
                                 :error-message="errors.nucleic_level.message"
@@ -173,7 +157,13 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-btn
+                            <q-input
+                                v-model="form.fastq1_path"
+                                :error="errors.fastq1_path.error"
+                                :error-message="errors.fastq1_path.message"
+                                label="R1文件"
+                            ></q-input>
+                            <!-- <q-btn
                                 label="R1文件"
                                 outline
                                 color="primary"
@@ -187,10 +177,16 @@
                                 :label="errors.fastq1_path.message"
                                 class="full-width"
                                 disable
-                            />
+                            /> -->
                         </div>
                         <div class="col q-pf-sm">
-                            <q-btn
+                            <q-input
+                                v-model="form.fastq2_path"
+                                :error="errors.fastq2_path.error"
+                                :error-message="errors.fastq2_path.message"
+                                label="R2文件"
+                            ></q-input>
+                            <!-- <q-btn
                                 label="R2文件"
                                 outline
                                 color="secondary"
@@ -204,7 +200,7 @@
                                 :label="errors.fastq2_path.message"
                                 class="full-width"
                                 disable
-                            />
+                            /> -->
                         </div>
                     </div>
                 </q-item>
@@ -253,7 +249,7 @@ const errors = ref({
         message: "必填",
         error: false,
     },
-    nucleicx_type: {
+    nucleic_break_type: {
         // 核酸打断方式
         message: "必填",
         error: false,
@@ -325,23 +321,23 @@ const errors = ref({
     },
 });
 const form = ref({
-    project_index: "",
-    library_number: "",
-    reagent_box: "asdf",
-    nucleicx_type: "",
-    library_input: "asdfas",
-    index_type: "",
-    index_number: "",
-    hybrid_input: "",
-    risk: false,
+    project_index: "project_index",
+    library_number: "library_number",
+    reagent_box: "reagent_box",
+    nucleic_break_type: "nucleic_break_type",
+    library_input: "library_input",
+    index_type: "index_type",
+    index_number: "index_number",
+    hybrid_input: "hybrid_input",
+    risk: true,
     nucleic_level: "A",
-    sample_meta_id: "1111",
-    sample_identifier: "asdfasdf",
-    identifier: "asdfasdf",
-    company: "asdfasf",
+    sample_meta_id: "sample_meta_id",
+    sample_identifier: "sample_identifier",
+    identifier: "identifier",
+    company: "company",
     nucleic_type: "gDNA",
-    fastq1_path: "test",
-    fastq2_path: "test",
+    fastq1_path: "fastq1_path",
+    fastq2_path: "fastq2_path",
 });
 const save = async () => {
     for (const key in errors.value) {
@@ -352,7 +348,7 @@ const save = async () => {
         project_index: form.value.project_index,
         library_number: form.value.library_number,
         reagent_box: form.value.reagent_box,
-        nucleicx_type: form.value.nucleicx_type,
+        nucleic_break_type: form.value.nucleic_break_type,
         library_input: form.value.library_input,
         index_type: form.value.index_type,
         index_number: form.value.index_number,

@@ -1,146 +1,226 @@
 <template>
-    <q-card style="width: 700px; max-width: 80vw">
+    <q-card style="width: 70vw; max-width: 80vw">
         <q-toolbar>
-            <q-toolbar-title>编辑样本</q-toolbar-title>
+            <q-toolbar-title>编辑数据</q-toolbar-title>
             <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
-
+        <q-separator></q-separator>
         <q-card-section>
             <q-list>
                 <q-item>
-                    <q-section class="full-width">
-                        <q-input v-model="text" label="样本名称"
-                    /></q-section>
+                    <div class="row full-width justify-between">
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.project_index"
+                                :error="errors.project_index.error"
+                                :error-message="errors.project_index.message"
+                                label="项目编码"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.library_number"
+                                :error="errors.library_number.error"
+                                :error-message="errors.library_number.message"
+                                label="文库编号"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.reagent_box"
+                                :error="errors.reagent_box.error"
+                                :error-message="errors.reagent_box.message"
+                                label="捕获试剂盒"
+                            ></q-input>
+                        </div>
+                    </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-btn
-                                label="R1文件"
-                                outline
-                                color="primary"
-                                class="full-width"
-                            />
+                            <q-input
+                                v-model="form.library_input"
+                                :error="errors.library_input.error"
+                                :error-message="errors.library_input.message"
+                                label="建库input"
+                            ></q-input>
                         </div>
                         <div class="col q-pf-sm">
-                            <q-btn
-                                label="R2文件"
-                                outline
-                                color="secondary"
-                                class="full-width"
+                            <q-input
+                                v-model="form.index_type"
+                                :error="errors.index_type.error"
+                                :error-message="errors.index_type.message"
+                                label="index类型"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.index_number"
+                                :error="errors.index_number.error"
+                                :error-message="errors.index_number.message"
+                                label="index编号"
+                            ></q-input>
+                        </div>
+                    </div>
+                </q-item>
+                <q-item>
+                    <div class="row full-width justify-between">
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.hybrid_input"
+                                :error="errors.hybrid_input.error"
+                                :error-message="errors.hybrid_input.message"
+                                label="杂交input"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.nucleic_break_type"
+                                :error="errors.nucleic_break_type.error"
+                                :error-message="
+                                    errors.nucleic_break_type.message
+                                "
+                                label="核酸打断方式"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.sample_meta_id"
+                                :error="errors.sample_meta_id.error"
+                                :error-message="errors.sample_meta_id.message"
+                                label="样本元信息ID"
+                            ></q-input>
+                        </div>
+                    </div>
+                </q-item>
+                <q-item>
+                    <div class="row full-width justify-between">
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.sample_identifier"
+                                :error="errors.sampsample_identifier"
+                                :error-message="errors.sampsample_identifier"
+                                label="样本识别号"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.identifier"
+                                :error="errors.identifier.error"
+                                :error-message="errors.identifier.message"
+                                label="数据识别号"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pf-sm">
+                            <q-input
+                                v-model="form.company"
+                                :error="errors.company.error"
+                                :error-message="errors.company.message"
+                                label="送检机构"
+                            ></q-input>
+                        </div>
+                    </div>
+                </q-item>
+                <q-item>
+                    <div class="row full-width justify-between">
+                        <div class="col q-pr-sm">
+                            <!-- <q-input
+                                v-model="form.risk"
+                                :error="errors.risk.error"
+                                :error-message="errors.risk.message"
+                                label="风险上机"
+                            ></q-input> -->
+                            <q-checkbox
+                                :error="errors.risk.error"
+                                :error-message="errors.risk.message"
+                                v-model="form.risk"
+                                label="风险上机"
+                                color="primary"
+                                left-label
+                                size="lg"
+                            />
+                        </div>
+                        <div class="col q-pr-sm">
+                            <!-- <q-input
+                                v-model="form.nucleic_type"
+                                :error="errors.nucleic_type.error"
+                                :error-message="errors.nucleic_type.message"
+                                label="核酸类型"
+                            ></q-input> -->
+                            <q-select
+                                :error="errors.nucleic_type.error"
+                                :error-message="errors.nucleic_type.message"
+                                v-model="form.nucleic_type"
+                                :options="nucleic_type_options"
+                                label="核酸类型"
+                            />
+                        </div>
+                        <div class="col q-pr-sm">
+                            <!-- <q-input
+                                v-model="form.nucleic_level"
+                                :error="errors.nucleic_level.error"
+                                :error-message="errors.nucleic_level.message"
+                                label="核酸降解等级"
+                            ></q-input> -->
+                            <q-select
+                                :error="errors.nucleic_level.error"
+                                :error-message="errors.nucleic_level.message"
+                                v-model="form.nucleic_level"
+                                :options="nucleic_level_options"
+                                label="核酸降解等级"
                             />
                         </div>
                     </div>
                 </q-item>
                 <q-item>
-                    <q-section>
-                        <q-toggle
-                            left-label
-                            label="患者信息"
-                            v-model="hasPatientInfo"
-                        />
-                    </q-section>
-                    <q-space></q-space>
-                    <q-section v-if="hasPatientInfo" class="q-gutter-x-sm">
-                        <q-btn label="填写" unelevated color="primary" />
-                        <label for="">或</label>
-                        <q-btn label="上传" unelevated color="secondary" />
-                        <q-icon
-                            name="file_download"
-                            class="cursor-pointer"
-                            size="sm"
-                        >
-                            <q-tooltip>下载模板文件 </q-tooltip>
-                        </q-icon>
-                    </q-section>
-                </q-item>
-                <q-item>
-                    <q-section>
-                        <q-toggle
-                            left-label
-                            label="临床信息"
-                            v-model="hasClinicalInfo"
-                        />
-                    </q-section>
-                    <q-space></q-space>
-                    <q-section v-if="hasClinicalInfo" class="q-gutter-x-sm">
-                        <q-btn label="填写" unelevated color="primary" />
-                        <label for="">或</label>
-                        <q-btn label="上传" unelevated color="secondary" />
-                        <q-icon
-                            name="file_download"
-                            class="cursor-pointer"
-                            size="sm"
-                        >
-                            <q-tooltip>下载模板文件 </q-tooltip>
-                        </q-icon>
-                    </q-section>
-                </q-item>
-                <q-item>
-                    <q-section>
-                        <q-toggle
-                            left-label
-                            label="样本信息"
-                            v-model="hasSampleInfo"
-                        />
-                    </q-section>
-                    <q-space></q-space>
-                    <q-section v-if="hasSampleInfo" class="q-gutter-x-sm">
-                        <q-btn label="填写" unelevated color="primary" />
-                        <label for="">或</label>
-                        <q-btn label="上传" unelevated color="secondary" />
-                        <q-icon
-                            name="file_download"
-                            class="cursor-pointer"
-                            size="sm"
-                        >
-                            <q-tooltip>下载模板文件 </q-tooltip>
-                        </q-icon>
-                    </q-section>
-                </q-item>
-                <q-item>
-                    <q-section>
-                        <q-toggle
-                            left-label
-                            label="文库信息"
-                            v-model="hasLibraryInfo"
-                        />
-                    </q-section>
-                    <q-space></q-space>
-                    <q-section v-if="hasLibraryInfo" class="q-gutter-x-sm">
-                        <q-btn label="填写" unelevated color="primary" />
-                        <label for="">或</label>
-                        <q-btn label="上传" unelevated color="secondary" />
-                        <q-icon
-                            name="file_download"
-                            class="cursor-pointer"
-                            size="sm"
-                        >
-                            <q-tooltip>下载模板文件 </q-tooltip>
-                        </q-icon>
-                    </q-section>
-                </q-item>
-                <q-item>
-                    <q-section>
-                        <q-toggle
-                            left-label
-                            label="其他信息"
-                            v-model="hasOtherInfo"
-                        />
-                    </q-section>
-                    <q-space></q-space>
-                    <q-section v-if="hasOtherInfo" class="q-gutter-x-sm">
-                        <q-btn label="填写" unelevated color="primary" />
-                        <label for="">或</label>
-                        <q-btn label="上传" unelevated color="secondary" />
-                        <q-icon
-                            name="file_download"
-                            class="cursor-pointer"
-                            size="sm"
-                        >
-                            <q-tooltip>下载模板文件 </q-tooltip>
-                        </q-icon>
-                    </q-section>
+                    <div class="row full-width justify-between">
+                        <div class="col q-pr-sm">
+                            <q-input
+                                v-model="form.fastq1_path"
+                                :error="errors.fastq1_path.error"
+                                :error-message="errors.fastq1_path.message"
+                                label="R1文件"
+                            ></q-input>
+                            <!-- <q-btn
+                                :label="'R1文件: ' + form.fastq1_path"
+                                outline
+                                color="primary"
+                                class="full-width"
+                            />
+                            <q-btn
+                                flat
+                                outline
+                                v-if="errors.fastq1_path.error"
+                                color="negative"
+                                :label="errors.fastq1_path.message"
+                                class="full-width"
+                                disable
+                            /> -->
+                        </div>
+                        <div class="col q-pf-sm">
+                            <q-input
+                                v-model="form.fastq2_path"
+                                :error="errors.fastq2_path.error"
+                                :error-message="errors.fastq2_path.message"
+                                label="R2文件"
+                            ></q-input>
+                            <!-- <q-btn
+                                :label="'R2文件: ' + form.fastq1_path"
+                                outline
+                                color="secondary"
+                                class="full-width"
+                            />
+                            <q-btn
+                                flat
+                                outline
+                                v-if="errors.fastq2_path.error"
+                                color="negative"
+                                :label="errors.fastq2_path.message"
+                                class="full-width"
+                                disable
+                            /> -->
+                        </div>
+                    </div>
                 </q-item>
             </q-list>
             <div class="q-pa-md q-gutter-y-sm content-start"></div>
@@ -158,10 +238,13 @@
     </q-card>
 </template>
 <script setup>
+import { ref, defineEmits, onMounted } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
-import { onMounted, ref } from "vue";
 
+const nucleic_level_options = ref(["A", "B", "C", "D"]);
+const nucleic_type_options = ref(["gDNA", "cfDNA", "RNA"]);
+const { apiPost } = useApi();
 const { apiGet, apiPut } = useApi();
 const emit = defineEmits(["refresh"]);
 
@@ -174,130 +257,146 @@ const props = defineProps({
         required: true,
     },
 });
-const form = ref({
-    name: "",
-    gender: "",
-    age: "",
-    birthday: "",
-    id_card: "",
-    location: "",
-    identifier: "",
-    inspection_agency: "",
-    medical_doctor: "",
-    diagnosis: "",
-    tumor_stage: "",
-    disease: "",
-    family_history: "",
-    medication_history: "",
-    treatment_history: "",
-    prognosis_time: "",
-    recurrence_time: "",
-    survival_time: "",
-});
 
 const errors = ref({
-    name: {
+    project_index: {
+        //项目编码
         message: "必填",
         error: false,
     },
-    gender: {
+    library_number: {
+        //文库编号
         message: "必填",
         error: false,
     },
-    age: {
+    reagent_box: {
+        //捕获试剂盒
         message: "必填",
         error: false,
     },
-    birthday: {
+    nucleic_break_type: {
+        // 核酸打断方式
         message: "必填",
         error: false,
     },
-    id_card: {
+    library_input: {
+        //建库input
         message: "必填",
         error: false,
     },
-    location: {
+    index_type: {
+        //index类型
+        message: "必填",
+        error: false,
+    },
+    index_number: {
+        // index编号
+        message: "必填",
+        error: false,
+    },
+    hybrid_input: {
+        // 杂交input
+        message: "必填",
+        error: false,
+    },
+    risk: {
+        // 风险上机
+        message: "必填",
+        error: false,
+    },
+    nucleic_level: {
+        // 核酸降解等级
+        message: "必填",
+        error: false,
+    },
+    sample_meta_id: {
+        // 样本元信息ID
+        message: "必填",
+        error: false,
+    },
+    sample_identifier: {
+        // 样本识别号
         message: "必填",
         error: false,
     },
     identifier: {
+        // 数据识别号
         message: "必填",
         error: false,
     },
-    inspection_agency: {
+    company: {
+        // 送检机构
         message: "必填",
         error: false,
     },
-    medical_doctor: {
+    nucleic_type: {
+        // 核酸类型
         message: "必填",
         error: false,
     },
-    diagnosis: {
+    fastq1_path: {
+        // R1数据名称
         message: "必填",
         error: false,
     },
-    tumor_stage: {
-        message: "必填",
-        error: false,
-    },
-    disease: {
-        message: "必填",
-        error: false,
-    },
-    family_history: {
-        message: "必填",
-        error: false,
-    },
-    medication_history: {
-        message: "必填",
-        error: false,
-    },
-    treatment_history: {
-        message: "必填",
-        error: false,
-    },
-    prognosis_time: {
-        message: "必填",
-        error: false,
-    },
-    recurrence_time: {
-        message: "必填",
-        error: false,
-    },
-    survival_time: {
+    fastq2_path: {
+        // R2数据名称
         message: "必填",
         error: false,
     },
 });
+const form = ref({
+    project_index: "project_index",
+    library_number: "library_number",
+    reagent_box: "reagent_box",
+    nucleic_break_type: "nucleic_break_type",
+    library_input: "library_input",
+    index_type: "index_type",
+    index_number: "index_number",
+    hybrid_input: "hybrid_input",
+    risk: true,
+    nucleic_level: "A",
+    sample_meta_id: "sample_meta_id",
+    sample_identifier: "sample_identifier",
+    identifier: "identifier",
+    company: "company",
+    nucleic_type: "gDNA",
+    fastq1_path: "fastq1_path",
+    fastq2_path: "fastq2_path",
+});
 onMounted(() => {
-    apiGet(`/patient/patients/${props.id}`, (res) => {
+    apiGet(`/sample/samples/${props.id}/`, (res) => {
         console.log(res);
         form.value = res.data;
     });
 });
 const save = async () => {
+    for (const key in errors.value) {
+        errors.value[key].error = false;
+        errors.value[key].message = "必填";
+    }
     const data = {
-        name: form.value.name,
-        gender: form.value.gender,
-        age: form.value.age,
-        birthday: form.value.birthday,
-        id_card: form.value.id_card,
-        location: form.value.location,
+        project_index: form.value.project_index,
+        library_number: form.value.library_number,
+        reagent_box: form.value.reagent_box,
+        nucleic_break_type: form.value.nucleic_break_type,
+        library_input: form.value.library_input,
+        index_type: form.value.index_type,
+        index_number: form.value.index_number,
+        hybrid_input: form.value.hybrid_input,
+        risk: form.value.risk,
+        nucleic_level: form.value.nucleic_level,
+        sample_meta_id: form.value.sample_meta_id,
+        sample_identifier: form.value.sample_identifier,
         identifier: form.value.identifier,
-        inspection_agency: form.value.inspection_agency,
-        medical_doctor: form.value.medical_doctor,
-        diagnosis: form.value.diagnosis,
-        tumor_stage: form.value.tumor_stage,
-        disease: form.value.disease,
-        family_history: form.value.family_history,
-        medication_history: form.value.medication_history,
-        treatment_history: form.value.treatment_history,
-        prognosis_time: form.value.prognosis_time,
-        recurrence_time: form.value.recurrence_time,
-        survival_time: form.value.survival_time,
+        company: form.value.company,
+        nucleic_type: form.value.nucleic_type,
+        fastq1_path: form.value.fastq1_path,
+        fastq2_path: form.value.fastq2_path,
     };
+
     apiPut(
-        `/patient/patients/${props.id}`,
+        `/sample/samples/${props.id}/`,
         (_) => {
             infoMessage("更新成功");
             emit("refresh");
@@ -305,7 +404,7 @@ const save = async () => {
         data,
         null,
         (res) => {
-            const errorDetail = JSON.parse(res.data);
+            const errorDetail = res.data;
             for (const key in errorDetail) {
                 errors.value[key].error = true;
                 errors.value[key].message = errorDetail[key][0];

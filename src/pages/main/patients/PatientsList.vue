@@ -15,6 +15,12 @@
                     icon="groups_2"
                     @click="showPatientNew = true"
                 />
+                <q-btn
+                    color="info"
+                    label="导出数据"
+                    icon="file_download"
+                    @click="exportData()"
+                />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
@@ -47,26 +53,34 @@
             </q-toolbar>
         </q-section>
         <q-section>
-            <div class="q-pa-md">
+            <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
-                        <tr class="text-body1 text-weight-bold">
+                        <tr>
                             <td>患者识别号</td>
                             <td>送检机构</td>
-                            <td>年龄</td>
                             <td>诊疗医生</td>
                             <td>性别</td>
-                            <td class="text-right">操作</td>
+                            <td>年龄</td>
+                            <td>临床诊断</td>
+                            <td>肿瘤分期</td>
+                            <td>遗传病</td>
+                            <td>家族史</td>
+                            <td>操作</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(patient, index) in patients" :key="index">
                             <td>{{ patient.name }}</td>
                             <td>{{ patient.inspection_agency }}</td>
-                            <td>{{ patient.age }}</td>
                             <td>{{ patient.medical_doctor }}</td>
                             <td>{{ patient.gender }}</td>
-                            <td class="q-gutter-x-sm text-right">
+                            <td>{{ patient.age }}</td>
+                            <td>{{ patient.diagnosis }}</td>
+                            <td>{{ patient.tumor_stage }}</td>
+                            <td>{{ patient.disease }}</td>
+                            <td>{{ patient.family_history }}</td>
+                            <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="primary"
                                     label="编辑"
@@ -118,7 +132,7 @@
             "
         />
     </q-dialog>
-    <q-dialog v-model="showPatientInfo" persistent>
+    <q-dialog v-model="showPatientInfo">
         <PatientInfo
             :id="infoId"
             @refresh="
@@ -144,11 +158,11 @@ import PatientEdit from "./PatientEdit.vue";
 import PatientNew from "./PatientNew.vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { onMounted, ref } from "vue";
-import { api, getTokenCookie } from "src/boot/axios";
+import { api } from "src/boot/axios";
 import { globalStore } from "src/stores/global";
 import { useApi } from "src/api/apiBase";
 
-const { apiGet, apiPut, apiPost, apiDelete } = useApi();
+const { apiGet, downloadData, apiDelete } = useApi();
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
@@ -216,10 +230,7 @@ const loadPage = async () => {
 };
 
 const downlaodTemplate = () => {
-    var link = document.createElement("a");
-    link.href = api.defaults.baseURL + "/patient/patients/dl_patient_template";
-    link.download = "患者批量上传模板.csv";
-    link.click();
+    downloadData("/patient/patients/dl_patient_template", null);
 };
 const fileSelected = (event) => {
     let data = new FormData();
@@ -236,5 +247,8 @@ const fileSelected = (event) => {
         .catch((e) => {
             console.log(e.response.data);
         });
+};
+const exportData = () => {
+    downloadData("/patient/patients/dl_patient_template", null);
 };
 </script>
