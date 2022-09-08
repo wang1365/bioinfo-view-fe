@@ -1,6 +1,6 @@
 <template>
     <q-page padding class="full-height overflow-hidden">
-        <PageTitle title="用户管理"/>
+        <PageTitle title="用户管理" />
         <div class="row justify-end q-gutter-md items-center q-py-xs">
             <div class="col-4">
                 <q-input
@@ -36,7 +36,7 @@
                 ></q-btn>
             </div>
         </div>
-        <q-separator/>
+        <q-separator />
         <q-table
             :rows="rows"
             :columns="columns"
@@ -54,13 +54,25 @@
         >
             <template v-slot:body-cell-disk="props">
                 <q-td align="center">
-                    {{ (props.row.used_disk || 0) + '/' + (props.row.disk_limit || '无限制') }}
+                    {{
+                        (props.row.used_disk || 0) +
+                        "/" +
+                        (props.row.disk_limit || "无限制")
+                    }}
                 </q-td>
             </template>
             <template v-slot:body-cell-role="props">
                 <q-td align="center">
-                    <q-chip v-if="_.get(props.row, 'role[0]') === 'super'" color="primary" text-color="white">
-                        <q-avatar icon="bookmark" color="red" text-color="white"/>
+                    <q-chip
+                        v-if="_.get(props.row, 'role[0]') === 'super'"
+                        color="primary"
+                        text-color="white"
+                    >
+                        <q-avatar
+                            icon="bookmark"
+                            color="red"
+                            text-color="white"
+                        />
                         超级管理员
                     </q-chip>
                     <span v-else>{{ getRoleName(props.row.role) }}</span>
@@ -68,22 +80,29 @@
             </template>
             <template v-slot:body-cell-is_active="props">
                 <q-td align="center">
-                    <q-chip v-if="props.row.is_active" label="启用" color="green" size="sm"/>
-                    <q-chip v-else label="禁用" color="orange" size="sm"/>
+                    <q-chip
+                        v-if="props.row.is_active"
+                        label="启用"
+                        color="green"
+                        size="sm"
+                    />
+                    <q-chip v-else label="禁用" color="orange" size="sm" />
                 </q-td>
             </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn
-                            size="xs" outline
+                            size="xs"
+                            outline
                             color="primary"
                             label="设置"
                             @click="clickEdit(props.row)"
                         ></q-btn>
                         <q-btn
                             v-if="allowReset(props.row)"
-                            size="xs" outline
+                            size="xs"
+                            outline
                             color="red"
                             text-color="red"
                             label="重置密码"
@@ -91,7 +110,8 @@
                         ></q-btn>
 
                         <q-btn
-                            size="xs" outline
+                            size="xs"
+                            outline
                             color="red"
                             text-color="red"
                             label="删除"
@@ -140,50 +160,90 @@
             <!--            </template>-->
         </q-table>
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
-        <EditUser ref="editUserDlg" :user="user" @success="refreshUsers"></EditUser>
+        <EditUser
+            ref="editUserDlg"
+            :user="user"
+            @success="refreshUsers"
+        ></EditUser>
         <ResetPassword ref="resetPasswordDlg" :user="user"></ResetPassword>
     </q-page>
 </template>
 
 <script setup>
-import {useQuasar} from "quasar"
-import {nextTick, onMounted, ref} from "vue"
-import _ from "lodash"
-import {listUser, batchDeleteUser} from "src/api/user"
-import PageTitle from "components/page-title/PageTitle.vue"
-import CreateUser from "./CreateUser"
-import EditUser from "pages/main/users/EditUser"
-import {deleteFlow} from "src/api/flow"
-import ResetPassword from "pages/main/users/ResetPassword"
-import {storeToRefs} from 'pinia'
-import {globalStore} from "src/stores/global";
+import { useQuasar } from "quasar";
+import { nextTick, onMounted, ref } from "vue";
+import _ from "lodash";
+import { listUser, batchDeleteUser } from "src/api/user";
+import PageTitle from "components/page-title/PageTitle.vue";
+import CreateUser from "./CreateUser";
+import EditUser from "pages/main/users/EditUser";
+import { deleteFlow } from "src/api/flow";
+import ResetPassword from "pages/main/users/ResetPassword";
+import { storeToRefs } from "pinia";
+import { globalStore } from "src/stores/global";
 
-const createUserDlg = ref(null)
-const editUserDlg = ref(null)
-const resetPasswordDlg = ref(null)
-const resetResourceLimitDlg = ref(false)
-const user = ref(null)
+const createUserDlg = ref(null);
+const editUserDlg = ref(null);
+const resetPasswordDlg = ref(null);
+const resetResourceLimitDlg = ref(false);
+const user = ref(null);
 const $q = useQuasar();
-const store = globalStore()
+const store = globalStore();
 const columns = [
-    {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
-    {name: "username", label: "账号", field: "username", sortable: true, align: "center",},
-    {name: "nickname", label: "姓名", field: "nickname", sortable: true, align: "center",},
-    {name: "disk", label: "磁盘使用(MB)", field: "disk", sortable: true, align: "center",},
+    {
+        name: "id",
+        label: "ID",
+        align: "center",
+        style: "width:80px",
+        field: (row) => row.id,
+        format: (val) => `${val}`,
+    },
+    {
+        name: "username",
+        label: "账号",
+        field: "username",
+        sortable: true,
+        align: "center",
+    },
+    {
+        name: "nickname",
+        label: "姓名",
+        field: "nickname",
+        sortable: true,
+        align: "center",
+    },
+    {
+        name: "disk",
+        label: "磁盘使用(MB)",
+        field: "disk",
+        sortable: true,
+        align: "center",
+    },
     // {name: "department",align: "center",label: "部门",field: "calories",sortable: true, },
     // {name: "email", label: "邮箱", field: "email", align: "center"},
-    {name: "role", label: "角色", align: "center", field: "role", format: (v) => getRoleName(v),},
-    {name: "is_active", label: "状态", field: "is_active", align: "center", format: (v) => `${v ? "启用" : "禁用"}`,},
-    {name: "operation", label: "操作", align: "center", style: "width:350px"},
-]
+    {
+        name: "role",
+        label: "角色",
+        align: "center",
+        field: "role",
+        format: (v) => getRoleName(v),
+    },
+    {
+        name: "is_active",
+        label: "状态",
+        field: "is_active",
+        align: "center",
+        format: (v) => `${v ? "启用" : "禁用"}`,
+    },
+    { name: "operation", label: "操作", align: "center", style: "width:350px" },
+];
 
-const loading = ref(false)
+const loading = ref(false);
 let rows = ref([]);
 onMounted(() => {
     refreshUsers();
-})
-
-const searchKeyword = ref("")
+});
+const searchKeyword = ref("");
 
 const getRoleName = (roles) => {
     if (!_.isArray(roles)) {
@@ -199,34 +259,34 @@ const getRoleName = (roles) => {
             );
         })
         .join(",");
-}
+};
 
 const allowReset = (row) => {
-    return row.id !== _.get(store, 'currentUser.id')
-}
+    return row.id !== _.get(store, "currentUser.id");
+};
 
 const getStatus = (isActive) => {
-    return isActive ? "√" : "x"
-}
+    return isActive ? "√" : "x";
+};
 
 const pagination = ref({
     sortBy: "id",
     descending: false,
     page: 1,
     rowsPerPage: 10,
-    rowsNumber: 0
-})
+    rowsNumber: 0,
+});
 
 const clickCreate = () => {
-    createUserDlg.value.show()
-}
+    createUserDlg.value.show();
+};
 
 const clickEdit = (row) => {
-    console.log('click edit', row)
-    user.value = row
+    console.log("click edit", row);
+    user.value = row;
 
-    editUserDlg.value.show()
-}
+    editUserDlg.value.show();
+};
 
 const clickReset = (row) => {
     // $q.dialog({
@@ -238,47 +298,51 @@ const clickReset = (row) => {
     //     });
     // });
 
-    user.value = row
-    resetPasswordDlg.value.show()
-}
+    user.value = row;
+    resetPasswordDlg.value.show();
+};
 
-const clickSetResourceLimit = (row) => {
-
-}
+const clickSetResourceLimit = (row) => {};
 
 const clickDelete = (row) => {
     $q.dialog({
         title: "确认删除",
         message: `是否要删除用户"${row.username}"?`,
-        cancel: '取消',
-        ok: '确定',
+        cancel: "取消",
+        ok: "确定",
     })
         .onOk(() => {
-            batchDeleteUser({ids: [row.id]}).then(() => {
-                $q.notify("删除成功")
+            batchDeleteUser({ ids: [row.id] }).then(() => {
+                $q.notify("删除成功");
             });
         })
         .onCancel(() => {
             // console.log('>>>> Cancel')
-        })
-}
+        });
+};
 
 function refreshUsersForEvent(props) {
-    const {page, rowsPerPage, sortBy, descending} = props.pagination
-    pagination.value = props.pagination
-    refreshUsers()
+    const { page, rowsPerPage, sortBy, descending } = props.pagination;
+    pagination.value = props.pagination;
+    refreshUsers();
 }
 
 function refreshUsers() {
-    loading.value = true
-    listUser(searchKeyword.value, pagination.value.page, pagination.value.rowsPerPage).then((data) => {
-        console.log("====>查询用户成功", data)
-        rows.value = data.item_list
+    loading.value = true;
+    listUser(
+        searchKeyword.value,
+        pagination.value.page,
+        pagination.value.rowsPerPage
+    )
+        .then((data) => {
+            console.log("====>查询用户成功", data);
+            rows.value = data.item_list;
 
-        pagination.value.rowsNumber = data.total_count
-    }).finally(() => {
-        loading.value = false
-    })
+            pagination.value.rowsNumber = data.total_count;
+        })
+        .finally(() => {
+            loading.value = false;
+        });
 }
 </script>
 

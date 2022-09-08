@@ -1,11 +1,11 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="个人中心"/>
+        <PageTitle title="个人中心" />
         <q-card class="column full-height full-width bg-blue-7">
             <q-card-section class="row items-center q-pb-none">
                 <div class="text-h6">用户中心</div>
-                <q-space/>
-                <q-btn icon="close" flat round dense v-close-popup/>
+                <q-space />
+                <q-btn icon="close" flat round dense v-close-popup />
             </q-card-section>
             <q-card-section>
                 <div
@@ -13,10 +13,10 @@
                     style="max-width: 95vw"
                 >
                     <div class="col-4 column items-center">
-                        <q-avatar icon="diversity_1" size="200px"/>
+                        <q-avatar icon="diversity_1" size="200px" />
 
                         <div class="text-subtitle1 q-mt-md q-mb-md">
-                            <GqaShowName showMyName/>
+                            <GqaShowName showMyName />
                         </div>
 
                         <q-list>
@@ -28,7 +28,9 @@
                                         class="text-warning"
                                     />
                                 </q-item-section>
-                                <q-item-section>{{ '账号: ' + me.username }}</q-item-section>
+                                <q-item-section>{{
+                                    "账号: " + me.username
+                                }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
@@ -38,7 +40,9 @@
                                         class="text-warning"
                                     />
                                 </q-item-section>
-                                <q-item-section>{{ '姓名: ' + me.nickname }}</q-item-section>
+                                <q-item-section>{{
+                                    "姓名: " + me.nickname
+                                }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
@@ -59,13 +63,12 @@
                                     />
                                 </q-item-section>
                                 <q-item-section
-                                >邮箱: bioinfo@bioinfo.com
-                                </q-item-section
-                                >
+                                    >邮箱: bioinfo@bioinfo.com
+                                </q-item-section>
                             </q-item>
                         </q-list>
 
-                        <q-separator inset spaced/>
+                        <q-separator inset spaced />
 
                         <!--                        <div class="row q-gutter-md">-->
                         <!--                            <q-btn color="primary" :label="$t('Change') + ' ' + $t('Nickname')"-->
@@ -75,7 +78,7 @@
                         <!--                        </div>-->
                     </div>
                     <div class="q-pa-md col-8 column items-center">
-                        <NoticeTab ref="noticeTab"/>
+                        <NoticeTab ref="noticeTab" />
                     </div>
                 </div>
             </q-card-section>
@@ -97,8 +100,8 @@
                     @click="router.push('/login')"
                 ></q-btn>
             </q-card-actions>
-            <ChangePasswordDialog ref="changePasswordDialog"/>
-            <ChangeNicknameDialog ref="changeNicknameDialog"/>
+            <ChangePasswordDialog ref="changePasswordDialog" />
+            <ChangeNicknameDialog ref="changeNicknameDialog" />
         </q-card>
     </q-page>
 </template>
@@ -108,14 +111,14 @@ import PageTitle from "components/page-title/PageTitle.vue";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { globalStore } from 'src/stores/global'
+import { globalStore } from "src/stores/global";
 
-const store = globalStore()
+const store = globalStore();
 
 const me = {
-    username: store.currentUser ? store.currentUser.username : '',
-    nickname: store.currentUser ? store.currentUser.nickname : ''
-}
+    username: store.currentUser ? store.currentUser.username : "",
+    nickname: store.currentUser ? store.currentUser.nickname : "",
+};
 
 const changePasswordDialog = ref(null);
 const showPasswordDialog = () => {
