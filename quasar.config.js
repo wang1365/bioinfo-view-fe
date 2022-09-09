@@ -84,7 +84,7 @@ module.exports = configure(function (ctx) {
             proxy: {
                 "/api": {
                     changeOrigin: true,
-                    target: process.env.host || "http://192.168.31.97:8000",
+                    target: process.env.host || "http://dell:8000",
                     // target: process.env.host || "http://localhost:8000",
                     pathRewrite: {
                         "^/api": "", // base path替换

@@ -28,8 +28,6 @@ import { globalStore } from "src/stores/global";
 const store = globalStore();
 const { currentUser } = storeToRefs(store);
 
-console.log("currentUser", store, currentUser);
-
 const props = defineProps({
     addRoutesItem: {
         default: function () {

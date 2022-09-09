@@ -2,7 +2,12 @@
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="项目详情" />
         <ProjectDetail :projectDetail="projectDetail" />
-        <ProjectDetailSampleList :projectDetail="projectDetail" />
+        <ProjectDetailDataList
+            v-if="projectDetail.id"
+            :projectDetail="projectDetail"
+            :projectId="projectDetail.id"
+            @refresh="getProjectDetail()"
+        />
         <ChildProjectList
             :projectDetail="projectDetail"
             v-if="!projectDetail.parent"
@@ -14,7 +19,7 @@
 import PageTitle from "components/page-title/PageTitle.vue";
 import ProjectDetail from "./ProjectDetail.vue";
 import ChildProjectList from "./ChildProjectList.vue";
-import ProjectDetailSampleList from "./ProjectDetailSamples/ProjectDetailSampleList.vue";
+import ProjectDetailDataList from "./ProjectDetailData/ProjectDetailDataList.vue";
 import { useApi } from "src/api/apiBase";
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";

@@ -17,6 +17,7 @@
                     overflow-y: scroll;
                     overflow-x: hidden;
                 "
+                class="bio-data-table"
             >
                 <table>
                     <thead
@@ -27,17 +28,18 @@
                             z-index: 1;
                         "
                     >
-                        <tr class="text-body1 text-weight-bold">
+                        <tr>
                             <td>选择</td>
                             <td>名称</td>
                             <td>code</td>
-                            <td>分类</td>
+                            <td>类型</td>
                             <td>描述</td>
+                            <td>创建时间</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr
-                            class="cursor-pointer q-py-sm"
+                            class="cursor-pointer"
                             v-for="(item, index) of flows"
                             :key="index"
                             @click="selectFlow(item)"
@@ -51,7 +53,8 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.code }}</td>
                             <td>{{ item.flow_category }}</td>
-                            <td>{{ item.details }}</td>
+                            <td>{{ item.desp }}</td>
+                            <td>{{ item.create_time }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -88,60 +91,14 @@ const selectFlow = (flow) => {
     selectedFlow.value = flow;
 };
 onMounted(() => {
-    let i = 0;
-    while (i < 5) {
-        flows.value.push({
-            id: i,
-            name: "test" + i,
-            code: "test" + i,
-            flow_category: "dddd",
-            details: "dasdfasdf",
-            checked: false,
-        });
-        i += 1;
-    }
-    // getFlows();
+    getFlows();
 });
 const getFlows = () => {
     apiGet("/flow/flows/", (res) => {
         for (const item of res.data.results) {
             item.checked = false;
-            flows.value.append(item);
+            flows.value.push(item);
         }
     });
 };
 </script>
-<style lang="scss">
-table {
-    width: 100%;
-    border-collapse: collapse;
-    td {
-        padding: 5px;
-        border-bottom: silver 1px solid;
-    }
-
-    tbody {
-        tr {
-            // &:nth-child(odd) {
-            //     td {
-            //         background-color: rgba(0, 0, 0, 0.05);
-            //     }
-            // }
-            // &:nth-child(even) {
-            //     td {
-            //         background-color: rgba(0, 0, 0, 0.08);
-            //     }
-            // }
-        }
-
-        tr {
-            border-bottom: solid silver 1px;
-            &:hover {
-                td {
-                    background-color: rgba(0, 0, 0, 0.15);
-                }
-            }
-        }
-    }
-}
-</style>

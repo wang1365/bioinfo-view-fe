@@ -84,7 +84,11 @@
         <FlowSelect @flowSelected="flowSelected($event)" />
     </q-dialog>
     <q-dialog persistent v-model="openCreateTask">
-        <CreateTask />
+        <CreateTask
+            :flowDetail="flowDetail"
+            :projectId="projectDetail.id"
+            @taskCreated="taskCreated($event)"
+        />
     </q-dialog>
 </template>
 <script setup>
@@ -98,16 +102,20 @@ const props = defineProps({ projectDetail: Object });
 const openFlowSelector = ref(false);
 const openCreateTask = ref(false);
 const selectedFlowId = ref(0);
+const flowDetail = ref({});
 
 const flowSelected = (event) => {
     openFlowSelector.value = false;
     selectedFlowId.value = event.id;
     getFlowDetail(event.id);
 };
+const taskCreated = (event) => {
+    openCreateTask.value = false;
+};
 
 const getFlowDetail = (flowId) => {
     apiGet(`/flow/flows/${flowId}/`, (res) => {
-        console.log(res);
+        flowDetail.value = res.data;
     });
 };
 </script>

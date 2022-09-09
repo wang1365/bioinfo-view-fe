@@ -13,17 +13,16 @@
             </q-toolbar>
         </q-section>
         <q-section>
-            <div class="q-pa-md">
+            <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
-                        <tr class="text-body1 text-weight-bold">
+                        <tr>
                             <td>项目名称</td>
                             <td>创建人</td>
                             <td>创建时间</td>
                             <td>样本数量</td>
                             <td>任务数量</td>
-
-                            <td class="text-right">操作</td>
+                            <td>操作</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,7 +34,7 @@
                             <td>{{ item.create_time }}</td>
                             <td>{{ item.samples.length }}</td>
                             <td>{{ item.task_count }}</td>
-                            <td class="q-gutter-x-sm text-right">
+                            <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="info"
                                     label="详情"
