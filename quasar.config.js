@@ -99,6 +99,11 @@ module.exports = configure(function (ctx) {
                 notify: {
                     /* look at QUASARCONFOPTIONS from the API card (bottom of page) */
                 },
+                loadingBar: {
+                    color: "red",
+                    size: "10px",
+                    position: "bottom",
+                },
             },
 
             // iconSet: 'material-icons', // Quasar icon set
@@ -112,7 +117,14 @@ module.exports = configure(function (ctx) {
             // directives: [],
 
             // Quasar plugins
-            plugins: ["Notify", "Dialog", "AppFullscreen", "Cookies", "Loading"],
+            plugins: [
+                "Notify",
+                "Dialog",
+                "AppFullscreen",
+                "Cookies",
+                "Loading",
+                "LoadingBar",
+            ],
         },
 
         // animations: 'all', // --- includes all animations

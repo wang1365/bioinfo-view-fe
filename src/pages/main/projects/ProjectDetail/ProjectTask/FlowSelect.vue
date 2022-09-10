@@ -72,7 +72,6 @@
     </q-card>
 </template>
 <script setup>
-import { useQuasar } from "quasar";
 import { ref, onMounted, defineEmits } from "vue";
 import { useApi } from "src/api/apiBase.js";
 import { errorMessage } from "src/utils/notify.js";

@@ -51,8 +51,14 @@ const routes = [
             },
             {
                 path: "tasks",
-                component: () => import("pages/main/tasks/TasksPage.vue"),
+                component: () => import("pages/main/tasks/index.vue"),
             },
+            {
+                path: "tasks/:id",
+                component: () =>
+                    import("pages/main/tasks/TaskDetail/index.vue"),
+            },
+
             {
                 path: "settings",
                 component: () => import("pages/main/settings/SettingBlank"),
@@ -63,11 +69,13 @@ const routes = [
                     },
                     {
                         path: "system",
-                        component: () => import("pages/main/settings/SettingsPage.vue"),
+                        component: () =>
+                            import("pages/main/settings/SettingsPage.vue"),
                     },
                     {
                         path: "ui",
-                        component: () => import("pages/main/settings/UiSettingsPage.vue"),
+                        component: () =>
+                            import("pages/main/settings/UiSettingsPage.vue"),
                     },
                 ],
             },

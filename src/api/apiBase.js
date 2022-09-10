@@ -1,8 +1,13 @@
 import { useRouter } from "vue-router";
-import { Notify } from "quasar";
+import { Notify, useQuasar } from "quasar";
 import axios from "axios";
 import { errorMessage } from "src/utils/notify";
-
+import { LoadingBar } from "quasar";
+LoadingBar.setDefaults({
+    color: "purple",
+    size: "15px",
+    position: "bottom",
+});
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -25,6 +30,12 @@ const api = axios.create({
         Authorization: getTokenCookie(),
     },
     withCredentials: true,
+    onUploadProgress: function (progressEvent) {
+        console.log("----->", progressEvent);
+    },
+    onDownloadProgress: function (progressEvent) {
+        console.log("<-----", progressEvent);
+    },
 });
 export function defaultErrorHandler(data) {
     Notify.create({
@@ -79,6 +90,12 @@ export function defaultHandler(router, resp, onSuccess, onError) {
 
 export function useApi() {
     const router = useRouter();
+    const $q = useQuasar();
+    $q.loadingBar.setDefaults({
+        color: "purple",
+        size: "5px",
+        position: "top",
+    });
     function apiGet(
         url,
         onSuccess,
@@ -86,11 +103,15 @@ export function useApi() {
         onError = null,
         onHttpError = null
     ) {
+        $q.loadingBar.start();
+
         api.get(url, config)
             .then((resp) => {
+                $q.loadingBar.stop();
                 defaultHandler(router, resp, onSuccess, onError);
             })
             .catch((error) => {
+                $q.loadingBar.stop();
                 if (onHttpError) {
                     onHttpError(error);
                 } else {
