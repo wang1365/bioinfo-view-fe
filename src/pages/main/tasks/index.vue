@@ -124,6 +124,7 @@
 import { ref, onMounted } from "vue";
 import { useApi } from "src/api/apiBase";
 import PageTitle from "components/page-title/PageTitle.vue";
+import PopupMultiSelector from "components/popup-multi-selector/PopupMultiSelector.vue";
 import ProjectListVue from "./components/ProjectList.vue";
 import { useRouter } from "vue-router";
 const options = ref([
@@ -135,7 +136,7 @@ const options = ref([
     { label: "取消", value: "CANCELED" },
 ]);
 const status = ref({ label: "全部", value: "ALL" });
-const showProjectSelect = ref(false);
+const showProjectSelect = ref(true);
 const projectId = ref(0);
 const projectName = ref("");
 const currentPage = ref(1);

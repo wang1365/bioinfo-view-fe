@@ -69,19 +69,6 @@
         }
         tbody {
             tr {
-                // &:nth-child(odd) {
-                //     td {
-                //         background-color: rgba(0, 0, 0, 0.05);
-                //     }
-                // }
-                // &:nth-child(even) {
-                //     td {
-                //         background-color: rgba(0, 0, 0, 0.08);
-                //     }
-                // }
-            }
-
-            tr {
                 padding: 5px;
                 border-bottom: solid silver 1px;
                 &:hover {
@@ -89,6 +76,52 @@
                         background-color: rgba(0, 0, 0, 0.15);
                     }
                 }
+            }
+        }
+    }
+}
+.popup-selector {
+    width: 80vw;
+    max-width: 80vw;
+    max-height: 90vh;
+    .popup-content {
+        display: flex;
+        flex-direction: column;
+        max-height: 80vh;
+        .popup-content-header {
+            height: 50px;
+        }
+        .popup-content-table-container {
+            margin: 10px;
+            flex: 1 1 auto;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            .popup-content-table-head {
+                background-color: white;
+                position: sticky;
+                top: 0;
+                z-index: 1;
+            }
+        }
+        .popup-content-single-footer {
+            height: 130px;
+            min-height: 130px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        .popup-content-multi-footer {
+            height: 130px;
+            min-height: 130px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            .popup-content-multi-footer-selected-sticky {
+                position: sticky;
+                top: 0;
+                background-color: white;
+            }
+            .popup-content-multi-footer-selected-container {
+                padding-left: 10px;
+                padding-right: 10px;
             }
         }
     }
