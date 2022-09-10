@@ -180,7 +180,6 @@ const info = async (item) => {
 const dataSelected = () => {
     openDataSelector.value = false;
     emit("refresh");
-    // refreshPage();
 };
 
 const fromParent = (item) => {
@@ -189,11 +188,7 @@ const fromParent = (item) => {
 onMounted(() => {
     loadPage();
 });
-// watch({
-//     "props.projectDetail": () => {
-//         refreshPage();
-//     },
-// });
+
 onUpdated(() => {
     refreshPage();
 });

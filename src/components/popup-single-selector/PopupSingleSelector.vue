@@ -7,6 +7,7 @@
                     <q-btn flat round dense icon="close" v-close-popup />
                 </q-toolbar>
             </div>
+            <slot name="tableFilter"></slot>
             <div class="bio-data-table popup-content-table-container">
                 <table>
                     <thead class="popup-content-table-head">
@@ -99,6 +100,7 @@ const props = defineProps({
 });
 const emit = defineEmits("pageChange", "ensureSelect");
 const pageChange = (event) => {
+    // selectedItem.value = {};
     emit("pageChange", event);
 };
 

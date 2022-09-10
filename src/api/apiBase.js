@@ -29,13 +29,13 @@ const api = axios.create({
     headers: {
         Authorization: getTokenCookie(),
     },
-    withCredentials: true,
-    onUploadProgress: function (progressEvent) {
-        console.log("----->", progressEvent);
-    },
-    onDownloadProgress: function (progressEvent) {
-        console.log("<-----", progressEvent);
-    },
+    // withCredentials: true,
+    // onUploadProgress: function (progressEvent) {
+    //     console.log("----->", progressEvent);
+    // },
+    // onDownloadProgress: function (progressEvent) {
+    //     console.log("<-----", progressEvent);
+    // },
 });
 export function defaultErrorHandler(data) {
     Notify.create({

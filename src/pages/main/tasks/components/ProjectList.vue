@@ -6,10 +6,27 @@
             :total="total"
             :tableHeaders="tableHeaders"
             :tableRowFields="tableRowFields"
+            :currentPage="currentPage"
             selectedShowField="name"
             @pageChange="pageChange($event)"
             @ensureSelect="ensureSelect($event)"
         >
+            <template v-slot:tableFilter>
+                <div class="row q-px-md q-gutter-sm">
+                    <q-input
+                        style="width: 250px"
+                        dense
+                        v-model="projectName"
+                        label="项目名称"
+                        clearable
+                    />
+                    <q-btn
+                        color="primary"
+                        icon="search"
+                        @click="refreshPage()"
+                    ></q-btn>
+                </div>
+            </template>
             <template v-slot:itemRow="{ row }">
                 <td>
                     {{ row.name }}
@@ -43,6 +60,8 @@ const tableRowFields = ref([
 const emit = defineEmits(["itemSelected"]);
 const { apiGet } = useApi();
 
+const projectName = ref("");
+
 const selectedItem = ref({});
 
 const selectItem = (item) => {
@@ -63,6 +82,7 @@ const ensureSelect = (event) => {
     emit("itemSelected", event);
 };
 const pageChange = async (event) => {
+    console.log(event);
     currentPage.value = event.currentPage;
     pageSize.value = event.pageSize;
     loadPage();
@@ -72,18 +92,15 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
-    if (currentPage.value) {
-        apiGet(
-            `/project?page=${currentPage.value}&size=${pageSize.value}`,
-            (res) => {
-                total.value = res.data.count;
-                dataItems.value = [];
-                for (let iterator of res.data.results) {
-                    iterator.selected = false;
-                    dataItems.value.push(iterator);
-                }
-            }
-        );
-    }
+    let params = `?page=${currentPage.value}&size=${pageSize.value}&all_level=1`;
+    if (projectName.value) params += `&name=${projectName.value}`;
+    apiGet(`/project${params}`, (res) => {
+        total.value = res.data.count;
+        dataItems.value = [];
+        for (let iterator of res.data.results) {
+            iterator.selected = false;
+            dataItems.value.push(iterator);
+        }
+    });
 };
 </script>

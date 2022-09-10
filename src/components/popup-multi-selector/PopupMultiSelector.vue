@@ -7,6 +7,8 @@
                     <q-btn flat round dense icon="close" v-close-popup />
                 </q-toolbar>
             </div>
+            <slot name="tableFilter"></slot>
+
             <div class="bio-data-table popup-content-table-container">
                 <table>
                     <thead class="popup-content-table-head">
@@ -28,6 +30,7 @@
                             class="cursor-pointer"
                             v-for="item of dataItems"
                             :key="item"
+                            @click="item.selected = !item.selected"
                         >
                             <td>
                                 <q-checkbox

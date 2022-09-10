@@ -65,7 +65,12 @@
                         >当前选择的是: {{ selectedFlow.name }}</q-toolbar-title
                     >
                     <q-btn class="q-mr-md" label="取消" v-close-popup />
-                    <q-btn color="primary" label="确认" @click="flowSelect()" />
+                    <q-btn
+                        v-if="selectedFlow.id"
+                        color="primary"
+                        label="确认"
+                        @click="flowSelect()"
+                    />
                 </q-toolbar>
             </div>
         </div>

@@ -28,14 +28,12 @@ const routes = [
             },
             {
                 path: "projects",
-                component: () => import("pages/main/projects/ProjectsPage.vue"),
+                component: () => import("pages/main/projects/index.vue"),
             },
             {
                 path: "projects/:id",
                 component: () =>
-                    import(
-                        "pages/main/projects/ProjectDetail/ProjectDetailPage.vue"
-                    ),
+                    import("pages/main/projects/ProjectDetail/index.vue"),
             },
             {
                 path: "patients",
