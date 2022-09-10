@@ -52,6 +52,7 @@
                         <!-- <td>
                             <q-checkbox v-model="selected" color="negative" />
                         </td> -->
+                        <td>ID</td>
                         <td>名称</td>
                         <td>项目</td>
                         <td>分析流程</td>
@@ -75,6 +76,9 @@
                             />
                         </td> -->
 
+                        <td>
+                            {{ item.id }}
+                        </td>
                         <td>
                             {{ item.name }}
                         </td>

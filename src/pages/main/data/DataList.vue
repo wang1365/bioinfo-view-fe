@@ -58,6 +58,8 @@
                                     color="negative"
                                 />
                             </td> -->
+
+                            <td>ID</td>
                             <td>项目编码</td>
                             <td>文库编号</td>
                             <!-- <td>捕获试剂盒</td>
@@ -94,6 +96,9 @@
                                 />
                             </td> -->
 
+                            <td>
+                                {{ item.id }}
+                            </td>
                             <td>
                                 {{ item.project_index }}
                             </td>

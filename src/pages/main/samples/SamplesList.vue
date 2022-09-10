@@ -58,6 +58,7 @@
                                     color="negative"
                                 />
                             </td> -->
+                            <td>ID</td>
                             <td>采样日期</td>
                             <td>送测日期</td>
                             <td>采样部位</td>
@@ -85,7 +86,9 @@
                                     color="negative"
                                 />
                             </td> -->
-
+                            <td>
+                                {{ item.id }}
+                            </td>
                             <td>
                                 {{ item.sample_date }}
                             </td>

@@ -57,6 +57,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <td>ID</td>
                             <td>患者识别号</td>
                             <td>送检机构</td>
                             <td>诊疗医生</td>
@@ -71,6 +72,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(patient, index) in patients" :key="index">
+                            <td>{{ patient.id }}</td>
                             <td>{{ patient.name }}</td>
                             <td>{{ patient.inspection_agency }}</td>
                             <td>{{ patient.medical_doctor }}</td>

@@ -17,6 +17,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <td>ID</td>
                             <td>项目名称</td>
                             <td>创建人</td>
                             <td>创建时间</td>
@@ -27,6 +28,9 @@
                     </thead>
                     <tbody>
                         <tr v-for="item in dataItems" :key="item">
+                            <td>
+                                {{ item.id }}
+                            </td>
                             <td>
                                 {{ item.name }}
                             </td>
