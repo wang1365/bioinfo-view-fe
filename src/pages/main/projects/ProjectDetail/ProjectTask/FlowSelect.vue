@@ -80,6 +80,7 @@
 import { ref, onMounted, defineEmits } from "vue";
 import { useApi } from "src/api/apiBase.js";
 import { errorMessage } from "src/utils/notify.js";
+
 const emit = defineEmits(["flowSelected"]);
 const { apiGet } = useApi();
 const selectedFlow = ref({});

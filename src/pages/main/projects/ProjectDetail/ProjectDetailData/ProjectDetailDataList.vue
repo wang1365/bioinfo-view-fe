@@ -9,7 +9,7 @@
                     <span
                         v-if="props.projectDetail.parent"
                         class="text-body2 bg-yellow-11"
-                        >来自于上级项目</span
+                        >继承自于上级项目</span
                     >
                 </q-toolbar-title>
                 <q-btn

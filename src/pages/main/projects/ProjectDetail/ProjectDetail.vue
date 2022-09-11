@@ -116,6 +116,7 @@ const taskCreated = (event) => {
 const getFlowDetail = (flowId) => {
     apiGet(`/flow/flows/${flowId}/`, (res) => {
         flowDetail.value = res.data;
+        openCreateTask.value = true;
     });
 };
 </script>
