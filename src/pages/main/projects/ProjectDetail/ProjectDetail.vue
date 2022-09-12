@@ -86,7 +86,7 @@
     <q-dialog persistent v-model="openCreateTask">
         <CreateTask
             :flowDetail="flowDetail"
-            :projectId="projectDetail.id"
+            :projectDetail="props.projectDetail"
             @taskCreated="taskCreated($event)"
         />
     </q-dialog>

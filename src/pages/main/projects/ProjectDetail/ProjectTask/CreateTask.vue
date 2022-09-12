@@ -2,105 +2,6 @@
     <q-card style="width: 80vw; max-width: 80vw">
         <PopupContentScroll title="创建任务">
             <template v-slot:contentBody>
-                <div class="q-py-md">
-                    <div class="text-h6">参数填写:</div>
-                    <div>
-                        <q-input
-                            v-model="newTaskName"
-                            label="任务名称"
-                        ></q-input>
-                    </div>
-                    <div class="row">
-                        <template
-                            v-for="param of convertParameterSchema()"
-                            :key="param.key"
-                        >
-                            <div
-                                class="col-6 q-pr-sm"
-                                v-if="param.type == 'string'"
-                            >
-                                <q-input
-                                    v-model="param.value"
-                                    :label="param.key"
-                                >
-                                    <q-tooltip>{{
-                                        param.description
-                                    }}</q-tooltip>
-                                </q-input>
-                            </div>
-                            <div
-                                class="col-6 q-pr-sm"
-                                v-if="param.type == 'number'"
-                            >
-                                <q-input
-                                    type="number"
-                                    v-model="param.value"
-                                    :label="param.key"
-                                >
-                                    <q-tooltip>{{
-                                        param.description
-                                    }}</q-tooltip>
-                                </q-input>
-                            </div>
-                            <div
-                                class="col-6 q-pr-sm"
-                                v-if="param.type == 'select'"
-                            >
-                                <q-select
-                                    v-model="param.value"
-                                    :options="param.choices"
-                                    :label="param.key"
-                                >
-                                    <q-tooltip>{{
-                                        param.description
-                                    }}</q-tooltip>
-                                </q-select>
-                            </div>
-                        </template>
-                    </div>
-                    <div class="text-h6 q-py-md">数据</div>
-                    <div v-if="props.flowDetail.sample_type == 'single'">
-                        <div class="row">
-                            <div class="col-6">
-                                <q-btn
-                                    label="选择数据"
-                                    color="primary"
-                                    style="width: 100%"
-                                ></q-btn>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-if="props.flowDetail.sample_type == 'double'">
-                        <div class="row">
-                            <div class="col">
-                                <q-btn
-                                    label="选择数据-1"
-                                    color="primary"
-                                    style="width: 99%"
-                                ></q-btn>
-                            </div>
-                            <div class="col">
-                                <q-btn
-                                    label="选择数据-2"
-                                    color="secondary"
-                                    style="width: 99%"
-                                ></q-btn>
-                            </div>
-                        </div>
-                    </div>
-                    <div v-if="props.flowDetail.sample_type == 'multiple'">
-                        <div class="row">
-                            <div class="col-6">
-                                <q-btn
-                                    label="选择数据"
-                                    color="primary"
-                                    style="width: 100%"
-                                ></q-btn>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <q-separator />
                 <div class="text-h6 q-py-md">流程信息:</div>
                 <div>
                     <div class="row">
@@ -131,49 +32,354 @@
                         </div>
                     </div>
                 </div>
+                <q-separator />
+                <div class="q-py-md">
+                    <div class="text-h6">参数填写:</div>
+                    <div>
+                        <q-input
+                            v-model="newTaskName"
+                            label="任务名称"
+                            :error="newTaskNameError"
+                            error-message="必填"
+                        >
+                        </q-input>
+                    </div>
+                    <div class="row">
+                        <template
+                            v-for="param of paramsDefine"
+                            :key="param.key"
+                        >
+                            <div
+                                class="col-6 q-pr-sm"
+                                v-if="param.type == 'string'"
+                            >
+                                <q-input
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    v-model="params[param.key]"
+                                    :label="param.key"
+                                >
+                                    <q-tooltip>{{
+                                        param.description
+                                    }}</q-tooltip>
+                                </q-input>
+                            </div>
+                            <div
+                                class="col-6 q-pr-sm"
+                                v-if="param.type == 'number'"
+                            >
+                                <q-input
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    type="number"
+                                    v-model="params[param.key]"
+                                    :label="param.key"
+                                >
+                                    <q-tooltip>{{
+                                        param.description
+                                    }}</q-tooltip>
+                                </q-input>
+                            </div>
+                            <div
+                                class="col-6 q-pr-sm"
+                                v-if="param.type == 'select'"
+                            >
+                                <q-select
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    v-model="params[param.key]"
+                                    :options="param.choices"
+                                    :label="param.key"
+                                >
+                                    <q-tooltip>{{
+                                        param.description
+                                    }}</q-tooltip>
+                                </q-select>
+                            </div>
+                            <div
+                                class="col-6 q-pr-sm"
+                                v-if="param.type == 'multiSelect'"
+                            >
+                                <q-select
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    v-model="params[param.key]"
+                                    :options="param.choices"
+                                    :label="param.key"
+                                    multiple
+                                    use-chips
+                                >
+                                    <q-tooltip>{{
+                                        param.description
+                                    }}</q-tooltip>
+                                </q-select>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="text-h6 q-py-md">数据</div>
+                    <div v-if="props.flowDetail.sample_type == 'single'">
+                        <div class="row">
+                            <div class="col-6">
+                                <q-btn
+                                    label="选择数据"
+                                    color="primary"
+                                    style="width: 100%"
+                                    @click="selectSingle()"
+                                ></q-btn>
+                            </div>
+                            <div class="col-6" v-if="sampleFirstError">
+                                <span class="text-red text-bold"
+                                    >请选择样本</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="props.flowDetail.sample_type == 'double'">
+                        <div class="row">
+                            <div class="col-6">
+                                <q-btn
+                                    :label="
+                                        '选择数据-1: ' + sampleFirst?.identifier
+                                    "
+                                    color="primary"
+                                    style="width: 99%"
+                                    @click="selectFirst()"
+                                ></q-btn>
+                            </div>
+                            <div class="col-6">
+                                <q-btn
+                                    :label="
+                                        '选择数据-2: ' +
+                                        sampleSecond?.identifier
+                                    "
+                                    color="secondary"
+                                    style="width: 99%"
+                                    @click="selectSecond()"
+                                ></q-btn>
+                            </div>
+                            <div class="col-6">
+                                <span
+                                    v-if="sampleFirstError"
+                                    class="text-red text-bold"
+                                    >请选择样本</span
+                                >
+                            </div>
+                            <div class="col-6">
+                                <span
+                                    v-if="sampleSecondError"
+                                    class="text-red text-bold"
+                                    >请选择样本</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="props.flowDetail.sample_type == 'multiple'">
+                        <div class="row">
+                            <div class="col-6">
+                                <q-btn
+                                    label="选择数据"
+                                    color="primary"
+                                    style="width: 100%"
+                                    @click="selectMulti()"
+                                ></q-btn>
+                            </div>
+                            <div class="col-6" v-if="samplesError">
+                                <span class="text-red text-bold"
+                                    >请选择样本</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </template>
             <template v-slot:contentFooter>
                 <q-btn label="取消" v-close-popup />
-                <q-btn color="primary" label="确定" @click="clickConfirm" />
+                <q-btn
+                    color="primary"
+                    label="确定"
+                    @click="confirmTaskCreated()"
+                />
             </template>
         </PopupContentScroll>
+        <q-dialog persistent v-model="openDataSelectorSingle">
+            <TaskDataSelectSingle
+                :projectDetail="props.projectDetail"
+                @refresh="singleSelected($event)"
+            />
+        </q-dialog>
+        <q-dialog persistent v-model="openDataSelectorMulti">
+            <TaskDataSelectMulti
+                :projectDetail="props.projectDetail"
+                @refresh="multiSelected($event)"
+            />
+        </q-dialog>
     </q-card>
 </template>
 
 <script setup>
-import { defineProps, ref, toRefs, defineEmits } from "vue";
+import { defineProps, ref, toRefs, defineEmits, onMounted } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
+import TaskDataSelectMulti from "./TaskDataSelectMulti.vue";
+import TaskDataSelectSingle from "./TaskDataSelectSingle.vue";
 import { useApi } from "src/api/apiBase";
+import { errorMessage } from "src/utils/notify";
 
 const { apiPost } = useApi();
+const openDataSelectorSingle = ref(false);
+const openDataSelectorMulti = ref(false);
+const newTaskName = ref("");
+const newTaskNameError = ref(false);
+const paramsDefine = ref([]);
+const params = ref({});
+
+const samples = ref([]);
+const sampleFirst = ref({});
+const sampleSecond = ref({});
+const currentSample = ref("first");
+const sampleFirstError = ref(false);
+const sampleSecondError = ref(false);
+const samplesError = ref(false);
+
 const emit = defineEmits(["taskCreated"]);
 const props = defineProps({
     flowDetail: { type: Object, required: true },
-    projectId: { type: Number, required: true },
+    projectDetail: { type: Object, required: true },
 });
-
-const newTaskName = ref("");
-const convertParameterSchema = () => {
-    return JSON.parse(props.flowDetail.parameter_schema);
-};
-
 const { flowId } = toRefs(props);
 
+onMounted(() => {
+    let flowParams = JSON.parse(props.flowDetail.parameter_schema);
+    for (const param of flowParams) {
+        paramsDefine.value.push({
+            required: param.required,
+            key: param.key,
+            type: param.type,
+            description: param.description,
+            choices: param.choices,
+            error: "必填",
+            isError: false,
+        });
+        params.value[param.key] = null;
+    }
+});
+
+const selectSingle = () => {
+    currentSample.value = "first";
+    openDataSelectorSingle.value = true;
+};
+const selectFirst = () => {
+    currentSample.value = "first";
+    openDataSelectorSingle.value = true;
+};
+const selectSecond = () => {
+    currentSample.value = "second";
+    openDataSelectorSingle.value = true;
+};
+const selectMulti = () => {
+    currentSample.value = "multi";
+    openDataSelectorMulti.value = true;
+};
+
+const singleSelected = (event) => {
+    openDataSelectorSingle.value = false;
+    if (currentSample.value == "first") {
+        sampleFirst.value = event;
+    } else {
+        sampleSecond.value = event;
+    }
+    console.log(event);
+};
+
+const multiSelected = (event) => {
+    openDataSelectorMulti.value = false;
+    samples.value = event;
+    console.log(event);
+};
+
 const confirmTaskCreated = () => {
+    let paramsError = false;
+
+    if (!newTaskName.value) {
+        newTaskNameError.value = true;
+        paramsError = true;
+    } else {
+        newTaskNameError.value = false;
+    }
+    let taskParameter = [];
+    for (let param of paramsDefine.value) {
+        if (!params.value[param.key] && param.required) {
+            param.isError = true;
+            paramsError = true;
+        } else {
+            taskParameter.push({
+                key: param.key,
+                value: params.value[param.key],
+            });
+            param.isError = false;
+        }
+    }
+
+    let taskSamples = [];
+    switch (props.flowDetail.sample_type) {
+        case "single": {
+            if (!sampleFirst.value.id) {
+                sampleFirstError.value = true;
+                paramsError = true;
+            } else {
+                sampleFirstError.value = false;
+                taskSamples.push(sampleFirst.value.id);
+            }
+            break;
+        }
+        case "double": {
+            if (!sampleFirst.value.id) {
+                sampleFirstError.value = true;
+                paramsError = true;
+            } else {
+                taskSamples.push(sampleFirst.value.id);
+                sampleFirstError.value = false;
+            }
+            if (!sampleSecond.value.id) {
+                sampleSecondError.value = true;
+                paramsError = true;
+            } else {
+                taskSamples.push(sampleSecond.value.id);
+                sampleSecondError.value = false;
+            }
+            break;
+        }
+        case "multiple": {
+            if (samples.value.length == 0) {
+                samplesError.value = true;
+                paramsError = true;
+            } else {
+                for (const item of samples.value) {
+                    taskSamples.push(item.id);
+                }
+                samplesError.value = false;
+            }
+            break;
+        }
+    }
+    if (paramsError) {
+        errorMessage("请更正表单");
+        return;
+    }
+
+    let data = new FormData();
+    data.append("flow_id", props.flowDetail.id);
+    data.append("project_id", props.projectDetail.id);
+    data.append("samples", taskSamples.join(","));
+    data.append("parameter", JSON.stringify(taskParameter));
+    data.append("name", newTaskName.value);
+
     apiPost(
         "/task",
         (res) => {
             console.log(res);
             emit("taskCreated");
         },
-        {
-            name: newTaskName.value,
-            project_id: props.projectId,
-            flow_id: props.flowDetail.id,
-        },
-        (error) => {
-            console.log(error);
-        }
+        data
     );
 };
 const sampleTypetrans = (flow) => {
