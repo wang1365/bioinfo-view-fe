@@ -118,7 +118,7 @@ import { useRouter, useRoute } from "vue-router";
 import { globalStore } from "src/stores/global";
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
-import { refreshSystemUi } from 'src/api/ui'
+import { refreshSystemUi } from "src/api/ui";
 
 const $q = useQuasar();
 const { t } = useI18n();
@@ -126,7 +126,7 @@ const store = globalStore();
 
 const isPwd = ref(true);
 const form = ref({
-    username: "super@super.com",
+    username: "super",
     password: "1234qwer",
     captcha: "",
     captcha_id: "",
