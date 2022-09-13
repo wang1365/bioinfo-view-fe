@@ -31,8 +31,8 @@
                             </q-expansion-item>
                             <br />
                             <q-expansion-item default-opened icon="perm_identity" label="支持非标准样本" class="shadow-1">
-                                <q-radio v-model="form.allow_nonstandard_samples" val="true" label="是" color="teal" keep-color :disable="isInfoMode" />
-                                <q-radio v-model="form.allow_nonstandard_samples" val="false" label="否" color="orange" keep-color :disable="isInfoMode" />
+                                <q-radio v-model="form.allow_nonstandard_samples" :val="true" label="是" color="teal" keep-color :disable="isInfoMode" />
+                                <q-radio v-model="form.allow_nonstandard_samples" :val="false" label="否" color="orange" keep-color :disable="isInfoMode" />
                             </q-expansion-item>
                             <br />
                             <q-input v-model="form.desp" type="textarea" filled label="描 述" stack-label clearable counter :readonly="isInfoMode" />
@@ -58,7 +58,7 @@
 <script setup>
 import ParamTable from './components/ParamTable'
 import { createFlow, updateFlow } from 'src/api/flow'
-import { defineProps, computed, ref, toRefs, defineExpose, defineEmits } from 'vue'
+import { defineProps, computed, ref, toRefs, defineExpose, defineEmits, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
@@ -95,21 +95,24 @@ const title = computed(() => {
 })
 
 const valueTypes = ['string', 'file']
-const form = ref({
-    id: -1,
-    name: '',
-    code: '',
-    allow_nonstandard_samples: true,
-    tar_path: '',
-    image_name: '',
-    memory: 1024,
-    alignment_tool: '',
-    desp: '',
-    flow_category: '',
-    details: '',
-    parameters: [],
-    builtin_parameters: [],
-    sample_type: 'multiple',
+const form = ref(null)
+onMounted(() => {
+    form.value = {
+        id: -1,
+        name: '',
+        code: '',
+        allow_nonstandard_samples: true,
+        tar_path: '',
+        image_name: '',
+        memory: 1024,
+        alignment_tool: '',
+        desp: '',
+        flow_category: '',
+        details: '',
+        parameters: [],
+        builtin_parameters: [],
+        sample_type: 'multiple',
+    }
 })
 
 const paramsTable = ref(null)
