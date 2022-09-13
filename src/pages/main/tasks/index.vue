@@ -16,17 +16,9 @@
                         </q-select>
                     </div>
                     <div class="col-10 q-pl-sm">
-                        <q-input
-                            readonly
-                            @click="showProjectSelect = true"
-                            :model-value="'所属项目: ' + projectName"
-                        >
+                        <q-input readonly @click="showProjectSelect = true" :model-value="'所属项目: ' + projectName">
                             <template v-slot:prepend>
-                                <q-icon
-                                    class="cursor-pointer"
-                                    name="search"
-                                    @click="showProjectSelect = true"
-                                />
+                                <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                             </template>
                             <template v-slot:append>
                                 <q-icon
@@ -64,11 +56,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr
-                        class="hover"
-                        v-for="item in dataItems"
-                        v-bind:key="item.name"
-                    >
+                    <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
                         <!-- <td class="q-pa-md text-center">
                             <q-checkbox
                                 v-model="item.selected"
@@ -88,11 +76,7 @@
                         <td>{{ item.flow.name }}</td>
 
                         <td>
-                            <q-linear-progress
-                                rounded
-                                size="10px"
-                                :value="item.progess"
-                            />
+                            <q-linear-progress rounded size="10px" :value="item.progess" />
                         </td>
                         <td>{{ getItemStatus(item) }}</td>
                         <td>{{ item.creator.username }}</td>
@@ -105,17 +89,14 @@
                                 @click="gotoDetail(item)"
                                 size="sm"
                             />
+                            <q-btn color="primary" label="下载" icon="download" @click="downlaod(item)" size="sm" />
                         </td>
                     </tr>
                 </tbody>
             </table>
             <div class="row q-mt-md">
                 <q-space></q-space>
-                <PaginatorVue
-                    :total="total"
-                    :currentPage="currentPage"
-                    @pageChange="pageChange($event)"
-                />
+                <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
             </div>
         </div>
         <q-dialog v-model="showProjectSelect">
@@ -146,7 +127,7 @@ const currentPage = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 const dataItems = ref([]);
-const { apiGet } = useApi();
+const { apiGet,downloadData } = useApi();
 const router = useRouter();
 
 const getItemStatus = (item) => {
@@ -201,5 +182,10 @@ const loadPage = async () => {
             dataItems.value.push(iterator);
         }
     });
+ };
+
+
+const downlaod = (item) => {
+    downloadData(`/task/download/${item.id}`, null);
 };
 </script>

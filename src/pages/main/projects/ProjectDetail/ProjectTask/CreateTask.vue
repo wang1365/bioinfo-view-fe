@@ -41,6 +41,14 @@
                     </div>
                     <div class="row">
                         <template v-for="param of paramsDefine" :key="param.key">
+                            <div class="col-6 q-pr-sm" v-if="param.type == 'file'">
+                                <q-file :error="param.isError" :error-message="param.error" v-model="params[param.key]"
+                                    :label="param.key">
+                                    <q-tooltip>{{
+                                        param.description
+                                        }}</q-tooltip>
+                                </q-file>
+                            </div>
                             <div class="col-6 q-pr-sm" v-if="param.type == 'string'">
                                 <q-input :error="param.isError" :error-message="param.error" v-model="params[param.key]"
                                     :label="param.key">
@@ -230,16 +238,23 @@ const confirmTaskCreated = () => {
     } else {
         newTaskNameError.value = false;
     }
+      let data = new FormData();
     let taskParameter = [];
-    for (let param of paramsDefine.value) {
+     for (let param of paramsDefine.value) {
+
         if (!params.value[param.key] && param.required) {
             param.isError = true;
             paramsError = true;
         } else {
+            if (param.type === 'file') {
+                data.append(param.key,params.value[param.key])
+            }
+            else {
             taskParameter.push({
                 key: param.key,
                 value: params.value[param.key],
             });
+            }
             param.isError = false;
         }
     }
@@ -291,7 +306,7 @@ const confirmTaskCreated = () => {
         return;
     }
 
-    let data = new FormData();
+
     data.append("flow_id", props.flowDetail.id);
     data.append("project_id", props.projectDetail.id);
     data.append("samples", taskSamples.join(","));
