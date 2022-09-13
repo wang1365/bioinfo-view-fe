@@ -225,16 +225,27 @@ const errors = ref({
     },
 });
 const form = ref({
-    sample_date: "2022-09-01",
-    test_date: "2022-09-01",
-    sample_componet: "sample_componet",
-    sample_type: "sample_type",
+    sample_date: "",
+    test_date: "",
+    sample_componet: "",
+    sample_type: "",
     panel_proportion: 1,
     is_panel: false,
-    patient_id: "patient_id",
-    patient_identifier: "patient_identifier",
-    identifier: "identifier",
-});
+    patient_id: "",
+    patient_identifier: "",
+    identifier: "",
+ });
+/* const form = ref({
+*    sample_date: "2022-09-01",
+*    test_date: "2022-09-01",
+*    sample_componet: "sample_componet",
+*    sample_type: "sample_type",
+*    panel_proportion: 1,
+*    is_panel: false,
+*    patient_id: "patient_id",
+*    patient_identifier: "patient_identifier",
+*    identifier: "identifier",
+}); */
 const save = async () => {
     for (const key in errors.value) {
         errors.value[key].error = false;

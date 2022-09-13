@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="项目详情" />
-        <ProjectDetail :projectDetail="projectDetail" />
+        <ProjectDetail :projectDetail="projectDetail" @reloadProject="getProjectDetail()"/>
         <ProjectDetailDataList
             v-if="projectDetail.id"
             :projectDetail="projectDetail"
