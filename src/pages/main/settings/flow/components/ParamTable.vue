@@ -16,8 +16,8 @@
             >
                 <template v-slot:top>
                     <div class="text-primary text-h7">自定义参数</div>
-                    <q-space/>
-                    <q-btn v-if="!readonly" color="primary" label="新增参数" @click="addParameter"/>
+                    <q-space />
+                    <q-btn v-if="!readonly" color="primary" label="新增参数" @click="addParameter" />
                 </template>
 
                 <!--                <template v-slot:body-cell-id="props" v-if="!isInfoMode">-->
@@ -68,22 +68,34 @@
                             {{ props.row.id }}
                         </q-td>
                         <q-td align="center">
-                            <q-input v-model="props.row.key" :disable="readonly"/>
+                            <q-input v-model="props.row.key" :disable="readonly" />
                         </q-td>
                         <q-td align="center">
-                            <q-input v-model="props.row.type" :disable="readonly"/>
+                            <q-select stack-label v-model="props.row.type" :options="[     'string','number','file','select','multiSelect']"> </q-select>
                         </q-td>
                         <q-td align="center">
-                            <q-checkbox v-model="props.row.required" color="teal" :disable="readonly"/>
+                            <q-checkbox v-model="props.row.required" color="teal" :disable="readonly" />
                         </q-td>
                         <q-td align="center">
                             <template v-for="(item, index) in props.row.choices" :key="item">
-                                <q-chip :label="item" size="sm" outline square removable color="orange"
-                                        @remove="deleteChoice(props.row, index)"/>
+                                <q-chip
+                                    :label="item"
+                                    size="sm"
+                                    outline
+                                    square
+                                    removable
+                                    color="orange"
+                                    @remove="deleteChoice(props.row, index)"
+                                />
                             </template>
 
-                            <q-btn v-if="!readonly" size="xs" label="+" color="primary"
-                                   @click="clickAddChoice(props.row)">
+                            <q-btn
+                                v-if="!readonly"
+                                size="xs"
+                                label="+"
+                                color="primary"
+                                @click="clickAddChoice(props.row)"
+                            >
                                 <!--                                <q-popup-edit title="添加值域" buttons-->
                                 <!--                                              label-set="确定" label-cancel="取消"-->
                                 <!--                                              @save="confirmAddChoice"-->
@@ -101,11 +113,16 @@
                             </q-btn>
                         </q-td>
                         <q-td>
-                            <q-input v-model="props.row.description" :readonly="readonly"/>
+                            <q-input v-model="props.row.description" :readonly="readonly" />
                         </q-td>
                         <q-td v-if="!readonly">
-                            <q-btn v-if="!readonly" label="删除" size="xs" color="red" glossy
-                                   @click="clickDeleteRow(props.row, props.index)"
+                            <q-btn
+                                v-if="!readonly"
+                                label="删除"
+                                size="xs"
+                                color="red"
+                                glossy
+                                @click="clickDeleteRow(props.row, props.index)"
                             />
                         </q-td>
                     </q-tr>
@@ -114,11 +131,11 @@
             <q-dialog ref="choiceDlg" v-model="choiceDlgVisible" class="relative-position" @before-show="choice = ''">
                 <q-card>
                     <q-card-section>
-                        <q-input v-model="choice" label="值域" clearable :readonly="readonly"/>
+                        <q-input v-model="choice" label="值域" clearable :readonly="readonly" />
                     </q-card-section>
                     <q-card-actions align="center">
-                        <q-btn label="确定" size="sm" color="primary" @click="confirmAddChoice"/>
-                        <q-btn label="取消" size="sm" v-close-popup/>
+                        <q-btn label="确定" size="sm" color="primary" @click="confirmAddChoice" />
+                        <q-btn label="取消" size="sm" v-close-popup />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
