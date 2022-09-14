@@ -124,6 +124,8 @@ module.exports = configure(function (ctx) {
                 "Cookies",
                 "Loading",
                 "LoadingBar",
+                'LocalStorage',
+                'SessionStorage'
             ],
         },
 

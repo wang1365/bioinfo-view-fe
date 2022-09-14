@@ -6,8 +6,6 @@
             :columns="columns"
             :loading="loading"
             row-key="name"
-            color="primary"
-            dense
             hide-no-data
             wrap-cells
             v-model:pagination="pagination"
@@ -18,6 +16,13 @@
             <template v-slot:top>
                 <q-btn color="primary" label="新建流程" @click="addFlow" />
             </template>
+            <!--            <template v-slot:header="props">-->
+            <!--                <q-tr :props="props">-->
+            <!--                    <q-th v-for="col in columns" :key="col.name" :props="props" class="text-weight-bolder text-h6">-->
+            <!--                        {{ col.label }}-->
+            <!--                    </q-th>-->
+            <!--                </q-tr>-->
+            <!--            </template>-->
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
                     <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>
