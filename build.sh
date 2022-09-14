@@ -13,7 +13,8 @@ DOCKER_IMAGE="frontend"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILDROOT=$DIR
 # Build staic
-# ng build --prod --deploy-url=/url前缀/
+npm run quasar build
+
 # Build docker
 
 quasar build

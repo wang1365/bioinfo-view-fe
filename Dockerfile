@@ -1,4 +1,4 @@
-from 1.22.0-alpine
+from nginx:1.22.0-alpine
 
 COPY dist/spa /opt/frontend
 COPY default.conf.template /etc/nginx/templates/default.conf.template
