@@ -24,5 +24,12 @@ cmd="docker build \
 echo $cmd
 eval $cmd
 
-start="docker run -it --rm --restart=always -p 80:80 -e API=10.10.0.208:8080 frontend:latest"
-echo $cmd & eval $cmd
+CONTAINER_NAME="bioinfo-ui"
+
+if [ ${docker ps -a -f "name=${CONTAINER_NAME}" | wc -l} -eq 1 ]; then
+    docker stop ${CONTAINER_NAME}
+    docker rm ${CONTAINER_NAME}
+fi
+start="docker run --name ${CONTAINER_NAME} -dit --restart=always -p 80:80 -e API=10.10.0.208:8080 frontend:latest"
+echo $start
+eval $start
