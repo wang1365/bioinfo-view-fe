@@ -9,9 +9,7 @@
             <div class="text-h5 text-center text-primary">
                 {{ "" }}
             </div>
-            <div class="text-h7 text-center text-primary q-mt-md q-mb-xs">
-                欢迎回来
-            </div>
+            <div class="text-h7 text-center text-primary q-mt-md q-mb-xs">欢迎回来</div>
             <q-form @submit="onSubmit" class="q-mt-lg gqa-form">
                 <q-input
                     :disable="loading"
@@ -78,28 +76,13 @@
                     />
                 </div>
                 <div class="items-center justify-around q-mt-md row">
-                    <q-btn
-                        label="登录"
-                        type="submit"
-                        color="primary"
-                        :loading="loading"
-                        style="width: 100%"
-                    />
+                    <q-btn label="登录" type="submit" color="primary" :loading="loading" style="width: 100%" />
                 </div>
                 <div class="items-center justify-around q-mt-md row">
-                    <q-btn
-                        label="回到首页"
-                        type="button"
-                        color="default"
-                        :loading="loading"
-                        style="width: 100%"
-                    />
+                    <q-btn label="回到首页" type="button" color="default" :loading="loading" style="width: 100%" />
                 </div>
             </q-form>
-            <q-inner-loading
-                :showing="loading"
-                style="background-color: rgba(0, 0, 0, 0)"
-            >
+            <q-inner-loading :showing="loading" style="background-color: rgba(0, 0, 0, 0)">
                 <q-spinner-hourglass color="primary" size="3em" />
             </q-inner-loading>
         </q-card-section>
@@ -161,7 +144,7 @@ const onSubmit = async () => {
     })
         .then((resp) => {
             loading.value = false;
-            store.currentUserToken = resp.access_token;
+            store.currentUserToken = resp.data.data.access_token;
 
             $q.cookies.set("token", store.currentUserToken);
             api.get("/account/me", {
