@@ -13,11 +13,10 @@ DOCKER_IMAGE="frontend"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILDROOT=$DIR
 # Build staic
-npm run quasar build
+npm install --registry=http://registry.npmmirror.com
+npm run build
 
 # Build docker
-
-quasar build
 
 cmd="docker build \
   -t $DOCKER_IMAGE \
@@ -25,3 +24,5 @@ cmd="docker build \
 echo $cmd
 eval $cmd
 
+start="docker run -it --rm --restart=always -p 80:80 -e API=10.10.0.208:8080 frontend:latest"
+echo $cmd & eval $cmd
