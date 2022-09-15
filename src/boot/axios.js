@@ -39,13 +39,6 @@ const api = axios.create({
 
 // 响应拦截
 api.interceptors.response.use(
-    (request) => {
-        const token = Cookies.get('token')
-        if (token) {
-            request.headers.Authorization = token
-        }
-        return request
-    },
     (response) => {
         const responseData = response.data
         const { code } = responseData
