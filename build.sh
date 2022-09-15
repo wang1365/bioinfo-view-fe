@@ -26,7 +26,7 @@ eval $cmd
 
 CONTAINER_NAME="bioinfo-ui"
 
-if [ ${docker ps -a -f "name=${CONTAINER_NAME}" | wc -l} -eq 1 ]; then
+if [ "$(docker ps -a -f "name=${CONTAINER_NAME}" | wc -l)" -eq 2 ]; then
     docker stop ${CONTAINER_NAME}
     docker rm ${CONTAINER_NAME}
 fi
