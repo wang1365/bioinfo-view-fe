@@ -50,11 +50,11 @@
                             <td>杂交 input</td>
                             <td>风险上机</td>
                             <td>核酸降解等级</td> -->
-                            <td>样本元信息 ID</td>
+                            <!-- <td>样本元信息 ID</td> -->
                             <td>样本识别号</td>
                             <td>数据识别号</td>
-                            <td>送检机构</td>
-                            <td>核酸类型</td>
+                            <!-- <td>送检机构</td> -->
+                            <!-- <td>核酸类型</td> -->
                             <td>R1 数据名称</td>
                             <td>R2 数据名称</td>
                             <!-- <td>样本所有者</td>
@@ -95,15 +95,15 @@
                             <td >
                                 {{ item.nucleic_level }}
                             </td> -->
-                            <td>
+                            <!-- <td>
                                 {{ item.sample_meta_id }}
-                            </td>
+                            </td> -->
                             <td>
                                 {{ item.sample_identifier }}
                             </td>
                             <td>{{ item.identifier }}</td>
-                            <td>{{ item.company }}</td>
-                            <td>{{ item.nucleic_type }}</td>
+                            <!-- <td>{{ item.company }}</td> -->
+                            <!-- <td>{{ item.nucleic_type }}</td> -->
                             <td>{{ item.fastq1_path }}</td>
                             <td>{{ item.fastq2_path }}</td>
                             <!-- <td>{{ item.user_id }}</td>
@@ -112,7 +112,7 @@
                             <td class="q-gutter-x-sm">
                                 <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
-                                <q-btn color="secondary" label="关联样本" icon="edit" @click="link(item)" size="sm" />
+                                <q-btn color="secondary" label="关联样本" icon="link" @click="link(item)" size="sm" />
                                 <q-btn color="red" label="删除" icon="delete" @click="confirm(item)" size="sm" />
                             </td>
                         </tr>
