@@ -9,18 +9,8 @@
                         <q-icon name="search" />
                     </template>
                 </q-input>
-                <q-btn
-                    color="primary"
-                    label="新建患者"
-                    icon="groups_2"
-                    @click="showPatientNew = true"
-                />
-                <q-btn
-                    color="info"
-                    label="导出数据"
-                    icon="file_download"
-                    @click="exportData()"
-                />
+                <q-btn color="primary" label="新建患者" icon="groups_2" @click="showPatientNew = true" />
+                <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
@@ -33,21 +23,11 @@
                                 display: inline-block;
                             "
                         >
-                            <input
-                                id="file"
-                                type="file"
-                                style="rgba(0,0,0,0)"
-                                @change="fileSelected($event)"
-                            />
+                            <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
                 </q-btn>
-                <q-btn
-                    color="positive"
-                    label="模板下载"
-                    icon="file_download"
-                    @click="downlaodTemplate()"
-                >
+                <q-btn color="positive" label="模板下载" icon="file_download" @click="downlaodTemplate()">
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
                 </q-btn>
             </q-toolbar>
@@ -58,7 +38,7 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>患者识别号</td>
+                            <td>姓名</td>
                             <td>送检机构</td>
                             <td>诊疗医生</td>
                             <td>性别</td>
@@ -83,19 +63,8 @@
                             <td>{{ patient.disease }}</td>
                             <td>{{ patient.family_history }}</td>
                             <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="primary"
-                                    label="编辑"
-                                    icon="edit"
-                                    size="sm"
-                                    @click="edit(patient)"
-                                />
-                                <q-btn
-                                    color="secondary"
-                                    label="关联样本"
-                                    icon="link"
-                                    size="sm"
-                                />
+                                <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
+                                <q-btn color="secondary" label="关联样本" icon="link" size="sm" />
                                 <q-btn
                                     color="info"
                                     label="患者信息"
@@ -103,24 +72,14 @@
                                     @click="info(patient)"
                                     size="sm"
                                 />
-                                <q-btn
-                                    color="red"
-                                    label="删除"
-                                    icon="delete"
-                                    size="sm"
-                                    @click="confirm(patient)"
-                                />
+                                <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(patient)" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <PaginatorVue
-                        :total="total"
-                        :currentPage="currentPage"
-                        @pageChange="pageChange($event)"
-                    />
+                    <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
         </q-section>

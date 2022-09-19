@@ -4,18 +4,8 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6"> 数据 </q-toolbar-title>
-                <q-btn
-                    color="primary"
-                    label="新建数据"
-                    icon="description"
-                    @click="showDataNew = true"
-                />
-                <q-btn
-                    color="info"
-                    label="导出数据"
-                    icon="file_download"
-                    @click="exportData()"
-                />
+                <q-btn color="primary" label="新建数据" icon="description" @click="showDataNew = true" />
+                <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
@@ -28,21 +18,11 @@
                                 display: inline-block;
                             "
                         >
-                            <input
-                                id="file"
-                                type="file"
-                                style="rgba(0,0,0,0)"
-                                @change="fileSelected($event)"
-                            />
+                            <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
                 </q-btn>
-                <q-btn
-                    color="positive"
-                    label="模板下载"
-                    icon="file_download"
-                    @click="downloadTemplate()"
-                >
+                <q-btn color="positive" label="模板下载" icon="file_download" @click="downloadTemplate()">
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
                 </q-btn>
             </q-toolbar>
@@ -84,11 +64,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            class="hover"
-                            v-for="item in dataItems"
-                            v-bind:key="item.name"
-                        >
+                        <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
                             <!-- <td class="q-pa-md text-center">
                                 <q-checkbox
                                     v-model="item.selected"
@@ -134,39 +110,17 @@
                             <td >{{ item.create_time }}</td>
                             <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="secondary"
-                                    label="详情"
-                                    icon="visibility"
-                                    @click="info(item)"
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="primary"
-                                    label="编辑"
-                                    icon="edit"
-                                    @click="edit(item)"
-                                    size="sm"
-                                />
+                                <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
+                                <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
 
-                                <q-btn
-                                    color="red"
-                                    label="删除"
-                                    icon="delete"
-                                    @click="confirm(item)"
-                                    size="sm"
-                                />
+                                <q-btn color="red" label="删除" icon="delete" @click="confirm(item)" size="sm" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <PaginatorVue
-                        :total="total"
-                        :currentPage="currentPage"
-                        @pageChange="pageChange($event)"
-                    />
+                    <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
         </q-section>
