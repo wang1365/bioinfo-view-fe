@@ -64,7 +64,13 @@
                             <td>{{ patient.family_history }}</td>
                             <td class="q-gutter-x-sm">
                                 <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
-                                <q-btn color="secondary" label="关联样本" icon="link" size="sm" />
+                                <q-btn
+                                    color="secondary"
+                                    label="关联样本"
+                                    icon="link"
+                                    size="sm"
+                                    @click="link(patient)"
+                                />
                                 <q-btn
                                     color="info"
                                     label="患者信息"
@@ -88,27 +94,35 @@
     <q-dialog v-model="showPatientNew" persistent>
         <PatientNew
             @refresh="
-                refreshPage();
-                showPatientNew = false;
-            "
+            refreshPage();
+            showPatientNew = false;
+        "
         />
     </q-dialog>
     <q-dialog v-model="showPatientInfo">
         <PatientInfo
             :id="infoId"
             @refresh="
-                refreshPage();
-                showPatientInfo = false;
-            "
+            refreshPage();
+            showPatientInfo = false;
+        "
         />
     </q-dialog>
     <q-dialog v-model="showPatientEdit" persistent>
         <PatientEdit
             :id="editId"
             @refresh="
-                refreshPage();
-                showPatientEdit = false;
-            "
+            refreshPage();
+            showPatientEdit = false;
+        "
+        />
+    </q-dialog>
+    <q-dialog persistent v-model="showLinkSample">
+        <SampleList
+            :linkId="linkId"
+            @refresh="
+            linkSample($event);
+        "
         />
     </q-dialog>
 </template>
@@ -122,8 +136,9 @@ import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
 import { globalStore } from "src/stores/global";
 import { useApi } from "src/api/apiBase";
+import SampleList from "./SampleList.vue";
 
-const { apiGet, downloadData, apiDelete } = useApi();
+const { apiGet, downloadData, apiDelete,apiPatch } = useApi();
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
@@ -139,6 +154,28 @@ const maxPages = ref(0);
 const $q = useQuasar();
 const store = globalStore();
 const patients = ref([]);
+
+const linkId = ref(0);
+const showLinkSample = ref(false);
+const link = async (item) => {
+    linkId.value = item.id;
+    showLinkSample.value = true;
+}
+const linkSample = (event) => {
+    showLinkSample.value = false;
+    let samples = []
+    for (const item of event) {
+        samples.push(item.id)
+    }
+    if (samples.length > 0) {
+        apiPatch(`/patient/patients/${linkId.value}`, (res) => {
+            showLinkSample.value = false;
+            refreshPage()
+        }, { samples: samples })
+    }
+
+}
+
 onMounted(() => {
     loadPage();
 });

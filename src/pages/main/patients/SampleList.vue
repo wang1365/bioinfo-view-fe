@@ -1,6 +1,6 @@
 <template>
     <div style="max-width: 100%">
-        <PopupSingleSelector
+        <PopupMultiSelector
             title="选择样本"
             :dataItems="dataItems"
             :total="total"
@@ -26,13 +26,13 @@
                 <td>{{ row.owner }}</td>
                 <td>{{ row.create_time }}</td>
             </template> -->
-        </PopupSingleSelector>
+        </PopupMultiSelector>
     </div>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
 import { useApi } from "src/api/apiBase";
-import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
+import PopupMultiSelector from "components/popup-multi-selector/PopupMultiSelector.vue";
 
 const tableHeaders = ref([
     "ID",
