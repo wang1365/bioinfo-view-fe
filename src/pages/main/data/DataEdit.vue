@@ -85,32 +85,16 @@
                         </div>
                         <div class="col q-pr-sm">
                             <q-input
-                                v-model="form.sample_meta_id"
-                                :error="errors.sample_meta_id.error"
-                                :error-message="errors.sample_meta_id.message"
-                                label="样本元信息ID"
-                            ></q-input>
-                        </div>
-                    </div>
-                </q-item>
-                <q-item>
-                    <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
-                            <q-input
-                                v-model="form.sample_identifier"
-                                :error="errors.sampsample_identifier"
-                                :error-message="errors.sampsample_identifier"
-                                label="样本识别号"
-                            ></q-input>
-                        </div>
-                        <div class="col q-pr-sm">
-                            <q-input
                                 v-model="form.identifier"
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
                                 label="数据识别号"
                             ></q-input>
                         </div>
+                    </div>
+                </q-item>
+                <q-item>
+                    <div class="row full-width justify-between">
                         <div class="col q-pf-sm">
                             <q-input
                                 v-model="form.company"
@@ -119,17 +103,29 @@
                                 label="送检机构"
                             ></q-input>
                         </div>
+                        <div class="col q-pr-sm">
+                            <q-select
+                                :error="errors.nucleic_type.error"
+                                :error-message="errors.nucleic_type.message"
+                                v-model="form.nucleic_type"
+                                :options="nucleic_type_options"
+                                label="核酸类型"
+                            />
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-select
+                                :error="errors.nucleic_level.error"
+                                :error-message="errors.nucleic_level.message"
+                                v-model="form.nucleic_level"
+                                :options="nucleic_level_options"
+                                label="核酸降解等级"
+                            />
+                        </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <!-- <q-input
-                                v-model="form.risk"
-                                :error="errors.risk.error"
-                                :error-message="errors.risk.message"
-                                label="风险上机"
-                            ></q-input> -->
                             <q-checkbox
                                 :error="errors.risk.error"
                                 :error-message="errors.risk.message"
@@ -140,35 +136,26 @@
                                 size="lg"
                             />
                         </div>
+
                         <div class="col q-pr-sm">
-                            <!-- <q-input
-                                v-model="form.nucleic_type"
-                                :error="errors.nucleic_type.error"
-                                :error-message="errors.nucleic_type.message"
-                                label="核酸类型"
-                            ></q-input> -->
-                            <q-select
-                                :error="errors.nucleic_type.error"
-                                :error-message="errors.nucleic_type.message"
-                                v-model="form.nucleic_type"
-                                :options="nucleic_type_options"
-                                label="核酸类型"
-                            />
+                            <q-input
+                                @click="showLinkSample=true"
+                                readonly
+                                v-model="form.sample_identifier"
+                                :error="errors.sampsample_identifier"
+                                :error-message="errors.sampsample_identifier"
+                                label="样本识别号"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <!-- <q-input
-                                v-model="form.nucleic_level"
-                                :error="errors.nucleic_level.error"
-                                :error-message="errors.nucleic_level.message"
-                                label="核酸降解等级"
-                            ></q-input> -->
-                            <q-select
-                                :error="errors.nucleic_level.error"
-                                :error-message="errors.nucleic_level.message"
-                                v-model="form.nucleic_level"
-                                :options="nucleic_level_options"
-                                label="核酸降解等级"
-                            />
+                            <q-input
+                                @click="showLinkSample=true"
+                                readonly
+                                v-model="form.sample_meta_id"
+                                :error="errors.sample_meta_id.error"
+                                :error-message="errors.sample_meta_id.message"
+                                label="样本元信息ID"
+                            ></q-input>
                         </div>
                     </div>
                 </q-item>
@@ -235,19 +222,33 @@
                 </q-item>
             </q-list>
         </q-card-actions>
+        <q-dialog persistent v-model="showLinkSample">
+            <SampleList
+                :linkId="0"
+                @refresh="
+            linkSample($event);
+        "
+            />
+        </q-dialog>
     </q-card>
 </template>
 <script setup>
 import { ref, defineEmits, onMounted } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
+import SampleList from "./SampleList.vue";
 
 const nucleic_level_options = ref(["A", "B", "C", "D"]);
 const nucleic_type_options = ref(["gDNA", "cfDNA", "RNA"]);
-const { apiPost } = useApi();
-const { apiGet, apiPut } = useApi();
+const { apiGet, apiPut,apiPost } = useApi();
 const emit = defineEmits(["refresh"]);
 
+const showLinkSample = ref(false);
+const linkSample = (event) => {
+    form.value.sample_meta_id= event.id;
+    form.value.sample_identifier=event.identifier
+    showLinkSample.value=false
+}
 const close = () => {
     emit("refresh");
 };

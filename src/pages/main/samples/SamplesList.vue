@@ -123,7 +123,7 @@
         />
     </q-dialog>
     <q-dialog persistent v-model="showLinkPatient">
-        <PatientsList
+        <PatientList
             :linkId="linkId"
             @refresh="
                 linkPatient($event);
@@ -139,7 +139,7 @@ import SampleEdit from "./SampleEdit.vue";
 import SampleNew from "./SampleNew.vue";
 import { ref, onMounted } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
-import PatientsList from "./PatientList.vue";
+import PatientList from "./PatientList.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";

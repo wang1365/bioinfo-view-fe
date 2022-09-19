@@ -112,7 +112,7 @@
                             <td class="q-gutter-x-sm">
                                 <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
-
+                                <q-btn color="secondary" label="关联样本" icon="edit" @click="link(item)" size="sm" />
                                 <q-btn color="red" label="删除" icon="delete" @click="confirm(item)" size="sm" />
                             </td>
                         </tr>
@@ -128,9 +128,9 @@
     <q-dialog persistent v-model="showDataNew">
         <DataNew
             @refresh="
-                refreshPage();
-                showDataNew = false;
-            "
+            refreshPage();
+            showDataNew = false;
+        "
         />
     </q-dialog>
     <q-dialog v-model="showDataInfo">
@@ -140,9 +140,17 @@
         <DataEdit
             :id="editId"
             @refresh="
-                refreshPage();
-                showDataEdit = false;
-            "
+            refreshPage();
+            showDataEdit = false;
+        "
+        />
+    </q-dialog>
+    <q-dialog persistent v-model="showLinkSample">
+        <SampleList
+            :linkId="linkId"
+            @refresh="
+            linkSample($event);
+        "
         />
     </q-dialog>
 </template>
@@ -153,16 +161,20 @@ import DataEdit from "./DataEdit.vue";
 import DataNew from "./DataNew.vue";
 import { ref, onMounted } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
+import SampleList from "./SampleList.vue";
+
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
 
-const { apiGet, downloadData, apiDelete } = useApi();
+
+const { apiGet, downloadData, apiDelete,apiPatch } = useApi();
 const showDataEdit = ref(false);
 const showDataInfo = ref(false);
 const showDataNew = ref(false);
 const infoId = ref(0);
 const editId = ref(0);
+const linkId = ref(0);
 
 const currentPage = ref(1);
 const pageSize = ref(10);
@@ -170,6 +182,18 @@ const total = ref(0);
 const dataItems = ref([]);
 
 const $q = useQuasar();
+
+const showLinkSample = ref(false);
+const link=async (item)=>{
+    linkId.value = item.id;
+    showLinkSample.value = true;
+}
+const linkSample = (event) => {
+    apiPatch(`/sample/samples/${linkId.value}/`, (res) => {
+        showLinkSample.value = false;
+        refreshPage()
+    }, { sample_meta_id: event.id, sample_identifier: event.identifier })
+}
 
 const edit = async (item) => {
     editId.value = item.id;

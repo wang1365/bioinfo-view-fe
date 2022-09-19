@@ -83,26 +83,7 @@
                                 label="核酸打断方式"
                             ></q-input>
                         </div>
-                        <div class="col q-pr-sm">
-                            <q-input
-                                v-model="form.sample_meta_id"
-                                :error="errors.sample_meta_id.error"
-                                :error-message="errors.sample_meta_id.message"
-                                label="样本元信息ID"
-                            ></q-input>
-                        </div>
-                    </div>
-                </q-item>
-                <q-item>
-                    <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
-                            <q-input
-                                v-model="form.sample_identifier"
-                                :error="errors.sampsample_identifier"
-                                :error-message="errors.sampsample_identifier"
-                                label="样本识别号"
-                            ></q-input>
-                        </div>
+
                         <div class="col q-pr-sm">
                             <q-input
                                 v-model="form.identifier"
@@ -111,6 +92,10 @@
                                 label="数据识别号"
                             ></q-input>
                         </div>
+                    </div>
+                </q-item>
+                <q-item>
+                    <div class="row full-width justify-between">
                         <div class="col q-pf-sm">
                             <q-input
                                 v-model="form.company"
@@ -118,21 +103,6 @@
                                 :error-message="errors.company.message"
                                 label="送检机构"
                             ></q-input>
-                        </div>
-                    </div>
-                </q-item>
-                <q-item>
-                    <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
-                            <q-checkbox
-                                :error="errors.risk.error"
-                                :error-message="errors.risk.message"
-                                v-model="form.risk"
-                                label="风险上机"
-                                color="primary"
-                                left-label
-                                size="lg"
-                            />
                         </div>
                         <div class="col q-pr-sm">
                             <q-select
@@ -151,6 +121,41 @@
                                 :options="nucleic_level_options"
                                 label="核酸降解等级"
                             />
+                        </div>
+                    </div>
+                </q-item>
+                <q-item>
+                    <div class="row full-width justify-between">
+                        <div class="col q-pr-sm">
+                            <q-checkbox
+                                :error="errors.risk.error"
+                                :error-message="errors.risk.message"
+                                v-model="form.risk"
+                                label="风险上机"
+                                color="primary"
+                                left-label
+                                size="lg"
+                            />
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                @click="showLinkSample=true"
+                                readonly
+                                v-model="form.sample_identifier"
+                                :error="errors.sampsample_identifier"
+                                :error-message="errors.sampsample_identifier"
+                                label="样本识别号"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm">
+                            <q-input
+                                @click="showLinkSample=true"
+                                readonly
+                                v-model="form.sample_meta_id"
+                                :error="errors.sample_meta_id.error"
+                                :error-message="errors.sample_meta_id.message"
+                                label="样本元信息ID"
+                            ></q-input>
                         </div>
                     </div>
                 </q-item>
@@ -217,12 +222,21 @@
                 </q-item>
             </q-list>
         </q-card-actions>
+        <q-dialog persistent v-model="showLinkSample">
+            <SampleList
+                :linkId="0"
+                @refresh="
+            linkSample($event);
+        "
+            />
+        </q-dialog>
     </q-card>
 </template>
 <script setup>
 import { ref, defineEmits } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
+import SampleList from "./SampleList.vue";
 
 const nucleic_level_options = ref(["A", "B", "C", "D"]);
 const nucleic_type_options = ref(["gDNA", "cfDNA", "RNA"]);
@@ -230,6 +244,13 @@ const { apiPost } = useApi();
 
 const emit = defineEmits(["refresh"]);
 
+const showLinkSample = ref(false);
+
+const linkSample = (event) => {
+    form.value.sample_meta_id= event.id;
+    form.value.sample_identifier=event.identifier
+    showLinkSample.value=false
+}
 const close = () => {
     emit("refresh");
 };

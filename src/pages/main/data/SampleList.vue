@@ -7,7 +7,7 @@
             :tableHeaders="tableHeaders"
             :tableRowFields="tableRowFields"
             :currentPage="currentPage"
-            selectedShowField="name"
+            selectedShowField="identifier"
             @pageChange="pageChange($event)"
             @ensureSelect="ensureSelect($event)"
         >
@@ -36,21 +36,19 @@ import PopupSingleSelector from "components/popup-single-selector/PopupSingleSel
 
 const tableHeaders = ref([
     "ID",
-    "姓名",
+    "样本识别号",
     "患者识别号",
-    "送检机构",
-    "诊疗医生",
-    "性别",
-    "年龄",
+    "样本类型",
+    "肿瘤样本",
+    "采样日期",
 ]);
 const tableRowFields = ref([
     "id",
-    "name",
     "identifier",
-    "inspection_agency",
-    "medical_doctor",
-    "gender",
-    "age"
+    "patient_identifier",
+    "sample_type",
+    "panel_proportion",
+    "sample_date",
 ]);
 const emit = defineEmits(["refresh"]);
 const { apiGet } = useApi();
@@ -88,7 +86,7 @@ const ensureSelect =  (event) => {
 }
 const loadPage = async () => {
     let params = `?page=${currentPage.value}&size=${pageSize.value}`;
-    apiGet(`/patient/patients${params}`, (res) => {
+    apiGet(`/sample/sampledatas/${params}`, (res) => {
         total.value = res.data.count;
         dataItems.value = [];
         for (let iterator of res.data.results) {

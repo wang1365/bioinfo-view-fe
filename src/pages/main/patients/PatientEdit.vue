@@ -15,14 +15,16 @@
                             ></q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-select
                                 :error="errors.gender.error"
                                 :error-message="errors.gender.message"
                                 v-model="form.gender"
+                                :option-value="'value'"
+                                :options="genderOptions"
                                 label="性别"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col">
+                        <!-- <div class="col">
                             <q-input
                                 :error="errors.age.error"
                                 :error-message="errors.age.message"
@@ -30,7 +32,7 @@
                                 v-model="form.age"
                                 label="年龄"
                             ></q-input>
-                        </div>
+                        </div> -->
                         <div class="col">
                             <q-input
                                 :error="errors.birthday.error"
@@ -40,24 +42,10 @@
                             >
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-date
-                                                v-model="form.birthday"
-                                                mask="YYYY-MM-DD"
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="form.birthday" mask="YYYY-MM-DD">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -97,8 +85,8 @@
                             <q-input
                                 :error="errors.inspection_agency.error"
                                 :error-message="
-                                    errors.inspection_agency.message
-                                "
+                                errors.inspection_agency.message
+                            "
                                 v-model="form.inspection_agency"
                                 label="送检机构"
                             ></q-input>
@@ -153,8 +141,8 @@
                             <q-input
                                 :error="errors.medication_history.error"
                                 :error-message="
-                                    errors.medication_history.message
-                                "
+                                errors.medication_history.message
+                            "
                                 v-model="form.medication_history"
                                 label="用药史"
                             ></q-input>
@@ -167,8 +155,8 @@
                             <q-input
                                 :error="errors.treatment_history.error"
                                 :error-message="
-                                    errors.treatment_history.message
-                                "
+                                errors.treatment_history.message
+                            "
                                 v-model="form.treatment_history"
                                 label="治疗史"
                             ></q-input>
@@ -180,61 +168,6 @@
                                 label="预后时间"
                                 v-model="form.prognosis_time"
                             >
-                                <template v-slot:prepend>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-date
-                                                v-model="form.prognosis_time"
-                                                mask="YYYY-MM-DD HH:mm"
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-
-                                <template v-slot:append>
-                                    <q-icon
-                                        name="access_time"
-                                        class="cursor-pointer"
-                                    >
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-time
-                                                v-model="form.prognosis_time"
-                                                mask="YYYY-MM-DD HH:mm"
-                                                format24h
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
-                                                </div>
-                                            </q-time>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
                             </q-input>
                         </div>
                     </div>
@@ -246,61 +179,6 @@
                                 label="复发时间"
                                 v-model="form.recurrence_time"
                             >
-                                <template v-slot:prepend>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-date
-                                                v-model="form.recurrence_time"
-                                                mask="YYYY-MM-DD HH:mm"
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-
-                                <template v-slot:append>
-                                    <q-icon
-                                        name="access_time"
-                                        class="cursor-pointer"
-                                    >
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-time
-                                                v-model="form.recurrence_time"
-                                                mask="YYYY-MM-DD HH:mm"
-                                                format24h
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
-                                                </div>
-                                            </q-time>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
                             </q-input>
                         </div>
                         <div class="col">
@@ -310,61 +188,6 @@
                                 label="存活时间"
                                 v-model="form.survival_time"
                             >
-                                <template v-slot:prepend>
-                                    <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-date
-                                                v-model="form.survival_time"
-                                                mask="YYYY-MM-DD HH:mm"
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
-                                                </div>
-                                            </q-date>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
-
-                                <template v-slot:append>
-                                    <q-icon
-                                        name="access_time"
-                                        class="cursor-pointer"
-                                    >
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-time
-                                                v-model="form.survival_time"
-                                                mask="YYYY-MM-DD HH:mm"
-                                                format24h
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
-                                                </div>
-                                            </q-time>
-                                        </q-popup-proxy>
-                                    </q-icon>
-                                </template>
                             </q-input>
                         </div>
                     </div>
@@ -386,7 +209,7 @@ import PopupContentScroll from "src/components/popup-content-scroll/PopupContent
 
 const { apiGet, apiPut } = useApi();
 const emit = defineEmits(["refresh"]);
-
+const genderOptions = [{ label: '男', value: 'male' }, { label: '女', value: 'female' }]
 const close = () => {
     emit("refresh");
 };
@@ -498,6 +321,9 @@ onMounted(() => {
     });
 });
 const save = async () => {
+    for (const key in errors.value) {
+        errors.value[key].error = false;
+    }
     const data = {
         name: form.value.name,
         gender: form.value.gender,
@@ -518,6 +344,10 @@ const save = async () => {
         recurrence_time: form.value.recurrence_time,
         survival_time: form.value.survival_time,
     };
+    if(form.value.gender.label){
+        data.gender=form.value.gender.value
+    }
+    data.age = (new Date().getFullYear()) - (new Date(form.value.birthday).getFullYear())
     apiPut(
         `/patient/patients/${props.id}`,
         (_) => {
@@ -528,7 +358,7 @@ const save = async () => {
         null,
         (res) => {
             errorMessage("请更正表单信息");
-            const errorDetail = JSON.parse(res.data);
+            const errorDetail = res.data;
             for (const key in errorDetail) {
                 errors.value[key].error = true;
                 errors.value[key].message = errorDetail[key][0];
