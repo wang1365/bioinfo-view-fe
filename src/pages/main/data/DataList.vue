@@ -4,18 +4,8 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6"> 数据 </q-toolbar-title>
-                <q-btn
-                    color="primary"
-                    label="新建数据"
-                    icon="description"
-                    @click="showDataNew = true"
-                />
-                <q-btn
-                    color="info"
-                    label="导出数据"
-                    icon="file_download"
-                    @click="exportData()"
-                />
+                <q-btn color="primary" label="新建数据" icon="description" @click="showDataNew = true" />
+                <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
@@ -28,21 +18,11 @@
                                 display: inline-block;
                             "
                         >
-                            <input
-                                id="file"
-                                type="file"
-                                style="rgba(0,0,0,0)"
-                                @change="fileSelected($event)"
-                            />
+                            <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
                 </q-btn>
-                <q-btn
-                    color="positive"
-                    label="模板下载"
-                    icon="file_download"
-                    @click="downloadTemplate()"
-                >
+                <q-btn color="positive" label="模板下载" icon="file_download" @click="downloadTemplate()">
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
                 </q-btn>
             </q-toolbar>
@@ -70,11 +50,11 @@
                             <td>杂交 input</td>
                             <td>风险上机</td>
                             <td>核酸降解等级</td> -->
-                            <td>样本元信息 ID</td>
+                            <!-- <td>样本元信息 ID</td> -->
                             <td>样本识别号</td>
                             <td>数据识别号</td>
-                            <td>送检机构</td>
-                            <td>核酸类型</td>
+                            <!-- <td>送检机构</td> -->
+                            <!-- <td>核酸类型</td> -->
                             <td>R1 数据名称</td>
                             <td>R2 数据名称</td>
                             <!-- <td>样本所有者</td>
@@ -84,11 +64,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            class="hover"
-                            v-for="item in dataItems"
-                            v-bind:key="item.name"
-                        >
+                        <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
                             <!-- <td class="q-pa-md text-center">
                                 <q-checkbox
                                     v-model="item.selected"
@@ -119,54 +95,32 @@
                             <td >
                                 {{ item.nucleic_level }}
                             </td> -->
-                            <td>
+                            <!-- <td>
                                 {{ item.sample_meta_id }}
-                            </td>
+                            </td> -->
                             <td>
                                 {{ item.sample_identifier }}
                             </td>
                             <td>{{ item.identifier }}</td>
-                            <td>{{ item.company }}</td>
-                            <td>{{ item.nucleic_type }}</td>
+                            <!-- <td>{{ item.company }}</td> -->
+                            <!-- <td>{{ item.nucleic_type }}</td> -->
                             <td>{{ item.fastq1_path }}</td>
                             <td>{{ item.fastq2_path }}</td>
                             <!-- <td>{{ item.user_id }}</td>
                             <td >{{ item.create_time }}</td>
                             <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="secondary"
-                                    label="详情"
-                                    icon="visibility"
-                                    @click="info(item)"
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="primary"
-                                    label="编辑"
-                                    icon="edit"
-                                    @click="edit(item)"
-                                    size="sm"
-                                />
-
-                                <q-btn
-                                    color="red"
-                                    label="删除"
-                                    icon="delete"
-                                    @click="confirm(item)"
-                                    size="sm"
-                                />
+                                <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
+                                <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
+                                <q-btn color="secondary" label="关联样本" icon="link" @click="link(item)" size="sm" />
+                                <q-btn color="red" label="删除" icon="delete" @click="confirm(item)" size="sm" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <PaginatorVue
-                        :total="total"
-                        :currentPage="currentPage"
-                        @pageChange="pageChange($event)"
-                    />
+                    <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
         </q-section>
@@ -174,9 +128,9 @@
     <q-dialog persistent v-model="showDataNew">
         <DataNew
             @refresh="
-                refreshPage();
-                showDataNew = false;
-            "
+            refreshPage();
+            showDataNew = false;
+        "
         />
     </q-dialog>
     <q-dialog v-model="showDataInfo">
@@ -186,9 +140,17 @@
         <DataEdit
             :id="editId"
             @refresh="
-                refreshPage();
-                showDataEdit = false;
-            "
+            refreshPage();
+            showDataEdit = false;
+        "
+        />
+    </q-dialog>
+    <q-dialog persistent v-model="showLinkSample">
+        <SampleList
+            :linkId="linkId"
+            @refresh="
+            linkSample($event);
+        "
         />
     </q-dialog>
 </template>
@@ -199,16 +161,20 @@ import DataEdit from "./DataEdit.vue";
 import DataNew from "./DataNew.vue";
 import { ref, onMounted } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
+import SampleList from "./SampleList.vue";
+
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
 
-const { apiGet, downloadData, apiDelete } = useApi();
+
+const { apiGet, downloadData, apiDelete,apiPatch } = useApi();
 const showDataEdit = ref(false);
 const showDataInfo = ref(false);
 const showDataNew = ref(false);
 const infoId = ref(0);
 const editId = ref(0);
+const linkId = ref(0);
 
 const currentPage = ref(1);
 const pageSize = ref(10);
@@ -216,6 +182,18 @@ const total = ref(0);
 const dataItems = ref([]);
 
 const $q = useQuasar();
+
+const showLinkSample = ref(false);
+const link=async (item)=>{
+    linkId.value = item.id;
+    showLinkSample.value = true;
+}
+const linkSample = (event) => {
+    apiPatch(`/sample/samples/${linkId.value}/`, (res) => {
+        showLinkSample.value = false;
+        refreshPage()
+    }, { sample_meta_id: event.id, sample_identifier: event.identifier })
+}
 
 const edit = async (item) => {
     editId.value = item.id;

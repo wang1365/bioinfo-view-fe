@@ -18,24 +18,10 @@
                             >
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-date
-                                                v-model="form.sample_date"
-                                                mask="YYYY-MM-DD"
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="form.sample_date" mask="YYYY-MM-DD">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -52,24 +38,10 @@
                             >
                                 <template v-slot:append>
                                     <q-icon name="event" class="cursor-pointer">
-                                        <q-popup-proxy
-                                            cover
-                                            transition-show="scale"
-                                            transition-hide="scale"
-                                        >
-                                            <q-date
-                                                v-model="form.test_date"
-                                                mask="YYYY-MM-DD"
-                                            >
-                                                <div
-                                                    class="row items-center justify-end"
-                                                >
-                                                    <q-btn
-                                                        v-close-popup
-                                                        label="Close"
-                                                        color="primary"
-                                                        flat
-                                                    />
+                                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                            <q-date v-model="form.test_date" mask="YYYY-MM-DD">
+                                                <div class="row items-center justify-end">
+                                                    <q-btn v-close-popup label="Close" color="primary" flat />
                                                 </div>
                                             </q-date>
                                         </q-popup-proxy>
@@ -123,7 +95,16 @@
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
                             <q-input
-                                type="number"
+                                v-model="form.identifier"
+                                :error="errors.identifier.error"
+                                :error-message="errors.identifier.message"
+                                label="样本识别号"
+                            ></q-input>
+                        </div>
+                        <div class="col q-pr-sm cursor-pointer">
+                            <q-input
+                                @click="showLinkPatient=true"
+                                readonly
                                 v-model="form.patient_id"
                                 :error="errors.patient_id.error"
                                 :error-message="errors.patient_id.message"
@@ -132,20 +113,14 @@
                         </div>
                         <div class="col q-pr-sm">
                             <q-input
+                                @click="showLinkPatient=true"
+                                readonly
                                 v-model="form.patient_identifier"
                                 :error="errors.patient_identifier.error"
                                 :error-message="
                                     errors.patient_identifier.message
                                 "
                                 label="患者识别号"
-                            ></q-input>
-                        </div>
-                        <div class="col q-pr-sm">
-                            <q-input
-                                v-model="form.identifier"
-                                :error="errors.identifier.error"
-                                :error-message="errors.identifier.message"
-                                label="样本识别号"
                             ></q-input>
                         </div>
                     </div>
@@ -163,16 +138,31 @@
                 </q-item>
             </q-list>
         </q-card-actions>
+        <q-dialog persistent v-model="showLinkPatient">
+            <PatientsList
+                :linkId="0"
+                @refresh="
+                linkPatient($event);
+            "
+            />
+        </q-dialog>
     </q-card>
 </template>
 <script setup>
 import { ref, defineEmits } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
+import PatientsList from "./PatientList.vue";
 
 const { apiPost } = useApi();
 
 const emit = defineEmits(["refresh"]);
+const showLinkPatient = ref(false);
+const linkPatient = (event) => {
+    showLinkPatient.value = false;
+    form.value.patient_id = event.id
+    form.value.patient_identifier = event.identifier
+}
 
 const close = () => {
     emit("refresh");

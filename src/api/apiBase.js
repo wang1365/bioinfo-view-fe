@@ -42,12 +42,20 @@ export function defaultErrorHandler(data) {
         message: `服务器错误：${data.msg}`,
     })
 }
-export function defaultHttpErrorHandler(error) {
-    Notify.create({
-        type: 'negative',
-        message: `服务器错误：${error}`,
-    })
-    console.log(error)
+export function defaultHttpErrorHandler(error, onError, router) {
+    if (error.response.status_code === 401) {
+        Cookies.remove('token')
+        router.push('/login')
+    }
+    if (!onError) {
+        Notify.create({
+            type: 'negative',
+            message: `服务器错误：${error}`,
+        })
+        console.log(error)
+    } else {
+        onError(error.response)
+    }
 }
 export function defaultHandler(router, resp, onSuccess, onError) {
     const res = resp.data
@@ -109,7 +117,7 @@ export function useApi() {
                 if (onHttpError) {
                     onHttpError(error)
                 } else {
-                    defaultHttpErrorHandler(error)
+                    defaultHttpErrorHandler(error, onError, router)
                 }
             })
     }
@@ -122,7 +130,7 @@ export function useApi() {
                 if (onHttpError) {
                     onHttpError(error)
                 } else {
-                    defaultHttpErrorHandler(error)
+                    defaultHttpErrorHandler(error, onError, router)
                 }
             })
     }
@@ -135,7 +143,7 @@ export function useApi() {
                 if (onHttpError) {
                     onHttpError(error)
                 } else {
-                    defaultHttpErrorHandler(error)
+                    defaultHttpErrorHandler(error, onError, router)
                 }
             })
     }
@@ -148,7 +156,7 @@ export function useApi() {
                 if (onHttpError) {
                     onHttpError(error)
                 } else {
-                    defaultHttpErrorHandler(error)
+                    defaultHttpErrorHandler(error, onError, router)
                 }
             })
     }
@@ -164,7 +172,7 @@ export function useApi() {
                 if (onHttpError) {
                     onHttpError(error)
                 } else {
-                    defaultHttpErrorHandler(error)
+                    defaultHttpErrorHandler(error, onError, router)
                 }
             })
     }
@@ -191,7 +199,7 @@ export function useApi() {
                 }
             })
             .catch((error) => {
-                defaultHttpErrorHandler(error)
+                defaultHttpErrorHandler(error, onError)
             })
     }
     return { apiGet, apiPost, apiPut, apiDelete, apiPatch, downloadData }

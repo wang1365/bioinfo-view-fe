@@ -1,24 +1,24 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="个人中心" />
-        <q-card class="column full-height full-width bg-blue-7">
+        <q-card class="column full-height full-width bg-white">
             <q-card-section class="row items-center q-pb-none">
                 <div class="text-h6">用户中心</div>
                 <q-space />
-                <q-btn icon="close" flat round dense v-close-popup />
+<!--                <q-btn icon="close" flat round dense v-close-popup />-->
+
             </q-card-section>
             <q-card-section>
                 <div
                     class="row q-pa-md items-center justify-around"
                     style="max-width: 95vw"
                 >
-                    <div class="col-4 column items-center">
-                        <q-avatar icon="diversity_1" size="200px" />
-
-                        <div class="text-subtitle1 q-mt-md q-mb-md">
-                            <GqaShowName showMyName />
-                        </div>
-
+                    <div class="col-4 items-center">
+<!--                        <q-avatar icon="diversity_1" size="200px" />-->
+                        <q-img :src="store.ui.image" spinner-color="white"  style="height: 200px; max-width: 200px"/>
+                        <q-space/>
+                    </div>
+                    <div class="col-8 items-center">
                         <q-list>
                             <q-item clickable>
                                 <q-item-section avatar>
@@ -29,8 +29,8 @@
                                     />
                                 </q-item-section>
                                 <q-item-section>{{
-                                    "账号: " + me.username
-                                }}</q-item-section>
+                                        "账号: " + me.username
+                                    }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
@@ -41,8 +41,8 @@
                                     />
                                 </q-item-section>
                                 <q-item-section>{{
-                                    "姓名: " + me.nickname
-                                }}</q-item-section>
+                                        "姓名: " + me.nickname
+                                    }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
@@ -63,7 +63,7 @@
                                     />
                                 </q-item-section>
                                 <q-item-section
-                                    >邮箱: bioinfo@bioinfo.com
+                                >邮箱: bioinfo@bioinfo.com
                                 </q-item-section>
                             </q-item>
                         </q-list>
@@ -77,24 +77,21 @@
                         <!--                                   @click="showPasswordDialog"></q-btn>-->
                         <!--                        </div>-->
                     </div>
-                    <div class="q-pa-md col-8 column items-center">
-                        <NoticeTab ref="noticeTab" />
-                    </div>
                 </div>
             </q-card-section>
             <q-card-actions align="right">
                 <q-btn
                     icon="password"
-                    color="white"
-                    text-color="black"
+                    color="primary"
+                    text-color="white"
                     size="1rem"
                     label="修改密码"
                     @click="showPasswordDialog"
                 ></q-btn>
                 <q-btn
                     icon="logout"
-                    color="white"
-                    text-color="black"
+                    color="red-10"
+                    text-color="white"
                     size="1rem"
                     label="退出"
                     @click="router.push('/login')"

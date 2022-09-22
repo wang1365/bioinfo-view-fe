@@ -9,18 +9,8 @@
                         <q-icon name="search" />
                     </template>
                 </q-input>
-                <q-btn
-                    color="primary"
-                    label="新建患者"
-                    icon="groups_2"
-                    @click="showPatientNew = true"
-                />
-                <q-btn
-                    color="info"
-                    label="导出数据"
-                    icon="file_download"
-                    @click="exportData()"
-                />
+                <q-btn color="primary" label="新建患者" icon="groups_2" @click="showPatientNew = true" />
+                <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
@@ -33,21 +23,11 @@
                                 display: inline-block;
                             "
                         >
-                            <input
-                                id="file"
-                                type="file"
-                                style="rgba(0,0,0,0)"
-                                @change="fileSelected($event)"
-                            />
+                            <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
                 </q-btn>
-                <q-btn
-                    color="positive"
-                    label="模板下载"
-                    icon="file_download"
-                    @click="downlaodTemplate()"
-                >
+                <q-btn color="positive" label="模板下载" icon="file_download" @click="downlaodTemplate()">
                     <q-tooltip>批量上传使用的模板文件 </q-tooltip>
                 </q-btn>
             </q-toolbar>
@@ -58,7 +38,7 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>患者识别号</td>
+                            <td>姓名</td>
                             <td>送检机构</td>
                             <td>诊疗医生</td>
                             <td>性别</td>
@@ -76,25 +56,20 @@
                             <td>{{ patient.name }}</td>
                             <td>{{ patient.inspection_agency }}</td>
                             <td>{{ patient.medical_doctor }}</td>
-                            <td>{{ patient.gender }}</td>
+                            <td>{{ patient.gender=="male"?'男':'女' }}</td>
                             <td>{{ patient.age }}</td>
                             <td>{{ patient.diagnosis }}</td>
                             <td>{{ patient.tumor_stage }}</td>
                             <td>{{ patient.disease }}</td>
                             <td>{{ patient.family_history }}</td>
                             <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="primary"
-                                    label="编辑"
-                                    icon="edit"
-                                    size="sm"
-                                    @click="edit(patient)"
-                                />
+                                <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
                                 <q-btn
                                     color="secondary"
                                     label="关联样本"
                                     icon="link"
                                     size="sm"
+                                    @click="link(patient)"
                                 />
                                 <q-btn
                                     color="info"
@@ -103,24 +78,14 @@
                                     @click="info(patient)"
                                     size="sm"
                                 />
-                                <q-btn
-                                    color="red"
-                                    label="删除"
-                                    icon="delete"
-                                    size="sm"
-                                    @click="confirm(patient)"
-                                />
+                                <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(patient)" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <PaginatorVue
-                        :total="total"
-                        :currentPage="currentPage"
-                        @pageChange="pageChange($event)"
-                    />
+                    <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
         </q-section>
@@ -129,27 +94,35 @@
     <q-dialog v-model="showPatientNew" persistent>
         <PatientNew
             @refresh="
-                refreshPage();
-                showPatientNew = false;
-            "
+            refreshPage();
+            showPatientNew = false;
+        "
         />
     </q-dialog>
     <q-dialog v-model="showPatientInfo">
         <PatientInfo
             :id="infoId"
             @refresh="
-                refreshPage();
-                showPatientInfo = false;
-            "
+            refreshPage();
+            showPatientInfo = false;
+        "
         />
     </q-dialog>
     <q-dialog v-model="showPatientEdit" persistent>
         <PatientEdit
             :id="editId"
             @refresh="
-                refreshPage();
-                showPatientEdit = false;
-            "
+            refreshPage();
+            showPatientEdit = false;
+        "
+        />
+    </q-dialog>
+    <q-dialog persistent v-model="showLinkSample">
+        <SampleList
+            :linkId="linkId"
+            @refresh="
+            linkSample($event);
+        "
         />
     </q-dialog>
 </template>
@@ -163,8 +136,9 @@ import { onMounted, ref } from "vue";
 import { api } from "src/boot/axios";
 import { globalStore } from "src/stores/global";
 import { useApi } from "src/api/apiBase";
+import SampleList from "./SampleList.vue";
 
-const { apiGet, downloadData, apiDelete } = useApi();
+const { apiGet, downloadData, apiDelete,apiPatch } = useApi();
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
@@ -180,6 +154,28 @@ const maxPages = ref(0);
 const $q = useQuasar();
 const store = globalStore();
 const patients = ref([]);
+
+const linkId = ref(0);
+const showLinkSample = ref(false);
+const link = async (item) => {
+    linkId.value = item.id;
+    showLinkSample.value = true;
+}
+const linkSample = (event) => {
+    showLinkSample.value = false;
+    let samples = []
+    for (const item of event) {
+        samples.push(item.id)
+    }
+    if (samples.length > 0) {
+        apiPatch(`/patient/patients/${linkId.value}`, (res) => {
+            showLinkSample.value = false;
+            refreshPage()
+        }, { samples: samples })
+    }
+
+}
+
 onMounted(() => {
     loadPage();
 });
