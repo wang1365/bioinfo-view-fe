@@ -8,7 +8,8 @@ GIT_DATE=$(git log HEAD -n1 --pretty='format:%cd' --date=format:'%Y%m%d-%H%M')
 # TAG="${GIT_BRANCH}-${GIT_HEAD}-${GIT_DATE}"
 # DOCKER_IMAGE=$REPO/$CONTAINER:$TAG
 
-DOCKER_IMAGE="frontend"
+DOCKER_IMAGE="bioinfo-view-ui"
+CONTAINER_NAME="bioinfo-view-ui"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 BUILDROOT=$DIR
@@ -24,12 +25,11 @@ cmd="docker build \
 echo $cmd
 eval $cmd
 
-CONTAINER_NAME="bioinfo-ui"
-
 if [ "$(docker ps -a -f "name=${CONTAINER_NAME}" | wc -l)" -eq 2 ]; then
     docker stop ${CONTAINER_NAME}
     docker rm ${CONTAINER_NAME}
 fi
-start="docker run --name ${CONTAINER_NAME} -dit --restart=always -p 80:80 -e API=10.10.0.208:8080 frontend:latest"
+
+start="docker run --name ${CONTAINER_NAME} -dit --restart=always -p 80:80 -e API=10.10.0.208:8080 ${DOCKER_IMAGE}:latest"
 echo $start
 eval $start
