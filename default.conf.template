@@ -1,5 +1,5 @@
 upstream api-service {
-        server ${API};
+    server ${API};
 }
 
 server {
@@ -13,7 +13,11 @@ server {
         expires 24h;
     }
 
-   
+    location /mounted {
+        root   /data/bioinfo;
+        expires 24h;
+    }
+
     location /api {
         rewrite /api/(.*) /$1 break;
         proxy_pass http://api-service;

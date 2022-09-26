@@ -1,7 +1,7 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
-        <PageTitle title="基因组浏览器" />
-        <div class="full-width full-height" id="igv" />
+    <q-page id="igv" padding style="overflow-x: hidden">
+        <!--        <PageTitle title="基因组浏览器" />-->
+        <!--        <div class="full-width full-height" id="igv" />-->
         <!--        <q-expansion-item expand-separator icon="settings_suggest" label="参数设置" class="shadow-1">-->
         <!--            <q-card>-->
         <!--                <q-card-section>-->
@@ -29,32 +29,43 @@
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
-import { ref, onMounted } from "vue";
-import  igv  from 'igv'
-const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"]);
+import {ref, onMounted} from "vue"
+import { useRoute } from "vue-router"
+import igv from 'igv'
+
+const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"])
 const database = ref("Google");
 const shape = ref("hg19");
+
+const route = useRoute()
+const browser = ref(null)
 
 
 onMounted(() => {
     const igvDiv = document.getElementById('igv')
-    const options =
-        {
-            genome: "hg38",
-            locus: "chr8:127,736,588-127,739,371",
-            tracks: [
-                {
-                    "name": "HG00103",
-                    "url": "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram",
-                    "indexURL": "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram.crai",
-                    "format": "cram"
-                }
-            ]
-        }
+    const genome = route.query.genome || 'hg38'
+    const url = route.query.url || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram"
+    const indexURL = route.query.indexURL || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram.crai"
+    const format = route.query.format || 'cram'
+    const options = {
+        genome,
+        locus: "chr8:127,736,588-127,739,371",
+        tracks: [
+            {
+                "name": "HG00103",
+                url,
+                indexURL,
+                format,
+            }
+        ]
+    }
+
+    console.log('创建IGV浏览器节点', options)
 
     igv.createBrowser(igvDiv, options)
         .then(function (browser) {
-            console.log("Created IGV browser");
+            console.log("Created IGV browser", browser)
+            this.browser.value = browser
         })
 })
 </script>

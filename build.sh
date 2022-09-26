@@ -30,6 +30,8 @@ if [ "$(docker ps -a -f "name=${CONTAINER_NAME}" | wc -l)" -eq 2 ]; then
     docker rm ${CONTAINER_NAME}
 fi
 
-start="docker run --name ${CONTAINER_NAME} -dit --restart=always -p 80:80 -e API=10.10.0.208:8080 ${DOCKER_IMAGE}:latest"
+start="docker run --name ${CONTAINER_NAME} -dit --restart=always -p 80:80 \
+  -v /data/bioinfo:/data/bioinfo \
+  -e API=10.10.0.208:8080 ${DOCKER_IMAGE}:latest"
 echo $start
 eval $start
