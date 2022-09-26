@@ -97,6 +97,10 @@ const routes = [
             },
             {
                 path: 'tools/browse',
+                component: () => import('pages/main/tools/browse/index.vue'),
+            },
+            {
+                path: 'tools/browse/detail',
                 component: () => import('pages/main/tools/browse/BrowsePage.vue'),
             },
         ],
