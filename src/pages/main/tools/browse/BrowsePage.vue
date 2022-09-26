@@ -43,16 +43,25 @@ const browser = ref(null)
 
 onMounted(() => {
     const igvDiv = document.getElementById('igv')
-    const genome = route.query.genome || 'hg38'
-    const url = route.query.url || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram"
-    const indexURL = route.query.indexURL || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram.crai"
-    const format = route.query.format || 'cram'
+    // const genome = route.query.genome || 'hg38'
+    // const format = route.query.format || 'cram'
+    // const url = route.query.url || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram"
+    // const indexURL = route.query.indexURL || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram.crai"
+
+    const name = route.query.name || '测试bam'
+    const genome = route.query.genome || 'hg19'
+    const format = route.query.format || 'bam'
+    const url = route.query.url || "http://10.10.0.208/mounted/test-igv-data/test.recal.bam"
+    const indexURL = route.query.indexURL || "http://10.10.0.208/mounted/test-igv-data/test.recal.bai"
+    // http://10.10.0.208/#/main/tools/browse?genome=hg19&format=bam&url=http://10.10.0.208/mounted/test-igv-data/test.recal.bam&indexURL=http://10.10.0.208/mounted/test-igv-data/test.recal.bai
+
+
     const options = {
         genome,
         locus: "chr8:127,736,588-127,739,371",
         tracks: [
             {
-                "name": "HG00103",
+                name,
                 url,
                 indexURL,
                 format,
@@ -65,7 +74,6 @@ onMounted(() => {
     igv.createBrowser(igvDiv, options)
         .then(function (browser) {
             console.log("Created IGV browser", browser)
-            this.browser.value = browser
         })
 })
 </script>
