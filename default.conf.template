@@ -14,7 +14,7 @@ server {
     }
 
     location /mounted {
-        root   /data/bioinfo;
+        alias   /data/bioinfo;
         expires 24h;
     }
 
