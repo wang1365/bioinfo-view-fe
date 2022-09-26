@@ -5,16 +5,9 @@
             <q-toolbar>
                 <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-                <q-toolbar-title
-                    shrink
-                    class="text-bold text-italic cursor-pointer"
-                    style="padding: 0 5px"
-                >
+                <q-toolbar-title shrink class="text-bold text-italic cursor-pointer" style="padding: 0 5px">
                     <q-avatar @click="router.push('/')">
-                        <img
-                            :src="store.ui.image"
-                            style="width: 30px; height: 25px"
-                        />
+                        <img :src="store.ui.image" style="width: 30px; height: 25px" />
                     </q-avatar>
                     {{ store.ui.title }}
                 </q-toolbar-title>
@@ -30,37 +23,21 @@
                                 <q-list>
                                     <q-item clickable>
                                         <q-item-section avatar>
-                                            <q-icon
-                                                size="lg"
-                                                name="star"
-                                                class="text-warning"
-                                            />
+                                            <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
                                         <q-item-section>等级:23</q-item-section>
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
-                                            <q-icon
-                                                size="lg"
-                                                name="star"
-                                                class="text-warning"
-                                            />
+                                            <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section
-                                            >积分:88888</q-item-section
-                                        >
+                                        <q-item-section>积分:88888</q-item-section>
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
-                                            <q-icon
-                                                size="lg"
-                                                name="star"
-                                                class="text-warning"
-                                            />
+                                            <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section
-                                            >成就:888</q-item-section
-                                        >
+                                        <q-item-section>成就:888</q-item-section>
                                     </q-item>
                                 </q-list>
                             </div>
@@ -69,9 +46,7 @@
 
                             <div class="column items-center">
                                 <q-icon></q-icon>
-                                <div class="text-subtitle1 q-mt-md q-mb-md">
-                                    管理员
-                                </div>
+                                <div class="text-subtitle1 q-mt-md q-mb-md">管理员</div>
 
                                 <div class="row q-gutter-md">
                                     <q-btn
@@ -111,14 +86,8 @@
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
                     <q-list>
-                        <template
-                            v-for="(item, index) in menuList"
-                            :key="index"
-                        >
-                            <SideBarLeftItem
-                                :addRoutesItem="item"
-                                :initLevel="0"
-                            />
+                        <template v-for="(item, index) in menuList" :key="index">
+                            <SideBarLeftItem :addRoutesItem="item" :initLevel="0" />
                         </template>
                         <!--                        <template-->
                         <!--                            v-for="(menuItem, index) in menuList"-->
@@ -155,108 +124,8 @@ import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue";
 import { onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 import { globalStore } from "src/stores/global";
+import menuList from './menu'
 const store = globalStore();
-const menuList = [
-    {
-        icon: "inbox",
-        label: "平台监控",
-        separator: true,
-        path: "/main/dashboard",
-    },
-    {
-        icon: "folder",
-        label: "项目管理",
-        separator: false,
-        path: "/main/projects",
-    },
-    {
-        icon: "description",
-        label: "样本管理",
-        separator: false,
-        path: "/main/samples",
-    },
-    {
-        icon: "groups_2",
-        label: "患者管理",
-        separator: false,
-        path: "/main/patients",
-    },
-    {
-        icon: "save",
-        label: "数据管理",
-        separator: false,
-        path: "/main/data",
-    },
-    // {
-    //     icon: "hub",
-    //     label: "Panel 分析流程",
-    //     separator: false,
-    //     path: "/main/panel",
-    // },
-    // {
-    //     icon: "hub",
-    //     label: "(暂时不做)群体分析流程",
-    //     separator: false,
-    //     path: "/main/group",
-    // },
-    {
-        icon: "auto_mode",
-        label: "任务管理",
-        separator: false,
-        path: "/main/tasks",
-    },
-    {
-        icon: "rate_review",
-        label: "数据库注释",
-        separator: false,
-        path: "/main/tools/comment",
-    },
-    {
-        icon: "biotech",
-        label: "基因组浏览器",
-        separator: true,
-        path: "/main/tools/browse",
-    },
-    {
-        icon: "settings",
-        label: "系统设置",
-        separator: false,
-        path: "/main/settings",
-        children: [
-            {
-                icon: "mediation",
-                label: "流程管理",
-                // roles: ["super"],
-                separator: false,
-                path: "/main/settings/flowManagement",
-            },
-            {
-                icon: "handyman",
-                label: "系统设置",
-                separator: false,
-                path: "/main/settings/system",
-            },
-            {
-                icon: "wallpaper",
-                label: "界面配置",
-                separator: false,
-                path: "/main/settings/ui",
-            },
-        ],
-    },
-    {
-        icon: "people",
-        label: "用户管理",
-        separator: false,
-        path: "/main/users",
-    },
-    {
-        icon: "manage_accounts",
-        label: "个人中心",
-        separator: false,
-        path: "/main/profile",
-    },
-];
 
 const router = useRouter();
 const leftDrawerOpen = ref(false);
