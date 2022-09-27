@@ -136,6 +136,7 @@ function showProfile() {
     router.push("/main/profile");
 }
 function logout() {
+    store.$reset()
     router.push("/login");
 }
 onBeforeMount(() => {

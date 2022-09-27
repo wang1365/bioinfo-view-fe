@@ -5,66 +5,44 @@
             <q-card-section class="row items-center q-pb-none">
                 <div class="text-h6">用户中心</div>
                 <q-space />
-<!--                <q-btn icon="close" flat round dense v-close-popup />-->
-
+                <!--                <q-btn icon="close" flat round dense v-close-popup />-->
             </q-card-section>
             <q-card-section>
-                <div
-                    class="row q-pa-md items-center justify-around"
-                    style="max-width: 95vw"
-                >
+                <div class="row q-pa-md items-center justify-around" style="max-width: 95vw">
                     <div class="col-4 items-center">
-<!--                        <q-avatar icon="diversity_1" size="200px" />-->
-                        <q-img :src="store.ui.image" spinner-color="white"  style="height: 200px; max-width: 200px"/>
-                        <q-space/>
+                        <!--                        <q-avatar icon="diversity_1" size="200px" />-->
+                        <q-img :src="store.ui.image" spinner-color="white" style="height: 200px; max-width: 200px" />
+                        <q-space />
                     </div>
                     <div class="col-8 items-center">
                         <q-list>
                             <q-item clickable>
                                 <q-item-section avatar>
-                                    <q-icon
-                                        size="lg"
-                                        name="star"
-                                        class="text-warning"
-                                    />
+                                    <q-icon size="lg" name="star" class="text-warning" />
                                 </q-item-section>
                                 <q-item-section>{{
                                         "账号: " + me.username
-                                    }}</q-item-section>
+                                }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
-                                    <q-icon
-                                        size="lg"
-                                        name="person_add"
-                                        class="text-warning"
-                                    />
+                                    <q-icon size="lg" name="person_add" class="text-warning" />
                                 </q-item-section>
                                 <q-item-section>{{
                                         "姓名: " + me.nickname
-                                    }}</q-item-section>
+                                }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
-                                    <q-icon
-                                        size="lg"
-                                        name="face"
-                                        class="text-warning"
-                                    />
+                                    <q-icon size="lg" name="face" class="text-warning" />
                                 </q-item-section>
                                 <q-item-section>角色: 管理员</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
-                                    <q-icon
-                                        size="lg"
-                                        name="email"
-                                        class="text-warning"
-                                    />
+                                    <q-icon size="lg" name="email" class="text-warning" />
                                 </q-item-section>
-                                <q-item-section
-                                >邮箱: bioinfo@bioinfo.com
-                                </q-item-section>
+                                <q-item-section>邮箱: bioinfo@bioinfo.com </q-item-section>
                             </q-item>
                         </q-list>
 
@@ -88,14 +66,7 @@
                     label="修改密码"
                     @click="showPasswordDialog"
                 ></q-btn>
-                <q-btn
-                    icon="logout"
-                    color="red-10"
-                    text-color="white"
-                    size="1rem"
-                    label="退出"
-                    @click="router.push('/login')"
-                ></q-btn>
+                <q-btn icon="logout" color="red-10" text-color="white" size="1rem" label="退出" @click="logout"></q-btn>
             </q-card-actions>
             <ChangePasswordDialog ref="changePasswordDialog" />
             <ChangeNicknameDialog ref="changeNicknameDialog" />
@@ -123,4 +94,9 @@ const showPasswordDialog = () => {
 };
 const showProfile = ref(false);
 const router = useRouter();
+
+const logout = () => {
+    store.$reset()
+    router.push('/login')
+}
 </script>
