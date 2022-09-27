@@ -41,19 +41,30 @@
                     </q-card>
                 </q-expansion-item> -->
 
-                <q-expansion-item
-                    expand-separator
-                    icon="auto_mode"
-                    label="最大并行任务数设置"
-                >
+                <q-expansion-item expand-separator default-opened icon="auto_mode" label="服务器资源设置">
                     <q-card>
-                        <q-card-section>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Quidem, eius reprehenderit eos corrupti
-                            commodi magni quaerat ex numquam, dolorum officiis
-                            modi facere maiores architecto suscipit iste eveniet
-                            doloribus ullam aliquid.
+                        <q-card-section row>
+                            <div class="row">
+                                <div class="col-5">
+                                    <q-input type="number" v-model.number="max_task.value">
+                                        <template v-slot:before><span class="text-h6">并行任务限制:</span></template>
+                                    </q-input>
+                                    <q-input type="number" v-model.number="memory_rate.value">
+                                        <template v-slot:before
+                                            ><span class="text-h6">内存率使用限制(%):</span></template
+                                        >
+                                    </q-input>
+                                    <q-input type="number" v-model.number="disk.value">
+                                        <template v-slot:before
+                                            ><span class="text-h6">磁盘使用限制(MB):</span></template
+                                        >
+                                    </q-input>
+                                </div>
+                            </div>
                         </q-card-section>
+                        <q-card-actions>
+                            <q-btn class="q-ml-lg" color="primary" label="确 定" @click="clickSave" />
+                        </q-card-actions>
                     </q-card>
                 </q-expansion-item>
                 <!-- <q-expansion-item
@@ -83,4 +94,44 @@ import PieChart2 from "./charts/PieChart2.vue";
 import LineChart2 from "./charts/LineChart2.vue";
 import PieChart3 from "./charts/PieChart3.vue";
 import LineChart from "./charts/LineChart.vue";
+import { ref, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
+import { listConfig, updateConfig } from 'src/api/config'
+
+const max_task = ref({})
+const memory_rate = ref({})
+const disk = ref({})
+
+const $q = useQuasar()
+
+onMounted(() => {
+    refresh()
+})
+
+const clickSave = () => {
+    updateConfig(max_task.value)
+    updateConfig(memory_rate.value)
+    updateConfig(disk.value).then(res => {
+        $q.notify({
+            message: '设置成功',
+            type: 'positive'
+        })
+    })
+}
+
+const refresh = () => {
+    listConfig().then(res => {
+        for (let cfg of res.results) {
+            if (cfg.name === 'max_task') {
+                max_task.value = cfg
+            }
+            if (cfg.name === 'memory_rate') {
+                memory_rate.value = cfg
+            }
+            if (cfg.name === 'disk') {
+                disk.value = cfg
+            }
+        }
+    })
+}
 </script>
