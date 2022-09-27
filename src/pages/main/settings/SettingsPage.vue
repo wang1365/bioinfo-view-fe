@@ -46,42 +46,49 @@
                         <q-card-section row>
                             <div class="row">
                                 <div class="col-5">
-                                    <q-input type="number" v-model.number="max_task.value">
-                                        <template v-slot:before><span class="text-h6">并行任务限制:</span></template>
-                                    </q-input>
-                                    <q-input type="number" v-model.number="memory_rate.value">
-                                        <template v-slot:before
-                                            ><span class="text-h6">内存率使用限制(%):</span></template
-                                        >
-                                    </q-input>
-                                    <q-input type="number" v-model.number="disk.value">
-                                        <template v-slot:before
-                                            ><span class="text-h6">磁盘使用限制(MB):</span></template
-                                        >
-                                    </q-input>
+                                    <q-form ref="form" @submit="submit">
+                                        <q-form-item>
+                                            <q-input
+                                                type="number"
+                                                v-model.number="max_task.value"
+                                                :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || '任务数数值错误，必须是正整数']"
+                                            >
+                                                <template v-slot:before
+                                                    ><span class="text-h6">并行任务限制(>1):</span></template
+                                                >
+                                            </q-input>
+                                        </q-form-item>
+                                        <q-form-item>
+                                            <q-input
+                                                type="number"
+                                                v-model.number="memory_rate.value"
+                                                :rules="[(val) => (val !== null && val > 0 && val <=1) || '内存使用率数值错误']"
+                                            >
+                                                <template v-slot:before
+                                                    ><span class="text-h6">内存率使用限制(0-1):</span></template
+                                                >
+                                            </q-input>
+                                        </q-form-item>
+                                        <q-form-item>
+                                            <q-input
+                                                type="number"
+                                                v-model.number="disk.value"
+                                                :rules="[(val) => (val !== null && val > 0) || '磁盘限制数值错误']"
+                                            >
+                                                <template v-slot:before
+                                                    ><span class="text-h6">磁盘使用限制(MB):</span></template
+                                                >
+                                            </q-input>
+                                        </q-form-item>
+                                    </q-form>
                                 </div>
                             </div>
                         </q-card-section>
                         <q-card-actions>
-                            <q-btn class="q-ml-lg" color="primary" label="确 定" @click="clickSave" />
+                            <q-btn class="q-ml-lg" color="primary" type="submit" label="确 定" @click="submit" />
                         </q-card-actions>
                     </q-card>
                 </q-expansion-item>
-                <!-- <q-expansion-item
-                    expand-separator
-                    icon="running_with_errors"
-                    label="用户磁盘空间限制"
-                >
-                    <q-card>
-                        <q-card-section>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Quidem, eius reprehenderit eos corrupti
-                            commodi magni quaerat ex numquam, dolorum officiis
-                            modi facere maiores architecto suscipit iste eveniet
-                            doloribus ullam aliquid.
-                        </q-card-section>
-                    </q-card>
-                </q-expansion-item> -->
             </q-list>
         </div>
     </q-page>
@@ -94,10 +101,11 @@ import PieChart2 from "./charts/PieChart2.vue";
 import LineChart2 from "./charts/LineChart2.vue";
 import PieChart3 from "./charts/PieChart3.vue";
 import LineChart from "./charts/LineChart.vue";
-import { ref, onMounted } from 'vue'
-import { useQuasar } from 'quasar'
-import { listConfig, updateConfig } from 'src/api/config'
+import {ref, onMounted} from 'vue'
+import {useQuasar} from 'quasar'
+import {listConfig, updateConfig} from 'src/api/config'
 
+const form = ref(null)
 const max_task = ref({})
 const memory_rate = ref({})
 const disk = ref({})
@@ -108,7 +116,7 @@ onMounted(() => {
     refresh()
 })
 
-const clickSave = () => {
+const submit = () => {
     updateConfig(max_task.value)
     updateConfig(memory_rate.value)
     updateConfig(disk.value).then(res => {
