@@ -14,7 +14,18 @@
             class="bio-data-table"
         >
             <template v-slot:top>
-                <q-btn color="primary" label="新建流程" @click="addFlow" />
+                <q-input
+                    label="患者姓名"
+                    v-model="keyword"
+                    clearable
+                    @clear="refreshSamples"
+                    @keypress.enter="refreshSamples"
+                >
+                    <template v-slot:prepend>
+                        <q-icon name="search" />
+                    </template>
+                </q-input>
+                <q-btn color="primary" class="q-ml-sm" label="查询" @click="refreshSamples" />
             </template>
             <!--            <template v-slot:header="props">-->
             <!--                <q-tr :props="props">-->
@@ -25,38 +36,45 @@
             <!--            </template>-->
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
-                    <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>
-                    <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>
-                    <q-btn label="删除" color="red" outline size="sm" @click="showDeleteDlg(props.row)"></q-btn>
-                    <q-btn label="+" color="red-10" flat size="xs" @click="showCreateTaskDlg(props.row)"></q-btn>
+                    <q-btn label="浏览" color="primary" outline size="sm" @click="clickView(props.row)"></q-btn>
+                    <!--                    <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>-->
                 </q-td>
             </template>
         </q-table>
-
     </q-page>
 </template>
 
 <script setup>
-import {getFlows, deleteFlow} from 'src/api/flow'
+import {listSample} from 'src/api/sample'
 import {ref, onMounted} from 'vue'
 import {useQuasar} from 'quasar'
+import { useRouter } from 'vue-router'
 import PageTitle from 'components/page-title/PageTitle'
 
 const loading = ref(false)
 const currentFlowId = ref(null)
+const router = useRouter()
 
 const $q = useQuasar()
 const columns = [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center', required: true},
-    {name: 'code', label: '类型', field: 'code', align: 'center', sortable: true, required: true},
-    {name: 'flow_category', label: '分 类', field: 'flow_category', align: 'center', required: true},
-    {name: 'memory', label: '内存(m)', align: 'center', field: 'memory', required: true},
-    {name: 'tar_path', label: 'Docker存档', field: 'tar_path', align: 'center', required: true},
-    {name: 'image_name', label: 'Docker镜像名称', field: 'image_name', align: 'center', required: true},
-    {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px', required: true},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', required: true,},
-    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px', required: true},
+    {name: 'patient_name', label: '患者', field: row => row.patient.name, sortable: true, align: 'center',
+        headerStyle: 'width: 200px', required: true},
+    {name: 'patient_age', label: '年龄', field: row => row.patient.age, sortable: true, align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'project_index', label: '项目编码', align: 'center', field: 'project_index', headerStyle: 'width: 200px', required: true},
+    {name: 'library_number', label: '文库编号', field: 'library_number', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'reagent_box', label: '捕获试剂盒', field: 'reagent_box', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'nucleic_break_type', label: '核酸打断方式', field: 'nucleic_break_type', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'library_input', label: '建库input', field: 'library_input', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'index_type', label: 'index类型', field: 'index_type', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'index_number', label: 'index编号', field: 'index_number', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'hybrid_input', label: '杂交input', field: 'hybrid_input', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'risk', label: '风险上机', field: 'risk', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'nucleic_level', label: '核酸降解等级', field: 'nucleic_level', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'nucleic_type', label: '核酸类型', field: 'nucleic_type', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'fastq1_path', label: 'fastq1文件地址', field: 'fastq1_path', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'fastq2_path', label: 'fastq2文件地址', field: 'fastq2_path', align: 'center', headerStyle: 'width: 200px', required: true},
+    {name: 'operation', label: '操 作', align: 'center', headerStyle: 'width:250px', required: true},
 ]
 
 const pagination = ref({
@@ -68,52 +86,28 @@ const pagination = ref({
 })
 
 const rows = ref([
-    {
-        name: 'WGS',
-        location: 'first.sh',
-        alignment_tool: 'bioinfo',
-        parameters: [
-            {key: 'INPUT_DIR', type: 'array', required: true, blank: false},
-            {key: 'REPORT_OUTPUT_DIR', type: 'array', required: true, blank: false},
-        ],
-        desp: 'xxx',
-    },
 ])
 const selectedFlow = ref({})
 const mode = ref('info')
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
+const keyword = ref('')
 
 onMounted(() => {
-    refreshFlows()
+    refreshSamples()
 })
 
-const refreshFlows = () => {
+const refreshSamples = () => {
     startLoading()
-    getFlows(1, 100)
+    listSample(keyword.value, page.value, total.value)
         .then((data) => {
-            flows.value = data.results
+            rows.value = data.results
             total.value = data.count
         })
         .finally(stopLoading)
 }
 
-const getTagType = (row) => {
-    const cat = row.flow_category
-    const data = {
-        DNA: 'success',
-        RNA: 'primary',
-        AMP: 'info',
-    }
-
-    return data[cat] || 'info'
-}
-
-const showEditDlg = (row) => {
-    dlgEdit.value.show()
-    dlgEdit.value.setData(row)
-}
 
 const startLoading = () => {
     loading.value = true
@@ -123,58 +117,20 @@ const stopLoading = () => {
     loading.value = false
 }
 
-const showDeleteDlg = (row) => {
-    $q.dialog({
-        title: `是否要删除流程“${row.name}”?`,
-        ok: '确认',
-        cancel: '取消',
-    }).onOk(() => {
-        startLoading()
-        deleteFlow(row.id)
-            .then(() => {
-                $q.notify({type: 'positive', message: '删除成功'})
-                refreshFlows()
-            })
-            .finally(stopLoading)
-    })
+
+const clickView = (row) => {
+    router.push('/main/tools/browse/detail')
 }
 
-const showCreateTaskDlg = (row) => {
-    currentFlowId.value = row.id
-    dlgCreateTask.value.show()
-    dlgCreateTask.value.setData(row)
-}
-
-const showInfoDlg = (row) => {
-    dlgInfo.value.show()
-    dlgInfo.value.setData(row)
-}
-
-const addFlow = () => {
-    dlgCreate.value.setData({
-        name: '',
-        location: '',
-        alignment_tool: '',
-        desp: '',
-        flow_category: '',
-        details: '',
-        parameters: [],
-        builtin_parameters: [],
-        sample_type: 'multiple',
-    })
-    dlgCreate.value.reset()
-    dlgCreate.value.show()
-    // isCreateDlgShow.value = true
-}
 
 const handleSizeChange = (size) => {
     pageSize.value = size
-    refreshFlows()
+    refreshSamples()
 }
 
 const handleCurrentChange = (page) => {
     page.value = page
-    refreshFlows()
+    refreshSamples()
 }
 </script>
 
@@ -183,4 +139,25 @@ const handleCurrentChange = (page) => {
     padding: 30px 30px 0 0;
     text-align: center;
 }
+
+.bio-data-table {
+    max-width: 99%;
+
+    thead tr:first-child th:first-child {
+        background-color: #fff;
+    }
+    /* bg color is important for th; just specify one */
+
+
+    td:first-child {
+        background-color: #f5f5dc;
+    }
+
+    th:first-child, td:first-child {
+        position: sticky;
+        left: 0;
+    }
+}
+  /* specifying max-width so the example can
+    highlight the sticky column on any browser window */
 </style>
