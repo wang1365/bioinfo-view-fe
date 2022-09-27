@@ -29,8 +29,9 @@
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
-import {ref, onMounted} from "vue"
-import { useRoute } from "vue-router"
+import {ref, onMounted, defineProps} from "vue"
+import {useRoute, onBeforeRouteUpdate} from "vue-router"
+import { getSample } from 'src/api/sample'
 import igv from 'igv'
 
 const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"])
@@ -39,16 +40,33 @@ const shape = ref("hg19");
 
 const route = useRoute()
 const browser = ref(null)
+const sample = ref(null)
 
+onBeforeRouteUpdate(async (to, from) => {
+    console.log('Route upate', from, to)
+})
 
 onMounted(() => {
+    refresh()
+})
+
+const refresh = () => {
+    getSample(route.query.sample).then(res => {
+        console.log(res)
+        sample.value = res
+        refreshBrowser()
+    }).finally(() => {
+    })
+}
+
+const refreshBrowser = () => {
     const igvDiv = document.getElementById('igv')
     // const genome = route.query.genome || 'hg38'
     // const format = route.query.format || 'cram'
     // const url = route.query.url || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram"
     // const indexURL = route.query.indexURL || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram.crai"
 
-    const name = route.query.name || '测试bam'
+    const name = sample.value ? `${sample.value.patient.name}-${sample.value.library_number}` : '测试bam'
     const genome = route.query.genome || 'hg19'
     const format = route.query.format || 'bam'
     const url = route.query.url || "http://10.10.0.208/mounted/test-igv-data/test.recal.bam"
@@ -75,5 +93,5 @@ onMounted(() => {
         .then(function (browser) {
             console.log("Created IGV browser", browser)
         })
-})
+}
 </script>

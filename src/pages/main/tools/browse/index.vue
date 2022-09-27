@@ -45,10 +45,10 @@
 </template>
 
 <script setup>
-import {listSample} from 'src/api/sample'
+import {listSample, getSample} from 'src/api/sample'
 import {ref, onMounted} from 'vue'
 import {useQuasar} from 'quasar'
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
 import PageTitle from 'components/page-title/PageTitle'
 
 const loading = ref(false)
@@ -58,22 +58,116 @@ const router = useRouter()
 const $q = useQuasar()
 const columns = [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'patient_name', label: '患者', field: row => row.patient.name, sortable: true, align: 'center',
-        headerStyle: 'width: 200px', required: true},
-    {name: 'patient_age', label: '年龄', field: row => row.patient.age, sortable: true, align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'project_index', label: '项目编码', align: 'center', field: 'project_index', headerStyle: 'width: 200px', required: true},
-    {name: 'library_number', label: '文库编号', field: 'library_number', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'reagent_box', label: '捕获试剂盒', field: 'reagent_box', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'nucleic_break_type', label: '核酸打断方式', field: 'nucleic_break_type', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'library_input', label: '建库input', field: 'library_input', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'index_type', label: 'index类型', field: 'index_type', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'index_number', label: 'index编号', field: 'index_number', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'hybrid_input', label: '杂交input', field: 'hybrid_input', align: 'center', headerStyle: 'width: 200px', required: true},
+    {
+        name: 'patient_name', label: '患者', field: row => row.patient.name, sortable: true, align: 'center',
+        headerStyle: 'width: 200px', required: true
+    },
+    {
+        name: 'patient_age',
+        label: '年龄',
+        field: row => row.patient.age,
+        sortable: true,
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'project_index',
+        label: '项目编码',
+        align: 'center',
+        field: 'project_index',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'library_number',
+        label: '文库编号',
+        field: 'library_number',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'reagent_box',
+        label: '捕获试剂盒',
+        field: 'reagent_box',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'nucleic_break_type',
+        label: '核酸打断方式',
+        field: 'nucleic_break_type',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'library_input',
+        label: '建库input',
+        field: 'library_input',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'index_type',
+        label: 'index类型',
+        field: 'index_type',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'index_number',
+        label: 'index编号',
+        field: 'index_number',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'hybrid_input',
+        label: '杂交input',
+        field: 'hybrid_input',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
     {name: 'risk', label: '风险上机', field: 'risk', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'nucleic_level', label: '核酸降解等级', field: 'nucleic_level', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'nucleic_type', label: '核酸类型', field: 'nucleic_type', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'fastq1_path', label: 'fastq1文件地址', field: 'fastq1_path', align: 'center', headerStyle: 'width: 200px', required: true},
-    {name: 'fastq2_path', label: 'fastq2文件地址', field: 'fastq2_path', align: 'center', headerStyle: 'width: 200px', required: true},
+    {
+        name: 'nucleic_level',
+        label: '核酸降解等级',
+        field: 'nucleic_level',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'nucleic_type',
+        label: '核酸类型',
+        field: 'nucleic_type',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'fastq1_path',
+        label: 'fastq1文件地址',
+        field: 'fastq1_path',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
+    {
+        name: 'fastq2_path',
+        label: 'fastq2文件地址',
+        field: 'fastq2_path',
+        align: 'center',
+        headerStyle: 'width: 200px',
+        required: true
+    },
     {name: 'operation', label: '操 作', align: 'center', headerStyle: 'width:250px', required: true},
 ]
 
@@ -85,8 +179,7 @@ const pagination = ref({
     // rowsNumber: xx if getting data from a server
 })
 
-const rows = ref([
-])
+const rows = ref([])
 const selectedFlow = ref({})
 const mode = ref('info')
 const page = ref(1)
@@ -119,7 +212,11 @@ const stopLoading = () => {
 
 
 const clickView = (row) => {
-    router.push('/main/tools/browse/detail')
+    router.push({
+            path: '/main/tools/browse/detail',
+            query: { sample: row.id }
+        }
+    )
 }
 
 
@@ -146,6 +243,7 @@ const handleCurrentChange = (page) => {
     thead tr:first-child th:first-child {
         background-color: #fff;
     }
+
     /* bg color is important for th; just specify one */
 
 
@@ -158,6 +256,7 @@ const handleCurrentChange = (page) => {
         left: 0;
     }
 }
-  /* specifying max-width so the example can
-    highlight the sticky column on any browser window */
+
+/* specifying max-width so the example can
+  highlight the sticky column on any browser window */
 </style>

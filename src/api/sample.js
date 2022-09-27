@@ -7,3 +7,10 @@ export function listSample(keyword, page = 1, size = 10) {
         data: { keyword, page, size },
     })
 }
+
+export function getSample(id) {
+    return api({
+        url: `/sample/samples/${id}`,
+        method: 'get',
+    })
+}
