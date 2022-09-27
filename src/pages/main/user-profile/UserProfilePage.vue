@@ -36,13 +36,13 @@
                                 <q-item-section avatar>
                                     <q-icon size="lg" name="face" class="text-warning" />
                                 </q-item-section>
-                                <q-item-section>角色: 管理员</q-item-section>
+                                <q-item-section>{{'角色: ' + getRole() }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
                                     <q-icon size="lg" name="email" class="text-warning" />
                                 </q-item-section>
-                                <q-item-section>邮箱: bioinfo@bioinfo.com </q-item-section>
+                                <q-item-section>{{'邮箱: ' + me.email }} </q-item-section>
                             </q-item>
                         </q-list>
 
@@ -86,6 +86,8 @@ const store = globalStore();
 const me = {
     username: store.currentUser ? store.currentUser.username : "",
     nickname: store.currentUser ? store.currentUser.nickname : "",
+    roles: store.currentUser.role_list,
+    email: store.currentUser.email
 };
 
 const changePasswordDialog = ref(null);
@@ -98,5 +100,17 @@ const router = useRouter();
 const logout = () => {
     store.$reset()
     router.push('/login')
+}
+
+const getRole = () => {
+    if (me.roles.includes('super')) {
+        return '超级管理员'
+    }
+
+    if (me.roles.includes('admin')) {
+        return '管理员'
+    }
+
+    return '普通用户'
 }
 </script>

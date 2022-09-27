@@ -19,34 +19,36 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;管理员
                         <q-menu class="row items-center justify-around q-pa-md">
                             <div class="column">
-                                <div class="text-h6">摘要</div>
+                                <div class="text-h6">个人信息</div>
                                 <q-list>
                                     <q-item clickable>
                                         <q-item-section avatar>
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section>等级:23</q-item-section>
+                                        <q-item-section>
+                                            {{ "账号: " + store.currentUser.username }}
+                                        </q-item-section>
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section>积分:88888</q-item-section>
+                                        <q-item-section>{{ "姓名: " + store.currentUser.nickname  }}</q-item-section>
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section>成就:888</q-item-section>
+                                        <q-item-section>{{ '角色: ' + getRole() }}</q-item-section>
                                     </q-item>
                                 </q-list>
                             </div>
 
-                            <q-separator vertical inset class="q-mx-lg" />
+                            <!--                            <q-separator vertical inset class="q-mx-lg" />-->
 
                             <div class="column items-center">
                                 <q-icon></q-icon>
-                                <div class="text-subtitle1 q-mt-md q-mb-md">管理员</div>
+                                <!--                                <div class="text-subtitle1 q-mt-md q-mb-md">管理员</div>-->
 
                                 <div class="row q-gutter-md">
                                     <q-btn
@@ -121,23 +123,40 @@
 <script setup>
 import Fullscreen from "./Fullscreen.vue";
 import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue";
-import { onBeforeMount, ref } from "vue";
-import { useRouter } from "vue-router";
-import { globalStore } from "src/stores/global";
+import {onBeforeMount, ref} from "vue";
+import {useRouter} from "vue-router";
+import {globalStore} from "src/stores/global";
 import menuList from './menu'
+
 const store = globalStore();
 
 const router = useRouter();
 const leftDrawerOpen = ref(false);
+
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+
 function showProfile() {
     router.push("/main/profile");
 }
+
 function logout() {
     store.$reset()
     router.push("/login");
+}
+
+const getRole = () => {
+    const roles = store.currentUser.role_list
+    if (roles.includes('super')) {
+        return '超级管理员'
+    }
+
+    if (roles.includes('admin')) {
+        return '管理员'
+    }
+
+    return '普通用户'
 }
 onBeforeMount(() => {
     //    console.log(store.currentUser);
