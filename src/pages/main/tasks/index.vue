@@ -76,7 +76,7 @@
                         <td>{{ item.flow.name }}</td>
 
                         <td>
-                            <q-linear-progress rounded size="10px" :value="item.progess" />
+                            <q-linear-progress rounded size="10px" :value="item.progress" />
                         </td>
                         <td>{{ getItemStatus(item) }}</td>
                         <td>{{ item.creator.username }}</td>
@@ -94,6 +94,7 @@
                     </tr>
                 </tbody>
             </table>
+
             <div class="row q-mt-md">
                 <q-space></q-space>
                 <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
@@ -110,6 +111,7 @@ import { ref, onMounted } from "vue";
 import { useApi } from "src/api/apiBase";
 import PageTitle from "components/page-title/PageTitle.vue";
 import ProjectListVue from "./components/ProjectList.vue";
+import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { useRouter } from "vue-router";
 const options = ref([
     { label: "全部", value: "ALL" },

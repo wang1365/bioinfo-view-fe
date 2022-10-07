@@ -7,33 +7,17 @@
             :tableHeaders="tableHeaders"
             :tableRowFields="tableRowFields"
             :currentPage="currentPage"
-            selectedShowField="library_number"
+            selectedShowField="identifier"
             @pageChange="pageChange($event)"
             @ensureSelect="ensureSelect($event)"
         >
-            <template v-slot:tableFilter>
+            <!-- <template v-slot:tableFilter>
                 <div class="row q-px-md q-gutter-sm">
-                    <q-input
-                        style="width: 250px"
-                        dense
-                        v-model="indexType"
-                        label="index 类型"
-                        clearable
-                    />
-                    <q-input
-                        style="width: 250px"
-                        dense
-                        v-model="company"
-                        label="送检机构"
-                        clearable
-                    />
-                    <q-btn
-                        color="primary"
-                        icon="search"
-                        @click="refreshPage()"
-                    ></q-btn>
+                    <q-input style="width: 250px" dense v-model="indexType" label="index 类型" clearable />
+                    <q-input style="width: 250px" dense v-model="company" label="送检机构" clearable />
+                    <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
                 </div>
-            </template>
+            </template> -->
         </PopupMultiSelector>
     </div>
 </template>

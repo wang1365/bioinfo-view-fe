@@ -7,31 +7,15 @@
             :tableHeaders="tableHeaders"
             :tableRowFields="tableRowFields"
             :currentPage="currentPage"
-            selectedShowField="library_number"
+            selectedShowField="identifier"
             @pageChange="pageChange($event)"
             @ensureSelect="ensureSelect($event)"
         >
             <template v-slot:tableFilter>
                 <div class="row q-px-md q-gutter-sm">
-                    <q-input
-                        style="width: 250px"
-                        dense
-                        v-model="indexType"
-                        label="index 类型"
-                        clearable
-                    />
-                    <q-input
-                        style="width: 250px"
-                        dense
-                        v-model="company"
-                        label="送检机构"
-                        clearable
-                    />
-                    <q-btn
-                        color="primary"
-                        icon="search"
-                        @click="refreshPage()"
-                    ></q-btn>
+                    <q-input style="width: 250px" dense v-model="indexType" label="index 类型" clearable />
+                    <q-input style="width: 250px" dense v-model="company" label="送检机构" clearable />
+                    <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
                 </div>
             </template>
         </PopupMultiSelector>
@@ -44,8 +28,8 @@ import PopupMultiSelector from "components/popup-multi-selector/PopupMultiSelect
 import { infoMessage } from "src/utils/notify";
 
 const tableHeaders = ref([
-    "文库编号",
     "数据识别号",
+    "文库编号",
     "送检机构",
     "核酸类型",
     "index 类型",
@@ -53,8 +37,8 @@ const tableHeaders = ref([
     "R2 数据名称",
 ]);
 const tableRowFields = ref([
-    "library_number",
     "identifier",
+    "library_number",
     "company",
     "nucleic_type",
     "index_type",

@@ -11,6 +11,8 @@
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
                             <q-input
+                                @click="showLinkProject=true"
+                                readonly
                                 v-model="form.project_index"
                                 :error="errors.project_index.error"
                                 :error-message="errors.project_index.message"
@@ -225,8 +227,16 @@
         <q-dialog persistent v-model="showLinkSample">
             <SampleList
                 :linkId="0"
-                @refresh="
+                @itemSelected="
             linkSample($event);
+        "
+            />
+        </q-dialog>
+        <q-dialog persistent v-model="showLinkProject">
+            <ProjectList
+                :linkId="0"
+                @itemSelected="
+            linkProject($event);
         "
             />
         </q-dialog>
@@ -237,6 +247,7 @@ import { ref, defineEmits } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import SampleList from "./SampleList.vue";
+import ProjectList from "./ProjectList.vue";
 
 const nucleic_level_options = ref(["A", "B", "C", "D"]);
 const nucleic_type_options = ref(["gDNA", "cfDNA", "RNA"]);
@@ -250,6 +261,13 @@ const linkSample = (event) => {
     form.value.sample_meta_id= event.id;
     form.value.sample_identifier=event.identifier
     showLinkSample.value=false
+}
+
+const showLinkProject = ref(false);
+
+const linkProject = (event) => {
+    form.value.project_index= event.name;
+    showLinkProject.value=false
 }
 const close = () => {
     emit("refresh");

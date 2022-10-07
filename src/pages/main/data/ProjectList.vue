@@ -1,23 +1,23 @@
 <template>
     <div style="max-width: 100%">
         <PopupSingleSelector
-            title="选择样本"
+            title="选择项目"
             :dataItems="dataItems"
             :total="total"
             :tableHeaders="tableHeaders"
             :tableRowFields="tableRowFields"
             :currentPage="currentPage"
-            selectedShowField="identifier"
+            selectedShowField="name"
             @pageChange="pageChange($event)"
             @ensureSelect="ensureSelect($event)"
         >
-            <!-- <template v-slot:tableFilter>
+            <template v-slot:tableFilter>
                 <div class="row q-px-md q-gutter-sm">
                     <q-input style="width: 250px" dense v-model="projectName" label="项目名称" clearable />
                     <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
                 </div>
-            </template> -->
-            <!-- <template v-slot:itemRow="{ row }">
+            </template>
+            <template v-slot:itemRow="{ row }">
                 <td>
                     {{ row.name }}
                 </td>
@@ -25,7 +25,7 @@
                 <td>{{ row.task_count }}</td>
                 <td>{{ row.owner }}</td>
                 <td>{{ row.create_time }}</td>
-            </template> -->
+            </template>
         </PopupSingleSelector>
     </div>
 </template>
@@ -33,31 +33,27 @@
 import { onMounted, ref } from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
-
 const tableHeaders = ref([
-    "ID",
-    "样本识别号",
-    "患者识别号",
-    "样本类型",
-    "肿瘤样本",
-    "采样日期",
+    "项目名称",
+    "样本数量",
+    "任务数量",
+    "创建人",
+    "创建时间",
 ]);
 const tableRowFields = ref([
-    "id",
-    "identifier",
-    "patient_identifier",
-    "sample_type",
-    "panel_proportion",
-    "sample_date",
+    "name",
+    "samples",
+    "task_count",
+    "owner",
+    "create_time",
 ]);
 const emit = defineEmits(["itemSelected"]);
 const { apiGet } = useApi();
 
+const projectName = ref("");
 
 const selectedItem = ref({});
-const props = defineProps({
-    linkId: { type: Number, required: true }
-})
+
 const selectItem = (item) => {
     selectedItem.value = item;
 };
@@ -66,11 +62,15 @@ const pageSize = ref(10);
 const total = ref(0);
 const dataItems = ref([]);
 
-
+const itemSelected = () => {
+    emit("itemSelected", selectedItem.value);
+};
 onMounted(() => {
     loadPage();
 });
-
+const ensureSelect = (event) => {
+    emit("itemSelected", event);
+};
 const pageChange = async (event) => {
     console.log(event);
     currentPage.value = event.currentPage;
@@ -81,12 +81,10 @@ const refreshPage = async () => {
     currentPage.value = 1;
     loadPage();
 };
-const ensureSelect =  (event) => {
-    emit('itemSelected',event)
-}
 const loadPage = async () => {
-    let params = `?page=${currentPage.value}&size=${pageSize.value}`;
-    apiGet(`/sample/sampledatas/${params}`, (res) => {
+    let params = `?page=${currentPage.value}&size=${pageSize.value}&all_level=1`;
+    if (projectName.value) params += `&name=${projectName.value}`;
+    apiGet(`/project${params}`, (res) => {
         total.value = res.data.count;
         dataItems.value = [];
         for (let iterator of res.data.results) {
