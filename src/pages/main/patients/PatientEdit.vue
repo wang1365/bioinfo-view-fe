@@ -19,7 +19,6 @@
                                 :error="errors.gender.error"
                                 :error-message="errors.gender.message"
                                 v-model="form.gender"
-                                :option-value="'value'"
                                 :options="genderOptions"
                                 label="性别"
                             />
@@ -37,11 +36,12 @@
                             <q-input
                                 :error="errors.birthday.error"
                                 :error-message="errors.birthday.message"
-                                label="出生日期"
+                                label="*出生日期(YYYY-MM-DD)"
                                 v-model="form.birthday"
+                                readonly
                             >
                                 <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
+                                    <q-icon color="primary" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="form.birthday" mask="YYYY-MM-DD">
                                                 <div class="row items-center justify-end">
@@ -78,7 +78,7 @@
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
                                 v-model="form.identifier"
-                                label="患者识别号"
+                                label="*患者识别号"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -163,9 +163,10 @@
                         </div>
                         <div class="col">
                             <q-input
+                                type="number"
                                 :error="errors.prognosis_time.error"
                                 :error-message="errors.prognosis_time.message"
-                                label="预后时间"
+                                label="预后时间(天)"
                                 v-model="form.prognosis_time"
                             >
                             </q-input>
@@ -174,18 +175,20 @@
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
                             <q-input
+                                type="number"
                                 :error="errors.recurrence_time.error"
                                 :error-message="errors.recurrence_time.message"
-                                label="复发时间"
+                                label="*复发时间(天)"
                                 v-model="form.recurrence_time"
                             >
                             </q-input>
                         </div>
                         <div class="col">
                             <q-input
+                                type="number"
                                 :error="errors.survival_time.error"
                                 :error-message="errors.survival_time.message"
-                                label="存活时间"
+                                label="*存活时间(天)"
                                 v-model="form.survival_time"
                             >
                             </q-input>
@@ -209,7 +212,7 @@ import PopupContentScroll from "src/components/popup-content-scroll/PopupContent
 
 const { apiGet, apiPut } = useApi();
 const emit = defineEmits(["refresh"]);
-const genderOptions = [{ label: '男', value: 'male' }, { label: '女', value: 'female' }]
+const genderOptions = ['男','女']
 const close = () => {
     emit("refresh");
 };
@@ -344,9 +347,9 @@ const save = async () => {
         recurrence_time: form.value.recurrence_time,
         survival_time: form.value.survival_time,
     };
-    if(form.value.gender.label){
-        data.gender=form.value.gender.value
-    }
+    // if(form.value.gender.label){
+    //     data.gender=form.value.gender.value
+    // }
     data.age = (new Date().getFullYear()) - (new Date(form.value.birthday).getFullYear())
     apiPut(
         `/patient/patients/${props.id}`,

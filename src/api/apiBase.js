@@ -43,18 +43,48 @@ export function defaultErrorHandler(data) {
     })
 }
 export function defaultHttpErrorHandler(error, onError, router) {
-    if (error.response.status_code === 401) {
-        Cookies.remove('token')
-        router.push('/login')
-    }
-    if (!onError) {
+    let status = error.response.status
+    let errorData = error.response.data
+    if (status === 401) {
         Notify.create({
             type: 'negative',
-            message: `服务器错误：${error}`,
+            message: `未登录 ${status}:`,
         })
-        console.log(error)
-    } else {
-        onError(error.response)
+        Cookies.remove('token')
+        router.push('/login')
+    } else if (status === 403) {
+        Notify.create({
+            type: 'negative',
+            message: `无权限 ${status}`,
+        })
+        Cookies.remove('token')
+        router.push('/login')
+    } else if (status === 404) {
+        Notify.create({
+            type: 'negative',
+            message: '路由不存在',
+        })
+        console.log(errorData)
+    } else if (status >= 500) {
+        let blob = new Blob([errorData])
+        let url = window.URL.createObjectURL(blob)
+        Notify.create({
+            type: 'negative',
+            message: `服务器错误 ${status}`,
+            html: true,
+            timeout: 10000,
+        })
+        console.log(errorData)
+    } else if (status === 400) {
+        if (!onError) {
+            Notify.create({
+                type: 'negative',
+                message: `请求参数错误 ${status}：${error}`,
+            })
+        } else {
+            onError(errorData)
+        }
+        console.log(errorData)
     }
 }
 export function defaultHandler(router, resp, onSuccess, onError) {
@@ -106,7 +136,6 @@ export function useApi() {
     })
     function apiGet(url, onSuccess, config = {}, onError = null, onHttpError = null) {
         $q.loadingBar.start()
-
         api.get(url, config)
             .then((resp) => {
                 $q.loadingBar.stop()

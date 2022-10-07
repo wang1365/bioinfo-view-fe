@@ -19,23 +19,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            class="cursor-pointer"
-                            v-for="item of dataItems"
-                            :key="item"
-                            @click="selectItem(item)"
-                        >
+                        <tr v-if="dataItems.length===0">
+                            <td colspan="10" class="text-center">无数据</td>
+                        </tr>
+                        <tr class="cursor-pointer" v-for="item of dataItems" :key="item" @click="selectItem(item)">
                             <td>
-                                <q-radio
-                                    v-model="selectedItem.id"
-                                    :val="item.id"
-                                />
+                                <q-radio v-model="selectedItem.id" :val="item.id" />
                             </td>
                             <slot :row="item" name="itemRow">
-                                <td
-                                    v-for="field of tableRowFields"
-                                    :key="field"
-                                >
+                                <td v-for="field of tableRowFields" :key="field">
                                     {{ item[field] }}
                                 </td>
                             </slot>

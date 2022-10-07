@@ -13,11 +13,12 @@
                             <q-input
                                 :error="errors.sample_date.error"
                                 :error-message="errors.sample_date.message"
-                                label="采样日期"
+                                label="*采样日期(YYYY-MM-DD)"
                                 v-model="form.sample_date"
+                                readonly
                             >
                                 <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
+                                    <q-icon color="primary" :ref="'sample_date'" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="form.sample_date" mask="YYYY-MM-DD">
                                                 <div class="row items-center justify-end">
@@ -33,11 +34,12 @@
                             <q-input
                                 :error="errors.test_date.error"
                                 :error-message="errors.test_date.message"
-                                label="送测日期"
+                                label="*送测日期(YYYY-MM-DD)"
                                 v-model="form.test_date"
+                                readonly
                             >
                                 <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
+                                    <q-icon color="primary" id="test_date" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="form.test_date" mask="YYYY-MM-DD">
                                                 <div class="row items-center justify-end">
@@ -54,7 +56,7 @@
                                 v-model="form.sample_componet"
                                 :error="errors.sample_componet.error"
                                 :error-message="errors.sample_componet.message"
-                                label="采样部位"
+                                label="*采样部位"
                             ></q-input>
                         </div>
                     </div>
@@ -66,7 +68,7 @@
                                 v-model="form.sample_type"
                                 :error="errors.sample_type.error"
                                 :error-message="errors.sample_type.message"
-                                label="样本类型"
+                                label="*样本类型"
                             ></q-input>
                         </div>
                         <div class="col q-pf-sm">
@@ -98,7 +100,7 @@
                                 v-model="form.identifier"
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
-                                label="样本识别号"
+                                label="*样本识别号"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm cursor-pointer">
@@ -108,7 +110,7 @@
                                 v-model="form.patient_id"
                                 :error="errors.patient_id.error"
                                 :error-message="errors.patient_id.message"
-                                label="患者ID"
+                                label="*患者ID"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -120,7 +122,7 @@
                                 :error-message="
                                     errors.patient_identifier.message
                                 "
-                                label="患者识别号"
+                                label="*患者识别号"
                             ></q-input>
                         </div>
                     </div>
@@ -163,6 +165,7 @@ const linkPatient = (event) => {
     form.value.patient_id = event.id
     form.value.patient_identifier = event.identifier
 }
+const rref=ref;
 
 const close = () => {
     emit("refresh");
@@ -248,7 +251,7 @@ const save = async () => {
         sample_type: form.value.sample_type,
         panel_proportion: Number.parseInt(form.value.panel_proportion),
         is_panel: form.value.is_panel,
-        patient_id: Number.parseInt(form.value.patient_id),
+        patient: Number.parseInt(form.value.patient_id),
         patient_identifier: form.value.patient_identifier,
         identifier: form.value.identifier,
     };

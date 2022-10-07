@@ -26,6 +26,9 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <tr v-if="!dataItems">
+                            无数据
+                        </tr>
                         <tr
                             class="cursor-pointer"
                             v-for="item of dataItems"
@@ -33,16 +36,10 @@
                             @click="item.selected = !item.selected"
                         >
                             <td>
-                                <q-checkbox
-                                    v-model="item.selected"
-                                    color="primary"
-                                />
+                                <q-checkbox v-model="item.selected" color="primary" />
                             </td>
                             <slot :row="item" name="itemRow">
-                                <td
-                                    v-for="field of tableRowFields"
-                                    :key="field"
-                                >
+                                <td v-for="field of tableRowFields" :key="field">
                                     {{ item[field] }}
                                 </td>
                             </slot>
@@ -60,9 +57,7 @@
                         @pageChange="pageChange($event)"
                     />
                 </div>
-                <div
-                    class="popup-content-multi-footer-selected-container q-gutter-xs"
-                >
+                <div class="popup-content-multi-footer-selected-container q-gutter-xs">
                     <q-chip
                         v-for="item of selectedItems"
                         :key="item.id"
@@ -80,11 +75,7 @@
                 <q-toolbar>
                     <q-toolbar-title></q-toolbar-title>
                     <q-btn class="q-mr-md" label="取消" v-close-popup />
-                    <q-btn
-                        color="primary"
-                        label="确认"
-                        @click="ensureSelect()"
-                    />
+                    <q-btn color="primary" label="确认" @click="ensureSelect()" />
                 </q-toolbar>
             </div>
         </div>

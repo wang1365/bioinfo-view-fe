@@ -12,10 +12,10 @@ const menu = [
         path: '/main/projects',
     },
     {
-        icon: 'description',
-        label: '样本管理',
+        icon: 'auto_mode',
+        label: '任务管理',
         separator: false,
-        path: '/main/samples',
+        path: '/main/tasks',
     },
     {
         icon: 'groups_2',
@@ -23,6 +23,13 @@ const menu = [
         separator: false,
         path: '/main/patients',
     },
+    {
+        icon: 'description',
+        label: '样本管理',
+        separator: false,
+        path: '/main/samples',
+    },
+
     {
         icon: 'save',
         label: '数据管理',
@@ -41,12 +48,7 @@ const menu = [
     //     separator: false,
     //     path: "/main/group",
     // },
-    {
-        icon: 'auto_mode',
-        label: '任务管理',
-        separator: false,
-        path: '/main/tasks',
-    },
+
     {
         icon: 'rate_review',
         label: '数据库注释',

@@ -9,22 +9,16 @@
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">采样日期: {{ form.sample_date }}</div>
                 <div class="col q-pa-sm">送测日期: {{ form.test_date }}</div>
-                <div class="col q-pa-sm">
-                    采样部位: {{ form.sample_componet }}
-                </div>
+                <div class="col q-pa-sm">采样部位: {{ form.sample_componet }}</div>
             </div>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">样本类型: {{ form.sample_type }}</div>
-                <div class="col q-pa-sm">
-                    肿瘤含量: {{ form.panel_proportion }}
-                </div>
+                <div class="col q-pa-sm">肿瘤含量: {{ form.panel_proportion }}</div>
                 <div class="col q-pa-sm">肿瘤样本: {{ form.is_panel }}</div>
             </div>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">患者ID: {{ form.patient_id }}</div>
-                <div class="col q-pa-sm">
-                    患者识别号: {{ form.patient_identifier }}
-                </div>
+                <div class="col q-pa-sm">患者识别号: {{ form.patient_identifier }}</div>
                 <div class="col q-pa-sm">样本识别号: {{ form.identifier }}</div>
             </div>
         </q-card-section>
@@ -68,6 +62,8 @@ onMounted(() => {
     apiGet(`/sample/sampledatas/${props.id}/`, (res) => {
         console.log(res);
         form.value = res.data;
+        form.value.patient_id=res.data.patient.id
+        form.value.patient_identifier=res.data.patient.identifier
     });
 });
 </script>

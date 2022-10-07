@@ -80,7 +80,7 @@
                             </td>
                             <td>{{ item.is_panel }}</td>
                             <!-- <td>{{ item.patient_id }}</td> -->
-                            <td>{{ item.patient_identifier }}</td>
+                            <td>{{ item.patient.identifier }}</td>
                             <td>{{ item.identifier }}</td>
                             <!-- <td>{{ item.user_id }}</td> -->
                             <!-- <td>{{ item.create_time }}</td>
