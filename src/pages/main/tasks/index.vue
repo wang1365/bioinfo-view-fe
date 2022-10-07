@@ -25,10 +25,10 @@
                                     class="cursor-pointer"
                                     name="backspace"
                                     @click="
-                                        projectName = '';
-                                        projectId = '';
-                                        refreshPage();
-                                    "
+                                    projectName = '';
+                                    projectId = '';
+                                    refreshPage();
+                                "
                                 />
                             </template>
                         </q-input>
@@ -90,6 +90,7 @@
                                 size="sm"
                             />
                             <q-btn color="primary" label="下载" icon="download" @click="downlaod(item)" size="sm" />
+                            <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
                     </tr>
                 </tbody>
@@ -113,6 +114,9 @@ import PageTitle from "components/page-title/PageTitle.vue";
 import ProjectListVue from "./components/ProjectList.vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { useRouter } from "vue-router";
+
+import { useQuasar } from "quasar";
+const $q = useQuasar()
 const options = ref([
     { label: "全部", value: "ALL" },
     { label: "运行中", value: "RUNNING" },
@@ -129,7 +133,7 @@ const currentPage = ref(1);
 const pageSize = ref(10);
 const total = ref(0);
 const dataItems = ref([]);
-const { apiGet,downloadData } = useApi();
+const { apiGet, downloadData, apiDelete } = useApi();
 const router = useRouter();
 
 const getItemStatus = (item) => {
@@ -184,8 +188,18 @@ const loadPage = async () => {
             dataItems.value.push(iterator);
         }
     });
- };
-
+};
+const confirm = async (task) => {
+    $q.dialog({
+        title: "确认删除吗?",
+        cancel: true,
+        persistent: true,
+    }).onOk(() => {
+        apiDelete(`/task/${task.id}`, (_) => {
+            refreshPage();
+        });
+    });
+};
 
 const downlaod = (item) => {
     downloadData(`/task/download/${item.id}`, null);
