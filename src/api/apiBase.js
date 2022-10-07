@@ -82,7 +82,7 @@ export function defaultHttpErrorHandler(error, onError, router) {
                 message: `请求参数错误 ${status}：${error}`,
             })
         } else {
-            onError(errorData)
+            onError(error.response)
         }
         console.log(errorData)
     }
@@ -90,9 +90,15 @@ export function defaultHttpErrorHandler(error, onError, router) {
 export function defaultHandler(router, resp, onSuccess, onError) {
     const res = resp.data
     const code = resp.data.code
-    const statusCode = res.status_code
+    // const statusCode = res.status_code
     if (code === 0) {
         onSuccess(res)
+    } else if (code === 1) {
+        if (onError) {
+            onError(res)
+        } else {
+            defaultErrorHandler(res)
+        }
     } else if (statusCode === 401) {
         Notify.create({
             type: 'negative',

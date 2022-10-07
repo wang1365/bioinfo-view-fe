@@ -15,9 +15,10 @@
                                 :error-message="errors.sample_date.message"
                                 label="*采样日期(YYYY-MM-DD)"
                                 v-model="form.sample_date"
+                                readonly
                             >
                                 <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
+                                    <q-icon color="primary" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="form.sample_date" mask="YYYY-MM-DD">
                                                 <div class="row items-center justify-end">
@@ -31,13 +32,14 @@
                         </div>
                         <div class="col q-pr-sm">
                             <q-input
+                                readonly
                                 :error="errors.test_date.error"
                                 :error-message="errors.test_date.message"
                                 label="*送测日期(YYYY-MM-DD)"
                                 v-model="form.test_date"
                             >
                                 <template v-slot:append>
-                                    <q-icon name="event" class="cursor-pointer">
+                                    <q-icon color="primary" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                                             <q-date v-model="form.test_date" mask="YYYY-MM-DD">
                                                 <div class="row items-center justify-end">
@@ -263,7 +265,7 @@ const save = async () => {
         sample_type: form.value.sample_type,
         panel_proportion: Number.parseInt(form.value.panel_proportion),
         is_panel: form.value.is_panel,
-        patient: Number.parseInt(form.value.patient_id),
+        patient_id: Number.parseInt(form.value.patient_id),
         patient_identifier: form.value.patient_identifier,
         identifier: form.value.identifier,
     };

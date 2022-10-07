@@ -30,7 +30,7 @@
                                 v-model="form.reagent_box"
                                 :error="errors.reagent_box.error"
                                 :error-message="errors.reagent_box.message"
-                                label="捕获试剂盒"
+                                label="*捕获试剂盒"
                             ></q-input>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                                 v-model="form.library_input"
                                 :error="errors.library_input.error"
                                 :error-message="errors.library_input.message"
-                                label="建库input"
+                                label="*建库input"
                             ></q-input>
                         </div>
                         <div class="col q-pf-sm">
@@ -80,7 +80,7 @@
                                 :error-message="
                                     errors.nucleic_break_type.message
                                 "
-                                label="核酸打断方式"
+                                label="*核酸打断方式"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -88,7 +88,7 @@
                                 v-model="form.identifier"
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
-                                label="数据识别号"
+                                label="*数据识别号"
                             ></q-input>
                         </div>
                     </div>
@@ -100,7 +100,7 @@
                                 v-model="form.company"
                                 :error="errors.company.error"
                                 :error-message="errors.company.message"
-                                label="送检机构"
+                                label="*送检机构"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -144,7 +144,7 @@
                                 v-model="form.sample_identifier"
                                 :error="errors.sampsample_identifier"
                                 :error-message="errors.sampsample_identifier"
-                                label="样本识别号"
+                                label="*样本识别号"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -154,7 +154,7 @@
                                 v-model="form.sample_meta_id"
                                 :error="errors.sample_meta_id.error"
                                 :error-message="errors.sample_meta_id.message"
-                                label="样本元信息ID"
+                                label="*样本元信息ID"
                             ></q-input>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
                                 v-model="form.fastq1_path"
                                 :error="errors.fastq1_path.error"
                                 :error-message="errors.fastq1_path.message"
-                                label="R1文件"
+                                label="*R1文件"
                             ></q-input>
                             <!-- <q-btn
                                 :label="'R1文件: ' + form.fastq1_path"
@@ -189,7 +189,7 @@
                                 v-model="form.fastq2_path"
                                 :error="errors.fastq2_path.error"
                                 :error-message="errors.fastq2_path.message"
-                                label="R2文件"
+                                label="*R2文件"
                             ></q-input>
                             <!-- <q-btn
                                 :label="'R2文件: ' + form.fastq1_path"

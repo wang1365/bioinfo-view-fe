@@ -251,7 +251,7 @@ const save = async () => {
         sample_type: form.value.sample_type,
         panel_proportion: Number.parseInt(form.value.panel_proportion),
         is_panel: form.value.is_panel,
-        patient: Number.parseInt(form.value.patient_id),
+        patient_id: Number.parseInt(form.value.patient_id),
         patient_identifier: form.value.patient_identifier,
         identifier: form.value.identifier,
     };
