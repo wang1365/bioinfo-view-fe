@@ -1,9 +1,5 @@
 <template>
-    <q-card style="width: 70vw; max-width: 80vw">
-        <q-toolbar>
-            <q-toolbar-title>患者详情</q-toolbar-title>
-            <q-btn flat round dense icon="close" v-close-popup />
-        </q-toolbar>
+    <q-card>
         <q-separator></q-separator>
         <q-card-section>
             <div class="text-subtitle1 text-bold">患者信息</div>
@@ -46,6 +42,13 @@
                     用药史: {{ patient.medication_history }}
                 </div>
             </div>
+            <div class="row q-my-sm">
+                <div class="col q-pa-sm">吸烟: {{ patient.smoking }}</div>
+                <div class="col q-pa-sm">
+                    饮酒: {{ patient.drinking }}
+                </div>
+                <div class="col q-pa-sm">病毒感染: {{ patient.viral_infection }}</div>
+            </div>
             <div class="text-subtitle1 text-bold">其他信息</div>
             <q-separator></q-separator>
             <div class="row q-my-sm">
@@ -53,27 +56,22 @@
                     治疗史: {{ patient.treatment_history }}
                 </div>
                 <div class="col q-pa-sm">
-                    预后时间: {{ patient.prognosis_time }}
+                    预后信息: {{ patient.prognosis }}
                 </div>
             </div>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">
-                    复发时间: {{ patient.recurrence_time }}
+                    预后时间(天): {{ patient.prognosis_time }}
                 </div>
                 <div class="col q-pa-sm">
-                    存活时间: {{ patient.survival_time }}
+                    复发时间(天): {{ patient.recurrence_time }}
+                </div>
+                <div class="col q-pa-sm">
+                    存活时间(天): {{ patient.survival_time }}
                 </div>
             </div>
         </q-card-section>
-        <q-card-actions align="right" class="bg-white text-teal">
-            <q-list>
-                <q-item>
-                    <q-section class="q-gutter-x-sm">
-                        <q-btn color="primary" label="关闭" v-close-popup />
-                    </q-section>
-                </q-item>
-            </q-list>
-        </q-card-actions>
+
     </q-card>
 </template>
 

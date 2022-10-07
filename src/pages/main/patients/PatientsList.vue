@@ -1,28 +1,74 @@
 <template>
     <q-card class="q-mt-md">
+
+        <q-section>
+            <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
+
+                <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
+                    clearable>
+                </q-input>
+                <!-- <q-input v-model="searchParams.name" dense label="姓名" clearable>
+                </q-input>
+                <q-input v-model="searchParams.name" dense label="识别号" clearable>
+                </q-input>
+                <q-input v-model="searchParams.name" dense label="临床诊断" clearable>
+                </q-input>
+                <q-input v-model="searchParams.name" dense label="医生" clearable>
+                </q-input>
+                <q-select style="width:100px" dense v-model="searchParams.name" :options="['男','女']" label="性别"
+                    clearable /> -->
+                <!-- </div>
+            <div class=" q-gutter-md row items-start q-pa-md bio-data-table"> -->
+                <q-input type="number" v-model="searchParams.age_start" dense label="年龄起始" clearable>
+                </q-input>
+                <q-input type="number" v-model="searchParams.age_end" dense label="截止年龄" clearable>
+                </q-input>
+                <q-input clearable dense label="起始录入时间(YYYY-MM-DD)" v-model="searchParams.ctime_start">
+                    <template v-slot:append>
+                        <q-icon color="primary" name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="searchParams.ctime_start" mask="YYYY-MM-DD">
+                                    <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                </q-date>
+                            </q-popup-proxy>
+                        </q-icon>
+                    </template>
+                </q-input>
+                <q-input clearable dense label="截止录入时间(YYYY-MM-DD)" v-model="searchParams.ctime_end">
+                    <template v-slot:append>
+                        <q-icon color="primary" name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="searchParams.ctime_end" mask="YYYY-MM-DD">
+                                    <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                </q-date>
+                            </q-popup-proxy>
+                        </q-icon>
+                    </template>
+                </q-input>
+
+                <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+            </div>
+        </q-section>
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="groups_2" />
                 <q-toolbar-title class="text-h6"> 患者数据 </q-toolbar-title>
-                <q-input dense v-model="text" label="输入文本: 回车查询">
-                    <template v-slot:append>
-                        <q-icon name="search" />
-                    </template>
-                </q-input>
                 <q-btn color="primary" label="新建患者" icon="groups_2" @click="showPatientNew = true" />
                 <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span
-                            style="
+                        <span style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            "
-                        >
+                            ">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -56,7 +102,7 @@
                             <td>{{ patient.name }}</td>
                             <td>{{ patient.inspection_agency }}</td>
                             <td>{{ patient.medical_doctor }}</td>
-                            <td>{{ patient.gender=="male"?'男':'女' }}</td>
+                            <td>{{ patient.gender }}</td>
                             <td>{{ patient.age }}</td>
                             <td>{{ patient.diagnosis }}</td>
                             <td>{{ patient.tumor_stage }}</td>
@@ -64,20 +110,8 @@
                             <td>{{ patient.family_history }}</td>
                             <td class="q-gutter-x-sm">
                                 <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
-                                <q-btn
-                                    color="secondary"
-                                    label="关联样本"
-                                    icon="link"
-                                    size="sm"
-                                    @click="link(patient)"
-                                />
-                                <q-btn
-                                    color="info"
-                                    label="患者信息"
-                                    icon="visibility"
-                                    @click="info(patient)"
-                                    size="sm"
-                                />
+                                <q-btn color="secondary" label="关联样本" icon="link" size="sm" @click="link(patient)" />
+                                <q-btn color="info" label="患者信息" icon="visibility" @click="info(patient)" size="sm" />
                                 <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(patient)" />
                             </td>
                         </tr>
@@ -92,38 +126,27 @@
         <q-section class="q-pd-md"> </q-section>
     </q-card>
     <q-dialog v-model="showPatientNew" persistent>
-        <PatientNew
-            @refresh="
+        <PatientNew @refresh="
             refreshPage();
             showPatientNew = false;
-        "
-        />
+        " />
     </q-dialog>
     <q-dialog v-model="showPatientInfo">
-        <PatientInfo
-            :id="infoId"
-            @refresh="
+        <PatientInfo :id="infoId" @refresh="
             refreshPage();
             showPatientInfo = false;
-        "
-        />
+        " />
     </q-dialog>
     <q-dialog v-model="showPatientEdit" persistent>
-        <PatientEdit
-            :id="editId"
-            @refresh="
+        <PatientEdit :id="editId" @refresh="
             refreshPage();
             showPatientEdit = false;
-        "
-        />
+        " />
     </q-dialog>
     <q-dialog persistent v-model="showLinkSample">
-        <SampleList
-            :linkId="linkId"
-            @refresh="
+        <SampleList :linkId="linkId" @refresh="
             linkSample($event);
-        "
-        />
+        " />
     </q-dialog>
 </template>
 <script setup>
@@ -137,8 +160,24 @@ import { api } from "src/boot/axios";
 import { globalStore } from "src/stores/global";
 import { useApi } from "src/api/apiBase";
 import SampleList from "./SampleList.vue";
+import { useRouter } from "vue-router";
 
-const { apiGet, downloadData, apiDelete,apiPatch } = useApi();
+const router = useRouter()
+const searchParams = ref({
+    search: '',
+    name: '',
+    identifier: '',
+    diagnosis: '',
+    medical_doctor: '',
+    gender: '',
+    age_start: '',
+    age_end: '',
+    ctime_start: '',
+    ctime_end: ''
+
+})
+
+const { apiGet, downloadData, apiDelete, apiPatch } = useApi();
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
@@ -201,8 +240,9 @@ const edit = async (patient) => {
     showPatientEdit.value = true;
 };
 const info = async (patient) => {
-    infoId.value = patient.id;
-    showPatientInfo.value = true;
+    router.push(`/main/patients/${patient.id}`)
+    // infoId.value = patient.id;
+    // showPatientInfo.value = true;
 };
 const refreshPage = async () => {
     console.log("refresh page");
@@ -210,8 +250,25 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
+    let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    let identifiers = 'name,identifier,diagnosis,medical_doctor,gender'
+    if (searchParams.value.search) {
+        params += `&search=${searchParams.value.search}&identifiers=${identifiers}`
+    }
+    if (searchParams.value.age_start) {
+        params += `&age__gte=${searchParams.value.age_start}`
+    }
+    if (searchParams.value.age_end) {
+        params += `&age__lte=${searchParams.value.age_end}`
+    }
+    if (searchParams.value.ctime_start) {
+        params += `&create_time__gte=${searchParams.value.ctime_start}`
+    }
+    if (searchParams.value.ctime_end) {
+        params += `&create_time__lte=${searchParams.value.ctime_end}`
+    }
     apiGet(
-        `/patient/patients?page=${currentPage.value}&size=${pageSize.value}`,
+        `/patient/patients${params}`,
         (res) => {
             total.value = res.data.count;
             patients.value = [];

@@ -1,6 +1,49 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="任务管理" />
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div
+                style="
+                                        height: 150px;
+                                        display: flex;
+                                        justify-content: space-around;
+                                        justify-items: center;
+                                        align-items: center;
+                                    "
+            >
+                <q-card class="my-card">
+                    <q-card-section class="text-primary text-h5 text-center text-bold">
+                        {{taskSummary.running_task_count}}
+                    </q-card-section>
+
+                    <q-card-section class="desc"> 运行 </q-card-section>
+                </q-card>
+                <q-card class="my-card">
+                    <q-card-section class="text-negative text-h5 text-center text-bold">
+                        {{taskSummary.failured_task_count}}
+                    </q-card-section>
+                    <q-card-section class="desc"> 失败 </q-card-section>
+                </q-card>
+                <q-card class="my-card">
+                    <q-card-section class="text-secondary text-h5 text-center text-bold">
+                        {{taskSummary.pending_task_count}}
+                    </q-card-section>
+                    <q-card-section class="desc"> 排队</q-card-section>
+                </q-card>
+                <q-card class="my-card">
+                    <q-card-section class="text-warning text-h5 text-center text-bold">
+                        {{taskSummary.canceled_task_count}}
+                    </q-card-section>
+                    <q-card-section class="desc"> 取消</q-card-section>
+                </q-card>
+                <q-card class="my-card">
+                    <q-card-section class="text-positive text-h5 text-center text-bold">
+                        {{taskSummary.finished_task_count}}
+                    </q-card-section>
+                    <q-card-section class="desc"> 完成</q-card-section>
+                </q-card>
+            </div>
+        </div>
         <div class="row">
             <div class="col-2"></div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -125,6 +168,8 @@ const options = ref([
     { label: "完成", value: "FINISHED" },
     { label: "取消", value: "CANCELED" },
 ]);
+const startTime=ref("")
+const endTime=ref("")
 const status = ref({ label: "全部", value: "ALL" });
 const showProjectSelect = ref(false);
 const projectId = ref(0);
@@ -135,6 +180,13 @@ const total = ref(0);
 const dataItems = ref([]);
 const { apiGet, downloadData, apiDelete } = useApi();
 const router = useRouter();
+const taskSummary = ref({
+    canceled_task_count:0,
+    failured_task_count:0,
+    finished_task_count:0,
+    pending_task_count:0,
+    running_task_count:0
+})
 
 const getItemStatus = (item) => {
     switch (item.status) {
@@ -166,7 +218,9 @@ const gotoDetail = (item) => {
 };
 onMounted(() => {
     loadPage();
+    summary()
 });
+
 const pageChange = async (event) => {
     currentPage.value = event.currentPage;
     pageSize.value = event.pageSize;
@@ -203,5 +257,10 @@ const confirm = async (task) => {
 
 const downlaod = (item) => {
     downloadData(`/task/download/${item.id}`, null);
+};
+const summary = async () => {
+    apiGet(`/task/summary`, (res) => {
+        taskSummary.value = res.data
+    });
 };
 </script>
