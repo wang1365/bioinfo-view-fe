@@ -1,6 +1,70 @@
 <template>
     <q-card class="q-mt-md">
         <q-section>
+            <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
+
+                <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 采样部位, 样本类型, 患者识别号, 样本识别号"
+                    clearable>
+                </q-input>
+
+                <q-input clearable dense label="起始送检日期(YYYY-MM-DD)" v-model="searchParams.test_date_start">
+                    <template v-slot:append>
+                        <q-icon color="primary" name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="searchParams.test_date_start" mask="YYYY-MM-DD">
+                                    <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                </q-date>
+                            </q-popup-proxy>
+                        </q-icon>
+                    </template>
+                </q-input>
+                <q-input clearable dense label="截止送检日期(YYYY-MM-DD)" v-model="searchParams.test_date_end">
+                    <template v-slot:append>
+                        <q-icon color="primary" name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="searchParams.test_date_end" mask="YYYY-MM-DD">
+                                    <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                </q-date>
+                            </q-popup-proxy>
+                        </q-icon>
+                    </template>
+                </q-input>
+                <q-input clearable dense label="起始采样日期(YYYY-MM-DD)" v-model="searchParams.sample_date_start">
+                    <template v-slot:append>
+                        <q-icon color="primary" name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="searchParams.sample_date_start" mask="YYYY-MM-DD">
+                                    <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                </q-date>
+                            </q-popup-proxy>
+                        </q-icon>
+                    </template>
+                </q-input>
+                <q-input clearable dense label="截止采样日期(YYYY-MM-DD)" v-model="searchParams.sample_date_end">
+                    <template v-slot:append>
+                        <q-icon color="primary" name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                                <q-date v-model="searchParams.sample_date_end" mask="YYYY-MM-DD">
+                                    <div class="row items-center justify-end">
+                                        <q-btn v-close-popup label="Close" color="primary" flat />
+                                    </div>
+                                </q-date>
+                            </q-popup-proxy>
+                        </q-icon>
+                    </template>
+                </q-input>
+                <q-select style="width:100px" clearable dense v-model="searchParams.is_panel" :options="['是','否']"
+                    label="肿瘤样本" />
+                <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+            </div>
+        </q-section>
+        <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6"> 样本 </q-toolbar-title>
@@ -10,14 +74,12 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span
-                            style="
+                        <span style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            "
-                        >
+                            ">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -103,33 +165,25 @@
         </q-section>
     </q-card>
     <q-dialog persistent v-model="showSampleNew">
-        <SampleNew
-            @refresh="
-                refreshPage();
-                showSampleNew = false;
-            "
-        />
+        <SampleNew @refresh="
+            refreshPage();
+            showSampleNew = false;
+        " />
     </q-dialog>
     <q-dialog v-model="showSampleInfo">
         <SampleInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showSampleEdit">
-        <SampleEdit
-            :id="editId"
-            @refresh="
-                refreshPage();
-                showSampleEdit = false;
-            "
-        />
+        <SampleEdit :id="editId" @refresh="
+            refreshPage();
+            showSampleEdit = false;
+        " />
     </q-dialog>
     <q-dialog persistent v-model="showLinkPatient">
-        <PatientList
-            :linkId="linkId"
-            @refresh="
-                linkPatient($event);
+        <PatientList :linkId="linkId" @refresh="
+            linkPatient($event);
 
-            "
-        />
+        " />
     </q-dialog>
 </template>
 <script setup>
@@ -143,7 +197,7 @@ import PatientList from "./PatientList.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
-const { apiGet, apiDelete, downloadData ,apiPatch} = useApi();
+const { apiGet, apiDelete, downloadData, apiPatch } = useApi();
 const showSampleEdit = ref(false);
 const showSampleInfo = ref(false);
 const showSampleNew = ref(false);
@@ -157,6 +211,17 @@ const pageSize = ref(10);
 const total = ref(0);
 const dataItems = ref([]);
 
+const searchParams = ref({
+    search: '',
+    is_panel: '',
+
+    sample_date_start: '',
+    sample_date_end: '',
+    test_date_start: '',
+    test_date_end: ''
+
+})
+
 const $q = useQuasar();
 
 const edit = async (item) => {
@@ -167,7 +232,7 @@ const info = async (item) => {
     infoId.value = item.id;
     showSampleInfo.value = true;
 };
-const link=async (item)=>{
+const link = async (item) => {
     linkId.value = item.id;
     showLinkPatient.value = true;
 }
@@ -179,7 +244,7 @@ const pageChange = async (event) => {
     pageSize.value = event.pageSize;
     loadPage();
 };
-const linkPatient=(event)=>{
+const linkPatient = (event) => {
     apiPatch(`/sample/sampledatas/${linkId.value}/`, (res) => {
         showLinkPatient.value = false;
         refreshPage()
@@ -191,8 +256,28 @@ const refreshPage = async () => {
 };
 const loadPage = async () => {
     if (currentPage.value) {
+        let params = `?page=${currentPage.value}&size=${pageSize.value}`
+        let identifiers = 'identifier,patient_identifier,sample_componet,sample_type'
+        if (searchParams.value.search) {
+            params += `&search=${searchParams.value.search}&identifiers=${identifiers}`
+        }
+        if (searchParams.value.sample_date_start) {
+            params += `&sample_date__gte=${searchParams.value.sample_date_start}`
+        }
+        if (searchParams.value.sample_date_end) {
+            params += `&sample_date__lte=${searchParams.value.sample_date_end}`
+        }
+        if (searchParams.value.test_date_start) {
+            params += `&test_date__gte=${searchParams.value.test_date_start}`
+        }
+        if (searchParams.value.test_date_end) {
+            params += `&test_date__lte=${searchParams.value.test_date_end}`
+        }
+        if (searchParams.value.is_panel) {
+            params += `&is_panel=${searchParams.value.is_panel}`
+        }
         apiGet(
-            `/sample/sampledatas/?page=${currentPage.value}&size=${pageSize.value}`,
+            `/sample/sampledatas/${params}`,
             (res) => {
                 total.value = res.data.count;
                 dataItems.value = [];
