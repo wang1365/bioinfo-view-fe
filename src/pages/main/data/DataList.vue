@@ -1,6 +1,21 @@
 <template>
     <q-card class="q-mt-md">
         <q-section>
+            <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
+
+                <q-input style="width:450px" v-model="searchParams.search" dense
+                    label="关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构" clearable>
+                </q-input>
+                <q-select style="width:100px" clearable dense v-model="searchParams.nucleic_type"
+                    :options='["gDNA", "cfDNA", "RNA"]' label="核酸类型" />
+                <q-select style="width:100px" clearable dense v-model="searchParams.nucleic_level"
+                    :options='["A", "B", "C", "D"]' label="核算降解等级" />
+                <q-select style="width:100px" clearable dense v-model="searchParams.risk" :options="['是','否']"
+                    label="风险上机" />
+                <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+            </div>
+        </q-section>
+        <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6"> 数据 </q-toolbar-title>
@@ -10,14 +25,12 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span
-                            style="
+                        <span style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            "
-                        >
+                            ">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -126,32 +139,24 @@
         </q-section>
     </q-card>
     <q-dialog persistent v-model="showDataNew">
-        <DataNew
-            @refresh="
+        <DataNew @refresh="
             refreshPage();
             showDataNew = false;
-        "
-        />
+        " />
     </q-dialog>
     <q-dialog v-model="showDataInfo">
         <DataInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showDataEdit">
-        <DataEdit
-            :id="editId"
-            @refresh="
+        <DataEdit :id="editId" @refresh="
             refreshPage();
             showDataEdit = false;
-        "
-        />
+        " />
     </q-dialog>
     <q-dialog persistent v-model="showLinkSample">
-        <SampleList
-            :linkId="linkId"
-            @refresh="
+        <SampleList :linkId="linkId" @refresh="
             linkSample($event);
-        "
-        />
+        " />
     </q-dialog>
 </template>
 <script setup>
@@ -168,7 +173,7 @@ import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
 
 
-const { apiGet, downloadData, apiDelete,apiPatch } = useApi();
+const { apiGet, downloadData, apiDelete, apiPatch } = useApi();
 const showDataEdit = ref(false);
 const showDataInfo = ref(false);
 const showDataNew = ref(false);
@@ -182,9 +187,15 @@ const total = ref(0);
 const dataItems = ref([]);
 
 const $q = useQuasar();
+const searchParams = ref({
+    search: '',
+    risk: '',
+    nucleic_type: '',
+    nucleic_level: ''
 
+})
 const showLinkSample = ref(false);
-const link=async (item)=>{
+const link = async (item) => {
     linkId.value = item.id;
     showLinkSample.value = true;
 }
@@ -218,8 +229,22 @@ const refreshPage = async () => {
 };
 const loadPage = async () => {
     if (currentPage.value) {
+        let params = `?page=${currentPage.value}&size=${pageSize.value}`
+        let identifiers = 'library_input,nucleic_break_type,reagent_box,identifier,sample_identifier,company'
+        if (searchParams.value.search) {
+            params += `&search=${searchParams.value.search}&identifiers=${identifiers}`
+        }
+        if (searchParams.value.nucleic_level) {
+            params += `&nucleic_level=${searchParams.value.nucleic_level}`
+        }
+        if (searchParams.value.nucleic_type) {
+            params += `&nucleic_type=${searchParams.value.nucleic_type}`
+        }
+        if (searchParams.value.risk) {
+            params += `&risk=${searchParams.value.risk}`
+        }
         apiGet(
-            `/sample/samples/?page=${currentPage.value}&size=${pageSize.value}`,
+            `/sample/samples/${params}`,
             (res) => {
                 total.value = res.data.count;
                 dataItems.value = [];
