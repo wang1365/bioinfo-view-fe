@@ -1,10 +1,10 @@
 import { api } from "src/boot/axios";
 
-export function getFlows(page = 1, size = 1000) {
+export function getFlows(keyword = '', page = 1, size = 1000) {
     return api({
         url: `/flow/flows/`,
         method: "get",
-        params: { page, size },
+        params: { keyword, page, size },
     });
 }
 
@@ -86,3 +86,5 @@ export function authFlows(userId, flowIds) {
         data: { flow_ids: flowIds, account_ids: [userId] },
     });
 }
+
+

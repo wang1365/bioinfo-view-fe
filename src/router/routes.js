@@ -89,7 +89,22 @@ const routes = [
             },
             {
                 path: 'panel',
-                component: () => import('pages/main/panel-flows/FlowsPage.vue'),
+                // component: () => import('pages/main/panel-flows/FlowsPage.vue'),
+                component: () => import('pages/main/settings/SettingBlank'),
+                children: [
+                    {
+                        path: 'group',
+                        component: () => import('pages/main/panel-flows/FlowsPage'),
+                    },
+                    {
+                        path: 'panel',
+                        component: () => import('pages/main/panel-flows/FlowsPage'),
+                    },
+                    {
+                        path: 'flow',
+                        component: () => import('pages/main/panel-flows/FlowsPage'),
+                    },
+                ],
             },
             {
                 path: 'group',

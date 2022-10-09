@@ -38,7 +38,7 @@ const menu = [
     },
     // {
     //     icon: "hub",
-    //     label: "Panel 分析流程",
+    //     label: "Panel分析流程",
     //     separator: false,
     //     path: "/main/panel",
     // },
