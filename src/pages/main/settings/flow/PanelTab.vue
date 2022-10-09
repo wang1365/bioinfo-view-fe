@@ -8,6 +8,7 @@
             hide-no-data
             wrap-cells
             rows-per-page-label="每页条数"
+            rows-per-page-options="0"
             class="bio-data-table"
         >
             <template v-slot:top>

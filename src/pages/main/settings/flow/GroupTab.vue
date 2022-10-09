@@ -9,6 +9,7 @@
             wrap-cells
             rows-per-page-label="每页条数"
             class="bio-data-table"
+            rows-per-page-options="0"
         >
             <template v-slot:top>
                 <q-btn color="primary" label="新建分组" @click="addRow" />
