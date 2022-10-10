@@ -36,12 +36,12 @@ const menu = [
         separator: false,
         path: '/main/data',
     },
-    // {
-    //     icon: "hub",
-    //     label: "Panel分析流程",
-    //     separator: false,
-    //     path: "/main/panel",
-    // },
+    {
+        icon: 'hub',
+        label: 'Panel分析流程',
+        separator: false,
+        path: '/main/panel',
+    },
     // {
     //     icon: "hub",
     //     label: "(暂时不做)群体分析流程",
