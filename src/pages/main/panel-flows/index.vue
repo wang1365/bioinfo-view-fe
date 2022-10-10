@@ -13,16 +13,17 @@
         </q-tabs>
         <q-tab-panels v-model="tab">
             <q-tab-panel v-for="item in rows" :key="item.id" :label="item.name" :name="item.name">
-                <FlowsPage />
+                <PanelTab :panelGroupId="item.id" />
             </q-tab-panel>
         </q-tab-panels>
     </q-page>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
-import { getPanelGroups } from "src/api/panelGroup"
-import FlowsPage from "pages/main/panel-flows/FlowsPage"
+import {ref, onMounted} from "vue"
+import {getPanelGroups} from "src/api/panelGroup"
+import PanelTab from "pages/main/panel-flows/PanelTab"
+
 const rows = ref([])
 const tab = ref('')
 const refreshRows = () => {

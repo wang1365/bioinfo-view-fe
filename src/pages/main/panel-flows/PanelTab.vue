@@ -35,14 +35,20 @@
 
 <script setup>
 import {getPanels} from "src/api/panel"
-import {ref, onMounted} from "vue";
+import {ref, onMounted, defineProps, watch, toRefs} from "vue"
 import PanelDetail from "pages/main/panel-flows/PanelDetail"
 
 const rows = ref([])
 const tab = ref([])
 const splitterModel = ref(15)
 const refreshRows = () => {
-    getPanels().then(res => {
+    if (!props.panelGroupId) {
+        return
+    }
+    const params = {
+        panel_group_id: props.panelGroupId
+    }
+    getPanels(params).then(res => {
         rows.value = res.results
         if (res.results.length > 0) {
             tab.value = res.results[0].name
@@ -50,7 +56,20 @@ const refreshRows = () => {
     })
 }
 
+const props = defineProps({
+    panelGroupId: {
+        required: true,
+        type: Number
+    }
+})
+
+const {panelGroupId} = toRefs(props)
+
 onMounted(() => {
+    refreshRows()
+})
+
+watch(panelGroupId, value => {
     refreshRows()
 })
 </script>

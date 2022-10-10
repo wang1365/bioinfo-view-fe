@@ -20,6 +20,7 @@
 import {ref, onMounted, defineProps, watch, toRefs} from "vue"
 import { getPanelDetail } from "src/api/panel"
 import PageTitle from "components/page-title/PageTitle"
+
 const detail = ref({})
 const refresh = () => {
     console.log('Query panel detail', props.id)
