@@ -42,11 +42,11 @@ const rows = ref([])
 const tab = ref([])
 const splitterModel = ref(15)
 const refreshRows = () => {
-    if (!props.panelGroupId) {
-        return
-    }
-    const params = {
-        panel_group_id: props.panelGroupId
+    let params = {}
+    if (props.panelGroupId) {
+        params = {
+            panel_group_id: props.panelGroupId
+        }
     }
     getPanels(params).then(res => {
         rows.value = res.results
@@ -58,7 +58,7 @@ const refreshRows = () => {
 
 const props = defineProps({
     panelGroupId: {
-        required: true,
+        required: false,
         type: Number
     }
 })

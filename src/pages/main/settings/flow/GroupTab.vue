@@ -13,15 +13,29 @@
         >
             <template v-slot:top>
                 <q-btn color="primary" label="新建分组" @click="addRow" />
+                <q-toggle
+                    v-model="config.value"
+                    :true-value="1"
+                    :false-value="0"
+                    color="green"
+                    checked-icon="check"
+                    unchecked-icon="clear"
+                    label="是否展示分组"
+                    @update:model-value="clickEnabled()"
+                />
             </template>
             <template v-slot:body-cell-panels="props">
-                <q-td :props="props" align="center" >
-                    <div v-for="item in props.row.panels" :key="item.id">{{item.name}}</div>
+                <q-td :props="props" align="center">
+                    <q-div v-for="item in props.row.panels" :key="item.id">
+                        <q-chip :label="item.name" color="primary" outline size="sm" />
+                    </q-div>
+
+                    <!--                    <div v-for="item in props.row.panels" :key="item.id">{{item.name}}</div>-->
                 </q-td>
             </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
-<!--                    <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>-->
+                    <!--                    <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>-->
                     <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>
                     <q-btn label="删除" color="red" outline size="sm" @click="showDeleteDlg(props.row)"></q-btn>
                 </q-td>
@@ -36,15 +50,18 @@
 
 <script setup>
 import {getPanelGroups, deletePanelGroup} from 'src/api/panelGroup'
+import { createConfig, listConfig, updateConfig } from "src/api/config"
 import {ref, onMounted} from 'vue'
 import {useQuasar} from 'quasar'
 import PageTitle from 'components/page-title/PageTitle'
 import GroupDialog from "pages/main/settings/flow/GroupDialog";
+
 const loading = ref(false)
 const dlgCreate = ref(null)
 const dlgEdit = ref(null)
 const dlgInfo = ref(null)
 const currentFlowId = ref(null)
+const config = ref({value: 0})
 
 const $q = useQuasar()
 const columns = [
@@ -76,6 +93,20 @@ const pageSize = ref(10)
 
 onMounted(() => {
     refreshRows()
+
+    const name = 'panel_group_enabled'
+    listConfig({ name }).then(res => {
+        if (res.results.length > 0) {
+            config.value = res.results[0]
+        } else {
+            createConfig({
+                name,
+                value: 0
+            }).then(res => {
+                config.value = res
+            })
+        }
+    })
 })
 
 const refreshRows = () => {
@@ -87,7 +118,10 @@ const refreshRows = () => {
         .finally(stopLoading)
 }
 
-
+const clickEnabled = () => {
+    console.log(111)
+    updateConfig(config.value)
+}
 const showEditDlg = (row) => {
     dlgEdit.value.show()
     dlgEdit.value.setData(row)
@@ -144,7 +178,6 @@ const addRow = () => {
     dlgCreate.value.show()
     // isCreateDlgShow.value = true
 }
-
 </script>
 
 <style lang="scss" scoped>
