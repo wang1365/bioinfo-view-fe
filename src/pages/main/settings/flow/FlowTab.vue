@@ -22,7 +22,7 @@
                 >
                 </q-input>
                 <q-btn color="primary" icon="search" class="q-mx-sm" label="查询" @click="refreshFlows" />
-                <q-btn color="primary" label="新建流程分析模块" @click="addFlow" />
+                <q-btn color="primary" label="新建分析模块" @click="addFlow" />
             </template>
             <!--            <template v-slot:header="props">-->
             <!--                <q-tr :props="props">-->
@@ -36,7 +36,7 @@
                     <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>
                     <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>
                     <q-btn label="删除" color="red" outline size="sm" @click="showDeleteDlg(props.row)"></q-btn>
-<!--                    <q-btn label="+" color="red-10" flat size="xs" @click="showCreateTaskDlg(props.row)"></q-btn>-->
+                    <!--                    <q-btn label="+" color="red-10" flat size="xs" @click="showCreateTaskDlg(props.row)"></q-btn>-->
                 </q-td>
             </template>
         </q-table>
