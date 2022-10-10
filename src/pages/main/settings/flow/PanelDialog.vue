@@ -4,22 +4,32 @@
             <q-card-section>
                 <q-form>
                     <div class="row justify-between">
-                    <q-input class="col-6" v-model="form.name" label="Panel名称" dense clearable stack-label
-                             :rules="[(val) => (val !== null && val.length >= 3) || '名称至少为3个字符']"
-                    />
-                    <q-select class="col-5" label="Panel分组" v-model="form.panel_group"
-                              emit-value filled :options="panelGroups"
-                              map-options dense  stack-label
-                    />
+                        <q-input
+                            class="col-6"
+                            v-model="form.name"
+                            label="Panel名称"
+                            dense
+                            clearable
+                            stack-label
+                            :rules="[(val) => (val !== null && val.length >= 3) || '名称至少为3个字符']"
+                        />
+                        <q-select
+                            class="col-5"
+                            label="Panel分组"
+                            v-model="form.panel_group"
+                            emit-value
+                            :options="panelGroups"
+                            map-options
+                            dense
+                            stack-label
+                        />
                     </div>
-                    <q-input v-model="form.desp" label="描述" dense type="textarea" clearable stack-label counter
-                    />
-
+                    <q-input v-model="form.desp" label="描述" dense type="textarea" clearable stack-label counter />
                 </q-form>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn color="primary" label="确定" @click="clickSubmit"/>
-                <q-btn label="取消" v-close-popup/>
+                <q-btn color="primary" label="确定" @click="clickSubmit" />
+                <q-btn label="取消" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>

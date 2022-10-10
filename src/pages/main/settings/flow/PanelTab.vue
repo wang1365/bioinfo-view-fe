@@ -23,6 +23,13 @@
                 <q-btn color="primary" icon="search" class="q-mx-sm" label="查询" @click="refreshRows" />
                 <q-btn color="primary" label="新建Panel流程" @click="addRow" />
             </template>
+            <template v-slot:body-cell-flows="props">
+                <q-td :props="props" align="center" class="q-gutter-xs">
+                    <div v-for="item in props.row.flows" :key="item.id">
+                        <q-chip outline color="primary" size="sm" :label="item.name" />
+                    </div>
+                </q-td>
+            </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
                     <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>
@@ -55,6 +62,7 @@ const columns = [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
     {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center', required: true},
     {name: 'panel_group_name', label: 'Panel分组', field: row => row.panel_group_name, sortable: true, align: 'center', required: true},
+    {name: 'flows', label: '分析模块', field: 'flows', align: 'center', style: 'width:220px', required: true,},
     {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', required: true,},
     {name: 'operation', label: '操 作', align: 'center', style: 'width:250px', required: true},
 ]
@@ -80,7 +88,7 @@ const refreshRows = () => {
     }
     getPanels(params)
         .then((data) => {
-            rows.value = data.results
+            rows.value = data
         })
         .finally(stopLoading)
 }
@@ -132,7 +140,6 @@ const addRow = () => {
     dlgCreate.value.show()
     // isCreateDlgShow.value = true
 }
-
 </script>
 
 <style lang="scss" scoped>

@@ -69,6 +69,7 @@ const columns = [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
     {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center', required: true},
     {name: 'code', label: '类型', field: 'code', align: 'center', sortable: true, required: true},
+    {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true, required: true},
     {name: 'flow_category', label: '分 类', field: 'flow_category', align: 'center', required: true},
     {name: 'memory', label: '内存(m)', align: 'center', field: 'memory', required: true},
     {name: 'tar_path', label: 'Docker存档', field: 'tar_path', align: 'center', required: true},

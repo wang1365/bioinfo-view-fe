@@ -49,9 +49,9 @@ const refreshRows = () => {
         }
     }
     getPanels(params).then(res => {
-        rows.value = res.results
-        if (res.results.length > 0) {
-            tab.value = res.results[0].name
+        rows.value = res
+        if (res.length > 0) {
+            tab.value = res[0].name
         }
     })
 }
