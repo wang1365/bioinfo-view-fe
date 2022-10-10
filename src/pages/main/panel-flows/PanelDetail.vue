@@ -11,6 +11,40 @@
                 header-class="bg-primary text-white"
                 expand-icon-class="text-white"
             >
+                <q-input v-model="detail.desp" type="textarea" readonly> </q-input>
+            </q-expansion-item>
+            <q-expansion-item
+                label="流程分析模块"
+                dense
+                default-opened
+                class="shadow-1 overflow-hidden q-my-sm"
+                style="border-radius: 5px"
+                header-class="bg-primary text-white"
+                expand-icon-class="text-white"
+            >
+                <q-btn v-for="flow in detail.flows" :key="flow.id" :label="flow.name" color="purple" class="q-ma-sm">
+                    <q-badge
+                        color="orange"
+                        v-if="flow.sample_type === 'double'"
+                        label="配对"
+                        floating
+                        transparent
+                        align="bottom"
+                    />
+                </q-btn>
+            </q-expansion-item>
+            <q-expansion-item
+                label="说明"
+                dense
+                default-opened
+                class="shadow-1 overflow-hidden q-my-sm"
+                style="border-radius: 5px"
+                header-class="bg-primary text-white"
+                expand-icon-class="text-white"
+            >
+                <q-card>
+                    <q-card-section v-html="detail.detail" />
+                </q-card>
             </q-expansion-item>
         </q-list>
         <q-input readonly></q-input>
