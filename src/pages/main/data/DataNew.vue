@@ -28,12 +28,18 @@
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input
+                            <panel-list
+                                label="*捕获试剂盒"
+                                v-model="form.reagent_box"
+                                :error="errors.reagent_box.error"
+                                :error-message="errors.reagent_box.message"
+                            />
+                            <!-- <q-input
                                 v-model="form.reagent_box"
                                 :error="errors.reagent_box.error"
                                 :error-message="errors.reagent_box.message"
                                 label="*捕获试剂盒"
-                            ></q-input>
+                            ></q-input> -->
                         </div>
                     </div>
                 </q-item>
@@ -248,6 +254,7 @@ import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import SampleList from "./SampleList.vue";
 import ProjectList from "./ProjectList.vue";
+import PanelList from "src/pages/main/settings/flow/components/PanelList";
 
 const nucleic_level_options = ref(["A", "B", "C", "D"]);
 const nucleic_type_options = ref(["gDNA", "cfDNA", "RNA"]);

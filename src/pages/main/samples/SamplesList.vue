@@ -2,9 +2,13 @@
     <q-card class="q-mt-md">
         <q-section>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
-
-                <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 采样部位, 样本类型, 患者识别号, 样本识别号"
-                    clearable>
+                <q-input
+                    style="width:350px"
+                    v-model="searchParams.search"
+                    dense
+                    label="关键词: 采样部位, 样本类型, 患者识别号, 样本识别号"
+                    clearable
+                >
                 </q-input>
 
                 <q-input clearable dense label="起始送检日期(YYYY-MM-DD)" v-model="searchParams.test_date_start">
@@ -59,8 +63,14 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-select style="width:100px" clearable dense v-model="searchParams.is_panel" :options="['是','否']"
-                    label="肿瘤样本" />
+                <q-select
+                    style="width:100px"
+                    clearable
+                    dense
+                    v-model="searchParams.is_panel"
+                    :options="['是','否']"
+                    label="肿瘤样本"
+                />
                 <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
             </div>
         </q-section>
@@ -74,12 +84,14 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span style="
+                        <span
+                            style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            ">
+                            "
+                        >
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -142,7 +154,7 @@
                             </td>
                             <td>{{ item.is_panel }}</td>
                             <!-- <td>{{ item.patient_id }}</td> -->
-                            <td>{{ item.patient.identifier }}</td>
+                            <td>{{ item.patient?.identifier }}</td>
                             <td>{{ item.identifier }}</td>
                             <!-- <td>{{ item.user_id }}</td> -->
                             <!-- <td>{{ item.create_time }}</td>
@@ -165,25 +177,33 @@
         </q-section>
     </q-card>
     <q-dialog persistent v-model="showSampleNew">
-        <SampleNew @refresh="
+        <SampleNew
+            @refresh="
             refreshPage();
             showSampleNew = false;
-        " />
+        "
+        />
     </q-dialog>
     <q-dialog v-model="showSampleInfo">
         <SampleInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showSampleEdit">
-        <SampleEdit :id="editId" @refresh="
+        <SampleEdit
+            :id="editId"
+            @refresh="
             refreshPage();
             showSampleEdit = false;
-        " />
+        "
+        />
     </q-dialog>
     <q-dialog persistent v-model="showLinkPatient">
-        <PatientList :linkId="linkId" @refresh="
+        <PatientList
+            :linkId="linkId"
+            @refresh="
             linkPatient($event);
 
-        " />
+        "
+        />
     </q-dialog>
 </template>
 <script setup>
