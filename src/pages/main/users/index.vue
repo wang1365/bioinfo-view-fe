@@ -26,14 +26,7 @@
                 ></q-btn>
             </div>
             <div class="col-1">
-                <q-btn
-                    class="on-plus"
-                    size="md"
-                    color="primary"
-                    icon="add"
-                    label="新建"
-                    @click="clickCreate"
-                ></q-btn>
+                <q-btn class="on-plus" size="md" color="primary" icon="add" label="新建" @click="clickCreate"></q-btn>
             </div>
         </div>
         <q-separator />
@@ -63,16 +56,8 @@
             </template>
             <template v-slot:body-cell-role="props">
                 <q-td align="center">
-                    <q-chip
-                        v-if="_.get(props.row, 'role[0]') === 'super'"
-                        color="primary"
-                        text-color="white"
-                    >
-                        <q-avatar
-                            icon="bookmark"
-                            color="red"
-                            text-color="white"
-                        />
+                    <q-chip v-if="_.get(props.row, 'role[0]') === 'super'" color="primary" text-color="white">
+                        <q-avatar icon="bookmark" color="red" text-color="white" />
                         超级管理员
                     </q-chip>
                     <span v-else>{{ getRoleName(props.row.role) }}</span>
@@ -80,25 +65,14 @@
             </template>
             <template v-slot:body-cell-is_active="props">
                 <q-td align="center">
-                    <q-chip
-                        v-if="props.row.is_active"
-                        label="启用"
-                        color="green"
-                        size="sm"
-                    />
+                    <q-chip v-if="props.row.is_active" label="启用" color="green" size="sm" />
                     <q-chip v-else label="禁用" color="orange" size="sm" />
                 </q-td>
             </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
-                        <q-btn
-                            size="xs"
-                            outline
-                            color="primary"
-                            label="设置"
-                            @click="clickEdit(props.row)"
-                        ></q-btn>
+                        <q-btn size="xs" outline color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
                         <q-btn
                             v-if="allowReset(props.row)"
                             size="xs"
@@ -110,6 +84,7 @@
                         ></q-btn>
 
                         <q-btn
+                            v-if="allowDelete(props.row)"
                             size="xs"
                             outline
                             color="red"
@@ -160,11 +135,7 @@
             <!--            </template>-->
         </q-table>
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
-        <EditUser
-            ref="editUserDlg"
-            :user="user"
-            @success="refreshUsers"
-        ></EditUser>
+        <EditUser ref="editUserDlg" :user="user" @success="refreshUsers"></EditUser>
         <ResetPassword ref="resetPasswordDlg" :user="user"></ResetPassword>
     </q-page>
 </template>
@@ -174,6 +145,7 @@ import { useQuasar } from "quasar";
 import { nextTick, onMounted, ref } from "vue";
 import _ from "lodash";
 import { listUser, batchDeleteUser } from "src/api/user";
+import { isSuper, isAdmin } from "src/utils/user"
 import PageTitle from "components/page-title/PageTitle.vue";
 import CreateUser from "./CreateUser";
 import EditUser from "pages/main/users/EditUser";
@@ -343,6 +315,18 @@ function refreshUsers() {
         .finally(() => {
             loading.value = false;
         });
+}
+
+const allowDelete = (row) => {
+    if (isSuper(row)) {
+        return false
+    }
+
+    if (isAdmin(row)) {
+        return isSuper(store.currentUser)
+    }
+
+    return true
 }
 </script>
 
