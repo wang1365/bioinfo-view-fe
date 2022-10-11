@@ -74,6 +74,14 @@
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn size="xs" outline color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
                         <q-btn
+                            v-if="isNormal(props.row)"
+                            size="xs"
+                            outline
+                            color="primary"
+                            label="流程授权"
+                            @click="clickFlowAuth(props.row)"
+                        ></q-btn>
+                        <q-btn
                             v-if="allowReset(props.row)"
                             size="xs"
                             outline
@@ -145,7 +153,7 @@ import { useQuasar } from "quasar";
 import { nextTick, onMounted, ref } from "vue";
 import _ from "lodash";
 import { listUser, batchDeleteUser } from "src/api/user";
-import { isSuper, isAdmin } from "src/utils/user"
+import { isSuper, isAdmin, isNormal } from "src/utils/user"
 import PageTitle from "components/page-title/PageTitle.vue";
 import CreateUser from "./CreateUser";
 import EditUser from "pages/main/users/EditUser";
@@ -273,6 +281,10 @@ const clickReset = (row) => {
     user.value = row;
     resetPasswordDlg.value.show();
 };
+
+const clickFlowAuth = (row) => {
+
+}
 
 const clickSetResourceLimit = (row) => {};
 

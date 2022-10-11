@@ -71,7 +71,6 @@ const menu = [
             {
                 icon: 'mediation',
                 label: '流程管理',
-                // roles: ["super"],
                 separator: false,
                 path: '/main/settings/flowManagement',
                 roles: ['super'],
@@ -107,10 +106,8 @@ const menu = [
 
 export const getAuthMenu = (currentUser) => {
     const currentRoles = currentUser.role_list || []
-    console.log('getAuthMenu', currentUser)
     function filter(items) {
-        const filteredItems = items.filter((item) => {
-            console.log('====', item.roles, item)
+        return items.filter((item) => {
             let result = false
             if (!item.roles) {
                 result = true
@@ -128,8 +125,6 @@ export const getAuthMenu = (currentUser) => {
             }
             return result
         })
-        console.log('==== filteredItem', items, filteredItems)
-        return filteredItems
     }
 
     return filter(menu)

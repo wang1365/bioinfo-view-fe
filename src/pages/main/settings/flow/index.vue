@@ -8,19 +8,19 @@
             class="bg-gray text-black shadow-2"
             align="justify"
         >
-            <q-tab name="group" label="Panel分组" />
-            <q-tab name="panel" label="Panel流程" />
             <q-tab name="flow" label="分析模块" />
+            <q-tab name="panel" label="Panel流程" />
+            <q-tab name="group" label="Panel分组" />
         </q-tabs>
         <q-tab-panels v-model="tabValue">
-            <q-tab-panel name="group">
-                <GroupTab />
+            <q-tab-panel name="flow">
+                <FlowTable />
             </q-tab-panel>
             <q-tab-panel name="panel">
-                <PanelTab />
+                <PanelTable />
             </q-tab-panel>
-            <q-tab-panel name="flow">
-                <FlowTab />
+            <q-tab-panel name="group">
+                <GroupTab />
             </q-tab-panel>
         </q-tab-panels>
     </q-page>
@@ -29,12 +29,12 @@
 <script setup>
 import {ref, onMounted} from 'vue'
 import {useQuasar} from 'quasar'
-import FlowTab from "pages/main/settings/flow/FlowTab"
+import FlowTable from "pages/main/settings/flow/FlowTable"
 import GroupTab from "pages/main/settings/flow/GroupTab"
-import PanelTab from "pages/main/settings/flow/PanelTab"
+import PanelTable from "pages/main/settings/flow/PanelTable"
 const $q = useQuasar()
 
-const tabValue = ref('group')
+const tabValue = ref('flow')
 
 
 

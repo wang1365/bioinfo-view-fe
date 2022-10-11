@@ -28,12 +28,18 @@
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input
+                            <panel-list
+                                label="*捕获试剂盒"
                                 v-model="form.reagent_box"
                                 :error="errors.reagent_box.error"
                                 :error-message="errors.reagent_box.message"
-                                label="*捕获试剂盒"
-                            ></q-input>
+                            />
+                            <!--                            <q-input-->
+                            <!--                                v-model="form.reagent_box"-->
+                            <!--                                :error="errors.reagent_box.error"-->
+                            <!--                                :error-message="errors.reagent_box.message"-->
+                            <!--                                label="*捕获试剂盒"-->
+                            <!--                            ></q-input>-->
                         </div>
                     </div>
                 </q-item>
@@ -246,6 +252,7 @@
 import { ref, defineEmits, onMounted } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
+import PanelList from "src/pages/main/settings/flow/components/PanelList";
 import SampleList from "./SampleList.vue";
 import ProjectList from "./ProjectList.vue";
 
@@ -261,6 +268,7 @@ const linkSample = (event) => {
     showLinkSample.value=false
 }
 const showLinkProject = ref(false);
+const showPanelTable = ref(false);
 
 const linkProject = (event) => {
     form.value.project_index= event.name;

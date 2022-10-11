@@ -3,11 +3,14 @@
         <q-table
             :rows="flows"
             :columns="columns"
+            :visible-columns="visibleColumns"
             :loading="loading"
             row-key="name"
             hide-no-data
             wrap-cells
             v-model:pagination="pagination"
+            :selection="props.selection"
+            v-model:selected="selected"
             rows-per-page-label="每页条数"
             :rows-per-page-options="[10, 20, 50, 100]"
             class="bio-data-table"
@@ -48,7 +51,7 @@
 
 <script setup>
 import {getFlows, deleteFlow} from 'src/api/flow'
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, computed } from 'vue'
 import {useQuasar} from 'quasar'
 import PageTitle from 'components/page-title/PageTitle'
 import FlowDialog from './FlowDialog'
@@ -61,21 +64,26 @@ const dlgCreateTask = ref(null)
 const currentFlowId = ref(null)
 const keyword = ref('')
 const action = ref('info')
-
+const selected = ref([])
 const $q = useQuasar()
 const columns = [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center', required: true},
-    {name: 'code', label: '类型', field: 'code', align: 'center', sortable: true, required: true},
-    {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true, required: true},
-    {name: 'flow_category', label: '分 类', field: 'flow_category', align: 'center', required: true},
-    {name: 'memory', label: '内存(m)', align: 'center', field: 'memory', required: true},
-    {name: 'tar_path', label: 'Docker存档', field: 'tar_path', align: 'center', required: true},
-    {name: 'image_name', label: 'Docker镜像名称', field: 'image_name', align: 'center', required: true},
-    {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px', required: true},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', required: true,},
-    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px', required: true},
+    {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center'},
+    {name: 'code', label: '类型', field: 'code', align: 'center', sortable: true, },
+    {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true},
+    {name: 'flow_category', label: '分 类', field: 'flow_category', align: 'center', },
+    {name: 'memory', label: '内存(m)', align: 'center', field: 'memory'},
+    {name: 'tar_path', label: 'Docker存档', field: 'tar_path', align: 'center' },
+    {name: 'image_name', label: 'Docker镜像名称', field: 'image_name', align: 'center'},
+    {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
+    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px'},
+    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px'},
 ]
+
+const visibleColumns = computed(() => {
+    console.log('visibleColumns', props.columns)
+    return props.columns || columns.map(t => t.name)
+})
 
 const pagination = ref({
     sortBy: 'desc',
@@ -83,6 +91,19 @@ const pagination = ref({
     page: 1,
     rowsPerPage: 10,
     // rowsNumber: xx if getting data from a server
+})
+
+const props = defineProps({
+    selection: {
+        required: false,
+        type: String,
+        default: 'multiple',
+    },
+    columns: {
+        required: false,
+        type: Array,
+        default: null
+    }
 })
 
 const flows = ref([
