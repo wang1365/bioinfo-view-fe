@@ -126,9 +126,10 @@ import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue";
 import {onBeforeMount, ref} from "vue";
 import {useRouter} from "vue-router";
 import {globalStore} from "src/stores/global";
-import menuList from './menu'
+import {getAuthMenu} from './menu'
 
 const store = globalStore();
+const menuList = getAuthMenu(store.currentUser)
 
 const router = useRouter();
 const leftDrawerOpen = ref(false);

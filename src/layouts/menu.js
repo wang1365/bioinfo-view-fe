@@ -66,6 +66,7 @@ const menu = [
         label: '系统设置',
         separator: false,
         path: '/main/settings',
+        roles: ['super', 'admin'],
         children: [
             {
                 icon: 'mediation',
@@ -73,6 +74,7 @@ const menu = [
                 // roles: ["super"],
                 separator: false,
                 path: '/main/settings/flowManagement',
+                roles: ['super'],
             },
             {
                 icon: 'handyman',
@@ -93,6 +95,7 @@ const menu = [
         label: '用户管理',
         separator: false,
         path: '/main/users',
+        roles: ['super', 'admin'],
     },
     {
         icon: 'manage_accounts',
@@ -102,4 +105,32 @@ const menu = [
     },
 ]
 
-export default menu
+export const getAuthMenu = (currentUser) => {
+    const currentRoles = currentUser.role_list || []
+    console.log('getAuthMenu', currentUser)
+    function filter(items) {
+        const filteredItems = items.filter((item) => {
+            console.log('====', item.roles, item)
+            let result = false
+            if (!item.roles) {
+                result = true
+            } else {
+                for (let role of item.roles) {
+                    if (currentRoles.includes(role)) {
+                        result = true
+                        break
+                    }
+                }
+            }
+
+            if (result && item.children) {
+                item.children = filter(item.children)
+            }
+            return result
+        })
+        console.log('==== filteredItem', items, filteredItems)
+        return filteredItems
+    }
+
+    return filter(menu)
+}
