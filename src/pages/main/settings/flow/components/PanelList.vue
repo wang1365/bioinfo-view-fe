@@ -1,7 +1,7 @@
 <template>
     <q-select
         :options="filteredPanels"
-        option-value="id"
+        option-value="name"
         option-label="name"
         map-options
         stack-label
