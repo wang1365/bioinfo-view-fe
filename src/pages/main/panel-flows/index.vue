@@ -20,7 +20,9 @@
                 </q-tab-panel>
             </q-tab-panels>
         </div>
-        <PanelTab v-else />
+        <q-scroll-area v-else style="height: 80vh; max-width: 100%;" :thumb-style="thumbStyle">
+            <PanelTab />
+        </q-scroll-area>
     </q-page>
 </template>
 
