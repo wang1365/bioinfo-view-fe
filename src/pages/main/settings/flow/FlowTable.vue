@@ -13,7 +13,6 @@
             v-model:selected="selected"
             rows-per-page-label="每页条数"
             :rows-per-page-options="[10, 20, 50, 100]"
-            class="bio-data-table"
         >
             <template v-slot:top>
                 <q-input
@@ -73,12 +72,12 @@ const columns = [
     {name: 'code', label: '类型', field: 'code', align: 'center', sortable: true, },
     {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true},
     {name: 'flow_category', label: '分 类', field: 'flow_category', align: 'center', },
-    {name: 'memory', label: '内存(m)', align: 'center', field: 'memory'},
+    {name: 'memory', label: '内存(m)', align: 'center', field: 'memory', style: 'width:85px',},
     {name: 'tar_path', label: 'Docker存档', field: 'tar_path', align: 'center' },
     {name: 'image_name', label: 'Docker镜像名称', field: 'image_name', align: 'center'},
-    {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', format: v => format(v)},
-    {name: 'operation', label: '操 作', align: 'center', style: 'width:300px'},
+    // {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
+    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', format: v => format(v)},
+    {name: 'operation', label: '操 作', align: 'center'},
 ]
 
 const visibleColumns = computed(() => {
