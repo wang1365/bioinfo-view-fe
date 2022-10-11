@@ -55,6 +55,7 @@ import {ref, onMounted} from 'vue'
 import {useQuasar} from 'quasar'
 import PageTitle from 'components/page-title/PageTitle'
 import GroupDialog from "pages/main/settings/flow/GroupDialog";
+import { format } from 'src/utils/time'
 
 const loading = ref(false)
 const dlgCreate = ref(null)
@@ -68,8 +69,8 @@ const columns = [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
     {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center', required: true},
     {name: 'panels', label: 'Panel列表', field: 'panels', sortable: true, align: 'center', required: true},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', required: true,},
-    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px', required: true},
+    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', format: v => format(v)},
+    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px'},
 ]
 
 

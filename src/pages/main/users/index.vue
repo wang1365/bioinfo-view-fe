@@ -149,23 +149,24 @@
 </template>
 
 <script setup>
-import { useQuasar } from "quasar";
-import { nextTick, onMounted, ref } from "vue";
+import { useQuasar } from "quasar"
+import { nextTick, onMounted, ref } from "vue"
 import _ from "lodash";
-import { listUser, batchDeleteUser } from "src/api/user";
+import { listUser, batchDeleteUser } from "src/api/user"
 import { isSuper, isAdmin, isNormal } from "src/utils/user"
-import PageTitle from "components/page-title/PageTitle.vue";
-import CreateUser from "./CreateUser";
-import EditUser from "pages/main/users/EditUser";
-import { deleteFlow } from "src/api/flow";
-import ResetPassword from "pages/main/users/ResetPassword";
-import { storeToRefs } from "pinia";
-import { globalStore } from "src/stores/global";
+import PageTitle from "components/page-title/PageTitle.vue"
+import CreateUser from "./CreateUser"
+import EditUser from "pages/main/users/EditUser"
+import { deleteFlow } from "src/api/flow"
 
-const createUserDlg = ref(null);
-const editUserDlg = ref(null);
-const resetPasswordDlg = ref(null);
-const resetResourceLimitDlg = ref(false);
+import ResetPassword from "pages/main/users/ResetPassword"
+import { storeToRefs } from "pinia"
+import { globalStore } from "src/stores/global"
+
+const createUserDlg = ref(null)
+const editUserDlg = ref(null)
+const resetPasswordDlg = ref(null)
+const resetResourceLimitDlg = ref(false)
 const user = ref(null);
 const $q = useQuasar();
 const store = globalStore();

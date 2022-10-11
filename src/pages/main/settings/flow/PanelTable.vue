@@ -49,6 +49,7 @@
 import {getPanels, deletePanel} from 'src/api/panel'
 import {ref, onMounted, computed} from 'vue'
 import {useQuasar} from 'quasar'
+import { format } from 'src/utils/time'
 import PanelDialog from "pages/main/settings/flow/PanelDialog"
 
 const loading = ref(false)
@@ -64,7 +65,7 @@ const columns = [
     {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center'},
     {name: 'panel_group_name', label: 'Panel分组', field: row => row.panel_group_name, sortable: true, align: 'center'},
     {name: 'flows', label: '分析模块', field: 'flows', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px'},
+    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', 'format': v => format(v)},
     {name: 'operation', label: '操 作', align: 'center', style: 'width:250px'},
 ]
 

@@ -56,6 +56,7 @@ import {useQuasar} from 'quasar'
 import PageTitle from 'components/page-title/PageTitle'
 import FlowDialog from './FlowDialog'
 import TaskParamTable from './components/TaskParamTable'
+import { format } from 'src/utils/time'
 
 const loading = ref(false)
 const dlgFlow = ref(null)
@@ -76,8 +77,8 @@ const columns = [
     {name: 'tar_path', label: 'Docker存档', field: 'tar_path', align: 'center' },
     {name: 'image_name', label: 'Docker镜像名称', field: 'image_name', align: 'center'},
     {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px'},
-    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px'},
+    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', format: v => format(v)},
+    {name: 'operation', label: '操 作', align: 'center', style: 'width:300px'},
 ]
 
 const visibleColumns = computed(() => {

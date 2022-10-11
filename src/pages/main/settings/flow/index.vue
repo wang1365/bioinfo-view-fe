@@ -32,6 +32,7 @@ import {useQuasar} from 'quasar'
 import FlowTable from "pages/main/settings/flow/FlowTable"
 import GroupTab from "pages/main/settings/flow/GroupTab"
 import PanelTable from "pages/main/settings/flow/PanelTable"
+
 const $q = useQuasar()
 
 const tabValue = ref('flow')
