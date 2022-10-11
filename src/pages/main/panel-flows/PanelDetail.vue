@@ -22,7 +22,14 @@
                 header-class="bg-primary text-white"
                 expand-icon-class="text-white"
             >
-                <q-btn v-for="flow in detail.flows" :key="flow.id" :label="flow.name" color="purple" class="q-ma-sm">
+                <q-btn
+                    v-for="flow in detail.flows"
+                    :key="flow.id"
+                    :label="flow.name"
+                    color="purple"
+                    class="q-ma-sm"
+                    @click="showFlowDlg(flow)"
+                >
                     <q-badge
                         color="orange"
                         v-if="flow.sample_type === 'double'"
@@ -48,14 +55,17 @@
             </q-expansion-item>
         </q-list>
         <q-input readonly></q-input>
+        <flow-dialog ref="dlgFlow" action="info" :id="currentFlowId" />
     </div>
 </template>
 <script setup>
 import {ref, onMounted, defineProps, watch, toRefs} from "vue"
 import { getPanelDetail } from "src/api/panel"
 import PageTitle from "components/page-title/PageTitle"
-
+import FlowDialog from "pages/main/settings/flow/FlowDialog"
 const detail = ref({})
+const currentFlowId = ref(null)
+const dlgFlow = ref(null)
 const refresh = () => {
     console.log('Query panel detail', props.id)
     if (props.id) {
@@ -80,4 +90,9 @@ const {panelId} =  toRefs(props)
 watch(panelId, (val) => {
     refresh()
 })
+
+const showFlowDlg = (row) => {
+    currentFlowId.value = row.id
+    dlgFlow.value.show()
+}
 </script>

@@ -41,10 +41,8 @@
             </template>
         </q-table>
 
-        <flow-dialog ref="dlgCreate" action="create" @success="refreshFlows" />
-        <flow-dialog ref="dlgEdit" action="edit" @success="refreshFlows" />
-        <flow-dialog ref="dlgInfo" action="info" />
-        <task-param-table ref="dlgCreateTask" :flowId="currentFlowId" @handleFinish="refreshFlows" />
+        <flow-dialog ref="dlgFlow" :action="action" :id="currentFlowId" @success="refreshFlows" />
+        <flow-dialog ref="dlgFlowCreate" action="create" @success="refreshFlows" />
     </q-page>
 </template>
 
@@ -57,12 +55,12 @@ import FlowDialog from './FlowDialog'
 import TaskParamTable from './components/TaskParamTable'
 
 const loading = ref(false)
-const dlgCreate = ref(null)
-const dlgEdit = ref(null)
-const dlgInfo = ref(null)
+const dlgFlow = ref(null)
+const dlgFlowCreate = ref(null)
 const dlgCreateTask = ref(null)
 const currentFlowId = ref(null)
 const keyword = ref('')
+const action = ref('info')
 
 const $q = useQuasar()
 const columns = [
@@ -131,8 +129,11 @@ const getTagType = (row) => {
 }
 
 const showEditDlg = (row) => {
-    dlgEdit.value.show()
-    dlgEdit.value.setData(row)
+    console.log('show edit dlg', row.id)
+    currentFlowId.value = row.id
+    action.value = 'edit'
+    dlgFlow.value.show()
+    dlgFlow.value.setData(row)
 }
 
 const startLoading = () => {
@@ -160,18 +161,21 @@ const showDeleteDlg = (row) => {
 }
 
 const showCreateTaskDlg = (row) => {
-    currentFlowId.value = row.id
+    console.log('showCreateTaskDlg', row.id)
     dlgCreateTask.value.show()
     dlgCreateTask.value.setData(row)
 }
 
 const showInfoDlg = (row) => {
-    dlgInfo.value.show()
-    dlgInfo.value.setData(row)
+    console.log('showInfoDlg', row.id)
+    currentFlowId.value = row.id
+    action.value = 'info'
+    dlgFlow.value.show()
+    dlgFlow.value.setData(row)
 }
 
 const addFlow = () => {
-    dlgCreate.value.setData({
+    dlgFlowCreate.value.setData({
         name: '',
         location: '',
         alignment_tool: '',
@@ -182,8 +186,8 @@ const addFlow = () => {
         builtin_parameters: [],
         sample_type: 'multiple',
     })
-    dlgCreate.value.reset()
-    dlgCreate.value.show()
+    dlgFlowCreate.value.reset()
+    dlgFlowCreate.value.show()
     // isCreateDlgShow.value = true
 }
 

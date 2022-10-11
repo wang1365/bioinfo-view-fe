@@ -14,7 +14,9 @@
             </q-tabs>
             <q-tab-panels v-model="tab">
                 <q-tab-panel v-for="item in rows" :key="item.id" :label="item.name" :name="item.name">
-                    <PanelTab :panelGroupId="item.id" />
+                    <q-scroll-area style="height: 200px; max-width: 300px;">
+                        <PanelTab :panelGroupId="item.id" />
+                    </q-scroll-area>
                 </q-tab-panel>
             </q-tab-panels>
         </div>

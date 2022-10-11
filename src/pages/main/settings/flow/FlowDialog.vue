@@ -195,9 +195,9 @@
 
 <script setup>
 import ParamTable from './components/ParamTable'
-import { createFlow, updateFlow } from 'src/api/flow'
+import { getFlowDetail, createFlow, updateFlow } from 'src/api/flow'
 import { getPanels } from "src/api/panel"
-import { defineProps, computed, ref, toRefs, defineExpose, defineEmits, onMounted } from 'vue'
+import { defineProps, computed, ref, toRefs, defineExpose, defineEmits, onMounted, watch } from 'vue'
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
@@ -217,9 +217,20 @@ const props = defineProps({
     },
     id: {
         type: Number,
-        default: -1,
+        default: null,
+        required: false
     },
 })
+
+const { id } = toRefs(props)
+
+watch(id, v => {
+    console.log('flow id changed:', v)
+    getFlowDetail(v).then(res => {
+        form.value = res
+    })
+})
+
 
 const isEditMode = computed(() => {
     return props.action === 'edit'
@@ -263,13 +274,13 @@ onMounted(() => {
 const paramsTable = ref(null)
 
 const setData = (data) => {
-    console.log('------> set data', data)
-    // this.form = data
-    // Object.assign(form.value, data)
-    form.value = data
-    if (paramsTable.value) {
-        paramsTable.value.setData(data.parameters)
-    }
+    // console.log('------> set data', data)
+    // // this.form = data
+    // // Object.assign(form.value, data)
+    // form.value = data
+    // if (paramsTable.value) {
+    //     paramsTable.value.setData(data.parameters)
+    // }
 }
 
 const reset = () => {
