@@ -272,7 +272,7 @@ const loadPage = async () => {
         (res) => {
             total.value = res.data.count;
             patients.value = [];
-            if (total.value % pageSize.value == 0) {
+            if (total.value % pageSize.value === 0) {
                 maxPages.value = total.value / pageSize.value;
             } else {
                 maxPages.value = total.value / pageSize.value + 1;
