@@ -30,14 +30,17 @@ export default route(function (/* { store, ssrContext } */) {
         // quasar.conf.js -> build -> publicPath
         history: createHistory(process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE),
     })
-    Router.beforeEach((to, from) => {
+    Router.beforeEach((to, from, next) => {
         // ...
         // 返回 false 以取消导航
         //        console.log(to);
         // 检查用户是否已登录 & 避免无限重定向
         if (!isAuthenticated() && to.name !== 'Login') {
             // 将用户重定向到登录页面
-            return { name: 'Login' }
+            console.log('用户未登录，重定向到登录页')
+            next({ path: '/login' })
+        } else {
+            next()
         }
     })
     return Router

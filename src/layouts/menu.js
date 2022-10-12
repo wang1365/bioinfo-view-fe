@@ -105,6 +105,9 @@ const menu = [
 ]
 
 export const getAuthMenu = (currentUser) => {
+    if (!currentUser) {
+        return []
+    }
     const currentRoles = currentUser.role_list || []
     function filter(items) {
         return items.filter((item) => {
