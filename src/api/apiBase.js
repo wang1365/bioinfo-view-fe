@@ -252,5 +252,19 @@ export function useApi() {
                 }
             })
     }
-    return { apiGet, apiPost, apiPut, apiDelete, apiPatch, downloadData, apiGetById }
+    function apiGetByIds(model, modelIds, onSuccess, config = {}, onError = null, onHttpError = null) {
+        let query = buildModelQuery([], { id__in: modelIds })
+        api.post(`/model_query/${model}`, query, config)
+            .then((resp) => {
+                defaultHandler(router, resp, onSuccess, onError)
+            })
+            .catch((error) => {
+                if (onHttpError) {
+                    onHttpError(error)
+                } else {
+                    defaultHttpErrorHandler(error, onError, router)
+                }
+            })
+    }
+    return { apiGet, apiPost, apiPut, apiDelete, apiPatch, downloadData, apiGetById, apiGetByIds }
 }

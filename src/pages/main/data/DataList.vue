@@ -185,7 +185,7 @@
     <q-dialog persistent v-model="showLinkSample">
         <SampleList
             :linkId="linkId"
-            @refresh="
+            @itemSelected="
             linkSample($event);
         "
         />
