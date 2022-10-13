@@ -277,9 +277,9 @@ const setData = (data) => {
     console.log('------> set data', data)
     // this.form = data
     // Object.assign(form.value, data)
-    form.value = data
+    form.value = {...data}
     if (paramsTable.value) {
-        paramsTable.value.setData(data.parameters)
+        paramsTable.value.setData([...data.parameters])
     }
 }
 

@@ -145,7 +145,8 @@ const validateChoice = (v) => {
     return v !== null && v !== ''
 }
 const setData = (data) => {
-    params.value = data
+    console.log('set params data', data)
+    params.value = [...data]
 }
 
 const getData = () => {
