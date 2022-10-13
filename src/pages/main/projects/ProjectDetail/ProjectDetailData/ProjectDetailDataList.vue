@@ -6,51 +6,30 @@
                 <q-toolbar-title class="text-h6">
                     数据
 
-                    <span
-                        v-if="props.projectDetail.parent"
-                        class="text-body2 bg-yellow-11"
-                        >继承自于上级项目</span
-                    >
+                    <span v-if="props.projectDetail.parent" class="text-body2 bg-yellow-11">继承自于上级项目</span>
                 </q-toolbar-title>
-                <q-btn
-                    color="primary"
-                    label="选择数据"
-                    icon="description"
-                    @click="openDataSelector = true"
-                />
+                <q-btn color="primary" label="选择数据" icon="description" @click="openDataSelector = true" />
             </q-toolbar>
         </q-section>
         <q-section>
             <div class="q-pa-md bio-data-table">
-                <table>
+                <table style="min-width: 1000px;">
                     <thead>
                         <tr>
-                            <!-- <td >
-                                <q-checkbox
-                                    v-model="selected"
-                                    color="negative"
-                                />
-                            </td> -->
                             <td>项目编码</td>
                             <td>文库编号</td>
-                            <!-- <td>捕获试剂盒</td>
-                            <td>核酸打断方式</td>
-                            <td>建库input</td>
-                            <td>index 类型</td>
-                            <td>index 编号</td>
-                            <td>杂交 input</td>
-                            <td>风险上机</td>
-                            <td>核酸降解等级</td> -->
-                            <!-- <td>样本元信息 ID</td> -->
                             <td>样本识别号</td>
                             <td>数据识别号</td>
                             <td>送检机构</td>
                             <td>核酸类型</td>
                             <td>R1 数据名称</td>
                             <td>R2 数据名称</td>
-                            <!-- <td>样本所有者</td>
-                            <td>创建时间</td>
-                            <td>更新时间</td> -->
+                            <td>患者识别号</td>
+                            <td>患者姓名</td>
+                            <td>性别</td>
+                            <td>样本识别号</td>
+                            <td>采样部位</td>
+                            <td>肿瘤样本</td>
                             <td>操作</td>
                         </tr>
                     </thead>
@@ -63,36 +42,13 @@
                                 'bg-yellow-11': fromParent(item),
                             }"
                         >
-                            <!-- <td class="q-pa-md text-center">
-                                <q-checkbox
-                                    v-model="item.selected"
-                                    color="negative"
-                                />
-                            </td> -->
-
                             <td>
                                 {{ item.project_index }}
                             </td>
                             <td>
                                 {{ item.library_number }}
                             </td>
-                            <!-- <td >{{ item.reagent_box }}</td>
-                            <td >
-                                {{ item.nucleic_break_type }}
-                            </td>
-                            <td >
-                                {{ item.library_input }}
-                            </td>
-                            <td >{{ item.index_type }}</td>
-                            <td >{{ item.index_number }}</td>
-                            <td >{{ item.hybrid_input }}</td>
-                            <td >{{ item.risk }}</td>
-                            <td >
-                                {{ item.nucleic_level }}
-                            </td> -->
-                            <!-- <td>
-                                {{ item.sample_meta_id }}
-                            </td> -->
+
                             <td>
                                 {{ item.sample_identifier }}
                             </td>
@@ -101,17 +57,15 @@
                             <td>{{ item.nucleic_type }}</td>
                             <td>{{ item.fastq1_path }}</td>
                             <td>{{ item.fastq2_path }}</td>
-                            <!-- <td>{{ item.user_id }}</td>
-                            <td >{{ item.create_time }}</td>
-                            <td >{{ item.modify_time }}</td> -->
+                            <td>{{ item.patient?.identifier }}</td>
+                            <td>{{ item.patient?.name }}</td>
+                            <td>{{ item.patient?.gender }}</td>
+                            <td>{{ item.sample_meta?.identifier }}</td>
+                            <td>{{ item.sample_meta?.sample_componet }}</td>
+                            <td>{{ item.sample_meta?.is_panel }}</td>
+
                             <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="secondary"
-                                    label="详情"
-                                    icon="visibility"
-                                    @click="info(item)"
-                                    size="sm"
-                                />
+                                <q-btn color="secondary" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn
                                     color="red"
                                     label="删除"
@@ -126,11 +80,7 @@
                 </table>
                 <div class="row q-mt-md">
                     <q-space></q-space>
-                    <PaginatorVue
-                        :total="total"
-                        :currentPage="currentPage"
-                        @pageChange="pageChange($event)"
-                    />
+                    <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
         </q-section>
@@ -140,10 +90,7 @@
         <DataInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="openDataSelector">
-        <ProjectDetailDataSelect
-            :projectDetail="projectDetail"
-            @refresh="dataSelected()"
-        />
+        <ProjectDetailDataSelect :projectDetail="projectDetail" @refresh="dataSelected()" />
     </q-dialog>
 </template>
 <script setup>

@@ -2,16 +2,38 @@
     <q-card class="q-mt-md">
         <q-section>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
-
-                <q-input style="width:450px" v-model="searchParams.search" dense
-                    label="关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构" clearable>
+                <q-input
+                    style="width:450px"
+                    v-model="searchParams.search"
+                    dense
+                    label="关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构"
+                    clearable
+                >
                 </q-input>
-                <q-select style="width:100px" clearable dense v-model="searchParams.nucleic_type"
-                    :options='["gDNA", "cfDNA", "RNA"]' label="核酸类型" />
-                <q-select style="width:100px" clearable dense v-model="searchParams.nucleic_level"
-                    :options='["A", "B", "C", "D"]' label="核算降解等级" />
-                <q-select style="width:100px" clearable dense v-model="searchParams.risk" :options="['是','否']"
-                    label="风险上机" />
+                <q-select
+                    style="width:100px"
+                    clearable
+                    dense
+                    v-model="searchParams.nucleic_type"
+                    :options='["gDNA", "cfDNA", "RNA"]'
+                    label="核酸类型"
+                />
+                <q-select
+                    style="width:100px"
+                    clearable
+                    dense
+                    v-model="searchParams.nucleic_level"
+                    :options='["A", "B", "C", "D"]'
+                    label="核算降解等级"
+                />
+                <q-select
+                    style="width:100px"
+                    clearable
+                    dense
+                    v-model="searchParams.risk"
+                    :options="['是','否']"
+                    label="风险上机"
+                />
                 <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
             </div>
         </q-section>
@@ -25,12 +47,14 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span style="
+                        <span
+                            style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            ">
+                            "
+                        >
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -139,24 +163,32 @@
         </q-section>
     </q-card>
     <q-dialog persistent v-model="showDataNew">
-        <DataNew @refresh="
+        <DataNew
+            @refresh="
             refreshPage();
             showDataNew = false;
-        " />
+        "
+        />
     </q-dialog>
     <q-dialog v-model="showDataInfo">
         <DataInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showDataEdit">
-        <DataEdit :id="editId" @refresh="
+        <DataEdit
+            :id="editId"
+            @refresh="
             refreshPage();
             showDataEdit = false;
-        " />
+        "
+        />
     </q-dialog>
     <q-dialog persistent v-model="showLinkSample">
-        <SampleList :linkId="linkId" @refresh="
+        <SampleList
+            :linkId="linkId"
+            @refresh="
             linkSample($event);
-        " />
+        "
+        />
     </q-dialog>
 </template>
 <script setup>
@@ -171,9 +203,10 @@ import SampleList from "./SampleList.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
+import { buildModelQuery } from "src/api/modelQueryBuilder";
 
 
-const { apiGet, downloadData, apiDelete, apiPatch } = useApi();
+const { apiGet, downloadData, apiDelete, apiPatch, apiPost } = useApi();
 const showDataEdit = ref(false);
 const showDataInfo = ref(false);
 const showDataNew = ref(false);
@@ -228,32 +261,40 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
-    if (currentPage.value) {
-        let params = `?page=${currentPage.value}&size=${pageSize.value}`
-        let identifiers = 'library_input,nucleic_break_type,reagent_box,identifier,sample_identifier,company'
-        if (searchParams.value.search) {
-            params += `&search=${searchParams.value.search}&identifiers=${identifiers}`
-        }
-        if (searchParams.value.nucleic_level) {
-            params += `&nucleic_level=${searchParams.value.nucleic_level}`
-        }
-        if (searchParams.value.nucleic_type) {
-            params += `&nucleic_type=${searchParams.value.nucleic_type}`
-        }
-        if (searchParams.value.risk) {
-            params += `&risk=${searchParams.value.risk}`
-        }
-        apiGet(
-            `/sample/samples/${params}`,
-            (res) => {
-                total.value = res.data.count;
+    let andFields = {}
+    let searchFields=buildModelQuery()
+    if (searchParams.value.search) {
+        searchFields = buildModelQuery([], {
+            library_input__icontains: searchParams.value.search,
+            nucleic_break_type__icontains: searchParams.value.search,
+            reagent_box__icontains: searchParams.value.search,
+            identifier__icontains: searchParams.value.search,
+            sample_identifier__icontains: searchParams.value.search,
+            company__icontains: searchParams.value.search,
+        }, 'OR')
+    }
+    if (searchParams.value.nucleic_level) {
+        andFields.nucleic_level = searchParams.value.nucleic_level
+    }
+    if (searchParams.value.nucleic_type) {
+        andFields.nucleic_type = searchParams.value.nucleic_type
+    }
+    if (searchParams.value.risk == '是') {
+        andFields.risk = true
+    }
+    if (searchParams.value.risk == '否') {
+        andFields.risk = false
+    }
+    let query = buildModelQuery([searchFields], andFields)
+    let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    apiPost(`/model_query/sample${params}`, (res) => {
+        total.value = res.data.count;
                 dataItems.value = [];
                 for (const iterator of res.data.results) {
                     dataItems.value.push(iterator);
                 }
-            }
-        );
-    }
+    }, query)
+
 };
 
 const confirm = (item) => {

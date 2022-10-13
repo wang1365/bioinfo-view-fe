@@ -4,6 +4,7 @@ import axios from 'axios'
 import { errorMessage } from 'src/utils/notify'
 import { LoadingBar } from 'quasar'
 import { Cookies } from 'quasar'
+import { buildModelQuery } from './modelQueryBuilder'
 
 LoadingBar.setDefaults({
     color: 'purple',
@@ -237,5 +238,19 @@ export function useApi() {
                 defaultHttpErrorHandler(error, onError)
             })
     }
-    return { apiGet, apiPost, apiPut, apiDelete, apiPatch, downloadData }
+    function apiGetById(model, modelId, onSuccess, config = {}, onError = null, onHttpError = null) {
+        let query = buildModelQuery([], { id: modelId })
+        api.post(`/model_query/${model}`, query, config)
+            .then((resp) => {
+                defaultHandler(router, resp, onSuccess, onError)
+            })
+            .catch((error) => {
+                if (onHttpError) {
+                    onHttpError(error)
+                } else {
+                    defaultHttpErrorHandler(error, onError, router)
+                }
+            })
+    }
+    return { apiGet, apiPost, apiPut, apiDelete, apiPatch, downloadData, apiGetById }
 }

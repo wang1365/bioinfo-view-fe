@@ -11,12 +11,22 @@
             @pageChange="pageChange($event)"
             @ensureSelect="ensureSelect($event)"
         >
-            <!-- <template v-slot:tableFilter>
-                <div class="row q-px-md q-gutter-sm">
-                    <q-input style="width: 250px" dense v-model="projectName" label="项目名称" clearable />
-                    <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
+            <template v-slot:tableFilter>
+                <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
+                    <q-input
+                        style="width:350px"
+                        v-model="searchParams.search"
+                        dense
+                        label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
+                        clearable
+                    >
+                    </q-input>
+                    <q-input type="number" v-model="searchParams.age_start" dense label="年龄起始" clearable> </q-input>
+                    <q-input type="number" v-model="searchParams.age_end" dense label="截止年龄" clearable> </q-input>
+
+                    <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
                 </div>
-            </template> -->
+            </template>
             <!-- <template v-slot:itemRow="{ row }">
                 <td>
                     {{ row.name }}
@@ -33,6 +43,7 @@
 import { onMounted, ref } from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
+import { buildModelQuery } from "src/api/modelQueryBuilder";
 
 const tableHeaders = ref([
     "ID",
@@ -53,8 +64,20 @@ const tableRowFields = ref([
     "age"
 ]);
 const emit = defineEmits(["refresh"]);
-const { apiGet } = useApi();
+const { apiGet,apiPost } = useApi();
+const searchParams = ref({
+    search: '',
+    name: '',
+    identifier: '',
+    diagnosis: '',
+    medical_doctor: '',
+    gender: '',
+    age_start: '',
+    age_end: '',
+    ctime_start: '',
+    ctime_end: ''
 
+})
 
 const selectedItem = ref({});
 const props = defineProps({
@@ -87,14 +110,48 @@ const ensureSelect =  (event) => {
     emit('refresh',event)
 }
 const loadPage = async () => {
-    let params = `?page=${currentPage.value}&size=${pageSize.value}`;
-    apiGet(`/patient/patients${params}`, (res) => {
+    let andFields = {}
+    let searchFields=buildModelQuery()
+    if (searchParams.value.search) {
+        searchFields = buildModelQuery([], {
+            name__icontains: searchParams.value.search,
+            identifier__icontains: searchParams.value.search,
+            diagnosis__icontains: searchParams.value.search,
+            medical_doctor__icontains: searchParams.value.search,
+            gender__icontains: searchParams.value.search,
+        }, 'OR')
+    }
+    if (searchParams.value.age_start) {
+        andFields.age__gte = searchParams.value.age_start
+    }
+    if (searchParams.value.age_end) {
+        andFields.age__lte = searchParams.value.age_end
+    }
+    if (searchParams.value.ctime_start) {
+        andFields.create_time__gte = searchParams.value.ctime_start
+    }
+    if (searchParams.value.ctime_end) {
+        andFields.create_time__lte = searchParams.value.ctime_end
+    }
+
+    let query = buildModelQuery([searchFields], andFields)
+    let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    apiPost(`/model_query/patient${params}`, (res) => {
         total.value = res.data.count;
-        dataItems.value = [];
-        for (let iterator of res.data.results) {
-            iterator.selected = false;
-            dataItems.value.push(iterator);
-        }
-    });
+                dataItems.value = [];
+                for (const iterator of res.data.results) {
+                    iterator.selected = false;
+                    dataItems.value.push(iterator);
+                }
+    }, query)
+    // let params = `?page=${currentPage.value}&size=${pageSize.value}`;
+    // apiGet(`/patient/patients${params}`, (res) => {
+    //     total.value = res.data.count;
+    //     dataItems.value = [];
+    //     for (let iterator of res.data.results) {
+    //         iterator.selected = false;
+    //         dataItems.value.push(iterator);
+    //     }
+    // });
 };
 </script>

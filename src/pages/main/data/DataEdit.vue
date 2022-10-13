@@ -258,7 +258,7 @@ import ProjectList from "./ProjectList.vue";
 
 const nucleic_level_options = ref(["A", "B", "C", "D"]);
 const nucleic_type_options = ref(["gDNA", "cfDNA", "RNA"]);
-const { apiGet, apiPut,apiPost } = useApi();
+const { apiGet, apiPut,apiPost,apiGetById } = useApi();
 const emit = defineEmits(["refresh"]);
 
 const showLinkSample = ref(false);
@@ -410,6 +410,9 @@ const form = ref({
 *    fastq2_path: "fastq2_path",
 }); */
 onMounted(() => {
+    // apiGetById('sample',props.id,(res)=>{
+    //     console.log(res.data.results[0])
+    // })
     apiGet(`/sample/samples/${props.id}/`, (res) => {
         console.log(res);
         form.value = res.data;

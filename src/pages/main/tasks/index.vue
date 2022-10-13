@@ -93,6 +93,7 @@
                         <td>分析流程</td>
                         <td>进度</td>
                         <td>状态</td>
+                        <td>错误信息</td>
                         <td>创建者</td>
                         <td>创建时间</td>
                         <td>操作</td>
@@ -122,6 +123,15 @@
                             <q-linear-progress rounded size="10px" :value="item.progress" />
                         </td>
                         <td>{{ getItemStatus(item) }}</td>
+                        <td>
+                            <q-icon
+                                class="cursor-pointer"
+                                color="red"
+                                name="find_in_page"
+                                @click="showError=true;currentTaskError=task.error_message"
+                                size="sm"
+                            />
+                        </td>
                         <td>{{ item.creator.username }}</td>
                         <td>{{ item.create_time }}</td>
                         <td class="q-gutter-x-sm">
@@ -146,6 +156,22 @@
         </div>
         <q-dialog v-model="showProjectSelect">
             <ProjectListVue @itemSelected="projectSelected($event)" />
+        </q-dialog>
+        <q-dialog v-model="showError">
+            <q-card class="q-mt-md popup-selector">
+                <div class="popup-content">
+                    <div class="popup-content-header">
+                        <q-toolbar>
+                            <q-toolbar-title>错误信息</q-toolbar-title>
+                            <q-btn flat round dense icon="close" v-close-popup />
+                        </q-toolbar>
+                    </div>
+                </div>
+                <pre>
+                {{currentTaskError || "无"}}
+            </pre
+                >
+            </q-card>
         </q-dialog>
     </q-page>
 </template>
@@ -172,6 +198,7 @@ const startTime=ref("")
 const endTime=ref("")
 const status = ref({ label: "全部", value: "ALL" });
 const showProjectSelect = ref(false);
+const showError=ref(false)
 const projectId = ref(0);
 const projectName = ref("");
 const currentPage = ref(1);

@@ -145,7 +145,7 @@
                             <td>
                                 {{ item.test_date }}
                             </td>
-                            <td>{{ item.sample_componet }}</td>
+                            <td>{{ item.sample_component }}</td>
                             <td>
                                 {{ item.sample_type }}
                             </td>
@@ -217,7 +217,8 @@ import PatientList from "./PatientList.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
-const { apiGet, apiDelete, downloadData, apiPatch } = useApi();
+import { buildModelQuery } from "src/api/modelQueryBuilder"
+const { apiGet, apiDelete, downloadData, apiPatch, apiPost } = useApi();
 const showSampleEdit = ref(false);
 const showSampleInfo = ref(false);
 const showSampleNew = ref(false);
@@ -275,38 +276,75 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
-    if (currentPage.value) {
-        let params = `?page=${currentPage.value}&size=${pageSize.value}`
-        let identifiers = 'identifier,patient_identifier,sample_componet,sample_type'
-        if (searchParams.value.search) {
-            params += `&search=${searchParams.value.search}&identifiers=${identifiers}`
-        }
-        if (searchParams.value.sample_date_start) {
-            params += `&sample_date__gte=${searchParams.value.sample_date_start}`
-        }
-        if (searchParams.value.sample_date_end) {
-            params += `&sample_date__lte=${searchParams.value.sample_date_end}`
-        }
-        if (searchParams.value.test_date_start) {
-            params += `&test_date__gte=${searchParams.value.test_date_start}`
-        }
-        if (searchParams.value.test_date_end) {
-            params += `&test_date__lte=${searchParams.value.test_date_end}`
-        }
-        if (searchParams.value.is_panel) {
-            params += `&is_panel=${searchParams.value.is_panel}`
-        }
-        apiGet(
-            `/sample/sampledatas/${params}`,
-            (res) => {
-                total.value = res.data.count;
-                dataItems.value = [];
-                for (const iterator of res.data.results) {
-                    dataItems.value.push(iterator);
-                }
-            }
-        );
+    let andFields = {}
+    let searchFields = buildModelQuery()
+    if (searchParams.value.search) {
+        searchFields = buildModelQuery([], {
+            patient_identifier__icontains: searchParams.value.search,
+            identifier__icontains: searchParams.value.search,
+            sample_componet__icontains: searchParams.value.search,
+            sample_type__icontains: searchParams.value.search,
+        }, 'OR')
     }
+    if (searchParams.value.age_start) {
+        andFields.sample_date__gte = searchParams.value.sample_date_start
+    }
+    if (searchParams.value.sample_date_end) {
+        andFields.sample_date__lte = searchParams.value.sample_date_end
+    }
+    if (searchParams.value.test_date_start) {
+        andFields.test_date__gte = searchParams.value.test_date_start
+    }
+    if (searchParams.value.test_date_end) {
+        andFields.test_date__lte = searchParams.value.test_date_end
+    }
+    if (searchParams.value.is_panel==='是') {
+        andFields.is_panel = true
+    } if (searchParams.value.is_panel==='否') {
+        andFields.is_panel = false
+    }
+
+    let query = buildModelQuery([searchFields], andFields)
+    let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    apiPost(`/model_query/sample_meta${params}`, (res) => {
+        total.value = res.data.count;
+        dataItems.value = [];
+        for (const iterator of res.data.results) {
+            dataItems.value.push(iterator);
+        }
+    }, query)
+    // if (currentPage.value) {
+    //     let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    //     let identifiers = 'identifier,patient_identifier,sample_componet,sample_type'
+    //     if (searchParams.value.search) {
+    //         params += `&search=${searchParams.value.search}&identifiers=${identifiers}`
+    //     }
+    //     if (searchParams.value.sample_date_start) {
+    //         params += `&sample_date__gte=${searchParams.value.sample_date_start}`
+    //     }
+    //     if (searchParams.value.sample_date_end) {
+    //         params += `&sample_date__lte=${searchParams.value.sample_date_end}`
+    //     }
+    //     if (searchParams.value.test_date_start) {
+    //         params += `&test_date__gte=${searchParams.value.test_date_start}`
+    //     }
+    //     if (searchParams.value.test_date_end) {
+    //         params += `&test_date__lte=${searchParams.value.test_date_end}`
+    //     }
+    //     if (searchParams.value.is_panel) {
+    //         params += `&is_panel=${searchParams.value.is_panel}`
+    //     }
+    //     apiGet(
+    //         `/sample/sampledatas/${params}`,
+    //         (res) => {
+    //             total.value = res.data.count;
+    //             dataItems.value = [];
+    //             for (const iterator of res.data.results) {
+    //                 dataItems.value.push(iterator);
+    //             }
+    //         }
+    //     );
+    // }
 };
 
 const confirm = (item) => {
