@@ -47,19 +47,27 @@
         <div class="row">
             <div class="col-2"></div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="row">
+                <div class="row q-gutter-sm">
                     <div class="col-2">
                         <q-select
                             v-model="status"
                             :options="options"
                             stack-label
+                            clearable
+                            filled
+                            @clear="clearSelect()"
                             :display-value="`状态: ${status.label}`"
                             @update:model-value="refreshPage()"
                         >
                         </q-select>
                     </div>
-                    <div class="col-10 q-pl-sm">
-                        <q-input readonly @click="showProjectSelect = true" :model-value="'所属项目: ' + projectName">
+                    <div class="col-4 q-pl-sm">
+                        <q-input
+                            readonly
+                            filled
+                            @click="showProjectSelect = true"
+                            :model-value="'所属项目: ' + projectName"
+                        >
                             <template v-slot:prepend>
                                 <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                             </template>
@@ -232,6 +240,10 @@ const getItemStatus = (item) => {
     }
 };
 
+const clearSelect = () => {
+    status.value = { label: "全部", value: "ALL" }
+    refreshPage()
+}
 const projectSelected = (event) => {
     console.log(event);
     projectName.value = event.name;
