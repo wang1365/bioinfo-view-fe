@@ -7,6 +7,7 @@
         v-model="dlgVisible"
         :title="title"
         :content-style="{ width: '800px' }"
+        @hide="close()"
     >
         <q-card class="my-card">
             <q-bar>
@@ -274,24 +275,26 @@ onMounted(() => {
 const paramsTable = ref(null)
 
 const setData = (data) => {
-    // console.log('------> set data', data)
-    // // this.form = data
-    // // Object.assign(form.value, data)
-    // form.value = data
-    // if (paramsTable.value) {
-    //     paramsTable.value.setData(data.parameters)
-    // }
+    console.log('------> set data', data)
+    // this.form = data
+    // Object.assign(form.value, data)
+    form.value = data
+    if (paramsTable.value) {
+        paramsTable.value.setData(data.parameters)
+    }
 }
 
 const reset = () => {
-    // this.$refs.params.resetFields()
-    // this.$refs.builtinParams.resetFields()
-    // this.$refs.form.resetFields()
+    form.value = {
+        parameters:[]
+    }
 }
 
 const show = () => {
     dlgVisible.value = true
+    console.log('dlg data is:', form.value)
 }
+
 defineExpose({ setData, reset, show })
 const emit = defineEmits(['success'])
 
@@ -311,9 +314,7 @@ const deleteParam = (row, index) => {
 }
 
 const close = () => {
-    if (!isInfoMode.value) {
-        reset()
-    }
+    reset()
 
     dlgVisible.value = false
 }

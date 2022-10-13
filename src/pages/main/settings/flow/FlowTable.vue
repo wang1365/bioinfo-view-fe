@@ -50,7 +50,7 @@
 
 <script setup>
 import {getFlows, deleteFlow} from 'src/api/flow'
-import {ref, onMounted, computed } from 'vue'
+import {ref, onMounted, computed, nextTick} from 'vue'
 import {useQuasar} from 'quasar'
 import PageTitle from 'components/page-title/PageTitle'
 import FlowDialog from './FlowDialog'
@@ -149,13 +149,6 @@ const getTagType = (row) => {
     return data[cat] || 'info'
 }
 
-const showEditDlg = (row) => {
-    console.log('show edit dlg', row.id)
-    currentFlowId.value = row.id
-    action.value = 'edit'
-    dlgFlow.value.show()
-    dlgFlow.value.setData(row)
-}
 
 const startLoading = () => {
     loading.value = true
@@ -163,6 +156,26 @@ const startLoading = () => {
 
 const stopLoading = () => {
     loading.value = false
+}
+
+
+const showInfoDlg = (row) => {
+    console.log('showInfoDlg', row.id)
+    currentFlowId.value = row.id
+    action.value = 'info'
+    dlgFlow.value.show()
+    dlgFlow.value.setData(row)
+}
+
+const showEditDlg = (row) => {
+    console.log('show edit dlg', row.id)
+    currentFlowId.value = row.id
+    action.value = 'edit'
+    dlgFlow.value.setData(row)
+    nextTick(() => {
+        console.log('nextTick => show edit dlg', row.id)
+        dlgFlow.value.show()
+    })
 }
 
 const showDeleteDlg = (row) => {
@@ -185,14 +198,6 @@ const showCreateTaskDlg = (row) => {
     console.log('showCreateTaskDlg', row.id)
     dlgCreateTask.value.show()
     dlgCreateTask.value.setData(row)
-}
-
-const showInfoDlg = (row) => {
-    console.log('showInfoDlg', row.id)
-    currentFlowId.value = row.id
-    action.value = 'info'
-    dlgFlow.value.show()
-    dlgFlow.value.setData(row)
 }
 
 const addFlow = () => {
