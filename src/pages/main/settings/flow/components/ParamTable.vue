@@ -24,13 +24,10 @@
                 <template v-slot:body="props">
                     <q-tr :props="props">
                         <q-td align="center">
-                            {{ props.row.id }}
-                        </q-td>
-                        <q-td align="center">
                             <q-input v-model="props.row.key" :disable="readonly" dense/>
                         </q-td>
                         <q-td align="center">
-                            <q-select stack-label  dense v-model="props.row.type" :options="[     'string','number','file','select','multiSelect']"> </q-select>
+                            <q-select stack-label dense v-model="props.row.type" :options="['string','number','file','select','multiSelect']" />
                         </q-td>
                         <q-td align="center">
                             <q-checkbox v-model="props.row.required" color="teal" :disable="readonly" dense />
@@ -60,7 +57,7 @@
                         <q-td>
                             <q-input v-model="props.row.description" :readonly="readonly" dense />
                         </q-td>
-                        <q-td v-if="!readonly">
+                        <q-td v-if="!readonly" align="center">
                             <q-btn
                                 v-if="!readonly"
                                 label="删除"
@@ -115,7 +112,6 @@ const props = defineProps({
 const {readonly} = toRefs(props)
 
 let columns = [
-    {name: "id", label: "ID", align: "center", style: "width:80px", field: (row) => row.id, format: (val) => `${val}`,},
     {name: "key", label: "参数名", field: "key", align: "center"},
     {name: "type", label: "值类型", align: "center", field: "type"},
     {name: "required", label: "必填", field: "required", align: "center"},

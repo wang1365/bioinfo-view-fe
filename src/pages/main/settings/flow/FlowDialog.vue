@@ -1,6 +1,6 @@
 <template>
     <q-dialog
-        persistent
+        :persistent = "action !== 'info'"
         transition-show="fade"
         transition-hide="fade"
         v-model="dlgVisible"
@@ -93,7 +93,8 @@
                                  :rules="[(val) => (val !== null && val !== '') || '请输入对比软件']"
                         />
                         <div class="col-12 row q-gutter-sm justify-around">
-                            <q-expansion-item dense default-opened icon="perm_identity" header-class="red"
+                            <q-expansion-item dense default-opened icon="perm_identity"
+                                              header-class="bg-blue-5 text-white"
                                               label="样本数目" class="col shadow-1 bg-grey-3">
                                 <q-radio
                                     v-model="form.sample_type"
@@ -125,6 +126,7 @@
                                 default-opened dense
                                 icon="perm_identity"
                                 label="支持非标准样本"
+                                header-class="bg-blue-5 text-white"
                                 class="col shadow-1 bg-grey-3"
                             >
                                 <q-radio
