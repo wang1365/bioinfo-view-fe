@@ -185,7 +185,7 @@
 
                 <q-card-actions align="right">
                     <q-btn v-if="isInfoMode" label="确 定" color="primary" v-close-popup/>
-                    <q-btn v-if="!isInfoMode" label="确 定" color="primary" type="submit"/>
+                    <q-btn v-if="!isInfoMode" label="确 定" class="q-mx-sm" color="primary" type="submit"/>
                     <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
                 </q-card-actions>
             </q-form>
