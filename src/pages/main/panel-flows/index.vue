@@ -1,6 +1,6 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
-        <PageTitle title="Panel 分析流程" />
+    <q-page style="overflow-x: hidden">
+<!--        <PageTitle title="Panel 分析流程" />-->
         <div v-if="groupEnabled">
             <q-tabs
                 v-model="tab"
@@ -14,15 +14,13 @@
             </q-tabs>
             <q-tab-panels v-model="tab">
                 <q-tab-panel v-for="item in rows" :key="item.id" :label="item.name" :name="item.name">
-                    <q-scroll-area style="height: 80vh; max-width: 100%;" :thumb-style="thumbStyle">
                         <PanelTab :panelGroupId="item.id" />
-                    </q-scroll-area>
                 </q-tab-panel>
             </q-tab-panels>
         </div>
-        <q-scroll-area v-else style="height: 80vh; max-width: 100%;" :thumb-style="thumbStyle">
+        <div v-else>
             <PanelTab />
-        </q-scroll-area>
+        </div>
     </q-page>
 </template>
 
@@ -35,13 +33,6 @@ import PanelTab from "pages/main/panel-flows/PanelTab"
 const rows = ref([])
 const tab = ref('')
 const groupEnabled = ref(false)
-const thumbStyle = {
-    right: '2px',
-    borderRadius: '5px',
-    backgroundColor: '#027be3',
-    width: '5px',
-    opacity: 0.75
-}
 
 const refreshRows = () => {
     getPanelGroups().then(res => {
