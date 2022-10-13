@@ -100,7 +100,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
+                    <tr class="hover" v-for="item in dataItems" v-bind:key="item.id">
                         <!-- <td class="q-pa-md text-center">
                             <q-checkbox
                                 v-model="item.selected"
@@ -259,15 +259,12 @@ const refreshPage = async () => {
 };
 const loadPage = async () => {
     let params = `?page=${currentPage.value}&size=${pageSize.value}`;
-    if (status.value.label != "全部") params += `&status=${status.value.value}`;
+    if (status.value.label !== "全部") params += `&status=${status.value.value}`;
     if (projectId.value) params += `&project_id=${projectId.value}`;
 
     apiGet(`/task${params}`, (res) => {
         total.value = res.data.total_count;
-        dataItems.value = [];
-        for (const iterator of res.data.item_list) {
-            dataItems.value.push(iterator);
-        }
+        dataItems.value = res.data.item_list;
     });
 };
 const confirm = async (task) => {
