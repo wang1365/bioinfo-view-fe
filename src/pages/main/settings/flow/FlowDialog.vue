@@ -10,7 +10,7 @@
         @hide="close()"
     >
         <q-card class="my-card">
-            <q-bar>
+            <q-bar class="bg-primary text-white">
                 <q-icon name="mediation" />
                 <div>流程管理</div>
                 <q-space />
