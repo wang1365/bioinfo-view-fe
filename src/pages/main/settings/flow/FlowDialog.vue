@@ -1,7 +1,6 @@
 <template>
     <q-dialog
         persistent
-        full-width
         transition-show="fade"
         transition-hide="fade"
         v-model="dlgVisible"
@@ -11,94 +10,91 @@
     >
         <q-card class="my-card">
             <q-bar class="bg-primary text-white">
-                <q-icon name="mediation" />
+                <q-icon name="mediation"/>
                 <div>流程管理</div>
-                <q-space />
+                <q-space/>
                 <q-btn dense flat icon="close" v-close-popup>
                     <q-tooltip>取消</q-tooltip>
                 </q-btn>
             </q-bar>
             <q-form ref="qForm" @submit="onSubmit">
                 <q-card-section class="q-pa-sm">
-                    <div class="row q-col-gutter-x-lg q-pl-lg">
-                        <div class="col-5 q-pa-sm">
-                            <q-input
-                                v-model="form.name"
-                                label="流程名称" :label-color="labelColor"
-                                stack-label filled
-                                clearable
-                                :readonly="isInfoMode"
-                                :rules="[(val) => (val !== null && val !== '') || '请输入流程名称']"
-                            />
-                            <div class="row justify-between">
-                                <q-input
-                                    class="col-5" :label-color="labelColor"
-                                    v-model="form.code"
-                                    label="流程code"
-                                    stack-label filled
-                                    clearable
-                                    :readonly="isInfoMode"
-                                    :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
-                                />
-                                <q-select
-                                    class="col-5"  :label-color="labelColor"
-                                    v-model="form.panel"
-                                    label="Panel"
-                                    :options="panels"
-                                    option-label="name"
-                                    option-value="id"
-                                    map-options  filled
-                                    emit-value
-                                    stack-label
-                                />
-                            </div>
-                            <q-input
-                                v-model="form.flow_category"
-                                label="分类名称"  :label-color="labelColor"
-                                stack-label filled
-                                clearable
-                                :readonly="isInfoMode"
-                                :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
-                            />
-                            <q-input
-                                v-model="form.memory"
-                                :min="0"
-                                :step="100"
-                                label="内存(m)" :label-color="labelColor"
-                                stack-label filled
-                                clearable
-                                :readonly="isInfoMode"
-                                :rules="[(val) => (val !== null && val !== '') || '请输入内存数值']"
-                            />
+                    <div class="row content-start q-col-gutter-xs justify-start">
+                        <q-input class="col-3"
+                                 v-model="form.name"
+                                 label="流程名称" :label-color="labelColor"
+                                 stack-label filled
+                                 clearable
+                                 :readonly="isInfoMode"
+                                 :rules="[(val) => (val !== null && val !== '') || '请输入流程名称']"
+                        />
+                        <q-input
+                            class="col-3" :label-color="labelColor"
+                            v-model="form.code"
+                            label="流程code"
+                            stack-label filled
+                            clearable
+                            :readonly="isInfoMode"
+                            :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
+                        />
+                        <q-select
+                            class="col-3" :label-color="labelColor"
+                            v-model="form.panel"
+                            label="Panel"
+                            :options="panels"
+                            option-label="name"
+                            option-value="id"
+                            map-options filled
+                            emit-value
+                            stack-label
+                        />
+                        <q-input class="col-3"
+                                 v-model="form.flow_category"
+                                 label="分类名称" :label-color="labelColor"
+                                 stack-label filled
+                                 clearable
+                                 :readonly="isInfoMode"
+                                 :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
+                        />
+                        <q-input class="col-3"
+                                 v-model="form.memory"
+                                 :min="0"
+                                 :step="100"
+                                 label="内存(m)" :label-color="labelColor"
+                                 stack-label filled
+                                 clearable
+                                 :readonly="isInfoMode"
+                                 :rules="[(val) => (val !== null && val !== '') || '请输入内存数值']"
+                        />
 
-                            <q-input
-                                v-model="form.tar_path"
-                                label="Docker存档地址" :label-color="labelColor"
-                                stack-label filled
-                                clearable
-                                :readonly="isInfoMode"
-                                :rules="[(val) => (val !== null && val !== '') || '请输入docker存档路径']"
-                            />
-                            <q-input
-                                v-model="form.image_name"
-                                label="Docker镜像名称" :label-color="labelColor"
-                                stack-label filled
-                                clearable
-                                :readonly="isInfoMode"
-                                :rules="[(val) => (val !== null && val !== '') || '请输入docker镜像名称']"
-                            />
+                        <q-input class="col-3"
+                                 v-model="form.tar_path"
+                                 label="Docker存档地址" :label-color="labelColor"
+                                 stack-label filled
+                                 clearable
+                                 :readonly="isInfoMode"
+                                 :rules="[(val) => (val !== null && val !== '') || '请输入docker存档路径']"
+                        />
+                        <q-input class="col-3"
+                                 v-model="form.image_name"
+                                 label="Docker镜像名称" :label-color="labelColor"
+                                 stack-label filled
+                                 clearable
+                                 :readonly="isInfoMode"
+                                 :rules="[(val) => (val !== null && val !== '') || '请输入docker镜像名称']"
+                        />
 
-                            <q-input
-                                v-model="form.alignment_tool"
-                                label="对比软件" :label-color="labelColor"
-                                stack-label filled
-                                clearable
-                                :readonly="isInfoMode"
-                                :rules="[(val) => (val !== null && val !== '') || '请输入对比软件']"
-                            />
-                        </div>
-                        <div class="col-6 q-pa-sm">
-                            <q-expansion-item default-opened icon="perm_identity" header-class="red" label="样本数目" class="shadow-1 bg-grey-3">
+                        <q-input class="col-3"
+                                 v-model="form.alignment_tool"
+                                 label="对比软件" :label-color="labelColor"
+                                 stack-label filled
+                                 clearable
+                                 :readonly="isInfoMode"
+                                 :rules="[(val) => (val !== null && val !== '') || '请输入对比软件']"
+                        />
+                        <div class="col-12 row q-gutter-sm justify-around">
+                            <q-expansion-item dense default-opened icon="perm_identity" header-class="red"
+                                              label="样本数目" class="col shadow-1 bg-grey-3">
                                 <q-radio
                                     v-model="form.sample_type"
                                     val="single"
@@ -124,12 +120,12 @@
                                     :disable="isInfoMode"
                                 />
                             </q-expansion-item>
-                            <br />
+
                             <q-expansion-item
-                                default-opened
+                                default-opened dense
                                 icon="perm_identity"
                                 label="支持非标准样本"
-                                class="shadow-1 bg-grey-3"
+                                class="col shadow-1 bg-grey-3"
                             >
                                 <q-radio
                                     v-model="form.allow_nonstandard_samples"
@@ -148,28 +144,29 @@
                                     :disable="isInfoMode"
                                 />
                             </q-expansion-item>
-                            <br />
-                            <q-input
-                                v-model="form.desp"
-                                type="textarea"
-                                filled
-                                label="描 述"
-                                stack-label
-                                clearable
-                                counter
-                                :readonly="isInfoMode"
+                        </div>
+                        <div class="col-12 q-mt-sm row q-gutter-sm justify-around">
+                            <q-input class="col"
+                                     v-model="form.desp"
+                                     type="textarea"
+                                     filled
+                                     label="描 述" label-color="primary"
+                                     stack-label
+                                     clearable
+                                     counter
+                                     :readonly="isInfoMode"
                             />
-                            <br />
-                            <q-input
-                                v-model="form.details"
-                                :readonly="isInfoMode"
-                                type="textarea"
-                                filled
-                                :autosize="{ minRows: 18, maxRows: 380 }"
-                                label="提示说明"
-                                stack-label
-                                clearable
-                                counter
+                            <br/>
+                            <q-input class="col"
+                                     v-model="form.details"
+                                     :readonly="isInfoMode"
+                                     type="textarea"
+                                     filled
+                                     :autosize="{ minRows: 18, maxRows: 380 }"
+                                     label="提示说明" label-color="primary"
+                                     stack-label
+                                     clearable
+                                     counter
                             />
                         </div>
                     </div>
@@ -185,9 +182,9 @@
                 />
 
                 <q-card-actions align="right">
-                    <q-btn v-if="isInfoMode" label="确 定" color="primary" v-close-popup />
-                    <q-btn v-if="!isInfoMode" label="确 定" color="primary" type="submit" />
-                    <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup />
+                    <q-btn v-if="isInfoMode" label="确 定" color="primary" v-close-popup/>
+                    <q-btn v-if="!isInfoMode" label="确 定" color="primary" type="submit"/>
+                    <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
                 </q-card-actions>
             </q-form>
         </q-card>
@@ -196,10 +193,10 @@
 
 <script setup>
 import ParamTable from './components/ParamTable'
-import { getFlowDetail, createFlow, updateFlow } from 'src/api/flow'
-import { getPanels } from "src/api/panel"
-import { defineProps, computed, ref, toRefs, defineExpose, defineEmits, onMounted, watch } from 'vue'
-import { useQuasar } from 'quasar'
+import {getFlowDetail, createFlow, updateFlow} from 'src/api/flow'
+import {getPanels} from "src/api/panel"
+import {defineProps, computed, ref, toRefs, defineExpose, defineEmits, onMounted, watch} from 'vue'
+import {useQuasar} from 'quasar'
 
 const $q = useQuasar()
 const dlgVisible = ref(false)
@@ -223,7 +220,7 @@ const props = defineProps({
     },
 })
 
-const { id } = toRefs(props)
+const {id} = toRefs(props)
 
 const labelColor = 'blue-7'
 
@@ -288,7 +285,7 @@ const setData = (data) => {
 
 const reset = () => {
     form.value = {
-        parameters:[]
+        parameters: []
     }
 }
 
@@ -297,7 +294,7 @@ const show = () => {
     console.log('dlg data is:', form.value)
 }
 
-defineExpose({ setData, reset, show })
+defineExpose({setData, reset, show})
 const emit = defineEmits(['success'])
 
 const addParam = (key) => {
@@ -340,14 +337,14 @@ const onSubmit = () => {
 
     for (const param of form.value.parameters) {
         if (param.key === undefined || param.key === '' || param.key === null) {
-            $q.notify({ message: '自定义参数名不允许为空' })
+            $q.notify({message: '自定义参数名不允许为空'})
             return
         }
     }
 
     const items = form.value.parameters.map((t) => t.key)
     if (items.length !== new Set(items).size) {
-        $q.notify({ message: '存在相同名称的自定义参数' })
+        $q.notify({message: '存在相同名称的自定义参数'})
         return
     }
 
@@ -356,7 +353,7 @@ const onSubmit = () => {
         //     if (valid) {
         form.value.parameters = paramsTable.value.getData()
         createFlow(form.value).then(() => {
-            $q.notify({ message: '流程创建成功' })
+            $q.notify({message: '流程创建成功'})
             emit('success')
             close()
         })
@@ -367,7 +364,7 @@ const onSubmit = () => {
     if (isEditMode.value) {
         form.value.parameters = paramsTable.value.getData()
         updateFlow(form.value.id, form.value).then(() => {
-            $q.notify({ message: '修改成功' })
+            $q.notify({message: '修改成功'})
             emit('success')
             close()
         })
@@ -379,7 +376,7 @@ const onSubmit = () => {
 
 <style lang="scss" scoped>
 .my-card {
-    width: 100%;
-    max-width: 800px;
+    width: 1200px;
+    max-width: 1800px;
 }
 </style>
