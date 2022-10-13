@@ -16,7 +16,7 @@
                     <Fullscreen />
                     <q-btn dense flat>
                         <q-icon name="person_pin" />
-                        &nbsp;&nbsp;&nbsp;&nbsp;管理员
+                        &nbsp;&nbsp;&nbsp;&nbsp;{{store.currentUser.nickname}}
                         <q-menu class="row items-center justify-around q-pa-md">
                             <div class="column">
                                 <div class="text-h6">个人信息</div>
