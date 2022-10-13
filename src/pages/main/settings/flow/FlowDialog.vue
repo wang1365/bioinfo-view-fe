@@ -24,38 +24,38 @@
                         <div class="col-5 q-pa-sm">
                             <q-input
                                 v-model="form.name"
-                                label="流程名称"
-                                stack-label
+                                label="流程名称" :label-color="labelColor"
+                                stack-label filled
                                 clearable
                                 :readonly="isInfoMode"
                                 :rules="[(val) => (val !== null && val !== '') || '请输入流程名称']"
                             />
                             <div class="row justify-between">
                                 <q-input
-                                    class="col-5"
+                                    class="col-5" :label-color="labelColor"
                                     v-model="form.code"
                                     label="流程code"
-                                    stack-label
+                                    stack-label filled
                                     clearable
                                     :readonly="isInfoMode"
                                     :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
                                 />
                                 <q-select
-                                    class="col-5"
+                                    class="col-5"  :label-color="labelColor"
                                     v-model="form.panel"
                                     label="Panel"
                                     :options="panels"
                                     option-label="name"
                                     option-value="id"
-                                    map-options
+                                    map-options  filled
                                     emit-value
                                     stack-label
                                 />
                             </div>
                             <q-input
                                 v-model="form.flow_category"
-                                label="分类名称"
-                                stack-label
+                                label="分类名称"  :label-color="labelColor"
+                                stack-label filled
                                 clearable
                                 :readonly="isInfoMode"
                                 :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
@@ -64,8 +64,8 @@
                                 v-model="form.memory"
                                 :min="0"
                                 :step="100"
-                                label="内存(m)"
-                                stack-label
+                                label="内存(m)" :label-color="labelColor"
+                                stack-label filled
                                 clearable
                                 :readonly="isInfoMode"
                                 :rules="[(val) => (val !== null && val !== '') || '请输入内存数值']"
@@ -73,16 +73,16 @@
 
                             <q-input
                                 v-model="form.tar_path"
-                                label="Docker存档地址"
-                                stack-label
+                                label="Docker存档地址" :label-color="labelColor"
+                                stack-label filled
                                 clearable
                                 :readonly="isInfoMode"
                                 :rules="[(val) => (val !== null && val !== '') || '请输入docker存档路径']"
                             />
                             <q-input
                                 v-model="form.image_name"
-                                label="Docker镜像名称"
-                                stack-label
+                                label="Docker镜像名称" :label-color="labelColor"
+                                stack-label filled
                                 clearable
                                 :readonly="isInfoMode"
                                 :rules="[(val) => (val !== null && val !== '') || '请输入docker镜像名称']"
@@ -90,15 +90,15 @@
 
                             <q-input
                                 v-model="form.alignment_tool"
-                                label="对比软件"
-                                stack-label
+                                label="对比软件" :label-color="labelColor"
+                                stack-label filled
                                 clearable
                                 :readonly="isInfoMode"
                                 :rules="[(val) => (val !== null && val !== '') || '请输入对比软件']"
                             />
                         </div>
                         <div class="col-6 q-pa-sm">
-                            <q-expansion-item default-opened icon="perm_identity" label="样本数目" class="shadow-1">
+                            <q-expansion-item default-opened icon="perm_identity" header-class="red" label="样本数目" class="shadow-1 bg-grey-3">
                                 <q-radio
                                     v-model="form.sample_type"
                                     val="single"
@@ -129,7 +129,7 @@
                                 default-opened
                                 icon="perm_identity"
                                 label="支持非标准样本"
-                                class="shadow-1"
+                                class="shadow-1 bg-grey-3"
                             >
                                 <q-radio
                                     v-model="form.allow_nonstandard_samples"
@@ -224,6 +224,8 @@ const props = defineProps({
 })
 
 const { id } = toRefs(props)
+
+const labelColor = 'blue-7'
 
 watch(id, v => {
     console.log('flow id changed:', v)
