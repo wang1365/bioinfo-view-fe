@@ -65,6 +65,10 @@ const refresh = () => {
         console.log('==> 任务详情：', res)
         task.value = res
 
+        function toBai(bam) {
+            return bam.substring(0, bam.length - 1) + 'i'
+        }
+
         const base = '/igv'
         const genome = res.igv[2][1]
         const tracks = [{
@@ -84,13 +88,13 @@ const refresh = () => {
             type: 'alignment',
             format: 'bam',
             url: base + res.igv[3][1],
-            indexURL: base + res.igv[3][1] + '.bai'
+            indexURL: base + toBai(res.igv[3][1])
         }, {
             name: res.igv[4][0],
             type: 'alignment',
             format: 'bam',
             url: base + res.igv[4][1],
-            indexURL: base + res.igv[4][1] + '.bai',
+            indexURL: base + toBai(res.igv[4][1])
         }]
 
         options = {
