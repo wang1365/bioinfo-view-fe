@@ -13,8 +13,8 @@ server {
         expires 24h;
     }
 
-    location /mounted {
-        alias   /data/bioinfo;
+    location /igv {
+        alias   /;
         expires 24h;
     }
 

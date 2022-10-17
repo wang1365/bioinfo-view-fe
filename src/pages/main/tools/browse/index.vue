@@ -55,7 +55,7 @@
 
 <script setup>
 import {listSample, getSample} from 'src/api/sample'
-import {ref, onMounted} from 'vue'
+import {ref, reactive,  onMounted} from 'vue'
 import {useQuasar} from 'quasar'
 import {useRouter} from 'vue-router'
 import PageTitle from 'components/page-title/PageTitle'
@@ -64,7 +64,6 @@ const loading = ref(false)
 const currentFlowId = ref(null)
 const router = useRouter()
 
-const $q = useQuasar()
 const columns = [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
     {
