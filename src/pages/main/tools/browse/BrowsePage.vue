@@ -1,5 +1,5 @@
 <template>
-    <q-page id="igv" padding style="overflow-x: hidden">
+    <q-page id="igv" style="overflow-x: hidden">
         <!--        <PageTitle title="基因组浏览器" />-->
         <!--        <div class="full-width full-height" id="igv" />-->
         <!--        <q-expansion-item expand-separator icon="settings_suggest" label="参数设置" class="shadow-1">-->
@@ -76,30 +76,36 @@ const refresh = () => {
             type: 'annotation',
             format: 'bed',
             url: base + res.igv[0][1],
-            indexed: false
+            indexed: false,
+            autoHeight: true
         }, {
             name: res.igv[1][0],
             type: 'annotation',
             format: 'bed',
             url: base + res.igv[1][1],
-            indexed: false
+            indexed: false,
+            autoHeight: true
         }, {
             name: res.igv[3][0],
             type: 'alignment',
             format: 'bam',
             url: base + res.igv[3][1],
-            indexURL: base + toBai(res.igv[3][1])
+            indexURL: base + toBai(res.igv[3][1]),
+            autoHeight: true
         }, {
             name: res.igv[4][0],
             type: 'alignment',
             format: 'bam',
             url: base + res.igv[4][1],
-            indexURL: base + toBai(res.igv[4][1])
+            indexURL: base + toBai(res.igv[4][1]),
+            autoHeight: true
         }]
 
         options = {
             genome,
-            tracks
+            tracks,
+            showCircularViewButton: true,
+            showROITableButton: true,
         }
 
         nextTick(() => {
