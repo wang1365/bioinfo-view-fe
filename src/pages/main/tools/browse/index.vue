@@ -39,7 +39,7 @@
                     <q-btn v-if="props.row.tasks.length > 0" label="浏览" color="primary" icon="arrow_drop_down" outline size="xs" >
                         <q-menu>
                             <q-list>
-                                <q-item v-for="task in props.row.tasks" :key="task.id"
+                                <q-item v-for="task in props.row.tasks" :key="task.id" :disable="!task.exist_igv"
                                     clickable v-close-popup @click="clickView(props.row.id, task)">
                                     {{`【${task.flow_name}】${task.name}`}}
                                 </q-item>
