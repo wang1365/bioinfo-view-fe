@@ -33,6 +33,7 @@ import {ref, reactive, onMounted, nextTick} from "vue"
 import {useRoute, onBeforeRouteUpdate} from "vue-router"
 import {getSample} from 'src/api/sample'
 import {getTask} from 'src/api/task'
+import { errorMessage } from "src/utils/notify";
 import igv from 'igv'
 
 // const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"])
@@ -67,6 +68,11 @@ const refresh = () => {
 
         function toBai(bam) {
             return bam.substring(0, bam.length - 1) + 'i'
+        }
+
+        if (!res.igv || res.igv.length === 0) {
+            errorMessage('中间文件不存在')
+            return
         }
 
         const base = '/igv'
