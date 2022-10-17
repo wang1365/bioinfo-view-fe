@@ -77,28 +77,26 @@ const refresh = () => {
             format: 'bed',
             url: base + res.igv[0][1],
             indexed: false,
-            autoHeight: true
         }, {
             name: res.igv[1][0],
             type: 'annotation',
             format: 'bed',
             url: base + res.igv[1][1],
             indexed: false,
-            autoHeight: true
         }, {
             name: res.igv[3][0],
             type: 'alignment',
             format: 'bam',
             url: base + res.igv[3][1],
             indexURL: base + toBai(res.igv[3][1]),
-            autoHeight: true
+            height: 250
         }, {
             name: res.igv[4][0],
             type: 'alignment',
             format: 'bam',
             url: base + res.igv[4][1],
             indexURL: base + toBai(res.igv[4][1]),
-            autoHeight: true
+            height: 250
         }]
 
         options = {
