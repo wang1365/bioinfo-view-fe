@@ -36,7 +36,16 @@
             <!--            </template>-->
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
-                    <q-btn label="浏览" color="primary" outline size="sm" @click="clickView(props.row)"></q-btn>
+                    <q-btn v-if="props.row.tasks.length > 0" label="浏览" color="primary" icon="arrow_drop_down" outline size="xs" >
+                        <q-menu>
+                            <q-list>
+                                <q-item v-for="task in props.row.tasks" :key="task.id"
+                                    clickable v-close-popup @click="clickView(props.row.id, task)">
+                                    {{`【${task.flow_name}】${task.name}`}}
+                                </q-item>
+                            </q-list>
+                        </q-menu>
+                    </q-btn>
                     <!--                    <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>-->
                 </q-td>
             </template>
@@ -211,10 +220,10 @@ const stopLoading = () => {
 }
 
 
-const clickView = (row) => {
+const clickView = (sample_id, task) => {
     router.push({
             path: '/main/tools/browse/detail',
-            query: { sample: row.id }
+            query: { sample: sample_id, task: task.id }
         }
     )
 }

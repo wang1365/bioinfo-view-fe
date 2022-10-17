@@ -32,6 +32,7 @@ import PageTitle from "components/page-title/PageTitle.vue";
 import {ref, onMounted, defineProps} from "vue"
 import {useRoute, onBeforeRouteUpdate} from "vue-router"
 import { getSample } from 'src/api/sample'
+import { getTask } from 'src/api/task'
 import igv from 'igv'
 
 const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"])
@@ -41,9 +42,10 @@ const shape = ref("hg19");
 const route = useRoute()
 const browser = ref(null)
 const sample = ref(null)
+const task = ref(null)
 
 onBeforeRouteUpdate(async (to, from) => {
-    console.log('Route upate', from, to)
+    console.log('Route update', from, to)
 })
 
 onMounted(() => {
@@ -54,6 +56,13 @@ const refresh = () => {
     getSample(route.query.sample).then(res => {
         console.log(res)
         sample.value = res
+        refreshBrowser()
+    }).finally(() => {
+    })
+
+    getTask(route.query.task).then(res => {
+        console.log(res)
+        task.value = res
         refreshBrowser()
     }).finally(() => {
     })
