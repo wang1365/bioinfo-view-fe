@@ -65,7 +65,7 @@ const refresh = () => {
         console.log('==> 任务详情：', res)
         task.value = res
 
-        const base = '/mounted'
+        const base = '/igv'
         const genome = res.igv[2][1]
         const tracks = [{
             name: res.igv[0][0],
