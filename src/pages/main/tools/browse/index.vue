@@ -156,20 +156,22 @@ const stopLoading = () => {
 }
 
 const clickView = (sample_id, task) => {
-    // 直接路由
-    // router.push({
-    //         // path: '/main/tools/browse/detail',
-    //         path: '/browse',
-    //         query: {sample: sample_id, task: task.id}
-    //     }
-    // )
-
-    // 新页面打开
-    const routeUrl = router.resolve({
-        path: '/browse',
-        query: {sample: sample_id, task: task.id}
-    })
-    window.open(routeUrl.href, '_blank')
+    const openInNewTab = false
+    if (!openInNewTab) {
+        // 直接路由
+        router.push({
+                path: '/main/tools/browse/detail',
+                query: {sample: sample_id, task: task.id}
+            }
+        )
+    } else {
+        // 新页面打开
+        const routeUrl = router.resolve({
+            path: '/browse',
+            query: {sample: sample_id, task: task.id}
+        })
+        window.open(routeUrl.href, '_blank')
+    }
 }
 </script>
 
