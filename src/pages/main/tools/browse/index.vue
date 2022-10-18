@@ -1,69 +1,6 @@
 <template>
     <q-page padding>
         <PageTitle title="样本数据检索" />
-        <!--        <q-table-->
-        <!--            :rows="rows"-->
-        <!--            :columns="columns"-->
-        <!--            :loading="loading"-->
-        <!--            row-key="name"-->
-        <!--            hide-no-data-->
-        <!--            wrap-cells-->
-        <!--            v-model:pagination="pagination"-->
-        <!--            rows-per-page-label="每页条数"-->
-        <!--            :rows-per-page-options="[10, 20, 50, 100]"-->
-        <!--            class="bio-data-table"-->
-        <!--        >-->
-        <!--            <template v-slot:top>-->
-        <!--                <q-input-->
-        <!--                    label="患者姓名"-->
-        <!--                    v-model="keyword"-->
-        <!--                    clearable-->
-        <!--                    @clear="refreshSamples"-->
-        <!--                    @keypress.enter="refreshSamples"-->
-        <!--                >-->
-        <!--                    <template v-slot:prepend>-->
-        <!--                        <q-icon name="search" />-->
-        <!--                    </template>-->
-        <!--                </q-input>-->
-        <!--                <q-btn color="primary" class="q-ml-sm" label="查询" @click="refreshSamples" />-->
-        <!--            </template>-->
-        <!--            &lt;!&ndash;            <template v-slot:header="props">&ndash;&gt;-->
-        <!--            &lt;!&ndash;                <q-tr :props="props">&ndash;&gt;-->
-        <!--            &lt;!&ndash;                    <q-th v-for="col in columns" :key="col.name" :props="props" class="text-weight-bolder text-h6">&ndash;&gt;-->
-        <!--            &lt;!&ndash;                        {{ col.label }}&ndash;&gt;-->
-        <!--            &lt;!&ndash;                    </q-th>&ndash;&gt;-->
-        <!--            &lt;!&ndash;                </q-tr>&ndash;&gt;-->
-        <!--            &lt;!&ndash;            </template>&ndash;&gt;-->
-        <!--            <template v-slot:body-cell-operation="props">-->
-        <!--                <q-td :props="props" align="center" class="q-gutter-xs">-->
-        <!--                    <q-btn-->
-        <!--                        v-if="props.row.tasks.length > 0"-->
-        <!--                        label="浏览"-->
-        <!--                        color="primary"-->
-        <!--                        icon="arrow_drop_down"-->
-        <!--                        outline-->
-        <!--                        size="xs"-->
-        <!--                    >-->
-        <!--                        <q-menu>-->
-        <!--                            <q-list>-->
-        <!--                                <q-item-->
-        <!--                                    v-for="task in props.row.tasks"-->
-        <!--                                    :key="task.id"-->
-        <!--                                    :disable="!task.exist_igv"-->
-        <!--                                    clickable-->
-        <!--                                    v-close-popup-->
-        <!--                                    @click="clickView(props.row.id, task)"-->
-        <!--                                >-->
-        <!--                                    {{`【${task.flow_name}】${task.name}`}}-->
-        <!--                                </q-item>-->
-        <!--                            </q-list>-->
-        <!--                        </q-menu>-->
-        <!--                    </q-btn>-->
-        <!--                    &lt;!&ndash;                    <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>&ndash;&gt;-->
-        <!--                </q-td>-->
-        <!--            </template>-->
-        <!--        </q-table>-->
-
         <div class="row items-center">
             <q-input
                 label="患者姓名"
