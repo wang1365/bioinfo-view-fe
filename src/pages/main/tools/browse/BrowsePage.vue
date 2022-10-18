@@ -66,9 +66,11 @@ import {ref, reactive, onMounted, nextTick} from "vue"
 import {useRoute, onBeforeRouteUpdate} from "vue-router"
 import {getSample} from 'src/api/sample'
 import {getTask} from 'src/api/task'
-import {errorMessage} from "src/utils/notify";
+import {errorMessage} from "src/utils/notify"
+import { useQuasar, QSpinnerFacebook } from 'quasar'
 import igv from 'igv'
 
+const $q = useQuasar()
 const route = useRoute()
 const sample = ref(null)
 const task = ref(null)
@@ -172,6 +174,14 @@ const addIgvFile = () => {
     igv.browser.removeTrack()
 
     console.log('addIgvFile', inputForm.value)
+    $q.loading.show({
+        spinner: QSpinnerFacebook,
+        spinnerColor: 'yellow',
+        spinnerSize: 140,
+        backgroundColor: 'grey',
+        message: '正在加载和解析结果文件...',
+        messageColor: 'black'
+    })
     igv.browser.loadTrack({
         url: '/igv' + inputForm.value.file,
         label: inputForm.value.type
@@ -181,6 +191,8 @@ const addIgvFile = () => {
     })
     .catch(function (error)  {
         alert("结果文件加载失败: " + error)
+    }).finally(() => {
+        $q.loading.hide()
     })
 }
 </script>
