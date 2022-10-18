@@ -38,10 +38,16 @@
                 <q-dialog v-model="inputDlgVisible">
                     <q-card style="width:500px">
                         <q-card-section>
-                            <q-input v-model="inputForm.file" label="输入结果文件路径" stack-label />
+                            <q-input
+                                v-model="inputForm.file"
+                                label-color="primary"
+                                label="输入结果文件路径"
+                                stack-label
+                            />
                             <q-select
                                 v-model="inputForm.type"
-                                label="输入结果文件路径"
+                                label="选择Track类型"
+                                label-color="primary"
                                 stack-label
                                 :options="['annotation', 'alignment', 'variant', 'gwas']"
                             />
