@@ -162,7 +162,6 @@ const stopLoading = () => {
     loading.value = false
 }
 
-
 const clickView = (sample_id, task) => {
     router.push({
             path: '/main/tools/browse/detail',
@@ -170,43 +169,12 @@ const clickView = (sample_id, task) => {
         }
     )
 }
-
-
-const handleSizeChange = (size) => {
-    pageSize.value = size
-    refreshSamples()
-}
-
-const handleCurrentChange = (page) => {
-    page.value = page
-    refreshSamples()
-}
 </script>
 
 <style lang="scss" scoped>
 .pagination {
     padding: 30px 30px 0 0;
     text-align: center;
-}
-
-.bio-data-table {
-    max-width: 99%;
-
-    thead tr:first-child th:first-child {
-        background-color: #fff;
-    }
-
-    /* bg color is important for th; just specify one */
-
-
-    td:first-child {
-        background-color: #f5f5dc;
-    }
-
-    th:first-child, td:first-child {
-        position: sticky;
-        left: 0;
-    }
 }
 
 /* specifying max-width so the example can
