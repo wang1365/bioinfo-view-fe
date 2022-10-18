@@ -195,7 +195,9 @@ const addIgvFile = () => {
     })
     igv.browser.loadTrack({
         url: '/igv' + inputForm.value.file,
-        label: inputForm.value.type
+        type: inputForm.value.type,
+        label: inputForm.value.file,
+        name: inputForm.value.file,
     })
     .then(function (newTrack) {
         console.log("Track loaded: " + newTrack.name)

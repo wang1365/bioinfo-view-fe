@@ -32,7 +32,7 @@
                                 <q-item
                                     v-for="task in record.tasks"
                                     :key="task.id"
-                                    :disable="!task.exist_igv"
+                                    :disable="!isTaskClickable(task)"
                                     clickable
                                     v-close-popup
                                     @click="clickView(record.id, task)"
@@ -155,6 +155,10 @@ const stopLoading = () => {
     loading.value = false
 }
 
+const isTaskClickable = (task) => {
+    return true
+    // return !task.exist_igv
+}
 const clickView = (sample_id, task) => {
     const openInNewTab = false
     if (!openInNewTab) {
