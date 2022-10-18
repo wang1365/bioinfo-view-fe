@@ -109,6 +109,10 @@ const routes = [
             },
         ],
     },
+    {
+        path: '/browse',
+        component: () => import('pages/main/tools/browse/FullBrowsePage'),
+    },
 
     // Always leave this as last one,
     // but you can also remove it

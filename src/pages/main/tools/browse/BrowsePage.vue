@@ -33,7 +33,7 @@ import {ref, reactive, onMounted, nextTick} from "vue"
 import {useRoute, onBeforeRouteUpdate} from "vue-router"
 import {getSample} from 'src/api/sample'
 import {getTask} from 'src/api/task'
-import { errorMessage } from "src/utils/notify";
+import {errorMessage} from "src/utils/notify";
 import igv from 'igv'
 
 // const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"])
@@ -70,40 +70,42 @@ const refresh = () => {
             return bam.substring(0, bam.length - 1) + 'i'
         }
 
+        let tracks = []
+        let genome = 'hg19'
         if (!res.igv || res.igv.length === 0) {
             errorMessage('中间文件不存在')
-            return
-        }
+        } else {
+            const base = '/igv'
+            genome = res.igv[2][1]
+            tracks = [{
+                name: res.igv[0][0],
+                type: 'annotation',
+                format: 'bed',
+                url: base + res.igv[0][1],
+                indexed: false,
+            }, {
+                name: res.igv[1][0],
+                type: 'annotation',
+                format: 'bed',
+                url: base + res.igv[1][1],
+                indexed: false,
+            }, {
+                name: res.igv[3][0],
+                type: 'alignment',
+                format: 'bam',
+                url: base + res.igv[3][1],
+                indexURL: base + toBai(res.igv[3][1]),
+                height: 250
+            }, {
+                name: res.igv[4][0],
+                type: 'alignment',
+                format: 'bam',
+                url: base + res.igv[4][1],
+                indexURL: base + toBai(res.igv[4][1]),
+                height: 250
+            }]
 
-        const base = '/igv'
-        const genome = res.igv[2][1]
-        const tracks = [{
-            name: res.igv[0][0],
-            type: 'annotation',
-            format: 'bed',
-            url: base + res.igv[0][1],
-            indexed: false,
-        }, {
-            name: res.igv[1][0],
-            type: 'annotation',
-            format: 'bed',
-            url: base + res.igv[1][1],
-            indexed: false,
-        }, {
-            name: res.igv[3][0],
-            type: 'alignment',
-            format: 'bam',
-            url: base + res.igv[3][1],
-            indexURL: base + toBai(res.igv[3][1]),
-            height: 250
-        }, {
-            name: res.igv[4][0],
-            type: 'alignment',
-            format: 'bam',
-            url: base + res.igv[4][1],
-            indexURL: base + toBai(res.igv[4][1]),
-            height: 250
-        }]
+        }
 
         options = {
             genome,

@@ -25,14 +25,7 @@
         >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'operation'">
-                    <q-btn
-                        v-if="record.tasks && record.tasks.length > 0"
-                        label="浏览"
-                        color="primary"
-                        icon="arrow_drop_down"
-                        outline
-                        size="xs"
-                    >
+                    <q-btn label="浏览" color="primary" icon="arrow_drop_down" outline size="xs">
                         <!--                    <q-btn label="浏览" color="primary" icon="arrow_drop_down" outline size="xs">-->
                         <q-menu>
                             <q-list>
@@ -163,11 +156,20 @@ const stopLoading = () => {
 }
 
 const clickView = (sample_id, task) => {
-    router.push({
-            path: '/main/tools/browse/detail',
-            query: {sample: sample_id, task: task.id}
-        }
-    )
+    // 直接路由
+    // router.push({
+    //         // path: '/main/tools/browse/detail',
+    //         path: '/browse',
+    //         query: {sample: sample_id, task: task.id}
+    //     }
+    // )
+
+    // 新页面打开
+    const routeUrl = router.resolve({
+        path: '/browse',
+        query: {sample: sample_id, task: task.id}
+    })
+    window.open(routeUrl.href, '_blank')
 }
 </script>
 
