@@ -38,7 +38,13 @@
                 <q-dialog v-model="inputDlgVisible">
                     <q-card style="width:500px">
                         <q-card-section>
-                            <q-input v-model="inputIgvFile" label="输入结果文件路径" stack-label />
+                            <q-input v-model="inputForm.file" label="输入结果文件路径" stack-label />
+                            <q-select
+                                v-model="inputForm.type"
+                                label="输入结果文件路径"
+                                stack-label
+                                :options="['annotation', 'alignment', 'variant', 'gwas']"
+                            />
                         </q-card-section>
                         <q-card-actions align="right">
                             <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup />
@@ -63,17 +69,16 @@ import {getTask} from 'src/api/task'
 import {errorMessage} from "src/utils/notify";
 import igv from 'igv'
 
-// const options = ref(["Google", "Facebook", "Twitter", "Apple", "Oracle"])
-// const database = ref("Google");
-
 const route = useRoute()
-const browser = ref(null)
 const sample = ref(null)
 const task = ref(null)
 const tab = ref('igv')
 // const options = ref({})
 const inputDlgVisible = ref(false)
-const inputIgvFile = ref('')
+const inputForm = ref({
+    file: '',
+    type: 'annotation'
+})
 let options = {}
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -166,15 +171,16 @@ const refreshBrowser = () => {
 const addIgvFile = () => {
     igv.browser.removeTrack()
 
+    console.log('addIgvFile', inputForm.value)
     igv.browser.loadTrack({
-        url: '/igv' + inputIgvFile.value,
-        label: inputIgvFile.value
+        url: '/igv' + inputForm.value.file,
+        label: inputForm.value.type
     })
     .then(function (newTrack) {
-        alert("Track loaded: " + newTrack.name)
+        console.log("Track loaded: " + newTrack.name)
     })
     .catch(function (error)  {
-        // Handle error
+        alert("结果文件加载失败: " + error)
     })
 }
 </script>
