@@ -87,6 +87,7 @@ const inputForm = ref({
     file: '',
     type: 'annotation'
 })
+let trackNames = []
 let options = {}
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -157,6 +158,8 @@ const refresh = () => {
             showROITableButton: true,
         }
 
+        trackNames = tracks.map(t => t.name)
+
         nextTick(() => {
             refreshBrowser()
         })
@@ -177,7 +180,9 @@ const refreshBrowser = () => {
 }
 
 const addIgvFile = () => {
-    igv.browser.removeTrack()
+    for (let name of trackNames) {
+        igv.browser.removeTrackByName()
+    }
 
     console.log('addIgvFile', inputForm.value)
     $q.loading.show({
@@ -194,8 +199,8 @@ const addIgvFile = () => {
     })
     .then(function (newTrack) {
         console.log("Track loaded: " + newTrack.name)
-    })
-    .catch(function (error)  {
+        trackNames = [inputForm.value.type]
+    }).catch(function (error)  {
         alert("结果文件加载失败: " + error)
     }).finally(() => {
         $q.loading.hide()
