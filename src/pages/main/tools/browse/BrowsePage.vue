@@ -1,5 +1,5 @@
 <template>
-    <q-page id="igv" style="overflow-x: hidden">
+    <q-page style="overflow-x: hidden">
         <!--        <PageTitle title="基因组浏览器" />-->
         <!--        <div class="full-width full-height" id="igv" />-->
         <!--        <q-expansion-item expand-separator icon="settings_suggest" label="参数设置" class="shadow-1">-->
@@ -24,6 +24,33 @@
         <!--            </div>-->
         <!--            <div class="q-py-sm"></div>-->
         <!--        </q-expansion-item>-->
+
+        <!--        <q-expansion-item label="样本信息" header-class="bg-primary text-white" dense> 2222</q-expansion-item>-->
+        <!--        <q-expansion-item label="基因组浏览器" :default-opened="true" dense header-class="bg-purple text-white">-->
+        <!--            <div id="igv"></div>-->
+        <!--        </q-expansion-item>-->
+        <q-banner>
+            <q-tabs v-model="tab" dense>
+                <q-tab label="基因组浏览" name="igv"></q-tab>
+                <q-tab label="样本信息" name="sample"></q-tab>
+                <q-space />
+                <q-btn label="选择基因组文件" color="primary" size="sm" @click="inputDlgVisible = true"></q-btn>
+                <q-dialog v-model="inputDlgVisible">
+                    <q-card style="width:500px">
+                        <q-card-section>
+                            <q-input v-model="inputIgvFile" label="输入结果文件路径" stack-label />
+                        </q-card-section>
+                        <q-card-actions align="right">
+                            <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup />
+                            <q-btn label="取消" v-close-popup />
+                        </q-card-actions>
+                    </q-card>
+                </q-dialog>
+            </q-tabs>
+        </q-banner>
+
+        <div v-show="tab === 'igv'" id="igv"></div>
+        <div v-if="tab !== 'igv'">2222222222</div>
     </q-page>
 </template>
 
@@ -43,7 +70,10 @@ const route = useRoute()
 const browser = ref(null)
 const sample = ref(null)
 const task = ref(null)
+const tab = ref('igv')
 // const options = ref({})
+const inputDlgVisible = ref(false)
+const inputIgvFile = ref('')
 let options = {}
 
 onBeforeRouteUpdate(async (to, from) => {
@@ -72,7 +102,7 @@ const refresh = () => {
 
         let tracks = []
         let genome = 'hg19'
-        if (!res.igv || res.igv.length === 0) {
+        if (!res || !res.igv || res.igv.length === 0) {
             errorMessage('中间文件不存在')
         } else {
             const base = '/igv'
@@ -123,37 +153,28 @@ const refresh = () => {
 
 const refreshBrowser = () => {
     const igvDiv = document.getElementById('igv')
-    // const genome = route.query.genome || 'hg38'
-    // const format = route.query.format || 'cram'
-    // const url = route.query.url || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram"
-    // const indexURL = route.query.indexURL || "https://s3.amazonaws.com/1000genomes/data/HG00103/alignment/HG00103.alt_bwamem_GRCh38DH.20150718.GBR.low_coverage.cram.crai"
-
-    // const name = sample.value ? `${sample.value.patient.name}-${sample.value.library_number}` : '测试bam'
-    // const genome = route.query.genome || 'hg19'
-    // const format = route.query.format || 'bam'
-    // const url = route.query.url || "http://10.10.0.208/mounted/test-igv-data/test.recal.bam"
-    // const indexURL = route.query.indexURL || "http://10.10.0.208/mounted/test-igv-data/test.recal.bai"
-    // http://10.10.0.208/#/main/tools/browse?genome=hg19&format=bam&url=http://10.10.0.208/mounted/test-igv-data/test.recal.bam&indexURL=http://10.10.0.208/mounted/test-igv-data/test.recal.bai
-
-    //
-    // const options = {
-    //     genome,
-    //     locus: "chr8:127,736,588-127,739,371",
-    //     tracks: [
-    //         {
-    //             name,
-    //             url,
-    //             indexURL,
-    //             format,
-    //         }
-    //     ]
-    // }
 
     console.log('==> 创建IGV浏览器节点', igvDiv, options)
 
     igv.createBrowser(igvDiv, options)
         .then(function (browser) {
             console.log("Created IGV browser", browser)
+            igv.browser = browser
         })
+}
+
+const addIgvFile = () => {
+    igv.browser.removeTrack()
+
+    igv.browser.loadTrack({
+        url: '/igv' + inputIgvFile.value,
+        label: inputIgvFile.value
+    })
+    .then(function (newTrack) {
+        alert("Track loaded: " + newTrack.name)
+    })
+    .catch(function (error)  {
+        // Handle error
+    })
 }
 </script>
