@@ -33,7 +33,7 @@
             <q-tabs v-model="tab" dense>
                 <q-tab label="基因组浏览" name="igv"></q-tab>
                 <q-tab label="样本信息" name="sample"></q-tab>
-                <q-space />
+                <q-space/>
                 <q-btn label="选择基因组文件" color="primary" size="sm" @click="inputDlgVisible = true"></q-btn>
                 <q-dialog v-model="inputDlgVisible">
                     <q-card style="width:500px">
@@ -53,8 +53,8 @@
                             />
                         </q-card-section>
                         <q-card-actions align="right">
-                            <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup />
-                            <q-btn label="取消" v-close-popup />
+                            <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup/>
+                            <q-btn label="取消" v-close-popup/>
                         </q-card-actions>
                     </q-card>
                 </q-dialog>
@@ -63,21 +63,21 @@
 
         <div v-show="tab === 'igv'" id="igv"></div>
         <div v-if="tab !== 'igv'" class="col">
-            <sample-card :sample="sample" v-for="sample in samples" :key="sample.id" class="row-auto q-ma-md" />
+            <sample-card :sample="sample" v-for="sample in samples" :key="sample.id" class="row-auto q-ma-md"/>
         </div>
     </q-page>
 </template>
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
-import { ref, reactive, onMounted, nextTick } from "vue"
-import { useRoute, onBeforeRouteUpdate } from "vue-router"
-import { getSample, listSampleMetaByParams } from 'src/api/sample'
-import { getTask } from 'src/api/task'
-import { errorMessage } from "src/utils/notify"
-import { useQuasar, QSpinnerFacebook } from 'quasar'
+import {ref, reactive, onMounted, nextTick} from "vue"
+import {useRoute, onBeforeRouteUpdate} from "vue-router"
+import {getSample, listSampleMetaByParams} from 'src/api/sample'
+import {getTask} from 'src/api/task'
+import {errorMessage} from "src/utils/notify"
+import {useQuasar, QSpinnerFacebook} from 'quasar'
 import SampleCard from './components/SampleCard'
-import { buildModelQuery, queryModel } from 'src/api/modelQueryBuilder'
+import {buildModelQuery, queryModel} from 'src/api/modelQueryBuilder'
 import igv from 'igv'
 
 const $q = useQuasar()
@@ -217,16 +217,17 @@ const addIgvFile = () => {
     igv.browser.loadTrack({
         url: '/igv' + inputForm.value.file,
         type: inputForm.value.type,
-        label: inputForm.value.file,
-        name: inputForm.value.file,
+        label: inputForm.value.file
     })
-    .then(function (newTrack) {
-        console.log("Track loaded: " + newTrack.name)
-        trackNames = [inputForm.value.type]
-    }).catch(function (error)  {
-        alert("结果文件加载失败: " + error)
-    }).finally(() => {
-        $q.loading.hide()
-    })
+        .then(function (newTrack) {
+            console.log("Track loaded: " + newTrack.name)
+            trackNames = [inputForm.value.type]
+        })
+        .catch(function (error) {
+            alert("结果文件加载失败: " + error)
+        })
+        .finally(() => {
+            $q.loading.hide()
+        })
 }
 </script>
