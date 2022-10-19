@@ -62,8 +62,8 @@
         </q-banner>
 
         <div v-show="tab === 'igv'" id="igv"></div>
-        <div v-if="tab !== 'igv'">
-            <sample-card :sample="sample" v-for="sample in samples" :key="sample.id" />
+        <div v-if="tab !== 'igv'" class="col">
+            <sample-card :sample="sample" v-for="sample in samples" :key="sample.id" class="row-auto q-ma-md" />
         </div>
     </q-page>
 </template>
@@ -178,10 +178,13 @@ const refresh = () => {
 }
 
 const getSamples = (sampleDataIds) => {
-    const query = buildModelQuery([], {'id__in': sampleDataIds})
-    queryModel('sample_meta', query).then(res => {
-        console.log('samples', res)
-        samples.value = res.results
+    let query = buildModelQuery([], {'id__in': sampleDataIds})
+    queryModel('sample', query).then(res => {
+        const sampleMetaIds = res.results.map(t => t.sample_meta.id).filter(t => t !== null)
+        query = buildModelQuery([], {'id__in': sampleMetaIds})
+        queryModel('sample_meta', query).then(res => {
+            samples.value = res.results
+        })
     })
 }
 
