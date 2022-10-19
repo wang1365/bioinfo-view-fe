@@ -30,7 +30,7 @@
                         <q-menu>
                             <q-list>
                                 <q-item
-                                    v-for="task in record.tasks"
+                                    v-for="task in filterTasks(record.tasks, 3)"
                                     :key="task.id"
                                     :disable="!isTaskClickable(task)"
                                     clickable
@@ -136,6 +136,9 @@ onMounted(() => {
     refreshSamples()
 })
 
+const filterTasks = (tasks, status) => {
+    return tasks.filter(t => status === t.status)
+}
 const refreshSamples = () => {
     startLoading()
     listSample(keyword.value, page.value, total.value)
