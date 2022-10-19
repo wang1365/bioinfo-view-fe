@@ -4,6 +4,7 @@ const menu = [
         label: '平台监控',
         separator: true,
         path: '/main/dashboard',
+        roles: ['super', 'admin'],
     },
     {
         icon: 'folder',
