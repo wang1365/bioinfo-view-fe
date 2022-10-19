@@ -33,7 +33,7 @@
             <q-tabs v-model="tab" dense>
                 <q-tab label="基因组浏览" name="igv"></q-tab>
                 <q-tab label="样本信息" name="sample"></q-tab>
-                <q-space/>
+                <q-space />
                 <q-btn label="选择基因组文件" color="primary" size="sm" @click="inputDlgVisible = true"></q-btn>
                 <q-dialog v-model="inputDlgVisible">
                     <q-card style="width:500px">
@@ -45,6 +45,13 @@
                                 stack-label
                             />
                             <q-select
+                                v-model="inputForm.format"
+                                label="选择文件格式"
+                                label-color="primary"
+                                stack-label
+                                :options="['bam', 'bed', 'cvf', 'cram', 'gff', 'gff3']"
+                            />
+                            <q-select
                                 v-model="inputForm.type"
                                 label="选择Track类型"
                                 label-color="primary"
@@ -53,8 +60,8 @@
                             />
                         </q-card-section>
                         <q-card-actions align="right">
-                            <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup/>
-                            <q-btn label="取消" v-close-popup/>
+                            <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup />
+                            <q-btn label="取消" v-close-popup />
                         </q-card-actions>
                     </q-card>
                 </q-dialog>
@@ -63,7 +70,7 @@
 
         <div v-show="tab === 'igv'" id="igv"></div>
         <div v-if="tab !== 'igv'" class="col">
-            <sample-card :sample="sample" v-for="sample in samples" :key="sample.id" class="row-auto q-ma-md"/>
+            <sample-card :sample="sample" v-for="sample in samples" :key="sample.id" class="row-auto q-ma-md" />
         </div>
     </q-page>
 </template>
@@ -89,7 +96,8 @@ const tab = ref('igv')
 const inputDlgVisible = ref(false)
 const inputForm = ref({
     file: '',
-    type: 'annotation'
+    type: 'annotation',
+    format: 'bam'
 })
 const samples = ref([])
 let trackNames = []
@@ -217,6 +225,7 @@ const addIgvFile = () => {
     igv.browser.loadTrack({
         url: '/igv' + inputForm.value.file,
         type: inputForm.value.type,
+        format: inputForm.value.format,
         label: inputForm.value.file
     })
         .then(function (newTrack) {
