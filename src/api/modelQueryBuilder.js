@@ -1,3 +1,5 @@
+import { api } from 'src/boot/axios'
+
 // q = {
 //     _connector: 'OR',
 //     _negated: false,
@@ -38,4 +40,13 @@ export function buildModelQuery(args = [], kwargs = {}, connector = 'AND', negat
         kwargs: kwargs,
     }
     return query
+}
+
+export function queryModel(modelName, queryBody, params) {
+    return api({
+        url: `/model_query/${modelName}`,
+        method: 'post',
+        params,
+        data: queryBody,
+    })
 }

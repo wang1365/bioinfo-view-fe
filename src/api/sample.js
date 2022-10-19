@@ -14,3 +14,10 @@ export function getSample(id) {
         method: 'get',
     })
 }
+
+export function listSampleMetaByParams(params) {
+    return api({
+        url: `/sample/sampledatas/?${params}`,
+        method: 'get',
+    })
+}

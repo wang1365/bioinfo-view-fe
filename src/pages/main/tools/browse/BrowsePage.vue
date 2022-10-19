@@ -62,18 +62,22 @@
         </q-banner>
 
         <div v-show="tab === 'igv'" id="igv"></div>
-        <div v-if="tab !== 'igv'">2222222222</div>
+        <div v-if="tab !== 'igv'">
+            <sample-card :sample="sample" v-for="sample in samples" :key="sample.id" />
+        </div>
     </q-page>
 </template>
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
-import {ref, reactive, onMounted, nextTick} from "vue"
-import {useRoute, onBeforeRouteUpdate} from "vue-router"
-import {getSample} from 'src/api/sample'
-import {getTask} from 'src/api/task'
-import {errorMessage} from "src/utils/notify"
+import { ref, reactive, onMounted, nextTick } from "vue"
+import { useRoute, onBeforeRouteUpdate } from "vue-router"
+import { getSample, listSampleMetaByParams } from 'src/api/sample'
+import { getTask } from 'src/api/task'
+import { errorMessage } from "src/utils/notify"
 import { useQuasar, QSpinnerFacebook } from 'quasar'
+import SampleCard from './components/SampleCard'
+import { buildModelQuery, queryModel } from 'src/api/modelQueryBuilder'
 import igv from 'igv'
 
 const $q = useQuasar()
@@ -87,6 +91,7 @@ const inputForm = ref({
     file: '',
     type: 'annotation'
 })
+const samples = ref([])
 let trackNames = []
 let options = {}
 
@@ -112,6 +117,11 @@ const refresh = () => {
 
         function toBai(bam) {
             return bam.substring(0, bam.length - 1) + 'i'
+        }
+
+        if (res && res.samples) {
+            // 查询任务中的多个样本信息
+            getSamples(res.samples)
         }
 
         let tracks = []
@@ -164,6 +174,14 @@ const refresh = () => {
             refreshBrowser()
         })
     }).finally(() => {
+    })
+}
+
+const getSamples = (sampleDataIds) => {
+    const query = buildModelQuery([], {'id__in': sampleDataIds})
+    queryModel('sample_meta', query).then(res => {
+        console.log('samples', res)
+        samples.value = res.results
     })
 }
 
