@@ -139,7 +139,7 @@ const refresh = () => {
         if (!res || !res.igv || res.igv.length === 0) {
             errorMessage('中间文件不存在')
         } else {
-            inputForm.value.refText = res.map(t => t.join(',')).join('\n')
+            inputForm.value.refText = res.igv.map(t => t.join(',')).join('\n')
 
             const base = '/igv'
             genome = res.igv[2][1]
