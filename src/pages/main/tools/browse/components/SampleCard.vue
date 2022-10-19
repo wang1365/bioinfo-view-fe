@@ -1,7 +1,7 @@
 <template>
     <q-card>
         <q-card-section>
-            <div class="row">
+            <div class="row q-gutter-xs justify-around">
                 <sample-field :model-value="sample.identifier" label="样本标识号" />
                 <sample-field :model-value="sample.is_panel ? '是' : '否'" label="是否肿瘤" />
                 <sample-field :model-value="sample.panel_proportion" label="肿瘤含量" />
