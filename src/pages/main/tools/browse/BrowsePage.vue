@@ -36,7 +36,7 @@
                 <q-space />
                 <q-btn label="选择基因组文件" color="primary" size="sm" @click="inputDlgVisible = true"></q-btn>
                 <q-dialog v-model="inputDlgVisible">
-                    <q-card style="width:500px">
+                    <q-card class="my-card">
                         <q-card-section>
                             <q-input
                                 v-model="inputForm.file"
@@ -44,20 +44,22 @@
                                 label="输入结果文件路径"
                                 stack-label
                             />
-                            <q-select
-                                v-model="inputForm.format"
-                                label="选择文件格式"
-                                label-color="primary"
-                                stack-label
-                                :options="['bam', 'bed', 'cvf', 'cram', 'gff', 'gff3']"
-                            />
-                            <q-select
-                                v-model="inputForm.type"
-                                label="选择Track类型"
-                                label-color="primary"
-                                stack-label
-                                :options="['annotation', 'alignment', 'variant', 'gwas']"
-                            />
+                            <div class="row">
+                                <q-select
+                                    v-model="inputForm.format"
+                                    label="选择文件格式"
+                                    label-color="primary"
+                                    stack-label class="col-6"
+                                    :options="['bam', 'bed', 'cvf', 'cram', 'gff', 'gff3']"
+                                />
+                                <q-select
+                                    v-model="inputForm.type"
+                                    label="选择Track类型"
+                                    label-color="primary"
+                                    stack-label class="col-6"
+                                    :options="['annotation', 'alignment', 'variant', 'gwas']"
+                                />
+                            </div>
                             <q-input type="textarea" v-model="inputForm.refText" readonly/>
                         </q-card-section>
                         <q-card-actions align="right">
@@ -139,7 +141,7 @@ const refresh = () => {
         if (!res || !res.igv || res.igv.length === 0) {
             errorMessage('中间文件不存在')
         } else {
-            inputForm.value.refText = res.igv.map(t => t.join(',')).join('\n')
+            inputForm.value.refText = res.igv.map(t => t.join('\t')).join('\n')
 
             const base = '/igv'
             genome = res.igv[2][1]
@@ -244,3 +246,10 @@ const addIgvFile = () => {
         })
 }
 </script>
+
+<style lang="scss" scoped>
+.my-card {
+    width: 1000px;
+    max-width: 1800px;
+}
+</style>
