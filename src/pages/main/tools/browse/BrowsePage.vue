@@ -58,6 +58,7 @@
                                 stack-label
                                 :options="['annotation', 'alignment', 'variant', 'gwas']"
                             />
+                            <q-input type="textarea" v-model="inputForm.refText" readonly/>
                         </q-card-section>
                         <q-card-actions align="right">
                             <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup />
@@ -97,7 +98,8 @@ const inputDlgVisible = ref(false)
 const inputForm = ref({
     file: '',
     type: 'annotation',
-    format: 'bam'
+    format: 'bam',
+    refText: ''
 })
 const samples = ref([])
 let trackNames = []
@@ -137,6 +139,8 @@ const refresh = () => {
         if (!res || !res.igv || res.igv.length === 0) {
             errorMessage('中间文件不存在')
         } else {
+            inputForm.value.refText = res.map(t => t.join(',')).join('\n')
+
             const base = '/igv'
             genome = res.igv[2][1]
             tracks = [{
