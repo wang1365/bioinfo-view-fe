@@ -1,3 +1,5 @@
+import { globalStore } from 'src/stores/global'
+
 export const isSuper = (user) => {
     return isRole(user, 'super')
 }
@@ -17,4 +19,24 @@ const isRole = (user, roleName) => {
     }
 
     return roles.includes(roleName)
+}
+
+export const hasAnyRole = (roles) => {
+    const { currentUser } = globalStore()
+    if (!currentUser) {
+        return false
+    }
+
+    const userRoles = currentUser.role_list
+    if (!userRoles) {
+        return false
+    }
+
+    for (let role of roles) {
+        if (userRoles.includes(role)) {
+            return true
+        }
+    }
+
+    return false
 }

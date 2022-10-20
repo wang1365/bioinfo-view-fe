@@ -34,7 +34,13 @@
                 <q-tab label="基因组浏览" name="igv"></q-tab>
                 <q-tab label="样本信息" name="sample"></q-tab>
                 <q-space />
-                <q-btn label="选择基因组文件" color="primary" size="sm" @click="inputDlgVisible = true"></q-btn>
+                <q-btn
+                    v-if="hasAnyRole(['super'])"
+                    label="选择基因组文件"
+                    color="primary"
+                    size="sm"
+                    @click="inputDlgVisible = true"
+                ></q-btn>
                 <q-dialog v-model="inputDlgVisible">
                     <q-card class="my-card">
                         <q-card-section>
@@ -49,18 +55,20 @@
                                     v-model="inputForm.format"
                                     label="选择文件格式"
                                     label-color="primary"
-                                    stack-label class="col-6"
+                                    stack-label
+                                    class="col-6"
                                     :options="['bam', 'bed', 'cvf', 'cram', 'gff', 'gff3']"
                                 />
                                 <q-select
                                     v-model="inputForm.type"
                                     label="选择Track类型"
                                     label-color="primary"
-                                    stack-label class="col-6"
+                                    stack-label
+                                    class="col-6"
                                     :options="['annotation', 'alignment', 'variant', 'gwas']"
                                 />
                             </div>
-                            <q-input type="textarea" v-model="inputForm.refText" readonly/>
+                            <q-input type="textarea" v-model="inputForm.refText" readonly />
                         </q-card-section>
                         <q-card-actions align="right">
                             <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup />
@@ -89,6 +97,7 @@ import {useQuasar, QSpinnerFacebook} from 'quasar'
 import SampleCard from './components/SampleCard'
 import {buildModelQuery, queryModel} from 'src/api/modelQueryBuilder'
 import igv from 'igv'
+import { hasAnyRole } from 'src/utils/user'
 
 const $q = useQuasar()
 const route = useRoute()
