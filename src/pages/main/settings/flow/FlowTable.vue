@@ -97,7 +97,7 @@ const props = defineProps({
     selection: {
         required: false,
         type: String,
-        default: 'multiple',
+        default: 'none',
     },
     columns: {
         required: false,
