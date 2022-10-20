@@ -153,35 +153,27 @@ const refresh = () => {
             inputForm.value.refText = res.igv.map(t => t.join('\t')).join('\n')
 
             const base = '/igv'
-            genome = res.igv[2][1]
-            tracks = [{
-                name: res.igv[0][0],
-                type: 'annotation',
-                format: 'bed',
-                url: base + res.igv[0][1],
-                indexed: false,
-            }, {
-                name: res.igv[1][0],
-                type: 'annotation',
-                format: 'bed',
-                url: base + res.igv[1][1],
-                indexed: false,
-            }, {
-                name: res.igv[3][0],
-                type: 'alignment',
-                format: 'bam',
-                url: base + res.igv[3][1],
-                indexURL: base + toBai(res.igv[3][1]),
-                height: 250
-            }, {
-                name: res.igv[4][0],
-                type: 'alignment',
-                format: 'bam',
-                url: base + res.igv[4][1],
-                indexURL: base + toBai(res.igv[4][1]),
-                height: 250
-            }]
+            genome = 'hg19'
+            tracks = []
+            for (let line of res.igv) {
+                if (line.length === 2) {
+                    genome = line[1]
+                }
 
+                if (line.length === 4) {
+                    const track = {
+                        name: line[0],
+                        type: line[1],
+                        format: line[2],
+                        url: base + line[3],
+                    }
+
+                    if (track.format === 'bam') {
+                        track.indexURL = toBai(track.url)
+                    }
+                    tracks.push(track)
+                }
+            }
         }
 
         options = {
