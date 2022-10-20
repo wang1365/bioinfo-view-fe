@@ -85,13 +85,12 @@ const columns = [
     {
         title: '样本标识号',
         dataIndex: ["sample_meta", "identifier"],
-        fixed: true,
         align: 'center',
         width: 120
     },
 
     // 样本数据
-    {title: '数据识别号', dataIndex: 'identifier', fixed: 'left', width: 120},
+    {title: '数据识别号', dataIndex: 'identifier', width: 120},
     {key: 'project_index', title: '项目编码', dataIndex: 'project_index', width: 120},
     {key: 'library_number', title: '文库编号', dataIndex: 'library_number', width: 120},
     {key: 'reagent_box', title: '捕获试剂盒', dataIndex: 'reagent_box', width: 120},
