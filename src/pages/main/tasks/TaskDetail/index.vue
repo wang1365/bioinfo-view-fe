@@ -50,15 +50,49 @@
             <q-separator></q-separator>
             <q-section>
                 <div class="text-h6 q-pa-md">任务进度:</div>
-                <!-- <div class="text-body q-px-md" v-for="(item,key) of taskDetail.env" :key="item">
+                <div id="task-step" class="text-body q-px-md q-py-md">
+                    <q-stepper v-model="lastStageIndex" color="primary">
+                        <q-step
+                            v-for="(item,index) in stages"
+                            :key="index"
+                            :title="item"
+                            :name="index"
+                            active-icon="play_circle"
+                            icon="fast_forward"
+                            :done="index<lastStageIndex"
+                        >
+                            <template v-slot:default></template>
+                        </q-step>
+                    </q-stepper>
+                </div>
+                <!-- <div>
+                    {{lastStageIndex}}
+                </div>
+                <div class="text-body q-pa-md" v-for="(item,key) of stages" :key="item">
                     <span class="text-bold">{{key}} : </span> {{item}}
                 </div> -->
             </q-section>
             <q-separator></q-separator>
             <q-section>
                 <div class="text-h6 q-pa-md">任务日志:</div>
-                <!-- <div class="text-body q-px-md" v-for="(item,key) of taskDetail.env" :key="item">
-                    <span class="text-bold">{{key}} : </span> {{item}}
+                <div class="text-body q-px-md q-py-xs">
+                    <q-timeline color="secondary">
+                        <q-timeline-entry
+                            v-for="(item,key) of logs"
+                            :key="key"
+                            :title="item.stage + ':'+item.title"
+                            :subtitle="item.status +':' + item.time"
+                            :body="item.detail"
+                        />
+                    </q-timeline>
+                </div>
+                <!-- <div class="text-body q-px-md q-py-xs" v-for="(item,key) of logs" :key="key">
+                    <span class="text-primary text-bold text-subtitle1"> {{item.stage}}</span
+                    >:<span class="text-primary text-bold text-subtitle1"> {{item.status}}</span>
+                    <div>
+                        <span class="text-bold">{{item.time}} {{item.title}}: </span>
+                        <span class="q-ml-sm"> {{item.detail}} </span>
+                    </div>
                 </div> -->
             </q-section>
         </q-card>
@@ -71,10 +105,14 @@ import { useApi } from "src/api/apiBase";
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
-const { apiGet,apiGetByIds } = useApi();
+const { apiGet, apiGetByIds } = useApi();
 const route = useRoute();
 const taskDetail = ref({});
-const taskSamples=ref([])
+const taskSamples = ref([])
+const stages = ref([])
+const logs = ref([])
+const lastStage=ref("")
+const lastStageIndex=ref(0)
 const getItemStatus = (item) => {
     switch (item.status) {
         case "PENDING":
@@ -107,6 +145,22 @@ const getItemStatusColor = (item) => {
             return item.status;
     }
 };
+
+const buildTaskStageAndLog = (task) => {
+    let log = task.log
+    if (log.length >= 0) {
+        stages.value = log[0].stages
+
+        if (log.length > 1) {
+            for (let i = 1; i < log.length; i++) {
+                logs.value.push(log[i])
+            }
+            lastStage.value = log[log.length - 1].stage
+        }
+        lastStageIndex.value=stages.value.indexOf(lastStage.value)
+
+    }
+}
 watch(
     () => route.params.id,
     () => {
@@ -119,15 +173,34 @@ onMounted(() => {
 const getTaskDetail = () => {
     apiGet(`/task/${route.params.id}`, (res) => {
         taskDetail.value = res.data;
+        if(taskDetail.value.log.length===0){
+            taskDetail.value.log=[
+            {'stages':['test-检查','test-运行中','test-完成']},
+            {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+            {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+            {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+            {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+            {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"}
+        ]
+        }
+
+        buildTaskStageAndLog(taskDetail.value)
         getTaskSamples(taskDetail.value.samples)
     });
 };
 const getTaskSamples = (sampleIds) => {
-    apiGetByIds('sample',sampleIds, (res) => {
-        taskSamples.value=[]
+    apiGetByIds('sample', sampleIds, (res) => {
+        taskSamples.value = []
         for (const iterator of res.data.results) {
             taskSamples.value.push(iterator)
         }
     });
 };
 </script>
+
+<style>
+
+#task-step .q-stepper__step-inner{
+    display: none;
+}
+</style>
