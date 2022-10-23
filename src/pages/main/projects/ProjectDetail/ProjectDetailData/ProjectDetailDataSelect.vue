@@ -185,7 +185,11 @@ const loadPage = async () => {
     if (searchParams.value.risk == '否') {
         andFields.risk = false
     }
-    let query = buildModelQuery([searchFields], andFields)
+    let notInProject = buildModelQuery([], {
+        project__id__in:projectIds
+        }, 'NOT',true)
+    let query = buildModelQuery([searchFields,notInProject], andFields)
+    console.log(query)
     let params = `?page=${currentPage.value}&size=${pageSize.value}`
     apiPost(`/model_query/sample${params}`, (res) => {
         total.value = res.data.count;
