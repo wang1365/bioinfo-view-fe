@@ -128,11 +128,46 @@
                         <td>{{ item.flow.name }}</td>
 
                         <td>
-                            <q-linear-progress rounded size="10px" :value="item.progress" />
+                            <q-linear-progress
+                                v-if="item.status==='CANCELED'"
+                                color="warning"
+                                rounded
+                                size="10px"
+                                :value="100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status==='RUNNING'"
+                                color="primary"
+                                rounded
+                                size="10px"
+                                :value="100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status==='FAILURED'"
+                                color="negative"
+                                rounded
+                                size="10px"
+                                :value="100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status==='PENDING'"
+                                color="secondary"
+                                rounded
+                                size="10px"
+                                :value="100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status==='FINISHED'"
+                                color="positive"
+                                rounded
+                                size="10px"
+                                :value="100"
+                            />
                         </td>
                         <td>{{ getItemStatus(item) }}</td>
                         <td>
                             <q-icon
+                                v-if="item.status==='FAILURED'"
                                 class="cursor-pointer"
                                 color="red"
                                 name="find_in_page"
