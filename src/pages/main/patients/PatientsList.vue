@@ -2,13 +2,8 @@
     <q-card class="q-mt-md">
         <q-section>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
-                <q-input
-                    style="width:350px"
-                    v-model="searchParams.search"
-                    dense
-                    label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
-                    clearable
-                >
+                <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
+                    clearable>
                 </q-input>
                 <q-input type="number" v-model="searchParams.age_start" dense label="年龄起始" clearable> </q-input>
                 <q-input type="number" v-model="searchParams.age_end" dense label="截止年龄" clearable> </q-input>
@@ -52,14 +47,12 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span
-                            style="
+                        <span style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            "
-                        >
+                            ">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -100,23 +93,11 @@
                             <td>{{ patient.tumor_stage }}</td>
                             <td>{{ patient.disease }}</td>
                             <td>{{ patient.family_history }}</td>
-                            <td>{{patient.samplemeta_set.length}}</td>
+                            <td>{{ patient.samplemeta_set.length }}</td>
                             <td class="q-gutter-x-sm">
                                 <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
-                                <q-btn
-                                    color="secondary"
-                                    label="关联样本"
-                                    icon="link"
-                                    size="sm"
-                                    @click="link(patient)"
-                                />
-                                <q-btn
-                                    color="info"
-                                    label="患者信息"
-                                    icon="visibility"
-                                    @click="info(patient)"
-                                    size="sm"
-                                />
+                                <q-btn color="secondary" label="关联样本" icon="link" size="sm" @click="link(patient)" />
+                                <q-btn color="info" label="患者信息" icon="visibility" @click="info(patient)" size="sm" />
                                 <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(patient)" />
                             </td>
                         </tr>
@@ -131,38 +112,27 @@
         <q-section class="q-pd-md"> </q-section>
     </q-card>
     <q-dialog v-model="showPatientNew" persistent>
-        <PatientNew
-            @refresh="
-            refreshPage();
-            showPatientNew = false;
-        "
-        />
+        <PatientNew @refresh="
+    refreshPage();
+showPatientNew = false;
+        " />
     </q-dialog>
     <q-dialog v-model="showPatientInfo">
-        <PatientInfo
-            :id="infoId"
-            @refresh="
-            refreshPage();
-            showPatientInfo = false;
-        "
-        />
+        <PatientInfo :id="infoId" @refresh="
+    refreshPage();
+showPatientInfo = false;
+        " />
     </q-dialog>
     <q-dialog v-model="showPatientEdit" persistent>
-        <PatientEdit
-            :id="editId"
-            @refresh="
-            refreshPage();
-            showPatientEdit = false;
-        "
-        />
+        <PatientEdit :id="editId" @refresh="
+    refreshPage();
+showPatientEdit = false;
+        " />
     </q-dialog>
     <q-dialog persistent v-model="showLinkSample">
-        <SampleList
-            :linkId="linkId"
-            @refresh="
-            linkSample($event);
-        "
-        />
+        <SampleList :linkId="linkId" :patient="linkSamplePatient" @refresh="
+    linkSample($event);
+        " />
     </q-dialog>
 </template>
 <script setup>
@@ -194,7 +164,7 @@ const searchParams = ref({
 
 })
 
-const { apiGet, downloadData, apiDelete, apiPatch ,apiPost} = useApi();
+const { apiGet, downloadData, apiDelete, apiPatch, apiPost } = useApi();
 const showPatientInfo = ref(false);
 const showPatientEdit = ref(false);
 const showPatientNew = ref(false);
@@ -213,9 +183,12 @@ const dataItems = ref([]);
 
 const linkId = ref(0);
 const showLinkSample = ref(false);
+const linkSamplePatient = ref({})
 const link = async (item) => {
     linkId.value = item.id;
     showLinkSample.value = true;
+    linkSamplePatient.value = item
+
 }
 const linkSample = (event) => {
     showLinkSample.value = false;
@@ -224,12 +197,26 @@ const linkSample = (event) => {
         samples.push(item.id)
     }
     if (samples.length > 0) {
-        apiPatch(`/patient/patients/${linkId.value}`, (res) => {
-            showLinkSample.value = false;
-            refreshPage()
-        }, { samples: samples })
-    }
 
+        for (const sampleid of samples) {
+            apiPatch(`/sample/sampledatas/${sampleid}/`, (res) => {
+
+            }, { patient_id: linkSamplePatient.value.id, patient_identifier: linkSamplePatient.value.identifier })
+        }
+        for (const iterator of linkSamplePatient.value.samplemeta_set) {
+            if (samples.indexOf(iterator.id) < 0) {
+                apiPatch(`/sample/sampledatas/${iterator.id}/`, (res) => {
+
+                }, { patient_id: null, patient_identifier: null })
+            }
+        }
+        showLinkSample.value = false;
+        refreshPage()
+        // apiPatch(`/patient/patients/${linkId.value}`, (res) => {
+        //     showLinkSample.value = false;
+        //     refreshPage()
+        // }, { samplemeta_set: samples })
+    }
 }
 
 onMounted(() => {
@@ -268,7 +255,7 @@ const refreshPage = async () => {
 };
 const loadPage = async () => {
     let andFields = {}
-    let searchFields=buildModelQuery()
+    let searchFields = buildModelQuery()
     if (searchParams.value.search) {
         searchFields = buildModelQuery([], {
             name__icontains: searchParams.value.search,
@@ -295,10 +282,10 @@ const loadPage = async () => {
     let params = `?page=${currentPage.value}&size=${pageSize.value}`
     apiPost(`/model_query/patient${params}`, (res) => {
         total.value = res.data.count;
-                dataItems.value = [];
-                for (const iterator of res.data.results) {
-                    dataItems.value.push(iterator);
-                }
+        dataItems.value = [];
+        for (const iterator of res.data.results) {
+            dataItems.value.push(iterator);
+        }
     }, query)
 
     // let params = `?page=${currentPage.value}&size=${pageSize.value}`

@@ -29,7 +29,7 @@
                                 clearable
                                 dense
                                 v-model="searchParams.is_panel"
-                                :options="['是','否']"
+                                :options="['是', '否']"
                                 label="肿瘤样本"
                             />
                             <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
@@ -78,16 +78,17 @@ const tableRowFields = ref([
     "identifier",
     "patient_identifier",
     "sample_type",
-    "panel_proportion",
+    "is_panel",
     "sample_date",
 ]);
 const emit = defineEmits(["refresh"]);
-const { apiGet,apiPost } = useApi();
+const { apiGet, apiPost } = useApi();
 
 
 const selectedItem = ref({});
 const props = defineProps({
-    linkId: { type: Number, required: true }
+    linkId: { type: Number, required: true },
+    patient:{type:Object,required:true}
 })
 const selectItem = (item) => {
     selectedItem.value = item;
@@ -111,8 +112,8 @@ const refreshPage = async () => {
     currentPage.value = 1;
     loadPage();
 };
-const ensureSelect =  (event) => {
-    emit('refresh',event)
+const ensureSelect = (event) => {
+    emit('refresh', event)
 }
 const loadPage = async () => {
     let andFields = {}
@@ -137,9 +138,9 @@ const loadPage = async () => {
     if (searchParams.value.test_date_end) {
         andFields.test_date__lte = searchParams.value.test_date_end
     }
-    if (searchParams.value.is_panel==='是') {
+    if (searchParams.value.is_panel === '是') {
         andFields.is_panel = true
-    } if (searchParams.value.is_panel==='否') {
+    } if (searchParams.value.is_panel === '否') {
         andFields.is_panel = false
     }
 
@@ -148,8 +149,14 @@ const loadPage = async () => {
     apiPost(`/model_query/sample_meta${params}`, (res) => {
         total.value = res.data.count;
         dataItems.value = [];
-        for (const iterator of res.data.results) {
+        for (let iterator of res.data.results) {
             iterator.selected = false;
+            for (const sample of props.patient.samplemeta_set) {
+                if(sample.id===iterator.id){
+                    iterator.selected=true
+                    break
+                }
+            }
             dataItems.value.push(iterator);
         }
     }, query)
