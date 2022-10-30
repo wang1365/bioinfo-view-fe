@@ -95,10 +95,20 @@ const routes = [
                 path: 'group',
                 component: () => import('pages/main/group-flows/FlowsPage.vue'),
             },
+
             {
-                path: 'tools/comment',
-                component: () => import('pages/main/tools/comment/CommentPage.vue'),
+                path: 'tools/comment/gene',
+                component: () => import('pages/main/tools/comment/gene/index'),
             },
+            {
+                path: 'tools/comment/mutation',
+                component: () => import('pages/main/tools/comment/mutation/index'),
+            },
+            {
+                path: 'tools/comment/medicine',
+                component: () => import('pages/main/tools/comment/medicine/index'),
+            },
+
             {
                 path: 'tools/browse',
                 component: () => import('pages/main/tools/browse/index.vue'),
