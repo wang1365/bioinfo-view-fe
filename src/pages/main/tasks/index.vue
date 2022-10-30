@@ -2,43 +2,41 @@
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="任务管理" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div
-                style="
+            <div style="
                                         height: 150px;
                                         display: flex;
                                         justify-content: space-around;
                                         justify-items: center;
                                         align-items: center;
-                                    "
-            >
+                                    ">
                 <q-card class="my-card">
                     <q-card-section class="text-primary text-h5 text-center text-bold">
-                        {{taskSummary.running_task_count}}
+                        {{ taskSummary.running_task_count }}
                     </q-card-section>
 
                     <q-card-section class="desc"> 运行 </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-negative text-h5 text-center text-bold">
-                        {{taskSummary.failured_task_count}}
+                        {{ taskSummary.failured_task_count }}
                     </q-card-section>
                     <q-card-section class="desc"> 失败 </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-secondary text-h5 text-center text-bold">
-                        {{taskSummary.pending_task_count}}
+                        {{ taskSummary.pending_task_count }}
                     </q-card-section>
                     <q-card-section class="desc"> 排队</q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-warning text-h5 text-center text-bold">
-                        {{taskSummary.canceled_task_count}}
+                        {{ taskSummary.canceled_task_count }}
                     </q-card-section>
                     <q-card-section class="desc"> 取消</q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-positive text-h5 text-center text-bold">
-                        {{taskSummary.finished_task_count}}
+                        {{ taskSummary.finished_task_count }}
                     </q-card-section>
                     <q-card-section class="desc"> 完成</q-card-section>
                 </q-card>
@@ -49,38 +47,23 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="row q-gutter-sm">
                     <div class="col-2">
-                        <q-select
-                            v-model="status"
-                            :options="options"
-                            stack-label
-                            clearable
-                            filled
-                            @clear="clearSelect()"
-                            :display-value="`状态: ${status.label}`"
-                            @update:model-value="refreshPage()"
-                        >
+                        <q-select v-model="status" :options="options" stack-label clearable filled
+                            @clear="clearSelect()" :display-value="`状态: ${status.label}`"
+                            @update:model-value="refreshPage()">
                         </q-select>
                     </div>
                     <div class="col-4 q-pl-sm">
-                        <q-input
-                            readonly
-                            filled
-                            @click="showProjectSelect = true"
-                            :model-value="'所属项目: ' + projectName"
-                        >
+                        <q-input readonly filled @click="showProjectSelect = true"
+                            :model-value="'所属项目: ' + projectName">
                             <template v-slot:prepend>
                                 <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                             </template>
                             <template v-slot:append>
-                                <q-icon
-                                    class="cursor-pointer"
-                                    name="backspace"
-                                    @click="
-                                    projectName = '';
-                                    projectId = '';
-                                    refreshPage();
-                                "
-                                />
+                                <q-icon class="cursor-pointer" name="backspace" @click="
+    projectName = '';
+projectId = '';
+refreshPage();
+                                " />
                             </template>
                         </q-input>
                     </div>
@@ -128,63 +111,28 @@
                         <td>{{ item.flow.name }}</td>
 
                         <td>
-                            <q-linear-progress
-                                v-if="item.status==='CANCELED'"
-                                color="warning"
-                                rounded
-                                size="10px"
-                                :value="item.progress/100"
-                            />
-                            <q-linear-progress
-                                v-if="item.status==='RUNNING'"
-                                color="primary"
-                                rounded
-                                size="10px"
-                                :value="item.progress/100"
-                            />
-                            <q-linear-progress
-                                v-if="item.status==='FAILURED'"
-                                color="negative"
-                                rounded
-                                size="10px"
-                                :value="item.progress/100"
-                            />
-                            <q-linear-progress
-                                v-if="item.status==='PENDING'"
-                                color="secondary"
-                                rounded
-                                size="10px"
-                                :value="item.progress/100"
-                            />
-                            <q-linear-progress
-                                v-if="item.status==='FINISHED'"
-                                color="positive"
-                                rounded
-                                size="10px"
-                                :value="item.progress/100"
-                            />
+                            <q-linear-progress v-if="item.status === 'CANCELED'" color="warning" rounded size="10px"
+                                :value="item.progress / 100" />
+                            <q-linear-progress v-if="item.status === 'RUNNING'" color="primary" rounded size="10px"
+                                :value="item.progress / 100" />
+                            <q-linear-progress v-if="item.status === 'FAILURED'" color="negative" rounded size="10px"
+                                :value="item.progress / 100" />
+                            <q-linear-progress v-if="item.status === 'PENDING'" color="secondary" rounded size="10px"
+                                :value="item.progress / 100" />
+                            <q-linear-progress v-if="item.status === 'FINISHED'" color="positive" rounded size="10px"
+                                :value="item.progress / 100" />
                         </td>
                         <td>{{ getItemStatus(item) }}</td>
                         <td>
-                            <q-icon
-                                v-if="item.status==='FAILURED'"
-                                class="cursor-pointer"
-                                color="red"
-                                name="find_in_page"
-                                @click="showError=true;currentTaskError=item.error_message"
-                                size="sm"
-                            />
+                            <q-icon v-if="item.status === 'FAILURED'" class="cursor-pointer" color="red"
+                                name="find_in_page" @click="showError = true; currentTaskError = item.error_message"
+                                size="sm" />
                         </td>
                         <td>{{ item.creator.username }}</td>
                         <td>{{ item.create_time }}</td>
                         <td class="q-gutter-x-sm">
-                            <q-btn
-                                color="secondary"
-                                label="详情"
-                                icon="visibility"
-                                @click="gotoDetail(item)"
-                                size="sm"
-                            />
+                            <q-btn color="secondary" label="详情" icon="visibility" @click="gotoDetail(item)" size="sm" />
+                            <q-btn color="info" label="结果" icon="query_stats" @click="gotoReport(item)" size="sm" />
                             <q-btn color="primary" label="下载" icon="download" @click="downlaod(item)" size="sm" />
                             <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
@@ -211,9 +159,8 @@
                     </div>
                 </div>
                 <pre>
-                {{currentTaskError || "无"}}
-            </pre
-                >
+                {{ currentTaskError || "无" }}
+            </pre>
             </q-card>
         </q-dialog>
     </q-page>
@@ -237,11 +184,11 @@ const options = ref([
     { label: "完成", value: "FINISHED" },
     { label: "取消", value: "CANCELED" },
 ]);
-const startTime=ref("")
-const endTime=ref("")
+const startTime = ref("")
+const endTime = ref("")
 const status = ref({ label: "全部", value: "ALL" });
 const showProjectSelect = ref(false);
-const showError=ref(false)
+const showError = ref(false)
 const projectId = ref(0);
 const projectName = ref("");
 const currentPage = ref(1);
@@ -251,11 +198,11 @@ const dataItems = ref([]);
 const { apiGet, downloadData, apiDelete } = useApi();
 const router = useRouter();
 const taskSummary = ref({
-    canceled_task_count:0,
-    failured_task_count:0,
-    finished_task_count:0,
-    pending_task_count:0,
-    running_task_count:0
+    canceled_task_count: 0,
+    failured_task_count: 0,
+    finished_task_count: 0,
+    pending_task_count: 0,
+    running_task_count: 0
 })
 
 const getItemStatus = (item) => {
@@ -289,6 +236,9 @@ const projectSelected = (event) => {
 };
 const gotoDetail = (item) => {
     router.push(`/main/tasks/${item.id}`);
+};
+const gotoReport = (item) => {
+    router.push(`/main/tasks/${item.id}/report`);
 };
 onMounted(() => {
     loadPage();

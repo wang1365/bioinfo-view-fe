@@ -60,6 +60,10 @@ const routes = [
                 path: 'tasks/:id',
                 component: () => import('pages/main/tasks/TaskDetail/index.vue'),
             },
+            {
+                path: 'tasks/:id/report',
+                component: () => import('pages/main/tasks/report/index.vue'),
+            },
 
             {
                 path: 'settings',
