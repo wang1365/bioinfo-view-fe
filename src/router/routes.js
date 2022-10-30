@@ -101,8 +101,8 @@ const routes = [
             },
 
             {
-                path: 'tools/comment/gene',
-                component: () => import('pages/main/tools/comment/gene/index'),
+                path: 'tools/comment',
+                component: () => import('pages/main/tools/comment/index'),
             },
             {
                 path: 'tools/comment/mutation',

@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="基因注释" />
+        <PageTitle title="数据库注释" />
         <div class="q-py-md">
             <div class="text-h6">功能介绍:</div>
             <div class="text-body">功能介绍功能介绍功能介绍功能介绍功能介绍功能介绍</div>
@@ -268,4 +268,5 @@ import PageTitle from "components/page-title/PageTitle.vue";
 import { ref } from "vue";
 const options = ref(["基因", "突变", "药物"]);
 const database = ref("基因");
+const tab=ref("突变")
 </script>
