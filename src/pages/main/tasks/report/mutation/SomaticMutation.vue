@@ -5,10 +5,16 @@
                 <q-input dense label="基因搜索:" clearable />
             </div>
             <div class="col">
-                <q-input dense label="深度 >" clearable type="number" />
+                <q-input dense label="肿瘤深度 >" clearable type="number" />
             </div>
             <div class="col">
-                <q-input dense label="频率 >" clearable type="number" />
+                <q-input dense label="对照深度 >" clearable type="number" />
+            </div>
+            <div class="col">
+                <q-input dense label="肿瘤频率 >" clearable type="number" />
+            </div>
+            <div class="col">
+                <q-input dense label="对照频率 >" clearable type="number" />
             </div>
             <div class="col">
                 <q-input dense label="人群频率 <" clearable type="number" />
@@ -27,9 +33,9 @@
             <div class="col">
                 <q-select clearable dense :options='["选项 1", "选项 2", "选项 3"]' label="突变危险" />
             </div>
-            <div class="col">
+            <!-- <div class="col">
                 <q-select clearable dense :options='["选项 1", "选项 2", "选项 3"]' label="SIFT_p" />
-            </div>
+            </div> -->
         </div>
         <div class="q-gutter-md text-center q-py-sm">
             <q-btn color="primary" label="确定" icon="search" @click="refreshPage()" />
