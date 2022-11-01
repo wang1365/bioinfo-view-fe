@@ -55,22 +55,96 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
+                    <td @click="showColumn = true;" class="cursor-pointer">数据</td>
+                    <td @click="showColumn = true;" class="cursor-pointer">数据</td>
+                    <td @click="showColumn = true;" class="cursor-pointer">数据</td>
+                    <td @click="showColumn = true;" class="cursor-pointer">数据</td>
+                    <td @click="showColumn = true;" class="cursor-pointer">数据</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div class="q-py-sm">
-        过滤结果的图表数据
+    <div class="q-py-sm" v-if="!showColumn">
+        <div class="row q-gutter-sm">
+            <div class="col">
+                <BarChartVue />
+            </div>
+            <div class="col">
+                <PieChartVue />
+            </div>
+        </div>
+        <div class="row q-gutter-sm q-py-sm">
+            <div class="col">
+                <BubbleChartVue />
+            </div>
+            <div class="col">
+                <RoseChartVue />
+            </div>
+            <div class="col">
+                <RoseChartVue />
+            </div>
+        </div>
     </div>
-    <div class="q-py-sm">
-        特定行图表数据
+    <div class="q-py-sm" v-if="showColumn">
+        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
+            :breakpoint="0">
+            <q-tab name="突变信息" label="突变信息" />
+            <q-tab name="药物关联信息" label="药物关联信息" />
+
+        </q-tabs>
+        <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="突变信息">
+                <div class="row q-gutter-xs">
+                    <div class="col" style="border-right:solid 1px black">数据</div>
+                    <div class="col" style="border-right:solid 1px black">数据</div>
+                    <div class="col" style="border-right:solid 1px black">数据</div>
+                    <div class="col">
+                        <RadarChartVue />
+                    </div>
+                </div>
+            </q-tab-panel>
+            <q-tab-panel name="药物关联信息">
+                <div>
+                    药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述
+                </div>
+                <div class="bio-data-table q-py-sm">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </q-tab-panel>
+        </q-tab-panels>
     </div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import BarChartVue from "./SomaticInfoCharts/BarChart.vue"
+import PieChartVue from "./SomaticInfoCharts/PieChart.vue"
+import RoseChartVue from "./SomaticInfoCharts/RoseChart.vue"
+import BubbleChartVue from "./SomaticInfoCharts/BubbleChart.vue"
+import RadarChartVue from "./SomaticColumnCharts/RadarChart.vue"
+
+const tab = ref('突变信息')
+const showColumn = ref(false)
+
+const refreshPage = () => {
+    showColumn.value = false
+}
 </script>

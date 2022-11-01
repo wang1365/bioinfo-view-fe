@@ -5,15 +5,15 @@
     <div class="q-py-md">
         <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
             :breakpoint="0">
-            <q-tab name="Tumor" label="Tumor" />
-            <q-tab name="Normal" label="Normal" />
+            <q-tab name="单样品融合分析" label="单样品融合分析" />
+            <q-tab name="体细胞融合分析" label="体细胞融合分析" />
 
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="Tumor">
+            <q-tab-panel name="单样品融合分析">
                 <TumorVue />
             </q-tab-panel>
-            <q-tab-panel name="Normal">
+            <q-tab-panel name="体细胞融合分析">
                 <NormalVue />
             </q-tab-panel>
         </q-tab-panels>
@@ -23,5 +23,5 @@
 import { ref, onMounted } from "vue";
 import NormalVue from "./Normal.vue";
 import TumorVue from "./Tumor.vue";
-const tab = ref("Tumor")
+const tab = ref("单样品融合分析")
 </script>
