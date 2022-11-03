@@ -16,19 +16,20 @@
         </div>
         <div class="row q-gutter-sm ">
             <div class="col">
-                <q-select clearable dense :options='["选项 1", "选项 2", "选项 3"]' label="突变类型" />
+                <q-select clearable dense :options='["All", "SNP", "INDEL"]' label="突变类型" />
             </div>
             <div class="col">
-                <q-select clearable dense :options='["选项 1", "选项 2", "选项 3"]' label="突变位置" />
+                <q-select clearable dense :options='["All", "Exonic", "Intronic", "Intergenic"]' label="突变位置" />
             </div>
             <div class="col">
-                <q-select clearable dense :options='["选项 1", "选项 2", "选项 3"]' label="突变意义" />
+                <q-select clearable dense :options='["All", "Missense", "Frameshift", "Stopgain", "Stoploss"]'
+                    label="突变意义" />
             </div>
             <div class="col">
-                <q-select clearable dense :options='["选项 1", "选项 2", "选项 3"]' label="突变危险" />
+                <q-select clearable dense :options='["All", "Benign", "not_provided"]' label="突变危险" />
             </div>
             <div class="col">
-                <q-select clearable dense :options='["选项 1", "选项 2", "选项 3"]' label="SIFT_p" />
+                <q-select clearable dense :options='["D", "T", "点"]' label="SIFT_p" />
             </div>
         </div>
         <div class="q-gutter-md text-center q-py-sm">
