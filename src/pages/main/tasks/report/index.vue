@@ -3,7 +3,7 @@
         <PageTitle title="任务结果" />
         <div class="q-pt-md">
             <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-                :breakpoint="0">
+                :breakpoint="0" dense>
                 <q-tab name="qc" label="质控" />
                 <q-tab name="mutation" label="突变分析结果" />
                 <q-tab name="fusion" label="融合分析结果" />

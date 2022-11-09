@@ -8,7 +8,7 @@
 
 
         <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-            :breakpoint="0">
+            :breakpoint="0" dense>
             <q-tab name="试剂盒捕获质控信息" label="试剂盒捕获质控信息" />
             <q-tab name="深度信息" label="深度信息" />
 

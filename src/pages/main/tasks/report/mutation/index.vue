@@ -4,7 +4,7 @@
     </div>
     <div class="q-py-md">
         <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-            :breakpoint="0">
+            :breakpoint="0" dense>
             <q-tab name="胚系突变分析" label="胚系突变分析" />
             <q-tab name="体细胞突变分析" label="体细胞突变分析" />
 
