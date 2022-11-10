@@ -16,7 +16,8 @@
             <div class="col q-mr-md">
                 <div class="text-center text-bold text-primary text-h6" style="position:relative">
                     对照样本
-                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"></q-icon>
+                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
+                            @click="download(0)"></q-icon>
                 </div>
                 <q-separator></q-separator>
                 <a-table
@@ -32,7 +33,8 @@
             <div class="col q-ml-md">
                 <div class="text-center text-bold text-purple text-h6" style="position:relative">
                     肿瘤样本
-                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"></q-icon>
+                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
+                            @click="download(0)"></q-icon>
                 </div>
                 <q-separator></q-separator>
                 <a-table
@@ -51,6 +53,8 @@
 import {ref, onMounted} from "vue";
 import {getReportTable} from 'src/api/report'
 import {useRoute} from 'vue-router'
+import {exportFile} from 'quasar'
+
 
 const route = useRoute()
 
@@ -80,6 +84,35 @@ const clearKeyword = () => {
     filteredRows2.value = rows2.value
 }
 
+const download = (idx) => {
+    const name = idx === 0 ? 'normal.txt' : ' tumor.txt'
+    let data =  '基因\t深度平均值\t深度中位值\t基因覆盖度\n'
+    let objects = idx === 0 ? filteredRows1.value : filteredRows2.value
+    objects.forEach(row => {
+        data += `${row.k1}\t${row.k2}\t${row.k3}\n`
+    })
+
+    // let data = [['基因', '深度平均值', '深度中位值', '基因覆盖度']]
+    // let objects = idx === 0 ? filteredRows1.value : filteredRows2.value
+    // objects.forEach(row => {
+    //     data.push([row.k1, row.k1, row.k1])
+    // })
+    const status = exportFile(name, data,
+    //     {
+    //     // encoding: 'windows-1252',
+    //     // mimeType: 'text/csv;charset=windows-1252;'
+    //     mimeType: 'text/csv'
+    // }
+    )
+
+    if (status === true) {
+        // 浏览器允许
+    } else {
+        // 浏览器拒绝
+        console.error('Error: ' + status)
+    }
+}
+
 onMounted(() => {
     loading1.value = true
     loading2.value = true
@@ -88,11 +121,15 @@ onMounted(() => {
     getReportTable(route.params.id, 'QN11', {}, fields).then(res => {
         rows1.value = res
         filteredRows1.value = rows1.value
-    }).finally(() => { loading1.value = false})
+    }).finally(() => {
+        loading1.value = false
+    })
 
     getReportTable(route.params.id, 'QT11', {}, fields).then(res => {
         rows2.value = res
         filteredRows2.value = rows2.value
-    }).finally(() => { loading2.value = false})
+    }).finally(() => {
+        loading2.value = false
+    })
 })
 </script>
