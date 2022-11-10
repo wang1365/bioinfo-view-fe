@@ -7,6 +7,7 @@
         <a-table
             class="col-5 q-px-lg"
             size="small"
+            :loading="loading"
             :data-source="rows"
             :columns="columns"
             :sticky="true"
@@ -22,6 +23,7 @@ import { useRoute } from 'vue-router'
 import { getReport } from "src/api/report"
 
 const route = useRoute()
+const loading = ref(false)
 
 const groupCustomCell = (_, rowIndex, column) => {
     if (rowIndex === 1 || rowIndex === 5) {
@@ -68,9 +70,11 @@ const columns = [
 const rows = ref([])
 
 onMounted(() => {
+    loading.value = true
     getReport(route.params.id, 'QC', {}, ['k1', 'k2', 'k3', 'k4']).then(res => {
-        console.log('----------RRRRRRRRRRRRR', res)
         rows.value = res
+    }).finally(() => {
+        loading.value = false
     })
 })
 </script>
