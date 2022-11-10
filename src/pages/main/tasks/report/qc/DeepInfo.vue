@@ -2,13 +2,13 @@
     <div>
         <div class="row">
             <div class="col-2">
-                <q-input v-model="text" label="输入基因进行搜索:" clearable dense>
+                <q-input v-model="keyword" label="输入基因进行搜索:" clearable dense @clear="clearKeyword">
                     <template v-slot:append>
-                        <q-icon name="search" />
+                        <q-icon name="search"/>
                     </template>
                 </q-input>
             </div>
-            <q-btn class="q-ml-sm" color="primary" label="基因搜索" size="sm"></q-btn>
+            <q-btn class="q-ml-sm" color="primary" label="基因搜索" size="sm" @click="searchKeyword"></q-btn>
         </div>
     </div>
     <div class="q-py-md">
@@ -23,11 +23,9 @@
                     class="col-5"
                     size="small"
                     bordered
-                    :data-source="rows1"
+                    :data-source="filteredRows1"
                     :columns="columns"
                     :sticky="true"
-                    :pagination="pagination"
-                    @change="tableChange"
                 >
                 </a-table>
             </div>
@@ -40,11 +38,9 @@
                 <a-table
                     size="small"
                     bordered
-                    :data-source="rows2"
+                    :data-source="filteredRows2"
                     :columns="columns"
                     :sticky="true"
-                    :pagination="pagination"
-                    @change="tableChange"
                 >
                 </a-table>
             </div>
@@ -52,15 +48,15 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import { getReportTable } from 'src/api/report'
-import { useRoute } from 'vue-router'
+import {ref, onMounted} from "vue";
+import {getReportTable} from 'src/api/report'
+import {useRoute} from 'vue-router'
 
 const route = useRoute()
 
 const columns = [
     // 患者
-    {key: 'gene', title: '基因', dataIndex: 'k1',  align: 'center', width: 120},
+    {key: 'gene', title: '基因', dataIndex: 'k1', align: 'center', width: 120},
     {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120},
     {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120},
     {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120},
@@ -75,11 +71,21 @@ const pagination = ref({
     // rowsNumber: xx if getting data from a server
 })
 
+const keyword = ref('')
 const rows1 = ref([])
+const filteredRows1 = ref([])
 const rows2 = ref([])
+const filteredRows2 = ref([])
 
-const report = {
 
+const searchKeyword = () => {
+    filteredRows1.value = rows1.value.filter(t => t.k1.includes(keyword.value))
+    filteredRows2.value = rows2.value.filter(t => t.k1.includes(keyword.value))
+}
+
+const clearKeyword = () => {
+    filteredRows1.value = rows1.value
+    filteredRows2.value = rows2.value
 }
 
 onMounted(() => {
@@ -88,11 +94,13 @@ onMounted(() => {
     getReportTable(route.params.id, 'QN11', {}, fields).then(res => {
         console.log('=========>', res)
         rows1.value = res
+        filteredRows1.value = rows1.value
     })
 
     getReportTable(route.params.id, 'QT11', {}, fields).then(res => {
         console.log('=========>', res)
         rows2.value = res
+        filteredRows2.value = rows2.value
     })
 })
 </script>
