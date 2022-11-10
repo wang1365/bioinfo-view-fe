@@ -60,9 +60,9 @@ const route = useRoute()
 
 const columns = [
     {key: 'gene', title: '基因', dataIndex: 'k1', align: 'center', width: 120},
-    {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120},
-    {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120},
-    {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120},
+    {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120, sorter: (row1, row2) => row1.k2 - row2.k2},
+    {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k3},
+    {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k4},
 ]
 
 const keyword = ref('')
