@@ -13,7 +13,7 @@
             size="small"
             bordered :loading="loading2"
             :data-source="filteredRows2"
-            :columns="columns"
+            :columns="columns1"
             :sticky="true"
         >
             <template #bodyCell="{ column, record }">
@@ -38,7 +38,7 @@
             size="small"
             bordered :loading="loading2"
             :data-source="filteredRows2"
-            :columns="columns"
+            :columns="columns2"
             :sticky="true"
         >
             <template #bodyCell="{ column, record }">
@@ -58,12 +58,8 @@ import {exportFile} from 'quasar'
 
 const route = useRoute()
 
-const columns = ref([
-    // {key: 'gene', title: '基因', dataIndex: 'k1', align: 'center', width: 120},
-    // {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120, sorter: (row1, row2) => row1.k2 - row2.k2},
-    // {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k3},
-    // {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k4},
-])
+const columns1 = ref([])
+const columns2 = ref([])
 
 const keyword = ref('')
 const rows1 = ref([])
@@ -94,7 +90,7 @@ onMounted(() => {
     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
     getReportTable(route.params.id, 'FUSION_QT11', {}, fields).then(res => {
         const head = res[0]
-        columns.value = Object.keys(head).map(k => {
+        columns1.value = Object.keys(head).map(k => {
             return {title: head[k], key: k, dataIndex: k, align: 'center'}
         })
         rows1.value = res.slice(1)
@@ -104,6 +100,10 @@ onMounted(() => {
     })
 
     getReportTable(route.params.id, 'FUSION_QN11', {}, fields).then(res => {
+        const head = res[0]
+        columns2.value = Object.keys(head).map(k => {
+            return {title: head[k], key: k, dataIndex: k, align: 'center'}
+        })
         rows2.value = res.slice(1)
         filteredRows2.value = rows2.value
     }).finally(() => {
