@@ -14,12 +14,14 @@ export function getReportTable(taskId, name, queryBody = {}, fields = []) {
                     .filter((t) => t.length > 0)
                     .map((t) => t.split(','))
 
+                console.log('>>>>>>>>1', lines, fields)
                 // 根据fields进行，将每行的元素转为对象，以便于后续数据绑定
                 if (fields.length > 0) {
                     const bound = fields.length
                     lines = lines
                         .map((line) => {
-                            if (line.length > bound) {
+                            console.log('>>>>>>>>lll', line.length, bound)
+                            if (line.length < bound) {
                                 return null
                             }
 
@@ -29,7 +31,8 @@ export function getReportTable(taskId, name, queryBody = {}, fields = []) {
                             })
                             return item
                         })
-                        .filter((t) => t != null)
+                        // .filter((t) => t != null)
+                    console.log('>>>>>>>>2', lines)
                 }
                 return lines
             },

@@ -1,69 +1,113 @@
 <template>
-    <div class="text-h6">肿瘤单样品融合</div>
-    <div>
-        <div class="row q-gutter-sm ">
-            <div class="col">
-                <q-input dense label="搜索:" clearable />
-            </div>
 
+    <div class="row q-gutter-sm justify-between">
+        <div class="text-h6 text-purple">肿瘤单样品融合</div>
+        <div class="row col-4">
+            <q-input v-model="keyword" class="col p-mr-sm q-gutter-xs" dense label="搜索:" clearable
+                     @clear="clearKeyword"/>
+            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
         </div>
-
     </div>
     <div class="bio-data-table q-py-sm">
-        <table>
-            <thead>
-                <tr>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                </tr>
-            </tbody>
-        </table>
+        <a-table
+            size="small"
+            bordered :loading="loading2"
+            :data-source="filteredRows2"
+            :columns="columns"
+            :sticky="true"
+        >
+            <template #bodyCell="{ column, record }">
+                <q-btn v-if="column.key === 'k9'" label="查看" color="primary" outline size="xs"
+                       @click="clickView(record)">
+                </q-btn>
+            </template>
+        </a-table>
     </div>
-    <div class="text-h6">对照单样品融合</div>
-    <div>
-        <div class="row q-gutter-sm ">
-            <div class="col">
-                <q-input dense label="搜索:" clearable />
-            </div>
 
+
+    <div class="row q-gutter-sm justify-between">
+        <div class="text-h6 text-primary">对照单样品融合</div>
+        <div class="row col-4">
+            <q-input v-model="keyword" class="col p-mr-sm q-gutter-xs" dense label="搜索:" clearable
+                     @clear="clearKeyword"/>
+            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
         </div>
-
     </div>
     <div class="bio-data-table q-py-sm">
-        <table>
-            <thead>
-                <tr>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                    <td>数据</td>
-                </tr>
-            </tbody>
-        </table>
+        <a-table
+            size="small"
+            bordered :loading="loading2"
+            :data-source="filteredRows2"
+            :columns="columns"
+            :sticky="true"
+        >
+            <template #bodyCell="{ column, record }">
+                <q-btn v-if="column.key === 'k9'" label="查看" color="primary" outline size="xs"
+                       @click="clickView(record)">
+                </q-btn>
+            </template>
+        </a-table>
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, onMounted} from "vue";
+import {getReportTable} from 'src/api/report'
+import {useRoute} from 'vue-router'
+import {exportFile} from 'quasar'
+
+
+const route = useRoute()
+
+const columns = ref([
+    // {key: 'gene', title: '基因', dataIndex: 'k1', align: 'center', width: 120},
+    // {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120, sorter: (row1, row2) => row1.k2 - row2.k2},
+    // {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k3},
+    // {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k4},
+])
+
+const keyword = ref('')
+const rows1 = ref([])
+const filteredRows1 = ref([])
+const rows2 = ref([])
+const filteredRows2 = ref([])
+const loading1 = ref(false)
+const loading2 = ref(false)
+
+
+const searchKeyword = () => {
+    filteredRows1.value = rows1.value.filter(t => t.k1.includes(keyword.value))
+    filteredRows2.value = rows2.value.filter(t => t.k1.includes(keyword.value))
+}
+
+const clearKeyword = () => {
+    filteredRows1.value = rows1.value
+    filteredRows2.value = rows2.value
+}
+
+const clickView = (record) => {
+    console.log(record)
+}
+onMounted(() => {
+    loading1.value = true
+    loading2.value = true
+
+    const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
+    getReportTable(route.params.id, 'FUSION_QT11', {}, fields).then(res => {
+        const head = res[0]
+        columns.value = Object.keys(head).map(k => {
+            return {title: head[k], key: k, dataIndex: k, align: 'center'}
+        })
+        rows1.value = res.slice(1)
+        filteredRows1.value = rows1.value
+    }).finally(() => {
+        loading1.value = false
+    })
+
+    getReportTable(route.params.id, 'FUSION_QN11', {}, fields).then(res => {
+        rows2.value = res.slice(1)
+        filteredRows2.value = rows2.value
+    }).finally(() => {
+        loading2.value = false
+    })
+})
 </script>
