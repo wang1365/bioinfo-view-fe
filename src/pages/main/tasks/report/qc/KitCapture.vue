@@ -30,7 +30,7 @@ const groupCustomCell = (_, rowIndex, column) => {
         return { style: 'border-bottom-color:blue' }
     }
     if (rowIndex === 11) {
-        return { style: 'border-top-color:blue; border-top-style: solid; font-weight:bold;' }
+        return { style: 'border-top-color:blue; border-top-style: solid; font-weight:bold; font-size: 15px' }
     }
     return {}
 }
