@@ -22,7 +22,7 @@
                 <a-table
                     class="col-5"
                     size="small"
-                    bordered
+                    bordered :loading="loading1"
                     :data-source="filteredRows1"
                     :columns="columns"
                     :sticky="true"
@@ -37,7 +37,7 @@
                 <q-separator></q-separator>
                 <a-table
                     size="small"
-                    bordered
+                    bordered :loading="loading2"
                     :data-source="filteredRows2"
                     :columns="columns"
                     :sticky="true"
@@ -55,27 +55,19 @@ import {useRoute} from 'vue-router'
 const route = useRoute()
 
 const columns = [
-    // 患者
     {key: 'gene', title: '基因', dataIndex: 'k1', align: 'center', width: 120},
     {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120},
     {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120},
     {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120},
 ]
 
-const pagination = ref({
-    position: ['bottomRight'],
-    current: 1,
-    total: 0,
-    pageSize: 10,
-    showSizeChanger: true,
-    // rowsNumber: xx if getting data from a server
-})
-
 const keyword = ref('')
 const rows1 = ref([])
 const filteredRows1 = ref([])
 const rows2 = ref([])
 const filteredRows2 = ref([])
+const loading1 = ref(false)
+const loading2 = ref(false)
 
 
 const searchKeyword = () => {
@@ -89,18 +81,18 @@ const clearKeyword = () => {
 }
 
 onMounted(() => {
-    console.log('sfsdfsdfdddddd', route)
+    loading1.value = true
+    loading2.value = true
+
     const fields = ['k1', 'k2', 'k3', 'k4']
     getReportTable(route.params.id, 'QN11', {}, fields).then(res => {
-        console.log('=========>', res)
         rows1.value = res
         filteredRows1.value = rows1.value
-    })
+    }).finally(() => { loading1.value = false})
 
     getReportTable(route.params.id, 'QT11', {}, fields).then(res => {
-        console.log('=========>', res)
         rows2.value = res
         filteredRows2.value = rows2.value
-    })
+    }).finally(() => { loading2.value = false})
 })
 </script>
