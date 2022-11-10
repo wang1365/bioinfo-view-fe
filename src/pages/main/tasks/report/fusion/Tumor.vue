@@ -11,8 +11,8 @@
     <div class="bio-data-table q-py-sm">
         <a-table
             size="small"
-            bordered :loading="loading2"
-            :data-source="filteredRows2"
+            bordered :loading="loading1"
+            :data-source="filteredRows1"
             :columns="columns1"
             :sticky="true"
         >
@@ -57,17 +57,19 @@ import {exportFile} from 'quasar'
 
 
 const route = useRoute()
+const keyword = ref('')
 
 const columns1 = ref([])
 const columns2 = ref([])
 
-const keyword = ref('')
-const rows1 = ref([])
-const filteredRows1 = ref([])
-const rows2 = ref([])
-const filteredRows2 = ref([])
 const loading1 = ref(false)
 const loading2 = ref(false)
+
+const rows1 = ref([])
+const rows2 = ref([])
+
+const filteredRows1 = ref([])
+const filteredRows2 = ref([])
 
 
 const searchKeyword = () => {
@@ -88,10 +90,17 @@ onMounted(() => {
     loading2.value = true
 
     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
+    const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
     getReportTable(route.params.id, 'FUSION_QT11', {}, fields).then(res => {
         const head = res[0]
         columns1.value = Object.keys(head).map(k => {
             return {title: head[k], key: k, dataIndex: k, align: 'center'}
+        })
+        columns1.value.forEach((col, i) => {
+            col.width = width[i]
+            if (col.key === 'k8') {
+                col.align = 'left'
+            }
         })
         rows1.value = res.slice(1)
         filteredRows1.value = rows1.value
