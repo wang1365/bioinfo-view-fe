@@ -28,12 +28,12 @@ const api = axios.create({
 
     transformResponse: [
         function (data) {
+            console.log('xxxxxxxxxxxx', data)
             // 对 data 进行任意转换处理
             return JSON.parse(data)
         },
     ],
 })
-
 
 export default boot(({ app, router, store }) => {
     // for use inside Vue files (Options API) through this.$axios and this.$api
@@ -51,6 +51,10 @@ export default boot(({ app, router, store }) => {
         (response) => {
             const responseData = response.data
             const { code } = responseData
+            if (code === undefined) {
+                // 非标准结构的响应，直接返回数据
+                return response.data
+            }
             if (code === 0) {
                 // 业务处理成功，只返回数据
                 return responseData.data
