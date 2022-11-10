@@ -1,7 +1,7 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
-        <PageTitle title="任务结果" />
-        <div class="q-pt-md">
+    <q-page padding style="overflow-x: hidden; padding-top: 10px">
+        <h6>任务结果</h6>
+        <div class="q-pt-xs">
             <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
                 :breakpoint="0" dense>
                 <q-tab name="qc" label="质控" />

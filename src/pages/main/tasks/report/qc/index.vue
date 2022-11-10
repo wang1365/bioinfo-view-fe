@@ -1,7 +1,7 @@
 <template>
 
     <div class="q-py-md">
-        质控介绍:质控介绍:质控介绍:质控介绍:质控介绍:质控介绍:质控介绍:质控介绍:
+        {{qcIntro}}
     </div>
 
     <div class="q-py-md">
@@ -28,5 +28,19 @@
 import { ref, onMounted } from "vue";
 import KitCaptureVue from "./KitCapture.vue"
 import DeepInfoVue from "./DeepInfo.vue"
+import { useRoute } from 'vue-router'
+import { getReportText } from "src/api/report"
+
+const route = useRoute()
 const tab = ref("试剂盒捕获质控信息")
+const qcIntro = ref('')
+
+
+onMounted(() => {
+    getReportText(route.params.id, 'QC_TIP').then(res => {
+        console.log('====>', res)
+        qcIntro.value = res
+    })
+})
+
 </script>

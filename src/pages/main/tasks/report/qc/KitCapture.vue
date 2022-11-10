@@ -1,6 +1,6 @@
 <template>
     <div class="q-py-sm">
-        <div class="text-bold">肿瘤样本的中靶率：XX%，对照样本中靶率：XX%</div>
+        <div class="text-bold">{{`肿瘤样本的中靶率：${onTarget.v1}，对照样本中靶率：${onTarget.v2}`}}</div>
     </div>
     <q-separator></q-separator>
     <div class="q-py-sm">
@@ -20,7 +20,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from 'vue-router'
-import { getReport } from "src/api/report"
+import { getReportTable, getReportText } from "src/api/report"
 
 const route = useRoute()
 const loading = ref(false)
@@ -68,14 +68,26 @@ const columns = [
 ]
 
 const rows = ref([])
+const onTarget = ref({
+    v1: '', v2: ''
+})
 
 onMounted(() => {
     loading.value = true
-    getReport(route.params.id, 'QC', {}, ['k1', 'k2', 'k3', 'k4']).then(res => {
+    getReportTable(route.params.id, 'QC', {}, ['k1', 'k2', 'k3', 'k4']).then(res => {
         rows.value = res
     }).finally(() => {
         loading.value = false
     })
+
+    getReportText(route.params.id, 'ONTARGET').then(res => {
+        console.log('====>', res)
+        const vs = res.split('\n')
+        onTarget.value = {
+            v1: vs[0], v2: vs[1]
+        }
+    })
+
 })
 </script>
 <style lang="scss">

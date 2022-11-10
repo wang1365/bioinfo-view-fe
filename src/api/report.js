@@ -1,6 +1,6 @@
 import { api } from 'src/boot/axios'
 
-export function getReport(taskId, name, queryBody = {}, fields = []) {
+export function getReportTable(taskId, name, queryBody = {}, fields = []) {
     return api({
         url: `/report/data/${taskId}/${name}/`,
         method: 'post',
@@ -36,3 +36,12 @@ export function getReport(taskId, name, queryBody = {}, fields = []) {
         ],
     })
 }
+
+export function getReportText(taskId, name) {
+    return api({
+        url: `/report/data/${taskId}/${name}/`,
+        method: 'post',
+        data: {}
+    })
+}
+

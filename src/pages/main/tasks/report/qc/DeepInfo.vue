@@ -87,8 +87,6 @@ const report = {
 
 onMounted(() => {
     console.log('sfsdfsdfdddddd', route)
-    getReport().then(res => {
-        console.log('----------', res)
-    })
+
 })
 </script>
