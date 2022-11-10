@@ -2,16 +2,16 @@
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>任务结果</h6>
         <div class="q-pt-xs">
-            <q-tabs v-model="tab" active-color="white" active-bg-color="blue-7" align="justify"
-                    class="bg-primary text-grey-3 shadow-2" indicator-color="red-8"
+            <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-5" align="justify"
+                    class="bg-grey-2 shadow-2" indicator-color="primary" inline-label
                 :breakpoint="0" dense>
-                <q-tab name="qc" label="质控" />
-                <q-tab name="mutation" label="突变分析结果" />
-                <q-tab name="fusion" label="融合分析结果" />
-                <q-tab name="copy-number-variation" label="拷贝数变异分析结果" />
-                <q-tab name="microsatellite-instability" label="微卫星不稳定结果" />
-                <q-tab name="tumor-mutation-load" label="肿瘤突变负荷分析结果" />
-                <q-tab name="homologous-recombination-defect" label="同源重组缺陷分析结果" />
+                <q-tab name="qc" label="质控" icon="border_left"/>
+                <q-tab name="mutation" label="突变分析结果" icon="candlestick_chart" />
+                <q-tab name="fusion" label="融合分析结果" icon="format_strikethrough"/>
+                <q-tab name="copy-number-variation" label="拷贝数变异分析结果" icon="polyline"/>
+                <q-tab name="microsatellite-instability" label="微卫星不稳定结果" icon="shape_line"/>
+                <q-tab name="tumor-mutation-load" label="肿瘤突变负荷分析结果" icon="bubble_chart"/>
+                <q-tab name="homologous-recombination-defect" label="同源重组缺陷分析结果" icon="line_axis" />
             </q-tabs>
             <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="qc">
