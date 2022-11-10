@@ -21,9 +21,9 @@
                 <q-separator></q-separator>
                 <a-table
                     class="col-5"
-                    size="middle"
+                    size="small"
                     bordered
-                    :data-source="rows"
+                    :data-source="rows1"
                     :columns="columns"
                     :sticky="true"
                     :pagination="pagination"
@@ -38,9 +38,9 @@
                 </div>
                 <q-separator></q-separator>
                 <a-table
-                    size="middle"
+                    size="small"
                     bordered
-                    :data-source="rows"
+                    :data-source="rows2"
                     :columns="columns"
                     :sticky="true"
                     :pagination="pagination"
@@ -53,17 +53,17 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
-import { getReport } from 'src/api/report'
+import { getReportTable } from 'src/api/report'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
 const columns = [
     // 患者
-    {key: 'gene', title: '基因', dataIndex: 'gene',  align: 'center', width: 120},
-    {key: 'avg', title: '深度平均值', dataIndex: 'avg', align: 'center', width: 120},
-    {key: 'mid', title: '深度中位值', dataIndex: 'mid', align: 'center', width: 120},
-    {key: 'ratio', title: '基因覆盖度', dataIndex: 'ratio', align: 'center', width: 120},
+    {key: 'gene', title: '基因', dataIndex: 'k1',  align: 'center', width: 120},
+    {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120},
+    {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120},
+    {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120},
 ]
 
 const pagination = ref({
@@ -75,11 +75,8 @@ const pagination = ref({
     // rowsNumber: xx if getting data from a server
 })
 
-const rows = ref([
-    {gene:'D17S250', avg: 299.804, mid:317, ratio: 100},
-    {gene:'PALB2', avg: 94.4007, mid:96, ratio: 100},
-    {gene:'TOP2A', avg: 116.065, mid:114, ratio: 100},
-])
+const rows1 = ref([])
+const rows2 = ref([])
 
 const report = {
 
@@ -87,6 +84,15 @@ const report = {
 
 onMounted(() => {
     console.log('sfsdfsdfdddddd', route)
+    const fields = ['k1', 'k2', 'k3', 'k4']
+    getReportTable(route.params.id, 'QN11', {}, fields).then(res => {
+        console.log('=========>', res)
+        rows1.value = res
+    })
 
+    getReportTable(route.params.id, 'QT11', {}, fields).then(res => {
+        console.log('=========>', res)
+        rows2.value = res
+    })
 })
 </script>
