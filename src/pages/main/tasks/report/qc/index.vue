@@ -31,7 +31,7 @@
         </q-tab-panels>
         <q-separator class="bg-separator" />
         <div class="q-py-md">
-            <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>
+            <q-input :model-value="tip" readonly autogrow type="textarea"></q-input>
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 800px; max-width: 2000px">
@@ -56,6 +56,7 @@ import {getReportText} from "src/api/report"
 const route = useRoute()
 const tab = ref("试剂盒捕获质控信息")
 const dlgVisible = ref(false)
+const tip = ref('')
 
 const props = defineProps({
     intro: {
@@ -65,9 +66,9 @@ const props = defineProps({
 })
 
 onMounted(() => {
-    // getReportText(route.params.id, 'QC_TIP').then(res => {
-    //     console.log('====>', res)
-    //     intro.value = res
-    // })
+    getReportText(route.params.id, 'QC_TIP').then(res => {
+        console.log('====>', res)
+        tip.value = res
+    })
 })
 </script>
