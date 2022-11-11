@@ -31,12 +31,14 @@
         </q-tab-panels>
         <q-separator class="bg-separator" />
         <div class="q-py-md">
-            {{ intro }}
+            <q-input :model-value="intro" readonly autogrow type="textarea"></q-input>
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 800px; max-width: 2000px">
                 <q-bar class="bg-primary text-white">质控解读</q-bar>
-                <q-card-section>{{intro}}</q-card-section>
+                <q-card-section>
+                    <q-input :model-value="intro" readonly autogrow type="textarea"></q-input>
+                </q-card-section>
                 <q-card-actions align="center">
                     <q-btn v-close-popup color="primary">关闭</q-btn>
                 </q-card-actions>
