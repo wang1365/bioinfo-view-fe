@@ -31,13 +31,13 @@
         </q-tab-panels>
         <q-separator class="bg-separator" />
         <div class="q-py-md">
-            <q-input :model-value="intro" readonly autogrow type="textarea"></q-input>
+            <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 800px; max-width: 2000px">
                 <q-bar class="bg-primary text-white">融合分析解读</q-bar>
                 <q-card-section>
-                    <q-input :model-value="intro" readonly autogrow type="textarea"></q-input>
+                    <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>
                 </q-card-section>
                 <q-card-actions align="center">
                     <q-btn v-close-popup color="primary">关闭</q-btn>
@@ -53,5 +53,11 @@ import TumorVue from "./Tumor.vue";
 
 const tab = ref("单样品融合分析")
 const dlgVisible = ref(false)
-const intro = ref('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+
+const props = defineProps({
+    intro: {
+        type: String,
+        required: false
+    }
+})
 </script>

@@ -14,25 +14,21 @@ export function getReportTable(taskId, name, queryBody = {}, fields = []) {
                     .filter((t) => t.length > 0)
                     .map((t) => t.split(','))
 
-                console.log('>>>>>>>>1', lines, fields)
                 // 根据fields进行，将每行的元素转为对象，以便于后续数据绑定
                 if (fields.length > 0) {
                     const bound = fields.length
-                    lines = lines
-                        .map((line) => {
-                            console.log('>>>>>>>>lll', line.length, bound)
-                            if (line.length < bound) {
-                                return null
-                            }
+                    lines = lines.map((line) => {
+                        if (line.length < bound) {
+                            return null
+                        }
 
-                            const item = {}
-                            fields.forEach((field, idx) => {
-                                item[field] = line[idx]
-                            })
-                            return item
+                        const item = {}
+                        fields.forEach((field, idx) => {
+                            item[field] = line[idx]
                         })
-                        // .filter((t) => t != null)
-                    console.log('>>>>>>>>2', lines)
+                        return item
+                    })
+                    // .filter((t) => t != null)
                 }
                 return lines
             },
@@ -44,7 +40,6 @@ export function getReportText(taskId, name) {
     return api({
         url: `/report/data/${taskId}/${name}/`,
         method: 'post',
-        data: {}
+        data: {},
     })
 }
-
