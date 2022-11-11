@@ -4,7 +4,7 @@
             <div class="col-2">
                 <q-input v-model="keyword" label="输入基因进行搜索:" clearable dense @clear="clearKeyword">
                     <template v-slot:append>
-                        <q-icon name="search"/>
+                        <q-icon name="search" />
                     </template>
                 </q-input>
             </div>
@@ -16,14 +16,18 @@
             <div class="col q-mr-md">
                 <div class="text-center text-bold text-primary text-h6" style="position:relative">
                     对照样本
-                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
-                            @click="download(0)"></q-icon>
+                    <q-icon
+                        name="download"
+                        style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
+                        @click="download(0)"
+                    ></q-icon>
                 </div>
                 <q-separator></q-separator>
                 <a-table
                     class="col-5"
                     size="small"
-                    bordered :loading="loading1"
+                    bordered
+                    :loading="loading1"
                     :data-source="filteredRows1"
                     :columns="columns"
                     :sticky="true"
@@ -33,13 +37,17 @@
             <div class="col q-ml-md">
                 <div class="text-center text-bold text-purple text-h6" style="position:relative">
                     肿瘤样本
-                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
-                            @click="download(0)"></q-icon>
+                    <q-icon
+                        name="download"
+                        style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
+                        @click="download(1)"
+                    ></q-icon>
                 </div>
                 <q-separator></q-separator>
                 <a-table
                     size="small"
-                    bordered :loading="loading2"
+                    bordered
+                    :loading="loading2"
                     :data-source="filteredRows2"
                     :columns="columns"
                     :sticky="true"
