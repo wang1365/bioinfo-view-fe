@@ -30,9 +30,9 @@
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
-        <div class="q-py-md">
-            <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>
-        </div>
+        <!--        <div class="q-py-md">-->
+        <!--            <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>-->
+        <!--        </div>-->
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 800px; max-width: 2000px">
                 <q-bar class="bg-primary text-white">融合分析解读</q-bar>
