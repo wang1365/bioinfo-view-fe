@@ -20,7 +20,7 @@
                     name="copy-number-variation"
                     label="拷贝数变异分析"
                     icon="polyline"
-                    v-if="tabValid('拷贝数变异分析')"
+                    v-if="tabValid('copy-number-variation')"
                 />
                 <q-tab
                     name="microsatellite-instability"
@@ -96,7 +96,7 @@ onMounted(() => {
         '突变分析': 'mutation',
         '融合分析': 'fusion',
         '拷贝数变异分析': 'copy-number-variation',
-        '微卫星不稳定': 'microsatellite-instability',
+        '微卫星不稳定分析': 'microsatellite-instability',
         '肿瘤突变负荷分析': 'tumor-mutation-load',
         '同源重组缺陷分析': 'homologous-recombination-defect',
     }
