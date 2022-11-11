@@ -46,22 +46,22 @@
                     <QcVue :intro="options['qc']" />
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
-                    <MutaionVue />
+                    <MutaionVue :intro="options['mutation']" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
                     <FusionVue :intro="options['fusion']" />
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
-                    <CopyNumberVariationVue />
+                    <CopyNumberVariationVue :intro="options['copy-number-variation']" />
                 </q-tab-panel>
                 <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
-                    <MicrosatelliteInstabilityVue />
+                    <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']" />
                 </q-tab-panel>
                 <q-tab-panel name="tumor-mutation-load" v-if="tabValid('tumor-mutation-load')">
-                    <TumorMutationLoadVue />
+                    <TumorMutationLoadVue :intro="options['tumor-mutation-load']" />
                 </q-tab-panel>
                 <q-tab-panel name="homologous-recombination-defect" v-if="tabValid('homologous-recombination-defect')">
-                    <HomologousRecombinationDefectVue />
+                    <HomologousRecombinationDefectVue :intro="options['homologous-recombination-defect']" />
                 </q-tab-panel>
             </q-tab-panels>
         </div>
