@@ -26,7 +26,7 @@ const route = useRoute()
 const loading = ref(false)
 
 const groupCustomCell = (_, rowIndex, column) => {
-    if (rowIndex === 1 || rowIndex === 5) {
+    if (rowIndex === 0 || rowIndex === 3) {
         return { style: 'border-bottom-color:blue' }
     }
     if (rowIndex === 11) {
@@ -41,8 +41,8 @@ const columns = [
         dataIndex: 'group',
         customCell: (_, rowIndex, column) => {
             let ret = { style: 'font-weight: bold;'}
-            if (rowIndex === 1 || rowIndex === 5) {
-                ret.style = 'border-bottom-color:blue'
+            if (rowIndex === 0 || rowIndex === 3) {
+                ret.style = 'font-weight: bold;border-bottom-color:blue'
             }
             if (rowIndex === 11) {
                 return { style: 'border-top-color:blue; border-top-style: solid; font-weight:bold;' }
@@ -53,10 +53,10 @@ const columns = [
             if (index === 0) {
                 return '病理评估'
             }
-            if (index === 2) {
+            if (index === 1) {
                 return 'DNA质量评估'
             }
-            if (index === 6) {
+            if (index === 4) {
                 return '测序质量评估'
             }
         }
@@ -81,7 +81,6 @@ onMounted(() => {
     })
 
     getReportText(route.params.id, 'ONTARGET').then(res => {
-        console.log('====>', res)
         const vs = res.split('\n')
         onTarget.value = {
             v1: vs[0], v2: vs[1]
