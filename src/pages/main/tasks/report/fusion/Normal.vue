@@ -63,7 +63,7 @@ const clearKeyword = () => {
 }
 
 const clickView = (record) => {
-    selectedFile.value = record.k9
+    selectedFile.value = record.k8
     igvVisible.value = true
 }
 onMounted(() => {
