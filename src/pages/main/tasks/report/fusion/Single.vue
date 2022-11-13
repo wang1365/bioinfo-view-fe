@@ -115,7 +115,6 @@ const clearKeyword = () => {
 }
 
 const clickView = (record) => {
-    console.log(record)
     selectedFile.value = record.k9
     igvVisible.value = true
 }

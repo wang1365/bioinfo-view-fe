@@ -1,25 +1,36 @@
 <template>
     <div class="row q-gutter-sm justify-between">
         <div class="row col-4">
-            <q-input v-model="keyword" class="col p-mr-sm q-gutter-xs" dense label="搜索:" clearable
-                     @clear="clearKeyword"/>
+            <q-input
+                v-model="keyword"
+                class="col p-mr-sm q-gutter-xs"
+                dense
+                label="搜索:"
+                clearable
+                @clear="clearKeyword"
+            />
             <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
         </div>
     </div>
     <div class="bio-data-table q-py-sm">
-        <a-table
-            size="small"
-            bordered :loading="loading"
-            :data-source="filteredRows"
-            :columns="columns"
-            :sticky="true"
-        >
+        <a-table size="small" bordered :loading="loading" :data-source="filteredRows" :columns="columns" :sticky="true">
             <template #bodyCell="{ column, record }">
-                <q-btn v-if="column.key === 'k8'" label="查看" color="primary" outline size="xs"
-                       @click="clickView(record)">
+                <q-btn
+                    v-if="column.key === 'k8'"
+                    label="查看"
+                    color="primary"
+                    outline
+                    size="xs"
+                    @click="clickView(record)"
+                >
                 </q-btn>
             </template>
         </a-table>
+        <q-dialog v-model="igvVisible">
+            <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
+                <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 <script setup>
@@ -40,7 +51,8 @@ const keyword = ref('')
 const rows = ref([])
 const filteredRows = ref([])
 const loading = ref(false)
-
+const igvVisible = ref(false)
+const selectedFile = ref('')
 
 const searchKeyword = () => {
     filteredRows.value = rows.value.filter(t => t.k1.includes(keyword.value))
@@ -51,7 +63,8 @@ const clearKeyword = () => {
 }
 
 const clickView = (record) => {
-    console.log(record)
+    selectedFile.value = record.k9
+    igvVisible.value = true
 }
 onMounted(() => {
     loading.value = true
