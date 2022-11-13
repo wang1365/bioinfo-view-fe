@@ -82,7 +82,6 @@ onMounted(() => {
                 col.align = 'left'
             }
         })
-        console.log('=========KKKK', columns.value)
 
         rows.value = res.slice(1)
         filteredRows.value = rows.value
