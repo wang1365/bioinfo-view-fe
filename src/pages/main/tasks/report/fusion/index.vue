@@ -5,7 +5,7 @@
             size="small"
             outline
             color="orange"
-            class="relative-position float-right z-top q-mr-md"
+            class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
             >说明</q-btn
         >
@@ -23,7 +23,7 @@
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
-                <TumorVue />
+                <Single />
             </q-tab-panel>
             <q-tab-panel name="体细胞融合分析">
                 <NormalVue />
@@ -49,7 +49,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import NormalVue from "./Normal.vue";
-import TumorVue from "./Tumor.vue";
+import Single from "./Single.vue";
 
 const tab = ref("单样品融合分析")
 const dlgVisible = ref(false)
