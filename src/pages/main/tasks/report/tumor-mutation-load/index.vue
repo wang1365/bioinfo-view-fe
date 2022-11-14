@@ -52,7 +52,7 @@
             </div>
             <div class="q-gutter-md text-center q-py-sm">
                 <q-btn color="primary" label="确定" icon="search" @click="search()"/>
-                <q-btn color="grey" label="复位" icon="delete" @click="clickReset"/>
+                <q-btn color="primary" label="复位" icon="settings_backup_restore" @click="clickReset"/>
             </div>
         </div>
 

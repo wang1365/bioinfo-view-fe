@@ -63,7 +63,7 @@
     <div class="q-py-sm">过滤结果的图表数据</div>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 800px; max-width: 2000px">
-            <q-bar class="bg-primary text-white">质控解读</q-bar>
+            <q-bar class="bg-primary text-white">拷贝数变异分析</q-bar>
             <q-card-section>
                 <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>
             </q-card-section>
