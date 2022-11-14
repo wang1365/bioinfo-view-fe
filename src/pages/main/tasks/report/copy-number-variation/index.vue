@@ -6,11 +6,8 @@
         color="orange"
         class="relative-position float-right z-top q-mr-md"
         @click="dlgVisible = !dlgVisible"
-        >说明</q-btn
-    >
-    <div class="q-py-md">
-        拷贝数变异分析介绍:拷贝数变异分析介绍:拷贝数变异分析介绍:拷贝数变异分析介绍:拷贝数变异分析介绍:拷贝数变异分析介绍:拷贝数变异分析介绍:拷贝数变异分析介绍:
-    </div>
+        >说明
+    </q-btn>
     <div>
         <div class="row q-gutter-sm ">
             <div class="col">
@@ -34,6 +31,17 @@
             <q-btn color="grey" label="清除" icon="delete" @click="refreshPage()" />
         </div>
     </div>
+
+    <a-table
+        class="col-5"
+        size="small"
+        bordered
+        :loading="loading"
+        :data-source="filteredRows"
+        :columns="columns"
+        :sticky="true"
+    >
+    </a-table>
 
     <div class="q-py-sm">过滤结果的图表数据</div>
     <q-dialog v-model="dlgVisible">
@@ -65,9 +73,14 @@
     </div> -->
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, onMounted} from "vue";
+import { useRoute } from 'vue-router'
+import { readTaskFile } from "src/api/task"
+import { getCsvData } from 'src/utils/csv'
 import GermlineMutationVue from "./GermlineMutation.vue"
 import SomaticMutationVue from "./SomaticMutation.vue"
+
+const route = useRoute()
 const tab = ref("胚系突变分析")
 const dlgVisible = ref(false)
 const props = defineProps({
@@ -75,5 +88,31 @@ const props = defineProps({
         type: String,
         required: false
     }
+})
+
+const rows = ref([])
+const filteredRows = ref([])
+const loading = ref(false)
+const keyword = ref('')
+const columns = [
+    {key: 'Chr', title: 'Chr', dataIndex: 'Chr', align: 'center', width: 50},
+    {key: 'Start', title: 'Start', dataIndex: 'Start', align: 'center', width: 80},
+    {key: 'End', title: 'End', dataIndex: 'End', align: 'center', width: 80},
+    {key: 'Type', title: 'Type', dataIndex: 'Type', align: 'center', width: 50},
+    {key: 'Gene', title: 'Gene', dataIndex: 'Gene', align: 'center', width: 50},
+    {key: 'Copys', title: 'Copys', dataIndex: 'Copys', align: 'center', width: 50},
+    {key: 'Rank', title: 'Rank', dataIndex: 'Rank', align: 'center', width: 50},
+    {key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200},
+    {key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80}
+]
+
+onMounted(() => {
+    readTaskFile(route.params.id, 'CNV/AnnotSV.tsv.filter.txt').then(res => {
+        const columnFields = columns.map(t => t.dataIndex)
+        const result = getCsvData(res, { fields: columnFields })
+        rows.value = result
+        filteredRows.value = result
+        console.log('===> rows.value', rows.value)
+    })
 })
 </script>
