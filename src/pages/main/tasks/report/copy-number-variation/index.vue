@@ -11,24 +11,40 @@
     <div>
         <div class="row q-gutter-sm ">
             <div class="col">
-                <q-input dense label="搜索基因:" clearable />
+                <q-input v-model="searchParams.gene" dense label="搜索基因:" clearable />
             </div>
             <div class="col">
-                <q-select clearable dense :options='["DUP", "DEL"]' label="拷贝数变异分类" />
+                <q-select
+                    v-model="searchParams.type"
+                    clearable
+                    dense
+                    :options='["DUP", "DEL"]'
+                    label="拷贝数变异分类"
+                />
             </div>
             <div class="col">
-                <q-select clearable dense :options='["无", "正", "反",]' label="CN 排序" />
+                <q-select
+                    v-model="searchParams.drug"
+                    clearable
+                    dense
+                    :options='["All", "Yes", "No",]'
+                    label="药物靶点"
+                />
             </div>
             <div class="col">
-                <q-select clearable dense :options='["All", "Yes", "No",]' label="药物靶点" />
-            </div>
-            <div class="col">
-                <q-select clearable dense :options='["A", "B", "C", "D", "E"]' label="突变位置" />
+                <q-select
+                    v-model="searchParams.drugLevel"
+                    :disable="searchParams.drug !== 'Yes'"
+                    clearable
+                    dense
+                    :options='["A", "B", "C", "D", "E"]'
+                    label="用药等级"
+                />
             </div>
         </div>
         <div class="q-gutter-md text-center q-py-sm">
-            <q-btn color="primary" label="确定" icon="search" @click="refreshPage()" />
-            <q-btn color="grey" label="清除" icon="delete" @click="refreshPage()" />
+            <q-btn color="primary" label="确定" icon="search" @click="clickSearch()" />
+            <q-btn color="grey" label="清除" icon="delete" @click="clickClear()" />
         </div>
     </div>
 
@@ -74,9 +90,9 @@
 </template>
 <script setup>
 import {ref, onMounted} from "vue";
-import { useRoute } from 'vue-router'
-import { readTaskFile } from "src/api/task"
-import { getCsvData } from 'src/utils/csv'
+import {useRoute} from 'vue-router'
+import {readTaskFile} from "src/api/task"
+import {getCsvData} from 'src/utils/csv'
 import GermlineMutationVue from "./GermlineMutation.vue"
 import SomaticMutationVue from "./SomaticMutation.vue"
 
@@ -93,14 +109,26 @@ const props = defineProps({
 const rows = ref([])
 const filteredRows = ref([])
 const loading = ref(false)
-const keyword = ref('')
+const searchParams = ref({
+    gene: '',
+    type: '',  // DUP/DEL
+    drug: '', // YES/NO
+    drugLevel: '', // A/B/C/D/E
+})
 const columns = [
     {key: 'Chr', title: 'Chr', dataIndex: 'Chr', align: 'center', width: 50},
     {key: 'Start', title: 'Start', dataIndex: 'Start', align: 'center', width: 80},
     {key: 'End', title: 'End', dataIndex: 'End', align: 'center', width: 80},
     {key: 'Type', title: 'Type', dataIndex: 'Type', align: 'center', width: 50},
     {key: 'Gene', title: 'Gene', dataIndex: 'Gene', align: 'center', width: 50},
-    {key: 'Copys', title: 'Copys', dataIndex: 'Copys', align: 'center', width: 50},
+    {
+        key: 'Copys',
+        title: 'Copys',
+        dataIndex: 'Copys',
+        align: 'center',
+        width: 50,
+        sorter: (r1, r2) => r1.Copys - r2.Copys
+    },
     {key: 'Rank', title: 'Rank', dataIndex: 'Rank', align: 'center', width: 50},
     {key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200},
     {key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80}
@@ -109,10 +137,46 @@ const columns = [
 onMounted(() => {
     readTaskFile(route.params.id, 'CNV/AnnotSV.tsv.filter.txt').then(res => {
         const columnFields = columns.map(t => t.dataIndex)
-        const result = getCsvData(res, { fields: columnFields })
+        const result = getCsvData(res, {fields: columnFields})
         rows.value = result
         filteredRows.value = result
         console.log('===> rows.value', rows.value)
     })
 })
+
+const clickSearch = () => {
+    filteredRows.value = rows.value.filter( t => {
+        let result = true
+        let param = searchParams.value.gene
+        if (param.length > 0) {
+            result &= t.Gene.includes(param)
+        }
+
+        param = searchParams.value.type
+        if (param !== '' && param !== 'All') {
+            result &= t.Type === param
+        }
+
+        param = searchParams.value.drug
+        if (param === 'Yes' || param === 'No') {
+            result &= (param === 'Yes' ? t.Drugs.length > 0 : t.Drugs.length === 0)
+        }
+
+        param = searchParams.value.drugLevel
+        if (searchParams.value.drug === 'Yes' && param.length > 0) {
+            // TODO
+        }
+        return result
+    })
+}
+
+const clickClear = () => {
+    searchParams.value = {
+        gene: '',
+        type: '',  // DUP/DEL
+        drug: '', // YES/NO
+        drugLevel: '', // A/B/C/D/E
+    }
+    clickSearch()
+}
 </script>
