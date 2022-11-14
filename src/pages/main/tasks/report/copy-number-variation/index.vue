@@ -153,7 +153,7 @@ const clickSearch = () => {
         }
 
         param = searchParams.value.type
-        if (param === 'DUP' && param === 'DEL') {
+        if (param === 'DUP' || param === 'DEL') {
             result &= t.Type === param
         }
 

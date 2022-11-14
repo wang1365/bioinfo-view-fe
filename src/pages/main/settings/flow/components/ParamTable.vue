@@ -11,7 +11,8 @@
                 color="primary"
                 separator="cell"
                 :pagination="{rowsPerPage: 0}"
-                dense hide-pagination
+                dense
+                hide-pagination
                 hide-no-data
                 wrap-cells
             >
@@ -24,10 +25,15 @@
                 <template v-slot:body="props">
                     <q-tr :props="props">
                         <q-td align="center">
-                            <q-input v-model="props.row.key" :disable="readonly" dense/>
+                            <q-input v-model="props.row.key" :disable="readonly" dense />
                         </q-td>
                         <q-td align="center">
-                            <q-select stack-label dense v-model="props.row.type" :options="['string','number','file','select','multiSelect']" />
+                            <q-select
+                                stack-label
+                                dense
+                                v-model="props.row.type"
+                                :options="['string','number','file','select','multiSelect']"
+                            />
                         </q-td>
                         <q-td align="center">
                             <q-checkbox v-model="props.row.required" color="teal" :disable="readonly" dense />
@@ -151,14 +157,12 @@ const getData = () => {
 
 defineExpose({setData, getData})
 const addParameter = () => {
-    console.log("addParameter");
     // this.$set(params, params.value.length, { choices: [] });
     params.value.push({
         key: '', type: '', required: false, choices: [], description: ''
     })
 }
 const clickDeleteRow = (row, index) => {
-    console.log('xxxxxxxxxxxx', index, params.value, row)
     params.value.splice(index, 1)
 }
 const deleteChoice = (row, idx) => {
@@ -171,7 +175,6 @@ const clickAddChoice = (row) => {
     choiceDlgVisible.value = true
 }
 const confirmAddChoice = (value, initValue) => {
-    console.log('.............', value, initValue, currentRow.value)
     // const value = this._.get(row, "newChoice", "");
     if (choice.value !== "") {
         if (currentRow.value.choices === undefined) {
