@@ -1,7 +1,7 @@
 #!/bin/bash
 GIT_BRANCH="$(git branch --show-current)"
 GIT_HEAD="$(git rev-parse --short=7 HEAD)"
-GIT_DATE=$(git log HEAD -n1 --pretty='format:%cd' --date=format:'%Y%m%d-%H%M')
+GIT_DATE=$(git log HEAD -n1 --pretty='format:%cd' --date=format:'%Y%m%d%H%M')
 
 # REPO="镜像仓库"
 # CONTAINER="镜像名"
@@ -21,7 +21,7 @@ npm run build
 # Build docker
 
 cmd="docker build \
-  -t $DOCKER_IMAGE \
+  -t $DOCKER_IMAGE:${TAG} \
   -f $DIR/Dockerfile $BUILDROOT"
 echo $cmd
 eval $cmd
