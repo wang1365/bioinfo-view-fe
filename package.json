@@ -25,7 +25,7 @@
         "vue-i18n": "^9.0.0",
         "vue-router": "^4.0.0",
         "pinia-plugin-persistedstate": "^2.2.0",
-        "igv": "^2.13.2",
+        "igv": "^2.13.4",
         "ant-design-vue": "^3.2.13",
         "moment": "^2.29.4"
     },
