@@ -6,13 +6,14 @@
             <q-btn icon="close" color="red" size="mini" v-close-popup></q-btn>
         </q-bar>
         <div class="row full-width justify-between">
-            <div v-for="(igv, idx) in options" :id="'igv-'+idx" :key="idx" class="col"></div>
+            <div v-for="(igv, idx) in options" :id="igv.uid" :key="igv.uid" class="col"></div>
         </div>
     </div>
 </template>
 <script setup>
-import {ref, onMounted, onBeforeMount, onActivated, nextTick} from 'vue'
+import {ref, onMounted, onBeforeMount, onActivated, nextTick, onUnmounted} from 'vue'
 import {readTaskFile} from "src/api/task"
+import { uid } from 'quasar'
 import igv from "igv"
 
 const props = defineProps({
@@ -30,7 +31,6 @@ const options = ref([])
 
 onMounted(() => {
     console.log('===> onBeforeMount')
-    const file = 'QN11.fusion_germline.10.PAIP2B-NUTM1.igv'
     readTaskFile(props.taskId, props.file).then(res => {
         let lines = res.split('\n').filter(t => t.length > 0)
         lines = lines.map(line => JSON.parse(line))
@@ -38,6 +38,7 @@ onMounted(() => {
         // url 处理
         options.value = lines
         options.value.forEach((option, idx) => {
+            option.uid = uid()
             for (let track of option.tracks) {
                 const url = track['url']
                 if (url) {
@@ -51,14 +52,17 @@ onMounted(() => {
         })
 
         nextTick(() => {
-            options.value.forEach((option, idx) => {
-                refreshIgvBrowser(`igv-${idx}`, option)
+            options.value.forEach(option => {
+                refreshIgvBrowser(option.uid, option)
             })
         })
 
     })
 })
 
+onUnmounted(() => {
+    console.log('===> onUnmounted')
+})
 
 const refreshIgvBrowser = (id, options) => {
     // const parent = document.getElementById('igvContainer')
@@ -70,7 +74,6 @@ const refreshIgvBrowser = (id, options) => {
     igv.createBrowser(div, options)
         .then(function (browser) {
             console.log("Created IGV browser", browser)
-            igv.browser = browser
         })
 }
 </script>
