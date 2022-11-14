@@ -9,82 +9,37 @@
         >说明</q-btn
     >
     <div class="q-py-md">
-        微卫星不稳定结果介绍微卫星不稳定结果介绍微卫星不稳定结果介绍微卫星不稳定结果介绍微卫星不稳定结果介绍
-    </div>
-
-    <div class="q-py-md">
-        <div class="text-h6">总体微卫星状态表</div>
-        <div class="bio-data-table">
-            <table>
-                <thead>
-                    <tr>
-                        <td>Total_Number_of_Sites</td>
-                        <td>Number_of_Somatic_Sites</td>
-                        <td>%</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1929</td>
-                        <td>635</td>
-                        <td>32.92</td>
-                    </tr>
-                    <tr>
-                        <td>1929</td>
-                        <td>635</td>
-                        <td>32.92</td>
-                    </tr>
-                    <tr>
-                        <td>1929</td>
-                        <td>635</td>
-                        <td>32.92</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="text-h6 text-primary text-bold">总体微卫星状态表</div>
+        <a-table
+            class="col-5"
+            size="small"
+            bordered
+            :loading="loading1"
+            :data-source="rows1"
+            :columns="columns1"
+            :sticky="true"
+        >
+        </a-table>
     </div>
     <div class="q-py-md">
-        <div class="text-h6">金标微卫星图</div>
-        <div class="bio-data-table">
-            <table>
-                <thead>
-                    <tr>
-                        <td>CHROM</td>
-                        <td>POSITION</td>
-                        <td>NAME</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>chr2</td>
-                        <td>47641579</td>
-                        <td class="cursor-pointer" @click="openImage()">BAT-26</td>
-                    </tr>
-                    <tr>
-                        <td>chr2</td>
-                        <td>47641579</td>
-                        <td class="cursor-pointer" @click="openImage()">BAT-26</td>
-                    </tr>
-                    <tr>
-                        <td>chr2</td>
-                        <td>47641579</td>
-                        <td class="cursor-pointer" @click="openImage()">BAT-26</td>
-                    </tr>
-                    <tr>
-                        <td>chr2</td>
-                        <td>47641579</td>
-                        <td class="cursor-pointer" @click="openImage()">BAT-26</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <div class="text-h6 text-primary text-bold">金标微卫星图</div>
+        <a-table
+            class="col-5"
+            size="small"
+            bordered
+            :loading="loading1"
+            :data-source="rows2"
+            :columns="columns1"
+            :sticky="true"
+        >
+        </a-table>
     </div>
     <q-dialog v-model="showImage">
         <img src="" alt="" style="width:500px;height:400px;background-color:white" />
     </q-dialog>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 800px; max-width: 2000px">
-            <q-bar class="bg-primary text-white">质控解读</q-bar>
+            <q-bar class="bg-primary text-white">微卫星不稳定</q-bar>
             <q-card-section>
                 <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>
             </q-card-section>
@@ -96,7 +51,31 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import {readTaskFile} from "src/api/task";
+import { useRoute } from 'vue-router'
+import { getCsvData } from "src/utils/csv";
+
+const route = useRoute()
 const showImage = ref('false')
+const dlgVisible = ref(false)
+
+const loading1 = ref(false)
+const loading2 = ref(false)
+
+const rows1 = ref([])
+const rows2 = ref([])
+
+const columns1 = ref([
+    {key: 'k1', title: 'Total_Number_of_Sites', dataIndex: 'k1', align: 'center', width: 50},
+    {key: 'k2', title: 'Number_of_Somatic_Sites', dataIndex: 'k2', align: 'center', width: 50},
+    {key: 'k3', title: '%', dataIndex: 'k3', align: 'center', width: 50}
+])
+const columns2 = ref([
+    {key: 'k1', title: 'CHROM', dataIndex: 'k1', align: 'center', width: 50},
+    {key: 'k2', title: 'POSITION', dataIndex: 'k2', align: 'center', width: 50},
+    {key: 'k3', title: 'NAME', dataIndex: 'k3', align: 'center', width: 50}
+])
+
 const openImage = () => {
     showImage.value = true
 }
@@ -106,5 +85,15 @@ const props = defineProps({
         type: String,
         required: false
     }
+})
+
+onMounted(() => {
+    readTaskFile(route.params.id, 'MSI/QN11_QT11.msi').then(res => {
+        rows1.value = getCsvData(res, { fields: ['k1', 'k2', 'k3']} )
+    })
+
+    readTaskFile(route.params.id, 'MSI/jingbiao.msi').then(res => {
+        rows2.value = getCsvData(res, { fields: ['k1', 'k2', 'k3']} )
+    })
 })
 </script>
