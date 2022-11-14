@@ -46,9 +46,9 @@
         </a-table>
     </div>
     <q-dialog v-model="showImage">
-        <q-card style="width:850px;max-width:1000px;height:550px">
+        <q-card style="width:850px;max-width:1000px;height:550px;align-items: center">
             <q-card-section>
-                <img :src="imageUrl" alt="" style="background-color:white" />
+                <img :src="imageUrl" alt="" style="width:750px;height:450px;background-color:white" />
             </q-card-section>
         </q-card>
     </q-dialog>
