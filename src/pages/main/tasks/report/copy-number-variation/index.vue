@@ -196,7 +196,7 @@ const pieOption = {
                 borderColor: '#fff',
                 borderWidth: 1,
                 color: (object) => {
-                    return object.data.error ? 'red': 'grey'
+                    return object.data.error ? 'red': '#f0f0f5'
                 }
             },
             label: {
@@ -231,7 +231,7 @@ const pieOption = {
                 borderColor: '#fff',
                 borderWidth: 1,
                 color: (object) => {
-                    return object.data.ratio ? 'green': 'grey'
+                    return object.data.ratio ? 'green': '#f0f0f5'
                 }
             },
             label: {
