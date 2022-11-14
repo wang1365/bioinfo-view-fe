@@ -2,6 +2,7 @@
 GIT_BRANCH="$(git branch --show-current)"
 GIT_HEAD="$(git rev-parse --short=7 HEAD)"
 GIT_DATE=$(git log HEAD -n1 --pretty='format:%cd' --date=format:'%Y%m%d-%H%M')
+TAG=$(date '+%Y%m%d%H%M%S')
 
 # REPO="镜像仓库"
 # CONTAINER="镜像名"
@@ -32,6 +33,6 @@ fi
 
 start="docker run --name ${CONTAINER_NAME} -dit --restart=always -p 80:80 \
   -v /data/bioinfo:/data/bioinfo \
-  -e API=10.10.0.208:8080 ${DOCKER_IMAGE}:latest"
+  -e API=10.10.0.208:8080 ${DOCKER_IMAGE}:${TAG}"
 echo $start
 eval $start
