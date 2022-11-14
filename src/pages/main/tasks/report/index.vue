@@ -55,7 +55,7 @@
                     <CopyNumberVariationVue :intro="options['copy-number-variation']" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
-                    <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']" />
+                    <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']"  :task="taskDetail"/>
                 </q-tab-panel>
                 <q-tab-panel name="tumor-mutation-load" v-if="tabValid('tumor-mutation-load')">
                     <TumorMutationLoadVue :intro="options['tumor-mutation-load']" />

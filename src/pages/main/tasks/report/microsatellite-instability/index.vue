@@ -32,10 +32,21 @@
             :columns="columns1"
             :sticky="true"
         >
+            <template #bodyCell="{ column, record }">
+                <q-btn
+                    v-if="column.key === 'k3'"
+                    :label="record.k3"
+                    color="primary"
+                    flat
+                    size="xs"
+                    @click="clickView(record)"
+                >
+                </q-btn>
+            </template>
         </a-table>
     </div>
     <q-dialog v-model="showImage">
-        <img src="" alt="" style="width:500px;height:400px;background-color:white" />
+        <img :src="imageUrl" alt="" style="width:500px;height:400px;background-color:white" />
     </q-dialog>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 800px; max-width: 2000px">
@@ -57,6 +68,7 @@ import { getCsvData } from "src/utils/csv";
 
 const route = useRoute()
 const showImage = ref('false')
+const imageUrl = ref('')
 const dlgVisible = ref(false)
 
 const loading1 = ref(false)
@@ -84,8 +96,18 @@ const props = defineProps({
     intro: {
         type: String,
         required: false
+    },
+    task: {
+        type: Object,
+        required: true
     }
 })
+
+const clickView = (record) => {
+    showImage.value = true
+    imageUrl.value = `/igv${props.task.result_dir}/MSI/${record.k3}.jpeg`
+    console.log('=== image url', imageUrl.value)
+}
 
 onMounted(() => {
     readTaskFile(route.params.id, 'MSI/QN11_QT11.msi').then(res => {
