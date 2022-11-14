@@ -6,7 +6,7 @@
             <q-btn icon="close" color="red" size="mini" v-close-popup></q-btn>
         </q-bar>
         <div class="row full-width justify-between">
-            <div v-for="(igv, idx) in options" :id="igv.uid" :key="igv.uid" class="col"></div>
+            <div v-for="igv in options" :id="igv.uid" :key="igv.uid" class="col"></div>
         </div>
     </div>
 </template>
