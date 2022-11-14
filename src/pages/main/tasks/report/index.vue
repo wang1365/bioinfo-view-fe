@@ -52,7 +52,7 @@
                     <FusionVue :intro="options['fusion']" />
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
-                    <CopyNumberVariationVue :intro="options['copy-number-variation']" />
+                    <CopyNumberVariationVue :intro="options['copy-number-variation']" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
                     <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']" />
@@ -71,6 +71,7 @@
 import {ref, onMounted} from "vue";
 import {useApi} from "src/api/apiBase";
 import PageTitle from "components/page-title/PageTitle.vue";
+import { getTask } from "src/api/task"
 import QcVue from "./qc/index.vue"
 import MutaionVue from "./mutation/index.vue"
 import FusionVue from "./fusion/index.vue"
@@ -89,8 +90,13 @@ const route = useRoute()
 const options = ref({})
 
 const tab = ref("qc")
+const taskDetail = ref({})
 
 onMounted(() => {
+    getTask(route.params.id).then(res => {
+        taskDetail.value = res
+    })
+
     const dict = {
         '质控': 'qc',
         '突变分析': 'mutation',

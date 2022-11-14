@@ -9,6 +9,7 @@
         >说明
     </q-btn>
     <div>
+        <div id="pie" style="width: 1000px; height: 600px"></div>
         <div class="row q-gutter-sm ">
             <div class="col">
                 <q-input v-model="searchParams.gene" dense label="搜索基因:" clearable />
@@ -89,12 +90,20 @@
     </div> -->
 </template>
 <script setup>
-import {ref, onMounted} from "vue";
-import {useRoute} from 'vue-router'
-import {readTaskFile} from "src/api/task"
-import {getCsvData} from 'src/utils/csv'
+import { ref, onMounted } from "vue";
+import { useRoute } from 'vue-router'
+import { readTaskFile } from "src/api/task"
+import { getCsvData } from 'src/utils/csv'
+import { readSystemFile } from "src/api/report"
 import GermlineMutationVue from "./GermlineMutation.vue"
 import SomaticMutationVue from "./SomaticMutation.vue"
+import * as echarts from 'echarts'
+
+
+
+
+// hg19基因组数据，/data/bioinfo/database_dir/hg19/hg19_genome/hg19.length
+// hg38基因组数据，/data/bioinfo/database_dir/hg38/hg38_genome/hg38.length
 
 const route = useRoute()
 const tab = ref("胚系突变分析")
@@ -103,6 +112,10 @@ const props = defineProps({
     intro: {
         type: String,
         required: false
+    },
+    task: {
+        type: Object,
+        required: true
     }
 })
 
@@ -134,14 +147,24 @@ const columns = [
     {key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80}
 ]
 
+const chrList = ref([])
+
 onMounted(() => {
     readTaskFile(route.params.id, 'CNV/AnnotSV.tsv.filter.txt').then(res => {
         const columnFields = columns.map(t => t.dataIndex)
         const result = getCsvData(res, {fields: columnFields})
         rows.value = result
         filteredRows.value = result
-        console.log('===> rows.value', rows.value)
     })
+
+    console.log('===========> task', props.task)
+    const genome = props.task.env.GENOME
+    const genomeFile = genome === 'hg38' ? 'database_dir/hg38/hg38_genome/hg38.length' : 'database_dir/hg19/hg19_genome/hg19.length'
+    readSystemFile(genomeFile).then(res => {
+        chrList.value = getCsvData(res, { fields: ['chr', 'len'] })
+    })
+
+    initPie()
 })
 
 const clickSearch = () => {
@@ -178,5 +201,56 @@ const clickClear = () => {
         drugLevel: '', // A/B/C/D/E
     }
     clickSearch()
+}
+
+const initPie = () => {
+    const div = document.getElementById('pie')
+    const pie = echarts.init(div)
+
+    const option = {
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            top: '5%',
+            left: 'center'
+        },
+        series: [
+            {
+                name: 'Access From',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: false,
+                itemStyle: {
+                    borderRadius: 10,
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    label: {
+                        show: true,
+                        fontSize: '40',
+                        fontWeight: 'bold'
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: [
+                    { value: 1048, name: 'Search Engine' },
+                    { value: 735, name: 'Direct' },
+                    { value: 580, name: 'Email' },
+                    { value: 484, name: 'Union Ads' },
+                    { value: 300, name: 'Video Ads' }
+                ]
+            }
+        ]
+    }
+
+    pie.setOption(option)
 }
 </script>

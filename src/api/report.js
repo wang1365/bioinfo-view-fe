@@ -43,3 +43,11 @@ export function getReportText(taskId, name) {
         data: {},
     })
 }
+
+export function readSystemFile(path) {
+    return api({
+        url: `/report/file/`,
+        method: 'get',
+        params: { path },
+    })
+}
