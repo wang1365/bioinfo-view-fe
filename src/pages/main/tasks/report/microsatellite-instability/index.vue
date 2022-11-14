@@ -45,8 +45,8 @@
             </template>
         </a-table>
     </div>
-    <q-dialog v-model="showImage">
-        <img :src="imageUrl" alt="" style="width:500px;height:400px;background-color:white" />
+    <q-dialog v-model="showImage" :auto-close="false">
+        <img :src="imageUrl" alt="" style="width:750px;height:450px;background-color:white" />
     </q-dialog>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 800px; max-width: 2000px">
@@ -88,9 +88,6 @@ const columns2 = ref([
     {key: 'k3', title: 'NAME', dataIndex: 'k3', align: 'center', width: 50}
 ])
 
-const openImage = () => {
-    showImage.value = true
-}
 
 const props = defineProps({
     intro: {
@@ -106,7 +103,6 @@ const props = defineProps({
 const clickView = (record) => {
     showImage.value = true
     imageUrl.value = `/igv${props.task.result_dir}/MSI/${record.k3}.jpeg`
-    console.log('=== image url', imageUrl.value)
 }
 
 onMounted(() => {
