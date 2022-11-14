@@ -2,11 +2,11 @@
 GIT_BRANCH="$(git branch --show-current)"
 GIT_HEAD="$(git rev-parse --short=7 HEAD)"
 GIT_DATE=$(git log HEAD -n1 --pretty='format:%cd' --date=format:'%Y%m%d-%H%M')
-TAG=$(date '+%Y%m%d%H%M%S')
 
 # REPO="镜像仓库"
 # CONTAINER="镜像名"
-# TAG="${GIT_BRANCH}-${GIT_HEAD}-${GIT_DATE}"
+#TAG=$(date '+%Y%m%d%H%M%S')
+TAG="${GIT_BRANCH}-${GIT_HEAD}-${GIT_DATE}"
 # DOCKER_IMAGE=$REPO/$CONTAINER:$TAG
 
 DOCKER_IMAGE="bioinfo-view-ui"
