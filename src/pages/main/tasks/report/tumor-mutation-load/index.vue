@@ -51,8 +51,8 @@
                 />
             </div>
             <div class="q-gutter-md text-center q-py-sm">
-                <q-btn color="primary" label="确定" icon="search" @click="refreshPage()"/>
-                <q-btn color="grey" label="清除" icon="delete" @click="refreshPage()"/>
+                <q-btn color="primary" label="确定" icon="search" @click="search()"/>
+                <q-btn color="grey" label="复位" icon="delete" @click="clickReset"/>
             </div>
         </div>
 
@@ -82,6 +82,7 @@ import GuageChartVue from "./GuageChart.vue";
 
 const route = useRoute()
 const dlgVisible = ref(false)
+let initialParams = {}
 const searchParams = ref({
     tumorDepth: null,
     compareDepth: null,
@@ -100,6 +101,7 @@ const props = defineProps({
     }
 })
 
+
 onMounted(() => {
     readTaskFile(route.params.id, 'TMB/filter.txt').then(res => {
         // "肿瘤深度        20" +
@@ -115,7 +117,7 @@ onMounted(() => {
 
         const lines = getCsvData(res, {hasHeaderLine: false})
 
-        searchParams.value = {
+        initialParams = {
             tumorDepth: Number(lines[0][1]),
             compareDepth: Number(lines[1][1]),
             tumorRatio: Number(lines[2][1]),
@@ -125,6 +127,17 @@ onMounted(() => {
             mutationMeaning: lines[7][1],
             humanRatio: lines[8][1]
         }
+
+        searchParams.value = Object.assign({}, initialParams)
     })
 })
+
+const clickReset = () => {
+    searchParams.value = Object.assign({}, initialParams)
+    search()
+}
+
+const search = () => {
+
+}
 </script>

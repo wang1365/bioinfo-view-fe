@@ -10,15 +10,17 @@
     </q-btn>
     <div>
         <div id="pie" style="width: 1000px; height: 600px"></div>
-        <div class="row q-gutter-sm ">
+        <q-separator/>
+        <div class="row q-gutter-sm q-my-sm">
             <div class="col">
-                <q-input v-model="searchParams.gene" dense label="搜索基因:" clearable />
+                <q-input v-model="searchParams.gene" dense  stack-label label-color="primary"
+                         label="搜索基因:" clearable />
             </div>
             <div class="col">
                 <q-select
                     v-model="searchParams.type"
                     clearable
-                    dense
+                    dense stack-label label-color="primary"
                     :options='["DUP", "DEL"]'
                     label="拷贝数变异分类"
                 />
@@ -27,7 +29,7 @@
                 <q-select
                     v-model="searchParams.drug"
                     clearable
-                    dense
+                    dense stack-label label-color="primary"
                     :options='["All", "Yes", "No",]'
                     label="药物靶点"
                 />
@@ -37,13 +39,11 @@
                     v-model="searchParams.drugLevel"
                     :disable="searchParams.drug !== 'Yes'"
                     clearable
-                    dense
+                    dense stack-label label-color="primary"
                     :options='["A", "B", "C", "D", "E"]'
                     label="用药等级"
                 />
             </div>
-        </div>
-        <div class="q-gutter-md text-center q-py-sm">
             <q-btn color="primary" label="确定" icon="search" @click="clickSearch()" />
             <q-btn color="grey" label="清除" icon="delete" @click="clickClear()" />
         </div>

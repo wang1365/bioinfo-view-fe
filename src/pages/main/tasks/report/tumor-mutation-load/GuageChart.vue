@@ -67,7 +67,7 @@ const init = () => {
                 axisLabel: {
                     color: '#464646',
                     fontSize: 20,
-                    distance: -60,
+                    distance: -160,
                     rotate: 'tangential',
                     formatter: function (value) {
                         if (value === 0.875) {
