@@ -6,7 +6,7 @@ GIT_DATE=$(git log HEAD -n1 --pretty='format:%cd' --date=format:'%Y%m%d-%H%M')
 # REPO="镜像仓库"
 # CONTAINER="镜像名"
 #TAG=$(date '+%Y%m%d%H%M%S')
-TAG="${GIT_BRANCH}-${GIT_HEAD}-${GIT_DATE}"
+TAG="${GIT_BRANCH}-${GIT_DATE}-${GIT_HEAD}"
 # DOCKER_IMAGE=$REPO/$CONTAINER:$TAG
 
 DOCKER_IMAGE="bioinfo-view-ui"
