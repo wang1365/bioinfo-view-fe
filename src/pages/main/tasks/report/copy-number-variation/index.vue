@@ -263,7 +263,7 @@ const pieOption = {
                     fontSize: 20
                 },
                 formatter: param => {
-                    return param.data.ratio ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio}` : null
+                    return param.data.ratio ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio}拷贝` : null
                 }
             },
             emphasis: {
@@ -308,7 +308,7 @@ const pieOption = {
                     fontSize: 20
                 },
                 formatter: param => {
-                    return param.data.ratio ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio}` : null
+                    return param.data.ratio ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio}拷贝` : null
                 }
             },
             emphasis: {
