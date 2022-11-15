@@ -6,14 +6,15 @@
             <q-btn icon="close" color="red" size="mini" v-close-popup></q-btn>
         </q-bar>
         <div class="row justify-between">
-<!--            <div v-for="igv in options" :id="igv.uid" :key="igv.uid" class="col"></div>-->
-            <div id="igv-1" class="col"></div>
-            <div id="igv-2" class="col"></div>
+            <div v-for="igv in options" :id="igv.uid" :key="igv.uid" class="col"></div>
+<!--            <div id="igv-1" class="col"></div>-->
+<!--            <div id="igv-2" class="col"></div>-->
         </div>
+        <q-resize-observer @resize="onResize" />
     </div>
 </template>
 <script setup>
-import {ref, onMounted, onUpdated, nextTick, onUnmounted} from 'vue'
+import {ref, onMounted, onUpdated, nextTick, onUnmounted, er} from 'vue'
 import {readTaskFile} from "src/api/task"
 import { uid } from 'quasar'
 import * as hg from 'src/utils/refGenome'
@@ -59,11 +60,11 @@ onMounted(() => {
         })
 
         nextTick(() => {
-            refreshIgvBrowser('igv-1', options.value[0])
-            refreshIgvBrowser('igv-2', options.value[0])
-            // options.value.forEach(option => {
-            //     refreshIgvBrowser(option.uid, option)
-            // })
+            // refreshIgvBrowser('igv-1', options.value[0])
+            // refreshIgvBrowser('igv-2', options.value[0])
+            options.value.forEach(option => {
+                refreshIgvBrowser(option.uid, option)
+            })
         })
 
     })
@@ -76,6 +77,14 @@ onUpdated(() => {
     // })
 })
 
+const onResize = () => {
+    console.log('========== resize')
+    if (igv.browser) {
+        console.log('========== resize browser')
+        igv.browser.resize()
+    }
+}
+
 onUnmounted(() => {
     console.log('===> onUnmounted')
 })
@@ -85,11 +94,14 @@ const refreshIgvBrowser = (id, options) => {
     // const div = document.createElement('div')
     // parent.appendChild(div)
     const div = document.getElementById(id)
+
     console.log('==> 创建IGV浏览器节点', id, div, options)
 
     igv.createBrowser(div, options)
         .then(function (browser) {
             console.log("Created IGV browser", browser)
+            browser.resize()
+            igv.browser = browser
         })
 }
 </script>
