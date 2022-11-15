@@ -9,7 +9,29 @@
         >说明
     </q-btn>
     <div>
-        <div :id="pieDivId" style="width: 1000px; height: 600px"></div>
+        <div class="row">
+            <div :id="pieDivId" class="col-10" style="width: 1000px; height: 600px"></div>
+            <div class="col-2 column justify-center q-gutter-sm">
+                <q-input
+                    v-model="pieParams.extra"
+                    class="col-1"
+                    label="拷贝数扩展阈值"
+                    label-color="primary"
+                    stack-label
+                />
+                <q-input
+                    v-model="pieParams.missing"
+                    class="col-1"
+                    label="拷贝数缺失阈值"
+                    label-color="primary"
+                    stack-label
+                />
+                <div class="row q-gutter-xs">
+                    <q-btn class="col" color="primary" size="small" label="确定" @click="refreshPie" />
+                    <q-btn class="col" color="primary" size="small" label="复位" @click="resetPie" />
+                </div>
+            </div>
+        </div>
         <q-separator />
         <div class="row q-gutter-sm q-my-sm">
             <div class="col">
@@ -101,7 +123,7 @@
     </div> -->
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useRoute } from 'vue-router'
 import { readTaskFile } from "src/api/task"
 import { getCsvData } from 'src/utils/csv'
@@ -121,7 +143,13 @@ import * as echarts from 'echarts'
 const route = useRoute()
 const tab = ref("胚系突变分析")
 const dlgVisible = ref(false)
+const pie = ref(null)
 const pieDivId = ref(uid())
+const pieParams = ref({
+    extra: 2.25,
+    missing: 1.75
+})
+
 const props = defineProps({
     intro: {
         type: String,
@@ -161,7 +189,10 @@ const columns = [
     {key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80}
 ]
 
-const chrList = ref([])
+const variants = ref([])
+const chrs = ref([])
+
+
 
 const pieOption = {
     tooltip: {
@@ -282,6 +313,52 @@ const pieOption = {
     ]
 }
 
+const resetPie = () => {
+    pieParams.value = {
+        extra: 2.25,
+        missing: 1.75
+    }
+    refreshPie()
+}
+
+const refreshPie = () => {
+    console.log('===========re calculate pie params')
+    const result1 = []
+    // 扩增
+    const extra_variant = toMap(variants.value.filter(t => t.ratio > pieParams.value.extra), t => t.name)
+    chrs.value.forEach((t, idx) => {
+        const extra = extra_variant[t.name]
+        if (extra) {
+            result1.push({ name: `${t.name}`, value: extra.start})
+            result1.push({ name: `${t.name}`, value: extra.end - extra.start, ratio: extra.ratio })
+            result1.push({ name: `${t.name}`, value: t.value - extra.end })
+        } else {
+            result1.push(t)
+        }
+    })
+    pieOption.series[1].data = result1
+
+
+    const result2 = []
+    // 缺失
+    const missing_variant = toMap(variants.value.filter(t => t.ratio < -pieParams.value.missing), t => t.name)
+    chrs.value.forEach((t, idx) => {
+        const variant = missing_variant[t.name]
+        if (variant) {
+            result2.push({ name: `${t.name}`, value: variant.start})
+            result2.push({ name: `${t.name}`, value: variant.end - variant.start, ratio: variant.ratio })
+            result2.push({ name: `${t.name}`, value: t.value - variant.end })
+        } else {
+            result2.push(t)
+        }
+    })
+    pieOption.series[2].data = result2
+    console.log('========== result1', result1)
+    console.log('========== result2', result2)
+    console.log('========== pieOption', pieOption)
+
+    pie.value.setOption(pieOption)
+}
 
 onMounted(() => {
     readTaskFile(route.params.id, 'CNV/AnnotSV.tsv.filter.txt').then(res => {
@@ -299,83 +376,23 @@ onMounted(() => {
     readSystemFile(genomeFile).then(res => {
         const data = getCsvData(res, { fields: ['name', 'value'], hasHeaderLine: false })
         data.forEach(t => t.value = Number(t.value))
-        data.forEach((t, idx) => {
-            t.start = idx === data.length - 1 ? 0 : data[idx+1].value
-            t.end = t.value
-        })
+        chrs.value = data
         pieOption.series[0].data = data
-
 
         readTaskFile(route.params.id, 'CNV/cnvkit_result').then(res => {
             // res =
             //     "chr1\t142535935\t249240121\t-0.219927\nchr2\t10501\t91741616\t-0.183334\nchr2\t95326672\t243188873\t-0.247272\nchr3\t209893\t90504354\t-0.110411\nchr3\t93655008\t197811384\t-0.0253599\nchr4\t10501\t49659617\t-0.0850496\nchr4\t52660618\t191043776\t-0.0859972\nchr5\t10501\t45939946\t-0.268931\nchr5\t49406142\t180904760\t-0.157413\nchr6\t226571\t58619289\t-0.20085\nchr6\t61880667\t171054567\t-0.110197\nchr7\t430916\t58053831\t-0.160338\nchr7\t61054832\t159128163\t-0.020188\nchr8\t309046\t43838387\t-0.0830619\nchr8\t46839388\t146303522\t-0.0134671\nchr9\t10501\t47317179\t-0.326718\nchr9\t65468180\t141152931\t-0.0186083\nchr10\t60501\t38519152\t-0.017626\nchr10\t42922186\t135524247\t-0.264409\nchr11\t208837\t50631814\t-0.210653\nchr11\t55148359\t134946016\t-0.13006\nchr12\t60501\t34243441\t-0.115191\nchr12\t37857195\t133841395\t-0.0852832\nchr13\t19169207\t69425133\t-0.125631\nchr13\t70026406\t115109378\t-0.043421\nchr14\t19000501\t72316755\t0.129684\nchr14\t72919904\t106999108\t-0.0446968\nchr15\t20000501\t84833699\t-0.0405048\nchr15\t85329293\t102520892\t-0.118179\nchr16\t60501\t35285301\t0.17616\nchr16\t46535746\t90140688\t0.0114606\nchr17\t501\t21964807\t0.0953093\nchr17\t25412017\t81051193\t0.258595\nchr18\t10501\t15410398\t0.345438\nchr18\t18821195\t78016748\t-0.00360856\nchr19\t203737\t24631282\t0.174567\nchr19\t28185923\t32884807\t-0.353412\nchr19\t32884808\t49087465\t0.0373639\nchr19\t49087466\t59118483\t-0.246282\nchr20\t60501\t25717498\t-0.424786\nchr20\t29536739\t62808504\t-0.117067\nchr21\t9411694\t39437423\t-0.27193\nchr21\t39739494\t48119395\t-0.180292\nchr22\t16050501\t23634743\t-0.0552004\nchr22\t23799777\t51244066\t0.0104669\nchrX\t145322\t58137601\t-0.444851\nchrX\t61826406\t155260060\t-0.551168\nchrY\t95322\t5789236\t-2.59446\nchrY\t5789237\t59363066\t-10.6868\n"
             // 变异数据
-            const variants = getCsvData(res, { fields: ['name', 'start', 'end', 'ratio'], hasHeaderLine: false})
-            variants.forEach(t => {
+            variants.value = getCsvData(res, { fields: ['name', 'start', 'end', 'ratio'], hasHeaderLine: false})
+            variants.value.forEach(t => {
                 t.start = Number(t.start)
                 t.end = Number(t.end)
                 t.ratio = Number(t.ratio)
             })
 
-            // 扩增
-            const extra_variant = toMap(variants.filter(t => t.ratio > 0.17), t => t.name)
-            // 缺失
-            const missing_variant = toMap(variants.filter(t => t.ratio < -0.19), t => t.name)
-            console.log('******************extra_variant', extra_variant)
-            console.log('******************missing_variant', missing_variant)
 
-            const data1 = []
-            // data.forEach((t, idx) => {
-            //     const extra = extra_variant[t.name]
-            //     if (extra) {
-            //         data1.push({ name: `${t.name}-1`, start: t.end, end: extra.end, value: t.end})
-            //         data1.push({ name: `${t.name}-2`, start: extra.end, end: extra.start, value: extra.end, ratio: extra.ratio })
-            //         data1.push({ name: `${t.name}-3`, start: extra.start, end: t.start, value: t.start })
-            //     } else {
-            //         data1.push(t)
-            //     }
-            // })
-            data.forEach((t, idx) => {
-                const extra = extra_variant[t.name]
-                if (extra) {
-                    data1.push({ name: `${t.name}`, value: extra.start})
-                    data1.push({ name: `${t.name}`, value: extra.end - extra.start, ratio: extra.ratio })
-                    data1.push({ name: `${t.name}`, value: t.value - extra.end })
-                } else {
-                    data1.push(t)
-                }
-            })
-            pieOption.series[1].data = data1
 
-            const data2 = []
-            // data.forEach((t, idx) => {
-            //     const missing = missing_variant[t.name]
-            //     if (missing) {
-            //         data2.push({ name: `${t.name}-1`, start: t.end, end: missing.end, value: t.end })
-            //         data2.push({ name: `${t.name}-2`, start: missing.end, end: missing.start, value: missing.end, ratio: missing.ratio })
-            //         data2.push({ name: `${t.name}-3`, start: missing.start, end: t.start, value: t.start })
-            //     } else {
-            //         data2.push(t)
-            //     }
-            // })
-
-            data.forEach((t, idx) => {
-                const missing = missing_variant[t.name]
-                if (missing) {
-                    data2.push({ name: `${t.name}`, value: missing.start })
-                    data2.push({ name: `${t.name}`, value: missing.end - missing.start, ratio: missing.ratio })
-                    data2.push({ name: `${t.name}`, value: t.value - missing.end })
-                } else {
-                    data2.push(t)
-                }
-            })
-            pieOption.series[2].data = data2
-
-            console.log('******************data1', data1)
-            console.log('******************data2', data2)
-            console.log('******************pieOption', pieOption)
             initPie()
-
         })
     })
 })
@@ -418,8 +435,8 @@ const clickClear = () => {
 
 const initPie = () => {
     const div = document.getElementById(pieDivId.value)
-    const pie = echarts.init(div)
+    pie.value = echarts.init(div)
 
-    pie.setOption(pieOption)
+    refreshPie()
 }
 </script>
