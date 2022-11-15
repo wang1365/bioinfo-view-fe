@@ -72,7 +72,6 @@
     >
     </a-table>
 
-    <div class="q-py-sm">过滤结果的图表数据</div>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 800px; max-width: 2000px">
             <q-bar class="bg-primary text-white">拷贝数变异分析</q-bar>
@@ -306,20 +305,17 @@ onMounted(() => {
         })
         pieOption.series[0].data = data
 
-        console.log('=========pieOption.value', pieOption.series[0].data, pieOption.series[1].data, pieOption.series[2].data)
 
         readTaskFile(route.params.id, 'CNV/cnvkit_result').then(res => {
             // res =
             //     "chr1\t142535935\t249240121\t-0.219927\nchr2\t10501\t91741616\t-0.183334\nchr2\t95326672\t243188873\t-0.247272\nchr3\t209893\t90504354\t-0.110411\nchr3\t93655008\t197811384\t-0.0253599\nchr4\t10501\t49659617\t-0.0850496\nchr4\t52660618\t191043776\t-0.0859972\nchr5\t10501\t45939946\t-0.268931\nchr5\t49406142\t180904760\t-0.157413\nchr6\t226571\t58619289\t-0.20085\nchr6\t61880667\t171054567\t-0.110197\nchr7\t430916\t58053831\t-0.160338\nchr7\t61054832\t159128163\t-0.020188\nchr8\t309046\t43838387\t-0.0830619\nchr8\t46839388\t146303522\t-0.0134671\nchr9\t10501\t47317179\t-0.326718\nchr9\t65468180\t141152931\t-0.0186083\nchr10\t60501\t38519152\t-0.017626\nchr10\t42922186\t135524247\t-0.264409\nchr11\t208837\t50631814\t-0.210653\nchr11\t55148359\t134946016\t-0.13006\nchr12\t60501\t34243441\t-0.115191\nchr12\t37857195\t133841395\t-0.0852832\nchr13\t19169207\t69425133\t-0.125631\nchr13\t70026406\t115109378\t-0.043421\nchr14\t19000501\t72316755\t0.129684\nchr14\t72919904\t106999108\t-0.0446968\nchr15\t20000501\t84833699\t-0.0405048\nchr15\t85329293\t102520892\t-0.118179\nchr16\t60501\t35285301\t0.17616\nchr16\t46535746\t90140688\t0.0114606\nchr17\t501\t21964807\t0.0953093\nchr17\t25412017\t81051193\t0.258595\nchr18\t10501\t15410398\t0.345438\nchr18\t18821195\t78016748\t-0.00360856\nchr19\t203737\t24631282\t0.174567\nchr19\t28185923\t32884807\t-0.353412\nchr19\t32884808\t49087465\t0.0373639\nchr19\t49087466\t59118483\t-0.246282\nchr20\t60501\t25717498\t-0.424786\nchr20\t29536739\t62808504\t-0.117067\nchr21\t9411694\t39437423\t-0.27193\nchr21\t39739494\t48119395\t-0.180292\nchr22\t16050501\t23634743\t-0.0552004\nchr22\t23799777\t51244066\t0.0104669\nchrX\t145322\t58137601\t-0.444851\nchrX\t61826406\t155260060\t-0.551168\nchrY\t95322\t5789236\t-2.59446\nchrY\t5789237\t59363066\t-10.6868\n"
             // 变异数据
             const variants = getCsvData(res, { fields: ['name', 'start', 'end', 'ratio'], hasHeaderLine: false})
-            console.log('******************getCsvData', variants)
             variants.forEach(t => {
                 t.start = Number(t.start)
                 t.end = Number(t.end)
                 t.ratio = Number(t.ratio)
             })
-            console.log('******************variants', variants)
 
             // 扩增
             const extra_variant = toMap(variants.filter(t => t.ratio > 0.17), t => t.name)
@@ -389,7 +385,7 @@ const clickSearch = () => {
         let result = true
         let param = searchParams.value.gene
         if (param.length > 0) {
-            result &= t.Gene.includes(param)
+            result &= t.Chr.includes(param)
         }
 
         param = searchParams.value.type
