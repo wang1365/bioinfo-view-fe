@@ -1,8 +1,8 @@
 export const hg19 = {
     // id: "hg19",
     // name: "Human (GRCh37/hg19)",
-    fastaURL: "/data/bioinfo/database_dir/hg19/hg19_genome/hg19.fa",
-    indexURL: "/data/bioinfo/database_dir/hg19/hg19_genome/hg19.fa.fai",
+    fastaURL: "/igv/data/bioinfo/database_dir/hg19/hg19_genome/hg19.fa",
+    indexURL: "/igv/data/bioinfo/database_dir/hg19/hg19_genome/hg19.fa.fai",
     // cytobandURL: "https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg19/cytoBand.txt",
     // aliasURL: "https://s3.amazonaws.com/igv.org.genomes/hg19/hg19_alias.tab",
     tracks: [
