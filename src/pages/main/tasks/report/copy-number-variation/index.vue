@@ -123,18 +123,16 @@
     </div> -->
 </template>
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
-import { useRoute } from 'vue-router'
-import { readTaskFile } from "src/api/task"
-import { getCsvData } from 'src/utils/csv'
-import { readSystemFile } from "src/api/report"
-import { toMap } from 'src/utils/collection'
-import { uid } from 'quasar'
+import {ref, onMounted, computed, watch} from "vue";
+import {useRoute} from 'vue-router'
+import {readTaskFile} from "src/api/task"
+import {getCsvData} from 'src/utils/csv'
+import {readSystemFile} from "src/api/report"
+import {toMap} from 'src/utils/collection'
+import {uid} from 'quasar'
 import GermlineMutationVue from "./GermlineMutation.vue"
 import SomaticMutationVue from "./SomaticMutation.vue"
 import * as echarts from 'echarts'
-
-
 
 
 // hg19基因组数据，/data/bioinfo/database_dir/hg19/hg19_genome/hg19.length
@@ -193,7 +191,6 @@ const variants = ref([])
 const chrs = ref([])
 
 
-
 const pieOption = {
     tooltip: {
         trigger: 'item'
@@ -219,9 +216,19 @@ const pieOption = {
                 padding: 0,
                 lineHeight: 2,
             },
+            tooltip: {
+                position: 'top',
+                textStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 20
+                },
+                formatter: param => {
+                    return `${param.data.name}: ${param.data.value}bp`
+                }
+            },
             emphasis: {
                 label: {
-                    show: true,
+                    show: false,
                     fontSize: '40',
                     fontWeight: 'bold'
                 }
@@ -240,7 +247,7 @@ const pieOption = {
                 borderColor: '#fff',
                 borderWidth: 1,
                 color: (object) => {
-                    return object.data.ratio ? 'red': '#f0f0f5'
+                    return object.data.ratio ? 'red' : '#f0f0f5'
                 }
             },
             label: {
@@ -250,18 +257,24 @@ const pieOption = {
                 lineHeight: 2,
             },
             tooltip: {
-              formatter: param => {
-                  return `${param.data.name}: [${param.data.value}]`
-              }
+                position: 'top',
+                textStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 20
+                },
+                formatter: param => {
+                    return param.data.ratio ? `${param.data.name}: ${param.data.start}-${param.data.end}` : null
+                }
             },
             emphasis: {
                 label: {
-                    show: true,
-                    fontSize: '40',
+                    show: false,
+                    position: 'center',
+                    fontSize: '28',
                     fontWeight: 'bold',
                     formatter: param => {
                         const ratio = param.data.ratio || ''
-                        return param.data.ratio ? `${param.data.name}: ${ratio}` : ''
+                        return param.data.ratio ? `${param.data.name}: ${ratio}` : null
                     }
                 }
             },
@@ -279,7 +292,7 @@ const pieOption = {
                 borderColor: '#fff',
                 borderWidth: 1,
                 color: (object) => {
-                    return object.data.ratio ? 'green': '#f0f0f5'
+                    return object.data.ratio ? 'green' : '#f0f0f5'
                 }
             },
             label: {
@@ -289,15 +302,20 @@ const pieOption = {
                 lineHeight: 2
             },
             tooltip: {
+                position: 'top',
+                textStyle: {
+                    fontWeight: 'bold',
+                    fontSize: 20
+                },
                 formatter: param => {
-                    const ratio = param.data.ratio || ''
-                    return param.data.ratio ? `${param.data.name}: ${ratio}` : ''
+                    return param.data.ratio ? `${param.data.name}: ${param.data.start}-${param.data.end}` : null
                 }
             },
             emphasis: {
                 label: {
-                    show: true,
-                    fontSize: '40',
+                    show: false,
+                    position: 'center',
+                    fontSize: '28',
                     fontWeight: 'bold',
                     formatter: param => {
                         const ratio = param.data.ratio || ''
@@ -327,11 +345,14 @@ const refreshPie = () => {
     // 扩增
     const extra_variant = toMap(variants.value.filter(t => t.ratio > pieParams.value.extra), t => t.name)
     chrs.value.forEach((t, idx) => {
-        const extra = extra_variant[t.name]
-        if (extra) {
-            result1.push({ name: `${t.name}`, value: extra.start})
-            result1.push({ name: `${t.name}`, value: extra.end - extra.start, ratio: extra.ratio })
-            result1.push({ name: `${t.name}`, value: t.value - extra.end })
+        const variant = extra_variant[t.name]
+        if (variant) {
+            result1.push({name: `${t.name}`, value: variant.start})
+            result1.push({
+                name: `${t.name}`, value: variant.end - variant.start, start: variant.start,
+                end: variant.end, ratio: variant.ratio
+            })
+            result1.push({name: `${t.name}`, value: t.value - variant.end})
         } else {
             result1.push(t)
         }
@@ -341,13 +362,19 @@ const refreshPie = () => {
 
     const result2 = []
     // 缺失
-    const missing_variant = toMap(variants.value.filter(t => t.ratio < -pieParams.value.missing), t => t.name)
+    const missing_variant = toMap(variants.value.filter(t => t.ratio < pieParams.value.missing), t => t.name)
     chrs.value.forEach((t, idx) => {
         const variant = missing_variant[t.name]
         if (variant) {
-            result2.push({ name: `${t.name}`, value: variant.start})
-            result2.push({ name: `${t.name}`, value: variant.end - variant.start, ratio: variant.ratio })
-            result2.push({ name: `${t.name}`, value: t.value - variant.end })
+            result2.push({name: `${t.name}`, value: variant.start})
+            result2.push({
+                name: `${t.name}`,
+                value: variant.end - variant.start,
+                start: variant.start,
+                end: variant.end,
+                ratio: variant.ratio
+            })
+            result2.push({name: `${t.name}`, value: t.value - variant.end})
         } else {
             result2.push(t)
         }
@@ -374,7 +401,7 @@ onMounted(() => {
     const genome = props.task.env.GENOME
     const genomeFile = genome === 'hg38' ? 'database_dir/hg38/hg38_genome/hg38.length' : 'database_dir/hg19/hg19_genome/hg19.length'
     readSystemFile(genomeFile).then(res => {
-        const data = getCsvData(res, { fields: ['name', 'value'], hasHeaderLine: false })
+        const data = getCsvData(res, {fields: ['name', 'value'], hasHeaderLine: false})
         data.forEach(t => t.value = Number(t.value))
         chrs.value = data
         pieOption.series[0].data = data
@@ -383,13 +410,12 @@ onMounted(() => {
             // res =
             //     "chr1\t142535935\t249240121\t-0.219927\nchr2\t10501\t91741616\t-0.183334\nchr2\t95326672\t243188873\t-0.247272\nchr3\t209893\t90504354\t-0.110411\nchr3\t93655008\t197811384\t-0.0253599\nchr4\t10501\t49659617\t-0.0850496\nchr4\t52660618\t191043776\t-0.0859972\nchr5\t10501\t45939946\t-0.268931\nchr5\t49406142\t180904760\t-0.157413\nchr6\t226571\t58619289\t-0.20085\nchr6\t61880667\t171054567\t-0.110197\nchr7\t430916\t58053831\t-0.160338\nchr7\t61054832\t159128163\t-0.020188\nchr8\t309046\t43838387\t-0.0830619\nchr8\t46839388\t146303522\t-0.0134671\nchr9\t10501\t47317179\t-0.326718\nchr9\t65468180\t141152931\t-0.0186083\nchr10\t60501\t38519152\t-0.017626\nchr10\t42922186\t135524247\t-0.264409\nchr11\t208837\t50631814\t-0.210653\nchr11\t55148359\t134946016\t-0.13006\nchr12\t60501\t34243441\t-0.115191\nchr12\t37857195\t133841395\t-0.0852832\nchr13\t19169207\t69425133\t-0.125631\nchr13\t70026406\t115109378\t-0.043421\nchr14\t19000501\t72316755\t0.129684\nchr14\t72919904\t106999108\t-0.0446968\nchr15\t20000501\t84833699\t-0.0405048\nchr15\t85329293\t102520892\t-0.118179\nchr16\t60501\t35285301\t0.17616\nchr16\t46535746\t90140688\t0.0114606\nchr17\t501\t21964807\t0.0953093\nchr17\t25412017\t81051193\t0.258595\nchr18\t10501\t15410398\t0.345438\nchr18\t18821195\t78016748\t-0.00360856\nchr19\t203737\t24631282\t0.174567\nchr19\t28185923\t32884807\t-0.353412\nchr19\t32884808\t49087465\t0.0373639\nchr19\t49087466\t59118483\t-0.246282\nchr20\t60501\t25717498\t-0.424786\nchr20\t29536739\t62808504\t-0.117067\nchr21\t9411694\t39437423\t-0.27193\nchr21\t39739494\t48119395\t-0.180292\nchr22\t16050501\t23634743\t-0.0552004\nchr22\t23799777\t51244066\t0.0104669\nchrX\t145322\t58137601\t-0.444851\nchrX\t61826406\t155260060\t-0.551168\nchrY\t95322\t5789236\t-2.59446\nchrY\t5789237\t59363066\t-10.6868\n"
             // 变异数据
-            variants.value = getCsvData(res, { fields: ['name', 'start', 'end', 'ratio'], hasHeaderLine: false})
+            variants.value = getCsvData(res, {fields: ['name', 'start', 'end', 'ratio'], hasHeaderLine: false})
             variants.value.forEach(t => {
                 t.start = Number(t.start)
                 t.end = Number(t.end)
                 t.ratio = Number(t.ratio)
             })
-
 
 
             initPie()
@@ -398,7 +424,7 @@ onMounted(() => {
 })
 
 const clickSearch = () => {
-    filteredRows.value = rows.value.filter( t => {
+    filteredRows.value = rows.value.filter(t => {
         let result = true
         let param = searchParams.value.gene
         if (param.length > 0) {
