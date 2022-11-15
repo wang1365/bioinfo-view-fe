@@ -26,15 +26,15 @@
         </div>
 
         <div class="column q-gutter-sm">
-            <div class="col">
+            <div class="col q-mx-sm q-my-lg">
                 <q-img :src="`/igv${task.result_dir}/HRD/QN11_QT11.001.seqz.png`" alt="" style="width:100%;height:300px"/>
                 <div class="text-grey-7">横坐标：染色体，纵坐标：A(红色)和B(蓝色)等位基因的拷贝数</div>
             </div>
-            <div class="col">
+            <div class="col q-mx-sm q-my-lg">
                 <q-img :src="`/igv${task.result_dir}/HRD/QN11_QT11.002.seqz.png`" alt="" style="width:100%;height:300px"/>
                 <div class="text-grey-7">横坐标：染色体，纵坐标：总体拷贝数的变化</div>
             </div>
-            <div class="col">
+            <div class="col q-mx-sm q-my-lg">
                 <q-img :src="`/igv${task.result_dir}/HRD/QN11_QT11.003.seqz.png`" alt="" style="width:100%;height:300px"/>
                 <div class="text-grey-7">横坐标：染色体，纵坐标：B等位基因的频率和深度比</div>
             </div>
