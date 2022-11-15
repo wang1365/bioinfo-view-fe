@@ -97,7 +97,9 @@ import {useQuasar, QSpinnerFacebook} from 'quasar'
 import SampleCard from './components/SampleCard'
 import {buildModelQuery, queryModel} from 'src/api/modelQueryBuilder'
 import igv from 'igv'
+import * as refGenomes from 'src/utils/refGenome'
 import { hasAnyRole } from 'src/utils/user'
+import {hg38} from "src/utils/refGenome";
 
 const $q = useQuasar()
 const route = useRoute()
@@ -135,6 +137,8 @@ const refresh = () => {
     getTask(route.query.task).then(res => {
         console.log('==> 任务详情：', res)
         task.value = res
+
+        const reference = res.env.GENOME === 'hg19' ? refGenomes.hg19 : refGenomes.hg38
 
         function toBai(bam) {
             return bam.substring(0, bam.length - 1) + 'i'
@@ -177,10 +181,10 @@ const refresh = () => {
         }
 
         options = {
-            genome,
+            // genome,
+            reference,
             tracks,
-            showCircularViewButton: true,
-            showROITableButton: true,
+            showCircularViewButton: true
         }
 
         trackNames = tracks.map(t => t.name)
