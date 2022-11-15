@@ -7,7 +7,7 @@ export const hg19 = {
     // aliasURL: "https://s3.amazonaws.com/igv.org.genomes/hg19/hg19_alias.tab",
     tracks: [
         {
-            name: "===Refseq Genes",
+            name: "Refseq Genes",
             format: "refgene",
             id: "hg19_genes",
             url: "/igv/data/bioinfo/database_dir/refseq/hg19/ncbiRefSeq.sorted.hg19.txt.gz",
@@ -31,7 +31,7 @@ export const hg38 = {
     // aliasURL: "https://s3.amazonaws.com/igv.org.genomes/hg38/hg38_alias.tab",
     tracks: [
         {
-            name: "===Refseq Genes",
+            name: "Refseq Genes",
             format: "refgene",
             url: "/igv/data/bioinfo/database_dir/refseq/hg38/ncbiRefSeq.sorted.hg38.txt.gz",
             indexURL: "/igv/data/bioinfo/database_dir/refseq/hg38/ncbiRefSeq.sorted.hg38.txt.gz.tbi",

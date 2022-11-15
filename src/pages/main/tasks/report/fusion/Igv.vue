@@ -14,6 +14,7 @@
 import {ref, onMounted, onBeforeMount, onActivated, nextTick, onUnmounted} from 'vue'
 import {readTaskFile} from "src/api/task"
 import { uid } from 'quasar'
+import * as hg from 'src/utils/refGenome'
 import igv from "igv"
 
 const props = defineProps({
@@ -36,9 +37,12 @@ onMounted(() => {
         lines = lines.map(line => JSON.parse(line))
 
         // url 处理
-        options.value = lines
-        options.value.forEach((option, idx) => {
+        options.value = lines.map(line => {
+            // 移除gnome属性
+            const { genome, ...option} = line
             option.uid = uid()
+            // 添加reference属性
+            option.reference = option.genome === 'hg19' ? hg.hg19 : hg38
             for (let track of option.tracks) {
                 const url = track['url']
                 if (url) {
@@ -49,6 +53,7 @@ onMounted(() => {
                     track['indexURL'] = '/igv' + indexURL
                 }
             }
+            return option
         })
 
         nextTick(() => {
