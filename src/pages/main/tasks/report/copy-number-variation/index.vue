@@ -9,18 +9,26 @@
         >说明
     </q-btn>
     <div>
-        <div id="pie" style="width: 1000px; height: 600px"></div>
-        <q-separator/>
+        <div :id="pieDivId" style="width: 1000px; height: 600px"></div>
+        <q-separator />
         <div class="row q-gutter-sm q-my-sm">
             <div class="col">
-                <q-input v-model="searchParams.gene" dense  stack-label label-color="primary"
-                         label="搜索基因:" clearable />
+                <q-input
+                    v-model="searchParams.gene"
+                    dense
+                    stack-label
+                    label-color="primary"
+                    label="搜索基因:"
+                    clearable
+                />
             </div>
             <div class="col">
                 <q-select
                     v-model="searchParams.type"
                     clearable
-                    dense stack-label label-color="primary"
+                    dense
+                    stack-label
+                    label-color="primary"
                     :options='["DUP", "DEL"]'
                     label="拷贝数变异分类"
                 />
@@ -29,7 +37,9 @@
                 <q-select
                     v-model="searchParams.drug"
                     clearable
-                    dense stack-label label-color="primary"
+                    dense
+                    stack-label
+                    label-color="primary"
                     :options='["All", "Yes", "No",]'
                     label="药物靶点"
                 />
@@ -39,7 +49,9 @@
                     v-model="searchParams.drugLevel"
                     :disable="searchParams.drug !== 'Yes'"
                     clearable
-                    dense stack-label label-color="primary"
+                    dense
+                    stack-label
+                    label-color="primary"
                     :options='["A", "B", "C", "D", "E"]'
                     label="用药等级"
                 />
@@ -96,6 +108,7 @@ import { readTaskFile } from "src/api/task"
 import { getCsvData } from 'src/utils/csv'
 import { readSystemFile } from "src/api/report"
 import { toMap } from 'src/utils/collection'
+import { uid } from 'quasar'
 import GermlineMutationVue from "./GermlineMutation.vue"
 import SomaticMutationVue from "./SomaticMutation.vue"
 import * as echarts from 'echarts'
@@ -109,6 +122,7 @@ import * as echarts from 'echarts'
 const route = useRoute()
 const tab = ref("胚系突变分析")
 const dlgVisible = ref(false)
+const pieDivId = ref(uid())
 const props = defineProps({
     intro: {
         type: String,
@@ -395,7 +409,7 @@ const clickClear = () => {
 }
 
 const initPie = () => {
-    const div = document.getElementById('pie')
+    const div = document.getElementById(pieDivId.value)
     const pie = echarts.init(div)
 
     pie.setOption(pieOption)
