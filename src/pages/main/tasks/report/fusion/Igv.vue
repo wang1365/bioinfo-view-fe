@@ -42,7 +42,7 @@ onMounted(() => {
             const { genome, ...option} = line
             option.uid = uid()
             // 添加reference属性
-            option.reference = option.genome === 'hg19' ? hg.hg19 : hg38
+            option.reference = option.genome === 'hg19' ? hg.hg19 : hg.hg38
             for (let track of option.tracks) {
                 const url = track['url']
                 if (url) {
