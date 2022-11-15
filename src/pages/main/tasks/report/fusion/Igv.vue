@@ -59,13 +59,22 @@ onMounted(() => {
             return option
         })
 
-        nextTick(() => {
-            // refreshIgvBrowser('igv-1', options.value[0])
-            // refreshIgvBrowser('igv-2', options.value[0])
+        // nextTick(() => {
+        //     // refreshIgvBrowser('igv-1', options.value[0])
+        //     // refreshIgvBrowser('igv-2', options.value[0])
+        //     options.value.forEach(option => {
+        //         refreshIgvBrowser(option.uid, option)
+        //     })
+        // })
+
+        console.log('==== timer 1')
+        setTimeout(() => {
+            console.log('==== timer 3')
             options.value.forEach(option => {
                 refreshIgvBrowser(option.uid, option)
             })
-        })
+        }, 1000)
+        console.log('==== timer 2')
 
     })
 })
