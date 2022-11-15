@@ -11,7 +11,7 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, onBeforeMount, onActivated, nextTick, onUnmounted} from 'vue'
+import {ref, onMounted, onUpdated, nextTick, onUnmounted} from 'vue'
 import {readTaskFile} from "src/api/task"
 import { uid } from 'quasar'
 import * as hg from 'src/utils/refGenome'
@@ -31,7 +31,7 @@ const props = defineProps({
 const options = ref([])
 
 onMounted(() => {
-    console.log('===> onBeforeMount')
+    console.log('===> onMounted')
     readTaskFile(props.taskId, props.file).then(res => {
         let lines = res.split('\n').filter(t => t.length > 0)
         lines = lines.map(line => JSON.parse(line))
@@ -56,12 +56,19 @@ onMounted(() => {
             return option
         })
 
-        nextTick(() => {
-            options.value.forEach(option => {
-                refreshIgvBrowser(option.uid, option)
-            })
-        })
+        // nextTick(() => {
+        //     options.value.forEach(option => {
+        //         refreshIgvBrowser(option.uid, option)
+        //     })
+        // })
 
+    })
+})
+
+onUpdated(() => {
+    console.log('===> onUpdated')
+    options.value.forEach(option => {
+        refreshIgvBrowser(option.uid, option)
     })
 })
 
