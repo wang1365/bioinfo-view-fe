@@ -333,7 +333,7 @@ onMounted(() => {
                 if (extra) {
                     data1.push({ name: `${t.name}-1`, value: extra.start})
                     data1.push({ name: `${t.name}-2`, value: dt, ratio: extra.ratio })
-                    data1.push({ name: `${t.name}-3`, value: extra.end - extra.end })
+                    data1.push({ name: `${t.name}-3`, value: t.value - extra.end })
                 } else {
                     data1.push(t)
                 }
