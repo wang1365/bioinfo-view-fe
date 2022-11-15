@@ -14,7 +14,7 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, onUpdated, nextTick, onUnmounted, er} from 'vue'
+import {ref, onMounted, onUpdated, nextTick, onUnmounted } from 'vue'
 import {readTaskFile} from "src/api/task"
 import { uid } from 'quasar'
 import * as hg from 'src/utils/refGenome'
@@ -59,40 +59,21 @@ onMounted(() => {
             return option
         })
 
-        // nextTick(() => {
-        //     // refreshIgvBrowser('igv-1', options.value[0])
-        //     // refreshIgvBrowser('igv-2', options.value[0])
-        //     options.value.forEach(option => {
-        //         refreshIgvBrowser(option.uid, option)
-        //     })
-        // })
-
-        console.log('==== timer 1')
+        // 延迟渲染，防止出现igv内部size不正常的现象
         setTimeout(() => {
-            console.log('==== timer 3')
             options.value.forEach(option => {
                 refreshIgvBrowser(option.uid, option)
             })
         }, 1000)
-        console.log('==== timer 2')
-
     })
 })
 
 onUpdated(() => {
     console.log('===> onUpdated')
-    // options.value.forEach(option => {
-    //     refreshIgvBrowser(option.uid, option)
-    // })
 })
 
 const onResize = () => {
     console.log('========== resize')
-    // igv.visibilityChange()
-    // if (igv.browser) {
-    //     console.log('========== resize browser')
-    //     igv.browser.resize()
-    // }
 }
 
 onUnmounted(() => {
@@ -100,19 +81,13 @@ onUnmounted(() => {
 })
 
 const refreshIgvBrowser = (id, options) => {
-    // const parent = document.getElementById('igvContainer')
-    // const div = document.createElement('div')
-    // parent.appendChild(div)
     const div = document.getElementById(id)
 
     console.log('==> 创建IGV浏览器节点', id, div, options)
-
     igv.createBrowser(div, options)
         .then(function (browser) {
             console.log("Created IGV browser", browser)
-            browser.resize()
             browser.visibilityChange()
-            igv.browser = browser
         })
 }
 </script>
