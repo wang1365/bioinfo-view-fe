@@ -210,7 +210,7 @@ const pieOption = {
                 borderColor: '#fff',
                 borderWidth: 1,
                 color: (object) => {
-                    return object.data.error ? 'red': '#f0f0f5'
+                    return object.data.ratio ? 'red': '#f0f0f5'
                 }
             },
             label: {
@@ -377,6 +377,7 @@ onMounted(() => {
 
             console.log('******************data1', data1)
             console.log('******************data2', data2)
+            console.log('******************pieOption', pieOption)
             initPie()
 
         })
