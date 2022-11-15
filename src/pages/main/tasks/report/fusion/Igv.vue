@@ -5,7 +5,7 @@
             <q-space></q-space>
             <q-btn icon="close" color="red" size="mini" v-close-popup></q-btn>
         </q-bar>
-        <div class="row justify-between">
+        <div class="row q-gutter-sm">
             <div v-for="igv in options" :id="igv.uid" :key="igv.uid" class="col"></div>
 <!--            <div id="igv-1" class="col"></div>-->
 <!--            <div id="igv-2" class="col"></div>-->
@@ -79,10 +79,11 @@ onUpdated(() => {
 
 const onResize = () => {
     console.log('========== resize')
-    if (igv.browser) {
-        console.log('========== resize browser')
-        igv.browser.resize()
-    }
+    // igv.visibilityChange()
+    // if (igv.browser) {
+    //     console.log('========== resize browser')
+    //     igv.browser.resize()
+    // }
 }
 
 onUnmounted(() => {
@@ -101,6 +102,7 @@ const refreshIgvBrowser = (id, options) => {
         .then(function (browser) {
             console.log("Created IGV browser", browser)
             browser.resize()
+            browser.visibilityChange()
             igv.browser = browser
         })
 }
