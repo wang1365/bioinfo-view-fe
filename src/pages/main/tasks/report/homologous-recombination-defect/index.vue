@@ -27,13 +27,13 @@
 
         <div class="row q-gutter-sm">
             <div class="col">
-                <q-img :src="`/igv/${task.result_dir}/HRD/QN11_QT11.001.seqz.png`" alt="" style="width:100%;height:300px"/>
+                <q-img :src="`/igv${task.result_dir}/HRD/QN11_QT11.001.seqz.png`" alt="" style="width:100%;height:300px"/>
             </div>
             <div class="col">
-                <q-img :src="`/igv/${task.result_dir}/HRD/QN11_QT11.002.seqz.png`" alt="" style="width:100%;height:300px"/>
+                <q-img :src="`/igv${task.result_dir}/HRD/QN11_QT11.002.seqz.png`" alt="" style="width:100%;height:300px"/>
             </div>
             <div class="col">
-                <q-img :src="`/igv/${task.result_dir}/HRD/QN11_QT11.003.seqz.png`" alt="" style="width:100%;height:300px"/>
+                <q-img :src="`/igv${task.result_dir}/HRD/QN11_QT11.003.seqz.png`" alt="" style="width:100%;height:300px"/>
             </div>
         </div>
         <q-dialog v-model="dlgVisible">
