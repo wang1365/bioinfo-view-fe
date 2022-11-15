@@ -329,10 +329,11 @@ onMounted(() => {
             // })
             data.forEach((t, idx) => {
                 const extra = extra_variant[t.name]
+                const dt = extra.end - extra.start
                 if (extra) {
-                    data1.push({ name: `${t.name}-1`, value: t.end})
-                    data1.push({ name: `${t.name}-2`,  value: t.end - extra.end, ratio: extra.ratio })
-                    data1.push({ name: `${t.name}-3`,  value: t.start })
+                    data1.push({ name: `${t.name}-1`, value: t.start})
+                    data1.push({ name: `${t.name}-2`,  value: dt, ratio: extra.ratio })
+                    data1.push({ name: `${t.name}-3`,  value: t.end - extra.end })
                 } else {
                     data1.push(t)
                 }
@@ -355,9 +356,9 @@ onMounted(() => {
                 const missing = missing_variant[t.name]
                 if (missing) {
                     const dt1 = missing.end - missing.start
-                    data2.push({ name: `${t.name}-1`, value: t.end })
-                    data2.push({ name: `${t.name}-2`, value: t.end - missing.end, ratio: missing.ratio })
-                    data2.push({ name: `${t.name}-3`, value: t.start })
+                    data2.push({ name: `${t.name}-1`, value: t.start })
+                    data2.push({ name: `${t.name}-2`, value: missing.end - missing.start, ratio: missing.ratio })
+                    data2.push({ name: `${t.name}-3`, value: t.end - missing.end })
                 } else {
                     data2.push(t)
                 }
