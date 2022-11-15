@@ -5,8 +5,10 @@
             <q-space></q-space>
             <q-btn icon="close" color="red" size="mini" v-close-popup></q-btn>
         </q-bar>
-        <div class="row full-width justify-between">
-            <div v-for="igv in options" :id="igv.uid" :key="igv.uid" class="col"></div>
+        <div class="row justify-between">
+<!--            <div v-for="igv in options" :id="igv.uid" :key="igv.uid" class="col"></div>-->
+            <div id="igv-1" class="col"></div>
+            <div id="igv-2" class="col"></div>
         </div>
     </div>
 </template>
@@ -56,20 +58,22 @@ onMounted(() => {
             return option
         })
 
-        // nextTick(() => {
-        //     options.value.forEach(option => {
-        //         refreshIgvBrowser(option.uid, option)
-        //     })
-        // })
+        nextTick(() => {
+            refreshIgvBrowser('igv-1', options.value[0])
+            refreshIgvBrowser('igv-2', options.value[0])
+            // options.value.forEach(option => {
+            //     refreshIgvBrowser(option.uid, option)
+            // })
+        })
 
     })
 })
 
 onUpdated(() => {
     console.log('===> onUpdated')
-    options.value.forEach(option => {
-        refreshIgvBrowser(option.uid, option)
-    })
+    // options.value.forEach(option => {
+    //     refreshIgvBrowser(option.uid, option)
+    // })
 })
 
 onUnmounted(() => {
