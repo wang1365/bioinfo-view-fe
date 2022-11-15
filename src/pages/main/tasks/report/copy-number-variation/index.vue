@@ -228,7 +228,11 @@ const pieOption = {
                 label: {
                     show: true,
                     fontSize: '40',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    formatter: param => {
+                        const ratio = param.data.ratio || ''
+                        return param.data.ratio ? `${param.data.name}: ${ratio}` : ''
+                    }
                 }
             },
             labelLine: {
@@ -257,14 +261,18 @@ const pieOption = {
             tooltip: {
                 formatter: param => {
                     const ratio = param.data.ratio || ''
-                    return `${param.data.name}: ${ratio} [${param.data.value}]`
+                    return param.data.ratio ? `${param.data.name}: ${ratio}` : ''
                 }
             },
             emphasis: {
                 label: {
                     show: true,
                     fontSize: '40',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    formatter: param => {
+                        const ratio = param.data.ratio || ''
+                        return param.data.ratio ? `${param.data.name}: ${ratio}` : ''
+                    }
                 }
             },
             labelLine: {
@@ -334,9 +342,9 @@ onMounted(() => {
             data.forEach((t, idx) => {
                 const extra = extra_variant[t.name]
                 if (extra) {
-                    data1.push({ name: `${t.name}-1`, value: extra.start})
-                    data1.push({ name: `${t.name}-2`, value: extra.end - extra.start, ratio: extra.ratio })
-                    data1.push({ name: `${t.name}-3`, value: t.value - extra.end })
+                    data1.push({ name: `${t.name}`, value: extra.start})
+                    data1.push({ name: `${t.name}`, value: extra.end - extra.start, ratio: extra.ratio })
+                    data1.push({ name: `${t.name}`, value: t.value - extra.end })
                 } else {
                     data1.push(t)
                 }
@@ -358,9 +366,9 @@ onMounted(() => {
             data.forEach((t, idx) => {
                 const missing = missing_variant[t.name]
                 if (missing) {
-                    data2.push({ name: `${t.name}-1`, value: missing.start })
-                    data2.push({ name: `${t.name}-2`, value: missing.end - missing.start, ratio: missing.ratio })
-                    data2.push({ name: `${t.name}-3`, value: t.value - missing.end })
+                    data2.push({ name: `${t.name}`, value: missing.start })
+                    data2.push({ name: `${t.name}`, value: missing.end - missing.start, ratio: missing.ratio })
+                    data2.push({ name: `${t.name}`, value: t.value - missing.end })
                 } else {
                     data2.push(t)
                 }
