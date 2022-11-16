@@ -3,6 +3,7 @@ export function getCsvData(str, options = {}) {
         splitter: '\t',
         hasHeaderLine: true,
         fields: [],
+        colIndex: []
     }
 
     const finalOptions = { ...defaultOptions }
@@ -15,6 +16,15 @@ export function getCsvData(str, options = {}) {
         .map((t) => t.split(finalOptions.splitter))
     if (finalOptions.hasHeaderLine) {
         lines = lines.splice(1)
+    }
+
+    // 列过滤
+    if (finalOptions.colIndex.length > 0) {
+        lines = lines.map(cols => {
+            const items = []
+            finalOptions.colIndex.forEach(i => items.push(cols[i-1]))
+            return items
+        })
     }
 
     // 根据fields进行，将每行的元素转为对象，以便于后续数据绑定
