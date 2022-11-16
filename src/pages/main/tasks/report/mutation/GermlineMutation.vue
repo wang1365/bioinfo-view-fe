@@ -1,12 +1,12 @@
 <template>
     <div>
         <div class="row justify-between">
-            <div class="col-2 column q-gutter-xs">
+            <div class="col-2 column q-pr-sm">
                 <div class="col">
                     <q-input
                         v-model="searchParams.depth"
                         label="基因"
-                        clearable
+                        clearable dense
                         stack-label
                         label-color="primary"
                     />
@@ -15,7 +15,7 @@
                     <q-input
                         v-model="searchParams.depth"
                         label="深度 >"
-                        clearable
+                        clearable dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -25,7 +25,7 @@
                     <q-input
                         v-model="searchParams.ratio"
                         label="肿瘤频率 >"
-                        clearable
+                        clearable dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -35,7 +35,7 @@
                 <div class="col">
                     <q-select
                         v-model="searchParams.mutationType"
-                        clearable
+                        clearable dense
                         :options='options.mutationType'
                         label="突变类型"
                         stack-label
@@ -46,7 +46,7 @@
                     <q-select
                         v-model="searchParams.mutationPosition"
                         clearable
-                        multiple
+                        multiple dense
                         :options="options.mutationPosition"
                         label="突变位置"
                         stack-label
@@ -55,7 +55,7 @@
                 </div>
                 <div class="col">
                     <q-select
-                        clearable
+                        clearable dense
                         v-model="searchParams.mutationMeaning"
                         stack-label
                         label-color="primary"
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col">
                     <q-select
-                        clearable
+                        clearable dense
                         v-model="searchParams.mutationRisk"
                         stack-label
                         label-color="primary"
@@ -77,7 +77,7 @@
                     <q-input
                         v-model="searchParams.humanRatio"
                         label="人群频率 <"
-                        clearable
+                        clearable dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -85,7 +85,7 @@
                 </div>
                 <div class="col">
                     <q-select
-                        clearable
+                        clearable dense
                         v-model="searchParams.sift"
                         stack-label
                         label-color="primary"
@@ -102,6 +102,7 @@
             <div class="col-10" >
                 <a-table size="small" bordered :loading="loading" :data-source="filteredRows" :columns="columns"
                          :scroll="{ x: 2000, y: 600 }"
+                         :custom-row="customRow"
                          :sticky="true">
                 </a-table>
             </div>
@@ -215,6 +216,32 @@ const loading = ref(false)
 const rows = ref([])
 const filteredRows = ref([])
 
+const customCell = (record, rowIndex, column) => {
+    return {
+        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+        style: {
+            // 字体颜色
+            // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
+            // 行背景色
+            'background-color': record.id === currentRow.value.id  ? '#FFFF99' : 'white',
+            // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
+            // 'border-style': 'solid',
+            // // 下划线
+            // 'text-decoration': 'underline',
+            // // 字体样式-斜体
+            // 'font-style': 'italic',
+            // // 字体样式-斜体
+            'font-weight': record.id === currentRow.value.id  ? 'bolder' : 'normal',
+            'cursor':'pointer'
+        },
+        // 鼠标单击行
+        onClick: event => {
+            // 记录当前点击的行标识
+            currentRow.value = record
+        }
+    }
+}
+const currentRow = ref({})
 const columns = ref([
     {i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left'},
     {i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left'},
@@ -257,6 +284,37 @@ const columns = ref([
     {i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100},
 ])
 
+columns.value.forEach(c => c.customCell = customCell)
+
+const customRow = (record, index) => {
+    return {
+        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+        style: {
+            // 字体颜色
+            // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
+            // 行背景色
+            // 'background-color': record.id === currentRow.value.id  ? '#FFFF99' : 'white',
+            // 'border-color': 'red',
+            // 'border-style': 'solid',
+            // 'border-width': '5px',
+            // // 字体类型
+            // 'font-family': 'Microsoft YaHei',
+            // // 下划线
+            // 'text-decoration': 'underline',
+            // // 字体样式-斜体
+            // 'font-style': 'italic',
+            // // 字体样式-斜体
+            // 'font-weight': record.id === clickedRow.value  ? 'bolder' : 'none'
+        },
+        // 鼠标单击行
+        onClick: event => {
+            // 记录当前点击的行标识
+            currentRow.value = record
+        }
+    }
+}
+
+
 const reset = () => {
     searchParams.value = {
         gene: null,
@@ -287,8 +345,29 @@ onMounted(() => {
         const visibleColIdx = columns.value.map(t => t.i)
         const colKeys = columns.value.map(t => t.dataIndex)
         const csvRows = getCsvData(res, {splitter: ',', hasHeaderLine: true, colIndex: visibleColIdx, fields: colKeys})
+        csvRows.forEach((row, i) => row.id = i)
         rows.value = csvRows
         filteredRows.value = csvRows
     })
 })
 </script>
+
+<style lang="scss" scoped>
+/*//点击行的样式*/
+.clickRowStyl {
+    background-color: #bbbbff !important;
+    font-size: 20px;
+}
+/*//偶数行的样式*/
+.evenRowStyl {
+    background-color: #aad4fd46 !important;
+}
+
+.ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+    background: #bbbbff;
+}
+/*//鼠标移入样式*/
+.ant-table-tbody>tr:hover>td {
+    background: #bbbbff !important
+}
+</style>
