@@ -37,6 +37,7 @@
 import {ref, onMounted} from "vue";
 import {getReportTable} from 'src/api/report'
 import {useRoute} from 'vue-router'
+import IGV from './Igv.vue'
 
 const route = useRoute()
 
@@ -63,6 +64,7 @@ const clearKeyword = () => {
 }
 
 const clickView = (record) => {
+    console.log('clickView', record)
     selectedFile.value = record.k8
     igvVisible.value = true
 }
