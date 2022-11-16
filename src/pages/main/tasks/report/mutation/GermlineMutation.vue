@@ -237,7 +237,12 @@ const customCell = (record, rowIndex, column) => {
         // 鼠标单击行
         onClick: event => {
             // 记录当前点击的行标识
-            currentRow.value = record
+            // currentRow.value = record
+            if (currentRow.value.id === record.id) {
+                currentRow.value = {}
+            } else {
+                currentRow.value = record
+            }
         }
     }
 }
@@ -307,10 +312,14 @@ const customRow = (record, index) => {
             // 'font-weight': record.id === clickedRow.value  ? 'bolder' : 'none'
         },
         // 鼠标单击行
-        onClick: event => {
-            // 记录当前点击的行标识
-            currentRow.value = record
-        }
+        // onClick: event => {
+        //     // 记录当前点击的行标识
+        //     if (currentRow.value.id === record.id) {
+        //         currentRow.value = {}
+        //     } else {
+        //         currentRow.value = record
+        //     }
+        // }
     }
 }
 
