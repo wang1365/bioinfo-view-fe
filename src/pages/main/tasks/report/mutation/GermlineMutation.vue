@@ -70,7 +70,7 @@
                         stack-label
                         label-color="primary"
                         :options="options.mutationRisk"
-                        label="突变意义"
+                        label="突变危险"
                     />
                 </div>
                 <div class="col">
