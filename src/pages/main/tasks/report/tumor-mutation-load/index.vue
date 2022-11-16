@@ -6,59 +6,107 @@
         color="orange"
         class="relative-position float-right z-top q-mr-md"
         @click="dlgVisible = !dlgVisible"
-    >说明
-    </q-btn
-    >
+        >说明
+    </q-btn>
 
     <div class="row justify-between">
         <div class="col-3 column q-gutter-xs">
             <div class="col">
-                <q-input v-model="searchParams.tumorDepth" label="肿瘤深度 >" clearable type="number" stack-label
-                         label-color="primary"/>
+                <q-input
+                    v-model="searchParams.tumorDepth"
+                    label="肿瘤深度 >"
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.compareDepth" label="对照深度 >" clearable type="number" stack-label
-                         label-color="primary"/>
+                <q-input
+                    v-model="searchParams.compareDepth"
+                    label="对照深度 >"
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.tumorRatio" label="肿瘤频率 >" clearable type="number" stack-label
-                         label-color="primary"/>
+                <q-input
+                    v-model="searchParams.tumorRatio"
+                    label="肿瘤频率 >"
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.compareRatio" label="对照频率 >" clearable type="number" stack-label
-                         label-color="primary"/>
+                <q-input
+                    v-model="searchParams.compareRatio"
+                    label="对照频率 >"
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.humanRatio" label="人群频率 <" clearable type="number" stack-label
-                         label-color="primary"/>
+                <q-input
+                    v-model="searchParams.humanRatio"
+                    label="人群频率 <"
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
-                <q-select v-model="searchParams.mutationType" clearable :options='["All", "SNP", "INDEL"]'
-                          label="突变类型" stack-label label-color="primary"/>
+                <q-select
+                    v-model="searchParams.mutationType"
+                    clearable
+                    :options='["All", "SNP", "INDEL"]'
+                    label="突变类型"
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
-                <q-select v-model="searchParams.mutationPosition" clearable multiple
-                          :options='["exonic", "intronic", "intergenic"]' label="突变位置" stack-label
-                          label-color="primary"/>
+                <q-select
+                    v-model="searchParams.mutationPosition"
+                    clearable
+                    multiple
+                    :options='["exonic", "intronic", "intergenic"]'
+                    label="突变位置"
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
                 <q-select
                     clearable
                     v-model="searchParams.mutationMeaning"
-                    dense stack-label label-color="primary"
+                    dense
+                    stack-label
+                    label-color="primary"
                     :options='["All", "No synonymous SNV"]'
                     label="突变意义"
                 />
             </div>
             <div class="q-gutter-md text-center q-py-sm">
-                <q-btn color="primary" label="确定" icon="search" @click="search()"/>
-                <q-btn color="primary" label="复位" icon="settings_backup_restore" @click="clickReset"/>
+                <q-btn color="primary" label="确定" icon="search" @click="search()" />
+                <q-btn color="primary" label="复位" icon="settings_backup_restore" @click="clickReset" />
             </div>
         </div>
 
         <div class="col-8">
             <div class="q-py-md text-primary text-bold text-h6">肿瘤突变负荷</div>
-            <GuageChartVue/>
+            <GuageChartVue />
+            <div class="q-pl-sm q-mt-sm">
+                <div class="text-weight-bold text-primary">仅限研究使用，不用于临床诊断</div>
+                <div class="text-weight-bold text-red">警示：随意过滤造成结果不准确</div>
+                <div class="text-weight-bold text-primary q-mt-sm" style="white-space: pre">{{guageTip}}</div>
+            </div>
         </div>
     </div>
     <q-dialog v-model="dlgVisible">
@@ -82,6 +130,7 @@ import GuageChartVue from "./GuageChart.vue";
 
 const route = useRoute()
 const dlgVisible = ref(false)
+const guageTip = ref('')
 let initialParams = {}
 const searchParams = ref({
     tumorDepth: null,
@@ -129,6 +178,10 @@ onMounted(() => {
         }
 
         searchParams.value = Object.assign({}, initialParams)
+    })
+
+    readTaskFile(route.params.id, 'TMB/TMB_drug.txt').then(res => {
+        guageTip.value = res
     })
 })
 
