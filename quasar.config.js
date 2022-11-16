@@ -88,6 +88,10 @@ module.exports = configure(function (ctx) {
                         '^/api': '', // base path替换
                     },
                 },
+                '/igv': {
+                    changeOrigin: true,
+                    target: 'http://10.10.0.208',
+                },
             },
         },
 

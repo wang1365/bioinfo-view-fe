@@ -30,3 +30,8 @@ export function getCsvData(str, options = {}) {
     }
     return lines
 }
+
+export function getCsvHeader(str, splitter = '\t') {
+    let headLine = str.substring(0, str.indexOf('\n'))
+    return headLine.split(splitter)
+}
