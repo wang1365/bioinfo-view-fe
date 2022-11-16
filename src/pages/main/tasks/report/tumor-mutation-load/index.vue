@@ -382,9 +382,10 @@ const search = () => {
          */
         param = searchParams.value.humanRatio
         if (param && param.length > 0) {
-            if (!(Number(line[29]) > param
-                && Number(line[24]) > param
-                && Number(line[42]) > param)) {
+            if (!( (line[29] === '.' || Number(line[29]) > param)
+                && (line[29] === '.' ||Number(line[24]) > param)
+                && (line[29] === '.' ||Number(line[42]) > param)
+            )) {
                 return false
             }
         }
