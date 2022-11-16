@@ -40,9 +40,10 @@ const option = {
                 lineStyle: {
                     width: 6,
                     color: [
-                        [0.25, '#7CFFB2'],
-
-                        [1, '#FF6E76']
+                        [1, 'green'],
+                        // [0.25, '#7CFFB2'],
+                        //
+                        // [1, '#FF6E76']
                     ]
                 }
             },
