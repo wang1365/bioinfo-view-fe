@@ -14,7 +14,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.tumorDepth"
-                    label="肿瘤深度 >"
+                    label="肿瘤深度 >="
                     clearable
                     type="number"
                     stack-label
@@ -24,7 +24,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.compareDepth"
-                    label="对照深度 >"
+                    label="对照深度 >="
                     clearable
                     type="number"
                     stack-label
@@ -34,7 +34,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.tumorRatio"
-                    label="肿瘤频率 >"
+                    label="肿瘤频率 >="
                     clearable
                     type="number"
                     stack-label
@@ -44,7 +44,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.compareRatio"
-                    label="对照频率 >"
+                    label="对照频率 >="
                     clearable
                     type="number"
                     stack-label
@@ -54,7 +54,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.mutationRatio"
-                    label="肿瘤突变频率 >"
+                    label="肿瘤突变频率 >="
                     clearable
                     type="number"
                     stack-label
@@ -64,7 +64,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.humanRatio"
-                    label="人群频率 <"
+                    label="人群频率 <="
                     clearable
                     type="number"
                     stack-label
