@@ -308,7 +308,7 @@ const search = () => {
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
         let param = searchParams.value.tumorDepth
         const tumorDepth = Number(tumorColumns.value.includes(7) ? line[7] : line[11])
-        if (param && !(tumorDepth > param)) {
+        if (param && !(tumorDepth >= param)) {
             return false
         }
 
@@ -317,7 +317,7 @@ const search = () => {
         param = searchParams.value.compareDepth
         if (param) {
             const columnValue = tumorColumns.value.includes(7) ? line[11] : line[7]
-            if (!(Number(columnValue) > param)) {
+            if (!(Number(columnValue) >= param)) {
                 return false
             }
         }
@@ -326,7 +326,7 @@ const search = () => {
         // 原始表格9列或者是13列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的小数
         param = searchParams.value.tumorRatio
         const tumorRatio = Number(tumorColumns.value.includes(8) ? line[8] : line[12])
-        if (param && !(tumorRatio > param)) {
+        if (param && !(tumorRatio >= param)) {
             return false
         }
 
@@ -335,7 +335,7 @@ const search = () => {
         param = searchParams.value.compareRatio
         if (param) {
             const columnValue = tumorColumns.value.includes(8) ? line[12] : line[8]
-            if (!(Number(columnValue) > param)) {
+            if (!(Number(columnValue) >= param)) {
                 return false
             }
         }
@@ -343,7 +343,7 @@ const search = () => {
         // 肿瘤突变频数 (= 肿瘤深度 x 肿瘤频率乘积)
         param = searchParams.value.mutationRatio
         if (param) {
-            if (!(tumorDepth * tumorRatio > param)) {
+            if (!(tumorDepth * tumorRatio >= param)) {
                 return false
             }
         }
@@ -372,6 +372,7 @@ const search = () => {
         param = searchParams.value.mutationPosition
         if (param && param.length > 0) {
             const positions = line[13].split(';')
+            // console.log('==========>', positions, line[13])
             if (!(positions.some(position => param.includes(position)))) {
                 return false
             }
@@ -383,7 +384,7 @@ const search = () => {
          */
         param = searchParams.value.mutationMeaning
         if (param && param.length > 0 && param !== 'All') {
-            if (!(line[16] !== 'synonymous SNV')) {
+            if (line[16] === 'synonymous SNV') {
                 return false
             }
         }
@@ -393,10 +394,10 @@ const search = () => {
         原始表格第30、35、43列，大于0的小数， 30、35、43都满足筛选要求
          */
         param = searchParams.value.humanRatio
-        if (param && param.length > 0) {
-            if (!( (line[29] === '.' || Number(line[29]) > param)
-                && (line[29] === '.' ||Number(line[24]) > param)
-                && (line[29] === '.' ||Number(line[42]) > param)
+        if (param) {
+            if (!((line[29] === '.' || Number(line[29]) <= param)
+                && (line[34] === '.' || Number(line[34]) <= param)
+                && (line[42] === '.' || Number(line[42]) <= param)
             )) {
                 return false
             }
@@ -405,7 +406,8 @@ const search = () => {
         return result
     })
 
-    tmb.value = Math.round(filteredLines.value.length / bedRegionValue.value)
+    tmb.value = (filteredLines.value.length / bedRegionValue.value).toFixed(2)
+    // tmb.value = Math.round(filteredLines.value.length / bedRegionValue.value)
     console.log('========= search result', filteredLines.value.length, tmb.value, filteredLines.value)
 }
 </script>
