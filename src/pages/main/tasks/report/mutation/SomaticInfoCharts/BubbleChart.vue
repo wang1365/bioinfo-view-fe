@@ -31,14 +31,23 @@ const option = ref({
             text: 'ExAC_EAS',
             textBaseline: 'middle',
             top: (0.5 * 100) / 3 + '%',
+            textStyle: {
+                color: 'blue'
+            }
         }, {
             text: '1000g2015aug_eas',
             textBaseline: 'middle',
-            top: (100) / 3 + 5 + '%',
+            top: (100) / 3 + 10 + '%',
+            textStyle: {
+                color: 'green'
+            }
         }, {
             text: 'gnomAD_genome_EAS',
             textBaseline: 'middle',
-            top: (2 * 100) / 3 + 5 + '%',
+            top: (2 * 100) / 3 + 10 + '%',
+            textStyle: {
+                color: 'orange'
+            }
         }
     ],
     tooltip: {
@@ -89,6 +98,8 @@ const option = ref({
             type: 'scatter',
             singleAxisIndex: 0,
             coordinateSystem: 'singleAxis',
+            symbol: 'circle',
+            symbolOffset: [0, 50],
             symbolSize: function (data) {
                 let ret = data[1] / 2
                 if (ret > 100) {
@@ -125,6 +136,8 @@ const option = ref({
             data: [],
             type: 'scatter',
             singleAxisIndex: 1,
+            symbol: 'circle',
+            symbolOffset: [0, 50],
             coordinateSystem: 'singleAxis',
             symbolSize: function (data) {
                 let ret = data[1] / 2
@@ -162,6 +175,8 @@ const option = ref({
             data: [],
             type: 'scatter',
             singleAxisIndex: 2,
+            symbol: 'circle',
+            symbolOffset: [0, 50],
             coordinateSystem: 'singleAxis',
             symbolSize: function (data) {
                 let ret = data[1] / 2
