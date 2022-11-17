@@ -20,7 +20,7 @@ const props = defineProps({
     }
 })
 
-const { data } = toRefs(props)
+const {data} = toRefs(props)
 
 const option = ref({
     title: [
@@ -28,16 +28,19 @@ const option = ref({
             text: 'ExAC_EAS',
             textBaseline: 'middle',
             top: (0.5 * 100) / 3 + '%',
-        },{
+        }, {
             text: '1000g2015aug_eas',
             textBaseline: 'middle',
-            top: (100) / 3 + 5+ '%',
-        },{
+            top: (100) / 3 + 5 + '%',
+        }, {
             text: 'gnomAD_genome_EAS',
             textBaseline: 'middle',
             top: (2 * 100) / 3 + 5 + '%',
         }
     ],
+    tooltip: {
+        position: 'top',
+    },
     singleAxis: [
         {
             left: 150,
@@ -54,7 +57,7 @@ const option = ref({
             type: 'category',
             boundaryGap: false,
             data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
-            top: 100/3 + 5 + '%',
+            top: 100 / 3 + 5 + '%',
             height: 100 / 3 - 10 + '%',
             axisLabel: {
                 interval: 1
@@ -64,7 +67,7 @@ const option = ref({
             type: 'category',
             boundaryGap: false,
             data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
-            top: 200/3 + 5 + '%',
+            top: 200 / 3 + 5 + '%',
             height: 100 / 3 - 10 + '%',
             axisLabel: {
                 interval: 1
@@ -84,13 +87,24 @@ const option = ref({
             singleAxisIndex: 0,
             coordinateSystem: 'singleAxis',
             symbolSize: function (data) {
-                let ret = data[1]/2
+                let ret = data[1] / 2
                 if (ret > 100) {
                     ret = 100
                 }
                 return ret;
                 // return Math.sqrt(data[1])
                 // return 10
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (param) {
+                    // return `${param.data[0]} - ${param.data[1]}`;
+                    return `${param.data[1]}`;
+                },
+                textStyle: {
+                    fontSize: 18,
+                    fontWight: 'bolder'
+                }
             },
             emphasis: {
                 focus: 'series',
@@ -110,13 +124,24 @@ const option = ref({
             singleAxisIndex: 1,
             coordinateSystem: 'singleAxis',
             symbolSize: function (data) {
-                let ret = data[1]/2
+                let ret = data[1] / 2
                 if (ret > 100) {
                     ret = 100
                 }
                 return ret;
                 // return Math.sqrt(data[1])
                 // return 10
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (param) {
+                    // return `${param.data[0]} - ${param.data[1]}`;
+                    return `${param.data[1]}`;
+                },
+                textStyle: {
+                    fontSize: 18,
+                    fontWight: 'bolder'
+                }
             },
             emphasis: {
                 focus: 'series',
@@ -136,7 +161,7 @@ const option = ref({
             singleAxisIndex: 2,
             coordinateSystem: 'singleAxis',
             symbolSize: function (data) {
-                let ret = data[1]/2
+                let ret = data[1] / 2
                 if (ret > 100) {
                     ret = 100
                 }
@@ -144,15 +169,26 @@ const option = ref({
                 // return Math.sqrt(data[1])
                 // return 10
             },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (param) {
+                    // return `${param.data[0]} - ${param.data[1]}`;
+                    return `${param.data[1]}`;
+                },
+                textStyle: {
+                    fontSize: 18,
+                    fontWight: 'bolder'
+                }
+            },
             emphasis: {
                 focus: 'series',
                 label: {
-                    show: true,
+                    show: false,
                     formatter: function (param) {
                         // return `${param.data[0]} - ${param.data[1]}`;
                         return `${param.data[1]}`;
                     },
-                    position: 'top'
+                    position: 'center'
                 }
             },
         },
@@ -193,7 +229,7 @@ const groupAndCount = (colName) => {
             arr[0] += 1
         } else {
             const ratio = Number(row[colName])
-            const idx = Math.floor(ratio/0.05)
+            const idx = Math.floor(ratio / 0.05)
             arr[idx] += 1
         }
     })
@@ -207,8 +243,8 @@ const groupAndCount = (colName) => {
     const result = [[0, arr[0]], [1, 0]]
     arr.forEach((v, i) => {
         if (i > 0) {
-            result.push([i*2 + 1, v])
-            result.push([i*2 + 2, 0])
+            result.push([i * 2 + 1, v])
+            result.push([i * 2 + 2, 0])
         }
     })
     // arr.map((v, i) => [i, v] )
