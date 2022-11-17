@@ -130,7 +130,7 @@
                 <BarChartVue :data="filteredRows" />
             </div>
             <div class="col">
-                <PieChartVue />
+                <PieChartVue :data="filteredRows" />
             </div>
         </div>
         <div class="row q-gutter-sm q-py-sm">
