@@ -12,6 +12,9 @@
     <div class="row justify-between">
         <div class="col-3 column q-gutter-xs">
             <div class="col">
+                <q-input model-value="PASS" label="VCF Filter" clearable readonly stack-label label-color="primary" />
+            </div>
+            <div class="col">
                 <q-input
                     v-model="searchParams.tumorDepth"
                     label="肿瘤深度 >="
