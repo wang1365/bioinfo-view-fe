@@ -22,6 +22,10 @@ const props = defineProps({
 
 const {data} = toRefs(props)
 
+watch(data, () => {
+    refresh()
+})
+
 const option = ref({
     title: [
         {
