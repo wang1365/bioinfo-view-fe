@@ -108,6 +108,9 @@
                         label="SIFT_pred"
                     />
                 </div>
+                <div class="col text-primary text-bold">
+                    {{`结果： ${filteredRows.length}条`}}
+                </div>
                 <div class="q-gutter-md text-center q-py-sm">
                     <q-btn color="primary" label="确定" icon="search" @click="search" />
                     <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
@@ -233,6 +236,7 @@ const options = ref({
     mutationPosition: [],
     mutationMeaning: [],
     mutationRisk: [],
+
 })
 
 const loading = ref(false)
@@ -443,8 +447,6 @@ const search = () => {
          */
         param = searchParams.value.humanRatio
         if (param) {
-            let hitCount = 0
-            let result = false
             if (line.col26 !== '.' && line.col31 !== '.'  || line.col39 !== '.' ) {
                 let count = Number(line.col26) < param ? 1 : 0
                 count += (Number(line.col31) < param ? 1 : 0)
@@ -488,6 +490,25 @@ onMounted(() => {
         csvRows.forEach((row, i) => row.id = i)
         rows.value = csvRows
         filteredRows.value = csvRows
+
+
+        // 提取options
+        let positions = new Set()
+        let meanings = new Set()
+        let risks = new Set()
+        for (let columns of csvRows) {
+            const items = columns.col10.split(';')
+            items.forEach(item => positions.add(item))
+
+            if (columns.col13 !== '.') {
+                meanings.add(columns.col13)
+            }
+
+            risks.add(columns.col21)
+        }
+        options.value.mutationPosition = Array.from(positions)
+        options.value.mutationMeaning = Array.from(meanings)
+        options.value.mutationRisk = Array.from(risks)
     }).finally(() => loading.value = false)
 })
 </script>
