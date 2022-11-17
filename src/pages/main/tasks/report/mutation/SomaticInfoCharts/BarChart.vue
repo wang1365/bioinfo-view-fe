@@ -6,11 +6,58 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch } from "vue";
+import { markRaw, onMounted, ref, watch, toRefs } from "vue";
+import * as _ from 'lodash'
 
 const echarts = require("echarts");
 const chart = ref(null);
 const barchart = ref(null);
+
+const props = defineProps({
+    data: {
+        type: Array,
+        required: false,
+        default: () => { return [] }
+    }
+})
+
+const { data } = toRefs(props)
+
+const option = ref({
+    xAxis: {
+        type: 'category',
+        data: []
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [
+        {
+            data: [],
+            type: 'bar'
+        }
+    ]
+})
+
+watch(data, v => {
+    refreshChart()
+})
+
+const refreshChart = () => {
+    const snp = ['A','T','C','G']
+    // snp筛选
+    const filteredData = data.value.filter(t => snp.includes(t.col4) && snp.includes(t.col5))
+    // 补充x轴标签
+    filteredData.forEach( t => t.xLable = `${t.col4}->${t.col5}`)
+    // 分组统计
+    const result = _.countBy(filteredData, t => t.xLable)
+
+    console.log('bar char ===>', data.value, filteredData, result)
+
+    option.value.xAxis.data = Object.keys(result)
+    option.value.series[0].data = Object.values(result)
+    chart.value.setOption(option.value)
+}
 
 onMounted(() => {
     init();
@@ -20,22 +67,10 @@ const init = () => {
     let ct = barchart.value;
     echarts.dispose(ct);
     chart.value = markRaw(echarts.init(ct));
-    chart.value.setOption({
-        xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                data: [120, 200, 150, 80, 70, 110, 130],
-                type: 'bar'
-            }
-        ]
-    });
+
+    refreshChart()
 };
+
 const onResize = () => {
     chart.value.resize();
 };

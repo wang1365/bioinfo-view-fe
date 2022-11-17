@@ -6,7 +6,8 @@
                     <q-input
                         v-model="searchParams.depth"
                         label="基因"
-                        clearable dense
+                        clearable
+                        dense
                         stack-label
                         label-color="primary"
                     />
@@ -15,7 +16,8 @@
                     <q-input
                         v-model="searchParams.depth"
                         label="深度 >"
-                        clearable dense
+                        clearable
+                        dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -25,7 +27,8 @@
                     <q-input
                         v-model="searchParams.ratio"
                         label="肿瘤频率 >"
-                        clearable dense
+                        clearable
+                        dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -35,8 +38,9 @@
                 <div class="col">
                     <q-select
                         v-model="searchParams.mutationType"
-                        clearable dense
-                        :options='options.mutationType'
+                        clearable
+                        dense
+                        :options="options.mutationType"
                         label="突变类型"
                         stack-label
                         label-color="primary"
@@ -46,7 +50,8 @@
                     <q-select
                         v-model="searchParams.mutationPosition"
                         clearable
-                        multiple dense
+                        multiple
+                        dense
                         :options="options.mutationPosition"
                         label="突变位置"
                         stack-label
@@ -55,7 +60,8 @@
                 </div>
                 <div class="col">
                     <q-select
-                        clearable dense
+                        clearable
+                        dense
                         v-model="searchParams.mutationMeaning"
                         stack-label
                         label-color="primary"
@@ -65,7 +71,8 @@
                 </div>
                 <div class="col">
                     <q-select
-                        clearable dense
+                        clearable
+                        dense
                         v-model="searchParams.mutationRisk"
                         stack-label
                         label-color="primary"
@@ -77,7 +84,8 @@
                     <q-input
                         v-model="searchParams.humanRatio"
                         label="人群频率 <"
-                        clearable dense
+                        clearable
+                        dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -85,7 +93,8 @@
                 </div>
                 <div class="col">
                     <q-select
-                        clearable dense
+                        clearable
+                        dense
                         v-model="searchParams.sift"
                         stack-label
                         label-color="primary"
@@ -94,49 +103,59 @@
                     />
                 </div>
                 <div class="q-gutter-md text-center q-py-sm">
-                    <q-btn color="primary" label="确定" icon="search" @click="search()"/>
-                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset"/>
+                    <q-btn color="primary" label="确定" icon="search" @click="search()" />
+                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
                 </div>
             </div>
 
-            <div class="col-10" >
-                <a-table size="small" bordered :loading="loading" :data-source="filteredRows" :columns="columns"
-                         :scroll="{ x: 2000, y: 600 }"
-                         :custom-row="customRow"
-                         :sticky="true">
+            <div class="col-10">
+                <a-table
+                    size="small"
+                    bordered
+                    :loading="loading"
+                    :data-source="filteredRows"
+                    :columns="columns"
+                    :scroll="{ x: 2000, y: 600 }"
+                    :custom-row="customRow"
+                    :sticky="true"
+                >
                 </a-table>
             </div>
-
         </div>
     </div>
 
     <div class="q-py-sm" v-if="!showColumn">
         <div class="row q-gutter-sm">
             <div class="col">
-                <BarChartVue/>
+                <BarChartVue :data="filteredRows" />
             </div>
             <div class="col">
-                <PieChartVue/>
+                <PieChartVue />
             </div>
         </div>
         <div class="row q-gutter-sm q-py-sm">
             <div class="col">
-                <BubbleChartVue/>
+                <BubbleChartVue />
             </div>
             <div class="col">
-                <RoseChartVue/>
+                <RoseChartVue />
             </div>
             <div class="col">
-                <RoseChartVue/>
+                <RoseChartVue />
             </div>
         </div>
     </div>
     <div class="q-py-sm" v-if="showColumn">
-        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-                :breakpoint="0">
-            <q-tab name="突变信息" label="突变信息"/>
-            <q-tab name="药物关联信息" label="药物关联信息"/>
-
+        <q-tabs
+            v-model="tab"
+            active-color="primary"
+            active-bg-color="grey-4"
+            align="left"
+            class="bg-grey-1"
+            :breakpoint="0"
+        >
+            <q-tab name="突变信息" label="突变信息" />
+            <q-tab name="药物关联信息" label="药物关联信息" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="突变信息">
@@ -145,33 +164,31 @@
                     <div class="col" style="border-right:solid 1px black">数据</div>
                     <div class="col" style="border-right:solid 1px black">数据</div>
                     <div class="col">
-                        <RadarChartVue/>
+                        <RadarChartVue />
                     </div>
                 </div>
             </q-tab-panel>
             <q-tab-panel name="药物关联信息">
-                <div>
-                    药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述
-                </div>
+                <div>药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述</div>
                 <div class="bio-data-table q-py-sm">
                     <table>
                         <thead>
-                        <tr>
-                            <td>数据</td>
-                            <td>数据</td>
-                            <td>数据</td>
-                            <td>数据</td>
-                            <td>数据</td>
-                        </tr>
+                            <tr>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>数据</td>
-                            <td>数据</td>
-                            <td>数据</td>
-                            <td>数据</td>
-                            <td>数据</td>
-                        </tr>
+                            <tr>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                                <td>数据</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
