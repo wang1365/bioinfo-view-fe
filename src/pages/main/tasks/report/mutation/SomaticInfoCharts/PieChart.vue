@@ -13,13 +13,23 @@ const echarts = require("echarts");
 const chart = ref(null);
 const piechart = ref(null);
 const option = ref({
-
+    title: {
+      text: '突变类型统计'
+    },
     tooltip: {
         trigger: "item",
     },
     legend: {
-        orient: "vertical",
-        left: "left",
+        orient: "horizontal",
+        bottom: "5%",
+    },
+    toolbox: {
+        show: true,
+        feature: {
+            mark: {show: true},
+            dataView: {show: true, readOnly: false},
+            saveAsImage: {show: true}
+        }
     },
     series: [
         {

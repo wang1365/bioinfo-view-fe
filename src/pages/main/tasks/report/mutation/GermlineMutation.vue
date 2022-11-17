@@ -142,15 +142,17 @@
                 <PieChartVue :data="filteredRows" />
             </div>
         </div>
-        <div class="row q-gutter-sm q-py-sm">
+        <div class="column q-gutter-sm q-py-sm">
             <div class="col">
                 <BubbleChartVue />
             </div>
-            <div class="col">
-                <RoseChartVue />
-            </div>
-            <div class="col">
-                <RoseChartVue />
+            <div class="col row">
+                <div class="col">
+                    <RoseChartVue :data="filteredRows" col-key="col13" title="突变意义统计" />
+                </div>
+                <div class="col">
+                    <RoseChartVue :data="filteredRows" col-key="col21" title="突变危险统计" />
+                </div>
             </div>
         </div>
     </div>
@@ -368,7 +370,6 @@ const reset = () => {
 
 const search = () => {
     filteredRows.value = rows.value.filter((line, i) => {
-        console.log('========= line', i, line)
         // 搜索基因
         // 原始表格11列，支持模糊搜索
         let param = searchParams.value.gene

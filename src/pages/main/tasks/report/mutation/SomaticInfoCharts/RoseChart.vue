@@ -6,55 +6,110 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch } from "vue";
+import {markRaw, onMounted, ref, watch, toRefs, computed} from "vue";
+import * as _ from 'lodash'
 
 const echarts = require("echarts");
 const chart = ref(null);
 const piechart = ref(null);
 
+
+const props = defineProps({
+    data: {
+        type: Array,
+        required: false,
+        default: () => []
+    },
+    colKey: {
+        type: String,
+        required: false,
+        default: () => ''
+    },
+    title: {
+        type: String,
+        required: false,
+        default: () => ''
+    }
+})
+
+const rawData = ref([])
+
+const option = ref({
+
+    title: {
+        text: props.title
+    },
+    legend: {
+        show: false,
+        top: 'bottom'
+    },
+    toolbox: {
+        show: true,
+        feature: {
+            mark: {show: true},
+            dataView: {show: true, readOnly: false},
+            saveAsImage: {show: true}
+        }
+    },
+    series: [
+        {
+            name: 'Nightingale Chart',
+            type: 'pie',
+            radius: [30, 100],
+            center: ['50%', '50%'],
+            avoidLabelOverlap: true,
+            roseType: 'area',
+            itemStyle: {
+                borderRadius: 5
+            },
+            tooltip: {
+                show: true
+            },
+            data: []
+        }
+    ]
+})
+
+
+const {data} = toRefs(props)
+
+watch(data, () => {
+    refreshChart()
+})
+
 onMounted(() => {
     init();
 });
+
+const refreshChart = () => {
+    let result = _.countBy(data.value, t => t[props.colKey])
+    console.log('======result', result, props.colKey, data.value)
+
+
+    const items = Object.keys(result).map(k => {
+        return {name: k, value: result[k]}
+    })
+
+    const dt = _.max(items.map(t => t.value))/2
+
+    console.log('======items', items, dt)
+    const displayData = items.map(t => {
+        t.value += dt;
+        return t
+    })
+
+    option.value.series[0].data = displayData
+    // console.log('======option.value', displayData, dt)
+
+    chart.value.setOption(option.value);
+}
+
 const init = () => {
     let ct = piechart.value;
     echarts.dispose(ct);
     chart.value = markRaw(echarts.init(ct));
-    chart.value.setOption({
-        legend: {
-            top: 'bottom'
-        },
-        toolbox: {
-            show: true,
-            feature: {
-                mark: { show: true },
-                dataView: { show: true, readOnly: false },
-                restore: { show: true },
-                saveAsImage: { show: true }
-            }
-        },
-        series: [
-            {
-                name: 'Nightingale Chart',
-                type: 'pie',
-                radius: [20, 100],
-                center: ['50%', '50%'],
-                roseType: 'area',
-                itemStyle: {
-                    borderRadius: 8
-                },
-                data: [
-                    { value: 40, name: 'rose 1' },
-                    { value: 38, name: 'rose 2' },
-                    { value: 32, name: 'rose 3' },
-                    { value: 30, name: 'rose 4' },
-                    { value: 28, name: 'rose 5' },
-                    { value: 26, name: 'rose 6' },
-                    { value: 22, name: 'rose 7' },
-                    { value: 18, name: 'rose 8' }
-                ]
-            }
-        ]
-    });
+
+    refreshChart()
 };
 const onResize = () => {
     chart.value.resize();
