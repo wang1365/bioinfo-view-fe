@@ -4,7 +4,7 @@
             <div class="col-2 column q-pr-sm">
                 <div class="col">
                     <q-input
-                        v-model="searchParams.depth"
+                        v-model="searchParams.gene"
                         label="基因"
                         clearable
                         dense
@@ -109,7 +109,7 @@
                     />
                 </div>
                 <div class="q-gutter-md text-center q-py-sm">
-                    <q-btn color="primary" label="确定" icon="search" @click="search()" />
+                    <q-btn color="primary" label="确定" icon="search" @click="search" />
                     <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
                 </div>
             </div>
@@ -363,13 +363,121 @@ const reset = () => {
 }
 
 const search = () => {
+    filteredRows.value = rows.value.filter((line, i) => {
+        console.log('========= line', i, line)
+        // 搜索基因
+        // 原始表格11列，支持模糊搜索
+        let param = searchParams.value.gene
+        if (param && param.length > 0) {
+            return line.col11.includes(param)
+        }
 
+        // 深度
+        // 原始表格8列，大于0的正整数，
+        param = searchParams.value.depth
+        if (param && !(Number(line.col8) > param)) {
+            return false
+        }
+
+        // 频率
+        // 原始表格，大于0的小数
+        param = searchParams.value.ratio
+        if (param && !(Number(line.col9) > param)) {
+            return false
+        }
+
+        // 突变类型 All/SNP/INDEL
+        /*
+        根据原始表格4、5列判断，SNP是第4列只能为A/T/C/G单碱基且第5列也只能为A/T/C/G单碱基（中划线-算INDEL），其他情况为INDEL
+        SNP是第4只能是A/T/C/G，第5列也是只能为A/T/C/G，
+        例如第4列是A，第5列是T，
+        其他情况都是INDEL，如第4列为A，第5列为-；第4列为A，第5列为AGC，第四列为AT，第5列为T
+         */
+        param = searchParams.value.mutationType
+        if (param && param.length > 0 && param !== 'All') {
+            const Snp = ['A', 'T', 'C', 'G']
+            let isSnp = Snp.includes(line.col4) && Snp.includes(line.col5)
+            if (!(param === 'SNP' ? isSnp : !isSnp)) {
+                return false
+            }
+        }
+
+        // 突变位置 All/Exonic / Intronic/ Intergenic /还有没列举完
+        /*
+        原始表格第14列，把这列信息提取排序去重后，再加上一个【exonic,splicing】选项，做成下拉菜单选择
+        （如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）
+         */
+        param = searchParams.value.mutationPosition
+        if (param && param.length > 0) {
+            const positions = line.col10.split(';')
+            if (!(positions.some(position => param.includes(position)))) {
+                return false
+            }
+        }
+
+        // 突变意义 All/No synonymous SNV/还有没列举完
+        /*
+        原始表格第17列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
+         */
+        param = searchParams.value.mutationMeaning
+        if (param && param.length > 0 && param !== 'All') {
+            if (line.col13 === 'synonymous SNV') {
+                return false
+            }
+        }
+
+        // 突变危险 All/No synonymous SNV/还有没列举完
+        /*
+        原始表格第17列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
+         */
+        param = searchParams.value.mutationRisk
+        if (param && param.length > 0 && param !== 'All') {
+            if (!param.includes(line.col21)) {
+                return false
+            }
+        }
+
+        // 人群频率
+        /*
+        原始表格第26、31、39列，大于0的小数， 26、31、39列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，不管什么筛选，都展示
+         */
+        param = searchParams.value.humanRatio
+        if (param) {
+            let hitCount = 0
+            let result = false
+            if (line.col26 !== '.' && line.col31 !== '.'  || line.col39 !== '.' ) {
+                let count = Number(line.col26) < param ? 1 : 0
+                count += (Number(line.col31) < param ? 1 : 0)
+                count += (Number(line.col39) < param ? 1 : 0)
+                if (count < 2) {
+                    return false
+                }
+            }
+        }
+
+        // SIFT_pred
+        /*
+        原始表格第56列，这列只包含3个选项：T、D、点
+         */
+        param = searchParams.value.sift
+        if (param && param.length > 0) {
+            if (param !== line.col56) {
+                return false
+            }
+        }
+
+        return true
+    })
+
+
+    console.log('========= search result', filteredRows.value.length, filteredRows.value)
 }
 const refreshPage = () => {
     showColumn.value = false
 }
 
 onMounted(() => {
+    loading.value = true
     readTaskFile(route.params.id, 'Mut_germline/QT11.combined.standard-new.csv').then(res => {
         const headNames = getCsvHeader(res, ',')
         columns.value.forEach(col => col.title = headNames[col.i-1])
@@ -380,7 +488,7 @@ onMounted(() => {
         csvRows.forEach((row, i) => row.id = i)
         rows.value = csvRows
         filteredRows.value = csvRows
-    })
+    }).finally(() => loading.value = false)
 })
 </script>
 
