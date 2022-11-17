@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch } from "vue";
+import {markRaw, onMounted, ref, watch, toRefs} from "vue";
 
 const echarts = require("echarts");
 const chart = ref(null);
@@ -19,6 +19,145 @@ const props = defineProps({
         default: () => []
     }
 })
+
+const { data } = toRefs(props)
+
+const option = ref({
+    title: [
+        {
+            text: 'ExAC_EAS',
+            textBaseline: 'middle',
+            top: (0.5 * 100) / 3 + '%',
+        },{
+            text: '1000g2015aug_eas',
+            textBaseline: 'middle',
+            top: (100) / 3 + 5+ '%',
+        },{
+            text: 'gnomAD_genome_EAS',
+            textBaseline: 'middle',
+            top: (2 * 100) / 3 + 5 + '%',
+        }
+    ],
+    singleAxis: [
+        {
+            left: 150,
+            type: 'category',
+            boundaryGap: false,
+            data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
+            top: '5%',
+            height: 100 / 3 - 10 + '%',
+            axisLabel: {
+                interval: 1
+            }
+        }, {
+            left: 150,
+            type: 'category',
+            boundaryGap: false,
+            data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
+            top: 100/3 + 5 + '%',
+            height: 100 / 3 - 10 + '%',
+            axisLabel: {
+                interval: 1
+            }
+        }, {
+            left: 150,
+            type: 'category',
+            boundaryGap: false,
+            data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
+            top: 200/3 + 5 + '%',
+            height: 100 / 3 - 10 + '%',
+            axisLabel: {
+                interval: 1
+            }
+        }
+    ],
+    legend: {
+        right: '10%',
+        top: '3%',
+        data: ['1990', '2015']
+    },
+    series: [
+        {
+            name: 'ExAC_EAS',
+            data: [],
+            type: 'scatter',
+            singleAxisIndex: 0,
+            coordinateSystem: 'singleAxis',
+            symbolSize: function (data) {
+                let ret = data[1]/2
+                if (ret > 100) {
+                    ret = 100
+                }
+                return ret;
+                // return Math.sqrt(data[1])
+                // return 10
+            },
+            emphasis: {
+                focus: 'series',
+                label: {
+                    show: true,
+                    formatter: function (param) {
+                        return param.data[3];
+                    },
+                    position: 'top'
+                }
+            },
+        },
+        {
+            name: '1000g2015aug_eas',
+            data: [],
+            type: 'scatter',
+            singleAxisIndex: 1,
+            coordinateSystem: 'singleAxis',
+            symbolSize: function (data) {
+                let ret = data[1]/2
+                if (ret > 100) {
+                    ret = 100
+                }
+                return ret;
+                // return Math.sqrt(data[1])
+                // return 10
+            },
+            emphasis: {
+                focus: 'series',
+                label: {
+                    show: true,
+                    formatter: function (param) {
+                        return param.data[3];
+                    },
+                    position: 'top'
+                }
+            },
+        },
+        {
+            name: 'gnomAD_genome_EAS',
+            data: [],
+            type: 'scatter',
+            singleAxisIndex: 2,
+            coordinateSystem: 'singleAxis',
+            symbolSize: function (data) {
+                let ret = data[1]/2
+                if (ret > 100) {
+                    ret = 100
+                }
+                return ret;
+                // return Math.sqrt(data[1])
+                // return 10
+            },
+            emphasis: {
+                focus: 'series',
+                label: {
+                    show: true,
+                    formatter: function (param) {
+                        // return `${param.data[0]} - ${param.data[1]}`;
+                        return `${param.data[1]}`;
+                    },
+                    position: 'top'
+                }
+            },
+        },
+    ]
+})
 onMounted(() => {
     init();
 });
@@ -26,151 +165,56 @@ const init = () => {
     let ct = piechart.value;
     echarts.dispose(ct);
     chart.value = markRaw(echarts.init(ct));
-    const data = [
-        [
-            [28604, 10, 17096869, 'Australia', 1990],
-            [31163, 10, 27662440, 'Canada', 1990],
-            [1516, 10, 1154605773, 'China', 1990],
-            [13670, 10, 10582082, 'Cuba', 1990],
-            [28599, 10, 4986705, 'Finland', 1990],
-            [29476, 10, 56943299, 'France', 1990],
-            [31476, 10, 78958237, 'Germany', 1990],
-            [28666, 10, 254830, 'Iceland', 1990],
-            [1777, 10, 870601776, 'India', 1990],
-            [29550, 10, 122249285, 'Japan', 1990],
-            [2076, 10, 20194354, 'North Korea', 1990],
-            [12087, 10, 42972254, 'South Korea', 1990],
-            [24021, 10, 3397534, 'New Zealand', 1990],
-            [43296, 10, 4240375, 'Norway', 1990],
-            [10088, 10, 38195258, 'Poland', 1990],
-            [19349, 10, 147568552, 'Russia', 1990],
-            [10670, 10, 53994605, 'Turkey', 1990],
-            [26424, 10, 57110117, 'United Kingdom', 1990],
-            [37062, 10, 252847810, 'United States', 1990]
-        ],
-        [
-            [44056, 30, 23968973, 'Australia', 2015],
-            [43294, 30, 35939927, 'Canada', 2015],
-            [13334, 30, 1376048943, 'China', 2015],
-            [21291, 30, 11389562, 'Cuba', 2015],
-            [38923, 30, 5503457, 'Finland', 2015],
-            [37599, 30, 64395345, 'France', 2015],
-            [44053, 30, 80688545, 'Germany', 2015],
-            [42182, 30, 329425, 'Iceland', 2015],
-            [5903, 30, 1311050527, 'India', 2015],
-            [36162, 30, 126573481, 'Japan', 2015],
-            [1390, 30, 25155317, 'North Korea', 2015],
-            [34644, 30, 50293439, 'South Korea', 2015],
-            [34186, 30, 4528526, 'New Zealand', 2015],
-            [64304, 30, 5210967, 'Norway', 2015],
-            [24787, 30, 38611794, 'Poland', 2015],
-            [23038, 30, 143456918, 'Russia', 2015],
-            [19360, 30, 78665830, 'Turkey', 2015],
-            [38225, 30, 64715810, 'United Kingdom', 2015],
-            [53354, 50, 0, 'United States', 2015]
-        ]
-    ];
-    chart.value.setOption({
 
-        title: {
-            text: 'Life Expectancy and GDP by Country',
-            left: '5%',
-            top: '3%'
-        },
-        legend: {
-            right: '10%',
-            top: '3%',
-            data: ['1990', '2015']
-        },
-        grid: {
-            left: '8%',
-            top: '10%'
-        },
-        xAxis: {
-            splitLine: {
-                lineStyle: {
-                    type: 'dashed'
-                }
-            }
-        },
-        yAxis: {
-            splitLine: {
-                lineStyle: {
-                    type: 'dashed'
-                }
-            },
-            scale: true
-        },
-        series: [
-            {
-                name: '1990',
-                data: data[0],
-                type: 'scatter',
-                symbolSize: function (data) {
-                    return Math.sqrt(data[2]) / 5e2;
-                },
-                emphasis: {
-                    focus: 'series',
-                    label: {
-                        show: true,
-                        formatter: function (param) {
-                            return param.data[3];
-                        },
-                        position: 'top'
-                    }
-                },
-                itemStyle: {
-                    shadowBlur: 10,
-                    shadowColor: 'rgba(120, 36, 50, 0.5)',
-                    shadowOffsetY: 5,
-                    color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
-                        {
-                            offset: 0,
-                            color: 'rgb(251, 118, 123)'
-                        },
-                        {
-                            offset: 1,
-                            color: 'rgb(204, 46, 72)'
-                        }
-                    ])
-                }
-            },
-            {
-                name: '2015',
-                data: data[1],
-                type: 'scatter',
-                symbolSize: function (data) {
-                    return Math.sqrt(data[2]) / 5e2;
-                },
-                emphasis: {
-                    focus: 'series',
-                    label: {
-                        show: true,
-                        formatter: function (param) {
-                            return param.data[3];
-                        },
-                        position: 'top'
-                    }
-                },
-                itemStyle: {
-                    shadowBlur: 10,
-                    shadowColor: 'rgba(25, 100, 150, 0.5)',
-                    shadowOffsetY: 5,
-                    color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
-                        {
-                            offset: 0,
-                            color: 'rgb(129, 227, 238)'
-                        },
-                        {
-                            offset: 1,
-                            color: 'rgb(25, 183, 207)'
-                        }
-                    ])
-                }
-            }
-        ]
-    });
+    refresh()
 };
+
+const refresh = () => {
+    const data1 = groupAndCount('col26')
+    const data2 = groupAndCount('col31')
+    const data3 = groupAndCount('col39')
+
+    option.value.series[0].data = data1
+    option.value.series[1].data = data2
+    option.value.series[2].data = data3
+
+    chart.value.setOption(option.value);
+}
+
+const groupAndCount = (colName) => {
+    // 初始化刻度，第一个刻度为-1，后续为0-20
+    const arr = new Array(21)
+    arr.fill(0)
+
+    // 数据归纳到刻度
+    data.value.forEach(row => {
+        const v = row[colName]
+        if (v === '.') {
+            arr[0] += 1
+        } else {
+            const ratio = Number(row[colName])
+            const idx = Math.floor(ratio/0.05)
+            arr[idx] += 1
+        }
+    })
+
+    // 构造数据
+    // const result = arr.map((v, i) => {
+    //     return [Number((-0.05 + 0.05*(i+1)).toFixed(2)), v]
+    // })
+    // result[0] = [-0.5, result[0][1]]
+
+    const result = [[0, arr[0]], [1, 0]]
+    arr.forEach((v, i) => {
+        if (i > 0) {
+            result.push([i*2 + 1, v])
+            result.push([i*2 + 2, 0])
+        }
+    })
+    // arr.map((v, i) => [i, v] )
+    return result
+}
+
 const onResize = () => {
     chart.value.resize();
 };

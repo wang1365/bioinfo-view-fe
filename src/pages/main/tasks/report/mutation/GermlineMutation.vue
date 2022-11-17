@@ -144,7 +144,7 @@
         </div>
         <div class="column q-gutter-sm q-py-sm">
             <div class="col">
-                <BubbleChartVue />
+                <BubbleChartVue :data="filteredRows" />
             </div>
             <div class="col row">
                 <div class="col">

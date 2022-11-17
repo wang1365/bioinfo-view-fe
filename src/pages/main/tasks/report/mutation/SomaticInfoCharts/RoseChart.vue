@@ -63,7 +63,10 @@ const option = ref({
                 borderRadius: 5
             },
             tooltip: {
-                show: true
+                trigger: 'item',
+                formatter: params => {
+                    return '2222'
+                }
             },
             data: []
         }
