@@ -78,6 +78,7 @@
                 <q-select
                     v-model="searchParams.mutationType"
                     clearable
+                    hide-dropdown-icon
                     :options='["All", "SNP", "INDEL"]'
                     label="突变类型"
                     stack-label
@@ -89,6 +90,7 @@
                     v-model="searchParams.mutationPosition"
                     clearable
                     multiple
+                    hide-dropdown-icon
                     :options="mutationPositionOptions"
                     label="突变位置"
                     stack-label
@@ -100,6 +102,7 @@
                     clearable
                     v-model="searchParams.mutationMeaning"
                     dense
+                    hide-dropdown-icon
                     stack-label
                     label-color="primary"
                     :options="['All', 'No synonymous SNV']"

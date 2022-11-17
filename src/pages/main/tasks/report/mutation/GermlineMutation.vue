@@ -40,6 +40,7 @@
                         v-model="searchParams.mutationType"
                         clearable
                         dense
+                        hide-dropdown-icon
                         :options="options.mutationType"
                         label="突变类型"
                         stack-label
@@ -52,6 +53,7 @@
                         clearable
                         multiple
                         dense
+                        hide-dropdown-icon
                         :options="options.mutationPosition"
                         label="突变位置"
                         stack-label
@@ -62,6 +64,7 @@
                     <q-select
                         clearable
                         dense
+                        hide-dropdown-icon
                         v-model="searchParams.mutationMeaning"
                         stack-label
                         label-color="primary"
@@ -73,6 +76,7 @@
                     <q-select
                         clearable
                         dense
+                        hide-dropdown-icon
                         v-model="searchParams.mutationRisk"
                         stack-label
                         label-color="primary"
@@ -86,6 +90,7 @@
                         label="人群频率 <"
                         clearable
                         dense
+                        hide-dropdown-icon
                         type="number"
                         stack-label
                         label-color="primary"
@@ -95,6 +100,7 @@
                     <q-select
                         clearable
                         dense
+                        hide-dropdown-icon
                         v-model="searchParams.sift"
                         stack-label
                         label-color="primary"
