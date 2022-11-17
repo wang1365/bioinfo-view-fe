@@ -31,6 +31,9 @@ const option = ref({
     yAxis: {
         type: 'value'
     },
+    label: {
+      show: true
+    },
     series: [
         {
             data: [],

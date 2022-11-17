@@ -12,6 +12,13 @@ const echarts = require("echarts");
 const chart = ref(null);
 const piechart = ref(null);
 
+const props = defineProps({
+    data: {
+        type: Array,
+        required: false,
+        default: () => []
+    }
+})
 onMounted(() => {
     init();
 });

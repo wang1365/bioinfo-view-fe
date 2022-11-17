@@ -53,6 +53,16 @@
             </div>
             <div class="col">
                 <q-input
+                    v-model="searchParams.mutationRatio"
+                    label="肿瘤突变频率 >"
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                />
+            </div>
+            <div class="col">
+                <q-input
                     v-model="searchParams.humanRatio"
                     label="人群频率 <"
                     clearable
@@ -151,6 +161,7 @@ const searchParams = ref({
     compareDepth: null,
     tumorRatio: null,
     compareRatio: null,
+    mutationRatio: null,
     mutationType: null,
     mutationPosition: [],
     mutationMeaning: null,
@@ -206,10 +217,11 @@ onMounted(() => {
             compareDepth: Number(lines[1][1]),
             tumorRatio: Number(lines[2][1]),
             compareRatio: Number(lines[3][1]),
+            mutationRatio: Number(lines[4][1]),
             mutationType: lines[5][1],
             mutationPosition: lines[6][1].split(','),
             mutationMeaning: lines[7][1],
-            humanRatio: lines[8][1]
+            humanRatio: Number(lines[8][1])
         }
 
         searchParams.value = Object.assign({}, initialParams)
@@ -329,7 +341,7 @@ const search = () => {
         }
 
         // 肿瘤突变频数 (= 肿瘤深度 x 肿瘤频率乘积)
-        param = searchParams.value.compareRatio
+        param = searchParams.value.mutationRatio
         if (param) {
             if (!(tumorDepth * tumorRatio > param)) {
                 return false
