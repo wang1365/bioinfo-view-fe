@@ -122,12 +122,12 @@
             </div>
         </div>
     </div>
-    <a-table size="small" bordered :loading="loading" :data-source="filteredRows" :columns="columns" :sticky="true">
-        <template #bodyCell="{ column, record }">
-            <q-btn v-if="column.key === 'k8'" label="查看" color="primary" outline size="xs" @click="clickView(record)">
-            </q-btn>
-        </template>
-    </a-table>
+    <!--    <a-table size="small" bordered :loading="loading" :data-source="filteredRows" :columns="columns" :sticky="true">-->
+    <!--        <template #bodyCell="{ column, record }">-->
+    <!--            <q-btn v-if="column.key === 'k8'" label="查看" color="primary" outline size="xs" @click="clickView(record)">-->
+    <!--            </q-btn>-->
+    <!--        </template>-->
+    <!--    </a-table>-->
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 800px; max-width: 2000px">
             <q-bar class="bg-primary text-white">肿瘤突变符合分析</q-bar>
