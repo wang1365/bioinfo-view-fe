@@ -1,6 +1,6 @@
 <template>
     <q-card>
-        <div ref="piechart" style="height: 400px"></div>
+        <div ref="piechart" style="height: 600px"></div>
         <q-resize-observer @resize="onResize" />
     </q-card>
 </template>
@@ -24,6 +24,9 @@ const {data} = toRefs(props)
 
 const option = ref({
     title: [
+        {
+            text: '人群频率分布',
+        },
         {
             text: 'ExAC_EAS',
             textBaseline: 'middle',

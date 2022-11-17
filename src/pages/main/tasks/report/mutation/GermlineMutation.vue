@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <div class="q-py-sm" v-if="!showColumn">
+    <div class="q-my-lg" v-if="!showColumn">
         <div class="row q-gutter-sm">
             <div class="col">
                 <BarChartVue :data="filteredRows" />
