@@ -59,7 +59,8 @@
 </template>
 <script setup>
 import {ref, onMounted} from "vue";
-import {getReportTable} from 'src/api/report'
+import {readTaskFile} from "src/api/task"
+import {getCsvData} from "src/utils/csv"
 import {useRoute} from 'vue-router'
 import {exportFile} from 'quasar'
 
@@ -126,15 +127,15 @@ onMounted(() => {
     loading2.value = true
 
     const fields = ['k1', 'k2', 'k3', 'k4']
-    getReportTable(route.params.id, 'QN11', {}, fields).then(res => {
-        rows1.value = res
+    readTaskFile(route.params.id, 'QC/QN11.depth', ).then(res => {
+        rows1.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
         filteredRows1.value = rows1.value
     }).finally(() => {
         loading1.value = false
     })
 
-    getReportTable(route.params.id, 'QT11', {}, fields).then(res => {
-        rows2.value = res
+    readTaskFile(route.params.id, 'QC/QT11.depth', {}, fields).then(res => {
+        rows2.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
         filteredRows2.value = rows2.value
     }).finally(() => {
         loading2.value = false
