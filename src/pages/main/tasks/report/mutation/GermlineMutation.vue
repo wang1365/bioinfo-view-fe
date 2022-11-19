@@ -134,25 +134,24 @@
     </div>
 
     <div class="q-my-lg" v-if="!showColumn">
-        <div class="row q-gutter-sm">
-            <div class="col">
-                <BarChartVue :data="filteredRows" />
-            </div>
-            <div class="col">
+        <div class="row q-mb-sm">
+            <div class="col q-px-xs">
                 <PieChartVue :data="filteredRows" />
             </div>
-        </div>
-        <div class="column q-gutter-sm q-py-sm">
-            <div class="col">
-                <BubbleChartVue :data="filteredRows" />
+            <div class="col q-px-xs">
+                <RoseChartVue :data="filteredRows" col-key="col13" title="突变意义统计" />
             </div>
-            <div class="col row">
-                <div class="col">
-                    <RoseChartVue :data="filteredRows" col-key="col13" title="突变意义统计" />
-                </div>
-                <div class="col">
-                    <RoseChartVue :data="filteredRows" col-key="col21" title="突变危险统计" />
-                </div>
+            <div class="col q-px-xs">
+                <RoseChartVue :data="filteredRows" col-key="col21" title="突变危险统计" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4 q-px-xs">
+                <BarChartVue :data="filteredRows" />
+            </div>
+
+            <div class="col-8 q-px-xs">
+                <BubbleChartVue :data="filteredRows" />
             </div>
         </div>
     </div>
