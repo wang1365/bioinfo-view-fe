@@ -188,11 +188,15 @@
             </div>
         </div>
     </div>
-    <q-dialog class="q-py-sm" v-model="dialogVisible">
-        <q-card style="width: 80vh;max-width: 90vh;height: 80vh;max-height: 90vh">
+    <q-dialog v-model="dialogVisible">
+        <q-card style="width: 80vh;max-width: 90vh;max-height: 90vh">
             <q-card-section>
                 <MutationInfo :row="currentRow" :isGermline="false"></MutationInfo>
             </q-card-section>
+            <q-space></q-space>
+            <q-card-actions align="center" vertical>
+                <q-btn label="关 闭" color="primary" v-close-popup></q-btn>
+            </q-card-actions>
         </q-card>
     </q-dialog>
 </template>

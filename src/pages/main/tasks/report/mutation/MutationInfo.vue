@@ -44,7 +44,7 @@
             </q-tab-panel>
 
             <q-tab-panel name="药物关联信息">
-                <div>药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述</div>
+                <div>功能尚未开放</div>
                 <div class="bio-data-table q-py-sm">
                     <table>
 
