@@ -4,7 +4,7 @@
             v-model="tab"
             active-color="primary"
             active-bg-color="grey-4"
-            align="left"
+            align="left" dense
             class="bg-grey-1"
             :breakpoint="0"
         >
