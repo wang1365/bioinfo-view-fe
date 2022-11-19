@@ -24,6 +24,9 @@ const props = defineProps({
 const { data } = toRefs(props)
 
 const option = ref({
+    title: {
+      text: 'SNP统计'
+    },
     xAxis: {
         type: 'category',
         data: []
