@@ -3,43 +3,61 @@
         <PageTitle title="任务管理" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div style="
-                                        height: 150px;
-                                        display: flex;
-                                        justify-content: space-around;
-                                        justify-items: center;
-                                        align-items: center;
+                        height: 110px;
+                        display: flex; padding-bottom: 15px; padding-top: 15px;
+                        justify-content: space-around;
+                        justify-items: center;
+                        align-items: center;
                                     ">
-                <q-card class="my-card">
-                    <q-card-section class="text-primary text-h5 text-center text-bold">
-                        {{ taskSummary.running_task_count }}
-                    </q-card-section>
+                <q-btn color="white" @click="clickCard(options[0])">
+                    <div class="text-black" style="width: 7vw">
+                        <div class="text-h5 text-center text-bold">
+                            {{ total_task_count }}
+                        </div>
+                        <div class="text-h6 text-center text-bold">全部</div>
+                    </div>
+                </q-btn>
 
-                    <q-card-section class="desc"> 运行 </q-card-section>
-                </q-card>
-                <q-card class="my-card">
-                    <q-card-section class="text-negative text-h5 text-center text-bold">
-                        {{ taskSummary.failured_task_count }}
-                    </q-card-section>
-                    <q-card-section class="desc"> 失败 </q-card-section>
-                </q-card>
-                <q-card class="my-card">
-                    <q-card-section class="text-secondary text-h5 text-center text-bold">
-                        {{ taskSummary.pending_task_count }}
-                    </q-card-section>
-                    <q-card-section class="desc"> 排队</q-card-section>
-                </q-card>
-                <q-card class="my-card">
-                    <q-card-section class="text-warning text-h5 text-center text-bold">
-                        {{ taskSummary.canceled_task_count }}
-                    </q-card-section>
-                    <q-card-section class="desc"> 取消</q-card-section>
-                </q-card>
-                <q-card class="my-card">
-                    <q-card-section class="text-positive text-h5 text-center text-bold">
-                        {{ taskSummary.finished_task_count }}
-                    </q-card-section>
-                    <q-card-section class="desc"> 完成</q-card-section>
-                </q-card>
+                <q-btn color="primary" @click="clickCard(options[1])">
+                    <div class="text-white" style="width: 7vw">
+                        <div class="text-white text-h5 text-center text-bold">
+                            {{ taskSummary.running_task_count }}
+                        </div>
+                        <div class="text-white text-h6 text-center text-bold">运行</div>
+                    </div>
+                </q-btn>
+                <q-btn color="negative" @click="clickCard(options[3])">
+                    <div class="text-white" style="width: 7vw">
+                        <div class=" text-h5 text-center text-bold">
+                            {{ taskSummary.failured_task_count }}
+                        </div>
+                        <div  class=" text-h6 text-center text-bold"> 失败 </div>
+                    </div>
+                </q-btn>
+                <q-btn color="secondary" @click="clickCard(options[2])">
+                    <div class="text-white" style="width: 7vw">
+                        <div class=" text-h5 text-center text-bold">
+                            {{ taskSummary.pending_task_count }}
+                        </div>
+                        <div  class=" text-h6 text-center text-bold"> 排队</div>
+                    </div>
+                </q-btn>
+                <q-btn color="warning" @click="clickCard(options[5])">
+                    <div class="text-white" style="width: 7vw">
+                        <div class=" text-h5 text-center text-bold">
+                            {{ taskSummary.canceled_task_count }}
+                        </div>
+                        <div  class=" text-h6 text-center text-bold"> 取消</div>
+                    </div>
+                </q-btn>
+                <q-btn color="positive" @click="clickCard(options[4])">
+                    <div class="text-white" style="width: 7vw">
+                        <div class=" text-h5 text-center text-bold">
+                            {{ taskSummary.finished_task_count }}
+                        </div>
+                        <div  class=" text-h6 text-center text-bold"> 完成</div>
+                    </div>
+                </q-btn>
             </div>
         </div>
         <div class="row">
@@ -48,12 +66,12 @@
                 <div class="row q-gutter-sm">
                     <div class="col-2">
                         <q-select v-model="status" :options="options" stack-label clearable filled
-                            @clear="clearSelect()" :display-value="`状态: ${status.label}`"
+                            @clear="clearSelect()" :display-value="`状态: ${status.label}`" dense
                             @update:model-value="refreshPage()">
                         </q-select>
                     </div>
                     <div class="col-4 q-pl-sm">
-                        <q-input readonly filled @click="showProjectSelect = true"
+                        <q-input readonly filled dense @click="showProjectSelect = true"
                             :model-value="'所属项目: ' + projectName">
                             <template v-slot:prepend>
                                 <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
@@ -167,7 +185,7 @@ refreshPage();
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, onMounted, computed} from "vue";
 import { useApi } from "src/api/apiBase";
 import PageTitle from "components/page-title/PageTitle.vue";
 import ProjectListVue from "./components/ProjectList.vue";
@@ -205,6 +223,12 @@ const taskSummary = ref({
     running_task_count: 0
 })
 
+const total_task_count = computed(() => {
+    const ts = taskSummary.value
+    return ts.canceled_task_count + ts.failured_task_count + ts.finished_task_count
+    +ts.pending_task_count + ts.running_task_count
+})
+
 const getItemStatus = (item) => {
     switch (item.status) {
         case "PENDING":
@@ -221,6 +245,11 @@ const getItemStatus = (item) => {
             return item.status;
     }
 };
+
+const clickCard = (v) => {
+    status.value = v
+    refreshPage()
+}
 
 const clearSelect = () => {
     status.value = { label: "全部", value: "ALL" }
