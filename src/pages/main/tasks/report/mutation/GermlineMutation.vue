@@ -277,33 +277,32 @@ const customCell = (record, rowIndex, column) => {
 }
 const currentRow = ref({})
 const columns = ref([
-    {i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left'},
-    {i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left'},
-    {i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85},
-    {i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70},
-    {i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70}, // Alt
-    {i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90},
-    {i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90},
-    {i: 7, title: '', dataIndex: 'col7', align: 'center', width: 105},
-    {i: 8, title: '', dataIndex: 'col8', align: 'center', width: 90},
-    {i: 9, title: '', dataIndex: 'col9', align: 'center', width: 110},
+    {i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left'},   // Chr
+    {i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left'},    // Start
+    {i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85},                   // End
+    {i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70},   // Ref
+    {i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70},   // Alt
+    {i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90},   // Geno_Type
+    {i: 7, title: '', dataIndex: 'col7', align: 'center', width: 105},  // Allelic_depths
+    {i: 8, title: '', dataIndex: 'col8', align: 'center', width: 90},   // Seq_depths
+    {i: 9, title: '', dataIndex: 'col9', align: 'center', width: 110},  // Mutation_Rate
     {i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105},// Func.refGene
-    {i: 11, title: '', dataIndex: 'col11', align: 'center', width: 105},
-    {i: 12, title: '', dataIndex: 'col12', align: 'center', width: 145},
-    {i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160},
-    {i: 14, title: '', dataIndex: 'col14', align: 'left', width: 140}, // exon
-    {i: 15, title: '', dataIndex: 'col15', align: 'left', width: 160, ellipsis: true},
-    {i: 16, title: '', dataIndex: 'col16', align: 'left', width: 160, ellipsis: true},
-    {i: 17, title: '', dataIndex: 'col17', align: 'center', width: 120},
+    {i: 11, title: '', dataIndex: 'col11', align: 'center', width: 105},// Gene.refGene
+
+    {i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160},                // ExoniFunc.refGene
+    {i: 14, title: '', dataIndex: 'col14', align: 'left', width: 140},                  // exon
+    {i: 15, title: '', dataIndex: 'col15', align: 'left', width: 160, ellipsis: true},  // NUChange
+    {i: 16, title: '', dataIndex: 'col16', align: 'left', width: 160, ellipsis: true},  // AAChange
+
     {i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true},  // CLNDN
-    {i: 19, title: '', dataIndex: 'col19', align: 'left', width: 400, ellipsis: true},
-    {i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280},
-    {i: 21, title: '', dataIndex: 'col21', align: 'center', width: 90},  // CLNIG
-    {i: 22, title: '', dataIndex: 'col22', align: 'center', width: 100},
-    {i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95},
-    {i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100},
-    {i: 25, title: '', dataIndex: 'col25', align: 'center', width: 100},
-    {i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100},
+    {i: 19, title: '', dataIndex: 'col19', align: 'left', width: 400, ellipsis: true},  // CLNDISDB
+    {i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280},                  // CLNREVSTAT
+    {i: 21, title: '', dataIndex: 'col21', align: 'left', width: 280},
+    {i: 22, title: '', dataIndex: 'col22', align: 'center', width: 100},    // cosmic70
+    {i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95},     // ExAC_ALL
+    {i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100},    // ExAC_AFR
+    {i: 25, title: '', dataIndex: 'col25', align: 'center', width: 100},    // ExAC_AMR
+    {i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100},    // ExAC_EAS
 
     {i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100},
     {i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100},

@@ -7,9 +7,9 @@
 
 <script setup>
 import {markRaw, onMounted, ref, watch, toRefs, computed} from "vue";
+import * as echarts from 'echarts'
 import * as _ from 'lodash'
 
-const echarts = require("echarts");
 const chart = ref(null);
 const piechart = ref(null);
 

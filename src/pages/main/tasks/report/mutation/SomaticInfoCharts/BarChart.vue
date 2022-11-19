@@ -8,8 +8,8 @@
 <script setup>
 import { markRaw, onMounted, ref, watch, toRefs } from "vue";
 import * as _ from 'lodash'
+import * as echarts from 'echarts'
 
-const echarts = require("echarts");
 const chart = ref(null);
 const barchart = ref(null);
 

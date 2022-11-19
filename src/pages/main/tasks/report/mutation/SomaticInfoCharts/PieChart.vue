@@ -7,9 +7,9 @@
 
 <script setup>
 import { markRaw, onMounted, ref, watch, toRefs } from "vue";
+import * as echarts from 'echarts'
 
 
-const echarts = require("echarts");
 const chart = ref(null);
 const piechart = ref(null);
 const option = ref({
