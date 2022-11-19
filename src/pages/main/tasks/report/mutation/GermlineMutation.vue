@@ -128,6 +128,17 @@
                     :custom-row="customRow"
                     :sticky="true"
                 >
+<!--                    <template #bodyCell="{ column, record }">-->
+<!--                        <q-btn-->
+<!--                            v-if="column.key === 'operation'"-->
+<!--                            label="查看"-->
+<!--                            color="primary"-->
+<!--                            outline flat-->
+<!--                            size="xs"-->
+<!--                            @click="clickView(record)"-->
+<!--                        >-->
+<!--                        </q-btn>-->
+<!--                    </template>-->
                 </a-table>
             </div>
         </div>
@@ -155,56 +166,11 @@
             </div>
         </div>
     </div>
-    <div class="q-py-sm" v-if="showColumn">
-        <q-tabs
-            v-model="tab"
-            active-color="primary"
-            active-bg-color="grey-4"
-            align="left"
-            class="bg-grey-1"
-            :breakpoint="0"
-        >
-            <q-tab name="突变信息" label="突变信息" />
-            <q-tab name="药物关联信息" label="药物关联信息" />
-        </q-tabs>
-        <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="突变信息">
-                <div class="row q-gutter-xs">
-                    <div class="col" style="border-right:solid 1px black">数据</div>
-                    <div class="col" style="border-right:solid 1px black">数据</div>
-                    <div class="col" style="border-right:solid 1px black">数据</div>
-                    <div class="col">
-                        <RadarChartVue />
-                    </div>
-                </div>
-            </q-tab-panel>
-            <q-tab-panel name="药物关联信息">
-                <div>药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述</div>
-                <div class="bio-data-table q-py-sm">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>数据</td>
-                                <td>数据</td>
-                                <td>数据</td>
-                                <td>数据</td>
-                                <td>数据</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>数据</td>
-                                <td>数据</td>
-                                <td>数据</td>
-                                <td>数据</td>
-                                <td>数据</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </q-tab-panel>
-        </q-tab-panels>
-    </div>
+    <q-dialog class="q-py-sm" v-model="dialogVisible">
+        <q-card style="width: 80vh;max-width: 90vh;height: 80vh;max-height: 90vh">
+            <GermlineMutationDlg :row="currentRow"></GermlineMutationDlg>
+        </q-card>
+    </q-dialog>
 </template>
 <script setup>
 import {ref, onMounted} from "vue";
@@ -213,13 +179,14 @@ import PieChartVue from "./SomaticInfoCharts/PieChart.vue"
 import RoseChartVue from "./SomaticInfoCharts/RoseChart.vue"
 import BubbleChartVue from "./SomaticInfoCharts/BubbleChart.vue"
 import RadarChartVue from "./SomaticColumnCharts/RadarChart.vue"
+import GermlineMutationDlg from './GermlineMutationDlg'
 import {readTaskFile} from "src/api/task";
 import {getCsvHeader, getCsvData} from "src/utils/csv";
 import {useRoute} from 'vue-router'
 
 const route = useRoute()
-const tab = ref('突变信息')
-const showColumn = ref(false)
+
+const dialogVisible = ref(false)
 const searchParams = ref({
     gene: null,
     depth: null,
@@ -265,12 +232,13 @@ const customCell = (record, rowIndex, column) => {
         // 鼠标单击行
         onClick: event => {
             // 记录当前点击的行标识
-            // currentRow.value = record
-            if (currentRow.value.id === record.id) {
-                currentRow.value = {}
-            } else {
-                currentRow.value = record
-            }
+            currentRow.value = record
+            clickRow(record)
+            // if (currentRow.value.id === record.id) {
+            //     currentRow.value = {}
+            // } else {
+            //     currentRow.value = record
+            // }
         }
     }
 }
@@ -314,6 +282,8 @@ const columns = ref([
     {i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100},
 
     {i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100},
+
+    // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
 ])
 
 columns.value.forEach(c => c.customCell = customCell)
@@ -364,6 +334,10 @@ const reset = () => {
         sift: null
     }
     search()
+}
+
+const clickRow = (row) => {
+    dialogVisible.value = true
 }
 
 const search = () => {
@@ -431,7 +405,7 @@ const search = () => {
 
         // 突变危险 All/No synonymous SNV/还有没列举完
         /*
-        原始表格第17列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
+        原始表格第21列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
          */
         param = searchParams.value.mutationRisk
         if (param && param.length > 0 && param !== 'All') {
@@ -474,7 +448,7 @@ const search = () => {
     console.log('========= search result', filteredRows.value.length, filteredRows.value)
 }
 const refreshPage = () => {
-    showColumn.value = false
+    dialogVisible.value = false
 }
 
 onMounted(() => {
@@ -484,8 +458,8 @@ onMounted(() => {
         columns.value.forEach(col => col.title = headNames[col.i-1])
 
         const visibleColIdx = columns.value.map(t => t.i)
-        const colKeys = columns.value.map(t => t.dataIndex)
-        const csvRows = getCsvData(res, {splitter: ',', hasHeaderLine: true, colIndex: visibleColIdx, fields: colKeys})
+        const colKeys = _.range(1, 150, 1).map(i => 'col' + i)
+        const csvRows = getCsvData(res, {splitter: ',', hasHeaderLine: true, fields: colKeys})
         csvRows.forEach((row, i) => row.id = i)
         rows.value = csvRows
         filteredRows.value = csvRows
