@@ -15,7 +15,7 @@
             <q-tab-panel name="突变信息">
                 <div class="row q-gutter-xs">
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
-                        <div>{{`VCF filter: `}}<span class="text-purple">{{props.row.col147}}</span></div>
+                        <div>{{`VCF filter: `}}<span class="text-purple">{{isGermline ? props.row.col147 : props.row.col151}}</span></div>
                     </div>
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>{{`Gene: `}}<span class="text-purple">{{col146.gene}}</span></div>
@@ -28,12 +28,12 @@
                     <div class="col" style="padding-left: 5px">
                         <div>
                             <span>{{'RS: '}}</span>
-                            <a :href="'https://www.ncbi.nlm.nih.gov/snp/' + props.row.col34" target="_blank">{{props.row.col34}}</a>
+                            <a :href="'https://www.ncbi.nlm.nih.gov/snp/' + rs" target="_blank">{{rs}}</a>
                         </div>
-                        <div>{{`ClinVar Allele ID: `}}<span class="text-purple">{{props.row.col17}}</span></div>
+                        <div>{{`ClinVar Allele ID: `}}<span class="text-purple">{{clinVar}}</span></div>
                         <div>
                             <span>{{'OMIM: '}}</span>
-                            <a :href="'https://omim.org/entry/' + props.row.col144" target="_blank">{{props.row.col144}}</a>
+                            <a :href="'https://omim.org/entry/' + omim" target="_blank">{{omim}}</a>
                         </div>
                     </div>
                 </div>
@@ -66,18 +66,24 @@ const props = defineProps({
         type: Object,
         required: true,
         default: () => {}
+    },
+    isGermline: {
+        type: Boolean,
+        required: false,
+        default: () => true
     }
 })
 
-const { row } = toRefs(props)
+const { row, isGermline } = toRefs(props)
 
 const col146 = computed(() => {
     const result = {
         ref: `${row.value.col4} > ${row.value.col5}`
     }
-    const items = row.value.col146.split(':')
+    const col = isGermline.value ? row.value.col146 : row.value.col150
+    const items = col.split(':')
     if (items.length < 5) {
-        console.log('Invalid col146', row.value.col146, row.value)
+        console.log('Invalid col', col, row.value)
         return result
     }
     const [gene, transcript, exon, cDna,  protein] = items
@@ -85,6 +91,18 @@ const col146 = computed(() => {
         gene, transcript, exon, cDna, protein,
         ...result
     }
+})
+
+const rs = computed(() => {
+    return isGermline.value ? props.row.col34 : props.row.col25
+})
+
+const clinVar = computed(() => {
+    return isGermline.value ? props.row.col17 : props.row.col21
+})
+
+const omim = computed(() => {
+    return isGermline.value ? props.row.col144 : props.row.col148
 })
 
 onMounted(() => {

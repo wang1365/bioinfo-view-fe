@@ -1,8 +1,15 @@
 <template>
-    <div>
-        <div ref="barchart" style="height: 400px; width: 600px"></div>
-        <q-resize-observer @resize="onResize"/>
+    <div class="row">
+        <div class="col-10" ref="barchart" style="height: 400px; width: 550px"></div>
+        <div class="col-2">
+            <div v-for="(item, i) in vs" :key="i">
+                <q-input :label="vsLabels[i]" :model-value="item ? item : '-'" readonly
+                         label-color="primary" stack-label prefix=" "
+                ></q-input>
+            </div>
+        </div>
     </div>
+    <q-resize-observer @resize="onResize"/>
 </template>
 
 <script setup>
@@ -48,14 +55,23 @@ const option = ref({
     ]
 })
 
+const vsLabels = ['SIFT', 'LRT', 'MutationTaster', 'MutationAssessor', 'FATHMM',]
+const vs = ref([])
+
 const props = defineProps({
     data: {
         type: Object,
         require: false,
         default: () => {
         }
+    },
+    isGermline: {
+        type: Boolean,
+        required: false,
+        default: () => true
     }
 })
+
 
 const {data} = toRefs(props)
 
@@ -76,15 +92,19 @@ const init = () => {
 };
 
 const refresh = () => {
-    let {col54, col60, col63, col66, col69} = data.value
-    col54 = col54 === '.' ? 0 : 1 - Number(col54)
-    col60 = col60 === '.' ? 0 : Number(col60)
-    col63 = col63 === '.' ? 0 : Number(col63)
-    col66 = col66 === '.' ? 0 : Math.abs(Number(col66))
-    col69 = col69 === '.' ? 0 : Math.abs(Number(col69))
+    let colKeys = props.isGermline ? ['col55', 'col61', 'col63', 'col67', 'col70'] : ['col59', 'col65', 'col68', 'col71', 'co74']
+    const v1 = data.value[colKeys[0]] === '.' ? 0 : Number(data.value[colKeys[0]])
+    const v2 = data.value[colKeys[1]] === '.' ? 0 : Number(data.value[colKeys[1]])
+    const v3 = data.value[colKeys[2]] === '.' ? 0 : Number(data.value[colKeys[2]])
+    const v4 = data.value[colKeys[3]] === '.' ? 0 : Number(data.value[colKeys[3]])
+    const v5 = data.value[colKeys[4]] === '.' ? 0 : Number(data.value[colKeys[4]])
+
+    const serialData = [v1, v2, v3, v4, v5]
+    vs.value = serialData
+    console.log('radar dat', serialData, colKeys, props.isGermline)
 
     option.value.series[0].data = [{
-        value: [col54, col60, col63, col66, col69],
+        value: serialData,
         name: '非同义突变'
     }]
 

@@ -1,7 +1,7 @@
 <template>
     <q-card>
         <div ref="piechart" style="height: 600px"></div>
-        <q-resize-observer @resize="onResize" />
+        <q-resize-observer @resize="onResize"/>
     </q-card>
 </template>
 
@@ -14,6 +14,11 @@ const piechart = ref(null);
 
 const props = defineProps({
     data: {
+        type: Array,
+        required: false,
+        default: () => []
+    },
+    colKeys: {
         type: Array,
         required: false,
         default: () => []
@@ -228,13 +233,9 @@ const init = () => {
 };
 
 const refresh = () => {
-    const data1 = groupAndCount('col26')
-    const data2 = groupAndCount('col31')
-    const data3 = groupAndCount('col39')
-
-    option.value.series[0].data = data1
-    option.value.series[1].data = data2
-    option.value.series[2].data = data3
+    props.colKeys.forEach((key, i) => {
+        option.value.series[i].data = groupAndCount(props.colKeys[i])
+    })
 
     chart.value.setOption(option.value);
 }

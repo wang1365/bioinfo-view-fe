@@ -162,14 +162,14 @@
             </div>
 
             <div class="col-8 q-px-xs">
-                <BubbleChartVue :data="filteredRows" />
+                <BubbleChartVue :data="filteredRows" :colKeys="['col26', 'col31', 'col39']" />
             </div>
         </div>
     </div>
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="width: 80vh;max-width: 90vh;height: 80vh;max-height: 90vh">
             <q-card-section>
-                <GermlineMutationDlg :row="currentRow"></GermlineMutationDlg>
+                <MutationInfo :row="currentRow"></MutationInfo>
             </q-card-section>
         </q-card>
     </q-dialog>
@@ -181,7 +181,7 @@ import PieChartVue from "./SomaticInfoCharts/PieChart.vue"
 import RoseChartVue from "./SomaticInfoCharts/RoseChart.vue"
 import BubbleChartVue from "./SomaticInfoCharts/BubbleChart.vue"
 import RadarChartVue from "./SomaticColumnCharts/RadarChart.vue"
-import GermlineMutationDlg from './GermlineMutationDlg'
+import MutationInfo from './MutationInfo'
 import {readTaskFile} from "src/api/task";
 import {getCsvHeader, getCsvData} from "src/utils/csv";
 import {useRoute} from 'vue-router'

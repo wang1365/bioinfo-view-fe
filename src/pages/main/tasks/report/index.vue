@@ -46,7 +46,7 @@
                     <QcVue :intro="options['qc']" />
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
-                    <MutaionVue :intro="options['mutation']" />
+                    <MutaionVue :intro="options['mutation']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
                     <FusionVue :intro="options['fusion']" />
@@ -88,17 +88,28 @@ import {useRouter, useRoute} from "vue-router";
 import {readTaskFile} from "src/api/task"
 
 import {useQuasar} from "quasar";
+import {buildModelQuery} from "src/api/modelQueryBuilder";
 
 const route = useRoute()
 const options = ref({})
 
 const tab = ref("qc")
 const taskDetail = ref({})
+const samples = ref([])
 
 onMounted(() => {
+    // 查询任务
     getTask(route.params.id).then(res => {
         taskDetail.value = res
+
+        // 查询任务样本，用于获取样本（样本识别号）是肿瘤样本还是对照样本
+        const query = buildModelQuery([], {id__in: res.samples})
+        apiPost(`/model_query/sample`, (res) => {
+            samples.value = res.data.results
+        }, query)
     })
+
+
 
     const dict = {
         '质控': 'qc',
