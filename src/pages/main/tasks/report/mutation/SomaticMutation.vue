@@ -189,7 +189,7 @@
         </div>
     </div>
     <q-dialog v-model="dialogVisible">
-        <q-card style="width: 80vh;max-width: 90vh;max-height: 90vh">
+        <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
                 <MutationInfo :row="currentRow" :isGermline="false"></MutationInfo>
             </q-card-section>

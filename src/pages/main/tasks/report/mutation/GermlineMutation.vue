@@ -167,7 +167,7 @@
         </div>
     </div>
     <q-dialog class="q-py-sm" v-model="dialogVisible">
-        <q-card style="width: 80vh;max-width: 90vh;max-height: 90vh">
+        <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
                 <MutationInfo :row="currentRow"></MutationInfo>
             </q-card-section>

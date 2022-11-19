@@ -45,10 +45,12 @@
 
             <q-tab-panel name="药物关联信息">
                 <div>功能尚未开放</div>
-                <div class="bio-data-table q-py-sm">
-                    <table>
+                <div>
+                    <a-table :columns="columns" :data-source="rows"
+                             :scroll="{ x: 800}" size="small"
+                             bordered :sticky="true">
 
-                    </table>
+                    </a-table>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -75,6 +77,17 @@ const props = defineProps({
 })
 
 const { row, isGermline } = toRefs(props)
+
+const columns = [
+    { title: 'Molecular Profile', dataIndex: 'k1', align: 'center', width: 80},
+    { title: 'Indication/Tumor Type', dataIndex: 'k1', align: 'center', width: 100},
+    { title: 'Response Type', dataIndex: 'k1', align: 'center', width: 80},
+    { title: 'Therapy Name', dataIndex: 'k1', align: 'center', width: 80},
+    { title: 'Approval Status', dataIndex: 'k1', align: 'center', width: 80},
+    { title: 'Evidence Type', dataIndex: 'k1', align: 'center', width: 80},
+    { title: 'Efficacy Evidence', dataIndex: 'k1', align: 'center', width: 80},
+    { title: 'References', dataIndex: 'k1', align: 'center', width: 80},
+]
 
 const col146 = computed(() => {
     const result = {
