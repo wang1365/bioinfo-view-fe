@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <div class="q-my-lg" v-if="!showColumn">
+    <div class="q-my-xs" v-if="!showColumn">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
                 <PieChartVue :data="filteredRows" />

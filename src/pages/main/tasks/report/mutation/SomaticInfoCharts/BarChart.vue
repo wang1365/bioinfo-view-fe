@@ -29,7 +29,11 @@ const option = ref({
     },
     xAxis: {
         type: 'category',
-        data: []
+        data: [],
+        axisLabel: {
+            rotate: 45,
+            interval: 0
+        }
     },
     yAxis: {
         type: 'value'
