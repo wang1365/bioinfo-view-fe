@@ -3,14 +3,14 @@
         <div class="text-h6 text-purple">肿瘤单样品融合</div>
         <div class="row col-4">
             <q-input
-                v-model="keyword"
+                v-model="keyword1"
                 class="col p-mr-sm q-gutter-xs"
                 dense
                 label="搜索:"
                 clearable
-                @clear="clearKeyword"
+                @clear="clearKeyword1"
             />
-            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
+            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword1"></q-btn>
         </div>
     </div>
     <div class="bio-data-table q-py-sm">
@@ -40,14 +40,14 @@
         <div class="text-h6 text-primary">对照单样品融合</div>
         <div class="row col-4">
             <q-input
-                v-model="keyword"
+                v-model="keyword2"
                 class="col p-mr-sm q-gutter-xs"
                 dense
                 label="搜索:"
                 clearable
-                @clear="clearKeyword"
+                @clear="clearKeyword2"
             />
-            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
+            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword2"></q-btn>
         </div>
     </div>
     <div class="bio-data-table q-py-sm">
@@ -87,7 +87,8 @@ import IGV from './Igv.vue'
 
 
 const route = useRoute()
-const keyword = ref('')
+const keyword1 = ref('')
+const keyword2 = ref('')
 
 const columns1 = ref([])
 const columns2 = ref([])
@@ -104,13 +105,19 @@ const filteredRows2 = ref([])
 const igvVisible = ref(false)
 const selectedFile = ref('')
 
-const searchKeyword = () => {
-    filteredRows1.value = rows1.value.filter(t => t.k1.includes(keyword.value))
-    filteredRows2.value = rows2.value.filter(t => t.k1.includes(keyword.value))
+const searchKeyword1 = () => {
+    filteredRows1.value = rows1.value.filter(t => t.k1.includes(keyword1.value))
 }
 
-const clearKeyword = () => {
+const searchKeyword2 = () => {
+    filteredRows2.value = rows2.value.filter(t => t.k1.includes(keyword2.value))
+}
+
+const clearKeyword1 = () => {
     filteredRows1.value = rows1.value
+}
+
+const clearKeyword2 = () => {
     filteredRows2.value = rows2.value
 }
 
@@ -118,6 +125,7 @@ const clickView = (record) => {
     selectedFile.value = record.k9
     igvVisible.value = true
 }
+
 onMounted(() => {
     loading1.value = true
     loading2.value = true
