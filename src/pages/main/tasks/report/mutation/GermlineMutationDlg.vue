@@ -14,7 +14,9 @@
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="突变信息">
                 <div class="row q-gutter-xs">
-                    <div class="col" style="border-right:solid 1px black; padding-left: 5px">{{props.row.col147}}</div>
+                    <div class="col" style="border-right:solid 1px black; padding-left: 5px">
+                        <div>{{`VCF filter: `}}<span class="text-purple">{{props.row.col147}}</span></div>
+                    </div>
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>{{`Gene: `}}<span class="text-purple">{{col146.gene}}</span></div>
                         <div>{{`Transcript: `}}<span class="text-purple">{{col146.transcript}}</span></div>
