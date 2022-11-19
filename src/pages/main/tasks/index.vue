@@ -147,10 +147,10 @@ refreshPage();
                                 size="sm" />
                         </td>
                         <td>{{ item.creator.username }}</td>
-                        <td>{{ item.create_time }}</td>
+                        <td>{{ format(item.create_time) }}</td>
                         <td class="q-gutter-x-sm">
                             <q-btn color="secondary" label="详情" icon="visibility" @click="gotoDetail(item)" size="sm" />
-                            <q-btn color="info" label="结果" icon="query_stats" @click="gotoReport(item)" size="sm" />
+                            <q-btn :disable="item.status !== 'FINISHED'" color="info" label="结果" icon="query_stats" @click="gotoReport(item)" size="sm" />
                             <q-btn color="primary" label="下载" icon="download" @click="downlaod(item)" size="sm" />
                             <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
@@ -191,6 +191,7 @@ import PageTitle from "components/page-title/PageTitle.vue";
 import ProjectListVue from "./components/ProjectList.vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { useRouter } from "vue-router";
+import { format } from 'src/utils/time'
 
 import { useQuasar } from "quasar";
 const $q = useQuasar()
