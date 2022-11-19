@@ -35,10 +35,12 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <RadarChartVue />
+                <q-separator class="q-my-sm"/>
+                <div class="q-mt-sm">
+                    <RadarChartVue :data="props.row"/>
                 </div>
             </q-tab-panel>
+
             <q-tab-panel name="药物关联信息">
                 <div>药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述药物关联信息描述</div>
                 <div class="bio-data-table q-py-sm">
@@ -53,6 +55,7 @@
 
 <script setup>
 import { ref, onMounted, toRefs, computed } from 'vue'
+import RadarChartVue from './SomaticColumnCharts/RadarChart'
 
 const tab = ref('突变信息')
 

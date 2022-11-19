@@ -168,7 +168,9 @@
     </div>
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="width: 80vh;max-width: 90vh;height: 80vh;max-height: 90vh">
-            <GermlineMutationDlg :row="currentRow"></GermlineMutationDlg>
+            <q-card-section>
+                <GermlineMutationDlg :row="currentRow"></GermlineMutationDlg>
+            </q-card-section>
         </q-card>
     </q-dialog>
 </template>
