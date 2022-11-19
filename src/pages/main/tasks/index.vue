@@ -151,7 +151,7 @@ refreshPage();
                         <td class="q-gutter-x-sm">
                             <q-btn color="secondary" label="详情" icon="visibility" @click="gotoDetail(item)" size="sm" />
                             <q-btn :disable="item.status !== 'FINISHED'" color="info" label="结果" icon="query_stats" @click="gotoReport(item)" size="sm" />
-                            <q-btn color="primary" label="下载" icon="download" @click="downlaod(item)" size="sm" />
+                            <q-btn :disable="item.status !== 'FINISHED'"  color="primary" label="下载" icon="download" @click="downlaod(item)" size="sm" />
                             <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
                     </tr>
