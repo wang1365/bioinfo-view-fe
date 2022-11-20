@@ -277,7 +277,7 @@ const customCell = (record, rowIndex, column) => {
             // 字体颜色
             // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
             // 行背景色
-            'background-color': record.id === currentRow.value.id  ? '#FFFF99' : 'white',
+            'background-color': record.id === currentRow.value.id  ? '#64b5f6' : 'white',
             // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
             // 'border-style': 'solid',
             // // 下划线
