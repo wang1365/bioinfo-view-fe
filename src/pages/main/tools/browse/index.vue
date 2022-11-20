@@ -64,7 +64,7 @@ const columns = [
 
     // 患者
     {key: 'patient_key', title: '患者', dataIndex: ["patient", "name"], fixed: true, width: 80},
-    {key: 'patient_age', title: '年龄', dataIndex: ["patient", "age"], fixed: true, align: 'center', width: 50},
+    {key: 'patient_age', title: '年龄', dataIndex: ["patient", "age"], fixed: true, align: 'center', width: 60},
 
     // 样本
     {
@@ -72,14 +72,14 @@ const columns = [
         dataIndex: ["sample_meta", "sample_componet"],
         fixed: true,
         align: 'center',
-        width: 80
+        width: 90
     },
     {
         title: '肿瘤样本',
         dataIndex: ["sample_meta", "is_panel"],
         fixed: true,
         align: 'center',
-        width: 80,
+        width: 90,
         customRender: (text, record) => text ? '√' : '×'
     },
     {
@@ -102,8 +102,8 @@ const columns = [
     {key: 'risk', title: '风险上机', dataIndex: 'risk', width: 120},
     {key: 'nucleic_level', title: '核酸降解等级', dataIndex: 'nucleic_level', align: 'center', width: 120},
     {key: 'nucleic_type', title: '核酸类型', dataIndex: 'nucleic_type', align: 'center', width: 120},
-    {key: 'fastq1_path', title: 'fastq1文件地址', dataIndex: 'fastq1_path', width: 120},
-    {key: 'fastq2_path', title: 'fastq2文件地址', dataIndex: 'fastq2_path', width: 120},
+    {key: 'fastq1_path', title: 'fastq1文件地址', dataIndex: 'fastq1_path', width: 130},
+    {key: 'fastq2_path', title: 'fastq2文件地址', dataIndex: 'fastq2_path', width: 130},
     {key: 'operation', title: '操作', fixed: 'right', align: 'center', width: 120},
 ]
 

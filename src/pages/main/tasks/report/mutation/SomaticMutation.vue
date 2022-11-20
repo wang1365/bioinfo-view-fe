@@ -309,9 +309,9 @@ const columns = ref([
     {i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70},   // Ref
     {i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70},   // Alt
     {i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90},   // Geno_Type
-    {i: 7, title: '', dataIndex: 'col7', align: 'center', width: 105},  // Allelic_depths
-    {i: 8, title: '', dataIndex: 'col8', align: 'center', width: 90},   // Seq_depths
-    {i: 9, title: '', dataIndex: 'col9', align: 'center', width: 110},  // Mutation_Rate
+    {i: 7, title: '', dataIndex: 'col7', align: 'center', width: 110},  // Allelic_depths
+    {i: 8, title: '', dataIndex: 'col8', align: 'center', width: 95},   // Seq_depths
+    {i: 9, title: '', dataIndex: 'col9', align: 'center', width: 115},  // Mutation_Rate
     {i: 10, title: '', dataIndex: 'col10', align: 'center', width: 90}, // Geno_Type
     {i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110},// Allelic_Depths
     {i: 12, title: '', dataIndex: 'col12', align: 'center', width: 95}, // Seq_Depths
