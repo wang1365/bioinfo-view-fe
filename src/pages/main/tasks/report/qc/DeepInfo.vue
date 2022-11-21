@@ -135,22 +135,24 @@ const download = (idx) => {
 }
 
 onMounted(() => {
-    loading1.value = true
-    loading2.value = true
-
     const fields = ['k1', 'k2', 'k3', 'k4']
-    readTaskFile(route.params.id, 'QC/QN11.depth', ).then(res => {
-        rows1.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
-        filteredRows1.value = rows1.value
-    }).finally(() => {
-        loading1.value = false
-    })
 
+    loading2.value = true
     readTaskFile(route.params.id, 'QC/QT11.depth', {}, fields).then(res => {
         rows2.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
         filteredRows2.value = rows2.value
     }).finally(() => {
         loading2.value = false
     })
+
+    if (props.samples.length > 1) {
+        loading1.value = true
+        readTaskFile(route.params.id, 'QC/QN11.depth', ).then(res => {
+            rows1.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
+            filteredRows1.value = rows1.value
+        }).finally(() => {
+            loading1.value = false
+        })
+    }
 })
 </script>

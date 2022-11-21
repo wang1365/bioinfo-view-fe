@@ -49,10 +49,10 @@
                     <MutaionVue :intro="options['mutation']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
-                    <FusionVue :intro="options['fusion']"  :samples="samples"/>
+                    <FusionVue :intro="options['fusion']" :samples="samples"/>
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
-                    <CopyNumberVariationVue :intro="options['copy-number-variation']" :task="taskDetail"  :samples="samples"/>
+                    <CopyNumberVariationVue :intro="options['copy-number-variation']" :task="taskDetail" :samples="samples"/>
                 </q-tab-panel>
                 <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
                     <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']" :task="taskDetail" :samples="samples" />

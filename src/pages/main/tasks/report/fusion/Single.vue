@@ -1,6 +1,6 @@
 <template>
     <div class="row q-gutter-sm justify-between">
-        <div class="text-h6 text-purple">肿瘤单样品融合</div>
+        <div v-if="!isSingle" class="text-h6 text-purple">肿瘤单样品融合</div>
         <div class="row col-4">
             <q-input
                 v-model="keyword1"
@@ -36,7 +36,7 @@
         </a-table>
     </div>
 
-    <div class="row q-gutter-sm justify-between">
+    <div v-if="!isSingle" class="row q-gutter-sm justify-between">
         <div class="text-h6 text-primary">对照单样品融合</div>
         <div class="row col-4">
             <q-input
@@ -50,7 +50,7 @@
             <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword2"></q-btn>
         </div>
     </div>
-    <div class="bio-data-table q-py-sm">
+    <div v-if="!isSingle" class="bio-data-table q-py-sm">
         <a-table
             size="small"
             bordered
@@ -79,13 +79,25 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref, onMounted, computed} from "vue";
 import {getReportTable} from 'src/api/report'
 import {useRoute} from 'vue-router'
 import {exportFile} from 'quasar'
 import IGV from './Igv.vue'
 
+const props = defineProps({
+    intro: {
+        type: String,
+        required: false
+    },
+    samples: {
+        type: Array,
+        required: false,
+        default: () => []
+    }
+})
 
+const isSingle = computed(() => props.samples.length === 1)
 const route = useRoute()
 const keyword1 = ref('')
 const keyword2 = ref('')
