@@ -43,7 +43,7 @@
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
-                    <QcVue :intro="options['qc']" :samples="samples"/>
+                    <QcVue :intro="options['qc']" :samples="samples" :module="module[options['qc']]"/>
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
                     <MutaionVue :intro="options['mutation']" :samples="samples" />
@@ -97,6 +97,7 @@ const options = ref({})
 const tab = ref("qc")
 const taskDetail = ref({})
 const samples = ref([])
+const module = ref({})
 
 onMounted(() => {
     // 查询任务
@@ -129,6 +130,10 @@ onMounted(() => {
         }
         options.value = result
     }))
+
+    readTaskFile(route.params.id, 'module.json').then(res => {
+        module.value = JSON.parse(res)
+    })
 })
 
 const tabValid = (name) => {

@@ -18,7 +18,7 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="试剂盒捕获质控信息" label="试剂盒捕获质控信息" />
+            <q-tab name="试剂盒捕获质控信息" label="捕获试剂盒质控信息" />
             <q-tab name="深度信息" label="深度信息" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>

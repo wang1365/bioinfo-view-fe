@@ -13,7 +13,7 @@
     </div>
     <div class="q-py-md">
         <div class="row q-col-gutter-lg-md justify-around">
-            <div class="col q-mr-md">
+            <div class="col q-mr-md" v-if="props.samples.length > 1">
                 <div class="text-center text-bold text-primary text-h6" style="position:relative">
                     对照样本
                     <q-icon
@@ -35,7 +35,9 @@
                 </a-table>
             </div>
             <div class="col q-ml-md">
-                <div class="text-center text-bold text-purple text-h6" style="position:relative">
+                <div class="text-center text-bold text-purple text-h6" style="position:relative"
+                     v-if="props.samples.length > 1"
+                >
                     肿瘤样本
                     <q-icon
                         name="download"
@@ -64,8 +66,18 @@ import {getCsvData} from "src/utils/csv"
 import {useRoute} from 'vue-router'
 import {exportFile} from 'quasar'
 
-
 const route = useRoute()
+const props = defineProps({
+    intro: {
+        type: String,
+        required: false
+    },
+    samples: {
+        type: Array,
+        required: false,
+        default: () => []
+    }
+})
 
 const columns = [
     {key: 'gene', title: '基因', dataIndex: 'k1', align: 'center', width: 120},
