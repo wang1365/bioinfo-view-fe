@@ -44,7 +44,7 @@
             </q-tab-panel>
 
             <q-tab-panel name="药物关联信息">
-                <div>功能尚未开放</div>
+                <div>{{intro}}</div>
                 <div>
                     <a-table :columns="columns" :data-source="rows"
                              :scroll="{ x: 800}" size="small"
@@ -60,7 +60,11 @@
 <script setup>
 import { ref, onMounted, toRefs, computed } from 'vue'
 import RadarChartVue from './SomaticColumnCharts/RadarChart'
+import { readTaskFile } from "src/api/task"
+import { getCsvData } from "src/utils/csv"
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const tab = ref('突变信息')
 
 const props = defineProps({
@@ -77,6 +81,7 @@ const props = defineProps({
 })
 
 const { row, isGermline } = toRefs(props)
+const intro = ref('')
 
 const columns = [
     { title: 'Molecular Profile', dataIndex: 'k1', align: 'center', width: 80},
@@ -119,7 +124,11 @@ const omim = computed(() => {
 })
 
 onMounted(() => {
-    console.log('=========', props.row)
+    const file = props.isGermline ? 'Mut_germline/standard-new.csv' : 'Mut_somatic/standard-new.csv'
+    readTaskFile(route.params.id, file).then(res => {
+        const items = getCsvData(res)
+        intro.value = items[items.length-1]
+    })
 })
 
 
