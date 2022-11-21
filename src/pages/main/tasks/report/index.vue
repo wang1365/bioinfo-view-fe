@@ -41,29 +41,29 @@
                     v-if="tabValid('homologous-recombination-defect')"
                 />
             </q-tabs>
-            <q-tab-panels v-model="tab" animated>
+            <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
-                    <QcVue :intro="options['qc']" />
+                    <QcVue :intro="options['qc']" :samples="samples"/>
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
                     <MutaionVue :intro="options['mutation']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
-                    <FusionVue :intro="options['fusion']" />
+                    <FusionVue :intro="options['fusion']"  :samples="samples"/>
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
-                    <CopyNumberVariationVue :intro="options['copy-number-variation']" :task="taskDetail" />
+                    <CopyNumberVariationVue :intro="options['copy-number-variation']" :task="taskDetail"  :samples="samples"/>
                 </q-tab-panel>
                 <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
-                    <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']" :task="taskDetail" />
+                    <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="tumor-mutation-load" v-if="tabValid('tumor-mutation-load')">
-                    <TumorMutationLoadVue :intro="options['tumor-mutation-load']" :task="taskDetail" />
+                    <TumorMutationLoadVue :intro="options['tumor-mutation-load']" :task="taskDetail"  :samples="samples"/>
                 </q-tab-panel>
                 <q-tab-panel name="homologous-recombination-defect" v-if="tabValid('homologous-recombination-defect')">
                     <HomologousRecombinationDefectVue
                         :intro="options['homologous-recombination-defect']"
-                        :task="taskDetail"
+                        :task="taskDetail" :samples="samples"
                     />
                 </q-tab-panel>
             </q-tab-panels>
@@ -91,6 +91,7 @@ import {useQuasar} from "quasar";
 import {buildModelQuery} from "src/api/modelQueryBuilder";
 
 const route = useRoute()
+const {apiPost} = useApi()
 const options = ref({})
 
 const tab = ref("qc")

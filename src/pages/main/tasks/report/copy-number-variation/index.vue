@@ -156,6 +156,11 @@ const props = defineProps({
     task: {
         type: Object,
         required: true
+    },
+    samples: {
+        type: Array,
+        required: false,
+        default: () => []
     }
 })
 

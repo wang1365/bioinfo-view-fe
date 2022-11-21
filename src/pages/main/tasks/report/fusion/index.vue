@@ -58,6 +58,11 @@ const props = defineProps({
     intro: {
         type: String,
         required: false
+    },
+    samples: {
+        type: Array,
+        required: false,
+        default: () => []
     }
 })
 </script>

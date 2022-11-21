@@ -55,7 +55,7 @@ const props = defineProps({
         type: String,
         required: false
     },
-    sample: {
+    samples: {
         type: Array,
         required: false,
         default: () => []

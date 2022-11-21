@@ -18,54 +18,76 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import {ref, onMounted, computed} from "vue";
 import { useRoute } from 'vue-router'
 import { getReportTable, getReportText } from "src/api/report"
+import { readTaskFile } from "src/api/task"
+import { getCsvData } from "src/utils/csv"
 
 const route = useRoute()
 const loading = ref(false)
+const props = defineProps({
+    intro: {
+        type: String,
+        required: false
+    },
+    samples: {
+        type: Array,
+        required: false,
+        default: () => []
+    }
+})
 
 const groupCustomCell = (_, rowIndex, column) => {
     if (rowIndex === 0 || rowIndex === 3) {
         return { style: 'border-bottom-color:blue' }
     }
-    if (rowIndex === 11) {
+    if (rowIndex === rows.value.length - 1) {
         return { style: 'border-top-color:blue; border-top-style: solid; font-weight:bold; font-size: 15px' }
     }
     return {}
 }
-const columns = [
-    {
-        key: 'a',
-        width: 40,
-        dataIndex: 'group',
-        customCell: (_, rowIndex, column) => {
-            let ret = { style: 'font-weight: bold;'}
-            if (rowIndex === 0 || rowIndex === 3) {
-                ret.style = 'font-weight: bold;border-bottom-color:blue'
+
+const columns = computed(() => {
+   let result = [
+        {
+            key: 'a',
+            width: 40,
+            dataIndex: 'group',
+            customCell: (_, rowIndex, column) => {
+                let ret = { style: 'font-weight: bold;'}
+                if (rowIndex === 0 || rowIndex === 3) {
+                    ret.style = 'font-weight: bold;border-bottom-color:blue'
+                }
+                if (rowIndex === rows.value.length - 1) {
+                    return { style: 'border-top-color:blue; border-top-style: solid; font-weight:bold;' }
+                }
+                return ret
+            },
+            customRender: ({text, record, index, column}) => {
+                if (index === 0) {
+                    return '病理评估'
+                }
+                if (index === 1) {
+                    return 'DNA质量评估'
+                }
+                if (index === 4) {
+                    return '测序质量评估'
+                }
             }
-            if (rowIndex === 11) {
-                return { style: 'border-top-color:blue; border-top-style: solid; font-weight:bold;' }
-            }
-            return ret
         },
-        customRender: ({text, record, index, column}) => {
-            if (index === 0) {
-                return '病理评估'
-            }
-            if (index === 1) {
-                return 'DNA质量评估'
-            }
-            if (index === 4) {
-                return '测序质量评估'
-            }
-        }
-    },
-    {title: '质量参数', dataIndex: 'k1',  align: 'left', width: 100, customCell: groupCustomCell},
-    {title: '肿瘤数值', dataIndex: 'k2', align: 'center', width: 120, customCell: groupCustomCell},
-    {title: '对照数值', dataIndex: 'k3', align: 'center', width: 120, customCell: groupCustomCell},
-    {title: '质控标准', dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell},
-]
+        {title: '质量参数', dataIndex: 'k1',  align: 'left', width: 100, customCell: groupCustomCell},
+        {title: '肿瘤数值', dataIndex: 'k2', align: 'center', width: 120, customCell: groupCustomCell},
+        // {title: '对照数值', dataIndex: 'k3', align: 'center', width: 120, customCell: groupCustomCell},
+        // {title: '质控标准', dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell},
+    ]
+
+    if (props.samples.length !== 1) {
+        result.push({title: '对照数值', dataIndex: 'k3', align: 'center', width: 120, customCell: groupCustomCell})
+    }
+    result.push({title: '质控标准', dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell})
+    return result
+})
 
 const rows = ref([])
 const onTarget = ref({
@@ -74,8 +96,11 @@ const onTarget = ref({
 
 onMounted(() => {
     loading.value = true
-    getReportTable(route.params.id, 'QC', {}, ['k1', 'k2', 'k3', 'k4']).then(res => {
-        rows.value = res
+
+    readTaskFile(route.params.id, 'QC/QC_info').then(res => {
+        const ks = columns.value.map(t => t.dataIndex).splice(1)
+        rows.value = getCsvData(res, {fields: ks, splitter:'\t'})
+        console.log('csv', res, rows.value)
     }).finally(() => {
         loading.value = false
     })
@@ -86,8 +111,8 @@ onMounted(() => {
             v1: vs[0], v2: vs[1]
         }
     })
-
 })
+
 </script>
 <style lang="scss">
 table {

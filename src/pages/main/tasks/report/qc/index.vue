@@ -23,10 +23,10 @@
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="试剂盒捕获质控信息">
-                <KitCaptureVue />
+                <KitCaptureVue :samples="samples"/>
             </q-tab-panel>
             <q-tab-panel name="深度信息">
-                <DeepInfoVue />
+                <DeepInfoVue :samples="samples"/>
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
@@ -47,7 +47,7 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted} from "vue";
+import {ref, onMounted, toRefs} from "vue";
 import KitCaptureVue from "./KitCapture.vue"
 import DeepInfoVue from "./DeepInfo.vue"
 import {useRoute} from 'vue-router'
@@ -62,8 +62,15 @@ const props = defineProps({
     intro: {
         type: String,
         required: false
+    },
+    samples: {
+        type: Array,
+        required: false,
+        default: () => []
     }
 })
+
+const { samples } = toRefs(props)
 
 onMounted(() => {
     getReportText(route.params.id, 'QC_TIP').then(res => {
