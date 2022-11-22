@@ -10,8 +10,13 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-input :error="errors.sample_date.error" :error-message="errors.sample_date.message"
-                                label="*采样日期(YYYY-MM-DD)" v-model="form.sample_date" readonly>
+                            <q-input
+                                :error="errors.sample_date.error"
+                                :error-message="errors.sample_date.message"
+                                label="*采样日期(YYYY-MM-DD)"
+                                v-model="form.sample_date"
+                                readonly
+                            >
                                 <template v-slot:append>
                                     <q-icon color="primary" :ref="'sample_date'" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -26,8 +31,13 @@
                             </q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input :error="errors.test_date.error" :error-message="errors.test_date.message"
-                                label="*送测日期(YYYY-MM-DD)" v-model="form.test_date" readonly>
+                            <q-input
+                                :error="errors.test_date.error"
+                                :error-message="errors.test_date.message"
+                                label="*送测日期(YYYY-MM-DD)"
+                                v-model="form.test_date"
+                                readonly
+                            >
                                 <template v-slot:append>
                                     <q-icon color="primary" id="test_date" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -42,8 +52,12 @@
                             </q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input v-model="form.sample_componet" :error="errors.sample_componet.error"
-                                :error-message="errors.sample_componet.message" label="*采样部位"></q-input>
+                            <q-input
+                                v-model="form.sample_componet"
+                                :error="errors.sample_componet.error"
+                                :error-message="errors.sample_componet.message"
+                                label="*采样部位"
+                            ></q-input>
                         </div>
                     </div>
                 </q-item>
@@ -52,37 +66,70 @@
                         <div class="col q-pr-sm">
                             <!-- <q-input v-model="form.sample_type" :error="errors.sample_type.error"
                                 :error-message="errors.sample_type.message" label="*样本类型"></q-input> -->
-                            <q-select v-model="form.sample_type" :error="errors.sample_type.error"
-                                :error-message="errors.sample_type.message" use-input input-debounce="0"
-                                @new-value="createValue" :options="sampleTypeOptions" label="*样本类型" />
+                            <q-select
+                                v-model="form.sample_type"
+                                :error="errors.sample_type.error"
+                                :error-message="errors.sample_type.message"
+                                use-input
+                                input-debounce="0"
+                                @new-value="createValue"
+                                :options="sampleTypeOptions"
+                                label="*样本类型"
+                            />
                         </div>
                         <div class="col q-pf-sm">
-                            <q-input type="number" v-model="form.panel_proportion"
-                                :error="errors.panel_proportion.error" :error-message="errors.panel_proportion.message"
-                                label="肿瘤含量"></q-input>
+                            <q-input
+                                type="number"
+                                v-model="form.panel_proportion"
+                                :error="errors.panel_proportion.error"
+                                :error-message="errors.panel_proportion.message"
+                                label="肿瘤含量"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-checkbox :error="errors.is_panel.error" :error-message="errors.is_panel.message"
-                                v-model="form.is_panel" label="肿瘤样本" color="primary" left-label size="lg" />
+                            <q-checkbox
+                                :error="errors.is_panel.error"
+                                :error-message="errors.is_panel.message"
+                                v-model="form.is_panel"
+                                label="肿瘤样本"
+                                color="primary"
+                                left-label
+                                size="lg"
+                            />
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-input v-model="form.identifier" :error="errors.identifier.error"
-                                :error-message="errors.identifier.message" label="*样本识别号"></q-input>
+                            <q-input
+                                v-model="form.identifier"
+                                :error="errors.identifier.error"
+                                :error-message="errors.identifier.message"
+                                label="*样本识别号"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm cursor-pointer">
-                            <q-input @click="showLinkPatient=true" readonly v-model="form.patient_id"
-                                :error="errors.patient_id.error" :error-message="errors.patient_id.message"
-                                label="*患者ID"></q-input>
+                            <q-input
+                                @click="showLinkPatient=true"
+                                readonly
+                                v-model="form.patient_id"
+                                :error="errors.patient_id.error"
+                                :error-message="errors.patient_id.message"
+                                label="*患者ID"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input @click="showLinkPatient=true" readonly v-model="form.patient_identifier"
-                                :error="errors.patient_identifier.error" :error-message="
+                            <q-input
+                                @click="showLinkPatient=true"
+                                readonly
+                                v-model="form.patient_identifier"
+                                :error="errors.patient_identifier.error"
+                                :error-message="
                                     errors.patient_identifier.message
-                                " label="*患者识别号"></q-input>
+                                "
+                                label="*患者识别号"
+                            ></q-input>
                         </div>
                     </div>
                 </q-item>
@@ -100,9 +147,12 @@
             </q-list>
         </q-card-actions>
         <q-dialog persistent v-model="showLinkPatient">
-            <PatientsList :linkId="0" @refresh="
+            <PatientsList
+                :linkId="0"
+                @refresh="
                 linkPatient($event);
-            " />
+            "
+            />
         </q-dialog>
     </q-card>
 </template>

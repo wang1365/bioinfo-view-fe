@@ -8,7 +8,7 @@
         @click="dlgVisible = !dlgVisible"
         >说明</q-btn
     >
-    <div class="q-py-md">
+    <div class="q-py-md" v-if="props.viewConfig.showMSI">
         <div class="text-h6 text-primary text-bold">总体微卫星状态表</div>
         <a-table
             class="col-5"
@@ -21,7 +21,7 @@
         >
         </a-table>
     </div>
-    <div class="q-py-md">
+    <div class="q-py-md" v-if="props.viewConfig.showMSIsite">
         <div class="text-h6 text-primary text-bold">金标微卫星图</div>
         <a-table
             class="col-5"
@@ -107,7 +107,15 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
+    },viewConfig: {
+        type: Object,
+        required: false,
+        default(){return {
+            "showMSI":true,
+            "showMSIsite":true,
+        }}
     }
+
 })
 
 const clickView = (record) => {

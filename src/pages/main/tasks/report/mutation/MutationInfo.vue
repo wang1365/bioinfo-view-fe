@@ -4,7 +4,8 @@
             v-model="tab"
             active-color="primary"
             active-bg-color="grey-4"
-            align="left" dense
+            align="left"
+            dense
             class="bg-grey-1"
             :breakpoint="0"
         >
@@ -15,41 +16,63 @@
             <q-tab-panel name="突变信息">
                 <div class="row q-gutter-xs">
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
-                        <div>{{`VCF filter: `}}<span class="text-purple">{{isGermline ? props.row.col147 : props.row.col151}}</span></div>
+                        <div>
+                            {{`VCF filter: `
+
+                            }}<span class="text-purple">{{isGermline ? props.row.col147 : props.row.col151}}</span>
+                        </div>
                     </div>
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
-                        <div>{{`Gene: `}}<span class="text-purple">{{col146.gene}}</span></div>
-                        <div>{{`Transcript: `}}<span class="text-purple">{{col146.transcript}}</span></div>
-                        <div>{{`Exon: `}}<span class="text-purple">{{col146.exon}}</span></div>
-                        <div>{{`cDNA: `}}<span class="text-purple">{{col146.cDna}}</span></div>
-                        <div>{{`Ref/Alt: `}}<span class="text-purple">{{col146.ref}}</span></div>
-                        <div>{{`Protein: `}}<span class="text-purple">{{col146.protein}}</span></div>
+                        <div>
+                            {{`Gene: `}}<span class="text-purple">{{col146.gene}}</span>
+                        </div>
+                        <div>
+                            {{`Transcript: `}}<span class="text-purple">{{col146.transcript}}</span>
+                        </div>
+                        <div>
+                            {{`Exon: `}}<span class="text-purple">{{col146.exon}}</span>
+                        </div>
+                        <div>
+                            {{`cDNA: `}}<span class="text-purple">{{col146.cDna}}</span>
+                        </div>
+                        <div>
+                            {{`Ref/Alt: `}}<span class="text-purple">{{col146.ref}}</span>
+                        </div>
+                        <div>
+                            {{`Protein: `}}<span class="text-purple">{{col146.protein}}</span>
+                        </div>
                     </div>
                     <div class="col" style="padding-left: 5px">
                         <div>
                             <span>{{'RS: '}}</span>
                             <a :href="'https://www.ncbi.nlm.nih.gov/snp/' + rs" target="_blank">{{rs}}</a>
                         </div>
-                        <div>{{`ClinVar Allele ID: `}}<span class="text-purple">{{clinVar}}</span></div>
+                        <div>
+                            {{`ClinVar Allele ID: `}}<span class="text-purple">{{clinVar}}</span>
+                        </div>
                         <div>
                             <span>{{'OMIM: '}}</span>
                             <a :href="'https://omim.org/entry/' + omim" target="_blank">{{omim}}</a>
                         </div>
                     </div>
                 </div>
-                <q-separator class="q-my-sm"/>
+                <q-separator class="q-my-sm" />
                 <div class="q-mt-sm">
-                    <RadarChartVue :data="props.row"/>
+                    <RadarChartVue :data="props.row" />
                 </div>
             </q-tab-panel>
 
             <q-tab-panel name="药物关联信息">
                 <div>{{intro}}</div>
                 <div>
-                    <a-table :columns="columns" :data-source="rows"
-                             :scroll="{ x: 800}" size="small"
-                             bordered :sticky="true">
-
+                    <a-table
+                        :columns="columns"
+                        :data-source="rows"
+                        :scroll="{ x: 800}"
+                        size="small"
+                        bordered
+                        :sticky="true"
+                    >
                     </a-table>
                 </div>
             </q-tab-panel>
@@ -130,6 +153,4 @@ onMounted(() => {
         intro.value = items[items.length-1]
     })
 })
-
-
 </script>

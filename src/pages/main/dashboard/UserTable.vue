@@ -1,11 +1,5 @@
 <template>
-    <q-table
-        class="my-sticky-header-column-table"
-        title="用户情况"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-    />
+    <q-table class="my-sticky-header-column-table" title="用户情况" :rows="rows" :columns="columns" row-key="name" />
 </template>
 
 <script setup>

@@ -31,19 +31,20 @@
                                     <q-icon name="folder_open" />
                                 </template>
 
-                                <template v-slot:hint/>
+                                <template v-slot:hint />
                                 <template v-slot:append>
                                     <q-btn round dense flat icon="add" @click.stop />
                                 </template>
                             </q-file>
                         </div>
                         <div v-else>
-                            <q-input v-if="props.row.choices.length === 0"
-                                     v-model="props.row.value"
-                            />
-                            <q-select v-if="props.row.choices.length > 0"
-                                      filled v-model="props.row.value"
-                                      :options="props.row.choices" dense
+                            <q-input v-if="props.row.choices.length === 0" v-model="props.row.value" />
+                            <q-select
+                                v-if="props.row.choices.length > 0"
+                                filled
+                                v-model="props.row.value"
+                                :options="props.row.choices"
+                                dense
                             />
                         </div>
                     </q-td>
@@ -55,8 +56,8 @@
                 </template>
             </q-table>
             <q-card-actions align="right">
-                <q-btn color="primary" label="确定" @click="clickConfirm"/>
-                <q-btn label="取消" v-close-popup/>
+                <q-btn color="primary" label="确定" @click="clickConfirm" />
+                <q-btn label="取消" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -120,4 +121,3 @@ const clickConfirm = () => {
     console.log('===> 当前数据', getData())
 }
 </script>
-

@@ -27,7 +27,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr>
                                 <td>分子突变</td>
                                 <td>蛋白质影响</td>
@@ -66,7 +65,6 @@
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr>
                                 <td>分子突变</td>
                                 <td>疾病</td>
@@ -117,11 +115,9 @@
                                 <td>招募状态</td>
                                 <td>覆盖国家</td>
                                 <td>其他国家</td>
-
                             </tr>
                         </thead>
                         <tbody>
-
                             <tr>
                                 <td>临床试验编号</td>
                                 <td>试验阶段</td>
@@ -130,7 +126,6 @@
                                 <td>招募状态</td>
                                 <td>覆盖国家</td>
                                 <td>其他国家</td>
-
                             </tr>
                             <tr>
                                 <td>临床试验编号</td>
@@ -140,7 +135,6 @@
                                 <td>招募状态</td>
                                 <td>覆盖国家</td>
                                 <td>其他国家</td>
-
                             </tr>
                             <tr>
                                 <td>临床试验编号</td>
@@ -150,14 +144,12 @@
                                 <td>招募状态</td>
                                 <td>覆盖国家</td>
                                 <td>其他国家</td>
-
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </q-card>
-
     </q-page>
 </template>
 

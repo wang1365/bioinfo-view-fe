@@ -128,17 +128,17 @@
                     :custom-row="customRow"
                     :sticky="true"
                 >
-<!--                    <template #bodyCell="{ column, record }">-->
-<!--                        <q-btn-->
-<!--                            v-if="column.key === 'operation'"-->
-<!--                            label="查看"-->
-<!--                            color="primary"-->
-<!--                            outline flat-->
-<!--                            size="xs"-->
-<!--                            @click="clickView(record)"-->
-<!--                        >-->
-<!--                        </q-btn>-->
-<!--                    </template>-->
+                    <!--                    <template #bodyCell="{ column, record }">-->
+                    <!--                        <q-btn-->
+                    <!--                            v-if="column.key === 'operation'"-->
+                    <!--                            label="查看"-->
+                    <!--                            color="primary"-->
+                    <!--                            outline flat-->
+                    <!--                            size="xs"-->
+                    <!--                            @click="clickView(record)"-->
+                    <!--                        >-->
+                    <!--                        </q-btn>-->
+                    <!--                    </template>-->
                 </a-table>
             </div>
         </div>

@@ -9,77 +9,43 @@
             <q-list>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">
-                            项目编码: {{ form.project_index }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            文库编号: {{ form.library_number }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            捕获试剂盒: {{ form.reagent_box }}
-                        </div>
+                        <div class="col q-pa-sm">项目编码: {{ form.project_index }}</div>
+                        <div class="col q-pa-sm">文库编号: {{ form.library_number }}</div>
+                        <div class="col q-pa-sm">捕获试剂盒: {{ form.reagent_box }}</div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">
-                            建库input: {{ form.library_input }}
-                        </div>
-                        <div class="col q-pf-sm">
-                            index类型: {{ form.index_type }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            index编号: {{ form.index_number }}
-                        </div>
+                        <div class="col q-pa-sm">建库input: {{ form.library_input }}</div>
+                        <div class="col q-pf-sm">index类型: {{ form.index_type }}</div>
+                        <div class="col q-pa-sm">index编号: {{ form.index_number }}</div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">
-                            杂交input: {{ form.hybrid_input }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            核酸打断方式: {{ form.nucleic_break_type }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            样本元信息ID: {{ form.sample_meta_id }}
-                        </div>
+                        <div class="col q-pa-sm">杂交input: {{ form.hybrid_input }}</div>
+                        <div class="col q-pa-sm">核酸打断方式: {{ form.nucleic_break_type }}</div>
+                        <div class="col q-pa-sm">样本元信息ID: {{ form.sample_meta_id }}</div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">
-                            样本识别号: {{ form.sample_identifier }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            数据识别号: {{ form.identifier }}
-                        </div>
-                        <div class="col q-pf-sm">
-                            送检机构: {{ form.company }}
-                        </div>
+                        <div class="col q-pa-sm">样本识别号: {{ form.sample_identifier }}</div>
+                        <div class="col q-pa-sm">数据识别号: {{ form.identifier }}</div>
+                        <div class="col q-pf-sm">送检机构: {{ form.company }}</div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">
-                            风险上机: {{ form.risk ? "是" : "否" }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            核酸类型: {{ form.nucleic_type }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            核酸降解等级: {{ form.nucleic_level }}
-                        </div>
+                        <div class="col q-pa-sm">风险上机: {{ form.risk ? "是" : "否" }}</div>
+                        <div class="col q-pa-sm">核酸类型: {{ form.nucleic_type }}</div>
+                        <div class="col q-pa-sm">核酸降解等级: {{ form.nucleic_level }}</div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">
-                            R1文件: {{ form.fastq1_path }}
-                        </div>
-                        <div class="col q-pa-sm">
-                            R2文件: {{ form.fastq2_path }}
-                        </div>
+                        <div class="col q-pa-sm">R1文件: {{ form.fastq1_path }}</div>
+                        <div class="col q-pa-sm">R2文件: {{ form.fastq2_path }}</div>
                     </div>
                 </q-item>
             </q-list>

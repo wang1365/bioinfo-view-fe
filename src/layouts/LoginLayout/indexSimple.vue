@@ -1,9 +1,6 @@
 <template>
     <div class="row gin-quasar-admin-init-db-page">
-        <div
-            class="col column justify-center items-center text-center"
-            style="margin-bottom: 100px"
-        >
+        <div class="col column justify-center items-center text-center" style="margin-bottom: 100px">
             <q-avatar :size="'100px'" @click="home">
                 <img :src="store.ui.image" alt="" />
             </q-avatar>
@@ -11,9 +8,7 @@
             <span class="text-weight-bold text-h3 text-white">
                 {{ store.ui.title }}
             </span>
-            <span class="text-white text-subtitle1" style="margin-top: 20px">
-                一站式解决基因文库分析结果.
-            </span>
+            <span class="text-white text-subtitle1" style="margin-top: 20px"> 一站式解决基因文库分析结果. </span>
             <span class="q-gutter-md">
                 <!-- <q-btn
                     push
@@ -36,10 +31,7 @@
                 </q-btn> -->
             </span>
         </div>
-        <div
-            class="col row column justify-center items-center"
-            style="margin-bottom: 80px"
-        >
+        <div class="col row column justify-center items-center" style="margin-bottom: 80px">
             <q-card
                 style="
                     width: 60%;

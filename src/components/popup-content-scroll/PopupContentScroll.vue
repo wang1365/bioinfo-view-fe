@@ -19,11 +19,7 @@
                         <q-item>
                             <q-section class="q-gutter-x-sm">
                                 <slot name="contentFooter">
-                                    <q-btn
-                                        class="q-mr-md"
-                                        label="取消"
-                                        v-close-popup
-                                    />
+                                    <q-btn class="q-mr-md" label="取消" v-close-popup />
                                     <q-btn color="primary" label="确认" />
                                 </slot>
                             </q-section>

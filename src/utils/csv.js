@@ -3,7 +3,7 @@ export function getCsvData(str, options = {}) {
         splitter: '\t',
         hasHeaderLine: true,
         fields: [],
-        colIndex: []
+        colIndex: [],
     }
 
     const finalOptions = { ...defaultOptions }
@@ -20,9 +20,9 @@ export function getCsvData(str, options = {}) {
 
     // 列过滤
     if (finalOptions.colIndex.length > 0) {
-        lines = lines.map(cols => {
+        lines = lines.map((cols) => {
             const items = []
-            finalOptions.colIndex.forEach(i => items.push(cols[i-1]))
+            finalOptions.colIndex.forEach((i) => items.push(cols[i - 1]))
             return items
         })
     }

@@ -1,18 +1,17 @@
-import { api } from "src/boot/axios";
+import { api } from 'src/boot/axios'
 
 export function getPanelGroups() {
     return api({
         url: `/flow/panelGroups/`,
-        method: "get"
-    });
+        method: 'get',
+    })
 }
-
 
 export function getPanelGroupDetail(id) {
     return api({
         url: `/flow/panelGroups/${id}/`,
-        method: "get",
-    });
+        method: 'get',
+    })
 }
 
 export function createPanelGroup(data) {
@@ -24,10 +23,10 @@ export function createPanelGroup(data) {
     //   "desp": "xxx"
     // }
     return api({
-        url: "/flow/panelGroups/",
-        method: "post",
+        url: '/flow/panelGroups/',
+        method: 'post',
         data,
-    });
+    })
 }
 
 export function updatePanelGroup(id, data) {
@@ -40,16 +39,14 @@ export function updatePanelGroup(id, data) {
     // }
     return api({
         url: `/flow/panelGroups/${id}/`,
-        method: "put",
+        method: 'put',
         data,
-    });
+    })
 }
 
 export function deletePanelGroup(id) {
     return api({
         url: `/flow/panelGroups/${id}/`,
-        method: "delete",
-    });
+        method: 'delete',
+    })
 }
-
-

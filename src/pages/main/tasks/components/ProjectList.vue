@@ -13,18 +13,8 @@
         >
             <template v-slot:tableFilter>
                 <div class="row q-px-md q-gutter-sm">
-                    <q-input
-                        style="width: 250px"
-                        dense
-                        v-model="projectName"
-                        label="项目名称"
-                        clearable
-                    />
-                    <q-btn
-                        color="primary"
-                        icon="search"
-                        @click="refreshPage()"
-                    ></q-btn>
+                    <q-input style="width: 250px" dense v-model="projectName" label="项目名称" clearable />
+                    <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
                 </div>
             </template>
             <template v-slot:itemRow="{ row }">

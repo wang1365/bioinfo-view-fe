@@ -85,7 +85,8 @@
                 <div class="col">
                     <q-select
                         clearable
-                        dense multiple
+                        dense
+                        multiple
                         hide-dropdown-icon
                         v-model="searchParams.mutationMeaning"
                         stack-label
@@ -97,7 +98,8 @@
                 <div class="col">
                     <q-select
                         clearable
-                        dense multiple
+                        dense
+                        multiple
                         hide-dropdown-icon
                         v-model="searchParams.mutationRisk"
                         stack-label
@@ -184,7 +186,7 @@
             </div>
 
             <div class="col-8 q-px-xs">
-                <BubbleChartVue :data="filteredRows"   :colKeys="['col30', 'col35', 'col43']" />
+                <BubbleChartVue :data="filteredRows" :colKeys="['col30', 'col35', 'col43']" />
             </div>
         </div>
     </div>

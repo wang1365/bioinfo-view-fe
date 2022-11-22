@@ -21,7 +21,7 @@ export function readTaskFile(id, path) {
 export function getSummary() {
     return api({
         url: `/task/summary`,
-        method: 'get'
+        method: 'get',
     })
 }
 
@@ -33,6 +33,6 @@ export function getWeeklySummary() {
     return api({
         url: `/task/summary`,
         method: 'get',
-        params
+        params,
     })
 }

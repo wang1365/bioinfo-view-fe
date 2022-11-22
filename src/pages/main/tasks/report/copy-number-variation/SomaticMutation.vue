@@ -17,10 +17,7 @@
         </div>
     </div>
 
-    <div class="q-py-sm">
-        过滤结果的图表数据
-    </div>
-
+    <div class="q-py-sm">过滤结果的图表数据</div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";

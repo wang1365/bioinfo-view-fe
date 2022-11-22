@@ -35,8 +35,10 @@
                 </a-table>
             </div>
             <div class="col q-ml-md">
-                <div class="text-center text-bold text-purple text-h6" style="position:relative"
-                     v-if="props.samples.length > 1"
+                <div
+                    class="text-center text-bold text-purple text-h6"
+                    style="position:relative"
+                    v-if="props.samples.length > 1"
                 >
                     肿瘤样本
                     <q-icon

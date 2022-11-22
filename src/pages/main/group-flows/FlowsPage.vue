@@ -4,14 +4,7 @@
         <q-card>
             <q-splitter v-model="splitterModel">
                 <template v-slot:before>
-                    <q-tabs
-                        v-model="ctab"
-                        dense
-                        align="left"
-                        vertical
-                        class="shadow-2 felx-end"
-                        :breakpoint="0"
-                    >
+                    <q-tabs v-model="ctab" dense align="left" vertical class="shadow-2 felx-end" :breakpoint="0">
                         <q-tab
                             v-for="tab in tabs"
                             :key="tab.name"

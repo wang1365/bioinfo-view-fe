@@ -9,17 +9,9 @@
             inactive-color="secondary"
             animated
         >
-            <q-step
-                :name="1"
-                title="Select campaign settings"
-                active-icon="looks_one"
-                icon="looks_one"
-                :done="0"
-            >
-                For each ad campaign that you create, you can control how much
-                you're willing to spend on clicks and conversions, which
-                networks and geographical locations you want your ads to show
-                on, and more.
+            <q-step :name="1" title="Select campaign settings" active-icon="looks_one" icon="looks_one" :done="0">
+                For each ad campaign that you create, you can control how much you're willing to spend on clicks and
+                conversions, which networks and geographical locations you want your ads to show on, and more.
 
                 <q-stepper-navigation>
                     <q-btn
@@ -43,8 +35,7 @@
                 icon="looks_two"
                 :done="0"
             >
-                An ad group contains one or more ads which target a shared set
-                of keywords.
+                An ad group contains one or more ads which target a shared set of keywords.
 
                 <q-stepper-navigation>
                     <q-btn
@@ -57,28 +48,14 @@
                         color="primary"
                         label="下一步"
                     />
-                    <q-btn
-                        flat
-                        @click="step = 1"
-                        color="primary"
-                        label="后退"
-                        class="q-ml-sm"
-                    />
+                    <q-btn flat @click="step = 1" color="primary" label="后退" class="q-ml-sm" />
                 </q-stepper-navigation>
             </q-step>
 
-            <q-step
-                :name="3"
-                title="Create an ad"
-                active-icon="looks_3"
-                icon="looks_3"
-                :done="0"
-            >
-                Try out different ad text to see what brings in the most
-                customers, and learn how to enhance your ads using features like
-                ad extensions. If you run into any problems with your ads, find
-                out how to tell if they're running and how to resolve approval
-                issues.
+            <q-step :name="3" title="Create an ad" active-icon="looks_3" icon="looks_3" :done="0">
+                Try out different ad text to see what brings in the most customers, and learn how to enhance your ads
+                using features like ad extensions. If you run into any problems with your ads, find out how to tell if
+                they're running and how to resolve approval issues.
 
                 <q-stepper-navigation>
                     <q-btn
@@ -89,13 +66,7 @@
                         "
                         label="使用流程"
                     />
-                    <q-btn
-                        flat
-                        @click="step = 2"
-                        color="primary"
-                        label="后退"
-                        class="q-ml-sm"
-                    />
+                    <q-btn flat @click="step = 2" color="primary" label="后退" class="q-ml-sm" />
                 </q-stepper-navigation>
             </q-step>
         </q-stepper>
@@ -109,10 +80,9 @@
             </q-card-section>
 
             <q-card-section>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum
-                repellendus sit voluptate voluptas eveniet porro. Rerum
-                blanditiis perferendis totam, ea at omnis vel numquam
-                exercitationem aut, natus minima, porro labore.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rerum repellendus sit voluptate voluptas
+                eveniet porro. Rerum blanditiis perferendis totam, ea at omnis vel numquam exercitationem aut, natus
+                minima, porro labore.
             </q-card-section>
         </q-card>
     </q-dialog>

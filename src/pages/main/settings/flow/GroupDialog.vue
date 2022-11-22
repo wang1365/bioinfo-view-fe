@@ -3,14 +3,18 @@
         <q-card class="my-card">
             <q-card-section>
                 <q-form>
-                    <q-input v-model="form.name" label="分组名称" dense stack-label
-                             :rules="[(val) => (val !== null && val.length >= 3) || '名称至少为3个字符']"
+                    <q-input
+                        v-model="form.name"
+                        label="分组名称"
+                        dense
+                        stack-label
+                        :rules="[(val) => (val !== null && val.length >= 3) || '名称至少为3个字符']"
                     />
                 </q-form>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn color="primary" label="确定" @click="clickSubmit"/>
-                <q-btn label="取消" v-close-popup/>
+                <q-btn color="primary" label="确定" @click="clickSubmit" />
+                <q-btn label="取消" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>

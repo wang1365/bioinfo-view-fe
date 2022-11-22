@@ -23,7 +23,6 @@ onBeforeMount(() => {
 onMounted(() => {
     refreshSystemUi()
 })
-
 </script>
 
 <style lang="scss" scoped></style>

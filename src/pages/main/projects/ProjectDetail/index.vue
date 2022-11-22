@@ -1,17 +1,14 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="项目详情" />
-        <ProjectDetail :projectDetail="projectDetail" @reloadProject="getProjectDetail()"/>
+        <ProjectDetail :projectDetail="projectDetail" @reloadProject="getProjectDetail()" />
         <ProjectDetailDataList
             v-if="projectDetail.id"
             :projectDetail="projectDetail"
             :projectId="projectDetail.id"
             @refresh="getProjectDetail()"
         />
-        <ChildProjectList
-            :projectDetail="projectDetail"
-            v-if="!projectDetail.parent"
-        />
+        <ChildProjectList :projectDetail="projectDetail" v-if="!projectDetail.parent" />
     </q-page>
 </template>
 

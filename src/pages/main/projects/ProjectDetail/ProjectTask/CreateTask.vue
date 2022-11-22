@@ -27,9 +27,7 @@
                         <div class="col">描述: {{ props.flowDetail.desc }}</div>
                     </div>
                     <div class="row">
-                        <div class="col">
-                            提示说明: {{ props.flowDetail.details }}
-                        </div>
+                        <div class="col">提示说明: {{ props.flowDetail.details }}</div>
                     </div>
                 </div>
                 <q-separator />
@@ -42,44 +40,68 @@
                     <div class="row">
                         <template v-for="param of paramsDefine" :key="param.key">
                             <div class="col-6 q-pr-sm" v-if="param.type == 'file'">
-                                <q-file :error="param.isError" :error-message="param.error" v-model="params[param.key]"
-                                    :label="param.key">
+                                <q-file
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    v-model="params[param.key]"
+                                    :label="param.key"
+                                >
                                     <q-tooltip>{{
                                         param.description
-                                        }}</q-tooltip>
+                                    }}</q-tooltip>
                                 </q-file>
                             </div>
                             <div class="col-6 q-pr-sm" v-if="param.type == 'string'">
-                                <q-input :error="param.isError" :error-message="param.error" v-model="params[param.key]"
-                                    :label="param.key">
+                                <q-input
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    v-model="params[param.key]"
+                                    :label="param.key"
+                                >
                                     <q-tooltip>{{
                                         param.description
-                                        }}</q-tooltip>
+                                    }}</q-tooltip>
                                 </q-input>
                             </div>
                             <div class="col-6 q-pr-sm" v-if="param.type == 'number'">
-                                <q-input :error="param.isError" :error-message="param.error" type="number"
-                                    v-model="params[param.key]" :label="param.key">
+                                <q-input
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    type="number"
+                                    v-model="params[param.key]"
+                                    :label="param.key"
+                                >
                                     <q-tooltip>{{
                                         param.description
-                                        }}</q-tooltip>
+                                    }}</q-tooltip>
                                 </q-input>
                             </div>
                             <div class="col-6 q-pr-sm" v-if="param.type == 'select'">
-                                <q-select :error="param.isError" :error-message="param.error"
-                                    v-model="params[param.key]" :options="param.choices" :label="param.key">
+                                <q-select
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    v-model="params[param.key]"
+                                    :options="param.choices"
+                                    :label="param.key"
+                                >
                                     <q-tooltip>{{
                                         param.description
-                                        }}</q-tooltip>
+                                    }}</q-tooltip>
                                 </q-select>
                             </div>
                             <div class="col-6 q-pr-sm" v-if="param.type == 'multiSelect'">
-                                <q-select :error="param.isError" :error-message="param.error"
-                                    v-model="params[param.key]" :options="param.choices" :label="param.key" multiple
-                                    use-chips>
+                                <q-select
+                                    :error="param.isError"
+                                    :error-message="param.error"
+                                    v-model="params[param.key]"
+                                    :options="param.choices"
+                                    :label="param.key"
+                                    multiple
+                                    use-chips
+                                >
                                     <q-tooltip>{{
                                         param.description
-                                        }}</q-tooltip>
+                                    }}</q-tooltip>
                                 </q-select>
                             </div>
                         </template>
@@ -88,9 +110,14 @@
                     <div v-if="props.flowDetail.sample_type == 'single'">
                         <div class="row">
                             <div class="col-6">
-                                <q-btn :label="
+                                <q-btn
+                                    :label="
                                         '选择数据-1: ' + sampleFirst?.identifier
-                                    " color="primary" style="width: 100%" @click="selectSingle()"></q-btn>
+                                    "
+                                    color="primary"
+                                    style="width: 100%"
+                                    @click="selectSingle()"
+                                ></q-btn>
                             </div>
                             <div class="col-6" v-if="sampleFirstError">
                                 <span class="text-red text-bold">请选择样本</span>
@@ -100,15 +127,25 @@
                     <div v-if="props.flowDetail.sample_type == 'double'">
                         <div class="row">
                             <div class="col-6">
-                                <q-btn :label="
+                                <q-btn
+                                    :label="
                                         '选择数据-1: ' + sampleFirst?.identifier
-                                    " color="primary" style="width: 99%" @click="selectFirst()"></q-btn>
+                                    "
+                                    color="primary"
+                                    style="width: 99%"
+                                    @click="selectFirst()"
+                                ></q-btn>
                             </div>
                             <div class="col-6">
-                                <q-btn :label="
+                                <q-btn
+                                    :label="
                                         '选择数据-2: ' +
                                         sampleSecond?.identifier
-                                    " color="secondary" style="width: 99%" @click="selectSecond()"></q-btn>
+                                    "
+                                    color="secondary"
+                                    style="width: 99%"
+                                    @click="selectSecond()"
+                                ></q-btn>
                             </div>
                             <div class="col-6">
                                 <span v-if="sampleFirstError" class="text-red text-bold">请选择样本</span>
@@ -121,15 +158,26 @@
                     <div v-if="props.flowDetail.sample_type == 'multiple'">
                         <div class="row">
                             <div class="col-6">
-                                <q-btn label="选择数据" color="primary" style="width: 100%" @click="selectMulti()"></q-btn>
+                                <q-btn
+                                    label="选择数据"
+                                    color="primary"
+                                    style="width: 100%"
+                                    @click="selectMulti()"
+                                ></q-btn>
                             </div>
                             <div class="col-6" v-if="samplesError">
                                 <span class="text-red text-bold">请选择样本</span>
                             </div>
                             <div class="col-12">
-<q-chip v-for="sample of samples" :key="sample.id" class="glossy" color="primary" text-color="white" >
-        {{sample.identifier}}
-      </q-chip>
+                                <q-chip
+                                    v-for="sample of samples"
+                                    :key="sample.id"
+                                    class="glossy"
+                                    color="primary"
+                                    text-color="white"
+                                >
+                                    {{sample.identifier}}
+                                </q-chip>
                             </div>
                         </div>
                     </div>

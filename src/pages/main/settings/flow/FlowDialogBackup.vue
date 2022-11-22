@@ -11,82 +11,141 @@
     >
         <q-card>
             <q-form @submit="onSubmit">
-            <q-bar>
-                <q-icon name="mediation"/>
-                <div>流程管理</div>
-                <q-space/>
-                <q-btn dense flat icon="close" v-close-popup>
-                    <q-tooltip>Close</q-tooltip>
-                </q-btn>
-            </q-bar>
-            <q-card-section>
-                <q-list dense bordered>
-                    <q-item dense>
-                        <q-input v-model="form.name" label="流程名称" stack-label clearable
-                                 :rules="[ val => val !== null && val !== '' || '请输入流程名称' ]"/>
-                    </q-item>
-                    <q-item dense>
-                        <q-input v-model="form.code" label="流程code" stack-label clearable
-                                 :rules="[ val => val !== null && val !== '' || '请输入流程code']"/>
-                    </q-item>
-                    <q-item dense>
-                        <q-input v-model="form.flow_category" label="分类名称" stack-label clearable
-                                 rules="[ val => val !== null && val !== '' || '请输入分类名称', ]"/>
-                    </q-item>
-                    <q-item dense>
-                        <q-input v-model="form.memory" :min="0" :step="100" label="内存(m)" stack-label clearable
-                                 :rules="[val => val !== null && val !== '' || '请输入内存数值']"
-                        />
-                    </q-item>
-                    <q-item dense>
-                        <q-input v-model="form.location" label="脚本路径" stack-label clearable
-                                 :rules="[val => val !== null && val !== '' ||  '请输入脚本路径']"/>
-                    </q-item>
-                    <q-item dense>
-                        <q-input v-model="form.alignment_tool" label="对比软件" stack-label clearable
-                                 :rules="[val => val !== null && val !== '' || '请输入对比软件']"/>
-                    </q-item>
-                    <q-item dense prop="sample_count" label="样本数目" size="small"
-                    >
-                        <q-expansion-item default-opened icon="perm_identity" label="样本数目" class="shadow-1">
-                            <q-radio v-model="form.sample_type" val="single" label="单样本" color="teal" keep-color/>
-                            <q-radio v-model="form.sample_type" val="double" label="配对样本" color="orange" keep-color/>
-                            <q-radio v-model="form.sample_type" val="multiple" label="多样本" color="cyan" keep-color/>
-                        </q-expansion-item>
-                    </q-item>
-                    <q-item dense
-                            prop="sample_count"
-                            label="支持非标准样本"
-                            size="small"
-                    >
-                        <q-expansion-item default-opened icon="perm_identity" label="支持非标准样本" class="shadow-1">
-                            <q-radio v-model="form.allow_nonstandard_samples" val="true" label="是" color="teal"
-                                     keep-color/>
-                            <q-radio v-model="form.allow_nonstandard_samples" val="false" label="否" color="orange"
-                                     keep-color/>
-                        </q-expansion-item>
-                    </q-item>
+                <q-bar>
+                    <q-icon name="mediation" />
+                    <div>流程管理</div>
+                    <q-space />
+                    <q-btn dense flat icon="close" v-close-popup>
+                        <q-tooltip>Close</q-tooltip>
+                    </q-btn>
+                </q-bar>
+                <q-card-section>
+                    <q-list dense bordered>
+                        <q-item dense>
+                            <q-input
+                                v-model="form.name"
+                                label="流程名称"
+                                stack-label
+                                clearable
+                                :rules="[ val => val !== null && val !== '' || '请输入流程名称' ]"
+                            />
+                        </q-item>
+                        <q-item dense>
+                            <q-input
+                                v-model="form.code"
+                                label="流程code"
+                                stack-label
+                                clearable
+                                :rules="[ val => val !== null && val !== '' || '请输入流程code']"
+                            />
+                        </q-item>
+                        <q-item dense>
+                            <q-input
+                                v-model="form.flow_category"
+                                label="分类名称"
+                                stack-label
+                                clearable
+                                rules="[ val => val !== null && val !== '' || '请输入分类名称', ]"
+                            />
+                        </q-item>
+                        <q-item dense>
+                            <q-input
+                                v-model="form.memory"
+                                :min="0"
+                                :step="100"
+                                label="内存(m)"
+                                stack-label
+                                clearable
+                                :rules="[val => val !== null && val !== '' || '请输入内存数值']"
+                            />
+                        </q-item>
+                        <q-item dense>
+                            <q-input
+                                v-model="form.location"
+                                label="脚本路径"
+                                stack-label
+                                clearable
+                                :rules="[val => val !== null && val !== '' ||  '请输入脚本路径']"
+                            />
+                        </q-item>
+                        <q-item dense>
+                            <q-input
+                                v-model="form.alignment_tool"
+                                label="对比软件"
+                                stack-label
+                                clearable
+                                :rules="[val => val !== null && val !== '' || '请输入对比软件']"
+                            />
+                        </q-item>
+                        <q-item dense prop="sample_count" label="样本数目" size="small">
+                            <q-expansion-item default-opened icon="perm_identity" label="样本数目" class="shadow-1">
+                                <q-radio
+                                    v-model="form.sample_type"
+                                    val="single"
+                                    label="单样本"
+                                    color="teal"
+                                    keep-color
+                                />
+                                <q-radio
+                                    v-model="form.sample_type"
+                                    val="double"
+                                    label="配对样本"
+                                    color="orange"
+                                    keep-color
+                                />
+                                <q-radio
+                                    v-model="form.sample_type"
+                                    val="multiple"
+                                    label="多样本"
+                                    color="cyan"
+                                    keep-color
+                                />
+                            </q-expansion-item>
+                        </q-item>
+                        <q-item dense prop="sample_count" label="支持非标准样本" size="small">
+                            <q-expansion-item
+                                default-opened
+                                icon="perm_identity"
+                                label="支持非标准样本"
+                                class="shadow-1"
+                            >
+                                <q-radio
+                                    v-model="form.allow_nonstandard_samples"
+                                    val="true"
+                                    label="是"
+                                    color="teal"
+                                    keep-color
+                                />
+                                <q-radio
+                                    v-model="form.allow_nonstandard_samples"
+                                    val="false"
+                                    label="否"
+                                    color="orange"
+                                    keep-color
+                                />
+                            </q-expansion-item>
+                        </q-item>
+                    </q-list>
+                </q-card-section>
+                <q-card-section class="q-gutter-lg row">
+                    <q-input v-model="form.desp" type="textarea" label="描 述" stack-label clearable />
+                    <q-input
+                        v-model="form.details"
+                        type="textarea"
+                        :autosize="{ minRows: 18, maxRows: 380 }"
+                        label="提示说明"
+                        stack-label
+                        clearable
+                    />
+                </q-card-section>
+                <!--        <param-table ref="builtinParams" :data="form.builtin_parameters" title="内置参数" />-->
+                <param-table ref="paramsTable" :data="form.parameters" title="自定义参数" :action="action" />
 
-                </q-list>
-            </q-card-section>
-            <q-card-section class="q-gutter-lg row">
-                <q-input v-model="form.desp" type="textarea" label="描 述" stack-label clearable/>
-                <q-input
-                    v-model="form.details"
-                    type="textarea"
-                    :autosize="{ minRows: 18, maxRows: 380 }"
-                    label="提示说明"
-                    stack-label clearable
-                />
-            </q-card-section>
-            <!--        <param-table ref="builtinParams" :data="form.builtin_parameters" title="内置参数" />-->
-            <param-table ref="paramsTable" :data="form.parameters" title="自定义参数" :action="action"/>
-
-            <q-card-actions align="right">
-<!--                <q-btn label="确 定" color="primary" @click="onConfirm"/>-->
-                <q-btn label="确 定" color="primary" type="submit"/>
-                <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup/>
-            </q-card-actions>
+                <q-card-actions align="right">
+                    <!--                <q-btn label="确 定" color="primary" @click="onConfirm"/>-->
+                    <q-btn label="确 定" color="primary" type="submit" />
+                    <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup />
+                </q-card-actions>
             </q-form>
         </q-card>
     </q-dialog>

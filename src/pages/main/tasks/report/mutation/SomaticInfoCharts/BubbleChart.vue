@@ -1,7 +1,7 @@
 <template>
     <q-card>
         <div ref="piechart" style="height: 600px"></div>
-        <q-resize-observer @resize="onResize"/>
+        <q-resize-observer @resize="onResize" />
     </q-card>
 </template>
 

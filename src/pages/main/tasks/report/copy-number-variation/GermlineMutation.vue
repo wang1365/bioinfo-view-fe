@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div class="row q-gutter-sm ">
             <div class="col">
                 <q-input dense label="搜索:" clearable />
@@ -18,10 +17,7 @@
         </div>
     </div>
 
-    <div class="q-py-sm">
-        过滤结果的图表数据
-    </div>
-
+    <div class="q-py-sm">过滤结果的图表数据</div>
 </template>
 <script setup>
 import { ref, onMounted } from "vue";

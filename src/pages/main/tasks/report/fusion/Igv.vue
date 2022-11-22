@@ -7,8 +7,8 @@
         </q-bar>
         <div class="row q-gutter-sm">
             <div v-for="igv in options" :id="igv.uid" :key="igv.uid" class="col"></div>
-<!--            <div id="igv-1" class="col"></div>-->
-<!--            <div id="igv-2" class="col"></div>-->
+            <!--            <div id="igv-1" class="col"></div>-->
+            <!--            <div id="igv-2" class="col"></div>-->
         </div>
         <q-resize-observer @resize="onResize" />
     </div>

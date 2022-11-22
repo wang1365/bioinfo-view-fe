@@ -28,46 +28,48 @@
                             :rules="[ val => val && val.length > 0 || '请输入姓名']"
                         />
                     </q-item>
-    <!--                <q-item>-->
-    <!--                    <q-input class="full-width"-->
-    <!--                        filled-->
-    <!--                        type="text"-->
-    <!--                        v-model="form.email"-->
-    <!--                        label="邮箱"-->
-    <!--                        lazy-rules-->
-    <!--                        :rules="[-->
-    <!--                          val => val !== null && val !== '' || '请输入邮箱'-->
-    <!--                        ]"-->
-    <!--                    />-->
-    <!--                </q-item>-->
+                    <!--                <q-item>-->
+                    <!--                    <q-input class="full-width"-->
+                    <!--                        filled-->
+                    <!--                        type="text"-->
+                    <!--                        v-model="form.email"-->
+                    <!--                        label="邮箱"-->
+                    <!--                        lazy-rules-->
+                    <!--                        :rules="[-->
+                    <!--                          val => val !== null && val !== '' || '请输入邮箱'-->
+                    <!--                        ]"-->
+                    <!--                    />-->
+                    <!--                </q-item>-->
                     <q-item>
-                        <q-input class="full-width"
-                                 filled
-                                 type="password"
-                                 v-model="form.password"
-                                 label="密码"
-                                 lazy-rules
-                                 :rules="[
+                        <q-input
+                            class="full-width"
+                            filled
+                            type="password"
+                            v-model="form.password"
+                            label="密码"
+                            lazy-rules
+                            :rules="[
                               val => val !== null && val !== '' || '请输入密码'
                             ]"
                         />
                     </q-item>
                     <q-item>
-                        <q-input class="full-width"
-                                 filled
-                                 type="password"
-                                 v-model="form.password_again"
-                                 label="确认密码"
-                                 lazy-rules
-                                 :rules="[
+                        <q-input
+                            class="full-width"
+                            filled
+                            type="password"
+                            v-model="form.password_again"
+                            label="确认密码"
+                            lazy-rules
+                            :rules="[
                                   val => val !== null && val !== '' || '请输入确认密码',
                                   val => val === form.password || '两次输入密码不一致'
                                 ]"
                         />
                     </q-item>
                     <q-card-actions align="right">
-                        <q-btn label="确定" type="button" color="primary" @click="clickOk"/>
-                        <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm"/>
+                        <q-btn label="确定" type="button" color="primary" @click="clickOk" />
+                        <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>
             </q-card-section>

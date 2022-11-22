@@ -7,9 +7,8 @@
             color="orange"
             class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
-        >说明
-        </q-btn
-        >
+            >说明
+        </q-btn>
         <q-tabs
             v-model="tab"
             active-color="primary"
@@ -19,15 +18,15 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="胚系突变分析" label="胚系突变分析"/>
-            <q-tab name="体细胞突变分析" label="体细胞突变分析"/>
+            <q-tab name="胚系突变分析" label="胚系突变分析" v-if="props.viewConfig.showMutGermline" />
+            <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.viewConfig.showMutSomatic" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="胚系突变分析">
-                <GermlineMutationVue/>
+                <GermlineMutationVue />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
-                <SomaticMutationVue/>
+                <SomaticMutationVue />
             </q-tab-panel>
         </q-tab-panels>
         <q-dialog v-model="dlgVisible">
@@ -44,7 +43,7 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted} from "vue";
+import { ref, onMounted } from "vue";
 import GermlineMutationVue from "./GermlineMutation.vue"
 import SomaticMutationVue from "./SomaticMutation.vue"
 
@@ -59,6 +58,14 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
+    },
+    viewConfig: {
+        type: Object,
+        required: false,
+        default(){return {
+            "showMutGermline": true,
+            "showMutSomatic": true
+        }}
     }
 })
 </script>

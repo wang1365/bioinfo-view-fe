@@ -193,6 +193,13 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
+    },
+    viewConfig: {
+        type: Object,
+        required: false,
+        default(){return {
+            "showTMB":true,
+        }}
     }
 })
 

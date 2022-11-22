@@ -6,15 +6,18 @@
             <div class="text-body">功能介绍功能介绍功能介绍功能介绍功能介绍功能介绍</div>
         </div>
         <q-card class="q-pa-sm">
-
-
             <div class="row">
                 <div class="col-2"></div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="row">
                         <div class="col-2">
-                            <q-select v-model="database" :options="options" stack-label :display-value="`检索方式: ${database ? database : '*none*'
-                            }`">
+                            <q-select
+                                v-model="database"
+                                :options="options"
+                                stack-label
+                                :display-value="`检索方式: ${database ? database : '*none*'
+                            }`"
+                            >
                             </q-select>
                         </div>
                         <div class="col-10">
@@ -33,8 +36,14 @@
                 <div class="text-body">基因注释信息基因注释信息基因注释信息基因注释信息基因注释信息基因注释信息</div>
             </div>
             <div class="q-pt-md">
-                <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-                    :breakpoint="0">
+                <q-tabs
+                    v-model="tab"
+                    active-color="primary"
+                    active-bg-color="grey-4"
+                    align="left"
+                    class="bg-grey-1"
+                    :breakpoint="0"
+                >
                     <q-tab name="突变" label="突变" />
                     <q-tab name="突变类型" label="突变类型" />
                     <q-tab name="分子特征" label="分子特征" />
@@ -131,7 +140,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     <tr>
                                         <td>分子突变</td>
                                         <td>蛋白质影响</td>
@@ -168,7 +176,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     <tr>
                                         <td>分子突变</td>
                                         <td>疾病</td>
@@ -218,11 +225,9 @@
                                         <td>招募状态</td>
                                         <td>覆盖国家</td>
                                         <td>其他国家</td>
-
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     <tr>
                                         <td>临床试验编号</td>
                                         <td>试验阶段</td>
@@ -231,7 +236,6 @@
                                         <td>招募状态</td>
                                         <td>覆盖国家</td>
                                         <td>其他国家</td>
-
                                     </tr>
                                     <tr>
                                         <td>临床试验编号</td>
@@ -241,7 +245,6 @@
                                         <td>招募状态</td>
                                         <td>覆盖国家</td>
                                         <td>其他国家</td>
-
                                     </tr>
                                     <tr>
                                         <td>临床试验编号</td>
@@ -251,7 +254,6 @@
                                         <td>招募状态</td>
                                         <td>覆盖国家</td>
                                         <td>其他国家</td>
-
                                     </tr>
                                 </tbody>
                             </table>

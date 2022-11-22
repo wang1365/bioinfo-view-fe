@@ -43,27 +43,44 @@
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
-                    <QcVue :intro="options['qc']" :samples="samples" :module="module[options['qc']]"/>
+                    <QcVue :module="module" :intro="intros['qc']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
-                    <MutaionVue :intro="options['mutation']" :samples="samples" />
+                    <MutaionVue :module="module" :intro="intros['mutation']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
-                    <FusionVue :intro="options['fusion']" :samples="samples"/>
+                    <FusionVue :module="module" :intro="intros['fusion']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
-                    <CopyNumberVariationVue :intro="options['copy-number-variation']" :task="taskDetail" :samples="samples"/>
+                    <CopyNumberVariationVue
+                        :module="module"
+                        :intro="intros['copy-number-variation']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
                 </q-tab-panel>
                 <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
-                    <MicrosatelliteInstabilityVue :intro="options['microsatellite-instability']" :task="taskDetail" :samples="samples" />
+                    <MicrosatelliteInstabilityVue
+                        :module="module"
+                        :intro="intros['microsatellite-instability']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
                 </q-tab-panel>
                 <q-tab-panel name="tumor-mutation-load" v-if="tabValid('tumor-mutation-load')">
-                    <TumorMutationLoadVue :intro="options['tumor-mutation-load']" :task="taskDetail"  :samples="samples"/>
+                    <TumorMutationLoadVue
+                        :module="module"
+                        :intro="intros['tumor-mutation-load']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
                 </q-tab-panel>
                 <q-tab-panel name="homologous-recombination-defect" v-if="tabValid('homologous-recombination-defect')">
                     <HomologousRecombinationDefectVue
-                        :intro="options['homologous-recombination-defect']"
-                        :task="taskDetail" :samples="samples"
+                        :module="module"
+                        :intro="intros['homologous-recombination-defect']"
+                        :task="taskDetail"
+                        :samples="samples"
                     />
                 </q-tab-panel>
             </q-tab-panels>
@@ -71,10 +88,9 @@
     </q-page>
 </template>
 <script setup>
-import {ref, onMounted} from "vue";
-import {useApi} from "src/api/apiBase";
-import PageTitle from "components/page-title/PageTitle.vue";
-import {getTask} from "src/api/task"
+import { ref, onMounted } from "vue";
+import { useApi } from "src/api/apiBase";
+import { getTask } from "src/api/task"
 import QcVue from "./qc/index.vue"
 import MutaionVue from "./mutation/index.vue"
 import FusionVue from "./fusion/index.vue"
@@ -83,16 +99,17 @@ import MicrosatelliteInstabilityVue from "./microsatellite-instability/index.vue
 import TumorMutationLoadVue from "./tumor-mutation-load/index.vue"
 import HomologousRecombinationDefectVue from "./homologous-recombination-defect/index.vue"
 
-import PaginatorVue from "src/components/paginator/Paginator.vue";
-import {useRouter, useRoute} from "vue-router";
-import {readTaskFile} from "src/api/task"
+import { useRoute } from "vue-router";
+import { readTaskFile } from "src/api/task"
+import { errorMessage } from "src/utils/notify";
 
-import {useQuasar} from "quasar";
-import {buildModelQuery} from "src/api/modelQueryBuilder";
+
+import { buildModelQuery } from "src/api/modelQueryBuilder";
 
 const route = useRoute()
-const {apiPost} = useApi()
-const options = ref({})
+const { apiPost } = useApi()
+const intros = ref({})
+
 
 const tab = ref("qc")
 const taskDetail = ref({})
@@ -105,9 +122,10 @@ onMounted(() => {
         taskDetail.value = res
 
         // 查询任务样本，用于获取样本（样本识别号）是肿瘤样本还是对照样本
-        const query = buildModelQuery([], {id__in: res.samples})
+        const query = buildModelQuery([], { id__in: res.samples })
         apiPost(`/model_query/sample`, (res) => {
             samples.value = res.data.results
+            console.log(res.data.results)
         }, query)
     })
 
@@ -122,21 +140,39 @@ onMounted(() => {
         '肿瘤突变负荷分析': 'tumor-mutation-load',
         '同源重组缺陷分析': 'homologous-recombination-defect',
     }
+    // 读取任务的 result.json 结果文件, 他是一个 json 文件, key:value
+    // key 是 页面上的 tab 名称, value 是每个 tab 的说明信息
+    // 如果没有 key 那么对应的 tab 也就不显示
+    // 这里将 每个 tab 的说明信息放入 intros 中传递到 tab 中
     readTaskFile(route.params.id, 'result.json').then((res => {
         const raw = JSON.parse(res)
         const result = {}
         for (let k in raw) {
             result[dict[k]] = raw[k]
         }
-        options.value = result
+        intros.value = result
     }))
 
+    // module.json
+    // 这个文件中配置每个 tab 下展示的内容
     readTaskFile(route.params.id, 'module.json').then(res => {
-        module.value = JSON.parse(res)
+        try {
+            module.value = JSON.parse(res)
+        } catch (error) {
+            // 尝试修复 json 的额外 ","
+            try {
+                module.value = JSON.parse(res.replace(/,[ \t\r\n]+}/g, '}').replace(/,[ \t\r\n]+\]/g, ']'))
+            } catch (error) {
+                errorMessage(`module.json 文件内容非正确 json 格式`)
+                console.info(res)
+            }
+
+        }
+
     })
 })
 
 const tabValid = (name) => {
-    return options.value[name]
+    return intros.value[name]
 }
 </script>

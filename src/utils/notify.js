@@ -1,14 +1,14 @@
-import { Notify } from "quasar";
+import { Notify } from 'quasar'
 
-export function infoMessage(message = "成功") {
+export function infoMessage(message = '成功') {
     Notify.create({
-        type: "positive",
+        type: 'positive',
         message: message,
-    });
+    })
 }
-export function errorMessage(message = "发生错误") {
+export function errorMessage(message = '发生错误') {
     Notify.create({
-        type: "negative",
+        type: 'negative',
         message: message,
-    });
+    })
 }

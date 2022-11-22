@@ -112,7 +112,6 @@ onMounted(() => {
         }
     })
 })
-
 </script>
 <style lang="scss">
 table {

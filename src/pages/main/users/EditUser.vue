@@ -9,7 +9,9 @@
                     <q-item>
                         <q-input
                             class="full-width"
-                            readonly filled stack-label
+                            readonly
+                            filled
+                            stack-label
                             v-model="form.username"
                             label="用户名"
                             :rules="[ val => val && val.length > 0 || '请输入用户名']"
@@ -25,12 +27,7 @@
                         />
                     </q-item>
                     <q-item>
-                        <q-input
-                            class="full-width"
-                            stack-label
-                            v-model.number="form.disk_limit"
-                            label="磁盘配额(MB)"
-                        />
+                        <q-input class="full-width" stack-label v-model.number="form.disk_limit" label="磁盘配额(MB)" />
                     </q-item>
                     <q-item>
                         <q-toggle
@@ -81,8 +78,8 @@
                     <!--                        />-->
                     <!--                    </q-item>-->
                     <q-card-actions align="right">
-                        <q-btn label="确定" type="button" color="primary" @click="clickOk"/>
-                        <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm"/>
+                        <q-btn label="确定" type="button" color="primary" @click="clickOk" />
+                        <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>
             </q-card-section>
@@ -143,6 +140,4 @@ const clickOk = () => {
 const onReset = () => {
 
 }
-
-
 </script>

@@ -1,6 +1,6 @@
 <template>
     <q-page style="overflow-x: hidden">
-<!--        <PageTitle title="Panel 分析流程" />-->
+        <!--        <PageTitle title="Panel 分析流程" />-->
         <div v-if="groupEnabled">
             <q-tabs
                 v-model="tab"
@@ -14,7 +14,7 @@
             </q-tabs>
             <q-tab-panels v-model="tab">
                 <q-tab-panel v-for="item in rows" :key="item.id" :label="item.name" :name="item.name">
-                        <PanelTab :panelGroupId="item.id" />
+                    <PanelTab :panelGroupId="item.id" />
                 </q-tab-panel>
             </q-tab-panels>
         </div>

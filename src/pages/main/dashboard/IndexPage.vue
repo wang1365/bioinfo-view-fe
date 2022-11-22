@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="平台监控"/>
+        <PageTitle title="平台监控" />
 
         <div class="q-pa-md row items-start q-gutter-md" style="justify-content: space-around">
             <q-card class="my-card">
@@ -26,7 +26,7 @@
                 <q-card-section class="desc"> 本周新增报告数量</q-card-section>
             </q-card>
         </div>
-        <q-separator/>
+        <q-separator />
         <q-card class="my-card" flat bordered>
             <q-card-section style="padding: 0">
                 <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
@@ -47,10 +47,10 @@
                     <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                         <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <LineChart2/>
+                                <LineChart2 />
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <UserTable/>
+                                <UserTable />
                             </div>
                         </div>
                     </div>
@@ -58,16 +58,16 @@
                     <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
                         <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <PieChart/>
+                                <PieChart />
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <PieChart2/>
+                                <PieChart2 />
                             </div>
                             <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <LineChart />
                             </div> -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <PageTitle title="任务概览"/>
+                                <PageTitle title="任务概览" />
                                 <div
                                     style="
                                         height: 300px;
@@ -100,7 +100,7 @@
                                         <q-card-section class="text-warning text-h5 text-bold">
                                             {{ taskStats.max_task }}
                                         </q-card-section>
-                                        <q-card-section class="desc"> 允许最大<br/>任务数</q-card-section>
+                                        <q-card-section class="desc"> 允许最大<br />任务数</q-card-section>
                                     </q-card>
                                 </div>
                             </div>
@@ -109,7 +109,7 @@
                 </div>
             </q-card-section>
         </q-card>
-        <q-separator/>
+        <q-separator />
         <q-card class="my-card" flat>
             <q-card-section style="padding: 0"></q-card-section>
         </q-card>
@@ -198,7 +198,6 @@ const init = () => {
         weeklyDiskUsage.value = v + ' ' + unit
     })
 }
-
 </script>
 
 <style lang="scss">

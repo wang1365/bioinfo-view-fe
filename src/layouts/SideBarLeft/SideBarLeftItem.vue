@@ -1,13 +1,6 @@
 <template v-if="hasPermission">
-    <component
-        v-if="hasPermission"
-        :is="chooseComponent"
-        :addRoutesItem="addRoutesItem"
-        :initLevel="initLevel"
-    >
-        <template
-            v-if="addRoutesItem.children && addRoutesItem.children.length"
-        >
+    <component v-if="hasPermission" :is="chooseComponent" :addRoutesItem="addRoutesItem" :initLevel="initLevel">
+        <template v-if="addRoutesItem.children && addRoutesItem.children.length">
             <SideBarLeftItem
                 :key="item.path"
                 :addRoutesItem="item"

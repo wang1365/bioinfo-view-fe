@@ -14,8 +14,11 @@
                     <thead class="popup-content-table-head">
                         <tr>
                             <td>
-                                <q-checkbox :model-value="checkAll" color="primary"
-                                    @update:model-value="checkedAll($event)" />
+                                <q-checkbox
+                                    :model-value="checkAll"
+                                    color="primary"
+                                    @update:model-value="checkedAll($event)"
+                                />
                             </td>
                             <td v-for="item of props.tableHeaders" :key="item">
                                 {{ item }}
@@ -28,8 +31,12 @@
                         </tr>
                         <tr class="cursor-pointer" v-for="item of dataItems" :key="item" @click="checkItem(item)">
                             <td>
-                                <q-checkbox @click="checkItem(item)" :model-value="item.selected" color="primary"
-                                    disable="true" />
+                                <q-checkbox
+                                    @click="checkItem(item)"
+                                    :model-value="item.selected"
+                                    color="primary"
+                                    disable="true"
+                                />
                             </td>
                             <slot :row="item" name="itemRow">
                                 <td v-for="field of tableRowFields" :key="field">
@@ -44,12 +51,21 @@
                 <div class="row popup-content-multi-footer-selected-sticky">
                     <q-btn flat class="text-bold text-h6">当前选择的是:</q-btn>
                     <q-space></q-space>
-                    <PaginatorVue :total="props.total" :currentPage="props.currentPage"
-                        @pageChange="pageChange($event)" />
+                    <PaginatorVue
+                        :total="props.total"
+                        :currentPage="props.currentPage"
+                        @pageChange="pageChange($event)"
+                    />
                 </div>
                 <div class="popup-content-multi-footer-selected-container q-gutter-xs">
-                    <q-chip v-for="item of selectedItems" :key="item.id" removable @remove="removeItem(item)"
-                        color="primary" text-color="white">
+                    <q-chip
+                        v-for="item of selectedItems"
+                        :key="item.id"
+                        removable
+                        @remove="removeItem(item)"
+                        color="primary"
+                        text-color="white"
+                    >
                         {{ item[props.selectedShowField] }}
                     </q-chip>
                 </div>

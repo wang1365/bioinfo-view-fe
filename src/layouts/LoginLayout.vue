@@ -12,31 +12,19 @@
                             <q-list>
                                 <q-item clickable>
                                     <q-item-section avatar>
-                                        <q-icon
-                                            size="lg"
-                                            name="star"
-                                            class="text-warning"
-                                        />
+                                        <q-icon size="lg" name="star" class="text-warning" />
                                     </q-item-section>
                                     <q-item-section>等级:23</q-item-section>
                                 </q-item>
                                 <q-item clickable>
                                     <q-item-section avatar>
-                                        <q-icon
-                                            size="lg"
-                                            name="star"
-                                            class="text-warning"
-                                        />
+                                        <q-icon size="lg" name="star" class="text-warning" />
                                     </q-item-section>
                                     <q-item-section>积分:88888</q-item-section>
                                 </q-item>
                                 <q-item clickable>
                                     <q-item-section avatar>
-                                        <q-icon
-                                            size="lg"
-                                            name="star"
-                                            class="text-warning"
-                                        />
+                                        <q-icon size="lg" name="star" class="text-warning" />
                                     </q-item-section>
                                     <q-item-section>成就:888</q-item-section>
                                 </q-item>
@@ -47,9 +35,7 @@
 
                         <div class="column items-center">
                             <q-icon></q-icon>
-                            <div class="text-subtitle1 q-mt-md q-mb-md">
-                                管理员
-                            </div>
+                            <div class="text-subtitle1 q-mt-md q-mb-md">管理员</div>
 
                             <div class="row q-gutter-md">
                                 <q-btn
@@ -77,13 +63,7 @@
             </q-toolbar>
         </q-header>
 
-        <q-drawer
-            v-model="leftDrawerOpen"
-            side="left"
-            overlay
-            behavior="desktop"
-            elevated
-        >
+        <q-drawer v-model="leftDrawerOpen" side="left" overlay behavior="desktop" elevated>
             <!-- drawer content -->
         </q-drawer>
 

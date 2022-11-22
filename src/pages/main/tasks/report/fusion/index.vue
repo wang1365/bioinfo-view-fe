@@ -18,15 +18,15 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="单样品融合分析" label="单样品融合分析" />
-            <q-tab name="体细胞融合分析" label="体细胞融合分析" />
+            <q-tab name="单样品融合分析" label="单样品融合分析" v-if="props.viewConfig.showFusionGermline" />
+            <q-tab name="体细胞融合分析" label="体细胞融合分析" v-if="props.viewConfig.showFusionSomatic" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
-                <Single :samples="props.samples"/>
+                <Single :samples="props.samples" />
             </q-tab-panel>
             <q-tab-panel name="体细胞融合分析">
-                <NormalVue :samples="props.samples"/>
+                <NormalVue :samples="props.samples" />
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
@@ -63,6 +63,13 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
+    }, viewConfig: {
+        type: Object,
+        required: false,
+        default(){return {
+            "showFusionGermline": true,
+            "showFusionSomatic": true
+        }}
     }
 })
 </script>

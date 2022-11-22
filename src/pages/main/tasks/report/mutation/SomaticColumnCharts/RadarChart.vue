@@ -3,13 +3,18 @@
         <div class="col-10" ref="barchart" style="height: 400px; width: 550px"></div>
         <div class="col-2">
             <div v-for="(item, i) in vs" :key="i">
-                <q-input :label="vsLabels[i]" :model-value="item ? item : '-'" readonly
-                         label-color="primary" stack-label prefix=" "
+                <q-input
+                    :label="vsLabels[i]"
+                    :model-value="item ? item : '-'"
+                    readonly
+                    label-color="primary"
+                    stack-label
+                    prefix=" "
                 ></q-input>
             </div>
         </div>
     </div>
-    <q-resize-observer @resize="onResize"/>
+    <q-resize-observer @resize="onResize" />
 </template>
 
 <script setup>

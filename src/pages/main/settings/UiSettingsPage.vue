@@ -6,22 +6,16 @@
                 <div class="text-h6">系统标题：</div>
                 <q-input v-model="form.title" outlined>
                     <template v-slot:before>
-                        <q-icon name="flight_takeoff"/>
+                        <q-icon name="flight_takeoff" />
                     </template>
                 </q-input>
             </q-card-section>
-            <q-separator/>
+            <q-separator />
             <q-card class="width:300px ">
                 <q-list>
                     <q-item>
-                        <q-img
-                            :src="form.image"
-                            spinner-color="white"
-                            style="height: 200px; max-width: 200px"
-                        >
-                            <div class="absolute-top text-center">
-                                系统图标
-                            </div>
+                        <q-img :src="form.image" spinner-color="white" style="height: 200px; max-width: 200px">
+                            <div class="absolute-top text-center">系统图标</div>
                         </q-img>
                     </q-item>
                     <q-item>
@@ -42,7 +36,7 @@
                     </q-item>
                 </q-list>
             </q-card>
-            <q-separator/>
+            <q-separator />
             <q-card-actions align="left">
                 <q-card-section>
                     <q-btn label="保存配置" color="primary" size="md" @click="clickSet"></q-btn>

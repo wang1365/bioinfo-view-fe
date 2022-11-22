@@ -23,10 +23,10 @@
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="试剂盒捕获质控信息">
-                <KitCaptureVue :samples="samples"/>
+                <KitCaptureVue :samples="samples" />
             </q-tab-panel>
             <q-tab-panel name="深度信息">
-                <DeepInfoVue :samples="samples"/>
+                <DeepInfoVue :samples="samples" />
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
@@ -47,11 +47,12 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, toRefs} from "vue";
+import { ref, onMounted, toRefs } from "vue";
 import KitCaptureVue from "./KitCapture.vue"
 import DeepInfoVue from "./DeepInfo.vue"
-import {useRoute} from 'vue-router'
-import {getReportText} from "src/api/report"
+import { useRoute } from 'vue-router'
+import { getReportText } from "src/api/report"
+import { object } from "vue-types";
 
 const route = useRoute()
 const tab = ref("试剂盒捕获质控信息")
@@ -67,6 +68,13 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
+    }, viewConfig: {
+        type: Object,
+        required: false,
+        default(){return {
+            "showQCsummary": true,
+            "showQCdepth": true
+        }}
     }
 })
 
@@ -74,7 +82,7 @@ const { samples } = toRefs(props)
 
 onMounted(() => {
     getReportText(route.params.id, 'QC_TIP').then(res => {
-        console.log('====>', res)
+        console.log('QcVue QC_TIP ====>', res)
         tip.value = res
     })
 })

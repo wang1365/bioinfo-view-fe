@@ -1,8 +1,5 @@
 <template>
-    <q-card
-        style="width: 80vw; max-width: 80vw; max-height: 90vh"
-        class="q-mt-md"
-    >
+    <q-card style="width: 80vw; max-width: 80vw; max-height: 90vh" class="q-mt-md">
         <div style="display: flex; flex-direction: column; max-height: 80vh">
             <div style="height: 50px">
                 <q-toolbar>
@@ -45,10 +42,7 @@
                             @click="selectFlow(item)"
                         >
                             <td>
-                                <q-radio
-                                    v-model="selectedFlow.id"
-                                    :val="item.id"
-                                />
+                                <q-radio v-model="selectedFlow.id" :val="item.id" />
                             </td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.code }}</td>
@@ -61,16 +55,9 @@
             </div>
             <div style="">
                 <q-toolbar>
-                    <q-toolbar-title
-                        >当前选择的是: {{ selectedFlow.name }}</q-toolbar-title
-                    >
+                    <q-toolbar-title>当前选择的是: {{ selectedFlow.name }}</q-toolbar-title>
                     <q-btn class="q-mr-md" label="取消" v-close-popup />
-                    <q-btn
-                        v-if="selectedFlow.id"
-                        color="primary"
-                        label="确认"
-                        @click="flowSelect()"
-                    />
+                    <q-btn v-if="selectedFlow.id" color="primary" label="确认" @click="flowSelect()" />
                 </q-toolbar>
             </div>
         </div>

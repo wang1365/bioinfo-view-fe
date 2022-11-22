@@ -1,6 +1,5 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-
         <q-card>
             <q-splitter v-model="splitterModel">
                 <template v-slot:before>
@@ -21,20 +20,23 @@
                             v-for="item in rows"
                             :key="item.id"
                             :name="item.name"
-                            vertical class="q-px-xs"
+                            vertical
+                            class="q-px-xs"
                             transition-prev="jump-up"
                             transition-next="jump-up"
                         >
-                        <q-scroll-area style="height: 85vh; max-width: 100%;"  class="q-pr-sm" :thumb-style="thumbStyle">
-                            <PanelDetail :id="item.id" />
-                        </q-scroll-area>
-
+                            <q-scroll-area
+                                style="height: 85vh; max-width: 100%;"
+                                class="q-pr-sm"
+                                :thumb-style="thumbStyle"
+                            >
+                                <PanelDetail :id="item.id" />
+                            </q-scroll-area>
                         </q-tab-panel>
                     </q-tab-panels>
                 </template>
             </q-splitter>
         </q-card>
-
     </q-page>
 </template>
 

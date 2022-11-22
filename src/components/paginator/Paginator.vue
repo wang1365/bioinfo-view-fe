@@ -1,10 +1,5 @@
 <template>
-    <q-select
-        dense
-        @update:model-value="pageSizeChange($event)"
-        v-model="pageSize"
-        :options="pageSizeOption"
-    />
+    <q-select dense @update:model-value="pageSizeChange($event)" v-model="pageSize" :options="pageSizeOption" />
     <q-btn disable flat :label="currentItems" />
     <q-btn icon="chevron_left" flat size="sm" @click="prePage()" />
     <q-btn icon="chevron_right" flat size="sm" @click="nextPage()" />

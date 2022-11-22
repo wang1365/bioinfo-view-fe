@@ -2,8 +2,13 @@
     <q-card class="q-mt-md">
         <q-section>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
-                <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
-                    clearable>
+                <q-input
+                    style="width:350px"
+                    v-model="searchParams.search"
+                    dense
+                    label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
+                    clearable
+                >
                 </q-input>
                 <q-input type="number" v-model="searchParams.age_start" dense label="年龄起始" clearable> </q-input>
                 <q-input type="number" v-model="searchParams.age_end" dense label="截止年龄" clearable> </q-input>
@@ -47,12 +52,14 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span style="
+                        <span
+                            style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            ">
+                            "
+                        >
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -96,8 +103,20 @@
                             <td>{{ patient.samplemeta_set.length }}</td>
                             <td class="q-gutter-x-sm">
                                 <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
-                                <q-btn color="secondary" label="关联样本" icon="link" size="sm" @click="link(patient)" />
-                                <q-btn color="info" label="患者信息" icon="visibility" @click="info(patient)" size="sm" />
+                                <q-btn
+                                    color="secondary"
+                                    label="关联样本"
+                                    icon="link"
+                                    size="sm"
+                                    @click="link(patient)"
+                                />
+                                <q-btn
+                                    color="info"
+                                    label="患者信息"
+                                    icon="visibility"
+                                    @click="info(patient)"
+                                    size="sm"
+                                />
                                 <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(patient)" />
                             </td>
                         </tr>
@@ -112,27 +131,39 @@
         <q-section class="q-pd-md"> </q-section>
     </q-card>
     <q-dialog v-model="showPatientNew" persistent>
-        <PatientNew @refresh="
+        <PatientNew
+            @refresh="
     refreshPage();
 showPatientNew = false;
-        " />
+        "
+        />
     </q-dialog>
     <q-dialog v-model="showPatientInfo">
-        <PatientInfo :id="infoId" @refresh="
+        <PatientInfo
+            :id="infoId"
+            @refresh="
     refreshPage();
 showPatientInfo = false;
-        " />
+        "
+        />
     </q-dialog>
     <q-dialog v-model="showPatientEdit" persistent>
-        <PatientEdit :id="editId" @refresh="
+        <PatientEdit
+            :id="editId"
+            @refresh="
     refreshPage();
 showPatientEdit = false;
-        " />
+        "
+        />
     </q-dialog>
     <q-dialog persistent v-model="showLinkSample">
-        <SampleList :linkId="linkId" :patient="linkSamplePatient" @refresh="
+        <SampleList
+            :linkId="linkId"
+            :patient="linkSamplePatient"
+            @refresh="
     linkSample($event);
-        " />
+        "
+        />
     </q-dialog>
 </template>
 <script setup>
