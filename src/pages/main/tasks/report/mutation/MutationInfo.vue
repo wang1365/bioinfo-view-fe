@@ -19,6 +19,13 @@
                         <div>
                             {{`VCF filter: `
 
+
+
+
+
+
+
+
                             }}<span class="text-purple">{{isGermline ? props.row.col147 : props.row.col151}}</span>
                         </div>
                     </div>
@@ -146,11 +153,16 @@ const omim = computed(() => {
     return isGermline.value ? props.row.col144 : props.row.col148
 })
 
+const tableData=ref(null)
 onMounted(() => {
     const file = props.isGermline ? 'Mut_germline/standard-new.csv' : 'Mut_somatic/standard-new.csv'
     readTaskFile(route.params.id, file).then(res => {
         const items = getCsvData(res)
         intro.value = items[items.length-1]
+    })
+    const tablefile = props.isGermline ? 'Mut_germline/germline.evidence' : 'Mut_somatic/somatic.evidence'
+    readTaskFile(route.params.id, tablefile).then(res => {
+        tableData.value=res
     })
 })
 </script>
