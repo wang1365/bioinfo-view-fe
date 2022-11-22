@@ -20,12 +20,6 @@
                             {{`VCF filter: `
 
 
-
-
-
-
-
-
                             }}<span class="text-purple">{{isGermline ? props.row.col147 : props.row.col151}}</span>
                         </div>
                     </div>
@@ -71,6 +65,7 @@
 
             <q-tab-panel name="药物关联信息">
                 <div>{{intro}}</div>
+
                 <div>
                     <a-table
                         :columns="columns"
@@ -82,6 +77,7 @@
                     >
                     </a-table>
                 </div>
+                <div>{{tableRow}}</div>
             </q-tab-panel>
         </q-tab-panels>
     </div>
@@ -115,15 +111,16 @@ const intro = ref('')
 
 const columns = [
     { title: 'Molecular Profile', dataIndex: 'k1', align: 'center', width: 80},
-    { title: 'Indication/Tumor Type', dataIndex: 'k1', align: 'center', width: 100},
-    { title: 'Response Type', dataIndex: 'k1', align: 'center', width: 80},
-    { title: 'Therapy Name', dataIndex: 'k1', align: 'center', width: 80},
-    { title: 'Approval Status', dataIndex: 'k1', align: 'center', width: 80},
-    { title: 'Evidence Type', dataIndex: 'k1', align: 'center', width: 80},
-    { title: 'Efficacy Evidence', dataIndex: 'k1', align: 'center', width: 80},
-    { title: 'References', dataIndex: 'k1', align: 'center', width: 80},
+    { title: 'Tumor Type', dataIndex: 'k2', align: 'center', width: 100},
+    { title: 'Response Type', dataIndex: 'k3', align: 'center', width: 80},
+    { title: 'Therapy Name', dataIndex: 'k4', align: 'center', width: 80},
+    { title: 'Approval Status', dataIndex: 'k5', align: 'center', width: 80},
+    { title: 'Evidence Type', dataIndex: 'k6', align: 'center', width: 80},
+    { title: 'Efficacy Evidence', dataIndex: 'k7', align: 'center', width: 80},
+    { title: 'Efficacy Level', dataIndex: 'k8', align: 'center', width: 80},
+    { title: 'Inferred Tier', dataIndex: 'k9', align: 'center', width: 80},
 ]
-
+const rows=ref([])
 const col146 = computed(() => {
     const result = {
         ref: `${row.value.col4} > ${row.value.col5}`
@@ -154,6 +151,7 @@ const omim = computed(() => {
 })
 
 const tableData=ref(null)
+const tableRow=ref('')
 onMounted(() => {
     const file = props.isGermline ? 'Mut_germline/standard-new.csv' : 'Mut_somatic/standard-new.csv'
     readTaskFile(route.params.id, file).then(res => {
@@ -162,7 +160,17 @@ onMounted(() => {
     })
     const tablefile = props.isGermline ? 'Mut_germline/germline.evidence' : 'Mut_somatic/somatic.evidence'
     readTaskFile(route.params.id, tablefile).then(res => {
-        tableData.value=res
+        let row = props.row
+        tableRow.value = `${row.col1}:${row.col2}-${row.col3}_${row.col4}-${row.col5}_${row.col11}`
+        const items = getCsvData(res)
+        for (const iterator of items) {
+            let item={}
+            for(let index=1;index<iterator.length;index++){
+                item[`k${index}`]=iterator[index]
+            }
+            rows.value.push(item)
+        }
+        console.log(rows.value)
     })
 })
 </script>
