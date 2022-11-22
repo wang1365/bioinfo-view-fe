@@ -19,7 +19,7 @@
             dense
         >
             <q-tab name="胚系突变分析" label="胚系突变分析" v-if="props.viewConfig.showMutGermline" />
-            <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.viewConfig.showMutSomatic" />
+            <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.samples.length > 1" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="胚系突变分析">
