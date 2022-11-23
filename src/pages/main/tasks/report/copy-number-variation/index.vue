@@ -441,7 +441,7 @@ const clickSearch = () => {
         let result = true
         let param = searchParams.value.gene
         if (param.length > 0) {
-            result &= t.Chr.includes(param)
+            result &= t.Gene.includes(param)
         }
 
         param = searchParams.value.type
@@ -456,7 +456,7 @@ const clickSearch = () => {
 
         param = searchParams.value.drugLevel
         if (searchParams.value.drug === 'Yes' && param.length > 0) {
-            // TODO
+            result &=t.Drugs.indexOf(`药物等级:${param}`)>=0?true:false
         }
         return result
     })
