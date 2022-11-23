@@ -19,7 +19,7 @@
             dense
         >
             <q-tab name="单样品融合分析" label="单样品融合分析" v-if="props.viewConfig.showFusionGermline" />
-            <q-tab name="体细胞融合分析" label="体细胞融合分析" v-if="props.viewConfig.showFusionSomatic" />
+            <q-tab name="体细胞融合分析" label="体细胞融合分析" v-if="props.samples.length>1" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
