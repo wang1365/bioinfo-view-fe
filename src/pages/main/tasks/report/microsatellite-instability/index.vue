@@ -23,13 +23,14 @@
     </div>
     <div class="q-py-md" v-if="props.viewConfig.showMSIsite">
         <div class="text-h6 text-primary text-bold">金标微卫星图</div>
+        <!-- TODO: 这里点击最后一列时,如果没有图片需要提 bed文件不包含金标微卫星位点 -->
         <a-table
             class="col-5"
             size="small"
             bordered
             :loading="loading1"
             :data-source="rows2"
-            :columns="columns1"
+            :columns="columns2"
             :sticky="true"
         >
             <template #bodyCell="{ column, record }">
