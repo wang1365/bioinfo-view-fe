@@ -169,7 +169,7 @@
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
-                <MutationInfo :row="currentRow"></MutationInfo>
+                <MutationInfo :row="currentRow" :task="props.task" :samples="props.samples"></MutationInfo>
             </q-card-section>
             <q-card-actions align="center" vertical>
                 <q-btn label="关 闭" color="primary" v-close-popup></q-btn>
@@ -189,6 +189,18 @@ import {readTaskFile} from "src/api/task";
 import {getCsvHeader, getCsvData} from "src/utils/csv";
 import {useRoute} from 'vue-router'
 
+ const props = defineProps({
+        samples: {
+        type: Array,
+        required: false,
+        default: () => []
+    },
+     task:{
+         type:Object,
+         reuqired:false
+}
+
+})
 const route = useRoute()
 
 const dialogVisible = ref(false)
@@ -458,8 +470,14 @@ const refreshPage = () => {
 }
 
 onMounted(() => {
+    let file=''
+     if(props.samples[0].id.toString()==props.task.samples[0].toString()){
+         file =`Mut_germline/${props.samples[0].identifier}.combined.standard-new.csv'`}
+     else{
+         file =`Mut_germline/${props.samples[1].identifier}.combined.standard-new.csv'`
+}
     loading.value = true
-    readTaskFile(route.params.id, 'Mut_germline/QT11.combined.standard-new.csv').then(res => {
+    readTaskFile(route.params.id, file).then(res => {
         const headNames = getCsvHeader(res, ',')
         columns.value.forEach(col => col.title = headNames[col.i-1])
 

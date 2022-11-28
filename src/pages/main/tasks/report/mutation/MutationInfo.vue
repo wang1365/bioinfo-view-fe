@@ -20,6 +20,7 @@
                             {{`VCF filter: `
 
 
+
                             }}<span class="text-purple">{{isGermline ? props.row.col147 : props.row.col151}}</span>
                         </div>
                     </div>
@@ -77,7 +78,6 @@
                     >
                     </a-table>
                 </div>
-                <div>{{tableRow}}</div>
             </q-tab-panel>
         </q-tab-panels>
     </div>
@@ -103,7 +103,13 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: () => true
-    }
+    },samples:{
+        type:Array,
+        required:false,
+},task:{
+     type:Object,
+     required:false
+}
 })
 
 const { row, isGermline } = toRefs(props)
@@ -153,24 +159,36 @@ const omim = computed(() => {
 const tableData=ref(null)
 const tableRow=ref('')
 onMounted(() => {
-    const file = props.isGermline ? 'Mut_germline/standard-new.csv' : 'Mut_somatic/standard-new.csv'
+     let file=''
+     if(props.samples.length===1){
+         file=file =`Mut_germline/${props.samples[0].identifier}.combined.standard-new.csv'`
+}else if(props.samples.length>1){
+     if(props.samples[0].id.toString()==props.task.samples[0].toString()){
+         file =`Mut_somatic/${props.samples[0].identifier}_${props.samples[1].library_number}.combined.standard-new.csv'`}
+     else{
+         file =`Mut_somatic/${props.samples[1].identifier}_${props.samples[0].library_number}.combined.standard-new.csv'`
+}
+}
+
     readTaskFile(route.params.id, file).then(res => {
         const items = getCsvData(res)
         intro.value = items[items.length-1]
+        console.log(items)
     })
     const tablefile = props.isGermline ? 'Mut_germline/germline.evidence' : 'Mut_somatic/somatic.evidence'
     readTaskFile(route.params.id, tablefile).then(res => {
         let row = props.row
-        tableRow.value = `${row.col1}:${row.col2}-${row.col3}_${row.col4}-${row.col5}_${row.col11}`
         const items = getCsvData(res)
         for (const iterator of items) {
-            let item={}
+            if(iterator[0]==`${row.col1}:${row.col2}-${row.col3}_${row.col4}-${row.col5}_${row.col11}`)
+           { let item={}
             for(let index=1;index<iterator.length;index++){
                 item[`k${index}`]=iterator[index]
             }
-            rows.value.push(item)
+               rows.value.push(item)}
         }
-        console.log(rows.value)
+
+
     })
 })
 </script>

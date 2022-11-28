@@ -46,7 +46,7 @@
                     <QcVue :module="module" :intro="intros['qc']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
-                    <MutaionVue :module="module" :intro="intros['mutation']" :samples="samples" />
+                    <MutaionVue :module="module" :intro="intros['mutation']" :samples="samples" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
                     <FusionVue :module="module" :intro="intros['fusion']" :samples="samples" />

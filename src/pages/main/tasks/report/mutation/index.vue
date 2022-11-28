@@ -23,10 +23,10 @@
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="胚系突变分析">
-                <GermlineMutationVue />
+                <GermlineMutationVue :samples="props.samples" :task="props.task" />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
-                <SomaticMutationVue />
+                <SomaticMutationVue :samples="props.samples" :task="props.task" />
             </q-tab-panel>
         </q-tab-panels>
         <q-dialog v-model="dlgVisible">
@@ -66,6 +66,9 @@ const props = defineProps({
             "showMutGermline": true,
             "showMutSomatic": true
         }}
-    }
+    },task:{
+        type:Object,
+        required:false
+}
 })
 </script>

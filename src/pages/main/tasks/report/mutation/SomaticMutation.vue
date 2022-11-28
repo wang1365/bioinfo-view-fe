@@ -193,7 +193,12 @@
     <q-dialog v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
-                <MutationInfo :row="currentRow" :isGermline="false"></MutationInfo>
+                <MutationInfo
+                    :row="currentRow"
+                    :isGermline="false"
+                    :task="props.task"
+                    :samples="props.samples"
+                ></MutationInfo>
             </q-card-section>
             <q-space></q-space>
             <q-card-actions align="center" vertical>
@@ -249,11 +254,14 @@ const props = defineProps({
         type: String,
         required: false
     },
-    sample: {
+    samples: {
         type: Array,
         required: false,
         default: () => []
-    }
+    },task:{
+        type:Object,
+        required:false,
+}
 })
 
 const headers = ref([])
@@ -547,7 +555,14 @@ onMounted(() => {
 
 const init = () => {
     loading.value = true
-    readTaskFile(route.params.id, 'Mut_somatic/QN11_QT11.combined.standard-new.csv').then(res => {
+    let file=''
+     if(props.samples[0].id.toString()==props.task.samples[1].toString()){
+         file = `Mut_somatic/${props.samples[0].identifier}_${props.samples[1].library_number}.combined.standard-new.csv`
+}else{
+
+    file = `Mut_somatic/${props.samples[0].identifier}_${props.samples[1].library_number}.combined.standard-new.csv`
+}
+    readTaskFile(route.params.id,file).then(res => {
         const headNames = getCsvHeader(res, ',')
         headers.value = headNames
         columns.value.forEach(col => col.title = headNames[col.i-1])
