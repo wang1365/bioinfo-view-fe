@@ -1,17 +1,15 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="系统设置" />
-        <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm justify-center">
-            <div class="col-lg-6 col-md-6 col-sm-10 col-xs-12">
-                <PieChart3 />
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-10 col-xs-12">
-                <PieChart2 />
-            </div>
-            <!-- <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                <PieChart />
-            </div> -->
-        </div>
+        <!-- <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm justify-center">
+             <div class="col-lg-6 col-md-6 col-sm-10 col-xs-12">
+             <PieChart3 />
+             </div>
+             <div class="col-lg-6 col-md-6 col-sm-10 col-xs-12">
+             <PieChart2 />
+             </div>
+
+             </div> -->
         <div class="q-my-md"></div>
         <q-separator></q-separator>
         <div class="q-py-md">

@@ -6,53 +6,68 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch } from "vue";
+import { markRaw, onMounted, onUpdated, ref, watch } from 'vue'
 
-const echarts = require("echarts");
-const chart = ref(null);
-const piechart = ref(null);
+const echarts = require('echarts')
+const chart = ref(null)
+const piechart = ref(null)
 
+const props = defineProps({
+    total: {
+        type: Number,
+        required: false,
+        default: 0,
+    },
+    used: {
+        type: Number,
+        required: false,
+        default: 0,
+    },
+})
 onMounted(() => {
-    init();
-});
+    init()
+})
+onUpdated(() => {
+    init()
+})
 const init = () => {
-    let ct = piechart.value;
-    echarts.dispose(ct);
-    chart.value = markRaw(echarts.init(ct));
+    let ct = piechart.value
+    echarts.dispose(ct)
+    chart.value = markRaw(echarts.init(ct))
     chart.value.setOption({
         title: {
-            text: "内存占用情况",
-            subtext: "单位 G",
-            left: "center",
+            text: `内存占用情况, 总共 ${props.total}G`,
+            subtext: '单位 G',
+            left: 'center',
         },
         tooltip: {
-            trigger: "item",
+            trigger: 'item',
         },
         legend: {
-            orient: "vertical",
-            left: "left",
+            orient: 'vertical',
+            left: 'left',
         },
         series: [
             {
-                name: "内存",
-                type: "pie",
-                radius: "50%",
+                name: '内存',
+                type: 'pie',
+                radius: '50%',
                 data: [
-                    { value: 100, name: "剩余内存" },
-                    { value: 28, name: "当前占用" },
+                    { value: props.total - props.used, name: '剩余内存' },
+                    { value: props.used, name: '当前占用' },
                 ],
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
                         shadowOffsetX: 0,
-                        shadowColor: "rgba(0, 0, 0, 0.5)",
+                        shadowColor: 'rgba(0, 0, 0, 0.5)',
                     },
                 },
             },
         ],
-    });
-};
+    })
+}
 const onResize = () => {
-    chart.value.resize();
-};
+    chart.value.resize()
+}
 </script>
