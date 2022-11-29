@@ -18,39 +18,49 @@
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>
                             {{`VCF filter: `
-
-
-
-                            }}<span class="text-purple">{{isGermline ? props.row.col147 : props.row.col151}}</span>
+                            }}
+                            <span
+                                class="text-purple"
+                            >{{isGermline ? props.row.col147 : props.row.col151}}</span>
                         </div>
                     </div>
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>
-                            {{`Gene: `}}<span class="text-purple">{{col146.gene}}</span>
+                            {{`Gene: `}}
+                            <span class="text-purple">{{col146.gene}}</span>
                         </div>
                         <div>
-                            {{`Transcript: `}}<span class="text-purple">{{col146.transcript}}</span>
+                            {{`Transcript: `}}
+                            <span class="text-purple">{{col146.transcript}}</span>
                         </div>
                         <div>
-                            {{`Exon: `}}<span class="text-purple">{{col146.exon}}</span>
+                            {{`Exon: `}}
+                            <span class="text-purple">{{col146.exon}}</span>
                         </div>
                         <div>
-                            {{`cDNA: `}}<span class="text-purple">{{col146.cDna}}</span>
+                            {{`cDNA: `}}
+                            <span class="text-purple">{{col146.cDna}}</span>
                         </div>
                         <div>
-                            {{`Ref/Alt: `}}<span class="text-purple">{{col146.ref}}</span>
+                            {{`Ref/Alt: `}}
+                            <span class="text-purple">{{col146.ref}}</span>
                         </div>
                         <div>
-                            {{`Protein: `}}<span class="text-purple">{{col146.protein}}</span>
+                            {{`Protein: `}}
+                            <span class="text-purple">{{col146.protein}}</span>
                         </div>
                     </div>
                     <div class="col" style="padding-left: 5px">
                         <div>
                             <span>{{'RS: '}}</span>
-                            <a :href="'https://www.ncbi.nlm.nih.gov/snp/' + rs" target="_blank">{{rs}}</a>
+                            <a
+                                :href="'https://www.ncbi.nlm.nih.gov/snp/' + rs"
+                                target="_blank"
+                            >{{rs}}</a>
                         </div>
                         <div>
-                            {{`ClinVar Allele ID: `}}<span class="text-purple">{{clinVar}}</span>
+                            {{`ClinVar Allele ID: `}}
+                            <span class="text-purple">{{clinVar}}</span>
                         </div>
                         <div>
                             <span>{{'OMIM: '}}</span>
@@ -65,7 +75,7 @@
             </q-tab-panel>
 
             <q-tab-panel name="药物关联信息">
-                <div>{{intro}}</div>
+                <div class="q-py-sm">{{intro}}</div>
 
                 <div>
                     <a-table
@@ -75,8 +85,7 @@
                         size="small"
                         bordered
                         :sticky="true"
-                    >
-                    </a-table>
+                    ></a-table>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -86,8 +95,8 @@
 <script setup>
 import { ref, onMounted, toRefs, computed } from 'vue'
 import RadarChartVue from './SomaticColumnCharts/RadarChart'
-import { readTaskFile } from "src/api/task"
-import { getCsvData } from "src/utils/csv"
+import { readTaskFile, readTaskMuFile } from 'src/api/task'
+import { getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -97,39 +106,41 @@ const props = defineProps({
     row: {
         type: Object,
         required: true,
-        default: () => {}
+        default: () => {},
     },
     isGermline: {
         type: Boolean,
         required: false,
-        default: () => true
-    },samples:{
-        type:Array,
-        required:false,
-},task:{
-     type:Object,
-     required:false
-}
+        default: () => true,
+    },
+    samples: {
+        type: Array,
+        required: false,
+    },
+    task: {
+        type: Object,
+        required: false,
+    },
 })
 
 const { row, isGermline } = toRefs(props)
 const intro = ref('')
 
 const columns = [
-    { title: 'Molecular Profile', dataIndex: 'k1', align: 'center', width: 80},
-    { title: 'Tumor Type', dataIndex: 'k2', align: 'center', width: 100},
-    { title: 'Response Type', dataIndex: 'k3', align: 'center', width: 80},
-    { title: 'Therapy Name', dataIndex: 'k4', align: 'center', width: 80},
-    { title: 'Approval Status', dataIndex: 'k5', align: 'center', width: 80},
-    { title: 'Evidence Type', dataIndex: 'k6', align: 'center', width: 80},
-    { title: 'Efficacy Evidence', dataIndex: 'k7', align: 'center', width: 80},
-    { title: 'Efficacy Level', dataIndex: 'k8', align: 'center', width: 80},
-    { title: 'Inferred Tier', dataIndex: 'k9', align: 'center', width: 80},
+    { title: 'Molecular Profile', dataIndex: 'k1', align: 'center', width: 80 },
+    { title: 'Tumor Type', dataIndex: 'k2', align: 'center', width: 100 },
+    { title: 'Response Type', dataIndex: 'k3', align: 'center', width: 80 },
+    { title: 'Therapy Name', dataIndex: 'k4', align: 'center', width: 80 },
+    { title: 'Approval Status', dataIndex: 'k5', align: 'center', width: 80 },
+    { title: 'Evidence Type', dataIndex: 'k6', align: 'center', width: 80 },
+    { title: 'Efficacy Evidence', dataIndex: 'k7', align: 'center', width: 250 },
+    { title: 'Efficacy Level', dataIndex: 'k8', align: 'center', width: 80 },
+    { title: 'Inferred Tier', dataIndex: 'k9', align: 'center', width: 80 },
 ]
-const rows=ref([])
+const rows = ref([])
 const col146 = computed(() => {
     const result = {
-        ref: `${row.value.col4} > ${row.value.col5}`
+        ref: `${row.value.col4} > ${row.value.col5}`,
     }
     const col = isGermline.value ? row.value.col146 : row.value.col150
     const items = col.split(':')
@@ -137,10 +148,14 @@ const col146 = computed(() => {
         console.log('Invalid col', col, row.value)
         return result
     }
-    const [gene, transcript, exon, cDna,  protein] = items
+    const [gene, transcript, exon, cDna, protein] = items
     return {
-        gene, transcript, exon, cDna, protein,
-        ...result
+        gene,
+        transcript,
+        exon,
+        cDna,
+        protein,
+        ...result,
     }
 })
 
@@ -156,39 +171,27 @@ const omim = computed(() => {
     return isGermline.value ? props.row.col144 : props.row.col148
 })
 
-const tableData=ref(null)
-const tableRow=ref('')
+const tableData = ref(null)
+const tableRow = ref('')
 onMounted(() => {
-     let file=''
-     if(props.samples.length===1){
-         file=file =`Mut_germline/${props.samples[0].identifier}.combined.standard-new.csv'`
-}else if(props.samples.length>1){
-     if(props.samples[0].id.toString()==props.task.samples[0].toString()){
-         file =`Mut_somatic/${props.samples[0].identifier}_${props.samples[1].library_number}.combined.standard-new.csv'`}
-     else{
-         file =`Mut_somatic/${props.samples[1].identifier}_${props.samples[0].library_number}.combined.standard-new.csv'`
-}
-}
-
-    readTaskFile(route.params.id, file).then(res => {
-        const items = getCsvData(res)
-        intro.value = items[items.length-1]
-        console.log(items)
-    })
+    if (props.isGermline) {
+        intro.value = props.row.col148
+    } else {
+        intro.value = props.row.col152
+    }
     const tablefile = props.isGermline ? 'Mut_germline/germline.evidence' : 'Mut_somatic/somatic.evidence'
-    readTaskFile(route.params.id, tablefile).then(res => {
+    readTaskFile(route.params.id, tablefile).then((res) => {
         let row = props.row
         const items = getCsvData(res)
         for (const iterator of items) {
-            if(iterator[0]==`${row.col1}:${row.col2}-${row.col3}_${row.col4}-${row.col5}_${row.col11}`)
-           { let item={}
-            for(let index=1;index<iterator.length;index++){
-                item[`k${index}`]=iterator[index]
+            if (iterator[0] == `${row.col1}:${row.col2}-${row.col3}_${row.col4}-${row.col5}_${row.col11}`) {
+                let item = {}
+                for (let index = 1; index < iterator.length; index++) {
+                    item[`k${index}`] = iterator[index]
+                }
+                rows.value.push(item)
             }
-               rows.value.push(item)}
         }
-
-
     })
 })
 </script>

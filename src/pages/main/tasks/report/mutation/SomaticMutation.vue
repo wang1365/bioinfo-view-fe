@@ -132,12 +132,15 @@
                         label="SIFT_pred"
                     />
                 </div>
-                <div class="col text-primary text-bold">
-                    {{`结果： ${filteredRows.length}条`}}
-                </div>
+                <div class="col text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                 <div class="q-gutter-md text-center q-py-sm">
                     <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
+                    <q-btn
+                        color="primary"
+                        label="重置"
+                        icon="settings_backup_restore"
+                        @click="reset"
+                    />
                 </div>
             </div>
 
@@ -209,16 +212,16 @@
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from "vue";
-import BarChartVue from "./SomaticInfoCharts/BarChart.vue"
-import PieChartVue from "./SomaticInfoCharts/PieChart.vue"
-import RoseChartVue from "./SomaticInfoCharts/RoseChart.vue"
-import BubbleChartVue from "./SomaticInfoCharts/BubbleChart.vue"
-import RadarChartVue from "./SomaticColumnCharts/RadarChart.vue"
+import { ref, onMounted, computed } from 'vue'
+import BarChartVue from './SomaticInfoCharts/BarChart.vue'
+import PieChartVue from './SomaticInfoCharts/PieChart.vue'
+import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
+import BubbleChartVue from './SomaticInfoCharts/BubbleChart.vue'
+import RadarChartVue from './SomaticColumnCharts/RadarChart.vue'
 import MutationInfo from './MutationInfo'
-import {readTaskFile} from "src/api/task";
-import {getCsvHeader, getCsvData} from "src/utils/csv";
-import {useRoute} from 'vue-router'
+import { readTaskFile, readTaskMuFile } from 'src/api/task'
+import { getCsvHeader, getCsvData } from 'src/utils/csv'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
@@ -234,15 +237,14 @@ const searchParams = ref({
     mutationMeaning: null,
     mutationRisk: null,
     humanRatio: null,
-    sift: null
+    sift: null,
 })
 
 const options = ref({
-    mutationType: ["All", "SNP", "INDEL"],
+    mutationType: ['All', 'SNP', 'INDEL'],
     mutationPosition: [],
     mutationMeaning: [],
     mutationRisk: [],
-
 })
 
 const loading = ref(false)
@@ -252,16 +254,17 @@ const filteredRows = ref([])
 const props = defineProps({
     intro: {
         type: String,
-        required: false
+        required: false,
     },
     samples: {
         type: Array,
         required: false,
-        default: () => []
-    },task:{
-        type:Object,
-        required:false,
-}
+        default: () => [],
+    },
+    task: {
+        type: Object,
+        required: false,
+    },
 })
 
 const headers = ref([])
@@ -287,7 +290,7 @@ const customCell = (record, rowIndex, column) => {
             // 字体颜色
             // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
             // 行背景色
-            'background-color': record.id === currentRow.value.id  ? '#64b5f6' : 'white',
+            'background-color': record.id === currentRow.value.id ? '#64b5f6' : 'white',
             // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
             // 'border-style': 'solid',
             // // 下划线
@@ -295,11 +298,11 @@ const customCell = (record, rowIndex, column) => {
             // // 字体样式-斜体
             // 'font-style': 'italic',
             // // 字体样式-斜体
-            'font-weight': record.id === currentRow.value.id  ? 'bolder' : 'normal',
-            'cursor':'pointer'
+            'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+            cursor: 'pointer',
         },
         // 鼠标单击行
-        onClick: event => {
+        onClick: (event) => {
             // 记录当前点击的行标识
             currentRow.value = record
             clickRow(record)
@@ -308,55 +311,55 @@ const customCell = (record, rowIndex, column) => {
             // } else {
             //     currentRow.value = record
             // }
-        }
+        },
     }
 }
 const currentRow = ref({})
 const columns = ref([
-    {i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left'},   // Chr
-    {i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left'},    // Start
-    {i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85},                   // End
-    {i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70},   // Ref
-    {i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70},   // Alt
-    {i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90},   // Geno_Type
-    {i: 7, title: '', dataIndex: 'col7', align: 'center', width: 110},  // Allelic_depths
-    {i: 8, title: '', dataIndex: 'col8', align: 'center', width: 95},   // Seq_depths
-    {i: 9, title: '', dataIndex: 'col9', align: 'center', width: 115},  // Mutation_Rate
-    {i: 10, title: '', dataIndex: 'col10', align: 'center', width: 90}, // Geno_Type
-    {i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110},// Allelic_Depths
-    {i: 12, title: '', dataIndex: 'col12', align: 'center', width: 95}, // Seq_Depths
-    {i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160},// Mutation_Rate
-    {i: 14, title: '', dataIndex: 'col14', align: 'center', width: 110},  // Func.refGene
-    {i: 15, title: '', dataIndex: 'col15', align: 'center', width: 110}, // Gene.refGene
+    { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
+    { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
+    { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85 }, // End
+    { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
+    { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
+    { i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90 }, // Geno_Type
+    { i: 7, title: '', dataIndex: 'col7', align: 'center', width: 110 }, // Allelic_depths
+    { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 95 }, // Seq_depths
+    { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 115 }, // Mutation_Rate
+    { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 90 }, // Geno_Type
+    { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110 }, // Allelic_Depths
+    { i: 12, title: '', dataIndex: 'col12', align: 'center', width: 95 }, // Seq_Depths
+    { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // Mutation_Rate
+    { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 110 }, // Func.refGene
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 110 }, // Gene.refGene
 
-    {i: 17, title: '', dataIndex: 'col17', align: 'center', width: 160}, // ExonicFunc.refGene
-    {i: 18, title: '', dataIndex: 'col18', align: 'center', width: 90}, // exon
-    {i: 19, title: '', dataIndex: 'col19', align: 'center', width: 100}, // NUChange
-    {i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100}, // AAChange
+    { i: 17, title: '', dataIndex: 'col17', align: 'center', width: 160 }, // ExonicFunc.refGene
+    { i: 18, title: '', dataIndex: 'col18', align: 'center', width: 90 }, // exon
+    { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 100 }, // NUChange
+    { i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100 }, // AAChange
 
-    {i: 22, title: '', dataIndex: 'col22', align: 'left', width: 240},    // CLNDN
-    {i: 23, title: '', dataIndex: 'col23', align: 'left', width: 300},     // CLNDISDB
-    {i: 24, title: '', dataIndex: 'col24', align: 'left', width: 160},    // CLNREVSTAT
-    {i: 25, title: '', dataIndex: 'col25', align: 'center', width: 120},    // CLNSIG
-    {i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100},    // cosmic70
-    {i: 27, title: '', dataIndex: 'col27', align: 'center', width: 100},    // ExAC_ALL
+    { i: 22, title: '', dataIndex: 'col22', align: 'left', width: 240 }, // CLNDN
+    { i: 23, title: '', dataIndex: 'col23', align: 'left', width: 300 }, // CLNDISDB
+    { i: 24, title: '', dataIndex: 'col24', align: 'left', width: 160 }, // CLNREVSTAT
+    { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 120 }, // CLNSIG
+    { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100 }, // cosmic70
+    { i: 27, title: '', dataIndex: 'col27', align: 'center', width: 100 }, // ExAC_ALL
 
-    {i: 30, title: '', dataIndex: 'col30', align: 'center', width: 100},
+    { i: 30, title: '', dataIndex: 'col30', align: 'center', width: 100 },
 
-    {i: 35, title: '', dataIndex: 'col35', align: 'center', width: 100},
-    {i: 36, title: '', dataIndex: 'col36', align: 'center', width: 100},
+    { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 100 },
+    { i: 36, title: '', dataIndex: 'col36', align: 'center', width: 100 },
 
-    {i: 38, title: '', dataIndex: 'col38', align: 'center', width: 100},
-    {i: 39, title: '', dataIndex: 'col39', align: 'center', width: 100},
+    { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 100 },
+    { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 100 },
 
-    {i: 43, title: '', dataIndex: 'col43', align: 'center', width: 100},
+    { i: 43, title: '', dataIndex: 'col43', align: 'center', width: 100 },
 
-    {i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100},
+    { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
 
-    {i: 148, title: '', dataIndex: 'col148', align: 'center', width: 100},
+    { i: 148, title: '', dataIndex: 'col148', align: 'center', width: 100 },
 ])
 
-columns.value.forEach(c => c.customCell = customCell)
+columns.value.forEach((c) => (c.customCell = customCell))
 
 const customRow = (record, index) => {
     return {
@@ -390,7 +393,6 @@ const customRow = (record, index) => {
     }
 }
 
-
 const reset = () => {
     searchParams.value = {
         gene: null,
@@ -401,7 +403,7 @@ const reset = () => {
         mutationMeaning: null,
         mutationRisk: null,
         humanRatio: null,
-        sift: null
+        sift: null,
     }
     search()
 }
@@ -483,7 +485,7 @@ const search = () => {
         param = searchParams.value.mutationPosition
         if (param && param.length > 0) {
             const positions = line.col14.split(';')
-            if (!(positions.some(position => param.includes(position)))) {
+            if (!positions.some((position) => param.includes(position))) {
                 return false
             }
         }
@@ -495,7 +497,7 @@ const search = () => {
          */
         param = searchParams.value.mutationMeaning
         if (param && param.length > 0 && param !== 'All') {
-            if (!(param.includes(line17))) {
+            if (!param.includes(line17)) {
                 return false
             }
         }
@@ -518,10 +520,10 @@ const search = () => {
          */
         param = searchParams.value.humanRatio
         if (param) {
-            if (line.col30 !== '.' && line.col35 !== '.'  || line.col43 !== '.' ) {
+            if ((line.col30 !== '.' && line.col35 !== '.') || line.col43 !== '.') {
                 let count = Number(line.col30) < param ? 1 : 0
-                count += (Number(line.col35) < param ? 1 : 0)
-                count += (Number(line.col43) < param ? 1 : 0)
+                count += Number(line.col35) < param ? 1 : 0
+                count += Number(line.col43) < param ? 1 : 0
                 if (count < 2) {
                     return false
                 }
@@ -542,7 +544,6 @@ const search = () => {
         return true
     })
 
-
     console.log('========= search result', filteredRows.value.length, filteredRows.value)
 }
 const refreshPage = () => {
@@ -555,43 +556,38 @@ onMounted(() => {
 
 const init = () => {
     loading.value = true
-    let file=''
-     if(props.samples[0].id.toString()==props.task.samples[1].toString()){
-         file = `Mut_somatic/${props.samples[0].identifier}_${props.samples[1].library_number}.combined.standard-new.csv`
-}else{
+    readTaskMuFile(route.params.id, 'Mut_somatic')
+        .then((res) => {
+            const headNames = getCsvHeader(res, ',')
+            headers.value = headNames
+            console.log('headers',headers.value)
+            columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
 
-    file = `Mut_somatic/${props.samples[0].identifier}_${props.samples[1].library_number}.combined.standard-new.csv`
-}
-    readTaskFile(route.params.id,file).then(res => {
-        const headNames = getCsvHeader(res, ',')
-        headers.value = headNames
-        columns.value.forEach(col => col.title = headNames[col.i-1])
+            const visibleColIdx = columns.value.map((t) => t.i)
+            const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
+            const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+            csvRows.forEach((row, i) => (row.id = i))
+            rows.value = csvRows
+            filteredRows.value = csvRows
 
-        const visibleColIdx = columns.value.map(t => t.i)
-        const colKeys = _.range(1, 155, 1).map(i => 'col' + i)
-        const csvRows = getCsvData(res, {splitter: ',', hasHeaderLine: true, fields: colKeys})
-        csvRows.forEach((row, i) => row.id = i)
-        rows.value = csvRows
-        filteredRows.value = csvRows
+            // 提取options
+            let positions = new Set()
+            let meanings = new Set()
+            let risks = new Set()
+            for (let columns of csvRows) {
+                const items = columns.col14.split(';')
+                items.forEach((item) => positions.add(item))
 
+                if (columns.col13 !== '.') {
+                    meanings.add(columns.col17)
+                }
 
-        // 提取options
-        let positions = new Set()
-        let meanings = new Set()
-        let risks = new Set()
-        for (let columns of csvRows) {
-            const items = columns.col14.split(';')
-            items.forEach(item => positions.add(item))
-
-            if (columns.col13 !== '.') {
-                meanings.add(columns.col17)
+                risks.add(columns.col25)
             }
-
-            risks.add(columns.col25)
-        }
-        options.value.mutationPosition = Array.from(positions)
-        options.value.mutationMeaning = Array.from(meanings)
-        options.value.mutationRisk = Array.from(risks)
-    }).finally(() => loading.value = false)
+            options.value.mutationPosition = Array.from(positions)
+            options.value.mutationMeaning = Array.from(meanings)
+            options.value.mutationRisk = Array.from(risks)
+        })
+        .finally(() => (loading.value = false))
 }
 </script>

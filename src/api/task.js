@@ -18,6 +18,16 @@ export function readTaskFile(id, path) {
     })
 }
 
+export function readTaskMuFile(id, name) {
+    return api({
+        url: `/task/${id}/mufile/`,
+        method: 'get',
+        params: {
+            name,
+        },
+    })
+}
+
 export function getSummary() {
     return api({
         url: `/task/summary`,

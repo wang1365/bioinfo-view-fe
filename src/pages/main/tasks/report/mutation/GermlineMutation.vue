@@ -108,12 +108,15 @@
                         label="SIFT_pred"
                     />
                 </div>
-                <div class="col text-primary text-bold">
-                    {{`结果： ${filteredRows.length}条`}}
-                </div>
+                <div class="col text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                 <div class="q-gutter-md text-center q-py-sm">
                     <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
+                    <q-btn
+                        color="primary"
+                        label="重置"
+                        icon="settings_backup_restore"
+                        @click="reset"
+                    />
                 </div>
             </div>
 
@@ -178,28 +181,27 @@
     </q-dialog>
 </template>
 <script setup>
-import {ref, onMounted} from "vue";
-import BarChartVue from "./SomaticInfoCharts/BarChart.vue"
-import PieChartVue from "./SomaticInfoCharts/PieChart.vue"
-import RoseChartVue from "./SomaticInfoCharts/RoseChart.vue"
-import BubbleChartVue from "./SomaticInfoCharts/BubbleChart.vue"
-import RadarChartVue from "./SomaticColumnCharts/RadarChart.vue"
+import { ref, onMounted } from 'vue'
+import BarChartVue from './SomaticInfoCharts/BarChart.vue'
+import PieChartVue from './SomaticInfoCharts/PieChart.vue'
+import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
+import BubbleChartVue from './SomaticInfoCharts/BubbleChart.vue'
+import RadarChartVue from './SomaticColumnCharts/RadarChart.vue'
 import MutationInfo from './MutationInfo'
-import {readTaskFile} from "src/api/task";
-import {getCsvHeader, getCsvData} from "src/utils/csv";
-import {useRoute} from 'vue-router'
+import { readTaskFile, readTaskMuFile } from 'src/api/task'
+import { getCsvHeader, getCsvData } from 'src/utils/csv'
+import { useRoute } from 'vue-router'
 
- const props = defineProps({
-        samples: {
+const props = defineProps({
+    samples: {
         type: Array,
         required: false,
-        default: () => []
+        default: () => [],
     },
-     task:{
-         type:Object,
-         reuqired:false
-}
-
+    task: {
+        type: Object,
+        reuqired: false,
+    },
 })
 const route = useRoute()
 
@@ -213,15 +215,14 @@ const searchParams = ref({
     mutationMeaning: null,
     mutationRisk: null,
     humanRatio: null,
-    sift: null
+    sift: null,
 })
 
 const options = ref({
-    mutationType: ["All", "SNP", "INDEL"],
+    mutationType: ['All', 'SNP', 'INDEL'],
     mutationPosition: [],
     mutationMeaning: [],
     mutationRisk: [],
-
 })
 
 const loading = ref(false)
@@ -235,7 +236,7 @@ const customCell = (record, rowIndex, column) => {
             // 字体颜色
             // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
             // 行背景色
-            'background-color': record.id === currentRow.value.id  ? '#64b5f6' : 'white',
+            'background-color': record.id === currentRow.value.id ? '#64b5f6' : 'white',
             // 'color': record.id === currentRow.value.id  ? 'white' : 'black',
             // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
             // 'border-style': 'solid',
@@ -244,11 +245,11 @@ const customCell = (record, rowIndex, column) => {
             // // 字体样式-斜体
             // 'font-style': 'italic',
             // // 字体样式-斜体
-            'font-weight': record.id === currentRow.value.id  ? 'bolder' : 'normal',
-            'cursor':'pointer'
+            'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+            cursor: 'pointer',
         },
         // 鼠标单击行
-        onClick: event => {
+        onClick: (event) => {
             // 记录当前点击的行标识
             currentRow.value = record
             clickRow(record)
@@ -257,54 +258,54 @@ const customCell = (record, rowIndex, column) => {
             // } else {
             //     currentRow.value = record
             // }
-        }
+        },
     }
 }
 const currentRow = ref({})
 const columns = ref([
-    {i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left'},   // Chr
-    {i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left'},    // Start
-    {i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85},                   // End
-    {i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70},   // Ref
-    {i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70},   // Alt
-    {i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90},   // Geno_Type
-    {i: 7, title: '', dataIndex: 'col7', align: 'center', width: 110},  // Allelic_depths
-    {i: 8, title: '', dataIndex: 'col8', align: 'center', width: 95},   // Seq_depths
-    {i: 9, title: '', dataIndex: 'col9', align: 'center', width: 115},  // Mutation_Rate
-    {i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105},// Func.refGene
-    {i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110},// Gene.refGene
+    { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
+    { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
+    { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85 }, // End
+    { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
+    { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
+    { i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90 }, // Geno_Type
+    { i: 7, title: '', dataIndex: 'col7', align: 'center', width: 110 }, // Allelic_depths
+    { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 95 }, // Seq_depths
+    { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 115 }, // Mutation_Rate
+    { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105 }, // Func.refGene
+    { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110 }, // Gene.refGene
 
-    {i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160},                // ExoniFunc.refGene
-    {i: 14, title: '', dataIndex: 'col14', align: 'left', width: 140},                  // exon
-    {i: 15, title: '', dataIndex: 'col15', align: 'left', width: 160, ellipsis: true},  // NUChange
-    {i: 16, title: '', dataIndex: 'col16', align: 'left', width: 160, ellipsis: true},  // AAChange
+    { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
+    { i: 14, title: '', dataIndex: 'col14', align: 'left', width: 140 }, // exon
+    { i: 15, title: '', dataIndex: 'col15', align: 'left', width: 160, ellipsis: true }, // NUChange
+    { i: 16, title: '', dataIndex: 'col16', align: 'left', width: 160, ellipsis: true }, // AAChange
 
-    {i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true},  // CLNDN
-    {i: 19, title: '', dataIndex: 'col19', align: 'left', width: 400, ellipsis: true},  // CLNDISDB
-    {i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280},                  // CLNREVSTAT
-    {i: 21, title: '', dataIndex: 'col21', align: 'left', width: 280},
-    {i: 22, title: '', dataIndex: 'col22', align: 'center', width: 100},    // cosmic70
-    {i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95},     // ExAC_ALL
-    {i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100},    // ExAC_AFR
-    {i: 25, title: '', dataIndex: 'col25', align: 'center', width: 100},    // ExAC_AMR
-    {i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100},    // ExAC_EAS
+    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
+    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 400, ellipsis: true }, // CLNDISDB
+    { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280 }, // CLNREVSTAT
+    { i: 21, title: '', dataIndex: 'col21', align: 'left', width: 280 },
+    { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 100 }, // cosmic70
+    { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95 }, // ExAC_ALL
+    { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
+    { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 100 }, // ExAC_AMR
+    { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100 }, // ExAC_EAS
 
-    {i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100},
-    {i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100},
+    { i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100 },
+    { i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100 },
 
-    {i: 34, title: '', dataIndex: 'col34', align: 'center', width: 100},// avsnp150
-    {i: 35, title: '', dataIndex: 'col35', align: 'center', width: 100},
+    { i: 34, title: '', dataIndex: 'col34', align: 'center', width: 100 }, // avsnp150
+    { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 100 },
 
-    {i: 39, title: '', dataIndex: 'col39', align: 'center', width: 100},
+    { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 100 },
 
-    {i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100},
+    { i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100 },
 
-    {i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100},
+    { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
 
     // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
 ])
 
-columns.value.forEach(c => c.customCell = customCell)
+columns.value.forEach((c) => (c.customCell = customCell))
 
 const customRow = (record, index) => {
     return {
@@ -338,7 +339,6 @@ const customRow = (record, index) => {
     }
 }
 
-
 const reset = () => {
     searchParams.value = {
         gene: null,
@@ -349,12 +349,13 @@ const reset = () => {
         mutationMeaning: null,
         mutationRisk: null,
         humanRatio: null,
-        sift: null
+        sift: null,
     }
     search()
 }
 
 const clickRow = (row) => {
+     console.log(row)
     dialogVisible.value = true
 }
 
@@ -405,7 +406,7 @@ const search = () => {
         param = searchParams.value.mutationPosition
         if (param && param.length > 0) {
             const positions = line.col10.split(';')
-            if (!(positions.some(position => param.includes(position)))) {
+            if (!positions.some((position) => param.includes(position))) {
                 return false
             }
         }
@@ -438,10 +439,10 @@ const search = () => {
          */
         param = searchParams.value.humanRatio
         if (param) {
-            if (line.col26 !== '.' && line.col31 !== '.'  || line.col39 !== '.' ) {
+            if ((line.col26 !== '.' && line.col31 !== '.') || line.col39 !== '.') {
                 let count = Number(line.col26) < param ? 1 : 0
-                count += (Number(line.col31) < param ? 1 : 0)
-                count += (Number(line.col39) < param ? 1 : 0)
+                count += Number(line.col31) < param ? 1 : 0
+                count += Number(line.col39) < param ? 1 : 0
                 if (count < 2) {
                     return false
                 }
@@ -462,7 +463,6 @@ const search = () => {
         return true
     })
 
-
     console.log('========= search result', filteredRows.value.length, filteredRows.value)
 }
 const refreshPage = () => {
@@ -470,43 +470,39 @@ const refreshPage = () => {
 }
 
 onMounted(() => {
-    let file=''
-     if(props.samples[0].id.toString()==props.task.samples[0].toString()){
-         file =`Mut_germline/${props.samples[0].identifier}.combined.standard-new.csv'`}
-     else{
-         file =`Mut_germline/${props.samples[1].identifier}.combined.standard-new.csv'`
-}
     loading.value = true
-    readTaskFile(route.params.id, file).then(res => {
-        const headNames = getCsvHeader(res, ',')
-        columns.value.forEach(col => col.title = headNames[col.i-1])
+    readTaskMuFile(route.params.id, 'Mut_germline')
+        .then((res) => {
+            const headNames = getCsvHeader(res, ',')
+            console.log('headers',headNames)
+            columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
 
-        const visibleColIdx = columns.value.map(t => t.i)
-        const colKeys = _.range(1, 150, 1).map(i => 'col' + i)
-        const csvRows = getCsvData(res, {splitter: ',', hasHeaderLine: true, fields: colKeys})
-        csvRows.forEach((row, i) => row.id = i)
-        rows.value = csvRows
-        filteredRows.value = csvRows
+            const visibleColIdx = columns.value.map((t) => t.i)
+            const colKeys = _.range(1, 150, 1).map((i) => 'col' + i)
+            const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+            csvRows.forEach((row, i) => (row.id = i))
+            rows.value = csvRows
+            filteredRows.value = csvRows
 
+            // 提取options
+            let positions = new Set()
+            let meanings = new Set()
+            let risks = new Set()
+            for (let columns of csvRows) {
+                const items = columns.col10.split(';')
+                items.forEach((item) => positions.add(item))
 
-        // 提取options
-        let positions = new Set()
-        let meanings = new Set()
-        let risks = new Set()
-        for (let columns of csvRows) {
-            const items = columns.col10.split(';')
-            items.forEach(item => positions.add(item))
+                if (columns.col13 !== '.') {
+                    meanings.add(columns.col13)
+                }
 
-            if (columns.col13 !== '.') {
-                meanings.add(columns.col13)
+                risks.add(columns.col21)
             }
-
-            risks.add(columns.col21)
-        }
-        options.value.mutationPosition = Array.from(positions)
-        options.value.mutationMeaning = Array.from(meanings)
-        options.value.mutationRisk = Array.from(risks)
-    }).finally(() => loading.value = false)
+            options.value.mutationPosition = Array.from(positions)
+            options.value.mutationMeaning = Array.from(meanings)
+            options.value.mutationRisk = Array.from(risks)
+        })
+        .finally(() => (loading.value = false))
 })
 </script>
 
@@ -521,11 +517,11 @@ onMounted(() => {
     background-color: #aad4fd46 !important;
 }
 
-.ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+.ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: #bbbbff;
 }
 /*//鼠标移入样式*/
-.ant-table-tbody>tr:hover>td {
-    background: #bbbbff !important
+.ant-table-tbody > tr:hover > td {
+    background: #bbbbff !important;
 }
 </style>

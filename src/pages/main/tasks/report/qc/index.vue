@@ -7,8 +7,7 @@
             color="orange"
             class="relative-position float-right z-top q-mr-md"
             @click="dlgVisible = !dlgVisible"
-            >说明</q-btn
-        >
+        >说明</q-btn>
         <q-tabs
             v-model="tab"
             active-color="primary"
@@ -18,8 +17,8 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="试剂盒捕获质控信息" label="捕获试剂盒质控信息" />
-            <q-tab name="深度信息" label="深度信息" />
+            <q-tab name="试剂盒捕获质控信息" label="捕获试剂盒质控信息" v-if="props.viewConfig.showQCsummary" />
+            <q-tab name="深度信息" label="深度信息" v-if="props.viewConfig.showQCdepth" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="试剂盒捕获质控信息">
@@ -47,41 +46,44 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, toRefs } from "vue";
-import KitCaptureVue from "./KitCapture.vue"
-import DeepInfoVue from "./DeepInfo.vue"
+import { ref, onMounted, toRefs } from 'vue'
+import KitCaptureVue from './KitCapture.vue'
+import DeepInfoVue from './DeepInfo.vue'
 import { useRoute } from 'vue-router'
-import { getReportText } from "src/api/report"
-import { object } from "vue-types";
+import { getReportText } from 'src/api/report'
+import { object } from 'vue-types'
 
 const route = useRoute()
-const tab = ref("试剂盒捕获质控信息")
+const tab = ref('试剂盒捕获质控信息')
 const dlgVisible = ref(false)
 const tip = ref('')
 
 const props = defineProps({
     intro: {
         type: String,
-        required: false
+        required: false,
     },
     samples: {
         type: Array,
         required: false,
-        default: () => []
-    }, viewConfig: {
+        default: () => [],
+    },
+    viewConfig: {
         type: Object,
         required: false,
-        default(){return {
-            "showQCsummary": true,
-            "showQCdepth": true
-        }}
-    }
+        default() {
+            return {
+                showQCsummary: true,
+                showQCdepth: true,
+            }
+        },
+    },
 })
 
 const { samples } = toRefs(props)
 
 onMounted(() => {
-    getReportText(route.params.id, 'QC_TIP').then(res => {
+    getReportText(route.params.id, 'QC_TIP').then((res) => {
         console.log('QcVue QC_TIP ====>', res)
         tip.value = res
     })

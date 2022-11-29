@@ -9,7 +9,7 @@
             @click="dlgVisible = !dlgVisible"
             >说明
         </q-btn>
-        <div v-if="props.viewConfig.showHRDpicture">
+        <div v-if="props.viewConfig.showHRDtable">
             <div class="q-py-md text-bold text-h6 text-primary">HRD 统计表</div>
             <div class="row q-gutter-x-sm">
                 <div class="col-7 justify-end">

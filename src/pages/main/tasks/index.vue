@@ -13,51 +13,49 @@
             >
                 <q-btn color="white" @click="clickCard(options[0])">
                     <div class="text-black" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">
-                            {{ total_task_count }}
-                        </div>
+                        <div class="text-h5 text-center text-bold">{{ total_task_count }}</div>
                         <div class="text-h6 text-center text-bold">全部</div>
                     </div>
                 </q-btn>
 
                 <q-btn color="primary" @click="clickCard(options[1])">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-white text-h5 text-center text-bold">
-                            {{ taskSummary.running_task_count }}
-                        </div>
+                        <div
+                            class="text-white text-h5 text-center text-bold"
+                        >{{ taskSummary.running_task_count }}</div>
                         <div class="text-white text-h6 text-center text-bold">运行</div>
                     </div>
                 </q-btn>
                 <q-btn color="negative" @click="clickCard(options[3])">
                     <div class="text-white" style="width: 7vw">
-                        <div class=" text-h5 text-center text-bold">
-                            {{ taskSummary.failured_task_count }}
-                        </div>
-                        <div class=" text-h6 text-center text-bold">失败</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.failured_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">失败</div>
                     </div>
                 </q-btn>
                 <q-btn color="secondary" @click="clickCard(options[2])">
                     <div class="text-white" style="width: 7vw">
-                        <div class=" text-h5 text-center text-bold">
-                            {{ taskSummary.pending_task_count }}
-                        </div>
-                        <div class=" text-h6 text-center text-bold">排队</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.pending_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">排队</div>
                     </div>
                 </q-btn>
                 <q-btn color="warning" @click="clickCard(options[5])">
                     <div class="text-white" style="width: 7vw">
-                        <div class=" text-h5 text-center text-bold">
-                            {{ taskSummary.canceled_task_count }}
-                        </div>
-                        <div class=" text-h6 text-center text-bold">取消</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.canceled_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">取消</div>
                     </div>
                 </q-btn>
                 <q-btn color="positive" @click="clickCard(options[4])">
                     <div class="text-white" style="width: 7vw">
-                        <div class=" text-h5 text-center text-bold">
-                            {{ taskSummary.finished_task_count }}
-                        </div>
-                        <div class=" text-h6 text-center text-bold">完成</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.finished_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">完成</div>
                     </div>
                 </q-btn>
             </div>
@@ -77,8 +75,7 @@
                             :display-value="`状态: ${status.label}`"
                             dense
                             @update:model-value="refreshPage()"
-                        >
-                        </q-select>
+                        ></q-select>
                     </div>
                     <div class="col-4 q-pl-sm">
                         <q-input
@@ -89,7 +86,11 @@
                             :model-value="'所属项目: ' + projectName"
                         >
                             <template v-slot:prepend>
-                                <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
+                                <q-icon
+                                    class="cursor-pointer"
+                                    name="search"
+                                    @click="showProjectSelect = true"
+                                />
                             </template>
                             <template v-slot:append>
                                 <q-icon
@@ -114,7 +115,7 @@ refreshPage();
                     <tr>
                         <!-- <td>
                             <q-checkbox v-model="selected" color="negative" />
-                        </td> -->
+                        </td>-->
                         <td>ID</td>
                         <td>名称</td>
                         <td>项目</td>
@@ -134,17 +135,11 @@ refreshPage();
                                 v-model="item.selected"
                                 color="negative"
                             />
-                        </td> -->
+                        </td>-->
 
-                        <td>
-                            {{ item.id }}
-                        </td>
-                        <td>
-                            {{ item.name }}
-                        </td>
-                        <td>
-                            {{ item.project.name }}
-                        </td>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.project.name }}</td>
                         <td>{{ item.flow.name }}</td>
 
                         <td>
@@ -221,7 +216,13 @@ refreshPage();
                                 @click="downlaod(item)"
                                 size="sm"
                             />
-                            <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
+                            <q-btn
+                                color="red"
+                                label="删除"
+                                icon="delete"
+                                size="sm"
+                                @click="confirm(item)"
+                            />
                         </td>
                     </tr>
                 </tbody>
@@ -229,7 +230,11 @@ refreshPage();
 
             <div class="row q-mt-md">
                 <q-space></q-space>
-                <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
+                <PaginatorVue
+                    :total="total"
+                    :currentPage="currentPage"
+                    @pageChange="pageChange($event)"
+                />
             </div>
         </div>
         <q-dialog v-model="showProjectSelect">
@@ -247,75 +252,79 @@ refreshPage();
                 </div>
                 <pre>
                 {{ currentTaskError || "无" }}
-            </pre
-                >
+            </pre>
             </q-card>
         </q-dialog>
     </q-page>
 </template>
 
 <script setup>
-import {ref, onMounted, computed} from "vue";
-import { useApi } from "src/api/apiBase";
-import PageTitle from "components/page-title/PageTitle.vue";
-import ProjectListVue from "./components/ProjectList.vue";
-import PaginatorVue from "src/components/paginator/Paginator.vue";
-import { useRouter } from "vue-router";
+import { ref, onMounted, computed } from 'vue'
+import { useApi } from 'src/api/apiBase'
+import PageTitle from 'components/page-title/PageTitle.vue'
+import ProjectListVue from './components/ProjectList.vue'
+import PaginatorVue from 'src/components/paginator/Paginator.vue'
+import { useRouter } from 'vue-router'
 import { format } from 'src/utils/time'
 
-import { useQuasar } from "quasar";
+import { useQuasar } from 'quasar'
 const $q = useQuasar()
 const options = ref([
-    { label: "全部", value: "ALL" },
-    { label: "运行中", value: "RUNNING" },
-    { label: "排队", value: "PENDING" },
-    { label: "失败", value: "FAILURED" },
-    { label: "完成", value: "FINISHED" },
-    { label: "取消", value: "CANCELED" },
-]);
-const startTime = ref("")
-const endTime = ref("")
-const status = ref({ label: "全部", value: "ALL" });
-const showProjectSelect = ref(false);
+    { label: '全部', value: 'ALL' },
+    { label: '运行中', value: 'RUNNING' },
+    { label: '排队', value: 'PENDING' },
+    { label: '失败', value: 'FAILURED' },
+    { label: '完成', value: 'FINISHED' },
+    { label: '取消', value: 'CANCELED' },
+])
+const startTime = ref('')
+const endTime = ref('')
+const status = ref({ label: '全部', value: 'ALL' })
+const showProjectSelect = ref(false)
 const showError = ref(false)
-const projectId = ref(0);
-const projectName = ref("");
-const currentPage = ref(1);
-const pageSize = ref(10);
-const total = ref(0);
-const dataItems = ref([]);
-const { apiGet, downloadData, apiDelete } = useApi();
-const router = useRouter();
+const projectId = ref(0)
+const projectName = ref('')
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+const dataItems = ref([])
+const { apiGet, downloadData, apiDelete } = useApi()
+const router = useRouter()
 const taskSummary = ref({
     canceled_task_count: 0,
     failured_task_count: 0,
     finished_task_count: 0,
     pending_task_count: 0,
-    running_task_count: 0
+    running_task_count: 0,
 })
 
 const total_task_count = computed(() => {
     const ts = taskSummary.value
-    return ts.canceled_task_count + ts.failured_task_count + ts.finished_task_count
-    +ts.pending_task_count + ts.running_task_count
+    return (
+        ts.canceled_task_count +
+        ts.failured_task_count +
+        ts.finished_task_count +
+        ts.pending_task_count +
+        ts.running_task_count
+    )
 })
 
 const getItemStatus = (item) => {
     switch (item.status) {
-        case "PENDING":
-            return "排队中";
-        case "RUNNING":
-            return "运行中";
-        case "FINISHED":
-            return "完成";
-        case "FAILURED":
-            return "失败";
-        case "CANCELED":
-            return "取消";
+        case 'PENDING':
+            return '排队中'
+        case 'RUNNING':
+            return '运行中'
+        case 'FINISHED':
+            return '完成'
+        case 'FAILURED':
+            return '失败'
+        case 'CANCELED':
+            return '取消'
         default:
-            return item.status;
+            return item.status
     }
-};
+}
 
 const clickCard = (v) => {
     status.value = v
@@ -323,65 +332,65 @@ const clickCard = (v) => {
 }
 
 const clearSelect = () => {
-    status.value = { label: "全部", value: "ALL" }
+    status.value = { label: '全部', value: 'ALL' }
     refreshPage()
 }
 const projectSelected = (event) => {
-    console.log(event);
-    projectName.value = event.name;
-    projectId.value = event.id;
-    showProjectSelect.value = false;
-    console.log(projectId.value);
-    refreshPage();
-};
+    console.log(event)
+    projectName.value = event.name
+    projectId.value = event.id
+    showProjectSelect.value = false
+    console.log(projectId.value)
+    refreshPage()
+}
 const gotoDetail = (item) => {
-    router.push(`/main/tasks/${item.id}`);
-};
+    router.push(`/main/tasks/${item.id}`)
+}
 const gotoReport = (item) => {
-    router.push(`/main/tasks/${item.id}/report`);
-};
+    router.push(`/main/tasks/${item.id}/report`)
+}
 onMounted(() => {
-    loadPage();
+    loadPage()
     summary()
-});
+})
 
 const pageChange = async (event) => {
-    currentPage.value = event.currentPage;
-    pageSize.value = event.pageSize;
-    loadPage();
-};
+    currentPage.value = event.currentPage
+    pageSize.value = event.pageSize
+    loadPage()
+}
 const refreshPage = async () => {
-    currentPage.value = 1;
-    loadPage();
-};
+    currentPage.value = 1
+    loadPage()
+}
 const loadPage = async () => {
-    let params = `?page=${currentPage.value}&size=${pageSize.value}`;
-    if (status.value.label !== "全部") params += `&status=${status.value.value}`;
-    if (projectId.value) params += `&project_id=${projectId.value}`;
+    let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    if (status.value.label !== '全部') params += `&status=${status.value.value}`
+    if (projectId.value) params += `&project_id=${projectId.value}`
 
     apiGet(`/task${params}`, (res) => {
-        total.value = res.data.total_count;
-        dataItems.value = res.data.item_list;
-    });
-};
+        total.value = res.data.total_count
+        dataItems.value = res.data.item_list
+    })
+}
 const confirm = async (task) => {
     $q.dialog({
-        title: "确认删除吗?",
+        title: '确认删除吗?',
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/task/${task.id}`, (_) => {
-            refreshPage();
-        });
-    });
-};
+            refreshPage()
+        })
+    })
+}
 
 const downlaod = (item) => {
-    downloadData(`/task/download/${item.id}`, null);
-};
+    downloadData(`/task/download/${item.id}`, null)
+}
 const summary = async () => {
     apiGet(`/task/summary`, (res) => {
         taskSummary.value = res.data
-    });
-};
+    })
+}
 </script>
