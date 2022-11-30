@@ -21,7 +21,7 @@
                     /
                     <span>{{samples.total}}</span>
                 </q-card-section>
-                <q-card-section class="desc">本周新增样本数/总数</q-card-section>
+                <q-card-section class="desc">新增样本数(本周) / 样本总数</q-card-section>
             </q-card>
             <q-card class="my-card">
                 <q-card-section class="text-secondary text-h5 text-bold">
@@ -29,7 +29,7 @@
                     /
                     <span>{{reports.total}}</span>份
                 </q-card-section>
-                <q-card-section class="desc">本周新增报告数量/总数</q-card-section>
+                <q-card-section class="desc">新增报告数(本周) / 报告总数</q-card-section>
             </q-card>
         </div>
         <q-separator />
