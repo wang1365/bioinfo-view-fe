@@ -19,14 +19,16 @@
                 <q-card-section class="text-primary text-h5 text-bold">
                     <span>{{samples.thisWeek}}</span>
                     /
-                     <span>{{samples.total}}</span>
+                    <span>{{samples.total}}</span>
                 </q-card-section>
                 <q-card-section class="desc">本周新增样本数/总数</q-card-section>
             </q-card>
             <q-card class="my-card">
-                <q-card-section class="text-secondary text-h5 text-bold">{{reports.thisWeek}}
-                     /
-                     <span>{{reports.total}}</span>份</q-card-section>
+                <q-card-section class="text-secondary text-h5 text-bold">
+                    {{reports.thisWeek}}
+                    /
+                    <span>{{reports.total}}</span>份
+                </q-card-section>
                 <q-card-section class="desc">本周新增报告数量/总数</q-card-section>
             </q-card>
         </div>
@@ -143,22 +145,22 @@ const taskStats = ref({
 })
 
 const samples = ref({
-     thisWeek:0,
-     total:0
+    thisWeek: 0,
+    total: 0,
 })
 const reports = ref({
-     thisWeek:0,
-     total:0
+    thisWeek: 0,
+    total: 0,
 })
 
 const week = () => {
     let now = new Date()
     let date = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    let startDate = new Date(date.getTime() - 3600 * 24 * 1000 * now.getDay())
-    let endDate = new Date(date.getTime() + 3600 * 24 * 1000 * 7)
+    let startDate = new Date(date.getTime() - 3600 * 24 * 1000 * (now.getDay()-1))
+    let endDate = new Date(now.getTime()+3600*24*1000)
     return {
-        start: `${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}`,
-        end: `${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()}`,
+        start: `${startDate.getFullYear()}-${startDate.getMonth()+1}-${startDate.getDate()} 00:00:00`,
+        end: `${endDate.getFullYear()}-${endDate.getMonth()+1}-${endDate.getDate()} 00:00:00`,
     }
 }
 onMounted(() => {
@@ -224,7 +226,7 @@ const init = () => {
         resource.value.mem_used = (res.data.memory.used / 1024).toFixed(0)
     })
     // 获取本周样本数
-    let { start,end } = week()
+    let { start, end } = week()
     let query = buildModelQuery([], { create_time__gte: start })
 
     // 获取本周报告数
@@ -236,15 +238,15 @@ const init = () => {
         },
         query
     )
-     query = buildModelQuery([], { create_time__lte: end })
-     apiPost(
+    query = buildModelQuery([], { create_time__lte: end })
+    apiPost(
         '/model_query/sample_meta?size=1',
         (res) => {
             samples.value.total = res.data.count
         },
         query
     )
-    query = buildModelQuery([], { create_time__gte: start, status: 'FINISHED' })
+    query = buildModelQuery([], { create_time__gte: start, status: 3 })
     apiPost(
         '/model_query/task?page_size=1',
         (res) => {
@@ -252,7 +254,7 @@ const init = () => {
         },
         query
     )
-     query = buildModelQuery([], { create_time__lte: end, status: 'FINISHED' })
+    query = buildModelQuery([], { create_time__lte: end, status: 3 })
     apiPost(
         '/model_query/task?page_size=1',
         (res) => {
