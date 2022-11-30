@@ -1,72 +1,63 @@
 <template>
-    <q-table class="my-sticky-header-column-table" title="用户情况" :rows="rows" :columns="columns" row-key="name" />
+    <q-table
+        class="my-sticky-header-column-table"
+        title="用户情况"
+        :rows="rows"
+        :columns="columns"
+        row-key="id"
+        ref="tableRef"
+        v-model:pagination="pagination"
+        @request="onRequest"
+    />
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { useApi } from 'src/api/apiBase'
+import { onMounted, ref } from 'vue'
+
+const { apiGet } = useApi()
+
+const tableRef = ref({})
+const pagination = ref({
+    page: 1,
+    rowsPerPage: 5,
+    rowsNumber: 0,
+})
+onMounted(() => {
+    tableRef.value.requestServerInteraction()
+})
+const onRequest = (props) => {
+    const { page, rowsPerPage } = props.pagination
+    console.log(page, rowsPerPage)
+    apiGet(`/account/?page=${page}&size=${rowsPerPage}`, (res) => {
+        pagination.value.rowsNumber = res.data.total_count
+        pagination.value.page = page
+        pagination.value.rowsPerPage = rowsPerPage
+        rows.value = res.data.item_list
+    })
+
+}
 const columns = ref([
     {
-        name: "name",
+        name: 'nickname',
         required: true,
-        label: "用户名",
-        align: "left",
-        field: (row) => row.name,
+        label: '用户',
+        align: 'left',
+        field: (row) => row.nickname,
         format: (val) => `${val}`,
     },
-    {
-        name: "regist",
-        align: "center",
-        label: "注册时间",
-        field: "regist",
-    },
-    { name: "lastLogin", label: "最近登录时间", field: "lastLogin" },
-    { name: "carbs", label: "样本数", field: "carbs" },
-    { name: "protein", label: "磁盘使用", field: "protein" },
-    { name: "sodium", label: "运行中的任务", field: "sodium" },
-]);
+    /* {
+     *     name: "regist",
+     *     align: "center",
+     *     label: "注册时间",
+     *     field: "regist",
+     * },
+     * { name: "lastLogin", label: "最近登录时间", field: "lastLogin" }, */
+    { name: 'used_disk', label: '磁盘使用G', field: (row) => (row.used_disk/1024).toFixed(2) },
+    { name: 'sodium', label: '运行中的任务', field: 'running_task' },
+])
+const rows = ref([])
 
-const rows = ref([
-    {
-        name: "张三",
-        regist: "2022-07-01 12:22:00",
-        lastLogin: "2022-07-02 12:22:00",
-        carbs: 24,
-        protein: 4.0,
-        sodium: 87,
-        calcium: "14%",
-        iron: "1%",
-    },
-    {
-        name: "李四",
-        regist: "2022-07-01 12:22:00",
-        lastLogin: "2022-07-02 12:22:00",
-        carbs: 37,
-        protein: 4.3,
-        sodium: 129,
-        calcium: "8%",
-        iron: "1%",
-    },
-    {
-        name: "王五",
-        regist: "2022-07-01 12:22:00",
-        lastLogin: "2022-07-02 12:22:00",
-        carbs: 23,
-        protein: 6.0,
-        sodium: 337,
-        calcium: "6%",
-        iron: "7%",
-    },
-    {
-        name: "赵六",
-        regist: "2022-07-01 12:22:00",
-        lastLogin: "2022-07-02 12:22:00",
-        carbs: 67,
-        protein: 4.3,
-        sodium: 413,
-        calcium: "3%",
-        iron: "8%",
-    },
-]);
 </script>
 
 <style lang="scss">

@@ -17,34 +17,23 @@
             </q-card>
             <q-card class="my-card">
                 <q-card-section class="text-primary text-h5 text-bold">
-                    <span>100</span> /
-                    <span class="text-secondary">1.5T</span>
+                    <span>{{samples.thisWeek}}</span>
+                    /
+                     <span>{{samples.total}}</span>
                 </q-card-section>
-                <q-card-section class="desc">本周新增样本数(数量/大小)</q-card-section>
+                <q-card-section class="desc">本周新增样本数/总数</q-card-section>
             </q-card>
             <q-card class="my-card">
-                <q-card-section class="text-secondary text-h5 text-bold">100 份</q-card-section>
-                <q-card-section class="desc">本周新增报告数量</q-card-section>
+                <q-card-section class="text-secondary text-h5 text-bold">{{reports.thisWeek}}
+                     /
+                     <span>{{reports.total}}</span>份</q-card-section>
+                <q-card-section class="desc">本周新增报告数量/总数</q-card-section>
             </q-card>
         </div>
         <q-separator />
         <q-card class="my-card" flat bordered>
             <q-card-section style="padding: 0">
                 <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
-                    <!-- <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-                        <q-card class="my-card" flat>
-                            <q-card-section style="padding: 0">
-                                <div>
-                                    <LineChart2 />
-                                </div>
-                            </q-card-section>
-                            <q-card-section style="padding: 0">
-                                <div>
-                                    <UserTable />
-                                </div>
-                            </q-card-section>
-                        </q-card>
-                    </div>-->
                     <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                         <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -64,9 +53,6 @@
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <PieChart2 :used="resource.disk_used" :total="resource.disk_total" />
                             </div>
-                            <!-- <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <LineChart />
-                            </div>-->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <PageTitle title="任务概览" />
                                 <div
@@ -132,8 +118,9 @@ import { getWeeklySummary, getSummary } from 'src/api/task'
 import { listConfig } from 'src/api/config'
 import { getWeeklyDiskUsage } from 'src/api/resource'
 import { useApi } from 'src/api/apiBase'
+import { buildModelQuery } from 'src/api/modelQueryBuilder'
 
-const { apiGet } = useApi()
+const { apiGet, apiPost } = useApi()
 const weeklyDiskUsage = ref('0 T')
 const weeklyTaskStats = ref({
     success: 0,
@@ -155,6 +142,25 @@ const taskStats = ref({
     max_task: null,
 })
 
+const samples = ref({
+     thisWeek:0,
+     total:0
+})
+const reports = ref({
+     thisWeek:0,
+     total:0
+})
+
+const week = () => {
+    let now = new Date()
+    let date = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    let startDate = new Date(date.getTime() - 3600 * 24 * 1000 * now.getDay())
+    let endDate = new Date(date.getTime() + 3600 * 24 * 1000 * 7)
+    return {
+        start: `${startDate.getFullYear()}-${startDate.getMonth()}-${startDate.getDate()}`,
+        end: `${endDate.getFullYear()}-${endDate.getMonth()}-${endDate.getDate()}`,
+    }
+}
 onMounted(() => {
     init()
 })
@@ -212,11 +218,48 @@ const init = () => {
     })
     // 获取磁盘和内存使用情况
     apiGet('/resource_limit/resource_limits/resource', (res) => {
-        resource.value.disk_total = (res.data.disk.all / 1024/1024).toFixed(3)
-        resource.value.disk_used = (res.data.disk.used / 1024/1024).toFixed(3)
+        resource.value.disk_total = (res.data.disk.all / 1024 / 1024).toFixed(3)
+        resource.value.disk_used = (res.data.disk.used / 1024 / 1024).toFixed(3)
         resource.value.mem_total = (res.data.memory.all / 1024).toFixed(0)
         resource.value.mem_used = (res.data.memory.used / 1024).toFixed(0)
     })
+    // 获取本周样本数
+    let { start,end } = week()
+    let query = buildModelQuery([], { create_time__gte: start })
+
+    // 获取本周报告数
+
+    apiPost(
+        '/model_query/sample_meta?size=1',
+        (res) => {
+            samples.value.thisWeek = res.data.count
+        },
+        query
+    )
+     query = buildModelQuery([], { create_time__lte: end })
+     apiPost(
+        '/model_query/sample_meta?size=1',
+        (res) => {
+            samples.value.total = res.data.count
+        },
+        query
+    )
+    query = buildModelQuery([], { create_time__gte: start, status: 'FINISHED' })
+    apiPost(
+        '/model_query/task?page_size=1',
+        (res) => {
+            reports.value.thisWeek = res.data.count
+        },
+        query
+    )
+     query = buildModelQuery([], { create_time__lte: end, status: 'FINISHED' })
+    apiPost(
+        '/model_query/task?page_size=1',
+        (res) => {
+            reports.value.total = res.data.count
+        },
+        query
+    )
 }
 </script>
 
