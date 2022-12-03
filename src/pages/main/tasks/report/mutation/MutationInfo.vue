@@ -174,18 +174,20 @@ const omim = computed(() => {
 const tableData = ref(null)
 const tableRow = ref('')
 onMounted(() => {
+    let row = props.row
+    let match = ''
     if (props.isGermline) {
         intro.value = props.row.col148
+        match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col11}`
     } else {
         intro.value = props.row.col152
+        match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col15}`
     }
     const tablefile = props.isGermline ? 'Mut_germline/germline.evidence' : 'Mut_somatic/somatic.evidence'
     readTaskFile(route.params.id, tablefile).then((res) => {
-        let row = props.row
         const items = getCsvData(res)
         console.log(items)
-        console.log()
-        const match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col11}`
+        console.log(row)
         console.log(match)
         for (const iterator of items) {
             if (iterator[0] == match) {
