@@ -273,7 +273,7 @@ const tumorColumnIdx = computed(() => {
     // 根据列表头名称，例如Geno_Type(QN11), 检查该列是对比样本列表还是肿瘤样本列
     const tumorIdx = []
     headers.value.forEach((header, i) => {
-        for (let k in samples.value) {
+        for (let k in props.samples.value) {
             if (header.includes(`(${k})`) && samples.value[k]) {
                 tumorIdx.push(i)
                 break
@@ -497,7 +497,7 @@ const search = () => {
          */
         param = searchParams.value.mutationMeaning
         if (param && param.length > 0 && param !== 'All') {
-            if (!param.includes(line17)) {
+            if (!param.includes(line)) {
                 return false
             }
         }

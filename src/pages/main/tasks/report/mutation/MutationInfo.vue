@@ -183,8 +183,12 @@ onMounted(() => {
     readTaskFile(route.params.id, tablefile).then((res) => {
         let row = props.row
         const items = getCsvData(res)
+        console.log(items)
+        console.log()
+        const match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col11}`
+        console.log(match)
         for (const iterator of items) {
-            if (iterator[0] == `${row.col1}:${row.col2}-${row.col3}_${row.col4}-${row.col5}_${row.col11}`) {
+            if (iterator[0] == match) {
                 let item = {}
                 for (let index = 1; index < iterator.length; index++) {
                     item[`k${index}`] = iterator[index]
