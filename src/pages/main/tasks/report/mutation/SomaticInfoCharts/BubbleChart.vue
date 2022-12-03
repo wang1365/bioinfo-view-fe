@@ -11,6 +11,7 @@ import * as echarts from 'echarts'
 
 const chart = ref(null);
 const piechart = ref(null);
+const adjustedData = ref([])
 
 const props = defineProps({
     data: {
@@ -109,12 +110,10 @@ const option = ref({
             coordinateSystem: 'singleAxis',
             symbol: 'circle',
             symbolOffset: [0, 50],
-            symbolSize: function (data) {
-                let ret = data[1] / 2
-                if (ret > 100) {
-                    ret = 100
-                }
-                return ret;
+            symbolSize: function (data, {dataIndex}) {
+                return adjustedData.value[2][dataIndex]
+                // let ret = data[1]
+                // return ret;
                 // return Math.sqrt(data[1])
                 // return 10
             },
@@ -148,12 +147,10 @@ const option = ref({
             symbol: 'circle',
             symbolOffset: [0, 50],
             coordinateSystem: 'singleAxis',
-            symbolSize: function (data) {
-                let ret = data[1] / 2
-                if (ret > 100) {
-                    ret = 100
-                }
-                return ret;
+            symbolSize: function (data, {dataIndex}) {
+                return adjustedData.value[2][dataIndex]
+                // let ret = data[1]
+                // return ret;
                 // return Math.sqrt(data[1])
                 // return 10
             },
@@ -187,12 +184,14 @@ const option = ref({
             symbol: 'circle',
             symbolOffset: [0, 50],
             coordinateSystem: 'singleAxis',
-            symbolSize: function (data) {
-                let ret = data[1] / 2
-                if (ret > 100) {
-                    ret = 100
-                }
-                return ret;
+            symbolSize: function (data, {dataIndex}) {
+                return adjustedData.value[2][dataIndex]
+
+                // let ret = data[1]
+                // if (dataIndex === 0 && ret > 100) {
+                //     ret = 100
+                // }
+                // return ret;
                 // return Math.sqrt(data[1])
                 // return 10
             },
@@ -234,7 +233,20 @@ const init = () => {
 
 const refresh = () => {
     props.colKeys.forEach((key, i) => {
-        option.value.series[i].data = groupAndCount(props.colKeys[i])
+        const result = groupAndCount(props.colKeys[i])
+        // 原始数据分布概率
+        option.value.series[i].data = result
+
+        // 根据原始数据调整bubble大小
+        const mx = _.max(result.map(t => t[1]))
+        let scale = 1
+        if (mx > 100) {
+            // bubble缩小比例
+            scale = 100/mx
+        }
+
+        // 防止最小bubble过小，设置最小+5
+        adjustedData.value[i] = result.map(t => t[1] === 0 ? 0 : Math.round(t[1]*scale) + 5)
     })
 
     chart.value.setOption(option.value);
@@ -245,6 +257,7 @@ const groupAndCount = (colName) => {
     const arr = new Array(21)
     arr.fill(0)
 
+    console.log('=========>groupAndCount', colName, data.value)
     // 数据归纳到刻度
     data.value.forEach(row => {
         const v = row[colName]
@@ -255,7 +268,9 @@ const groupAndCount = (colName) => {
             const idx = Math.floor(ratio / 0.05)
             arr[idx] += 1
         }
+        console.log('=========>', v, arr)
     })
+
 
     // 构造数据
     // const result = arr.map((v, i) => {
@@ -271,6 +286,10 @@ const groupAndCount = (colName) => {
         }
     })
     // arr.map((v, i) => [i, v] )
+    console.log('=========>result', result)
+
+
+
     return result
 }
 
