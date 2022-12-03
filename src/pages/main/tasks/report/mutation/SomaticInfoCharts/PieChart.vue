@@ -37,8 +37,6 @@ const option = ref({
             type: "pie",
             radius: "50%",
             data: [
-                { value: 100, name: "SNP" },
-                { value: 28, name: "INDEL" },
             ],
             emphasis: {
                 itemStyle: {
@@ -75,8 +73,13 @@ const refreshChart = () => {
     const snpCount = data.value.filter(t => snp.includes(t.col4) && snp.includes(t.col5)).length
     const indelCount = data.value.length - snpCount
 
-    option.value.series[0].data[0].value = snpCount
-    option.value.series[0].data[1].value = indelCount
+    option.value.series[0].data = []
+    if (snpCount > 0) {
+        option.value.series[0].data.push({value:snpCount, name: 'SNP'})
+    }
+    if (indelCount > 0) {
+        option.value.series[0].data.push({value:indelCount, name: 'INDEL'})
+    }
     chart.value.setOption(option.value)
 }
 
