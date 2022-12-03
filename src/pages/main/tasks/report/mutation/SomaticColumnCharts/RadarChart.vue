@@ -78,9 +78,9 @@ const props = defineProps({
 })
 
 
-const {data} = toRefs(props)
+const {data, isGermline} = toRefs(props)
 
-watch(data, v => {
+watch([data, isGermline], () => {
     refresh()
 })
 

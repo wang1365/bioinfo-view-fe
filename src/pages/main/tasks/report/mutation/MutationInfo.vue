@@ -70,7 +70,7 @@
                 </div>
                 <q-separator class="q-my-sm" />
                 <div class="q-mt-sm">
-                    <RadarChartVue :data="props.row" />
+                    <RadarChartVue :data="props.row" :is-germline="props.isGermline"/>
                 </div>
             </q-tab-panel>
 
@@ -160,7 +160,7 @@ const col146 = computed(() => {
 })
 
 const rs = computed(() => {
-    return isGermline.value ? props.row.col34 : props.row.col25
+    return isGermline.value ? props.row.col34 : props.row.col38
 })
 
 const clinVar = computed(() => {

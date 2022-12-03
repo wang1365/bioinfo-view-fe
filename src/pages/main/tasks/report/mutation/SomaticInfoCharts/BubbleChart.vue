@@ -257,7 +257,6 @@ const groupAndCount = (colName) => {
     const arr = new Array(21)
     arr.fill(0)
 
-    console.log('=========>groupAndCount', colName, data.value)
     // 数据归纳到刻度
     data.value.forEach(row => {
         const v = row[colName]
@@ -268,7 +267,6 @@ const groupAndCount = (colName) => {
             const idx = Math.floor(ratio / 0.05)
             arr[idx] += 1
         }
-        console.log('=========>', v, arr)
     })
 
 
@@ -286,9 +284,6 @@ const groupAndCount = (colName) => {
         }
     })
     // arr.map((v, i) => [i, v] )
-    console.log('=========>result', result)
-
-
 
     return result
 }
