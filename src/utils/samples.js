@@ -1,14 +1,13 @@
 import { globalStore } from 'src/stores/global'
+import * as _ from 'lodash'
 
 export const getSingleIdentifiers = (samples) => {
     return samples[0].identifier
 }
 
 export const getDualIdentifiers = (samples) => {
-    const qt = samples.filter(t => t.sample_meta.is_panel)[0].identifier
-    let qn = null
-    if (samples.length > 1) {
-        qn = samples.filter(t => !t.sample_meta.is_panel)[0].identifier
+    return {
+        qt: _.get(samples.filter(t => t.sample_meta.is_panel), '[0].identifier'),
+        qn: _.get(samples.filter(t => !t.sample_meta.is_panel), '[0].identifier')
     }
-    return {qt, qn}
 }

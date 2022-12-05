@@ -128,10 +128,10 @@ const clickView = (record) => {
 }
 
 onMounted(() => {
+    const {qn, qt} = getDualIdentifiers(props.samples)
     if (props.viewConfig.showMSI) {
         let file;
         if (props.samples.length > 1) {
-            const {qn, qt} = getDualIdentifiers(props.samples)
             file = `MSI/${qn}_${qt}.msi`
             //'MSI/QN11_QT11.msi')
         } else {
