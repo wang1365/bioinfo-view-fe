@@ -1,6 +1,6 @@
 <template>
     <q-card>
-        <div ref="piechart" style="height: 600px"></div>
+        <div ref="piechart" style="height: 400px"></div>
         <q-resize-observer @resize="onResize" />
     </q-card>
 </template>
@@ -47,14 +47,14 @@ const option = ref({
         }, {
             text: '1000g2015aug_eas',
             textBaseline: 'middle',
-            top: (100) / 3 + 10 + '%',
+            top: (100) / 3 + 15 + '%',
             textStyle: {
                 color: 'green'
             }
         }, {
             text: 'gnomAD_genome_EAS',
             textBaseline: 'middle',
-            top: (2 * 100) / 3 + 10 + '%',
+            top: (2 * 100) / 3 + 15 + '%',
             textStyle: {
                 color: 'orange'
             }
@@ -109,7 +109,7 @@ const option = ref({
             singleAxisIndex: 0,
             coordinateSystem: 'singleAxis',
             symbol: 'circle',
-            symbolOffset: [0, 50],
+            symbolOffset: [0, 40],
             symbolSize: function (data, {dataIndex}) {
                 return adjustedData.value[2][dataIndex]
                 // let ret = data[1]
@@ -145,7 +145,7 @@ const option = ref({
             type: 'scatter',
             singleAxisIndex: 1,
             symbol: 'circle',
-            symbolOffset: [0, 50],
+            symbolOffset: [0, 40],
             coordinateSystem: 'singleAxis',
             symbolSize: function (data, {dataIndex}) {
                 return adjustedData.value[2][dataIndex]
@@ -182,7 +182,7 @@ const option = ref({
             type: 'scatter',
             singleAxisIndex: 2,
             symbol: 'circle',
-            symbolOffset: [0, 50],
+            symbolOffset: [0, 40],
             coordinateSystem: 'singleAxis',
             symbolSize: function (data, {dataIndex}) {
                 return adjustedData.value[2][dataIndex]
