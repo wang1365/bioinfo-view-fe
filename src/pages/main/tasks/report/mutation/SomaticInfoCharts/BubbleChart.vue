@@ -111,7 +111,7 @@ const option = ref({
             symbol: 'circle',
             symbolOffset: [0, 40],
             symbolSize: function (data, {dataIndex}) {
-                return adjustedData.value[2][dataIndex]
+                return adjustedData.value[0][dataIndex]
                 // let ret = data[1]
                 // return ret;
                 // return Math.sqrt(data[1])
@@ -148,7 +148,7 @@ const option = ref({
             symbolOffset: [0, 40],
             coordinateSystem: 'singleAxis',
             symbolSize: function (data, {dataIndex}) {
-                return adjustedData.value[2][dataIndex]
+                return adjustedData.value[1][dataIndex]
                 // let ret = data[1]
                 // return ret;
                 // return Math.sqrt(data[1])
@@ -246,7 +246,10 @@ const refresh = () => {
         }
 
         // 防止最小bubble过小，设置最小+5
-        adjustedData.value[i] = result.map(t => t[1] === 0 ? 0 : Math.round(t[1]*scale) + 5)
+        adjustedData.value[i] = result.map((t, i) => {
+            return t[1] === 0 ? 0 : Math.round(t[1] * scale) + 10
+        })
+        console.log('====ajust', adjustedData.value[i])
     })
 
     chart.value.setOption(option.value);
@@ -254,17 +257,18 @@ const refresh = () => {
 
 const groupAndCount = (colName) => {
     // 初始化刻度，第一个刻度为-1，后续为0-20
-    const arr = new Array(21)
+    const arr = new Array(40)
+    let other = 0
     arr.fill(0)
 
     // 数据归纳到刻度
     data.value.forEach(row => {
         const v = row[colName]
         if (v === '.') {
-            arr[0] += 1
+            other += 1
         } else {
             const ratio = Number(row[colName])
-            const idx = Math.floor(ratio / 0.05)
+            const idx = Math.floor(ratio / 0.05)*2 + 1
             arr[idx] += 1
         }
     })
@@ -276,13 +280,13 @@ const groupAndCount = (colName) => {
     // })
     // result[0] = [-0.5, result[0][1]]
 
-    const result = [[0, arr[0]], [1, 0]]
+
+
+    const result = [[0, other], [1, 0]]
     arr.forEach((v, i) => {
-        if (i > 0) {
-            result.push([i * 2 + 1, v])
-            result.push([i * 2 + 2, 0])
-        }
+        result.push([i+ 2, v])
     })
+    console.log('==============arr', arr, result)
     // arr.map((v, i) => [i, v] )
 
     return result
