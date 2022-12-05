@@ -280,11 +280,11 @@ const columns = ref([
     { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100}, // NUChange
     { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100}, // AAChange
 
-    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200}, // CLNDN
-    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 400}, // CLNDISDB
-    { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280 }, // CLNREVSTAT
-    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 100 },//CLNSIG
-    { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 150 }, // cosmic70
+    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true}, // CLNDN
+    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true}, // CLNDISDB
+    { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280, ellipsis: true}, // CLNREVSTAT
+    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true},//CLNSIG
+    { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 200, ellipsis: true }, // cosmic70
     { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95 }, // ExAC_ALL
     { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
     { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 100 }, // ExAC_AMR
