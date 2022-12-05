@@ -1,6 +1,9 @@
 <template>
     <div class="q-py-sm">
-        <div class="text-bold">{{`肿瘤样本的中靶率：${onTarget.v1}，对照样本中靶率：${onTarget.v2}`}}</div>
+        <div class="text-bold">
+            <span>{{`肿瘤样本的中靶率：${onTarget.v1}`}}</span>
+            <span v-if="props.samples.length > 1">{{`，对照样本中靶率：${onTarget.v2}`}}</span>
+        </div>
     </div>
     <q-separator></q-separator>
     <div class="q-py-sm">
