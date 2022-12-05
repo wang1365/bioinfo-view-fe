@@ -276,15 +276,15 @@ const columns = ref([
     { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110 }, // Gene.refGene
 
     { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
-    { i: 14, title: '', dataIndex: 'col14', align: 'left', width: 140 }, // exon
-    { i: 15, title: '', dataIndex: 'col15', align: 'left', width: 160, ellipsis: true }, // NUChange
-    { i: 16, title: '', dataIndex: 'col16', align: 'left', width: 160, ellipsis: true }, // AAChange
+    { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80 }, // exon
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100}, // NUChange
+    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100}, // AAChange
 
-    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
-    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 400, ellipsis: true }, // CLNDISDB
+    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200}, // CLNDN
+    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 400}, // CLNDISDB
     { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280 }, // CLNREVSTAT
-    { i: 21, title: '', dataIndex: 'col21', align: 'left', width: 280 },
-    { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 100 }, // cosmic70
+    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 100 },//CLNSIG
+    { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 150 }, // cosmic70
     { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95 }, // ExAC_ALL
     { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
     { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 100 }, // ExAC_AMR
@@ -365,7 +365,9 @@ const search = () => {
         // 原始表格11列，支持模糊搜索
         let param = searchParams.value.gene
         if (param && param.length > 0) {
-            return line.col11.includes(param)
+            if (!line.col11.includes(param)) {
+                return false
+            }
         }
 
         // 深度
