@@ -79,11 +79,13 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, computed} from "vue";
-import {getReportTable} from 'src/api/report'
+import {ref, onMounted, computed} from "vue"
 import {useRoute} from 'vue-router'
 import {exportFile} from 'quasar'
 import IGV from './Igv.vue'
+import {readTaskFile} from "src/api/task"
+import {getCsvData} from "src/utils/csv"
+import {getDualIdentifiers} from "src/utils/samples"
 
 const props = defineProps({
     intro: {
@@ -144,8 +146,12 @@ onMounted(() => {
 
     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
     const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
-    getReportTable(route.params.id, 'FUSION_QT11', {}, fields).then(res => {
-        const head = res[0]
+
+    const {qt, qc} = getDualIdentifiers(props.samples)
+
+    readTaskFile(route.params.id, `fusion_germline/${qt}.fusions`).then(res => {
+        const lines = getCsvData(res, {fields: fields, hasHeaderLine: false})
+        const head = lines[0]
         columns1.value = Object.keys(head).map(k => {
             return {title: head[k], key: k, dataIndex: k, align: 'center'}
         })
@@ -155,21 +161,24 @@ onMounted(() => {
                 col.align = 'left'
             }
         })
-        rows1.value = res.slice(1)
+        rows1.value = lines.slice(1)
         filteredRows1.value = rows1.value
     }).finally(() => {
         loading1.value = false
     })
 
-    getReportTable(route.params.id, 'FUSION_QN11', {}, fields).then(res => {
-        const head = res[0]
-        columns2.value = Object.keys(head).map(k => {
-            return {title: head[k], key: k, dataIndex: k, align: 'center'}
+    if (props.samples.length > 1) {
+        readTaskFile(route.params.id, `fusion_germline/${qc}.fusions`).then(res => {
+            const lines = getCsvData(res, {fields: fields, hasHeaderLine: false})
+            const head = lines[0]
+            columns2.value = Object.keys(head).map(k => {
+                return {title: head[k], key: k, dataIndex: k, align: 'center'}
+            })
+            rows2.value = lines.slice(1)
+            filteredRows2.value = rows2.value
+        }).finally(() => {
+            loading2.value = false
         })
-        rows2.value = res.slice(1)
-        filteredRows2.value = rows2.value
-    }).finally(() => {
-        loading2.value = false
-    })
+    }
 })
 </script>
