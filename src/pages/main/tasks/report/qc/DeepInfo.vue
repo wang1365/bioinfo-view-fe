@@ -67,6 +67,7 @@ import {readTaskFile} from "src/api/task"
 import {getCsvData} from "src/utils/csv"
 import {useRoute} from 'vue-router'
 import {exportFile} from 'quasar'
+import {getDualIdentifiers} from "src/utils/samples"
 
 const route = useRoute()
 const props = defineProps({
@@ -139,8 +140,10 @@ const download = (idx) => {
 onMounted(() => {
     const fields = ['k1', 'k2', 'k3', 'k4']
 
+    const {qt, qc} = getDualIdentifiers(props.samples)
+
     loading2.value = true
-    readTaskFile(route.params.id, 'QC/QT11.depth', {}, fields).then(res => {
+    readTaskFile(route.params.id, `QC/${qt}.depth`, {}, fields).then(res => {
         rows2.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
         filteredRows2.value = rows2.value
     }).finally(() => {
@@ -149,7 +152,7 @@ onMounted(() => {
 
     if (props.samples.length > 1) {
         loading1.value = true
-        readTaskFile(route.params.id, 'QC/QN11.depth', ).then(res => {
+        readTaskFile(route.params.id, `QC/${qc}.depth`, ).then(res => {
             rows1.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
             filteredRows1.value = rows1.value
         }).finally(() => {
