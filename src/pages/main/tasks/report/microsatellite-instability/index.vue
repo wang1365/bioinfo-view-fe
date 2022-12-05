@@ -70,6 +70,7 @@ import { ref, onMounted } from "vue";
 import {readTaskFile} from "src/api/task";
 import { useRoute } from 'vue-router'
 import { getCsvData } from "src/utils/csv";
+import {getDualIdentifiers, getSingleIdentifiers} from "src/utils/samples";
 
 const route = useRoute()
 const showImage = ref('false')
@@ -128,12 +129,14 @@ const clickView = (record) => {
 
 onMounted(() => {
     if (props.viewConfig.showMSI) {
-        const id1 = props.samples.filter(t => t.sample_meta.is_panel)[0].identifier
-        let file = `MSI/${id1}.msi`
+        let file;
         if (props.samples.length > 1) {
-            const id2 = props.samples.filter(t => !t.sample_meta.is_panel)[0].identifier
-            file = `MSI/${id2}_${id1}.msi`
+            const {qn, qt} = getDualIdentifiers(props.samples)
+            file = `MSI/${qn}_${qt}.msi`
             //'MSI/QN11_QT11.msi')
+        } else {
+            const qt = getSingleIdentifiers(props.samples)
+            file = `MSI/${qt}.msi`
         }
 
         readTaskFile(route.params.id, file).then(res => {
