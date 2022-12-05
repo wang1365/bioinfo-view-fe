@@ -108,15 +108,17 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
-    },viewConfig: {
+    },
+    viewConfig: {
         type: Object,
         required: false,
-        default(){return {
-            "showMSI":true,
-            "showMSIsite":true,
-        }}
+        default() {
+            return {
+                showMSI: true,
+                showMSIsite: true
+            }
+        }
     }
-
 })
 
 const clickView = (record) => {
@@ -125,12 +127,24 @@ const clickView = (record) => {
 }
 
 onMounted(() => {
-    readTaskFile(route.params.id, 'MSI/QN11_QT11.msi').then(res => {
-        rows1.value = getCsvData(res, { fields: ['k1', 'k2', 'k3']} )
-    })
+    if (props.viewConfig.showMSI) {
+        const id1 = props.samples.filter(t => t.sample_meta.is_panel)[0].identifier
+        let file = `MSI/${id1}.msi`
+        if (props.samples.length > 1) {
+            const id2 = props.samples.filter(t => !t.sample_meta.is_panel)[0].identifier
+            file = `MSI/${id2}_${id1}.msi`
+            //'MSI/QN11_QT11.msi')
+        }
 
-    readTaskFile(route.params.id, 'MSI/jingbiao.msi').then(res => {
-        rows2.value = getCsvData(res, { fields: ['k1', 'k2', 'k3']} )
-    })
+        readTaskFile(route.params.id, file).then(res => {
+            rows1.value = getCsvData(res, {fields: ['k1', 'k2', 'k3']})
+        })
+    }
+
+    if (props.viewConfig.showMSIsite) {
+        readTaskFile(route.params.id, 'MSI/jingbiao.msi').then(res => {
+            rows2.value = getCsvData(res, { fields: ['k1', 'k2', 'k3']} )
+        })
+    }
 })
 </script>
