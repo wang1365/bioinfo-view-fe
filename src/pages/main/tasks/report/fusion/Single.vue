@@ -147,8 +147,7 @@ onMounted(() => {
     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
     const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
 
-    const {qt, qc} = getDualIdentifiers(props.samples)
-
+    const {qt, qn} = getDualIdentifiers(props.samples)
     readTaskFile(route.params.id, `fusion_germline/${qt}.fusions`).then(res => {
         const lines = getCsvData(res, {fields: fields, hasHeaderLine: false})
         const head = lines[0]
@@ -168,7 +167,7 @@ onMounted(() => {
     })
 
     if (props.samples.length > 1) {
-        readTaskFile(route.params.id, `fusion_germline/${qc}.fusions`).then(res => {
+        readTaskFile(route.params.id, `fusion_germline/${qn}.fusions`).then(res => {
             const lines = getCsvData(res, {fields: fields, hasHeaderLine: false})
             const head = lines[0]
             columns2.value = Object.keys(head).map(k => {
