@@ -49,31 +49,31 @@ const menu = [
     //     separator: false,
     //     path: "/main/group",
     // },
-
-    {
-        icon: 'rate_review',
-        label: '数据库注释',
-        separator: false,
-        path: '/main/tools/comment',
-        // children: [
-        //     {
-        //         label: '基因',
-        //         separator: false,
-        //         path: '/main/tools/comment/gene',
-        //         roles: ['super'],
-        //     },
-        //     {
-        //         label: '突变',
-        //         separator: false,
-        //         path: '/main/tools/comment/mutation',
-        //     },
-        //     {
-        //         label: '药物',
-        //         separator: false,
-        //         path: '/main/tools/comment/medicine',
-        //     },
-        // ],
-    },
+    //
+    // {
+    //     icon: 'rate_review',
+    //     label: '数据库注释',
+    //     separator: false,
+    //     path: '/main/tools/comment',
+    //     // children: [
+    //     //     {
+    //     //         label: '基因',
+    //     //         separator: false,
+    //     //         path: '/main/tools/comment/gene',
+    //     //         roles: ['super'],
+    //     //     },
+    //     //     {
+    //     //         label: '突变',
+    //     //         separator: false,
+    //     //         path: '/main/tools/comment/mutation',
+    //     //     },
+    //     //     {
+    //     //         label: '药物',
+    //     //         separator: false,
+    //     //         path: '/main/tools/comment/medicine',
+    //     //     },
+    //     // ],
+    // },
     {
         icon: 'biotech',
         label: '基因组浏览器',
