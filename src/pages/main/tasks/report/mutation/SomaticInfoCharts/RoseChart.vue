@@ -32,10 +32,7 @@ const props = defineProps({
     }
 })
 
-const rawData = ref([])
-
 const option = ref({
-
     title: {
         text: props.title
     },
@@ -51,22 +48,25 @@ const option = ref({
             saveAsImage: {show: true}
         }
     },
+    tooltip: [
+        {
+            trigger: 'item'
+        }
+    ],
     series: [
         {
-            name: 'Nightingale Chart',
+            name: props.title,
             type: 'pie',
-            radius: [30, 100],
+            radius: [30, 120],
             center: ['50%', '50%'],
             avoidLabelOverlap: true,
-            roseType: 'area',
+            roseType: 'radius',
             itemStyle: {
                 borderRadius: 5
             },
-            tooltip: {
-                trigger: 'item',
-                formatter: params => {
-                    return '2222'
-                }
+            label: {
+                show: true,
+                overflow: 'truncate',
             },
             data: []
         }
