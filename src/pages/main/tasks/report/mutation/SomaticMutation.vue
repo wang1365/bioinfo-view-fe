@@ -339,8 +339,8 @@ const columns = ref([
     { i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100 }, // AAChange
 
     { i: 22, title: '', dataIndex: 'col22', align: 'left', width: 200, ellipsis: true}, // CLNDN
-    { i: 23, title: '', dataIndex: 'col23', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
-    { i: 24, title: '', dataIndex: 'col24', align: 'left', width: 160 }, // CLNREVSTAT
+    { i: 23, title: '', dataIndex: 'col23', align: 'left', width: 200, ellipsis: true}, // CLNDISDB
+    { i: 24, title: '', dataIndex: 'col24', align: 'left', width: 160, ellipsis: true}, // CLNREVSTAT
     { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 120 }, // CLNSIG
     { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 200, ellipsis: true}, // cosmic70
     { i: 27, title: '', dataIndex: 'col27', align: 'center', width: 100 }, // ExAC_ALL
