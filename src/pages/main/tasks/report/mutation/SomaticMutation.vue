@@ -332,7 +332,7 @@ const columns = ref([
     { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 100 }, // NUChange
     { i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100 }, // AAChange
 
-    { i: 22, title: '', dataIndex: 'col22', align: 'left', width: 200 , ellipsis: true}, // CLNDN
+    { i: 22, title: '', dataIndex: 'col22', align: 'left', width: 200, ellipsis: true}, // CLNDN
     { i: 23, title: '', dataIndex: 'col23', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
     { i: 24, title: '', dataIndex: 'col24', align: 'left', width: 160 }, // CLNREVSTAT
     { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 120 }, // CLNSIG
