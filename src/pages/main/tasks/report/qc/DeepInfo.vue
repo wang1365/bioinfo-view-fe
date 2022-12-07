@@ -140,7 +140,7 @@ const download = (idx) => {
 onMounted(() => {
     const fields = ['k1', 'k2', 'k3', 'k4']
 
-    const {qt, qc} = getDualIdentifiers(props.samples)
+    const {qt, qn} = getDualIdentifiers(props.samples)
 
     loading2.value = true
     readTaskFile(route.params.id, `QC/${qt}.depth`, {}, fields).then(res => {
@@ -152,7 +152,7 @@ onMounted(() => {
 
     if (props.samples.length > 1) {
         loading1.value = true
-        readTaskFile(route.params.id, `QC/${qc}.depth`, ).then(res => {
+        readTaskFile(route.params.id, `QC/${qn}.depth`, ).then(res => {
             rows1.value  = getCsvData(res, {fields: fields, hasHeaderLine: false} )
             filteredRows1.value = rows1.value
         }).finally(() => {
