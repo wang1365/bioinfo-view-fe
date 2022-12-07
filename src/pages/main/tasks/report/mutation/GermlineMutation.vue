@@ -111,12 +111,7 @@
                 <div class="col text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                 <div class="q-gutter-md text-center q-py-sm">
                     <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn
-                        color="primary"
-                        label="重置"
-                        icon="settings_backup_restore"
-                        @click="reset"
-                    />
+                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
                 </div>
             </div>
 
@@ -142,6 +137,13 @@
                     <!--                        >-->
                     <!--                        </q-btn>-->
                     <!--                    </template>-->
+
+                    <template #bodyCell="{ column, record }">
+                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                            <div>{{record[column.dataIndex]}}</div>
+                        </a-tooltip>
+                        <span v-else>{{record[column.dataIndex]}}</span>
+                    </template>
                 </a-table>
             </div>
         </div>
@@ -355,7 +357,7 @@ const reset = () => {
 }
 
 const clickRow = (row) => {
-     console.log(row)
+     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>', row)
     dialogVisible.value = true
 }
 

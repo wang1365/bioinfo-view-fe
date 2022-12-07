@@ -150,6 +150,12 @@
                     :custom-row="customRow"
                     :sticky="true"
                 >
+                    <template #bodyCell="{ column, record }">
+                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                            <div>{{record[column.dataIndex]}}</div>
+                        </a-tooltip>
+                        <span v-else>{{record[column.dataIndex]}}</span>
+                    </template>
                     <!--                    <template #bodyCell="{ column, record }">-->
                     <!--                        <q-btn-->
                     <!--                            v-if="column.key === 'operation'"-->
