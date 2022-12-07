@@ -135,12 +135,7 @@
                 <div class="col text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                 <div class="q-gutter-md text-center q-py-sm">
                     <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn
-                        color="primary"
-                        label="重置"
-                        icon="settings_backup_restore"
-                        @click="reset"
-                    />
+                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
                 </div>
             </div>
 
@@ -418,7 +413,9 @@ const search = () => {
         // 原始表格15列，支持模糊搜索
         let param = searchParams.value.gene
         if (param && param.length > 0) {
-            return line.col15.includes(param)
+            if (!line.col15.includes(param)) {
+                return false
+            }
         }
 
         // 肿瘤深度
