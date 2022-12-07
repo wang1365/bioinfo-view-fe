@@ -97,7 +97,7 @@ const refreshChart = () => {
 
     console.log('======items', items, dt)
     const displayData = items.map(t => {
-        t.value += dt;
+        // t.value += dt;
         return t
     })
 
