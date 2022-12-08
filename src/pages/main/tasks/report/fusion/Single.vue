@@ -71,12 +71,12 @@
                 </q-btn>
             </template>
         </a-table>
-        <q-dialog v-model="igvVisible">
-            <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
-                <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
-            </q-card>
-        </q-dialog>
     </div>
+    <q-dialog v-model="igvVisible">
+        <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
+            <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
+        </q-card>
+    </q-dialog>
 </template>
 <script setup>
 import {ref, onMounted, computed} from "vue"
@@ -136,6 +136,7 @@ const clearKeyword2 = () => {
 }
 
 const clickView = (record) => {
+    console.log('click', record)
     selectedFile.value = record.k9
     igvVisible.value = true
 }
