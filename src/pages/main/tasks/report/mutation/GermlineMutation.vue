@@ -421,7 +421,10 @@ const search = () => {
          */
         param = searchParams.value.mutationMeaning
         if (param && param.length > 0 && param !== 'All') {
-            if (line.col13 === 'synonymous SNV') {
+            if (param === '●') {
+                param = '.'
+            }
+            if (line.col13 !== param) {
                 return false
             }
         }
@@ -496,7 +499,9 @@ onMounted(() => {
                 const items = columns.col10.split(';')
                 items.forEach((item) => positions.add(item))
 
-                if (columns.col13 !== '.') {
+                if (columns.col13 === '.') {
+                    meanings.add('●')
+                } else {
                     meanings.add(columns.col13)
                 }
 

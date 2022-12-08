@@ -446,7 +446,7 @@ const search = () => {
 
         // 肿瘤频率
         // 原始表格9、13列，大于0的小数
-        param = searchParams.value.ratio
+        param = searchParams.value.tumorRatio
         if (param) {
             const v = tumorColumnIdx.value.includes(i) ? line.col9 : line.col13
             if (!(Number(v) > param)) {
@@ -456,7 +456,7 @@ const search = () => {
 
         // 对比频率
         // 原始表格9、13列，大于0的小数
-        param = searchParams.value.ratio
+        param = searchParams.value.compareRatio
         if (param) {
             const v = tumorColumnIdx.value.includes(i) ? line.col13 : line.col9
             if (!(Number(v) > param)) {
