@@ -435,7 +435,10 @@ const search = () => {
          */
         param = searchParams.value.mutationRisk
         if (param && param.length > 0 && param !== 'All') {
-            if (!param.includes(line.col21)) {
+            if (param === '●') {
+                param = '.'
+            }
+            if (line.col21 !== param) {
                 return false
             }
         }
@@ -505,7 +508,11 @@ onMounted(() => {
                     meanings.add(columns.col13)
                 }
 
-                risks.add(columns.col21)
+                if (columns.col21 !== '.') {
+                    risks.add(columns.col21)
+                } else {
+                    risks.add('●')
+                }
             }
             options.value.mutationPosition = Array.from(positions)
             options.value.mutationMeaning = Array.from(meanings)
