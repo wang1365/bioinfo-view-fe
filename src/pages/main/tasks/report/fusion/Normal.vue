@@ -84,7 +84,7 @@ onMounted(() => {
     const width = [30, 30, 60, 60, 60, 60, 200, 50]
     const {qt, qn} = getDualIdentifiers(props.samples)
     readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then(res => {
-        const lines = getCsvData(res, {fields, hasHeaderLine: true})
+        const lines = getCsvData(res, {fields, hasHeaderLine: false})
         const head = lines[0]
         columns.value = Object.keys(head).map(k => {
             return {title: head[k], key: k, dataIndex: k, align: 'center'}
