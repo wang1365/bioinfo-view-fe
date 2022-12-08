@@ -86,7 +86,6 @@
                     <q-select
                         clearable
                         dense
-                        multiple
                         hide-dropdown-icon
                         v-model="searchParams.mutationMeaning"
                         stack-label
@@ -500,7 +499,10 @@ const search = () => {
          */
         param = searchParams.value.mutationMeaning
         if (param && param.length > 0 && param !== 'All') {
-            if (!param.includes(line)) {
+            if (param === '●') {
+                param = '.'
+            }
+            if (line.col17 !== param) {
                 return false
             }
         }
@@ -581,8 +583,10 @@ const init = () => {
                 const items = columns.col14.split(';')
                 items.forEach((item) => positions.add(item))
 
-                if (columns.col13 !== '.') {
+                if (columns.col17 !== '.') {
                     meanings.add(columns.col17)
+                } else {
+                    meanings.add('●')
                 }
 
                 risks.add(columns.col25)
