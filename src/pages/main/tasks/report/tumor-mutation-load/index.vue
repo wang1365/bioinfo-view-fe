@@ -117,7 +117,7 @@
 
         <div class="col-8">
             <div class="q-py-md text-primary text-bold text-h6">肿瘤突变负荷</div>
-            <GuageChartVue :tmb="tmb" />
+            <GuageChartVue :loading="loading" :tmb="tmb" />
             <div class="q-pl-sm q-mt-sm">
                 <div class="text-weight-bold text-primary">仅限研究使用，不用于临床诊断</div>
                 <div class="text-weight-bold text-red">警示：随意过滤造成结果不准确</div>
@@ -151,6 +151,7 @@ import {getCsvData, getCsvHeader} from "src/utils/csv";
 import GuageChartVue from "./GuageChart.vue";
 import {buildModelQuery} from "src/api/modelQueryBuilder"
 import {useApi} from "src/api/apiBase"
+import {getDualIdentifiers} from "src/utils/samples"
 
 const {apiPost} = useApi()
 const route = useRoute()
@@ -210,9 +211,10 @@ const tumorColumns = ref([])
 
 const mutationPositionOptions = ref([])
 const mutationMeaningOptions = ref([])
-
+const loading = ref(false)
 
 onMounted(() => {
+    loading.value = true
     // 从filter.txt获取默认参数值
     readTaskFile(route.params.id, 'TMB/filter.txt').then(res => {
         // "肿瘤深度        20" +
@@ -255,17 +257,15 @@ onMounted(() => {
             })
             samples.value = result
 
+            const {qt, qn} = getDualIdentifiers(props.samples)
             // 查询具体结果数据
-            readTaskFile(route.params.id, 'TMB/QN11_QT11.PASS.standard-new.csv').then(res => {
+            readTaskFile(route.params.id, `TMB/${qn}_${qt}.PASS.standard-new.csv`).then(res => {
                 // csv数据解析
                 const csv = getCsvData(res, {splitter: ','})
                 totalLines.value = csv
-                console.log('==========> lines.value', totalLines.value)
 
                 // 提取csv表头
                 const headers = getCsvHeader(res, ',')
-                console.log('==========> headers', headers)
-                console.log('==========> samples.value', samples.value)
 
                 // 根据列表头名称，例如Geno_Type(QN11), 检查该列是对比样本列表还是肿瘤样本列
                 const tumorIdx = []
@@ -278,7 +278,6 @@ onMounted(() => {
                     }
                 })
                 tumorColumns.value = tumorIdx
-                console.log('==========> tumorColumns.value', tumorColumns.value)
 
                 // 提取mutationTypeOptions
                 let positions = new Set()
@@ -304,7 +303,7 @@ onMounted(() => {
                 // chr1,2491306,2491306,G,A,0/0,298;0,298,0,0/1,349;18,367,0.0490463215258856,exonic,TNFRSF14,.,nonsynonymous SNV,exon4,c.G349A,A117T,139092,not_specified,MedGen:CN169374,no_assertion_provided,not_provided,.,0.0159,0.0475,0.0052,0.0511,0.0030,0.0078,0.0114,0.0177,0.0337,0.0211661,0.0157,rs2234163,0.0152,0.0334,0.0084,0.0033,0.0525,0.0031,0.0046,0.0051,0.0106,0.0379,0.0036,0.0018,0.0379,0.0022,0.0063,0.0083,0.0140,.,0.204,1.0,0.010,T,1.0,0.012,T,.,.,.,1,0.090,N,-2.005,0.002,N,-1.74,0.834,D,3.45,0.001,N,-0.892,0.487,T,0.036,0.156,T,0.002,0.000,T,.,.,.,.,.,.,.,0.150,0.170,0.285,0.083,T,0.174,0.626,T,-0.484,0.007,T,-0.430,0.300,T,0.009,0.001,T,.,.,.,.;.;.;.;.;.;,.;.;.;.;.;.;,0.679,0.085,0.003,0.015,N,0.035,0.043,N,-1.382,0.028,-1.419,0.031,0.707,0.731,0,3.04,0.448,0.158,-1.249,0.030,0.172,0.211,0.000,0.064,0.001,0.051,4.699,0.122,TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal,.,.,602746,.,TNFRSF14:NM_001297605:exon4:c.G349A:p.A117T
             })
         }, query)
-    })
+    }).finally(() => loading.value = false)
 
     // 从TMB_drug.txt获取用药说明
     readTaskFile(route.params.id, 'TMB/TMB_drug.txt').then(res => {
