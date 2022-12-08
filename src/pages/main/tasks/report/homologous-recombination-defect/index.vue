@@ -122,8 +122,8 @@ onMounted(() => {
 
     images.value = [
         `/igv${props.task.result_dir}/HRD/${qn}_${qt}.001.seqz.png`,
-        `/igv${props.task.result_dir}/HRD/${qn}_${qt}.001.seqz.png`,
-        `/igv${props.task.result_dir}/HRD/${qn}_${qt}.001.seqz.png`,
+        `/igv${props.task.result_dir}/HRD/${qn}_${qt}.002.seqz.png`,
+        `/igv${props.task.result_dir}/HRD/${qn}_${qt}.003.seqz.png`,
     ]
 })
 </script>
