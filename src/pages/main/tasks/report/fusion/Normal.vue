@@ -35,9 +35,11 @@
 </template>
 <script setup>
 import {ref, onMounted} from "vue";
-import {getReportTable} from 'src/api/report'
+import {readTaskFile} from "src/api/task"
+import {getCsvData} from "src/utils/csv"
 import {useRoute} from 'vue-router'
 import IGV from './Igv.vue'
+import {getDualIdentifiers} from "src/utils/samples"
 
 const route = useRoute()
 
@@ -55,6 +57,13 @@ const loading = ref(false)
 const igvVisible = ref(false)
 const selectedFile = ref('')
 
+const props = defineProps({
+    samples: {
+        type: Array,
+        require: true,
+        default: () => []
+    }
+})
 const searchKeyword = () => {
     filteredRows.value = rows.value.filter(t => t.k1.includes(keyword.value))
 }
@@ -73,8 +82,10 @@ onMounted(() => {
 
     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8']
     const width = [30, 30, 60, 60, 60, 60, 200, 50]
-    getReportTable(route.params.id, 'FUSION_QN11_SOMATIC', {}, fields).then(res => {
-        const head = res[0]
+    const {qt, qn} = getDualIdentifiers(props.samples)
+    readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then(res => {
+        const lines = getCsvData(res, {fields, hasHeaderLine: true})
+        const head = lines[0]
         columns.value = Object.keys(head).map(k => {
             return {title: head[k], key: k, dataIndex: k, align: 'center'}
         })
@@ -85,7 +96,7 @@ onMounted(() => {
             }
         })
 
-        rows.value = res.slice(1)
+        rows.value = lines.slice(1)
         filteredRows.value = rows.value
     }).finally(() => {
         loading.value = false
