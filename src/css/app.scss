@@ -51,7 +51,21 @@
         }
     }
 }
-
+.q-table {
+    thead {
+        tr {
+            th {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+        }
+    }
+    tbody{
+        tr:hover{
+            background-color: rgba(0, 0, 0, 0.15);
+        }
+    }
+}
 .bio-data-table {
     table {
         width: 100%;

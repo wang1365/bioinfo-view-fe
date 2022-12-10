@@ -159,7 +159,7 @@
                             <!-- <td>{{ item.user_id }}</td> -->
                             <!-- <td>{{ item.create_time }}</td>
                             <td>{{ item.modify_time }}</td> -->
-                            <td class="q-gutter-x-sm">
+                            <td class="q-gutter-xs">
                                 <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
                                 <q-btn color="secondary" label="关联患者" icon="link" @click="link(item)" size="sm" />
@@ -313,38 +313,7 @@ const loadPage = async () => {
             dataItems.value.push(iterator);
         }
     }, query)
-    // if (currentPage.value) {
-    //     let params = `?page=${currentPage.value}&size=${pageSize.value}`
-    //     let identifiers = 'identifier,patient_identifier,sample_componet,sample_type'
-    //     if (searchParams.value.search) {
-    //         params += `&search=${searchParams.value.search}&identifiers=${identifiers}`
-    //     }
-    //     if (searchParams.value.sample_date_start) {
-    //         params += `&sample_date__gte=${searchParams.value.sample_date_start}`
-    //     }
-    //     if (searchParams.value.sample_date_end) {
-    //         params += `&sample_date__lte=${searchParams.value.sample_date_end}`
-    //     }
-    //     if (searchParams.value.test_date_start) {
-    //         params += `&test_date__gte=${searchParams.value.test_date_start}`
-    //     }
-    //     if (searchParams.value.test_date_end) {
-    //         params += `&test_date__lte=${searchParams.value.test_date_end}`
-    //     }
-    //     if (searchParams.value.is_panel) {
-    //         params += `&is_panel=${searchParams.value.is_panel}`
-    //     }
-    //     apiGet(
-    //         `/sample/sampledatas/${params}`,
-    //         (res) => {
-    //             total.value = res.data.count;
-    //             dataItems.value = [];
-    //             for (const iterator of res.data.results) {
-    //                 dataItems.value.push(iterator);
-    //             }
-    //         }
-    //     );
-    // }
+
 };
 
 const confirm = (item) => {

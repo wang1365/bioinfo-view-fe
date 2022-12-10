@@ -1,22 +1,11 @@
 <template>
     <div>
-        <q-btn
-            icon="help_outline"
-            size="small"
-            outline
-            color="orange"
-            class="relative-position float-right q-mr-md"
-            @click="dlgVisible = !dlgVisible"
-        >说明</q-btn>
-        <q-tabs
-            v-model="tab"
-            active-color="primary"
-            active-bg-color="grey-4"
-            align="left"
-            class="bg-grey-1"
-            :breakpoint="0"
-            dense
-        >
+        <q-btn v-if="props.viewConfig.showStick" icon="bookmarks" size="small" outline color="primary"
+            class="relative-position float-right q-mr-md" @click="stickFilter()">固定过滤</q-btn>
+        <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
+            @click="dlgVisible = !dlgVisible">说明</q-btn>
+        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
+            :breakpoint="0" dense>
             <q-tab name="胚系突变分析" label="胚系突变分析" v-if="props.viewConfig.showMutGermline" />
             <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.viewConfig.showMutSomatic" />
         </q-tabs>
@@ -73,4 +62,6 @@ const props = defineProps({
         required: false,
     },
 })
+const stickFilter = () => {
+}
 </script>

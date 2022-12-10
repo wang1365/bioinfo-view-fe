@@ -101,7 +101,7 @@
                             <td>{{ patient.disease }}</td>
                             <td>{{ patient.family_history }}</td>
                             <td>{{ patient.samplemeta_set.length }}</td>
-                            <td class="q-gutter-x-sm">
+                            <td class="q-gutter-xs">
                                 <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
                                 <q-btn
                                     color="secondary"

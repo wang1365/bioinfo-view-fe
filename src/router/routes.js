@@ -64,6 +64,14 @@ const routes = [
                 path: 'tasks/:id/report',
                 component: () => import('pages/main/tasks/report/index.vue'),
             },
+            {
+                path: 'tasks/:id/define-report',
+                component: () => import('pages/main/tasks/defineReport/index.vue'),
+            },
+            {
+                path: 'reports',
+                component: () => import('pages/main/reports/index.vue'),
+            },
 
             {
                 path: 'settings',

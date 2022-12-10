@@ -19,6 +19,13 @@ const menu = [
         path: '/main/tasks',
     },
     {
+        icon: 'receipt_long',
+        label: '自定义报告',
+        separator: false,
+        path: '/main/reports',
+    },
+
+    {
         icon: 'groups_2',
         label: '患者管理',
         separator: false,

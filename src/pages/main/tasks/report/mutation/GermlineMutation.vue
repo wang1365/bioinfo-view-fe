@@ -3,21 +3,13 @@
         <div class="row justify-between">
             <div class="col-2 column q-pr-sm">
                 <div class="col">
-                    <q-input
-                        v-model="searchParams.gene"
-                        label="基因"
-                        clearable
-                        dense
-                        stack-label
-                        label-color="primary"
-                    />
+                    <q-input v-model="searchParams.gene" label="基因" clearable stack-label label-color="primary" />
                 </div>
                 <div class="col">
                     <q-input
                         v-model="searchParams.depth"
                         label="深度 >"
                         clearable
-                        dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -28,7 +20,6 @@
                         v-model="searchParams.ratio"
                         label="肿瘤频率 >"
                         clearable
-                        dense
                         type="number"
                         stack-label
                         label-color="primary"
@@ -39,7 +30,6 @@
                     <q-select
                         v-model="searchParams.mutationType"
                         clearable
-                        dense
                         hide-dropdown-icon
                         :options="options.mutationType"
                         label="突变类型"
@@ -52,7 +42,6 @@
                         v-model="searchParams.mutationPosition"
                         clearable
                         multiple
-                        dense
                         hide-dropdown-icon
                         :options="options.mutationPosition"
                         label="突变位置"
@@ -63,7 +52,6 @@
                 <div class="col">
                     <q-select
                         clearable
-                        dense
                         hide-dropdown-icon
                         v-model="searchParams.mutationMeaning"
                         stack-label
@@ -75,7 +63,6 @@
                 <div class="col">
                     <q-select
                         clearable
-                        dense
                         hide-dropdown-icon
                         v-model="searchParams.mutationRisk"
                         stack-label
@@ -89,7 +76,6 @@
                         v-model="searchParams.humanRatio"
                         label="人群频率 <"
                         clearable
-                        dense
                         hide-dropdown-icon
                         type="number"
                         stack-label
@@ -99,7 +85,6 @@
                 <div class="col">
                     <q-select
                         clearable
-                        dense
                         hide-dropdown-icon
                         v-model="searchParams.sift"
                         stack-label
@@ -108,10 +93,13 @@
                         label="SIFT_pred"
                     />
                 </div>
-                <div class="col text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
-                <div class="q-gutter-md text-center q-py-sm">
-                    <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
+                <div class="col">
+                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                </div>
+                <div class="col text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
+                <div class=" row justify-around q-py-sm">
+                    <q-btn color="primary" dense label="确定" icon="search" @click="search" />
+                    <q-btn color="primary" dense label="重置" icon="settings_backup_restore" @click="reset" />
                 </div>
             </div>
 
@@ -140,9 +128,9 @@
 
                     <template #bodyCell="{ column, record }">
                         <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
-                            <div>{{record[column.dataIndex]}}</div>
+                            <div>{{ record[column.dataIndex] }}</div>
                         </a-tooltip>
-                        <span v-else>{{record[column.dataIndex]}}</span>
+                        <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
                 </a-table>
             </div>
@@ -217,7 +205,8 @@ const searchParams = ref({
     mutationMeaning: null,
     mutationRisk: null,
     humanRatio: null,
-    sift: null,
+     sift: null,
+     drug:false,
 })
 
 const options = ref({
@@ -235,18 +224,6 @@ const customCell = (record, rowIndex, column) => {
     return {
         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
         style: {
-            // 字体颜色
-            // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
-            // 行背景色
-            'background-color': record.id === currentRow.value.id ? '#64b5f6' : 'white',
-            // 'color': record.id === currentRow.value.id  ? 'white' : 'black',
-            // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
-            // 'border-style': 'solid',
-            // // 下划线
-            // 'text-decoration': 'underline',
-            // // 字体样式-斜体
-            // 'font-style': 'italic',
-            // // 字体样式-斜体
             'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
             cursor: 'pointer',
         },
@@ -279,13 +256,13 @@ const columns = ref([
 
     { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
     { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80 }, // exon
-    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100}, // NUChange
-    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100}, // AAChange
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100 }, // NUChange
+    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100 }, // AAChange
 
-    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true}, // CLNDN
-    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true}, // CLNDISDB
-    { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280, ellipsis: true}, // CLNREVSTAT
-    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true},//CLNSIG
+    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
+    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
+    { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280, ellipsis: true }, // CLNREVSTAT
+    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true },//CLNSIG
     { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 200, ellipsis: true }, // cosmic70
     { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95 }, // ExAC_ALL
     { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
@@ -357,7 +334,7 @@ const reset = () => {
 }
 
 const clickRow = (row) => {
-     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>', row)
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>', row)
     dialogVisible.value = true
 }
 
@@ -484,7 +461,7 @@ onMounted(() => {
     readTaskMuFile(route.params.id, 'Mut_germline')
         .then((res) => {
             const headNames = getCsvHeader(res, ',')
-            console.log('headers',headNames)
+            console.log('headers', headNames)
             columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
 
             const visibleColIdx = columns.value.map((t) => t.i)
@@ -528,16 +505,18 @@ onMounted(() => {
     background-color: #bbbbff !important;
     font-size: 20px;
 }
+
 /*//偶数行的样式*/
 .evenRowStyl {
     background-color: #aad4fd46 !important;
 }
 
-.ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
+.ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
     background: #bbbbff;
 }
+
 /*//鼠标移入样式*/
-.ant-table-tbody > tr:hover > td {
+.ant-table-tbody>tr:hover>td {
     background: #bbbbff !important;
 }
 </style>

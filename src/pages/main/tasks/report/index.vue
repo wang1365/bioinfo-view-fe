@@ -2,107 +2,46 @@
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>任务结果</h6>
         <div class="q-pt-xs">
-            <q-tabs
-                v-model="tab"
-                active-color="primary"
-                active-bg-color="grey-5"
-                align="justify"
-                class="bg-grey-2 shadow-2"
-                indicator-color="primary"
-                inline-label
-                :breakpoint="0"
-                dense
-            >
+            <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-5" align="justify"
+                class="bg-grey-2 shadow-2" indicator-color="primary" inline-label :breakpoint="0" dense>
                 <q-tab name="qc" label="质控" icon="border_left" v-if="tabValid('qc')" />
-                <q-tab
-                    name="mutation"
-                    label="突变分析"
-                    icon="candlestick_chart"
-                    v-if="tabValid('mutation')"
-                />
-                <q-tab
-                    name="fusion"
-                    label="融合分析"
-                    icon="format_strikethrough"
-                    v-if="tabValid('fusion')"
-                />
-                <q-tab
-                    name="copy-number-variation"
-                    label="拷贝数变异分析"
-                    icon="polyline"
-                    v-if="tabValid('copy-number-variation')"
-                />
-                <q-tab
-                    name="microsatellite-instability"
-                    label="微卫星不稳定"
-                    icon="shape_line"
-                    v-if="tabValid('microsatellite-instability')"
-                />
-                <q-tab
-                    name="tumor-mutation-load"
-                    label="肿瘤突变负荷分析"
-                    icon="bubble_chart"
-                    v-if="tabValid('tumor-mutation-load')"
-                />
-                <q-tab
-                    name="homologous-recombination-defect"
-                    label="同源重组缺陷分析"
-                    icon="line_axis"
-                    v-if="tabValid('homologous-recombination-defect')"
-                />
+                <q-tab name="mutation" label="突变分析" icon="candlestick_chart" v-if="tabValid('mutation')" />
+                <q-tab name="fusion" label="融合分析" icon="format_strikethrough" v-if="tabValid('fusion')" />
+                <q-tab name="copy-number-variation" label="拷贝数变异分析" icon="polyline"
+                    v-if="tabValid('copy-number-variation')" />
+                <q-tab name="microsatellite-instability" label="微卫星不稳定" icon="shape_line"
+                    v-if="tabValid('microsatellite-instability')" />
+                <q-tab name="tumor-mutation-load" label="肿瘤突变负荷分析" icon="bubble_chart"
+                    v-if="tabValid('tumor-mutation-load')" />
+                <q-tab name="homologous-recombination-defect" label="同源重组缺陷分析" icon="line_axis"
+                    v-if="tabValid('homologous-recombination-defect')" />
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
                     <QcVue :viewConfig="module.qc" :intro="intros['qc']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
-                    <MutaionVue
-                        :viewConfig="module.mutation"
-                        :intro="intros['mutation']"
-                        :samples="samples"
-                        :task="taskDetail"
-                    />
+                    <MutaionVue :viewConfig="module.mutation" :intro="intros['mutation']" :samples="samples"
+                        :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
                     <FusionVue :viewConfig="module.fusion" :intro="intros['fusion']" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
-                    <CopyNumberVariationVue
-                        :viewConfig="module.copy_number_variation"
-                        :intro="intros['copy-number-variation']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <CopyNumberVariationVue :viewConfig="module.copy_number_variation"
+                        :intro="intros['copy-number-variation']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
-                <q-tab-panel
-                    name="microsatellite-instability"
-                    v-if="tabValid('microsatellite-instability')"
-                >
-                    <MicrosatelliteInstabilityVue
-                        :viewConfig="module.microsatellite_instability"
-                        :intro="intros['microsatellite-instability']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
+                    <MicrosatelliteInstabilityVue :viewConfig="module.microsatellite_instability"
+                        :intro="intros['microsatellite-instability']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="tumor-mutation-load" v-if="tabValid('tumor-mutation-load')">
-                    <TumorMutationLoadVue
-                        :viewConfig="module.tumor_mutation_load"
-                        :intro="intros['tumor-mutation-load']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <TumorMutationLoadVue :viewConfig="module.tumor_mutation_load"
+                        :intro="intros['tumor-mutation-load']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
-                <q-tab-panel
-                    name="homologous-recombination-defect"
-                    v-if="tabValid('homologous-recombination-defect')"
-                >
-                    <HomologousRecombinationDefectVue
-                        :viewConfig="module.homologous_recombination_defect"
-                        :intro="intros['homologous-recombination-defect']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                <q-tab-panel name="homologous-recombination-defect" v-if="tabValid('homologous-recombination-defect')">
+                    <HomologousRecombinationDefectVue :viewConfig="module.homologous_recombination_defect"
+                        :intro="intros['homologous-recombination-defect']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
             </q-tab-panels>
         </div>

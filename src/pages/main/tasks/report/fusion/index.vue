@@ -1,5 +1,7 @@
 <template>
     <div class="q-py-sm">
+        <q-btn v-if="props.viewConfig.showStick" icon="bookmarks" size="small" outline color="primary" class="relative-position float-right q-mr-md"
+            @click="stickFilter()">固定过滤</q-btn>
         <q-btn
             icon="help_outline"
             size="small"

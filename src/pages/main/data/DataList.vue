@@ -146,7 +146,7 @@
                             <!-- <td>{{ item.user_id }}</td>
                             <td >{{ item.create_time }}</td>
                             <td >{{ item.modify_time }}</td> -->
-                            <td class="q-gutter-x-sm">
+                            <td class="q-gutter-xs">
                                 <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
                                 <q-btn color="secondary" label="关联样本" icon="link" @click="link(item)" size="sm" />
