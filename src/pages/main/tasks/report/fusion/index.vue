@@ -1,7 +1,15 @@
 <template>
     <div class="q-py-sm">
-        <q-btn v-if="props.viewConfig.showStick" icon="bookmarks" size="small" outline color="primary" class="relative-position float-right q-mr-md"
-            @click="stickFilter()">固定过滤</q-btn>
+        <q-btn
+            v-if="props.viewConfig.showStick"
+            icon="bookmarks"
+            size="small"
+            outline
+            color="primary"
+            class="relative-position float-right q-mr-md"
+            @click="stickFilter()"
+            label="固定过滤"
+        />
         <q-btn
             icon="help_outline"
             size="small"
@@ -9,8 +17,7 @@
             color="orange"
             class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
-            >说明</q-btn
-        >
+        >说明</q-btn>
         <q-tabs
             v-model="tab"
             active-color="primary"
@@ -49,29 +56,36 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
-import NormalVue from "./Normal.vue";
-import Single from "./Single.vue";
+import { ref, onMounted } from 'vue'
+import NormalVue from './Normal.vue'
+import Single from './Single.vue'
 
-const tab = ref("单样品融合分析")
+const tab = ref('单样品融合分析')
 const dlgVisible = ref(false)
 
 const props = defineProps({
     intro: {
         type: String,
-        required: false
+        required: false,
     },
     samples: {
         type: Array,
         required: false,
-        default: () => []
-    }, viewConfig: {
+        default: () => [],
+    },
+    viewConfig: {
         type: Object,
         required: false,
-        default(){return {
-            "showFusionGermline": true,
-            "showFusionSomatic": true
-        }}
-    }
+        default() {
+            return {
+                showFusionGermline: true,
+                showFusionSomatic: true,
+                showStick: false,
+            }
+        },
+    },
 })
+const stickFilter = ()=>{
+
+}
 </script>

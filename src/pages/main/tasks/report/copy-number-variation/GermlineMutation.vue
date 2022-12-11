@@ -20,5 +20,20 @@
     <div class="q-py-sm">过滤结果的图表数据</div>
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+ import { ref, onMounted } from "vue";
+ const props = defineProps({
+     tmb: {
+         type: Number,
+         required: true,
+     },
+     maxTmb: {
+         type: Number,
+         required: true,
+     },
+     showSticky: {
+         type: Boolean,
+         required: false,
+         default: () => false,
+     },
+ })
 </script>

@@ -3,7 +3,13 @@
         <div class="row justify-between">
             <div class="col-2 column q-pr-sm">
                 <div class="col">
-                    <q-input v-model="searchParams.gene" label="基因" clearable stack-label label-color="primary" />
+                    <q-input
+                        v-model="searchParams.gene"
+                        label="基因"
+                        clearable
+                        stack-label
+                        label-color="primary"
+                    />
                 </div>
                 <div class="col">
                     <q-input
@@ -94,12 +100,22 @@
                     />
                 </div>
                 <div class="col">
-                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                    <q-checkbox
+                        left-label
+                        v-model="searchParams.drug"
+                        label="是否关联药物"
+                        color="primary"
+                    />
                 </div>
                 <div class="col text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
-                <div class=" row justify-around q-py-sm">
-                    <q-btn color="primary" dense label="确定" icon="search" @click="search" />
-                    <q-btn color="primary" dense label="重置" icon="settings_backup_restore" @click="reset" />
+                <div class="q-gutter-md text-center q-py-sm">
+                    <q-btn color="primary" label="确定" icon="search" @click="search" />
+                    <q-btn
+                        color="primary"
+                        label="重置"
+                        icon="settings_backup_restore"
+                        @click="reset"
+                    />
                 </div>
             </div>
 
@@ -127,7 +143,11 @@
                     <!--                    </template>-->
 
                     <template #bodyCell="{ column, record }">
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                        <a-tooltip
+                            v-if="column.ellipsis"
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                        >
                             <div>{{ record[column.dataIndex] }}</div>
                         </a-tooltip>
                         <span v-else>{{ record[column.dataIndex] }}</span>
@@ -192,9 +212,13 @@ const props = defineProps({
         type: Object,
         reuqired: false,
     },
+    showSticky: {
+        type: Boolean,
+        required: false,
+        default: () => false,
+    },
 })
 const route = useRoute()
-
 const dialogVisible = ref(false)
 const searchParams = ref({
     gene: null,
@@ -205,8 +229,8 @@ const searchParams = ref({
     mutationMeaning: null,
     mutationRisk: null,
     humanRatio: null,
-     sift: null,
-     drug:false,
+    sift: null,
+    drug: false,
 })
 
 const options = ref({
@@ -219,6 +243,8 @@ const options = ref({
 const loading = ref(false)
 const rows = ref([])
 const filteredRows = ref([])
+
+const drugTableRows = ref([])
 
 const customCell = (record, rowIndex, column) => {
     return {
@@ -262,7 +288,7 @@ const columns = ref([
     { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
     { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
     { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280, ellipsis: true }, // CLNREVSTAT
-    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true },//CLNSIG
+    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true }, //CLNSIG
     { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 200, ellipsis: true }, // cosmic70
     { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95 }, // ExAC_ALL
     { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
@@ -329,12 +355,12 @@ const reset = () => {
         mutationRisk: null,
         humanRatio: null,
         sift: null,
+        drug: false,
     }
     search()
 }
 
 const clickRow = (row) => {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>', row)
     dialogVisible.value = true
 }
 
@@ -365,11 +391,11 @@ const search = () => {
 
         // 突变类型 All/SNP/INDEL
         /*
-        根据原始表格4、5列判断，SNP是第4列只能为A/T/C/G单碱基且第5列也只能为A/T/C/G单碱基（中划线-算INDEL），其他情况为INDEL
-        SNP是第4只能是A/T/C/G，第5列也是只能为A/T/C/G，
-        例如第4列是A，第5列是T，
-        其他情况都是INDEL，如第4列为A，第5列为-；第4列为A，第5列为AGC，第四列为AT，第5列为T
-         */
+            根据原始表格4、5列判断，SNP是第4列只能为A/T/C/G单碱基且第5列也只能为A/T/C/G单碱基（中划线-算INDEL），其他情况为INDEL
+            SNP是第4只能是A/T/C/G，第5列也是只能为A/T/C/G，
+            例如第4列是A，第5列是T，
+            其他情况都是INDEL，如第4列为A，第5列为-；第4列为A，第5列为AGC，第四列为AT，第5列为T
+          */
         param = searchParams.value.mutationType
         if (param && param.length > 0 && param !== 'All') {
             const Snp = ['A', 'T', 'C', 'G']
@@ -381,9 +407,9 @@ const search = () => {
 
         // 突变位置 All/Exonic / Intronic/ Intergenic /还有没列举完
         /*
-        原始表格第14列，把这列信息提取排序去重后，再加上一个【exonic,splicing】选项，做成下拉菜单选择
-        （如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）
-         */
+            原始表格第14列，把这列信息提取排序去重后，再加上一个【exonic,splicing】选项，做成下拉菜单选择
+            （如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）
+          */
         param = searchParams.value.mutationPosition
         if (param && param.length > 0) {
             const positions = line.col10.split(';')
@@ -394,8 +420,8 @@ const search = () => {
 
         // 突变意义 All/No synonymous SNV/还有没列举完
         /*
-        原始表格第17列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
-         */
+            原始表格第17列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
+          */
         param = searchParams.value.mutationMeaning
         if (param && param.length > 0 && param !== 'All') {
             if (param === '●') {
@@ -408,8 +434,8 @@ const search = () => {
 
         // 突变危险 All/No synonymous SNV/还有没列举完
         /*
-        原始表格第21列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
-         */
+            原始表格第21列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
+          */
         param = searchParams.value.mutationRisk
         if (param && param.length > 0 && param !== 'All') {
             if (param === '●') {
@@ -422,8 +448,8 @@ const search = () => {
 
         // 人群频率
         /*
-        原始表格第26、31、39列，大于0的小数， 26、31、39列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，不管什么筛选，都展示
-         */
+            原始表格第26、31、39列，大于0的小数， 26、31、39列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，不管什么筛选，都展示
+          */
         param = searchParams.value.humanRatio
         if (param) {
             if ((line.col26 !== '.' && line.col31 !== '.') || line.col39 !== '.') {
@@ -438,8 +464,8 @@ const search = () => {
 
         // SIFT_pred
         /*
-        原始表格第56列，这列只包含3个选项：T、D、点
-         */
+            原始表格第56列，这列只包含3个选项：T、D、点
+          */
         param = searchParams.value.sift
         if (param && param.length > 0) {
             if (param !== line.col56) {
@@ -447,21 +473,42 @@ const search = () => {
             }
         }
 
+        // 要去关联匹配, germline 和 somatic 的 match 使用的列不一样
+        // 读取
+        param = searchParams.value.drug
+        if (param) {
+            let relDrug = false
+            let match = `${line.col1}:${line.col2}-${line.col3}_${line.col4}>${line.col5}_${line.col11}`
+            for (const iterator of drugTableRows.value) {
+                if (iterator[0] == match) {
+                    relDrug = true
+                    break
+                }
+            }
+            if (!relDrug) {
+                return false
+            }
+        }
+
         return true
     })
-
-    console.log('========= search result', filteredRows.value.length, filteredRows.value)
 }
+
+onMounted(() => {
+    loadDrugTable()
+    loadTable()
+})
+
 const refreshPage = () => {
     dialogVisible.value = false
 }
 
-onMounted(() => {
+// 加载表格数据
+const loadTable = () => {
     loading.value = true
     readTaskMuFile(route.params.id, 'Mut_germline')
         .then((res) => {
             const headNames = getCsvHeader(res, ',')
-            console.log('headers', headNames)
             columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
 
             const visibleColIdx = columns.value.map((t) => t.i)
@@ -496,7 +543,15 @@ onMounted(() => {
             options.value.mutationRisk = Array.from(risks)
         })
         .finally(() => (loading.value = false))
-})
+}
+// 加载药物关联表格数据
+const loadDrugTable = () => {
+    const tablefile = 'Mut_germline/germline.evidence'
+    readTaskFile(route.params.id, tablefile).then((res) => {
+        const items = getCsvData(res)
+        drugTableRows.value = items
+    })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -511,12 +566,12 @@ onMounted(() => {
     background-color: #aad4fd46 !important;
 }
 
-.ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+.ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: #bbbbff;
 }
 
 /*//鼠标移入样式*/
-.ant-table-tbody>tr:hover>td {
+.ant-table-tbody > tr:hover > td {
     background: #bbbbff !important;
 }
 </style>

@@ -1,6 +1,13 @@
 <template>
-    <q-btn v-if="props.viewConfig.showStick" icon="bookmarks" size="small" outline color="primary" class="relative-position float-right q-mr-md"
-            @click="stickFilter()">固定过滤</q-btn>
+    <q-btn
+        v-if="props.viewConfig.showStick"
+        icon="bookmarks"
+        size="small"
+        outline
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        @click="stickFilter()"
+    >固定过滤</q-btn>
     <q-btn
         icon="help_outline"
         size="small"
@@ -17,7 +24,7 @@
                     <q-input
                         v-model="pieParams.extra"
                         class="col-1"
-                        label="拷贝数扩展阈值"
+                        label="拷贝数扩增阈值"
                         label-color="primary"
                         stack-label
                     />
@@ -184,6 +191,7 @@ const props = defineProps({
             return {
                 showCNVcircos: true,
                 showCNVtable: true,
+                showSticky: false,
             }
         },
     },

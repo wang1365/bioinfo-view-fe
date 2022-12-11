@@ -6,21 +6,26 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch, toRefs } from "vue";
+import { markRaw, onMounted, ref, watch, toRefs } from 'vue'
 
-const echarts = require("echarts");
-const chart = ref(null);
-const barchart = ref(null);
+const echarts = require('echarts')
+const chart = ref(null)
+const barchart = ref(null)
 
 const props = defineProps({
     tmb: {
         type: Number,
-        required: true
+        required: true,
     },
     maxTmb: {
         type: Number,
-        required: true
-    }
+        required: true,
+    },
+    showSticky: {
+        type: Boolean,
+        required: false,
+        default: () => false,
+    },
 })
 
 const { tmb } = toRefs(props)
@@ -44,9 +49,9 @@ const option = {
                         // [0.25, '#7CFFB2'],
                         // [1, '#7CFFB2'],
 
-                        [70, '#FF6E76']
-                    ]
-                }
+                        [70, '#FF6E76'],
+                    ],
+                },
             },
             pointer: {
                 icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
@@ -54,22 +59,22 @@ const option = {
                 width: 20,
                 offsetCenter: [0, '-60%'],
                 itemStyle: {
-                    color: 'auto'
-                }
+                    color: 'auto',
+                },
             },
             axisTick: {
                 length: 12,
                 lineStyle: {
                     color: 'auto',
-                    width: 2
-                }
+                    width: 2,
+                },
             },
             splitLine: {
                 length: 20,
                 lineStyle: {
                     color: 'auto',
-                    width: 5
-                }
+                    width: 5,
+                },
             },
             axisLabel: {
                 color: '#464646',
@@ -78,17 +83,16 @@ const option = {
                 rotate: 'tangential',
                 formatter: function (value) {
                     if (value === 0.875) {
-                        return 'TMB hign';
+                        return 'TMB hign'
+                    } else if (value === 0.125) {
+                        return 'TMB low'
                     }
-                    else if (value === 0.125) {
-                        return 'TMB low';
-                    }
-                    return '';
-                }
+                    return ''
+                },
             },
             title: {
                 offsetCenter: [0, '-10%'],
-                fontSize: 20
+                fontSize: 20,
             },
             detail: {
                 fontSize: 30,
@@ -97,21 +101,21 @@ const option = {
                 formatter: function (value) {
                     return value
                 },
-                color: 'auto'
+                color: 'auto',
             },
             data: [
                 {
                     value: tmb,
-                    name: 'Mutation/MB'
-                }
-            ]
-        }
-    ]
+                    name: 'Mutation/MB',
+                },
+            ],
+        },
+    ],
 }
 
 onMounted(() => {
-    init();
-});
+    init()
+})
 
 watch(tmb, (v) => {
     if (chart.value) {
@@ -121,13 +125,13 @@ watch(tmb, (v) => {
 })
 
 const init = () => {
-    let ct = barchart.value;
-    echarts.dispose(ct);
-    chart.value = markRaw(echarts.init(ct));
-    chart.value.setOption(option);
+    let ct = barchart.value
+    echarts.dispose(ct)
+    chart.value = markRaw(echarts.init(ct))
+    chart.value.setOption(option)
 }
 
 const onResize = () => {
-    chart.value.resize();
-};
+    chart.value.resize()
+}
 </script>

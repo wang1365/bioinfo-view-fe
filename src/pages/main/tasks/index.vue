@@ -2,13 +2,15 @@
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="任务管理" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div style="
+            <div
+                style="
                         height: 110px;
                         display: flex; padding-bottom: 15px; padding-top: 15px;
                         justify-content: space-around;
                         justify-items: center;
                         align-items: center;
-                                    ">
+                                    "
+            >
                 <q-btn color="white" @click="clickCard(options[0])">
                     <div class="text-black" style="width: 7vw">
                         <div class="text-h5 text-center text-bold">{{ total_task_count }}</div>
@@ -18,31 +20,41 @@
 
                 <q-btn color="primary" @click="clickCard(options[1])">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-white text-h5 text-center text-bold">{{ taskSummary.running_task_count }}</div>
+                        <div
+                            class="text-white text-h5 text-center text-bold"
+                        >{{ taskSummary.running_task_count }}</div>
                         <div class="text-white text-h6 text-center text-bold">运行</div>
                     </div>
                 </q-btn>
                 <q-btn color="negative" @click="clickCard(options[3])">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ taskSummary.failured_task_count }}</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.failured_task_count }}</div>
                         <div class="text-h6 text-center text-bold">失败</div>
                     </div>
                 </q-btn>
                 <q-btn color="secondary" @click="clickCard(options[2])">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ taskSummary.pending_task_count }}</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.pending_task_count }}</div>
                         <div class="text-h6 text-center text-bold">排队</div>
                     </div>
                 </q-btn>
                 <q-btn color="warning" @click="clickCard(options[5])">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ taskSummary.canceled_task_count }}</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.canceled_task_count }}</div>
                         <div class="text-h6 text-center text-bold">取消</div>
                     </div>
                 </q-btn>
                 <q-btn color="positive" @click="clickCard(options[4])">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ taskSummary.finished_task_count }}</div>
+                        <div
+                            class="text-h5 text-center text-bold"
+                        >{{ taskSummary.finished_task_count }}</div>
                         <div class="text-h6 text-center text-bold">完成</div>
                     </div>
                 </q-btn>
@@ -53,22 +65,43 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="row q-gutter-sm">
                     <div class="col-2">
-                        <q-select v-model="status" :options="options" stack-label clearable filled
-                            @clear="clearSelect()" :display-value="`状态: ${status.label}`" dense
-                            @update:model-value="refreshPage()"></q-select>
+                        <q-select
+                            v-model="status"
+                            :options="options"
+                            stack-label
+                            clearable
+                            filled
+                            @clear="clearSelect()"
+                            :display-value="`状态: ${status.label}`"
+                            dense
+                            @update:model-value="refreshPage()"
+                        ></q-select>
                     </div>
                     <div class="col-4 q-pl-sm">
-                        <q-input readonly filled dense @click="showProjectSelect = true"
-                            :model-value="'所属项目: ' + projectName">
+                        <q-input
+                            readonly
+                            filled
+                            dense
+                            @click="showProjectSelect = true"
+                            :model-value="'所属项目: ' + projectName"
+                        >
                             <template v-slot:prepend>
-                                <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
+                                <q-icon
+                                    class="cursor-pointer"
+                                    name="search"
+                                    @click="showProjectSelect = true"
+                                />
                             </template>
                             <template v-slot:append>
-                                <q-icon class="cursor-pointer" name="backspace" @click="
+                                <q-icon
+                                    class="cursor-pointer"
+                                    name="backspace"
+                                    @click="
     projectName = '';
 projectId = '';
 refreshPage();
-                                " />
+                                "
+                                />
                             </template>
                         </q-input>
                     </div>
@@ -110,34 +143,94 @@ refreshPage();
                         <td>{{ item.flow.name }}</td>
 
                         <td>
-                            <q-linear-progress v-if="item.status === 'CANCELED'" color="warning" rounded size="10px"
-                                :value="item.progress / 100" />
-                            <q-linear-progress v-if="item.status === 'RUNNING'" color="primary" rounded size="10px"
-                                :value="item.progress / 100" />
-                            <q-linear-progress v-if="item.status === 'FAILURED'" color="negative" rounded size="10px"
-                                :value="item.progress / 100" />
-                            <q-linear-progress v-if="item.status === 'PENDING'" color="secondary" rounded size="10px"
-                                :value="item.progress / 100" />
-                            <q-linear-progress v-if="item.status === 'FINISHED'" color="positive" rounded size="10px"
-                                :value="item.progress / 100" />
+                            <q-linear-progress
+                                v-if="item.status === 'CANCELED'"
+                                color="warning"
+                                rounded
+                                size="10px"
+                                :value="item.progress / 100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status === 'RUNNING'"
+                                color="primary"
+                                rounded
+                                size="10px"
+                                :value="item.progress / 100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status === 'FAILURED'"
+                                color="negative"
+                                rounded
+                                size="10px"
+                                :value="item.progress / 100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status === 'PENDING'"
+                                color="secondary"
+                                rounded
+                                size="10px"
+                                :value="item.progress / 100"
+                            />
+                            <q-linear-progress
+                                v-if="item.status === 'FINISHED'"
+                                color="positive"
+                                rounded
+                                size="10px"
+                                :value="item.progress / 100"
+                            />
                         </td>
                         <td>{{ getItemStatus(item) }}</td>
                         <td>
-                            <q-icon v-if="item.status === 'FAILURED'" class="cursor-pointer" color="red"
-                                name="find_in_page" @click="showError = true; currentTaskError = item.error_message"
-                                size="sm" />
+                            <q-icon
+                                v-if="item.status === 'FAILURED'"
+                                class="cursor-pointer"
+                                color="red"
+                                name="find_in_page"
+                                @click="showError = true; currentTaskError = item.error_message"
+                                size="sm"
+                            />
                         </td>
                         <td>{{ item.creator.username }}</td>
                         <td>{{ format(item.create_time) }}</td>
                         <td class="q-gutter-sm">
-                            <q-btn color="secondary" label="详情" icon="visibility" @click="gotoDetail(item)" size="sm" />
-                            <q-btn :disable="item.status !== 'FINISHED'" color="info" label="结果" icon="query_stats"
-                                                                         @click="gotoReport(item)" size="sm" />
-                             <q-btn :disable="item.status !== 'FINISHED'" color="info" label="定制报告" icon="query_stats"
-                                @click="gotoDefineReport(item)" size="sm" />
-                            <q-btn :disable="item.status !== 'FINISHED'" color="primary" label="下载" icon="download"
-                                @click="downlaod(item)" size="sm" />
-                            <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
+                            <q-btn
+                                color="secondary"
+                                label="详情"
+                                icon="visibility"
+                                @click="gotoDetail(item)"
+                                size="sm"
+                            />
+                            <q-btn
+                                :disable="item.status !== 'FINISHED'"
+                                color="info"
+                                label="结果"
+                                icon="query_stats"
+                                @click="gotoReport(item)"
+                                size="sm"
+                            />
+                            <q-btn
+                                :disable="item.status !== 'FINISHED'"
+                                color="positive"
+                                label="定制报告"
+                                icon="query_stats"
+                                @click="gotoDefineReport(item)"
+                                size="sm"
+                            />
+                            <q-btn
+                                :disable="item.status !== 'FINISHED'"
+                                color="primary"
+                                label="下载"
+                                icon="download"
+                                @click="downlaod(item)"
+                                size="sm"
+                            />
+                            <q-btn
+                                color="red"
+                                label="删除"
+                                icon="delete"
+                                size="sm"
+                                @click="confirm(item)"
+                            />
                         </td>
                     </tr>
                 </tbody>
@@ -145,7 +238,11 @@ refreshPage();
 
             <div class="row q-mt-md">
                 <q-space></q-space>
-                <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
+                <PaginatorVue
+                    :total="total"
+                    :currentPage="currentPage"
+                    @pageChange="pageChange($event)"
+                />
             </div>
         </div>
         <q-dialog v-model="showProjectSelect">
@@ -259,8 +356,8 @@ const gotoDetail = (item) => {
 }
 const gotoReport = (item) => {
     router.push(`/main/tasks/${item.id}/report`)
- }
- const gotoDefineReport = (item) => {
+}
+const gotoDefineReport = (item) => {
     router.push(`/main/tasks/${item.id}/define-report`)
 }
 onMounted(() => {
@@ -307,5 +404,4 @@ const summary = async () => {
         taskSummary.value = res.data
     })
 }
-
 </script>

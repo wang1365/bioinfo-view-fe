@@ -5,19 +5,54 @@
         <q-card class="q-mt-md">
             <q-section>
                 <div class="q-gutter-md row items-start q-pa-md">
-                    <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 任务名称" clearable>
-                    </q-input>
-                    <q-input type="number" v-model="searchParams.age_start" dense label="患者识别号" clearable> </q-input>
-                    <q-input type="number" v-model="searchParams.age_end" dense label="样本识别号" clearable> </q-input>
-                    <q-input type="number" v-model="searchParams.age_start" dense label="数据识别号" clearable> </q-input>
+                    <q-input
+                        style="width:350px"
+                        v-model="searchParams.search"
+                        dense
+                        label="关键词: 任务名称"
+                        clearable
+                    ></q-input>
+                    <q-input
+                        type="number"
+                        v-model="searchParams.age_start"
+                        dense
+                        label="患者识别号"
+                        clearable
+                    ></q-input>
+                    <q-input
+                        type="number"
+                        v-model="searchParams.age_end"
+                        dense
+                        label="样本识别号"
+                        clearable
+                    ></q-input>
+                    <q-input
+                        type="number"
+                        v-model="searchParams.age_start"
+                        dense
+                        label="数据识别号"
+                        clearable
+                    ></q-input>
                     <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
                 </div>
 
-                <q-table :rows="rows" :columns="columns" row-key="id" ref="tableRef" v-model:pagination="pagination"
-                    @request="onRequest" rows-per-page-label="每页数量">
+                <q-table
+                    :rows="rows"
+                    :columns="columns"
+                    row-key="id"
+                    ref="tableRef"
+                    v-model:pagination="pagination"
+                    @request="onRequest"
+                    rows-per-page-label="每页数量"
+                >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-sm">
-                            <q-btn icon="download" @click="onEdit(props.row)" color="primary" label="下载报告" />
+                            <q-btn
+                                icon="download"
+                                @click="onEdit(props.row)"
+                                color="primary"
+                                label="下载报告"
+                            />
                         </q-td>
                     </template>
                 </q-table>
@@ -30,10 +65,10 @@
 import { ref, onMounted } from 'vue'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import { useApi } from 'src/api/apiBase'
-import { useQTable } from "src/utils/q-table"
+import { useQTable } from 'src/utils/q-table'
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
-const { apiGet } = useApi();
+const { apiGet } = useApi()
 const searchParams = ref({})
 const columns = ref([
     {
@@ -43,7 +78,8 @@ const columns = ref([
         align: 'left',
         field: (row) => row.id,
         format: (val) => `${val}`,
-    }, {
+    },
+    {
         name: 'task_id',
 
         label: '任务 ID',
@@ -88,9 +124,7 @@ const columns = ref([
         label: 'Actions',
         required: false,
     },
-
 ])
-
 
 onMounted(() => {
     loadDataOnMount()
