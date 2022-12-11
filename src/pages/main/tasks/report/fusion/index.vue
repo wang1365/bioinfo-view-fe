@@ -1,7 +1,15 @@
 <template>
     <div class="q-py-sm">
         <q-btn
-            v-if="props.viewConfig.showStick"
+            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            color="primary"
+            class="relative-position float-right q-mr-md"
+            label="已固定过滤"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
             icon="bookmarks"
             size="small"
             outline
@@ -56,7 +64,7 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, toRef } from 'vue'
 import NormalVue from './Normal.vue'
 import Single from './Single.vue'
 
@@ -85,7 +93,22 @@ const props = defineProps({
         },
     },
 })
-const stickFilter = ()=>{
-
+const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
+const stickDone = (name, data) => {
+    console.log(name, data)
+    stickData.value[name] = data
+}
+const emit = defineEmits('stickDone')
+const config = toRef(props, 'viewConfig')
+const stickFilter = () => {
+    if (!stickData.value.germlineMutation.filter && config.value.showMutGermline) {
+        errorMessage('胚系突变分析未进行过滤')
+        return false
+    }
+    if (!stickData.value.somaticMutation.filter && config.value.showMutSomatic) {
+        errorMessage('体细胞突变分析未进行过滤')
+        return false
+    }
+    emit('stickDone', stickData.value)
 }
 </script>

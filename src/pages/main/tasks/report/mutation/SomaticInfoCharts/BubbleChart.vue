@@ -249,7 +249,6 @@ const refresh = () => {
         adjustedData.value[i] = result.map((t, i) => {
             return t[1] === 0 ? 0 : Math.round(t[1] * scale) + 10
         })
-        console.log('====ajust', adjustedData.value[i])
     })
 
     chart.value.setOption(option.value);
@@ -286,7 +285,6 @@ const groupAndCount = (colName) => {
     arr.forEach((v, i) => {
         result.push([i+ 2, v])
     })
-    console.log('==============arr', arr, result)
     // arr.map((v, i) => [i, v] )
 
     return result

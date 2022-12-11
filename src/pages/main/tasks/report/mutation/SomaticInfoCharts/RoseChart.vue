@@ -86,8 +86,6 @@ onMounted(() => {
 
 const refreshChart = () => {
     let result = _.countBy(data.value, t => t[props.colKey])
-    console.log('======result', result, props.colKey, data.value)
-
 
     const items = Object.keys(result).map(k => {
         return {name: k, value: result[k]}
@@ -95,14 +93,12 @@ const refreshChart = () => {
 
     const dt = _.max(items.map(t => t.value))/2
 
-    console.log('======items', items, dt)
     const displayData = items.map(t => {
         // t.value += dt;
         return t
     })
 
     option.value.series[0].data = displayData
-    // console.log('======option.value', displayData, dt)
 
     chart.value.setOption(option.value);
 }

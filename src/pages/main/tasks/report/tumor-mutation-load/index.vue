@@ -1,6 +1,14 @@
 <template>
     <q-btn
-        v-if="props.viewConfig.showStick"
+        v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        label="已固定过滤"
+    />
+    <q-btn
+        v-if="props.viewConfig.showStick&& !props.viewConfig.stickDone"
         icon="bookmarks"
         size="small"
         outline
@@ -9,6 +17,7 @@
         @click="stickFilter()"
         label="固定过滤"
     />
+
     <q-btn
         icon="help_outline"
         size="small"
@@ -239,8 +248,17 @@ const tumorColumns = ref([])
 const mutationPositionOptions = ref([])
 const mutationMeaningOptions = ref([])
 const loading = ref(false)
-
-const stickFilter = () => {}
+const emit = defineEmits(['stickDone'])
+const stickFilter = () => {
+    let data = {
+        error: false,
+        data: {
+            tmb: tmb.value,
+            filter: searchParams.value,
+        },
+    }
+    emit('stickDone', data)
+}
 onMounted(() => {
     loading.value = true
     // 从filter.txt获取默认参数值

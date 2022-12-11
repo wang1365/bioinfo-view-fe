@@ -201,6 +201,7 @@ import MutationInfo from './MutationInfo'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
+const emit = defineEmits(['stickDone'])
 
 const props = defineProps({
     samples: {
@@ -492,6 +493,11 @@ const search = () => {
 
         return true
     })
+    let data = {
+        filter: searchParams.value,
+        rows: filteredRows,
+    }
+    emit('stickDone', data)
 }
 
 onMounted(() => {

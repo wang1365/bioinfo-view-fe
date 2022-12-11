@@ -1,6 +1,14 @@
 <template>
     <q-btn
-        v-if="props.viewConfig.showStick"
+        v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        label="已固定过滤"
+    />
+    <q-btn
+        v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
         icon="bookmarks"
         size="small"
         outline
@@ -8,6 +16,7 @@
         class="relative-position float-right q-mr-md"
         @click="stickFilter()"
     >固定过滤</q-btn>
+
     <q-btn
         icon="help_outline"
         size="small"
@@ -128,22 +137,6 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
-    <!-- <div class="q-py-md">
-        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-            :breakpoint="0">
-            <q-tab name="胚系突变分析" label="胚系突变分析" />
-            <q-tab name="体细胞突变分析" label="体细胞突变分析" />
-
-        </q-tabs>
-        <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="胚系突变分析">
-                <GermlineMutationVue />
-            </q-tab-panel>
-            <q-tab-panel name="体细胞突变分析">
-                <SomaticMutationVue />
-            </q-tab-panel>
-        </q-tab-panels>
-    </div>-->
 </template>
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
@@ -153,12 +146,20 @@ import { getCsvData } from 'src/utils/csv'
 import { readSystemFile } from 'src/api/report'
 import { toMap } from 'src/utils/collection'
 import { uid } from 'quasar'
-import GermlineMutationVue from './GermlineMutation.vue'
-import SomaticMutationVue from './SomaticMutation.vue'
 import * as echarts from 'echarts'
 
 // hg19基因组数据，/data/bioinfo/database_dir/hg19/hg19_genome/hg19.length
 // hg38基因组数据，/data/bioinfo/database_dir/hg38/hg38_genome/hg38.length
+const emit = defineEmits(['stickDone'])
+const stickFilter = () => {
+    let data = {
+        error: false,
+        data: {
+            filter: pieParams.value,
+        },
+    }
+    emit('stickDone', data)
+}
 
 const route = useRoute()
 const tab = ref('胚系突变分析')

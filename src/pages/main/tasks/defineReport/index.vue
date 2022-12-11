@@ -2,62 +2,108 @@
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>定制报告</h6>
         <q-stepper v-model="step" ref="stepper" color="primary" header-nav animated>
-
-            <q-step v-if="tabValid('mutation')" :done="isStepDone('mutation')" name="mutation" title="突变分析"
-                icon="candlestick_chart">
-                <MutaionVue :viewConfig="viewConfig.mutation" :intro="intros['mutation']" :samples="samples"
-                    :task="taskDetail" @stickDone="stickDone('mutation')" />
+            <q-step
+                v-if="tabValid('mutation')"
+                :done="isStepDone('mutation')"
+                name="mutation"
+                title="突变分析"
+                icon="candlestick_chart"
+            >
+                <MutaionVue
+                    :viewConfig="viewConfig.mutation"
+                    :intro="intros['mutation']"
+                    :samples="samples"
+                    :task="taskDetail"
+                    @stickDone="stickDone('mutation',$event,'fusion')"
+                />
             </q-step>
 
-            <q-step v-if="tabValid('fusion')" :done="isStepDone('mutation')" name="fusion" title="融合分析"
-                icon="format_strikethrough">
-                <FusionVue :viewConfig="viewConfig.fusion" :intro="intros['fusion']" :samples="samples"
-                    @stickDone="stickDone('fusion')" />
+            <q-step
+                v-if="tabValid('fusion')"
+                :done="isStepDone('mutation')"
+                name="fusion"
+                title="融合分析"
+                icon="format_strikethrough"
+            >
+                <FusionVue
+                    :viewConfig="viewConfig.fusion"
+                    :intro="intros['fusion']"
+                    :samples="samples"
+                    @stickDone="stickDone('fusion',$event,'copy_number_variation')"
+                />
             </q-step>
 
-            <q-step v-if="tabValid('copy-number-variation')" :done="isStepDone('copy-number-variation')"
-                name="copy-number-variation" title="拷贝数变异分析" icon="polyline">
-                <CopyNumberVariationVue :viewConfig="viewConfig.copy_number_variation"
-                    :intro="intros['copy-number-variation']" :task="taskDetail" :samples="samples"
-                    @stickDone="stickDone('copy-number-variation')" />
+            <q-step
+                v-if="tabValid('copy_number_variation')"
+                :done="isStepDone('copy_number_variation')"
+                name="copy_number_variation"
+                title="拷贝数变异分析"
+                icon="polyline"
+            >
+                <CopyNumberVariationVue
+                    :viewConfig="viewConfig.copy_number_variation"
+                    :intro="intros['copy_number_variation']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    @stickDone="stickDone('copy_number_variation',$event,'tumor_mutation_load')"
+                />
             </q-step>
 
-            <q-step v-if="tabValid('tumor-mutation-load')" :done="isStepDone('tumor_mutation_load')"
-                name="tumor-mutation-load" title="肿瘤突变负荷分析" icon="bubble_chart">
-                <TumorMutationLoadVue :viewConfig="viewConfig.tumor_mutation_load"
-                    :intro="intros['tumor-mutation-load']" :task="taskDetail" :samples="samples"
-                    @stickDone="stickDone('ctumor_mutation_load')" />
+            <q-step
+                v-if="tabValid('tumor_mutation_load')"
+                :done="isStepDone('tumor_mutation_load')"
+                name="tumor_mutation_load"
+                title="肿瘤突变负荷分析"
+                icon="bubble_chart"
+            >
+                <TumorMutationLoadVue
+                    :viewConfig="viewConfig.tumor_mutation_load"
+                    :intro="intros['tumor_mutation_load']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    @stickDone="stickDone('tumor_mutation_load',$event,'create')"
+                />
             </q-step>
             <!-- <q-step v-if="tabValid('qc')" name="qc" title="质控" icon="border_left" color="secondary">
                 <QcVue :viewConfig="viewConfig.qc" :intro="intros['qc']" :samples="samples" />
             </q-step>
-            <q-step v-if="tabValid('microsatellite-instability')" name="microsatellite-instability" title="微卫星不稳定"
+            <q-step v-if="tabValid('microsatellite_instability')" name="microsatellite_instability" title="微卫星不稳定"
                 icon="shape_line" color="secondary">
                 <MicrosatelliteInstabilityVue :viewConfig="viewConfig.microsatellite_instability"
-                    :intro="intros['microsatellite-instability']" :task="taskDetail" :samples="samples" />
+                    :intro="intros['microsatellite_instability']" :task="taskDetail" :samples="samples" />
             </q-step>
-            <q-step v-if="tabValid('homologous-recombination-defect')" name="homologous-recombination-defect" title="同源重组缺陷分析"
+            <q-step v-if="tabValid('homologous_recombination_defect')" name="homologous_recombination_defect" title="同源重组缺陷分析"
                 icon="line_axis" color="secondary">
                 <HomologousRecombinationDefectVue :viewConfig="viewConfig.homologous_recombination_defect"
-                    :intro="intros['homologous-recombination-defect']" :task="taskDetail" :samples="samples" />
-            </q-step> -->
+                    :intro="intros['homologous_recombination-defect']" :task="taskDetail" :samples="samples" />
+            </q-step>-->
             <q-step name="create" title="报告确认" icon="receipt_long">
                 <div>
-                    <span class="text-bold text-h6 text-primary">已固定的数据是: </span>
-                    <q-chip v-if="isStepDone('mutation')" color="primary" text-color="white" icon="candlestick_chart">
-                        突变分析
-                    </q-chip>
-                    <q-chip v-if="isStepDone('fusion')" color="primary" text-color="white" icon="format_strikethrough">
-                        融合分析
-                    </q-chip>
-                    <q-chip v-if="isStepDone('tumor_mutation_load')" color="primary" text-color="white" icon="polyline">
-                        拷贝数变异分析
-                    </q-chip>
-                    <q-chip v-if="isStepDone('tumor_mutation_load')" color="primary" text-color="white"
-                        icon="bubble_chart">
-                        肿瘤突变负荷分析
-                    </q-chip>
-
+                    <span class="text-bold text-h6 text-primary">已固定的数据是:</span>
+                    <q-chip
+                        v-if="isStepDone('mutation')"
+                        color="primary"
+                        text-color="white"
+                        icon="candlestick_chart"
+                    >突变分析</q-chip>
+                    <q-chip
+                        v-if="isStepDone('fusion')"
+                        color="primary"
+                        text-color="white"
+                        icon="format_strikethrough"
+                    >融合分析</q-chip>
+                    <q-chip
+                        v-if="isStepDone('copy_number_variation')"
+                        color="primary"
+                        text-color="white"
+                        icon="polyline"
+                    >拷贝数变异分析</q-chip>
+                    <q-chip
+                        v-if="isStepDone('tumor_mutation_load')"
+                        color="primary"
+                        text-color="white"
+                        icon="bubble_chart"
+                    >肿瘤突变负荷分析</q-chip>
                 </div>
                 <div class="q-py-md text-h6">填写信息</div>
                 <q-input v-model="text" label="报告备注" />
@@ -75,7 +121,7 @@
                     <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Back"
                         class="q-ml-sm" />
                 </q-stepper-navigation>
-            </template> -->
+            </template>-->
         </q-stepper>
     </q-page>
 </template>
@@ -101,18 +147,18 @@ const { apiPost } = useApi()
 const step = ref('mutation')
 const stepData = ref({})
 const route = useRoute()
- const router = useRouter()
+const router = useRouter()
 const intros = ref({})
 const taskDetail = ref({})
 const samples = ref([])
 const viewConfig = ref({
-    homologous_recombination_defect: { showHRDtable: true, showHRDpicture: true, showStick: true },
-    microsatellite_instability: { showMSI: true, showMSIsite: true, showStick: true },
-    copy_number_variation: { showCNVcircos: true, showCNVtable: true, showStick: true },
-    mutation: { showMutGermline: true, showMutSomatic: true, showStick: true },
-    tumor_mutation_load: { showTMB: true, showStick: true },
-    fusion: { showFusionGermline: true, showFusionSomatic: true, showStick: true },
-    qc: { showQCsummary: true, showQCdepth: true, showStick: true },
+    homologous_recombination_defect: { showHRDtable: true, showHRDpicture: true, showStick: true, stickDone: false },
+    microsatellite_instability: { showMSI: true, showMSIsite: true, showStick: true, stickDone: false },
+    copy_number_variation: { showCNVcircos: true, showCNVtable: true, showStick: true, stickDone: false },
+    mutation: { showMutGermline: true, showMutSomatic: true, showStick: true, stickDone: false },
+    tumor_mutation_load: { showTMB: true, showStick: true, stickDone: false },
+    fusion: { showFusionGermline: true, showFusionSomatic: true, showStick: true, stickDone: false },
+    qc: { showQCsummary: true, showQCdepth: true, showStick: true, stickDone: false },
 })
 
 onMounted(() => {
@@ -121,19 +167,26 @@ onMounted(() => {
     loadViewConfig()
 })
 
-const stickDone = (name) => {
+// 接收组件传递的过滤数据
+const stickDone = (name, data, nextstep) => {
+    console.log(name)
+    console.log(data)
+    stepData.value[name] = data
+    console.log(stepData.value)
+    // 设置试图的为已经有过滤数据
+    viewConfig.value[name].stickDone = true
+    step.value = nextstep
     return true
 }
 const tabValid = (name) => {
     return intros.value[name]
 }
 const isStepDone = (name) => {
-    return true
-    return stepData.value[name]
+    return Boolean(stepData.value[name])
 }
 
 const createReport = () => {
-    infoMessage("报告创建完成.")
+    infoMessage('报告创建完成.')
 }
 const gotoReports = () => {
     router.push(`/main/reports`)
@@ -154,7 +207,6 @@ const loadTaskSamples = () => {
     })
 }
 
-
 // 读取任务的 result.json 结果文件, 他是一个 json 文件, key:value
 // key 是 页面上的 tab 名称, value 是每个 tab 的说明信息
 // 如果没有 key 那么对应的 tab 也就不显示
@@ -164,10 +216,10 @@ const loadIntros = () => {
         质控: 'qc',
         突变分析: 'mutation',
         融合分析: 'fusion',
-        拷贝数变异分析: 'copy-number-variation',
-        微卫星不稳定分析: 'microsatellite-instability',
-        肿瘤突变负荷分析: 'tumor-mutation-load',
-        同源重组缺陷分析: 'homologous-recombination-defect',
+        拷贝数变异分析: 'copy_number_variation',
+        微卫星不稳定分析: 'microsatellite_instability',
+        肿瘤突变负荷分析: 'tumor_mutation_load',
+        同源重组缺陷分析: 'homologous_recombination_defect',
     }
 
     readTaskFile(route.params.id, 'result.json').then((res) => {
@@ -175,7 +227,7 @@ const loadIntros = () => {
         const result = {}
         for (let k in raw) {
             result[dict[k]] = raw[k]
-            stepData[dict[k]] = ""
+            stepData[dict[k]] = ''
         }
         intros.value = result
         console.log('intro============', intros.value)
@@ -210,6 +262,7 @@ const loadViewConfig = () => {
             for (let k in data) {
                 config[dict[k]] = data[k]
                 config[dict[k]].showStick = true
+                config[dict[k]].stickDone = false
             }
             console.log('module', data)
             viewConfig.value = config

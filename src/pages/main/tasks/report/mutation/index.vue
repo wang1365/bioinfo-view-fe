@@ -1,7 +1,15 @@
 <template>
     <div>
         <q-btn
-            v-if="props.viewConfig.showStick"
+            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            color="primary"
+            class="relative-position float-right q-mr-md"
+            label="已固定过滤"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
             icon="bookmarks"
             size="small"
             outline
@@ -35,6 +43,7 @@
                     :samples="props.samples"
                     :task="props.task"
                     ref="germlineMutationVue"
+                    @stickDone="stickDone('germlineMutation',$event)"
                 />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
@@ -42,6 +51,7 @@
                     :samples="props.samples"
                     :task="props.task"
                     ref="somaticMutationVue"
+                    @stickDone="stickDone('somaticMutation',$event)"
                 />
             </q-tab-panel>
         </q-tab-panels>
@@ -59,7 +69,8 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { errorMessage } from 'src/utils/notify'
+import { ref, onMounted, computed, toRef } from 'vue'
 import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 
@@ -67,6 +78,7 @@ const germlineMutation = ref({})
 const somaticMutation = ref({})
 const tab = ref('胚系突变分析')
 const dlgVisible = ref(false)
+
 const props = defineProps({
     intro: {
         type: String,
@@ -93,10 +105,22 @@ const props = defineProps({
         required: false,
     },
 })
+const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
+const stickDone = (name, data) => {
+    console.log(name, data)
+    stickData.value[name] = data
+}
+const emit = defineEmits('stickDone')
+const config = toRef(props, 'viewConfig')
 const stickFilter = () => {
-    let germlineResult = germlineMutation.value.stickFilter()
-    console.log(germlineResult)
-    let somaticResult = somaticMutation.value.stickFilter()
-    console.log(somaticResult)
+    if (!stickData.value.germlineMutation.filter && config.value.showMutGermline) {
+        errorMessage('胚系突变分析未进行过滤')
+        return false
+    }
+    if (!stickData.value.somaticMutation.filter && config.value.showMutSomatic) {
+        errorMessage('体细胞突变分析未进行过滤')
+        return false
+    }
+    emit('stickDone', stickData.value)
 }
 </script>

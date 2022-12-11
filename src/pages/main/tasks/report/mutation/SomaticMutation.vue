@@ -229,6 +229,8 @@ import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 
+const emit = defineEmits(['stickDone'])
+
 const route = useRoute()
 
 const dialogVisible = ref(false)
@@ -582,6 +584,12 @@ const search = () => {
         return true
     })
 
+    let data = {
+        filter: searchParams.value,
+
+        rows: filteredRows,
+    }
+    emit('stickDone', data)
 }
 const refreshPage = () => {
     dialogVisible.value = false
@@ -598,7 +606,6 @@ const loadTable = () => {
         .then((res) => {
             const headNames = getCsvHeader(res, ',')
             headers.value = headNames
-            console.log('headers', headers.value)
             columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
 
             const visibleColIdx = columns.value.map((t) => t.i)
@@ -636,9 +643,9 @@ const loadTable = () => {
 }
 // 加载药物关联表格数据
 const loadDrugTable = () => {
-     const tablefile = 'Mut_somatic/somatic.evidence'
-     readTaskFile(route.params.id, tablefile).then((res) => {
-         const items = getCsvData(res)
+    const tablefile = 'Mut_somatic/somatic.evidence'
+    readTaskFile(route.params.id, tablefile).then((res) => {
+        const items = getCsvData(res)
         drugTableRows.value = items
     })
 }

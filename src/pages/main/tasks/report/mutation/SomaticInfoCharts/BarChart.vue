@@ -70,8 +70,6 @@ const refreshChart = () => {
     // 分组统计
     const result = _.countBy(filteredData, t => t.xLable)
 
-    console.log('bar char ===>', data.value, filteredData, result)
-
     option.value.xAxis.data = Object.keys(result)
     option.value.series[0].data = Object.values(result)
     chart.value.setOption(option.value)

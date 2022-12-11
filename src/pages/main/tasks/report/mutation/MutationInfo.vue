@@ -145,7 +145,6 @@ const col146 = computed(() => {
     const col = isGermline.value ? row.value.col146 : row.value.col150
     const items = col.split(':')
     if (items.length < 5) {
-        console.log('Invalid col', col, row.value)
         return result
     }
     const [gene, transcript, exon, cDna, protein] = items
@@ -186,9 +185,7 @@ onMounted(() => {
     const tablefile = props.isGermline ? 'Mut_germline/germline.evidence' : 'Mut_somatic/somatic.evidence'
     readTaskFile(route.params.id, tablefile).then((res) => {
         const items = getCsvData(res)
-        console.log(items)
-        console.log(row)
-        console.log(match)
+
         for (const iterator of items) {
             if (iterator[0] == match) {
                 let item = {}
