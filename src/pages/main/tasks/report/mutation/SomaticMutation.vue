@@ -3,13 +3,7 @@
         <div class="row justify-between">
             <div class="col-2 column q-pr-sm">
                 <div class="col">
-                    <q-input
-                        v-model="searchParams.gene"
-                        label="基因"
-                        clearable
-                        stack-label
-                        label-color="primary"
-                    />
+                    <q-input v-model="searchParams.gene" label="基因" clearable stack-label label-color="primary" />
                 </div>
                 <div class="col">
                     <q-input
@@ -56,6 +50,7 @@
                     <q-select
                         v-model="searchParams.mutationType"
                         clearable
+                        multiple
                         hide-dropdown-icon
                         :options="options.mutationType"
                         label="突变类型"
@@ -81,6 +76,7 @@
                         hide-dropdown-icon
                         v-model="searchParams.mutationMeaning"
                         stack-label
+                        multiple
                         label-color="primary"
                         :options="options.mutationMeaning"
                         label="突变意义"
@@ -92,6 +88,7 @@
                         hide-dropdown-icon
                         v-model="searchParams.mutationRisk"
                         stack-label
+                        multiple
                         label-color="primary"
                         :options="options.mutationRisk"
                         label="突变危险"
@@ -111,7 +108,7 @@
                 <div class="col">
                     <q-select
                         clearable
-                        dense
+                        multiple
                         hide-dropdown-icon
                         v-model="searchParams.sift"
                         stack-label
@@ -121,22 +118,12 @@
                     />
                 </div>
                 <div class="col">
-                    <q-checkbox
-                        left-label
-                        v-model="searchParams.drug"
-                        label="是否关联药物"
-                        color="primary"
-                    />
+                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
                 </div>
                 <div class="col text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                 <div class="q-gutter-md text-center q-py-sm">
                     <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn
-                        color="primary"
-                        label="重置"
-                        icon="settings_backup_restore"
-                        @click="reset"
-                    />
+                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
                 </div>
             </div>
 
@@ -152,11 +139,7 @@
                     :sticky="true"
                 >
                     <template #bodyCell="{ column, record }">
-                        <a-tooltip
-                            v-if="column.ellipsis"
-                            color="#3b4146"
-                            :title="record[column.dataIndex]"
-                        >
+                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
                             <div>{{record[column.dataIndex]}}</div>
                         </a-tooltip>
                         <span v-else>{{record[column.dataIndex]}}</span>
@@ -240,17 +223,17 @@ const searchParams = ref({
     compareDepth: null,
     tumorRatio: null,
     compareRatio: null,
-    mutationType: null,
+    mutationType: [],
     mutationPosition: [],
-    mutationMeaning: null,
-    mutationRisk: null,
+    mutationMeaning: [],
+    mutationRisk: [],
     humanRatio: null,
-    sift: null,
+    sift: [],
     drug: false,
 })
 
 const options = ref({
-    mutationType: ['All', 'SNP', 'INDEL'],
+    mutationType: ['SNP', 'INDEL'],
     mutationPosition: [],
     mutationMeaning: [],
     mutationRisk: [],
@@ -486,10 +469,13 @@ const search = () => {
             其他情况都是INDEL，如第4列为A，第5列为-；第4列为A，第5列为AGC，第四列为AT，第5列为T
           */
         param = searchParams.value.mutationType
-        if (param && param.length > 0 && param !== 'All') {
+        if (param && param.length > 0) {
             const Snp = ['A', 'T', 'C', 'G']
             let isSnp = Snp.includes(line.col4) && Snp.includes(line.col5)
-            if (!(param === 'SNP' ? isSnp : !isSnp)) {
+            if (param[0] === 'SNP' && !isSnp) {
+                return false
+            }
+            if (param[0] === 'INDEL' && isSnp) {
                 return false
             }
         }
@@ -513,11 +499,9 @@ const search = () => {
             下拉选择：All/Missense/Frameshift/Stopgain/Stoploss/还有没列举完
           */
         param = searchParams.value.mutationMeaning
-        if (param && param.length > 0 && param !== 'All') {
-            if (param === '●') {
-                param = '.'
-            }
-            if (line.col17 !== param) {
+        if (param && param.length > 0) {
+            const realParam = param.map(t => t === '●' ? '.' : t)
+            if (!realParam.includes(line.col17)) {
                 return false
             }
         }
@@ -528,11 +512,9 @@ const search = () => {
             原始表格第25列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
           */
         param = searchParams.value.mutationRisk
-        if (param && param.length > 0 && param !== 'All') {
-            if (param === '●') {
-                param = '.'
-            }
-            if (line.col25 !== param) {
+        if (param && param.length > 0) {
+            const realParam = param.map(t => t === '●' ? '.' : t)
+            if (!realParam.includes(line.col25) ) {
                 return false
             }
         }
@@ -559,7 +541,7 @@ const search = () => {
           */
         param = searchParams.value.sift
         if (param && param.length > 0) {
-            if (param !== line.col60) {
+            if (!param.includes(line.col60)) {
                 return false
             }
         }
@@ -571,7 +553,7 @@ const search = () => {
             let relDrug = false
             let match = `${line.col1}:${line.col2}-${line.col3}_${line.col4}>${line.col5}_${line.col15}`
             for (const iterator of drugTableRows.value) {
-                if (iterator[0] == match) {
+                if (iterator[0] === match) {
                     relDrug = true
                     break
                 }
