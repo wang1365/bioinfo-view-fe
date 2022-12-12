@@ -3,7 +3,13 @@
         <div class="row justify-between">
             <div class="col-2 column q-pr-sm">
                 <div class="col">
-                    <q-input v-model="searchParams.gene" label="基因" clearable stack-label label-color="primary" />
+                    <q-input
+                        v-model="searchParams.gene"
+                        label="基因"
+                        clearable
+                        stack-label
+                        label-color="primary"
+                    />
                 </div>
                 <div class="col">
                     <q-input
@@ -32,7 +38,7 @@
                         clearable
                         multiple
                         hide-dropdown-icon
-                        :options="options.mutationType"
+                        :options="props.options.mutationType"
                         label="突变类型"
                         stack-label
                         label-color="primary"
@@ -44,7 +50,7 @@
                         clearable
                         multiple
                         hide-dropdown-icon
-                        :options="options.mutationPosition"
+                        :options="props.options.mutationPosition"
                         label="突变位置"
                         stack-label
                         label-color="primary"
@@ -58,7 +64,7 @@
                         stack-label
                         multiple
                         label-color="primary"
-                        :options="options.mutationMeaning"
+                        :options="props.options.mutationMeaning"
                         label="突变意义"
                     />
                 </div>
@@ -70,7 +76,7 @@
                         stack-label
                         multiple
                         label-color="primary"
-                        :options="options.mutationRisk"
+                        :options="props.options.mutationRisk"
                         label="突变危险"
                     />
                 </div>
@@ -98,12 +104,22 @@
                     />
                 </div>
                 <div class="col">
-                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                    <q-checkbox
+                        left-label
+                        v-model="searchParams.drug"
+                        label="是否关联药物"
+                        color="primary"
+                    />
                 </div>
                 <div class="col text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
                 <div class="q-gutter-md text-center q-py-sm">
                     <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
+                    <q-btn
+                        color="primary"
+                        label="重置"
+                        icon="settings_backup_restore"
+                        @click="reset"
+                    />
                 </div>
             </div>
 
@@ -119,7 +135,11 @@
                     :sticky="true"
                 >
                     <template #bodyCell="{ column, record }">
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                        <a-tooltip
+                            v-if="column.ellipsis"
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                        >
                             <div>{{ record[column.dataIndex] }}</div>
                         </a-tooltip>
                         <span v-else>{{ record[column.dataIndex] }}</span>
@@ -163,7 +183,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted, toRef } from 'vue'
+import { ref, onMounted, toRef, toRefs, watch } from 'vue'
 import BarChartVue from './SomaticInfoCharts/BarChart.vue'
 import PieChartVue from './SomaticInfoCharts/PieChart.vue'
 import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
@@ -191,6 +211,32 @@ const props = defineProps({
         required: false,
         default: () => false,
     },
+
+    rows: {
+        type: Array,
+        required: false,
+        default() {
+            return []
+        },
+    },
+    header: {
+        type: Array,
+        required: false,
+        default() {
+            return []
+        },
+    },
+    options: {
+        type: Object,
+        required: false,
+        default() {
+            return {
+                mutationPosition: [],
+                mutationMeaning: [],
+                mutationRisk: [],
+            }
+        },
+    },
     searchParams: {
         type: Object,
         required: false,
@@ -209,14 +255,7 @@ const props = defineProps({
             }
         },
     },
-    originRows: {
-        type: Array,
-        required: false,
-        default() {
-            return []
-        },
-    },
-    originHeaders: {
+    drugRows: {
         type: Array,
         required: false,
         default() {
@@ -239,18 +278,10 @@ const searchParams = ref({
     drug: false,
 })
 
-const options = ref({
-    mutationType: ['SNP', 'INDEL'],
-    mutationPosition: [],
-    mutationMeaning: [],
-    mutationRisk: [],
-})
-
 const loading = ref(false)
-const rows = ref([])
-const filteredRows = ref([])
+const { rows, drugRows, header } = toRefs(props)
 
-const drugTableRows = ref([])
+const filteredRows = ref([])
 
 const currentRow = ref({})
 
@@ -428,7 +459,7 @@ const search = () => {
           */
         param = searchParams.value.mutationMeaning
         if (param && param.length > 0) {
-            const realParam = param.map(t => t === '●' ? '.' : t)
+            const realParam = param.map((t) => (t === '●' ? '.' : t))
             if (!realParam.includes(line.col13)) {
                 return false
             }
@@ -440,7 +471,7 @@ const search = () => {
           */
         param = searchParams.value.mutationRisk
         if (param && param.length > 0) {
-            const realParam = param.map(t => t === '●' ? '.' : t)
+            const realParam = param.map((t) => (t === '●' ? '.' : t))
             if (!realParam.includes(line.col21)) {
                 return false
             }
@@ -479,7 +510,7 @@ const search = () => {
         if (param) {
             let relDrug = false
             let match = `${line.col1}:${line.col2}-${line.col3}_${line.col4}>${line.col5}_${line.col11}`
-            for (const iterator of drugTableRows.value) {
+            for (const iterator of drugRows.value) {
                 if (iterator[0] === match) {
                     relDrug = true
                     break
@@ -500,8 +531,11 @@ const search = () => {
     emit('searchParamsChange', searchParams.value)
 }
 
+watch(rows, (rows) => {
+    loadTable()
+})
+
 onMounted(() => {
-    loadDrugTable()
     loadTable()
 })
 
@@ -510,102 +544,15 @@ const refreshPage = () => {
 }
 
 const propSearchParams = toRef(props, 'searchParams')
-const originRows = toRef(props, 'originRows')
-const originHeaders = toRef(props, 'originHeaders')
+
 // 加载表格数据
 const loadTable = () => {
-    loading.value = true
-     console.log(originRows.value.length)
-    if (originRows.value.length > 0) {
-        const headers = originHeaders.value
-        const csvRows = originRows.value
-        columns.value.forEach((col) => (col.title = headers[col.i - 1]))
+    columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
 
-        const visibleColIdx = columns.value.map((t) => t.i)
-        const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
+    const visibleColIdx = columns.value.map((t) => t.i)
 
-        csvRows.forEach((row, i) => (row.id = i))
-        rows.value = csvRows
-        filteredRows.value = csvRows
-
-        // 提取options
-        let positions = new Set()
-        let meanings = new Set()
-        let risks = new Set()
-        for (let columns of csvRows) {
-            const items = columns.col10.split(';')
-            items.forEach((item) => positions.add(item))
-
-            if (columns.col13 === '.') {
-                meanings.add('●')
-            } else {
-                meanings.add(columns.col13)
-            }
-
-            if (columns.col21 !== '.') {
-                risks.add(columns.col21)
-            } else {
-                risks.add('●')
-            }
-        }
-        options.value.mutationPosition = Array.from(positions)
-        options.value.mutationMeaning = Array.from(meanings)
-        options.value.mutationRisk = Array.from(risks)
-
-        searchParams.value = propSearchParams.value
-        loading.value = false
-    } else {
-        readTaskMuFile(route.params.id, 'Mut_germline')
-            .then((res) => {
-                const headers = getCsvHeader(res, ',')
-                columns.value.forEach((col) => (col.title = headers[col.i - 1]))
-
-                const visibleColIdx = columns.value.map((t) => t.i)
-                const colKeys = _.range(1, 150, 1).map((i) => 'col' + i)
-                const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
-                csvRows.forEach((row, i) => (row.id = i))
-                rows.value = csvRows
-                filteredRows.value = csvRows
-
-                // 提取options
-                let positions = new Set()
-                let meanings = new Set()
-                let risks = new Set()
-                for (let columns of csvRows) {
-                    const items = columns.col10.split(';')
-                    items.forEach((item) => positions.add(item))
-
-                    if (columns.col13 === '.') {
-                        meanings.add('●')
-                    } else {
-                        meanings.add(columns.col13)
-                    }
-
-                    if (columns.col21 !== '.') {
-                        risks.add(columns.col21)
-                    } else {
-                        risks.add('●')
-                    }
-                }
-                options.value.mutationPosition = Array.from(positions)
-                options.value.mutationMeaning = Array.from(meanings)
-                options.value.mutationRisk = Array.from(risks)
-
-                searchParams.value = propSearchParams.value
-                emit('rowsLoaded',{csvRows,headers})
-            })
-            .finally(() => (loading.value = false))
-
-    }
-     search()
-}
-// 加载药物关联表格数据
-const loadDrugTable = () => {
-    const tablefile = 'Mut_germline/germline.evidence'
-    readTaskFile(route.params.id, tablefile).then((res) => {
-        const items = getCsvData(res)
-        drugTableRows.value = items
-    })
+    searchParams.value = propSearchParams.value
+    search()
 }
 </script>
 

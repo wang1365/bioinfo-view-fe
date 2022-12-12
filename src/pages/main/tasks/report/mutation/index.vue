@@ -37,18 +37,19 @@
             <q-tab name="胚系突变分析" label="胚系突变分析" v-if="props.viewConfig.showMutGermline" />
             <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.viewConfig.showMutSomatic" />
         </q-tabs>
-        <q-tab-panels v-model="tab" animated>
+        <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">
                 <GermlineMutationVue
                     :samples="props.samples"
                     :task="props.task"
                     ref="germlineMutationVue"
-                    @stickDone="stickDone('germlineMutation',$event)"
-                    :searchParams="germlineSearchParams"
-                    :originRows="germlineRows"
-                    :originHeaders="germlineHeaders"
-                    @rowsLoaded="rowsLoaded('germline',$event)"
-                    @searchParamsChange="searchParamsChange('germline',$event)"
+                    @stickDone="onStickDone('germlineMutation',$event)"
+                    :rows="germlineData.rows"
+                    :header="germlineData.header"
+                    :options="germlineData.options"
+                    :searchParams="germlineData.searchParams"
+                    :drugRows="germlineData.drugRows"
+                    @searchParamsChange="onSearchParamsChange('germline',$event)"
                 />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
@@ -56,12 +57,13 @@
                     :samples="props.samples"
                     :task="props.task"
                     ref="somaticMutationVue"
-                    @stickDone="stickDone('somaticMutation',$event)"
-                    :originRows="somaticRows"
-                    :searchParams="somaticSearchParams"
-                    :originHeaders="somaticHeaders"
-                    @rowsLoaded="rowsLoaded('somatic',$event)"
-                    @searchParamsChange="searchParamsChange('somatic',$event)"
+                    @stickDone="onStickDone('somaticMutation',$event)"
+                    :rows="somaticData.rows"
+                    :header="somaticData.header"
+                    :options="somaticData.options"
+                    :searchParams="somaticData.searchParams"
+                    :drugRows="somaticData.drugRows"
+                    @searchParamsChange="onSearchParamsChange('somatic',$event)"
                 />
             </q-tab-panel>
         </q-tab-panels>
@@ -81,42 +83,18 @@
 <script setup>
 import { errorMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef } from 'vue'
+import { useRoute } from 'vue-router'
+import { readTaskFile, readTaskMuFile } from 'src/api/task'
+import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 
+const route = useRoute()
+const loaded = ref(false)
 const tab = ref('胚系突变分析')
 const dlgVisible = ref(false)
-
-const germlineSearchParams = ref({
-    gene: null,
-    depth: null,
-    ratio: null,
-    mutationType: null,
-    mutationPosition: [],
-    mutationMeaning: null,
-    mutationRisk: null,
-    humanRatio: null,
-    sift: null,
-    drug: false,
-})
-const germlineRows = ref([])
-const germlineHeaders = ref([])
-const somaticSearchParams = ref({
-    gene: null,
-    tumorDepth: null,
-    compareDepth: null,
-    tumorRatio: null,
-    compareRatio: null,
-    mutationType: null,
-    mutationPosition: [],
-    mutationMeaning: null,
-    mutationRisk: null,
-    humanRatio: null,
-    sift: null,
-    drug: false,
-})
-const somaticRows = ref([])
-const somaticHeaders = ref([])
+const emit = defineEmits('stickDone')
+const viewConfig = toRef(props, 'viewConfig')
 const props = defineProps({
     intro: {
         type: String,
@@ -143,42 +121,170 @@ const props = defineProps({
         required: false,
     },
 })
-const searchParamsChange = (name, data) => {
-    if (name == 'germline') {
-        germlineSearchParams.value = data
-        console.log(germlineSearchParams.value)
-    } else {
-        somaticSearchParams.value = data
-        console.log(somaticSearchParams.value)
-    }
-}
-const rowsLoaded = (name, data) => {
-    console.log(name,data)
-    if (name == 'germline') {
-        germlineRows.value = data.csvRows
-        germlineHeaders.value = data.headers
-    } else {
-        somaticRows.value = data.csvRows
-        somaticHeaders.value = data.headers
-    }
- }
+
+const germlineData = ref({
+    rows: [],
+    header: [],
+    options: {
+        mutationType: ['SNP', 'INDEL'],
+        mutationPosition: [],
+        mutationMeaning: [],
+        mutationRisk: [],
+    },
+    searchParams: {
+        gene: null,
+        depth: null,
+        ratio: null,
+        mutationType: null,
+        mutationPosition: [],
+        mutationMeaning: null,
+        mutationRisk: null,
+        humanRatio: null,
+        sift: null,
+        drug: false,
+    },
+    drugRows: [],
+})
+
+const somaticData = ref({
+    rows: [],
+    header: [],
+    options: {
+        mutationType: ['SNP', 'INDEL'],
+        mutationPosition: [],
+        mutationMeaning: [],
+        mutationRisk: [],
+    },
+    searchParams: {
+        gene: null,
+        tumorDepth: null,
+        compareDepth: null,
+        tumorRatio: null,
+        compareRatio: null,
+        mutationType: null,
+        mutationPosition: [],
+        mutationMeaning: null,
+        mutationRisk: null,
+        humanRatio: null,
+        sift: null,
+        drug: false,
+    },
+    drugRows: [],
+})
 
 const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
+
+onMounted(() => {
+    if (viewConfig.value.showMutGermline) {
+        loadGermlineData()
+    }
+    if (viewConfig.value.showMutSomatic) {
+        loadSomaticData()
+    }
+    loaded.value = true
+})
 // germlinemutation 和 somaticmutation 的数据同步
-const stickDone = (name, data) => {
+const onStickDone = (name, data) => {
     stickData.value[name] = data
 }
-const emit = defineEmits('stickDone')
-const config = toRef(props, 'viewConfig')
+// 同步子组件的过滤参数
+const onSearchParamsChange = (name, data) => {
+    if (name == 'germline') {
+        germlineData.value.searchParams = data
+    } else {
+        somaticData.value.searchParams = data
+    }
+}
 const stickFilter = () => {
-    if (!stickData.value.germlineMutation.filter && config.value.showMutGermline) {
+    if (!stickData.value.germlineMutation.filter && viewConfig.value.showMutGermline) {
         errorMessage('胚系突变分析未进行过滤')
         return false
     }
-    if (!stickData.value.somaticMutation.filter && config.value.showMutSomatic) {
+    if (!stickData.value.somaticMutation.filter && viewConfig.value.showMutSomatic) {
         errorMessage('体细胞突变分析未进行过滤')
         return false
     }
     emit('stickDone', stickData.value)
+}
+
+const loadGermlineData = () => {
+    readTaskMuFile(route.params.id, 'Mut_germline').then((res) => {
+        const headNames = getCsvHeader(res, ',')
+
+        const colKeys = _.range(1, 150, 1).map((i) => 'col' + i)
+        const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+        csvRows.forEach((row, i) => (row.id = i))
+
+        // 提取options
+        let positions = new Set()
+        let meanings = new Set()
+        let risks = new Set()
+        for (let columns of csvRows) {
+            const items = columns.col10.split(';')
+            items.forEach((item) => positions.add(item))
+
+            if (columns.col13 === '.') {
+                meanings.add('●')
+            } else {
+                meanings.add(columns.col13)
+            }
+
+            if (columns.col21 !== '.') {
+                risks.add(columns.col21)
+            } else {
+                risks.add('●')
+            }
+        }
+        germlineData.value.rows = csvRows
+        germlineData.value.header = headNames
+        germlineData.value.options.mutationPosition = Array.from(positions)
+        germlineData.value.options.mutationMeaning = Array.from(meanings)
+        germlineData.value.options.mutationRisk = Array.from(risks)
+    })
+    const tablefile = 'Mut_germline/germline.evidence'
+    readTaskFile(route.params.id, tablefile).then((res) => {
+        const items = getCsvData(res)
+        germlineData.value.drugRows = items
+    })
+}
+
+const loadSomaticData = () => {
+    readTaskMuFile(route.params.id, 'Mut_somatic').then((res) => {
+        const headNames = getCsvHeader(res, ',')
+        const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
+        const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+        csvRows.forEach((row, i) => (row.id = i))
+
+        // 提取options
+        let positions = new Set()
+        let meanings = new Set()
+        let risks = new Set()
+        for (let columns of csvRows) {
+            const items = columns.col14.split(';')
+            items.forEach((item) => positions.add(item))
+
+            if (columns.col17 !== '.') {
+                meanings.add(columns.col17)
+            } else {
+                meanings.add('●')
+            }
+
+            if (columns.col25 !== '.') {
+                risks.add(columns.col25)
+            } else {
+                risks.add('●')
+            }
+        }
+        somaticData.value.rows = csvRows
+        somaticData.value.header = headNames
+        somaticData.value.options.mutationPosition = Array.from(positions)
+        somaticData.value.options.mutationMeaning = Array.from(meanings)
+        somaticData.value.options.mutationRisk = Array.from(risks)
+    })
+    const tablefile = 'Mut_somatic/somatic.evidence'
+    readTaskFile(route.params.id, tablefile).then((res) => {
+        const items = getCsvData(res)
+        somaticData.value.drugRows = items
+    })
 }
 </script>
