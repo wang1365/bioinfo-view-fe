@@ -44,6 +44,11 @@
                     :task="props.task"
                     ref="germlineMutationVue"
                     @stickDone="stickDone('germlineMutation',$event)"
+                    :searchParams="germlineSearchParams"
+                    :originRows="germlineRows"
+                    :originHeaders="germlineHeaders"
+                    @rowsLoaded="rowsLoaded('germline',$event)"
+                    @searchParamsChange="searchParamsChange('germline',$event)"
                 />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
@@ -52,6 +57,11 @@
                     :task="props.task"
                     ref="somaticMutationVue"
                     @stickDone="stickDone('somaticMutation',$event)"
+                    :originRows="somaticRows"
+                    :searchParams="somaticSearchParams"
+                    :originHeaders="somaticHeaders"
+                    @rowsLoaded="rowsLoaded('somatic',$event)"
+                    @searchParamsChange="searchParamsChange('somatic',$event)"
                 />
             </q-tab-panel>
         </q-tab-panels>
@@ -74,11 +84,39 @@ import { ref, onMounted, computed, toRef } from 'vue'
 import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 
-const germlineMutation = ref({})
-const somaticMutation = ref({})
 const tab = ref('胚系突变分析')
 const dlgVisible = ref(false)
 
+const germlineSearchParams = ref({
+    gene: null,
+    depth: null,
+    ratio: null,
+    mutationType: null,
+    mutationPosition: [],
+    mutationMeaning: null,
+    mutationRisk: null,
+    humanRatio: null,
+    sift: null,
+    drug: false,
+})
+const germlineRows = ref([])
+const germlineHeaders = ref([])
+const somaticSearchParams = ref({
+    gene: null,
+    tumorDepth: null,
+    compareDepth: null,
+    tumorRatio: null,
+    compareRatio: null,
+    mutationType: null,
+    mutationPosition: [],
+    mutationMeaning: null,
+    mutationRisk: null,
+    humanRatio: null,
+    sift: null,
+    drug: false,
+})
+const somaticRows = ref([])
+const somaticHeaders = ref([])
 const props = defineProps({
     intro: {
         type: String,
@@ -105,9 +143,29 @@ const props = defineProps({
         required: false,
     },
 })
+const searchParamsChange = (name, data) => {
+    if (name == 'germline') {
+        germlineSearchParams.value = data
+        console.log(germlineSearchParams.value)
+    } else {
+        somaticSearchParams.value = data
+        console.log(somaticSearchParams.value)
+    }
+}
+const rowsLoaded = (name, data) => {
+    console.log(name,data)
+    if (name == 'germline') {
+        germlineRows.value = data.csvRows
+        germlineHeaders.value = data.headers
+    } else {
+        somaticRows.value = data.csvRows
+        somaticHeaders.value = data.headers
+    }
+ }
+
 const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
+// germlinemutation 和 somaticmutation 的数据同步
 const stickDone = (name, data) => {
-    console.log(name, data)
     stickData.value[name] = data
 }
 const emit = defineEmits('stickDone')

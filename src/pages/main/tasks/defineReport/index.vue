@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>定制报告</h6>
-        <q-stepper v-model="step" ref="stepper" color="primary" header-nav animated>
+        <q-stepper v-model="step" ref="stepper" color="primary" animated>
             <q-step
                 v-if="tabValid('mutation')"
                 :done="isStepDone('mutation')"
@@ -109,7 +109,7 @@
                 <q-input v-model="text" label="报告备注" />
                 <div class="text-center q-pa-md q-gutter-sm">
                     <q-btn label="确认" color="primary" @click="createReport()" />
-                    <q-btn label="返回修改" color="secondary" @click="step = 'mutation'" />
+                    <q-btn label="返回修改" color="secondary" @click="reset()" />
 
                     <q-btn label="去查看报告" color="info" @click="gotoReports()" />
                 </div>
@@ -169,11 +169,7 @@ onMounted(() => {
 
 // 接收组件传递的过滤数据
 const stickDone = (name, data, nextstep) => {
-    console.log(name)
-    console.log(data)
     stepData.value[name] = data
-    console.log(stepData.value)
-    // 设置试图的为已经有过滤数据
     viewConfig.value[name].stickDone = true
     step.value = nextstep
     return true
@@ -190,6 +186,13 @@ const createReport = () => {
 }
 const gotoReports = () => {
     router.push(`/main/reports`)
+}
+const reset = () => {
+    stepData.value = {}
+    for (const key in viewConfig.value) {
+        viewConfig.value[key].stickDone = false
+    }
+    step.value = 'mutaion'
 }
 const loadTaskSamples = () => {
     // 查询任务
@@ -230,7 +233,6 @@ const loadIntros = () => {
             stepData[dict[k]] = ''
         }
         intros.value = result
-        console.log('intro============', intros.value)
     })
 }
 const loadViewConfig = () => {
@@ -264,7 +266,6 @@ const loadViewConfig = () => {
                 config[dict[k]].showStick = true
                 config[dict[k]].stickDone = false
             }
-            console.log('module', data)
             viewConfig.value = config
         }
     })

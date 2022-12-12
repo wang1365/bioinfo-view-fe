@@ -130,18 +130,6 @@
                     :custom-row="customRow"
                     :sticky="true"
                 >
-                    <!--                    <template #bodyCell="{ column, record }">-->
-                    <!--                        <q-btn-->
-                    <!--                            v-if="column.key === 'operation'"-->
-                    <!--                            label="查看"-->
-                    <!--                            color="primary"-->
-                    <!--                            outline flat-->
-                    <!--                            size="xs"-->
-                    <!--                            @click="clickView(record)"-->
-                    <!--                        >-->
-                    <!--                        </q-btn>-->
-                    <!--                    </template>-->
-
                     <template #bodyCell="{ column, record }">
                         <a-tooltip
                             v-if="column.ellipsis"
@@ -191,17 +179,18 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, toRef } from 'vue'
 import BarChartVue from './SomaticInfoCharts/BarChart.vue'
 import PieChartVue from './SomaticInfoCharts/PieChart.vue'
 import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
 import BubbleChartVue from './SomaticInfoCharts/BubbleChart.vue'
 import RadarChartVue from './SomaticColumnCharts/RadarChart.vue'
 import MutationInfo from './MutationInfo'
+
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
-const emit = defineEmits(['stickDone'])
+const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 
 const props = defineProps({
     samples: {
@@ -217,6 +206,38 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: () => false,
+    },
+    searchParams: {
+        type: Object,
+        required: false,
+        default() {
+            return {
+                gene: null,
+                depth: null,
+                ratio: null,
+                mutationType: null,
+                mutationPosition: [],
+                mutationMeaning: null,
+                mutationRisk: null,
+                humanRatio: null,
+                sift: null,
+                drug: false,
+            }
+        },
+    },
+    originRows: {
+        type: Array,
+        required: false,
+        default() {
+            return []
+        },
+    },
+    originHeaders: {
+        type: Array,
+        required: false,
+        default() {
+            return []
+        },
     },
 })
 const route = useRoute()
@@ -247,27 +268,8 @@ const filteredRows = ref([])
 
 const drugTableRows = ref([])
 
-const customCell = (record, rowIndex, column) => {
-    return {
-        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
-        style: {
-            'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-            cursor: 'pointer',
-        },
-        // 鼠标单击行
-        onClick: (event) => {
-            // 记录当前点击的行标识
-            currentRow.value = record
-            clickRow(record)
-            // if (currentRow.value.id === record.id) {
-            //     currentRow.value = {}
-            // } else {
-            //     currentRow.value = record
-            // }
-        },
-    }
-}
 const currentRow = ref({})
+
 const columns = ref([
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
@@ -310,7 +312,21 @@ const columns = ref([
 
     // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
 ])
-
+const customCell = (record, rowIndex, column) => {
+    return {
+        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+        style: {
+            'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+            cursor: 'pointer',
+        },
+        // 鼠标单击行
+        onClick: (event) => {
+            // 记录当前点击的行标识
+            currentRow.value = record
+            clickRow(record)
+        },
+    }
+}
 columns.value.forEach((c) => (c.customCell = customCell))
 
 const customRow = (record, index) => {
@@ -498,6 +514,7 @@ const search = () => {
         rows: filteredRows,
     }
     emit('stickDone', data)
+    emit('searchParamsChange', searchParams.value)
 }
 
 onMounted(() => {
@@ -509,46 +526,95 @@ const refreshPage = () => {
     dialogVisible.value = false
 }
 
+const propSearchParams = toRef(props, 'searchParams')
+const originRows = toRef(props, 'originRows')
+const originHeaders = toRef(props, 'originHeaders')
 // 加载表格数据
 const loadTable = () => {
     loading.value = true
-    readTaskMuFile(route.params.id, 'Mut_germline')
-        .then((res) => {
-            const headNames = getCsvHeader(res, ',')
-            columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
+     console.log(originRows.value.length)
+    if (originRows.value.length > 0) {
+        const headers = originHeaders.value
+        const csvRows = originRows.value
+        columns.value.forEach((col) => (col.title = headers[col.i - 1]))
 
-            const visibleColIdx = columns.value.map((t) => t.i)
-            const colKeys = _.range(1, 150, 1).map((i) => 'col' + i)
-            const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
-            csvRows.forEach((row, i) => (row.id = i))
-            rows.value = csvRows
-            filteredRows.value = csvRows
+        const visibleColIdx = columns.value.map((t) => t.i)
+        const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
 
-            // 提取options
-            let positions = new Set()
-            let meanings = new Set()
-            let risks = new Set()
-            for (let columns of csvRows) {
-                const items = columns.col10.split(';')
-                items.forEach((item) => positions.add(item))
+        csvRows.forEach((row, i) => (row.id = i))
+        rows.value = csvRows
+        filteredRows.value = csvRows
 
-                if (columns.col13 === '.') {
-                    meanings.add('●')
-                } else {
-                    meanings.add(columns.col13)
-                }
+        // 提取options
+        let positions = new Set()
+        let meanings = new Set()
+        let risks = new Set()
+        for (let columns of csvRows) {
+            const items = columns.col10.split(';')
+            items.forEach((item) => positions.add(item))
 
-                if (columns.col21 !== '.') {
-                    risks.add(columns.col21)
-                } else {
-                    risks.add('●')
-                }
+            if (columns.col13 === '.') {
+                meanings.add('●')
+            } else {
+                meanings.add(columns.col13)
             }
-            options.value.mutationPosition = Array.from(positions)
-            options.value.mutationMeaning = Array.from(meanings)
-            options.value.mutationRisk = Array.from(risks)
-        })
-        .finally(() => (loading.value = false))
+
+            if (columns.col21 !== '.') {
+                risks.add(columns.col21)
+            } else {
+                risks.add('●')
+            }
+        }
+        options.value.mutationPosition = Array.from(positions)
+        options.value.mutationMeaning = Array.from(meanings)
+        options.value.mutationRisk = Array.from(risks)
+
+        searchParams.value = propSearchParams.value
+        loading.value = false
+    } else {
+        readTaskMuFile(route.params.id, 'Mut_germline')
+            .then((res) => {
+                const headers = getCsvHeader(res, ',')
+                columns.value.forEach((col) => (col.title = headers[col.i - 1]))
+
+                const visibleColIdx = columns.value.map((t) => t.i)
+                const colKeys = _.range(1, 150, 1).map((i) => 'col' + i)
+                const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+                csvRows.forEach((row, i) => (row.id = i))
+                rows.value = csvRows
+                filteredRows.value = csvRows
+
+                // 提取options
+                let positions = new Set()
+                let meanings = new Set()
+                let risks = new Set()
+                for (let columns of csvRows) {
+                    const items = columns.col10.split(';')
+                    items.forEach((item) => positions.add(item))
+
+                    if (columns.col13 === '.') {
+                        meanings.add('●')
+                    } else {
+                        meanings.add(columns.col13)
+                    }
+
+                    if (columns.col21 !== '.') {
+                        risks.add(columns.col21)
+                    } else {
+                        risks.add('●')
+                    }
+                }
+                options.value.mutationPosition = Array.from(positions)
+                options.value.mutationMeaning = Array.from(meanings)
+                options.value.mutationRisk = Array.from(risks)
+
+                searchParams.value = propSearchParams.value
+                emit('rowsLoaded',{csvRows,headers})
+            })
+            .finally(() => (loading.value = false))
+
+    }
+     search()
 }
 // 加载药物关联表格数据
 const loadDrugTable = () => {

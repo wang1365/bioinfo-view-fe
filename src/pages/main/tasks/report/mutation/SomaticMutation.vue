@@ -218,7 +218,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, toRef } from 'vue'
 import BarChartVue from './SomaticInfoCharts/BarChart.vue'
 import PieChartVue from './SomaticInfoCharts/PieChart.vue'
 import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
@@ -229,7 +229,7 @@ import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 
-const emit = defineEmits(['stickDone'])
+const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 
 const route = useRoute()
 
@@ -278,6 +278,40 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: () => false,
+    },
+    searchParams: {
+        type: Object,
+        required: false,
+        default() {
+            return {
+                gene: null,
+                tumorDepth: null,
+                compareDepth: null,
+                tumorRatio: null,
+                compareRatio: null,
+                mutationType: null,
+                mutationPosition: [],
+                mutationMeaning: null,
+                mutationRisk: null,
+                humanRatio: null,
+                sift: null,
+                drug: true,
+            }
+        },
+    },
+    originRows: {
+        type: Array,
+        required: false,
+        default() {
+            return []
+        },
+    },
+    originHeaders: {
+        type: Array,
+        required: false,
+        default() {
+            return []
+        },
     },
 })
 
@@ -587,9 +621,10 @@ const search = () => {
     let data = {
         filter: searchParams.value,
 
-        rows: filteredRows,
+        rows: filteredRows.value,
     }
     emit('stickDone', data)
+    emit('searchParamsChange', searchParams)
 }
 const refreshPage = () => {
     dialogVisible.value = false
@@ -600,47 +635,97 @@ onMounted(() => {
     loadDrugTable()
 })
 
+const propSearchParams = toRef(props, 'searchParams')
+const originRows = toRef(props, 'originRows')
+const originHeaders = toRef(props, 'originHeaders')
 const loadTable = () => {
     loading.value = true
-    readTaskMuFile(route.params.id, 'Mut_somatic')
-        .then((res) => {
-            const headNames = getCsvHeader(res, ',')
-            headers.value = headNames
-            columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
+    console.log(originRows.value.length)
+    if (originRows.value.length > 0) {
+        const headerNames = originHeaders.value
+        const csvRows = originRows.value
+        columns.value.forEach((col) => (col.title = headerNames[col.i - 1]))
 
-            const visibleColIdx = columns.value.map((t) => t.i)
-            const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
-            const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
-            csvRows.forEach((row, i) => (row.id = i))
-            rows.value = csvRows
-            filteredRows.value = csvRows
+        const visibleColIdx = columns.value.map((t) => t.i)
+        const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
 
-            // 提取options
-            let positions = new Set()
-            let meanings = new Set()
-            let risks = new Set()
-            for (let columns of csvRows) {
-                const items = columns.col14.split(';')
-                items.forEach((item) => positions.add(item))
+        csvRows.forEach((row, i) => (row.id = i))
+        rows.value = csvRows
+        filteredRows.value = csvRows
+        // 提取options
+        let positions = new Set()
+        let meanings = new Set()
+        let risks = new Set()
+        for (let columns of csvRows) {
+            const items = columns.col14.split(';')
+            items.forEach((item) => positions.add(item))
 
-                if (columns.col17 !== '.') {
-                    meanings.add(columns.col17)
-                } else {
-                    meanings.add('●')
-                }
-
-                if (columns.col25 !== '.') {
-                    risks.add(columns.col25)
-                } else {
-                    risks.add('●')
-                }
+            if (columns.col17 !== '.') {
+                meanings.add(columns.col17)
+            } else {
+                meanings.add('●')
             }
-            options.value.mutationPosition = Array.from(positions)
-            options.value.mutationMeaning = Array.from(meanings)
-            options.value.mutationRisk = Array.from(risks)
-        })
-        .finally(() => (loading.value = false))
+
+            if (columns.col25 !== '.') {
+                risks.add(columns.col25)
+            } else {
+                risks.add('●')
+            }
+        }
+        options.value.mutationPosition = Array.from(positions)
+        options.value.mutationMeaning = Array.from(meanings)
+        options.value.mutationRisk = Array.from(risks)
+
+        searchParams.value = propSearchParams.value
+        search()
+        loading.value = false
+    } else {
+        readTaskMuFile(route.params.id, 'Mut_somatic')
+            .then((res) => {
+                const headNames = getCsvHeader(res, ',')
+                headers.value = headNames
+                columns.value.forEach((col) => (col.title = headNames[col.i - 1]))
+
+                const visibleColIdx = columns.value.map((t) => t.i)
+                const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
+                const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+                csvRows.forEach((row, i) => (row.id = i))
+                rows.value = csvRows
+                filteredRows.value = csvRows
+
+                // 提取options
+                let positions = new Set()
+                let meanings = new Set()
+                let risks = new Set()
+                for (let columns of csvRows) {
+                    const items = columns.col14.split(';')
+                    items.forEach((item) => positions.add(item))
+
+                    if (columns.col17 !== '.') {
+                        meanings.add(columns.col17)
+                    } else {
+                        meanings.add('●')
+                    }
+
+                    if (columns.col25 !== '.') {
+                        risks.add(columns.col25)
+                    } else {
+                        risks.add('●')
+                    }
+                }
+                options.value.mutationPosition = Array.from(positions)
+                options.value.mutationMeaning = Array.from(meanings)
+                options.value.mutationRisk = Array.from(risks)
+
+                searchParams.value = propSearchParams.value
+                search()
+                emit('rowsLoaded', { csvRows, headers })
+            })
+            .finally(() => (loading.value = false))
+    }
+
 }
+
 // 加载药物关联表格数据
 const loadDrugTable = () => {
     const tablefile = 'Mut_somatic/somatic.evidence'
