@@ -15,16 +15,18 @@
         color="primary"
         class="relative-position float-right q-mr-md"
         @click="stickFilter()"
-    >固定过滤</q-btn>
+        >固定过滤</q-btn
+    >
 
     <q-btn
         icon="help_outline"
         size="small"
         outline
         color="orange"
-        class="relative-position float-right z-top q-mr-md"
+        class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-    >说明</q-btn>
+        >说明</q-btn
+    >
     <div>
         <div v-if="props.viewConfig.showCNVcircos">
             <div class="row">
@@ -45,20 +47,8 @@
                         stack-label
                     />
                     <div class="row q-gutter-xs">
-                        <q-btn
-                            class="col"
-                            color="primary"
-                            size="small"
-                            label="确定"
-                            @click="refreshPie"
-                        />
-                        <q-btn
-                            class="col"
-                            color="primary"
-                            size="small"
-                            label="复位"
-                            @click="resetPie"
-                        />
+                        <q-btn class="col" color="primary" size="small" label="确定" @click="refreshPie" />
+                        <q-btn class="col" color="primary" size="small" label="复位" @click="resetPie" />
                     </div>
                 </div>
             </div>

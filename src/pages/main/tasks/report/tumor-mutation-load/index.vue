@@ -23,21 +23,15 @@
         size="small"
         outline
         color="orange"
-        class="relative-position float-right z-top q-mr-md"
+        class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-    >说明</q-btn>
+        >说明</q-btn
+    >
 
     <div class="row justify-between">
         <div class="col-3 column q-gutter-xs">
             <div class="col">
-                <q-input
-                    model-value="PASS"
-                    label="VCF Filter"
-                    clearable
-                    readonly
-                    stack-label
-                    label-color="primary"
-                />
+                <q-input model-value="PASS" label="VCF Filter" clearable readonly stack-label label-color="primary" />
             </div>
             <div class="col">
                 <q-input
@@ -136,12 +130,7 @@
             </div>
             <div class="q-gutter-md text-center q-py-sm">
                 <q-btn color="primary" label="确定" icon="search" @click="search()" />
-                <q-btn
-                    color="primary"
-                    label="复位"
-                    icon="settings_backup_restore"
-                    @click="clickReset"
-                />
+                <q-btn color="primary" label="复位" icon="settings_backup_restore" @click="clickReset" />
             </div>
         </div>
 
@@ -151,10 +140,7 @@
             <div class="q-pl-sm q-mt-sm">
                 <div class="text-weight-bold text-primary">仅限研究使用，不用于临床诊断</div>
                 <div class="text-weight-bold text-red">警示：随意过滤造成结果不准确</div>
-                <div
-                    class="text-weight-bold text-primary q-mt-sm"
-                    style="white-space: pre"
-                >{{ guageTip }}</div>
+                <div class="text-weight-bold text-primary q-mt-sm" style="white-space: pre">{{ guageTip }}</div>
             </div>
         </div>
     </div>
