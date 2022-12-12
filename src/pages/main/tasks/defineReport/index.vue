@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>定制报告</h6>
-        <q-stepper v-model="step" ref="stepper" color="primary" animated>
+        <q-stepper v-model="step" ref="stepper" header-nav color="primary" animated>
             <q-step
                 v-if="tabValid('mutation')"
                 :done="isStepDone('mutation')"
@@ -171,7 +171,7 @@ onMounted(() => {
 const stickDone = (name, data, nextstep) => {
     stepData.value[name] = data
     viewConfig.value[name].stickDone = true
-    step.value = nextstep
+     /*     step.value = nextstep */
     return true
 }
 const tabValid = (name) => {
@@ -192,7 +192,7 @@ const reset = () => {
     for (const key in viewConfig.value) {
         viewConfig.value[key].stickDone = false
     }
-    step.value = 'mutaion'
+     /*     step.value = 'mutation' */
 }
 const loadTaskSamples = () => {
     // 查询任务
