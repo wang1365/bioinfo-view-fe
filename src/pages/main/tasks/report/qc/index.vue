@@ -5,9 +5,10 @@
             size="small"
             outline
             color="orange"
-            class="relative-position float-right z-top q-mr-md"
+            class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
-        >说明</q-btn>
+            >说明</q-btn
+        >
         <q-tabs
             v-model="tab"
             active-color="primary"
