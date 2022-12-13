@@ -10,7 +10,13 @@
                 clearable
                 @clear="clearKeyword1"
             />
-            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword1"></q-btn>
+            <q-btn
+                class="col-2 p-pa-xs"
+                size="small"
+                color="primary"
+                label="搜索"
+                @click="searchKeyword1"
+            ></q-btn>
         </div>
     </div>
     <div class="bio-data-table q-py-sm">
@@ -30,8 +36,7 @@
                     outline
                     size="xs"
                     @click="clickView(record)"
-                >
-                </q-btn>
+                ></q-btn>
             </template>
         </a-table>
     </div>
@@ -47,7 +52,13 @@
                 clearable
                 @clear="clearKeyword2"
             />
-            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword2"></q-btn>
+            <q-btn
+                class="col-2 p-pa-xs"
+                size="small"
+                color="primary"
+                label="搜索"
+                @click="searchKeyword2"
+            ></q-btn>
         </div>
     </div>
     <div v-if="!isSingle" class="bio-data-table q-py-sm">
@@ -67,8 +78,7 @@
                     outline
                     size="xs"
                     @click="clickView(record)"
-                >
-                </q-btn>
+                ></q-btn>
             </template>
         </a-table>
     </div>
@@ -79,39 +89,55 @@
     </q-dialog>
 </template>
 <script setup>
-import {ref, onMounted, computed} from "vue"
-import {useRoute} from 'vue-router'
-import {exportFile} from 'quasar'
+import { ref, onMounted, computed, toRefs, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { exportFile } from 'quasar'
 import IGV from './Igv.vue'
-import {readTaskFile} from "src/api/task"
-import {getCsvData} from "src/utils/csv"
-import {getDualIdentifiers} from "src/utils/samples"
+import { readTaskFile } from 'src/api/task'
+import { getCsvData } from 'src/utils/csv'
+import { getDualIdentifiers } from 'src/utils/samples'
 
 const props = defineProps({
     intro: {
         type: String,
-        required: false
+        required: false,
     },
     samples: {
         type: Array,
         required: false,
-        default: () => []
-    }
+        default: () => [],
+    },
+    qt: {
+        type: Object,
+        required: false,
+        default() {
+            return {
+                rows: [],
+                header: {},
+                searchParams: '',
+            }
+        },
+    },
+    qn: {
+        type: Object,
+        required: false,
+        default() {
+            return {
+                rows: [],
+                header: {},
+                searchParams: '',
+            }
+        },
+    },
 })
 
 const isSingle = computed(() => props.samples.length === 1)
-const route = useRoute()
+
 const keyword1 = ref('')
 const keyword2 = ref('')
 
 const columns1 = ref([])
 const columns2 = ref([])
-
-const loading1 = ref(false)
-const loading2 = ref(false)
-
-const rows1 = ref([])
-const rows2 = ref([])
 
 const filteredRows1 = ref([])
 const filteredRows2 = ref([])
@@ -120,19 +146,19 @@ const igvVisible = ref(false)
 const selectedFile = ref('')
 
 const searchKeyword1 = () => {
-    filteredRows1.value = rows1.value.filter(t => t.k1.includes(keyword1.value))
+    filteredRows1.value = qt.value.rows.value.filter((t) => t.k1.includes(keyword1.value))
 }
 
 const searchKeyword2 = () => {
-    filteredRows2.value = rows2.value.filter(t => t.k1.includes(keyword2.value))
+    filteredRows2.value = qn.value.rows.value.filter((t) => t.k1.includes(keyword2.value))
 }
 
 const clearKeyword1 = () => {
-    filteredRows1.value = rows1.value
+    filteredRows1.value = qt.value.rows
 }
 
 const clearKeyword2 = () => {
-    filteredRows2.value = rows2.value
+    filteredRows2.value = qn.value.rows
 }
 
 const clickView = (record) => {
@@ -141,44 +167,77 @@ const clickView = (record) => {
     igvVisible.value = true
 }
 
+const { qt, qn } = toRefs(props)
+/* onMounted(() => {
+ *     loading1.value = true
+ *     loading2.value = true
+ *
+ *     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
+ *     const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
+ *
+ *     const { qt, qn } = getDualIdentifiers(props.samples)
+ *     readTaskFile(route.params.id, `fusion_germline/${qt}.fusions`)
+ *         .then((res) => {
+ *             const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
+ *             const head = lines[0]
+ *             columns1.value = Object.keys(head).map((k) => {
+ *                 return { title: head[k], key: k, dataIndex: k, align: 'center' }
+ *             })
+ *             columns1.value.forEach((col, i) => {
+ *                 col.width = width[i]
+ *                 if (col.key === 'k8') {
+ *                     col.align = 'left'
+ *                 }
+ *             })
+ *             rows1.value = lines.slice(1)
+ *             filteredRows1.value = rows1.value
+ *         })
+ *         .finally(() => {
+ *             loading1.value = false
+ *         })
+ *
+ *     if (props.samples.length > 1) {
+ *         readTaskFile(route.params.id, `fusion_germline/${qn}.fusions`)
+ *             .then((res) => {
+ *                 const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
+ *                 const head = lines[0]
+ *                 columns2.value = Object.keys(head).map((k) => {
+ *                     return { title: head[k], key: k, dataIndex: k, align: 'center' }
+ *                 })
+ *                 rows2.value = lines.slice(1)
+ *                 filteredRows2.value = rows2.value
+ *             })
+ *             .finally(() => {
+ *                 loading2.value = false
+ *             })
+ *     }
+ * }) */
+watch(qt, () => {
+    loadData()
+})
 onMounted(() => {
-    loading1.value = true
-    loading2.value = true
-
-    const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
+    loadData()
+})
+const loadData = () => {
     const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
 
-    const {qt, qn} = getDualIdentifiers(props.samples)
-    readTaskFile(route.params.id, `fusion_germline/${qt}.fusions`).then(res => {
-        const lines = getCsvData(res, {fields: fields, hasHeaderLine: false})
-        const head = lines[0]
-        columns1.value = Object.keys(head).map(k => {
-            return {title: head[k], key: k, dataIndex: k, align: 'center'}
-        })
-        columns1.value.forEach((col, i) => {
-            col.width = width[i]
-            if (col.key === 'k8') {
-                col.align = 'left'
-            }
-        })
-        rows1.value = lines.slice(1)
-        filteredRows1.value = rows1.value
-    }).finally(() => {
-        loading1.value = false
+    columns1.value = Object.keys(qt.value.header).map((k) => {
+        return { title: qt.value.header[k], key: k, dataIndex: k, align: 'center' }
     })
-
+    columns1.value.forEach((col, i) => {
+        col.width = width[i]
+        if (col.key === 'k8') {
+            col.align = 'left'
+        }
+    })
+    keyword1.value = qt.value.searchParam
+    searchKeyword1()
     if (props.samples.length > 1) {
-        readTaskFile(route.params.id, `fusion_germline/${qn}.fusions`).then(res => {
-            const lines = getCsvData(res, {fields: fields, hasHeaderLine: false})
-            const head = lines[0]
-            columns2.value = Object.keys(head).map(k => {
-                return {title: head[k], key: k, dataIndex: k, align: 'center'}
-            })
-            rows2.value = lines.slice(1)
-            filteredRows2.value = rows2.value
-        }).finally(() => {
-            loading2.value = false
+        columns2.value = Object.keys(qn.value.header).map((k) => {
+            return { title: qn.value.header[k], key: k, dataIndex: k, align: 'center' }
         })
+        keyword2.value = qn.value.searchParam
+        searchKeyword2()
     }
-})
+}
 </script>

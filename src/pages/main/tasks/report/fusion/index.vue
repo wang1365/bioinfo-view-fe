@@ -67,6 +67,9 @@
 import { ref, onMounted, toRef } from 'vue'
 import NormalVue from './Normal.vue'
 import Single from './Single.vue'
+import { readTaskFile } from 'src/api/task'
+import { getCsvData } from 'src/utils/csv'
+import { getDualIdentifiers } from 'src/utils/samples'
 
 const tab = ref('单样品融合分析')
 const dlgVisible = ref(false)
@@ -93,6 +96,32 @@ const props = defineProps({
         },
     },
 })
+
+const singleData = ref({
+    qt: {
+        rows: [],
+        header: {},
+        searchParams: '',
+    },
+    qn: {
+        rows: [],
+        header: {},
+        searchParams: '',
+    },
+})
+
+const normalData = ref({
+    qt: {
+        rows: [],
+        header: {},
+        searchParams: '',
+    },
+    qn: {
+        rows: [],
+        header: {},
+        searchParams: '',
+    },
+})
 const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
 const stickDone = (name, data) => {
     console.log(name, data)
@@ -111,4 +140,24 @@ const stickFilter = () => {
     }
     emit('stickDone', stickData.value)
 }
+const loadSingleData = () => {
+    const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
+    const { qt, qn } = getDualIdentifiers(props.samples)
+    const qtFile = `fusion_germline/${qt}.fusions`
+    readTaskFile(route.params.id, qtFile).then((res) => {
+        const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
+        singleData.value.qt.header = lines[0]
+        singleData.value.qt.rows = lines.slice(1)
+    })
+
+    if (props.samples.length > 1) {
+        const qnFile = `fusion_germline/${qn}.fusions`
+        readTaskFile(route.params.id, qnFile).then((res) => {
+            const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
+            normalData.value.qt.header = lines[0]
+            normalData.value.qt.rows = lines.slice(1)
+        })
+    }
+}
+const loadNormalData = () => {}
 </script>
