@@ -40,10 +40,10 @@
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
-                <Single :samples="props.samples" />
+                <Single :samples="props.samples" :qt="singleData.qt" :qn="singleData.qn" />
             </q-tab-panel>
             <q-tab-panel name="体细胞融合分析">
-                <NormalVue :samples="props.samples" />
+                <NormalVue :samples="props.samples" :rows="normalData.rows" :header="normalData.header" :searchParam="normalData.searchParam" />
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
@@ -64,13 +64,15 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, toRef } from 'vue'
+import { ref, onMounted, toRef, watch } from 'vue'
 import NormalVue from './Normal.vue'
 import Single from './Single.vue'
 import { readTaskFile } from 'src/api/task'
 import { getCsvData } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const tab = ref('单样品融合分析')
 const dlgVisible = ref(false)
 
@@ -81,7 +83,7 @@ const props = defineProps({
     },
     samples: {
         type: Array,
-        required: false,
+        required: true,
         default: () => [],
     },
     viewConfig: {
@@ -100,64 +102,84 @@ const props = defineProps({
 const singleData = ref({
     qt: {
         rows: [],
-        header: {},
+        header: [],
         searchParams: '',
     },
     qn: {
         rows: [],
-        header: {},
+        header: [],
         searchParams: '',
     },
 })
 
 const normalData = ref({
-    qt: {
-        rows: [],
-        header: {},
-        searchParams: '',
-    },
-    qn: {
-        rows: [],
-        header: {},
-        searchParams: '',
-    },
+    rows: [],
+    header: [],
+    searchParams: '',
 })
 const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
+const emit = defineEmits('stickDone')
+const viewConfig = toRef(props, 'viewConfig')
+const samples = toRef(props, 'samples')
+
+onMounted(() => {
+    loadData()
+})
+watch(props, () => {
+    loadData()
+})
 const stickDone = (name, data) => {
     console.log(name, data)
     stickData.value[name] = data
 }
-const emit = defineEmits('stickDone')
-const config = toRef(props, 'viewConfig')
+
 const stickFilter = () => {
-    if (!stickData.value.germlineMutation.filter && config.value.showMutGermline) {
+    if (!stickData.value.germlineMutation.filter && viewConfig.value.showMutGermline) {
         errorMessage('胚系突变分析未进行过滤')
         return false
     }
-    if (!stickData.value.somaticMutation.filter && config.value.showMutSomatic) {
+    if (!stickData.value.somaticMutation.filter && viewConfig.value.showMutSomatic) {
         errorMessage('体细胞突变分析未进行过滤')
         return false
     }
     emit('stickDone', stickData.value)
 }
+
+const loadData = () => {
+    if (viewConfig.value.showFusionGermline) {
+        loadSingleData()
+    }
+    if (viewConfig.value.showFusionSomatic) {
+        loadNormalData()
+    }
+}
 const loadSingleData = () => {
     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
-    const { qt, qn } = getDualIdentifiers(props.samples)
+    const { qt, qn } = getDualIdentifiers(samples.value)
+    if (!qt) return
     const qtFile = `fusion_germline/${qt}.fusions`
     readTaskFile(route.params.id, qtFile).then((res) => {
         const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
         singleData.value.qt.header = lines[0]
         singleData.value.qt.rows = lines.slice(1)
     })
-
-    if (props.samples.length > 1) {
+    if (samples.value.length > 1) {
         const qnFile = `fusion_germline/${qn}.fusions`
         readTaskFile(route.params.id, qnFile).then((res) => {
             const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
-            normalData.value.qt.header = lines[0]
-            normalData.value.qt.rows = lines.slice(1)
+            singleData.value.qn.header = lines[0]
+            singleData.value.qn.rows = lines.slice(1)
         })
     }
 }
-const loadNormalData = () => {}
+const loadNormalData = () => {
+    const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8']
+    const { qt, qn } = getDualIdentifiers(props.samples)
+    if (!qt || !qn) return
+    readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then((res) => {
+        const lines = getCsvData(res, { fields, hasHeaderLine: false })
+        normalData.value.header = lines[0]
+        normalData.value.rows = lines.slice(1)
+    })
+}
 </script>

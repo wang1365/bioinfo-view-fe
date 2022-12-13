@@ -20,7 +20,7 @@
 
             <q-step
                 v-if="tabValid('fusion')"
-                :done="isStepDone('mutation')"
+                :done="isStepDone('fusion')"
                 name="fusion"
                 title="融合分析"
                 icon="format_strikethrough"
@@ -144,7 +144,7 @@ import HomologousRecombinationDefectVue from '../report/homologous-recombination
 
 const { apiPost } = useApi()
 
-const step = ref('mutation')
+const step = ref('fusion')
 const stepData = ref({})
 const route = useRoute()
 const router = useRouter()

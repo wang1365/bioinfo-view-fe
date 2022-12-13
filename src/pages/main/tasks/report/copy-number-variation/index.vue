@@ -15,8 +15,7 @@
         color="primary"
         class="relative-position float-right q-mr-md"
         @click="stickFilter()"
-        >固定过滤</q-btn
-    >
+    >固定过滤</q-btn>
 
     <q-btn
         icon="help_outline"
@@ -25,30 +24,52 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-        >说明</q-btn
-    >
+    >说明</q-btn>
     <div>
         <div v-if="props.viewConfig.showCNVcircos">
             <div class="row">
-                <div :id="pieDivId" class="col-10" style="width: 1000px; height: 600px"></div>
-                <div class="col-2 column justify-center q-gutter-sm">
-                    <q-input
-                        v-model="pieParams.extra"
-                        class="col-1"
-                        label="拷贝数扩增阈值"
-                        label-color="primary"
-                        stack-label
-                    />
-                    <q-input
-                        v-model="pieParams.missing"
-                        class="col-1"
-                        label="拷贝数缺失阈值"
-                        label-color="primary"
-                        stack-label
-                    />
-                    <div class="row q-gutter-xs">
-                        <q-btn class="col" color="primary" size="small" label="确定" @click="refreshPie" />
-                        <q-btn class="col" color="primary" size="small" label="复位" @click="resetPie" />
+                <div
+                    :id="pieDivId"
+                    class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
+                    style="min-width: 600px;max-width:1000px; height: 600px"
+                ></div>
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 column justify-center">
+                    <div class="q-gutter-sm q-pb-md full-width">
+                        <div>
+                            <q-input
+                                v-model="pieParams.extra"
+                                class="col-1"
+                                label="拷贝数扩增阈值"
+                                label-color="primary"
+                                stack-label
+                            />
+                        </div>
+
+                        <div>
+                            <q-input
+                                v-model="pieParams.missing"
+                                class="col-1"
+                                label="拷贝数缺失阈值"
+                                label-color="primary"
+                                stack-label
+                            />
+                        </div>
+                        <div class="row q-gutter-xs">
+                            <q-btn
+                                class="col"
+                                color="primary"
+                                size="small"
+                                label="确定"
+                                @click="refreshPie"
+                            />
+                            <q-btn
+                                class="col"
+                                color="primary"
+                                size="small"
+                                label="复位"
+                                @click="resetPie"
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,24 +1,18 @@
 <template>
-    <div class="row q-gutter-sm justify-between">
-        <div v-if="!isSingle" class="text-h6 text-purple">肿瘤单样品融合</div>
-        <div class="row col-4">
-            <q-input
-                v-model="keyword1"
-                class="col p-mr-sm q-gutter-xs"
-                dense
-                label="搜索:"
-                clearable
-                @clear="clearKeyword1"
-            />
-            <q-btn
-                class="col-2 p-pa-xs"
-                size="small"
-                color="primary"
-                label="搜索"
-                @click="searchKeyword1"
-            ></q-btn>
-        </div>
-    </div>
+    <q-toolbar class="text-primary">
+        <q-toolbar-title v-if="!isSingle">肿瘤单样品融合</q-toolbar-title>
+
+        <q-input
+            v-model="keyword1"
+            class="q-mr-sm"
+            dense
+            label="搜索:"
+            clearable
+            @clear="clearKeyword1"
+            style="width:300px"
+        />
+        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword1"></q-btn>
+    </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <a-table
             size="small"
@@ -33,35 +27,28 @@
                     v-if="column.key === 'k9'"
                     label="查看"
                     color="primary"
-                    outline
-                    size="xs"
+                    size="sm"
                     @click="clickView(record)"
                 ></q-btn>
             </template>
         </a-table>
     </div>
 
-    <div v-if="!isSingle" class="row q-gutter-sm justify-between">
-        <div class="text-h6 text-primary">对照单样品融合</div>
-        <div class="row col-4">
+    <div v-if="!isSingle">
+        <q-toolbar class="text-primary">
+            <q-toolbar-title v-if="!isSingle">对照单样品融合</q-toolbar-title>
+
             <q-input
                 v-model="keyword2"
-                class="col p-mr-sm q-gutter-xs"
+                class="q-mr-sm"
                 dense
                 label="搜索:"
                 clearable
                 @clear="clearKeyword2"
+                style="width:300px"
             />
-            <q-btn
-                class="col-2 p-pa-xs"
-                size="small"
-                color="primary"
-                label="搜索"
-                @click="searchKeyword2"
-            ></q-btn>
-        </div>
-    </div>
-    <div v-if="!isSingle" class="bio-data-table q-py-sm">
+            <q-btn size="small" color="primary" label="搜索" @click="searchKeyword2"></q-btn>
+        </q-toolbar>
         <a-table
             size="small"
             bordered
@@ -75,13 +62,13 @@
                     v-if="column.key === 'k9'"
                     label="查看"
                     color="primary"
-                    outline
-                    size="xs"
+                    size="sm"
                     @click="clickView(record)"
                 ></q-btn>
             </template>
         </a-table>
     </div>
+
     <q-dialog v-model="igvVisible">
         <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
             <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
@@ -89,7 +76,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted, computed, toRefs, watch } from 'vue'
+import { ref, onMounted, computed, toRefs, watch, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { exportFile } from 'quasar'
 import IGV from './Igv.vue'
@@ -130,7 +117,7 @@ const props = defineProps({
         },
     },
 })
-
+const route = useRoute()
 const isSingle = computed(() => props.samples.length === 1)
 
 const keyword1 = ref('')
@@ -146,11 +133,19 @@ const igvVisible = ref(false)
 const selectedFile = ref('')
 
 const searchKeyword1 = () => {
-    filteredRows1.value = qt.value.rows.value.filter((t) => t.k1.includes(keyword1.value))
+    if (keyword1.value) {
+        filteredRows1.value = qt.value.rows.filter((t) => t.k1.includes(keyword1.value))
+    } else {
+        filteredRows1.value = qt.value.rows
+    }
 }
 
 const searchKeyword2 = () => {
-    filteredRows2.value = qn.value.rows.value.filter((t) => t.k1.includes(keyword2.value))
+    if (keyword2.value) {
+        filteredRows2.value = qn.value.rows.filter((t) => t.k1.includes(keyword2.value))
+    } else {
+        filteredRows2.value = qn.value.rows
+    }
 }
 
 const clearKeyword1 = () => {
@@ -168,56 +163,14 @@ const clickView = (record) => {
 }
 
 const { qt, qn } = toRefs(props)
-/* onMounted(() => {
- *     loading1.value = true
- *     loading2.value = true
- *
- *     const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
- *     const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
- *
- *     const { qt, qn } = getDualIdentifiers(props.samples)
- *     readTaskFile(route.params.id, `fusion_germline/${qt}.fusions`)
- *         .then((res) => {
- *             const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
- *             const head = lines[0]
- *             columns1.value = Object.keys(head).map((k) => {
- *                 return { title: head[k], key: k, dataIndex: k, align: 'center' }
- *             })
- *             columns1.value.forEach((col, i) => {
- *                 col.width = width[i]
- *                 if (col.key === 'k8') {
- *                     col.align = 'left'
- *                 }
- *             })
- *             rows1.value = lines.slice(1)
- *             filteredRows1.value = rows1.value
- *         })
- *         .finally(() => {
- *             loading1.value = false
- *         })
- *
- *     if (props.samples.length > 1) {
- *         readTaskFile(route.params.id, `fusion_germline/${qn}.fusions`)
- *             .then((res) => {
- *                 const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
- *                 const head = lines[0]
- *                 columns2.value = Object.keys(head).map((k) => {
- *                     return { title: head[k], key: k, dataIndex: k, align: 'center' }
- *                 })
- *                 rows2.value = lines.slice(1)
- *                 filteredRows2.value = rows2.value
- *             })
- *             .finally(() => {
- *                 loading2.value = false
- *             })
- *     }
- * }) */
-watch(qt, () => {
+
+watch(props, () => {
     loadData()
 })
 onMounted(() => {
     loadData()
 })
+const samples = toRef(props, 'samples')
 const loadData = () => {
     const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
 
@@ -232,7 +185,8 @@ const loadData = () => {
     })
     keyword1.value = qt.value.searchParam
     searchKeyword1()
-    if (props.samples.length > 1) {
+
+    if (samples.value.length > 1) {
         columns2.value = Object.keys(qn.value.header).map((k) => {
             return { title: qn.value.header[k], key: k, dataIndex: k, align: 'center' }
         })

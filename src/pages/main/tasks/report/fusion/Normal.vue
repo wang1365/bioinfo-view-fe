@@ -1,45 +1,54 @@
 <template>
-    <div class="row q-gutter-sm justify-between">
-        <div class="row col-4">
+
+    <q-toolbar class="text-primary">
             <q-input
                 v-model="keyword"
-                class="col p-mr-sm q-gutter-xs"
+                class="q-mr-sm"
                 dense
                 label="搜索:"
                 clearable
                 @clear="clearKeyword"
+                style="width:300px"
             />
-            <q-btn class="col-2 p-pa-xs" size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
-        </div>
-    </div>
+            <q-btn size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
+    </q-toolbar>
     <div class="bio-data-table q-py-sm">
-        <a-table size="small" bordered :loading="loading" :data-source="filteredRows" :columns="columns" :sticky="true">
+        <a-table
+            size="small"
+            bordered
+            :loading="loading"
+            :data-source="filteredRows"
+            :columns="columns"
+            :sticky="true"
+        >
             <template #bodyCell="{ column, record }">
                 <q-btn
                     v-if="column.key === 'k8'"
                     label="查看"
                     color="primary"
                     outline
-                    size="xs"
+                    size="sm"
                     @click="clickView(record)"
-                >
-                </q-btn>
+                ></q-btn>
             </template>
         </a-table>
         <q-dialog v-model="igvVisible">
-            <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
+            <q-card
+                class="full-width"
+                style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh"
+            >
                 <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
             </q-card>
         </q-dialog>
     </div>
 </template>
 <script setup>
-import {ref, onMounted} from "vue";
-import {readTaskFile} from "src/api/task"
-import {getCsvData} from "src/utils/csv"
-import {useRoute} from 'vue-router'
+import { ref, onMounted, toRef, watch } from 'vue'
+import { readTaskFile } from 'src/api/task'
+import { getCsvData } from 'src/utils/csv'
+import { useRoute } from 'vue-router'
 import IGV from './Igv.vue'
-import {getDualIdentifiers} from "src/utils/samples"
+import { getDualIdentifiers } from 'src/utils/samples'
 
 const route = useRoute()
 
@@ -51,9 +60,8 @@ const columns = ref([
 ])
 
 const keyword = ref('')
-const rows = ref([])
 const filteredRows = ref([])
-const loading = ref(false)
+
 const igvVisible = ref(false)
 const selectedFile = ref('')
 
@@ -61,11 +69,38 @@ const props = defineProps({
     samples: {
         type: Array,
         require: true,
-        default: () => []
-    }
+        default() {
+            return []
+        },
+    },
+    rows: {
+        type: Array,
+        require: false,
+        default() {
+            return []
+        },
+    },
+    header: {
+        type: Array,
+        require: false,
+        default() {
+            return []
+        },
+    },
+    searchParam: {
+        type: String,
+        require: false,
+        default() {
+            return ''
+        },
+    },
 })
 const searchKeyword = () => {
-    filteredRows.value = rows.value.filter(t => t.k1.includes(keyword.value))
+    if (keyword.value) {
+        filteredRows.value = rows.value.filter((t) => t.k1.includes(keyword.value))
+    } else {
+        filteredRows.value = rows.value
+    }
 }
 
 const clearKeyword = () => {
@@ -77,29 +112,28 @@ const clickView = (record) => {
     selectedFile.value = record.k8
     igvVisible.value = true
 }
-onMounted(() => {
-    loading.value = true
-
-    const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8']
-    const width = [30, 30, 60, 60, 60, 60, 200, 50]
-    const {qt, qn} = getDualIdentifiers(props.samples)
-    readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then(res => {
-        const lines = getCsvData(res, {fields, hasHeaderLine: false})
-        const head = lines[0]
-        columns.value = Object.keys(head).map(k => {
-            return {title: head[k], key: k, dataIndex: k, align: 'center'}
-        })
-        columns.value.forEach((col, i) => {
-            col.width = width[i]
-            if (col.key === 'k7') {
-                col.align = 'left'
-            }
-        })
-
-        rows.value = lines.slice(1)
-        filteredRows.value = rows.value
-    }).finally(() => {
-        loading.value = false
-    })
+const rows = toRef(props, 'rows')
+const header = toRef(props, 'header')
+const propSearchParam = toRef(props, 'searchParam')
+watch(props, () => {
+    loadData()
 })
+onMounted(() => {
+    loadData()
+})
+
+const loadData = () => {
+    const width = [30, 30, 60, 60, 60, 60, 200, 50]
+    columns.value = Object.keys(header.value).map((k) => {
+        return { title: header.value[k], key: k, dataIndex: k, align: 'center' }
+    })
+    columns.value.forEach((col, i) => {
+        col.width = width[i]
+        if (col.key === 'k7') {
+            col.align = 'left'
+        }
+    })
+    keyword.value = propSearchParam.value
+    searchKeyword()
+}
 </script>
