@@ -153,6 +153,8 @@
                     :scroll="{ x: 2000, y: 600 }"
                     :custom-row="customRow"
                     :sticky="true"
+                    rowKey="lineNumber"
+                    :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
                 >
                     <template #bodyCell="{ column, record }">
                         <a-tooltip
@@ -305,6 +307,11 @@ const props = defineProps({
             return []
         },
     },
+    selectedRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
 })
 
 const dialogVisible = ref(false)
@@ -326,7 +333,7 @@ const searchParams = ref({
 const loading = ref(false)
 const filteredRows = ref([])
 const { rows, drugRows, header } = toRefs(props)
-
+const propSelectedRows = toRef(props, 'selectedRows')
 const tumorColumnIdx = computed(() => {
     // 根据列表头名称，例如Geno_Type(QN11), 检查该列是对比样本列表还是肿瘤样本列
     const tumorIdx = []
@@ -632,8 +639,8 @@ const search = () => {
 
         rows: filteredRows.value,
     }
-    emit('stickDone', data)
-    emit('searchParamsChange', searchParams)
+    selectedRows.value = []
+    filterChange()
 }
 watch(rows, (rows) => {
     loadTable()
@@ -644,13 +651,37 @@ onMounted(() => {
 
 const propSearchParams = toRef(props, 'searchParams')
 const loadTable = () => {
-    loading.value = true
-    console.log('somatic', rows.value)
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
 
     const visibleColIdx = columns.value.map((t) => t.i)
     searchParams.value = propSearchParams.value
     search()
-    loading.value = false
+    selectedRows.value = []
+    for (let item of filteredRows.value) {
+        let finded = false
+        for (let lineNumber of propSelectedRows.value) {
+            if (lineNumber == item.lineNumber) {
+                finded = true
+                break
+            }
+        }
+        if (finded) {
+            selectedRows.value.push(item.lineNumber)
+        }
+    }
+    filterChange()
+}
+const selectedRows = ref([])
+
+const onSelectChange = (selectedRowKeys) => {
+    selectedRows.value = selectedRowKeys
+    filterChange()
+}
+
+const filterChange = () => {
+    emit('filterChange', {
+        searchParams: searchParams.value,
+        selectedRows: selectedRows.value,
+    })
 }
 </script>

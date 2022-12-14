@@ -53,7 +53,6 @@ export function getCsvDataAndSetLineNumber(str, options = {}) {
   let lines = str.split('\n')
   let start = 0
   if (finalOptions.hasHeaderLine) {
-    lines = lines.splice(1)
     start = 1
   }
   let rows = []

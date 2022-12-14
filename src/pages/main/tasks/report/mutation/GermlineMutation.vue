@@ -133,6 +133,8 @@
                     :scroll="{ x: 2000, y: 600 }"
                     :custom-row="customRow"
                     :sticky="true"
+                    rowKey="lineNumber"
+                    :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
                 >
                     <template #bodyCell="{ column, record }">
                         <a-tooltip
@@ -194,7 +196,7 @@ import MutationInfo from './MutationInfo'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
-const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
+const emit = defineEmits(['filterChange'])
 
 const props = defineProps({
     samples: {
@@ -262,6 +264,11 @@ const props = defineProps({
             return []
         },
     },
+    selectedRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
 })
 const route = useRoute()
 const dialogVisible = ref(false)
@@ -280,7 +287,7 @@ const searchParams = ref({
 
 const loading = ref(false)
 const { rows, drugRows, header } = toRefs(props)
-
+const propSelectedRows = toRef(props, 'selectedRows')
 const filteredRows = ref([])
 
 const currentRow = ref({})
@@ -527,8 +534,8 @@ const search = () => {
         filter: searchParams.value,
         rows: filteredRows,
     }
-    emit('stickDone', data)
-    emit('searchParamsChange', searchParams.value)
+    selectedRows.value = []
+    filterChange()
 }
 
 watch(rows, (rows) => {
@@ -538,10 +545,6 @@ watch(rows, (rows) => {
 onMounted(() => {
     loadTable()
 })
-
-const refreshPage = () => {
-    dialogVisible.value = false
-}
 
 const propSearchParams = toRef(props, 'searchParams')
 
@@ -553,6 +556,33 @@ const loadTable = () => {
 
     searchParams.value = propSearchParams.value
     search()
+    selectedRows.value = []
+    for (let item of filteredRows.value) {
+        let finded = false
+        for (let lineNumber of propSelectedRows.value) {
+            if (lineNumber == item.lineNumber) {
+                finded = true
+                break
+            }
+        }
+        if (finded) {
+            selectedRows.value.push(item.lineNumber)
+        }
+    }
+    filterChange()
+}
+const selectedRows = ref([])
+
+const onSelectChange = (selectedRowKeys) => {
+    selectedRows.value = selectedRowKeys
+    filterChange()
+}
+
+const filterChange = () => {
+    emit('filterChange', {
+        searchParams: searchParams.value,
+        selectedRows: selectedRows.value,
+    })
 }
 </script>
 

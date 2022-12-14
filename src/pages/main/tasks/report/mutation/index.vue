@@ -43,13 +43,13 @@
                     :samples="props.samples"
                     :task="props.task"
                     ref="germlineMutationVue"
-                    @stickDone="onStickDone('germlineMutation',$event)"
                     :rows="germlineData.rows"
                     :header="germlineData.header"
                     :options="germlineData.options"
                     :searchParams="germlineData.searchParams"
                     :drugRows="germlineData.drugRows"
-                    @searchParamsChange="onSearchParamsChange('germline',$event)"
+                    :selectedRows="germlineData.selectedRows"
+                    @filterChange="filterChange('germline',$event)"
                 />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
@@ -57,13 +57,13 @@
                     :samples="props.samples"
                     :task="props.task"
                     ref="somaticMutationVue"
-                    @stickDone="onStickDone('somaticMutation',$event)"
                     :rows="somaticData.rows"
                     :header="somaticData.header"
                     :options="somaticData.options"
                     :searchParams="somaticData.searchParams"
                     :drugRows="somaticData.drugRows"
-                    @searchParamsChange="onSearchParamsChange('somatic',$event)"
+                    :selectedRows="somaticData.selectedRows"
+                    @filterChange="filterChange('somatic',$event)"
                 />
             </q-tab-panel>
         </q-tab-panels>
@@ -85,7 +85,7 @@ import { errorMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
-import { getCsvHeader, getCsvData } from 'src/utils/csv'
+import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 
@@ -144,6 +144,7 @@ const germlineData = ref({
         drug: false,
     },
     drugRows: [],
+    selectedRows: [],
 })
 
 const somaticData = ref({
@@ -170,9 +171,10 @@ const somaticData = ref({
         drug: false,
     },
     drugRows: [],
+    selectedRows: [],
 })
 
-const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
+const filterData = ref({ somatic: {}, germline: {} })
 
 onMounted(() => {
     if (viewConfig.value.showMutGermline) {
@@ -184,11 +186,18 @@ onMounted(() => {
     loaded.value = true
 })
 // germlinemutation 和 somaticmutation 的数据同步
-const onStickDone = (name, data) => {
-    stickData.value[name] = data
-}
-// 同步子组件的过滤参数
-const onSearchParamsChange = (name, data) => {
+const filterChange = (name, data) => {
+    filterData.value[name] = data
+    if (name == 'germline') {
+        germlineData.value.searchParams = data.searchParams
+        germlineData.value.selectedRows = data.selectedRows
+    }else{
+        somaticData.value.searchParams = data.searchParams
+        somaticData.value.selectedRows = data.selectedRows
+    }
+ }
+ // 同步子组件的过滤参数
+ const onSearchParamsChange = (name, data) => {
     if (name == 'germline') {
         germlineData.value.searchParams = data
     } else {
@@ -196,15 +205,15 @@ const onSearchParamsChange = (name, data) => {
     }
 }
 const stickFilter = () => {
-    if (!stickData.value.germlineMutation.filter && viewConfig.value.showMutGermline) {
+    if (!filterData.value.germline && viewConfig.value.showMutGermline) {
         errorMessage('胚系突变分析未进行过滤')
         return false
     }
-    if (!stickData.value.somaticMutation.filter && viewConfig.value.showMutSomatic) {
+    if (!filterData.value.somatic && viewConfig.value.showMutSomatic) {
         errorMessage('体细胞突变分析未进行过滤')
         return false
     }
-    emit('stickDone', stickData.value)
+    emit('stickDone', filterData.value)
 }
 
 const loadGermlineData = () => {
@@ -212,9 +221,8 @@ const loadGermlineData = () => {
         const headNames = getCsvHeader(res, ',')
 
         const colKeys = _.range(1, 150, 1).map((i) => 'col' + i)
-        const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
-
         // 提取options
         let positions = new Set()
         let meanings = new Set()
@@ -252,7 +260,7 @@ const loadSomaticData = () => {
     readTaskMuFile(route.params.id, 'Mut_somatic').then((res) => {
         const headNames = getCsvHeader(res, ',')
         const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
-        const csvRows = getCsvData(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
 
         // 提取options
