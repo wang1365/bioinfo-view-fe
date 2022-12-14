@@ -76,51 +76,47 @@
         </div>
         <div v-if="props.viewConfig.showCNVtable">
             <q-separator />
-            <div class="row q-gutter-sm q-my-sm">
-                <div class="col">
-                    <q-input
-                        v-model="searchParams.gene"
-                        dense
-                        stack-label
-                        label-color="primary"
-                        label="搜索基因:"
-                        clearable
-                    />
-                </div>
-                <div class="col">
-                    <q-select
-                        v-model="searchParams.type"
-                        clearable
-                        dense
-                        stack-label
-                        label-color="primary"
-                        :options="['DUP', 'DEL']"
-                        label="拷贝数变异分类"
-                    />
-                </div>
-                <div class="col">
-                    <q-select
-                        v-model="searchParams.drug"
-                        clearable
-                        dense
-                        stack-label
-                        label-color="primary"
-                        :options="['All', 'Yes', 'No',]"
-                        label="药物靶点"
-                    />
-                </div>
-                <div class="col">
-                    <q-select
-                        v-model="searchParams.drugLevel"
-                        :disable="searchParams.drug !== 'Yes'"
-                        clearable
-                        dense
-                        stack-label
-                        label-color="primary"
-                        :options="['A', 'B', 'C', 'D', 'E']"
-                        label="用药等级"
-                    />
-                </div>
+            <div class="row q-gutter-sm items-start q-py-md">
+                <q-input
+                    v-model="searchParams.gene"
+                    stack-label
+                    label-color="primary"
+                    label="搜索基因:"
+                    clearable
+                    dense
+                    style="width:150px"
+                />
+                <q-select
+                    v-model="searchParams.type"
+                    clearable
+                    stack-label
+                    label-color="primary"
+                    :options="['DUP', 'DEL']"
+                    label="拷贝数变异分类"
+                    style="width:150px"
+                    dense
+                />
+                <q-select
+                    v-model="searchParams.drug"
+                    clearable
+                    stack-label
+                    label-color="primary"
+                    :options="['All', 'Yes', 'No',]"
+                    label="药物靶点"
+                    style="width:150px"
+                    dense
+                />
+                <q-select
+                    v-model="searchParams.drugLevel"
+                    :disable="searchParams.drug !== 'Yes'"
+                    clearable
+                    stack-label
+                    label-color="primary"
+                    :options="['A', 'B', 'C', 'D', 'E']"
+                    label="用药等级"
+                    style="width:150px"
+                    dense
+                />
                 <q-btn color="primary" label="确定" icon="search" @click="clickSearch()" />
                 <q-btn color="grey" label="清除" icon="delete" @click="clickClear()" />
             </div>
@@ -129,11 +125,13 @@
         <a-table
             class="col-5"
             size="small"
+            rowKey="Gene"
             bordered
             :loading="loading"
             :data-source="filteredRows"
             :columns="columns"
             :sticky="true"
+            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
         ></a-table>
     </div>
 
@@ -525,5 +523,11 @@ const initPie = () => {
     pie.value = echarts.init(div)
 
     refreshPie()
+}
+const selectedRows = ref([])
+
+const onSelectChange = (selectedRowKeys) => {
+    selectedRows.value = selectedRowKeys
+     /*     filterChange() */
 }
 </script>
