@@ -144,7 +144,7 @@ import HomologousRecombinationDefectVue from '../report/homologous-recombination
 
 const { apiPost } = useApi()
 
-const step = ref('fusion')
+const step = ref('mutation')
 const stepData = ref({})
 const route = useRoute()
 const router = useRouter()
