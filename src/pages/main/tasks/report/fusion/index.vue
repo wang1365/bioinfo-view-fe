@@ -169,7 +169,7 @@ const stickFilter = () => {
         errorMessage('单样品融合没有过滤数据')
         return false
     }
-    if (viewConfig.value.showFusionGermline && !filterData.value.normal) {
+    if (viewConfig.value.showFusionSomatic && !filterData.value.normal) {
         errorMessage('体细胞融合分析没有过滤数据')
         return false
     }

@@ -25,13 +25,19 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-        >说明</q-btn
-    >
+    >说明</q-btn>
 
     <div class="row justify-between">
         <div class="col-3 column q-gutter-xs">
             <div class="col">
-                <q-input model-value="PASS" label="VCF Filter" clearable readonly stack-label label-color="primary" />
+                <q-input
+                    model-value="PASS"
+                    label="VCF Filter"
+                    clearable
+                    readonly
+                    stack-label
+                    label-color="primary"
+                />
             </div>
             <div class="col">
                 <q-input
@@ -130,7 +136,12 @@
             </div>
             <div class="q-gutter-md text-center q-py-sm">
                 <q-btn color="primary" label="确定" icon="search" @click="search()" />
-                <q-btn color="primary" label="复位" icon="settings_backup_restore" @click="clickReset" />
+                <q-btn
+                    color="primary"
+                    label="复位"
+                    icon="settings_backup_restore"
+                    @click="clickReset"
+                />
             </div>
         </div>
 
@@ -140,7 +151,10 @@
             <div class="q-pl-sm q-mt-sm">
                 <div class="text-weight-bold text-primary">仅限研究使用，不用于临床诊断</div>
                 <div class="text-weight-bold text-red">警示：随意过滤造成结果不准确</div>
-                <div class="text-weight-bold text-primary q-mt-sm" style="white-space: pre">{{ guageTip }}</div>
+                <div
+                    class="text-weight-bold text-primary q-mt-sm"
+                    style="white-space: pre"
+                >{{ guageTip }}</div>
             </div>
         </div>
     </div>
@@ -232,11 +246,8 @@ const loading = ref(false)
 const emit = defineEmits(['stickDone'])
 const stickFilter = () => {
     let data = {
-        error: false,
-        data: {
-            tmb: tmb.value,
-            filter: searchParams.value,
-        },
+        tmb: tmb.value,
+        searchParams: searchParams.value,
     }
     emit('stickDone', data)
 }
@@ -279,7 +290,6 @@ onMounted(() => {
             apiPost(
                 `/model_query/sample`,
                 (res) => {
-                    console.log('====> samples', res.data.results)
                     const result = {}
                     res.data.results.forEach((sample) => {
                         // is_panel: 是否肿瘤
@@ -322,14 +332,8 @@ onMounted(() => {
                         }
                         mutationPositionOptions.value = Array.from(positions)
                         mutationMeaningOptions.value = Array.from(meanings)
-                        console.log('==========> 突变位置列表', mutationPositionOptions.value)
-                        console.log('==========> 突变意义列表', mutationMeaningOptions.value)
 
                         search()
-                        // csv内容样例，共150列
-                        // Chr,Start,End,Ref,Alt,Geno_Type(QN11),Allelic_Depths(QN11),Seq_Depths(QN11),Mutation_Rate(QN11),Geno_Type(QT11),Allelic_Depths(QT11),Seq_Depths(QT11),Mutation_Rate(QT11),Func.refGene,Gene.refGene,GeneDetail.refGene,ExonicFunc.refGene,exon,NUChange,AAChange,CLNALLELEID,CLNDN,CLNDISDB,CLNREVSTAT,CLNSIG,cosmic70,ExAC_ALL,ExAC_AFR,ExAC_AMR,ExAC_EAS,ExAC_FIN,ExAC_NFE,ExAC_OTH,ExAC_SAS,1000g2015aug_eas,1000g2015aug_all,esp6500siv2_all,avsnp150,gnomAD_genome_ALL,gnomAD_genome_AFR,gnomAD_genome_AMR,gnomAD_genome_ASJ,gnomAD_genome_EAS,gnomAD_genome_FIN,gnomAD_genome_NFE,gnomAD_genome_OTH,gnomAD_exome_ALL,gnomAD_exome_AFR,gnomAD_exome_AMR,gnomAD_exome_ASJ,gnomAD_exome_EAS,gnomAD_exome_FIN,gnomAD_exome_NFE,gnomAD_exome_OTH,gnomAD_exome_SAS,MCAP13,REVEL,SIFT_score,SIFT_converted_rankscore,SIFT_pred,SIFT4G_score,SIFT4G_converted_rankscore,SIFT4G_pred,LRT_score,LRT_converted_rankscore,LRT_pred,MutationTaster_score,MutationTaster_converted_rankscore,MutationTaster_pred,MutationAssessor_score,MutationAssessor_rankscore,MutationAssessor_pred,FATHMM_score,FATHMM_converted_rankscore,FATHMM_pred,PROVEAN_score,PROVEAN_converted_rankscore,PROVEAN_pred,MetaSVM_score,MetaSVM_rankscore,MetaSVM_pred,MetaLR_score,MetaLR_rankscore,MetaLR_pred,MetaRNN_score,MetaRNN_rankscore,MetaRNN_pred,M-CAP_score,M-CAP_rankscore,M-CAP_pred,MutPred_score,MutPred_rankscore,MVP_score,MVP_rankscore,MPC_score,MPC_rankscore,PrimateAI_score,PrimateAI_rankscore,PrimateAI_pred,DEOGEN2_score,DEOGEN2_rankscore,DEOGEN2_pred,BayesDel_addAF_score,BayesDel_addAF_rankscore,BayesDel_addAF_pred,BayesDel_noAF_score,BayesDel_noAF_rankscore,BayesDel_noAF_pred,ClinPred_score,ClinPred_rankscore,ClinPred_pred,LIST-S2_score,LIST-S2_rankscore,LIST-S2_pred,Aloft_pred,Aloft_Confidence,DANN_score,DANN_rankscore,fathmm-MKL_coding_score,fathmm-MKL_coding_rankscore,fathmm-MKL_coding_pred,fathmm-XF_coding_score,fathmm-XF_coding_rankscore,fathmm-XF_coding_pred,Eigen-raw_coding,Eigen-raw_coding_rankscore,Eigen-PC-raw_coding,Eigen-PC-raw_coding_rankscore,integrated_fitCons_score,integrated_fitCons_rankscore,integrated_confidence_value,GERP++_NR,GERP++_RS,GERP++_RS_rankscore,phyloP100way_vertebrate,phyloP100way_vertebrate_rankscore,phyloP30way_mammalian,phyloP30way_mammalian_rankscore,phastCons100way_vertebrate,phastCons100way_vertebrate_rankscore,phastCons30way_mammalian,phastCons30way_mammalian_rankscore,SiPhy_29way_logOdds,SiPhy_29way_logOdds_rankscore,Interpro_domain,GTEx_V8_gene,GTEx_V8_tissue,OmimID,HgmdID,AAChange.refGene
-                        // chr1,2130277,2130277,G,A,0/0,120;0,120,0,0/1,179;8,187,0.0427807486631016,intergenic,FAAP20;SKI,dist=4066;dist=29481,.,.,.,.,.,.,.,.,.,.,0.0002,0.0053,0,0,0,0,0,0,.,0.000798722,.,rs563740274,0.0013,0.0039,0,0,0,0.0003,0.0004,0,0.0003,0.0032,0.0004,0,0,0,7.951e-05,0,0,0.000412,0.010,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.
-                        // chr1,2491306,2491306,G,A,0/0,298;0,298,0,0/1,349;18,367,0.0490463215258856,exonic,TNFRSF14,.,nonsynonymous SNV,exon4,c.G349A,A117T,139092,not_specified,MedGen:CN169374,no_assertion_provided,not_provided,.,0.0159,0.0475,0.0052,0.0511,0.0030,0.0078,0.0114,0.0177,0.0337,0.0211661,0.0157,rs2234163,0.0152,0.0334,0.0084,0.0033,0.0525,0.0031,0.0046,0.0051,0.0106,0.0379,0.0036,0.0018,0.0379,0.0022,0.0063,0.0083,0.0140,.,0.204,1.0,0.010,T,1.0,0.012,T,.,.,.,1,0.090,N,-2.005,0.002,N,-1.74,0.834,D,3.45,0.001,N,-0.892,0.487,T,0.036,0.156,T,0.002,0.000,T,.,.,.,.,.,.,.,0.150,0.170,0.285,0.083,T,0.174,0.626,T,-0.484,0.007,T,-0.430,0.300,T,0.009,0.001,T,.,.,.,.;.;.;.;.;.;,.;.;.;.;.;.;,0.679,0.085,0.003,0.015,N,0.035,0.043,N,-1.382,0.028,-1.419,0.031,0.707,0.731,0,3.04,0.448,0.158,-1.249,0.030,0.172,0.211,0.000,0.064,0.001,0.051,4.699,0.122,TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal;TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|TNFR/NGFR cysteine-rich region|Tumor necrosis factor receptor 14/UL144\x2c N-terminal,.,.,602746,.,TNFRSF14:NM_001297605:exon4:c.G349A:p.A117T
                     })
                 },
                 query
@@ -420,7 +424,6 @@ const search = () => {
         param = searchParams.value.mutationPosition
         if (param && param.length > 0) {
             const positions = line[13].split(';')
-            // console.log('==========>', positions, line[13])
             if (!positions.some((position) => param.includes(position))) {
                 return false
             }
@@ -459,6 +462,5 @@ const search = () => {
 
     tmb.value = (filteredLines.value.length / bedRegionValue.value).toFixed(2)
     // tmb.value = Math.round(filteredLines.value.length / bedRegionValue.value)
-    console.log('========= search result', filteredLines.value.length, tmb.value, filteredLines.value)
 }
 </script>
