@@ -171,7 +171,8 @@ onMounted(() => {
 const stickDone = (name, data, nextstep) => {
     stepData.value[name] = data
     viewConfig.value[name].stickDone = true
-     /*     step.value = nextstep */
+    /*     step.value = nextstep */
+    console.log(data)
     return true
 }
 const tabValid = (name) => {
@@ -192,7 +193,7 @@ const reset = () => {
     for (const key in viewConfig.value) {
         viewConfig.value[key].stickDone = false
     }
-     /*     step.value = 'mutation' */
+    /*     step.value = 'mutation' */
 }
 const loadTaskSamples = () => {
     // 查询任务

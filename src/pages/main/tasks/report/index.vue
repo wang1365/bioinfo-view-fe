@@ -216,7 +216,6 @@ onMounted(() => {
             for (let k in data) {
                 viewConfig[dict[k]] = data[k]
             }
-            console.log('module', data)
             module.value = viewConfig
         }
     })

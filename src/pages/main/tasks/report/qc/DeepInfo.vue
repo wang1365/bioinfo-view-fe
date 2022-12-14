@@ -110,7 +110,6 @@ const download = (idx) => {
         // 浏览器允许
     } else {
         // 浏览器拒绝
-        console.error('Error: ' + status)
     }
 }
 

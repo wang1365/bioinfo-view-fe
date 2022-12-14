@@ -85,7 +85,6 @@ const { samples } = toRefs(props)
 
 onMounted(() => {
     getReportText(route.params.id, 'QC_TIP').then((res) => {
-        console.log('QcVue QC_TIP ====>', res)
         tip.value = res
     })
 })

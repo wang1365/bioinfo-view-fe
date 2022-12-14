@@ -51,11 +51,13 @@ export function getCsvDataAndSetLineNumber(str, options = {}) {
   const finalOptions = { ...defaultOptions }
   Object.assign(finalOptions, options)
   let lines = str.split('\n')
+  let start = 0
   if (finalOptions.hasHeaderLine) {
     lines = lines.splice(1)
+    start = 1
   }
   let rows = []
-  for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+  for (let lineNumber = start; lineNumber < lines.length; lineNumber++) {
     let line = lines[lineNumber]
     if (line.length > 0) {
       let originRow = line.split(finalOptions.splitter)
@@ -76,7 +78,6 @@ export function getCsvDataAndSetLineNumber(str, options = {}) {
         let linenumber = [lineNumber]
         row = linenumber.concat(row)
         rows.push(row)
-
       }
     }
   }

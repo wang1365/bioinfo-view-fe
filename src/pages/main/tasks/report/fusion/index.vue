@@ -40,10 +40,28 @@
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
-                <Single :samples="props.samples" :qt="singleData.qt" :qn="singleData.qn" />
+                <Single
+                    :samples="props.samples"
+                    :qtRows="singleData.qt.rows"
+                    :qtHeader="singleData.qt.header"
+                    :qtSearchParam="singleData.qt.searchParam"
+                    :qtSelectedRows="singleData.qt.selectedRows"
+                    :qnRows="singleData.qn.rows"
+                    :qnHeader="singleData.qn.header"
+                    :qnSearchParam="singleData.qn.searchParam"
+                    :qnSelectedRows="singleData.qn.selectedRows"
+                    @filterChange="filterChange('single',$event)"
+                />
             </q-tab-panel>
             <q-tab-panel name="体细胞融合分析">
-                <NormalVue :samples="props.samples" :rows="normalData.rows" :header="normalData.header" :searchParam="normalData.searchParam" />
+                <NormalVue
+                    :samples="props.samples"
+                    :rows="normalData.rows"
+                    :header="normalData.header"
+                    :searchParam="normalData.searchParam"
+                    :selectedRows="normalData.selectedRows"
+                    @filterChange="filterChange('normal',$event)"
+                />
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
@@ -68,9 +86,10 @@ import { ref, onMounted, toRef, watch } from 'vue'
 import NormalVue from './Normal.vue'
 import Single from './Single.vue'
 import { readTaskFile } from 'src/api/task'
-import { getCsvData,getCsvDataAndSetLineNumber } from 'src/utils/csv'
+import { getCsvData, getCsvDataAndSetLineNumber, getCsvHeader } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { useRoute } from 'vue-router'
+import { errorMessage } from 'src/utils/notify'
 
 const route = useRoute()
 const tab = ref('单样品融合分析')
@@ -103,21 +122,24 @@ const singleData = ref({
     qt: {
         rows: [],
         header: [],
-        searchParams: '',
+        searchParam: '',
+        selectedRows: [],
     },
     qn: {
         rows: [],
         header: [],
-        searchParams: '',
+        searchParam: '',
+        selectedRows: [],
     },
 })
 
 const normalData = ref({
     rows: [],
     header: [],
-    searchParams: '',
+    searchParam: '',
+    selectedRows: [],
 })
-const stickData = ref({ somaticMutation: {}, germlineMutation: {} })
+const filterData = ref({})
 const emit = defineEmits('stickDone')
 const viewConfig = toRef(props, 'viewConfig')
 const samples = toRef(props, 'samples')
@@ -128,21 +150,30 @@ onMounted(() => {
 watch(props, () => {
     loadData()
 })
-const stickDone = (name, data) => {
-    console.log(name, data)
-    stickData.value[name] = data
+const filterChange = (name, data) => {
+    if (name === 'normal') {
+        filterData.value.normal = data
+        normalData.value.searchParam = data.searchParam
+        normalData.value.selectedRows = data.selectedRows
+    } else {
+        filterData.value.single = data
+        singleData.value.qt.searchParam = data.qt.searchParam
+        singleData.value.qn.searchParam = data.qn.searchParam
+        singleData.value.qt.selectedRows = data.qt.selectedRows
+        singleData.value.qn.selectedRows = data.qn.selectedRows
+    }
 }
 
 const stickFilter = () => {
-    if (!stickData.value.germlineMutation.filter && viewConfig.value.showMutGermline) {
-        errorMessage('胚系突变分析未进行过滤')
+    if (viewConfig.value.showFusionGermline && !filterData.value.single.qt) {
+        errorMessage('单样品融合没有过滤数据')
         return false
     }
-    if (!stickData.value.somaticMutation.filter && viewConfig.value.showMutSomatic) {
-        errorMessage('体细胞突变分析未进行过滤')
+    if (viewConfig.value.showFusionGermline && !filterData.value.normal) {
+        errorMessage('体细胞融合分析没有过滤数据')
         return false
     }
-    emit('stickDone', stickData.value)
+    emit('stickDone', filterData.value)
 }
 
 const loadData = () => {
@@ -154,32 +185,38 @@ const loadData = () => {
     }
 }
 const loadSingleData = () => {
-    const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8', 'k9']
+    const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const { qt, qn } = getDualIdentifiers(samples.value)
     if (!qt) return
     const qtFile = `fusion_germline/${qt}.fusions`
     readTaskFile(route.params.id, qtFile).then((res) => {
-        const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: false })
-        singleData.value.qt.header = lines[0]
-        singleData.value.qt.rows = lines.slice(1)
+        const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
+        let header = getCsvHeader(res)
+        header.push('actions')
+        singleData.value.qt.header = header
+        singleData.value.qt.rows = lines
     })
     if (samples.value.length > 1) {
         const qnFile = `fusion_germline/${qn}.fusions`
         readTaskFile(route.params.id, qnFile).then((res) => {
-            const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: false })
-            singleData.value.qn.header = lines[0]
-            singleData.value.qn.rows = lines.slice(1)
+            const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
+            let header = getCsvHeader(res)
+            header.push('actions')
+            singleData.value.qn.header = header
+            singleData.value.qn.rows = lines
         })
     }
 }
 const loadNormalData = () => {
-    const fields = ['k1', 'k2', 'k3', 'k4', 'k5', 'k6', 'k7', 'k8']
+    const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     const { qt, qn } = getDualIdentifiers(props.samples)
     if (!qt || !qn) return
     readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then((res) => {
-        const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: false })
-        normalData.value.header = lines[0]
-        normalData.value.rows = lines.slice(1)
+        const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
+        let header = getCsvHeader(res)
+        header.push('actions')
+        normalData.value.header = header
+        normalData.value.rows = lines
     })
 }
 </script>

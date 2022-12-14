@@ -103,7 +103,6 @@ onMounted(() => {
     readTaskFile(route.params.id, 'QC/QC_info').then(res => {
         const ks = columns.value.map(t => t.dataIndex).splice(1)
         rows.value = getCsvData(res, {fields: ks, splitter:'\t'})
-        console.log('csv', res, rows.value)
     }).finally(() => {
         loading.value = false
     })

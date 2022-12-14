@@ -22,11 +22,11 @@
             :data-source="filteredRows1"
             :columns="columns1"
             :sticky="true"
-            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
-                    v-if="column.key === 'k9'"
+                    v-if="column.title === 'actions'"
                     label="查看"
                     color="primary"
                     size="sm"
@@ -54,16 +54,15 @@
         <a-table
             size="small"
             bordered
-            :loading="loading2"
             :data-source="filteredRows2"
             :columns="columns2"
             :sticky="true"
             rowKey="lineNumber"
-            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange2 }"
+            :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2 }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
-                    v-if="column.key === 'k9'"
+                    v-if="column.title === 'actions'"
                     label="查看"
                     color="primary"
                     size="sm"
@@ -98,6 +97,46 @@ const props = defineProps({
         required: false,
         default: () => [],
     },
+    qtRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+    qtHeader: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+    qtSearchParam: {
+        type: String,
+        required: false,
+        default: () => '',
+    },
+    qtSelectedRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+    qnRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+    qnHeader: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+    qnSearchParam: {
+        type: String,
+        required: false,
+        default: () => '',
+    },
+    qnSelectedRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
     qt: {
         type: Object,
         required: false,
@@ -105,7 +144,7 @@ const props = defineProps({
             return {
                 rows: [],
                 header: {},
-                searchParams: '',
+                searchParam: '',
             }
         },
     },
@@ -116,7 +155,7 @@ const props = defineProps({
             return {
                 rows: [],
                 header: {},
-                searchParams: '',
+                searchParam: '',
             }
         },
     },
@@ -138,38 +177,66 @@ const selectedFile = ref('')
 
 const searchKeyword1 = () => {
     if (keyword1.value) {
-        filteredRows1.value = qt.value.rows.filter((t) => t.k1.includes(keyword1.value))
+        filteredRows1.value = qtRows.value.filter((t) => t[0].includes(keyword1.value))
     } else {
-        filteredRows1.value = qt.value.rows
+        filteredRows1.value = qtRows.value
     }
+    filterChange()
 }
 
 const searchKeyword2 = () => {
     if (keyword2.value) {
-        filteredRows2.value = qn.value.rows.filter((t) => t.k1.includes(keyword2.value))
+        filteredRows2.value = qnRows.value.filter((t) => t[0].includes(keyword2.value))
     } else {
-        filteredRows2.value = qn.value.rows
+        filteredRows2.value = qnRows.value
     }
+    filterChange()
 }
 
 const clearKeyword1 = () => {
-    filteredRows1.value = qt.value.rows
+    filteredRows1.value = qtRows.value
+    keyword1.value = ''
+    filterChange()
 }
 
 const clearKeyword2 = () => {
-    filteredRows2.value = qn.value.rows
+    filteredRows2.value = qnRows.value
+    keyword2.value = ''
+    filterChange()
 }
 
 const clickView = (record) => {
-    console.log('click', record)
-    selectedFile.value = record.k9
+     console.log(record)
+    selectedFile.value = record[8]
     igvVisible.value = true
 }
 
-const { qt, qn } = toRefs(props)
-const selectedRow = ref([])
+const { qtRows, qtHeader, qtSearchParam, qtSelectedRows, qnRows, qnHeader, qnSelectedRows, qnSearchParam } =
+    toRefs(props)
 
-watch(props, () => {
+const emit = defineEmits('filterChange')
+const filterChange = () => {
+    emit('filterChange', {
+        qt: {
+            searchParam: keyword1.value,
+            selectedRows: selectedRows.value,
+        },
+        qn: {
+            searchParam: keyword2.value,
+            selectedRows: selectedRows2.value,
+        },
+    })
+}
+watch(qtSearchParam, () => {
+    loadData()
+})
+watch(qnSearchParam, () => {
+    loadData()
+})
+watch(qtRows, () => {
+    loadData()
+})
+watch(qnRows, () => {
     loadData()
 })
 onMounted(() => {
@@ -177,102 +244,88 @@ onMounted(() => {
 })
 const samples = toRef(props, 'samples')
 const loadData = () => {
-    const width = [30, 30, 60, 60, 60, 60, 60, 200, 50]
-
-    columns1.value = Object.keys(qt.value.header).map((k) => {
-        return { title: qt.value.header[k], key: k, dataIndex: k, align: 'center' }
+    let width = [30, 30, 60, 60, 60, 60, 60, 200, 60, 50]
+    columns1.value = []
+    qtHeader.value.forEach((item, index) => {
+        if (item == 'actions') {
+            columns1.value.push({
+                title: item,
+                dataIndex: index,
+                align: 'center',
+                width: width[index],
+            })
+        } else
+            columns1.value.push({
+                title: item,
+                dataIndex: index,
+                align: 'center',
+                width: width[index],
+            })
     })
-    columns1.value.forEach((col, i) => {
-        col.width = width[i]
-        if (col.key === 'k8') {
-            col.align = 'left'
-        }
-    })
-    keyword1.value = qt.value.searchParam
+    keyword1.value = qtSearchParam.value
     searchKeyword1()
+    selectedRows.value = []
+    for (let item of filteredRows1.value) {
+        let finded = false
+        for (let lineNumber of qtSelectedRows.value) {
+            if (lineNumber == item.lineNumber) {
+                finded = true
+                break
+            }
+        }
+        if (finded) {
+            selectedRows.value.push(item.lineNumber)
+        }
+    }
 
     if (samples.value.length > 1) {
-        columns2.value = Object.keys(qn.value.header).map((k) => {
-            return { title: qn.value.header[k], key: k, dataIndex: k, align: 'center' }
+        columns2.value = []
+        width = [30, 30, 60, 60, 60, 60, 60, 60, 120, 50]
+        qnHeader.value.forEach((item, index) => {
+            if (item == 'actions') {
+                columns2.value.push({
+                    title: item,
+                    dataIndex: index,
+                    align: 'center',
+                    width: width[index],
+                })
+            } else
+                columns2.value.push({
+                    title: item,
+                    dataIndex: index,
+                    align: 'center',
+                    width: width[index],
+                })
         })
-        keyword2.value = qn.value.searchParam
+        keyword2.value = qnSearchParam.value
         searchKeyword2()
+        selectedRows2.value = []
+        for (let item of filteredRows2.value) {
+            let finded = false
+            for (let lineNumber of qnSelectedRows.value) {
+                if (lineNumber == item.lineNumber) {
+                    finded = true
+                    break
+                }
+            }
+            if (finded) {
+                selectedRows2.value.push(item.lineNumber)
+            }
+        }
     }
-}
+     filterChange()
+ }
 
-const selectedRows = ref([])
+ const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys)
     selectedRows.value = selectedRowKeys
+    filterChange()
 }
 const selectedRows2 = ref([])
 
 const onSelectChange2 = (selectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys)
     selectedRows2.value = selectedRowKeys
+    filterChange()
 }
 </script>
-<!-- <template>
-     <div>
-     <div style="margin-bottom: 16px">
-     <a-button
-     type="primary"
-     :disabled="!hasSelected"
-     :loading="loading"
-     @click="start"
-     >Reload</a-button>
-     <span style="margin-left: 8px">
-     <template v-if="hasSelected">{{ `Selected ${selectedRows.length} items` }}</template>
-     </span>
-     </div>
-     <a-table
-     :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-     :columns="columns"
-     :data-source="data"
-     />
-     </div>
-     </template>
-     <script setup>
-     import { computed, defineComponent, reactive, toRefs,ref } from 'vue'
-     const columns = [
-     {
-     title: 'Name',
-     dataIndex: 'name',
-     },
-     {
-     title: 'Age',
-     dataIndex: 'age',
-     },
-     {
-     title: 'Address',
-     dataIndex: 'address',
-     },
-     ]
-     const data = []
-
-     for (let i = 0; i < 46; i++) {
-     data.push({
-     key: i,
-     name: `Edward King ${i}`,
-     age: 32,
-     address: `London, Park Lane no. ${i}`,
-     })
-     }
-
-     const selectedRows=ref([])
-
-
-     const onSelectChange = (selectedRowKeys) => {
-     console.log('selectedRowKeys changed: ', selectedRowKeys)
-     selectedRows.value = selectedRowKeys
-     }
-     const hasSelected = computed(() =>selectedRows.value.length > 0)
-
-     const start = () => {
-     setTimeout(() => {
-     selectedRows.value = []
-     }, 1000)
-     }
-
-     </script> -->

@@ -1,16 +1,15 @@
 <template>
-
     <q-toolbar class="text-primary">
-            <q-input
-                v-model="keyword"
-                class="q-mr-sm"
-                dense
-                label="搜索:"
-                clearable
-                @clear="clearKeyword"
-                style="width:300px"
-            />
-            <q-btn size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
+        <q-input
+            v-model="keyword"
+            class="q-mr-sm"
+            dense
+            label="搜索:"
+            clearable
+            @clear="clearKeyword"
+            style="width:300px"
+        />
+        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <a-table
@@ -21,13 +20,13 @@
             :columns="columns"
             :sticky="true"
             rowKey="lineNumber"
+            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
-                    v-if="column.key === 'k8'"
+                    v-if="column.title === 'actions'"
                     label="查看"
                     color="primary"
-                    outline
                     size="sm"
                     @click="clickView(record)"
                 ></q-btn>
@@ -45,26 +44,18 @@
 </template>
 <script setup>
 import { ref, onMounted, toRef, watch } from 'vue'
-import { readTaskFile } from 'src/api/task'
-import { getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import IGV from './Igv.vue'
-import { getDualIdentifiers } from 'src/utils/samples'
 
 const route = useRoute()
-
-const columns = ref([
-    // {key: 'gene', title: '基因', dataIndex: 'k1', align: 'center', width: 120},
-    // {key: 'avg', title: '深度平均值', dataIndex: 'k2', align: 'center', width: 120, sorter: (row1, row2) => row1.k2 - row2.k2},
-    // {key: 'mid', title: '深度中位值', dataIndex: 'k3', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k3},
-    // {key: 'ratio', title: '基因覆盖度', dataIndex: 'k4', align: 'center', width: 120, sorter: (row1, row2) => row1.k3 - row2.k4},
-])
+const columns = ref([])
 
 const keyword = ref('')
 const filteredRows = ref([])
 
 const igvVisible = ref(false)
 const selectedFile = ref('')
+const emit = defineEmits('filterChange')
 
 const props = defineProps({
     samples: {
@@ -95,28 +86,53 @@ const props = defineProps({
             return ''
         },
     },
+    selectedRows: {
+        type: Array,
+        require: false,
+        default() {
+            return []
+        },
+    },
 })
 const searchKeyword = () => {
     if (keyword.value) {
-        filteredRows.value = rows.value.filter((t) => t.k1.includes(keyword.value))
+        filteredRows.value = rows.value.filter((t) => t[0].includes(keyword.value))
     } else {
         filteredRows.value = rows.value
     }
+    filterChange()
 }
 
 const clearKeyword = () => {
+    keyword.value = ''
     filteredRows.value = rows.value
+    filterChange()
 }
 
 const clickView = (record) => {
     console.log('clickView', record)
-    selectedFile.value = record.k8
+    selectedFile.value = record[7]
     igvVisible.value = true
 }
 const rows = toRef(props, 'rows')
 const header = toRef(props, 'header')
 const propSearchParam = toRef(props, 'searchParam')
-watch(props, () => {
+const propSelectedRows = toRef(props, 'selectedRows')
+
+const selectedRows = ref([])
+
+const onSelectChange = (selectedRowKeys) => {
+    selectedRows.value = selectedRowKeys
+    filterChange()
+}
+
+const filterChange = () => {
+    emit('filterChange', {
+        searchParam: keyword.value,
+        selectedRows: selectedRows.value,
+    })
+}
+watch(propSearchParam, () => {
     loadData()
 })
 onMounted(() => {
@@ -124,17 +140,39 @@ onMounted(() => {
 })
 
 const loadData = () => {
-    const width = [30, 30, 60, 60, 60, 60, 200, 50]
-    columns.value = Object.keys(header.value).map((k) => {
-        return { title: header.value[k], key: k, dataIndex: k, align: 'center' }
-    })
-    columns.value.forEach((col, i) => {
-        col.width = width[i]
-        if (col.key === 'k7') {
-            col.align = 'left'
-        }
+    const width = [30, 30, 60, 60, 60, 60, 200, 50, 50]
+    columns.value = []
+    header.value.forEach((item, index) => {
+        if (item == 'actions') {
+            columns.value.push({
+                title: item,
+                dataIndex: index,
+                align: 'center',
+                width: width[index],
+            })
+        } else
+            columns.value.push({
+                title: item,
+                dataIndex: index,
+                align: 'center',
+                width: width[index],
+            })
     })
     keyword.value = propSearchParam.value
     searchKeyword()
+    selectedRows.value = []
+    for (let item of filteredRows.value) {
+        let finded = false
+        for (let lineNumber of propSelectedRows.value) {
+            if (lineNumber == item.lineNumber) {
+                finded = true
+                break
+            }
+        }
+        if (finded) {
+            selectedRows.value.push(item.lineNumber)
+        }
+    }
+    filterChange()
 }
 </script>
