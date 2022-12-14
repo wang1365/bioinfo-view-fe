@@ -17,10 +17,12 @@
         <a-table
             size="small"
             bordered
+            rowKey="lineNumber"
             :loading="loading1"
             :data-source="filteredRows1"
             :columns="columns1"
             :sticky="true"
+            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
@@ -56,6 +58,8 @@
             :data-source="filteredRows2"
             :columns="columns2"
             :sticky="true"
+            rowKey="lineNumber"
+            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange2 }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
@@ -163,6 +167,7 @@ const clickView = (record) => {
 }
 
 const { qt, qn } = toRefs(props)
+const selectedRow = ref([])
 
 watch(props, () => {
     loadData()
@@ -194,4 +199,80 @@ const loadData = () => {
         searchKeyword2()
     }
 }
+
+const selectedRows = ref([])
+
+const onSelectChange = (selectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys)
+    selectedRows.value = selectedRowKeys
+}
+const selectedRows2 = ref([])
+
+const onSelectChange2 = (selectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys)
+    selectedRows2.value = selectedRowKeys
+}
 </script>
+<!-- <template>
+     <div>
+     <div style="margin-bottom: 16px">
+     <a-button
+     type="primary"
+     :disabled="!hasSelected"
+     :loading="loading"
+     @click="start"
+     >Reload</a-button>
+     <span style="margin-left: 8px">
+     <template v-if="hasSelected">{{ `Selected ${selectedRows.length} items` }}</template>
+     </span>
+     </div>
+     <a-table
+     :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+     :columns="columns"
+     :data-source="data"
+     />
+     </div>
+     </template>
+     <script setup>
+     import { computed, defineComponent, reactive, toRefs,ref } from 'vue'
+     const columns = [
+     {
+     title: 'Name',
+     dataIndex: 'name',
+     },
+     {
+     title: 'Age',
+     dataIndex: 'age',
+     },
+     {
+     title: 'Address',
+     dataIndex: 'address',
+     },
+     ]
+     const data = []
+
+     for (let i = 0; i < 46; i++) {
+     data.push({
+     key: i,
+     name: `Edward King ${i}`,
+     age: 32,
+     address: `London, Park Lane no. ${i}`,
+     })
+     }
+
+     const selectedRows=ref([])
+
+
+     const onSelectChange = (selectedRowKeys) => {
+     console.log('selectedRowKeys changed: ', selectedRowKeys)
+     selectedRows.value = selectedRowKeys
+     }
+     const hasSelected = computed(() =>selectedRows.value.length > 0)
+
+     const start = () => {
+     setTimeout(() => {
+     selectedRows.value = []
+     }, 1000)
+     }
+
+     </script> -->

@@ -20,6 +20,7 @@
             :data-source="filteredRows"
             :columns="columns"
             :sticky="true"
+            rowKey="lineNumber"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn

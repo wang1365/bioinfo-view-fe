@@ -68,7 +68,7 @@ import { ref, onMounted, toRef, watch } from 'vue'
 import NormalVue from './Normal.vue'
 import Single from './Single.vue'
 import { readTaskFile } from 'src/api/task'
-import { getCsvData } from 'src/utils/csv'
+import { getCsvData,getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { useRoute } from 'vue-router'
 
@@ -159,14 +159,14 @@ const loadSingleData = () => {
     if (!qt) return
     const qtFile = `fusion_germline/${qt}.fusions`
     readTaskFile(route.params.id, qtFile).then((res) => {
-        const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
+        const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: false })
         singleData.value.qt.header = lines[0]
         singleData.value.qt.rows = lines.slice(1)
     })
     if (samples.value.length > 1) {
         const qnFile = `fusion_germline/${qn}.fusions`
         readTaskFile(route.params.id, qnFile).then((res) => {
-            const lines = getCsvData(res, { fields: fields, hasHeaderLine: false })
+            const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: false })
             singleData.value.qn.header = lines[0]
             singleData.value.qn.rows = lines.slice(1)
         })
@@ -177,7 +177,7 @@ const loadNormalData = () => {
     const { qt, qn } = getDualIdentifiers(props.samples)
     if (!qt || !qn) return
     readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then((res) => {
-        const lines = getCsvData(res, { fields, hasHeaderLine: false })
+        const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: false })
         normalData.value.header = lines[0]
         normalData.value.rows = lines.slice(1)
     })
