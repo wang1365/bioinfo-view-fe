@@ -106,7 +106,7 @@
                     >肿瘤突变负荷分析</q-chip>
                 </div>
                 <div class="q-py-md text-h6">填写信息</div>
-                <q-input v-model="text" label="报告备注" />
+                <q-input v-model="reportComment" label="报告备注" />
                 <div class="text-center q-pa-md q-gutter-sm">
                     <q-btn label="确认" color="primary" @click="createReport()" />
                     <q-btn label="返回修改" color="secondary" @click="reset()" />
@@ -144,6 +144,7 @@ import HomologousRecombinationDefectVue from '../report/homologous-recombination
 
 const { apiPost } = useApi()
 
+const reportComment = ref('')
 const step = ref('mutation')
 const stepData = ref({})
 const route = useRoute()
@@ -181,8 +182,33 @@ const tabValid = (name) => {
 const isStepDone = (name) => {
     return Boolean(stepData.value[name])
 }
-
+const tabMap = {
+    /*     qc: '质控', */
+    mutation: '突变分析',
+    fusion: '融合分析',
+    copy_number_variation: '拷贝数变异分析',
+    /*     microsatellite_instability: '微卫星不稳定分析', */
+    tumor_mutation_load: '肿瘤突变负荷分析',
+    /*     homologous_recombination_defect: '同源重组缺陷分析', */
+}
 const createReport = () => {
+    console.log(stepData.value)
+    for (let key in tabMap) {
+        if (tabValid(key) && !stepData.value[key]) {
+            errorMessage(tabMap[key] + '未固定过滤')
+            return
+        }
+        console.log(key, tabValid(key), Boolean(stepData.value[key]))
+    }
+    if (!reportComment.value) {
+        errorMessage('请填写备注')
+        return
+    }
+    let postData = {
+        comment: reportComment.value,
+        data: stepData.value,
+    }
+    console.log(JSON.stringify(postData))
     infoMessage('报告创建完成.')
 }
 const gotoReports = () => {
