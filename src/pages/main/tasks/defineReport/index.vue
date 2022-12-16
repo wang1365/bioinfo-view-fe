@@ -141,6 +141,7 @@ import CopyNumberVariationVue from '../report/copy-number-variation/index.vue'
 import MicrosatelliteInstabilityVue from '../report/microsatellite-instability/index.vue'
 import TumorMutationLoadVue from '../report/tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from '../report/homologous-recombination-defect/index.vue'
+import { api } from 'src/boot/axios'
 
 const { apiPost } = useApi()
 
@@ -209,7 +210,15 @@ const createReport = () => {
         data: stepData.value,
     }
     console.log(JSON.stringify(postData))
+    apiPost(
+        '/reports',
+        (res) => {
+            console.log(res)
+        },
+        postData
+    )
     infoMessage('报告创建完成.')
+
 }
 const gotoReports = () => {
     router.push(`/main/reports`)

@@ -14,21 +14,21 @@
                     ></q-input>
                     <q-input
                         type="number"
-                        v-model="searchParams.age_start"
+                        v-model="searchParams.patient_identifier"
                         dense
                         label="患者识别号"
                         clearable
                     ></q-input>
                     <q-input
                         type="number"
-                        v-model="searchParams.age_end"
+                        v-model="searchParams.sample_meta_identifier"
                         dense
                         label="样本识别号"
                         clearable
                     ></q-input>
                     <q-input
                         type="number"
-                        v-model="searchParams.age_start"
+                        v-model="searchParams.sample_identifier"
                         dense
                         label="数据识别号"
                         clearable
@@ -69,7 +69,12 @@ import { useQTable } from 'src/utils/q-table'
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
 const { apiGet } = useApi()
-const searchParams = ref({})
+const searchParams = ref({
+    search: '',
+    patient_identifer: '',
+    sample_meta_identifer: '',
+    sample_identifer: '',
+})
 const columns = ref([
     {
         name: 'id',
@@ -132,8 +137,19 @@ onMounted(() => {
 
 const onRequest = (props) => {
     const { page, rowsPerPage } = props.pagination
-    console.log(page, rowsPerPage)
     let params = `?page=${page}&size=${rowsPerPage}`
+    if (searchParams.value.search) {
+        params = `${params}&search=${searchParams.value.search}`
+    }
+    if (searchParams.value.patient_identifier) {
+        params = `${params}&patient_identifier=${searchParams.value.patient_identifer}`
+    }
+    if (searchParams.value.sample_meta_identifier) {
+        params = `${params}&sample_meta_identifier=${searchParams.value.sample_meta_identifer}`
+    }
+    if (searchParams.value.sample_identifier) {
+        params = `${params}&sample_identifier=${searchParams.value.sample_identifer}`
+    }
     apiGet(`/account/${params}`, (res) => {
         pagination.value.rowsNumber = res.data.total_count
         pagination.value.page = page

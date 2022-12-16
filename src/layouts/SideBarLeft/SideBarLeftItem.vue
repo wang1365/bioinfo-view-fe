@@ -1,5 +1,10 @@
 <template v-if="hasPermission">
-    <component v-if="hasPermission" :is="chooseComponent" :addRoutesItem="addRoutesItem" :initLevel="initLevel">
+    <component
+        v-if="hasPermission"
+        :is="chooseComponent"
+        :addRoutesItem="addRoutesItem"
+        :initLevel="initLevel"
+    >
         <template v-if="addRoutesItem.children && addRoutesItem.children.length">
             <SideBarLeftItem
                 :key="item.path"
@@ -12,19 +17,19 @@
 </template>
 
 <script setup>
-import ItemSingle from "./ItemSingle";
-import ItemMultiple from "./ItemMultiple";
-import { computed, toRefs } from "vue";
-import { storeToRefs } from "pinia";
-import { globalStore } from "src/stores/global";
+import ItemSingle from './ItemSingle'
+import ItemMultiple from './ItemMultiple'
+import { computed, toRefs } from 'vue'
+import { storeToRefs } from 'pinia'
+import { globalStore } from 'src/stores/global'
 
-const store = globalStore();
-const { currentUser } = storeToRefs(store);
+const store = globalStore()
+const { currentUser } = storeToRefs(store)
 
 const props = defineProps({
     addRoutesItem: {
         default: function () {
-            return null;
+            return null
         },
         type: Object,
     },
@@ -32,34 +37,34 @@ const props = defineProps({
         type: Number,
         default: 0,
     },
-});
-const { addRoutesItem, initLevel } = toRefs(props);
+})
+const { addRoutesItem, initLevel } = toRefs(props)
 const chooseComponent = computed(() => {
     if (addRoutesItem.value?.children?.length) {
-        return ItemMultiple;
+        return ItemMultiple
     } else {
-        return ItemSingle;
+        return ItemSingle
     }
-});
+})
 
 const hasPermission = () => {
-    console.log("==> 菜单权限check");
-    const roles = addRoutesItem.roles;
-    console.log("==> 菜单权限check：", addRoutesItem);
+    console.log('==> 菜单权限check')
+    const roles = addRoutesItem.roles
+    console.log('==> 菜单权限check：', addRoutesItem)
     if (_.isEmpty(roles)) {
-        return true;
+        return true
     }
 
-    const currentUserRoles = currentUser.role_list;
+    const currentUserRoles = currentUser.role_list
     if (_.isEmpty(currentUserRoles)) {
-        return false;
+        return false
     }
 
     for (let role of roles) {
         if (currentUserRoles.includes(role)) {
-            return true;
+            return true
         }
     }
-    return false;
-};
+    return false
+}
 </script>
