@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Response
 
 host = 'http://10.10.0.208:8080/'
-proxies = {'http': 'http://192.168.31.11:1082'}
+proxies = {'http': 'http://192.168.31.161:1082'}
 api = FastAPI()
 
 import requests
@@ -13,7 +13,7 @@ async def proxy_get(request: Request, path: str):
                         params=request.query_params,
                         cookies=request.cookies,
                         headers=request.headers,
-                        proxies=proxies)
+                        proxies=proxies,timeout=3)
     return Response(resp.content, resp.status_code, resp.headers)
 
 
@@ -24,7 +24,7 @@ async def proxy_post(request: Request, path: str):
                          cookies=request.cookies,
                          headers=request.headers,
                          json=await request.json(),
-                         proxies=proxies)
+                         proxies=proxies,timeout=3)
     return Response(resp.content, resp.status_code, resp.headers)
 
 
@@ -35,7 +35,7 @@ async def proxy_put(request: Request, path: str):
                         cookies=request.cookies,
                         headers=request.headers,
                         json=await request.json(),
-                        proxies=proxies)
+                        proxies=proxies,timeout=3)
     return Response(resp.content, resp.status_code, resp.headers)
 
 
@@ -46,5 +46,5 @@ async def proxy_delete(request: Request, path: str):
                            cookies=request.cookies,
                            headers=request.headers,
                            json=await request.json(),
-                           proxies=proxies)
+                           proxies=proxies,timeout=3)
     return Response(resp.content, resp.status_code, resp.headers)

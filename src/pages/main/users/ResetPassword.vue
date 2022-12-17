@@ -74,7 +74,7 @@ const againInput = ref(null)
 
 const clickOk = () => {
     if (againInput.value.validate()) {
-        resetPassword(user.id, password.value).then(() => {
+        resetPassword(user.value.id, password.value).then(() => {
             $q.notify({message: '修改密码用户成功', type: 'positive'})
             dlgVisible.value = false
         })

@@ -49,7 +49,7 @@ const chooseComponent = computed(() => {
 
 const hasPermission = () => {
     console.log('==> 菜单权限check')
-    const roles = addRoutesItem.roles
+    const roles = addRoutesItem.value.roles
     console.log('==> 菜单权限check：', addRoutesItem)
     if (_.isEmpty(roles)) {
         return true

@@ -5,54 +5,20 @@
         <q-card class="q-mt-md">
             <q-section>
                 <div class="q-gutter-md row items-start q-pa-md">
-                    <q-input
-                        style="width:350px"
-                        v-model="searchParams.search"
-                        dense
-                        label="关键词: 任务名称"
-                        clearable
-                    ></q-input>
-                    <q-input
-                        type="number"
-                        v-model="searchParams.patient_identifier"
-                        dense
-                        label="患者识别号"
-                        clearable
-                    ></q-input>
-                    <q-input
-                        type="number"
-                        v-model="searchParams.sample_meta_identifier"
-                        dense
-                        label="样本识别号"
-                        clearable
-                    ></q-input>
-                    <q-input
-                        type="number"
-                        v-model="searchParams.sample_identifier"
-                        dense
-                        label="数据识别号"
-                        clearable
-                    ></q-input>
+                    <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 任务名称"
+                        clearable></q-input>
+                    <q-input v-model="searchParams.patient_identifier" dense label="患者识别号" clearable></q-input>
+                    <q-input v-model="searchParams.sample_meta_identifier" dense label="样本识别号" clearable></q-input>
+                    <q-input v-model="searchParams.sample_identifier" dense label="数据识别号" clearable></q-input>
                     <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
                 </div>
 
-                <q-table
-                    :rows="rows"
-                    :columns="columns"
-                    row-key="id"
-                    ref="tableRef"
-                    v-model:pagination="pagination"
-                    @request="onRequest"
-                    rows-per-page-label="每页数量"
-                >
+                <q-table :rows="rows" :columns="columns" row-key="id" ref="tableRef" v-model:pagination="pagination"
+                    @request="onRequest" rows-per-page-label="每页数量">
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-sm">
-                            <q-btn
-                                icon="download"
-                                @click="onEdit(props.row)"
-                                color="primary"
-                                label="下载报告"
-                            />
+                            <q-btn icon="download" @click="onEdit(props.row)" color="primary" label="下载报告" />
+                            <q-btn icon="delete" @click="onEdit(props.row)" color="red" label="删除报告" />
                         </q-td>
                     </template>
                 </q-table>
@@ -68,7 +34,9 @@ import { useApi } from 'src/api/apiBase'
 import { useQTable } from 'src/utils/q-table'
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
-const { apiGet } = useApi()
+const { apiGet, apiDelete } = useApi()
+
+const reportUrl = '/reports'
 const searchParams = ref({
     search: '',
     patient_identifer: '',
@@ -150,7 +118,7 @@ const onRequest = (props) => {
     if (searchParams.value.sample_identifier) {
         params = `${params}&sample_identifier=${searchParams.value.sample_identifer}`
     }
-    apiGet(`/account/${params}`, (res) => {
+    apiGet(`/reports?${params}`, (res) => {
         pagination.value.rowsNumber = res.data.total_count
         pagination.value.page = page
         pagination.value.rowsPerPage = rowsPerPage
@@ -160,4 +128,15 @@ const onRequest = (props) => {
         }
     })
 }
+const confirm = async (patient) => {
+    $q.dialog({
+        title: `确认报告吗?`,
+        cancel: true,
+        persistent: true,
+    }).onOk(() => {
+        apiDelete(`/reports/${patient.id}`, (_) => {
+            refreshPage();
+        });
+    });
+};
 </script>
