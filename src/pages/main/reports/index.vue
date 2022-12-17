@@ -39,17 +39,18 @@
                     rows-per-page-label="每页数量"
                 >
                     <template v-slot:body-cell-actions="props">
-                        <q-td :props="props" class="q-gutter-sm">
+                        <q-td :props="props" class="q-gutter-xs">
                             <a :href="'/igv'+props.row.report_path" download v-if="props.row.status=='创建成功'">
-                                <q-btn icon="download" color="primary" label="下载报告" size="sm" />
+                                <q-btn  color="primary" label="下载报告" size="sm" />
                             </a>
+			    <a>
                             <q-btn
-                                icon="delete"
                                 @click="onDelete(props.row)"
                                 color="red"
                                 label="删除"
                                 size="sm"
                             />
+</a>
                         </q-td>
                     </template>
                 </q-table>
