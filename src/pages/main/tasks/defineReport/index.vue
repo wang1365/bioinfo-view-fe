@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>定制报告</h6>
-        <q-stepper v-model="step" ref="stepper" header-nav color="primary" animated>
+        <q-stepper v-if="viewConfigLoaded" v-model="step" ref="stepper" header-nav color="primary" animated>
             <q-step
                 v-if="tabValid('mutation')"
                 :done="isStepDone('mutation')"
@@ -148,6 +148,7 @@ import HomologousRecombinationDefectVue from '../report/homologous-recombination
 import { api } from 'src/boot/axios'
 
 const { apiPost } = useApi()
+const viewConfigLoaded = ref(false)
 const creating=ref(false)
 const reportComment = ref('')
 const step = ref('mutation')
@@ -299,10 +300,12 @@ const loadViewConfig = () => {
         }
         try {
             data = JSON.parse(res)
+            viewConfigLoaded.value=true
         } catch (error) {
             // 尝试修复 json 的额外 ","
             try {
                 data = JSON.parse(res.replace(/,[ \t\r\n]+}/g, '}').replace(/,[ \t\r\n]+\]/g, ']'))
+                viewConfigLoaded.value=true
             } catch (error) {
                 errorMessage(`module.json 文件内容非正确 json 格式`)
             }
@@ -316,6 +319,7 @@ const loadViewConfig = () => {
             }
             viewConfig.value = config
         }
+        viewConfigLoaded.value=true
     })
 }
 </script>
