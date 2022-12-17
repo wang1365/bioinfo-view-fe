@@ -31,10 +31,10 @@ const init = () => {
         let newDate = new Date(nowMinutes - i * 10 * 1000);
         data.push(
             newDate.getHours() +
-                ":" +
-                newDate.getMinutes() +
-                ":" +
-                newDate.getSeconds()
+            ":" +
+            newDate.getMinutes() +
+            ":" +
+            newDate.getSeconds()
         );
     }
     console.log(data);
@@ -95,6 +95,7 @@ const init = () => {
     chart.value.setOption(option);
 };
 const onResize = () => {
-    chart.value.resize();
+    if (chart.value)
+        chart.value.resize();
 };
 </script>
