@@ -2,13 +2,8 @@
     <q-card class="q-mt-md">
         <q-section>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
-                <q-input
-                    style="width:350px"
-                    v-model="searchParams.search"
-                    dense
-                    label="关键词: 采样部位, 样本类型, 患者识别号, 样本识别号"
-                    clearable
-                >
+                <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 采样部位, 样本类型, 患者识别号, 样本识别号"
+                    clearable>
                 </q-input>
 
                 <q-input clearable dense label="起始送检日期(YYYY-MM-DD)" v-model="searchParams.test_date_start">
@@ -63,14 +58,8 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-select
-                    style="width:100px"
-                    clearable
-                    dense
-                    v-model="searchParams.is_panel"
-                    :options="['是','否']"
-                    label="肿瘤样本"
-                />
+                <q-select style="width:100px" clearable dense v-model="searchParams.is_panel" :options="['是', '否']"
+                    label="肿瘤样本" />
                 <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
             </div>
         </q-section>
@@ -84,14 +73,12 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span
-                            style="
-                                width: 0;
-                                height: 0;
-                                overflow: hidden;
-                                display: inline-block;
-                            "
-                        >
+                        <span style="
+                                    width: 0;
+                                    height: 0;
+                                    overflow: hidden;
+                                    display: inline-block;
+                                ">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -107,11 +94,11 @@
                     <thead>
                         <tr>
                             <!-- <td >
-                                <q-checkbox
-                                    v-model="selected"
-                                    color="negative"
-                                />
-                            </td> -->
+                                    <q-checkbox
+                                        v-model="selected"
+                                        color="negative"
+                                    />
+                                </td> -->
                             <td>ID</td>
                             <td>采样日期</td>
                             <td>送测日期</td>
@@ -124,18 +111,18 @@
                             <td>样本识别号</td>
                             <!-- <td>样本所有者</td> -->
                             <!-- <td>创建时间</td>
-                            <td>更新时间</td> -->
+                                <td>更新时间</td> -->
                             <td>操作</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
                             <!-- <td class="q-pa-md text-center">
-                                <q-checkbox
-                                    v-model="item.selected"
-                                    color="negative"
-                                />
-                            </td> -->
+                                    <q-checkbox
+                                        v-model="item.selected"
+                                        color="negative"
+                                    />
+                                </td> -->
                             <td>
                                 {{ item.id }}
                             </td>
@@ -158,7 +145,7 @@
                             <td>{{ item.identifier }}</td>
                             <!-- <td>{{ item.user_id }}</td> -->
                             <!-- <td>{{ item.create_time }}</td>
-                            <td>{{ item.modify_time }}</td> -->
+                                <td>{{ item.modify_time }}</td> -->
                             <td class="q-gutter-xs">
                                 <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
@@ -177,33 +164,25 @@
         </q-section>
     </q-card>
     <q-dialog persistent v-model="showSampleNew">
-        <SampleNew
-            @refresh="
+        <SampleNew @refresh="
             refreshPage();
-            showSampleNew = false;
-        "
-        />
+        showSampleNew = false;
+                    " />
     </q-dialog>
     <q-dialog v-model="showSampleInfo">
         <SampleInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showSampleEdit">
-        <SampleEdit
-            :id="editId"
-            @refresh="
+        <SampleEdit :id="editId" @refresh="
             refreshPage();
-            showSampleEdit = false;
-        "
-        />
+        showSampleEdit = false;
+                    " />
     </q-dialog>
     <q-dialog persistent v-model="showLinkPatient">
-        <PatientList
-            :linkId="linkId"
-            @refresh="
+        <PatientList :linkId="linkId" @refresh="
             linkPatient($event);
 
-        "
-        />
+                    " />
     </q-dialog>
 </template>
 <script setup>
@@ -298,9 +277,9 @@ const loadPage = async () => {
     if (searchParams.value.test_date_end) {
         andFields.test_date__lte = searchParams.value.test_date_end
     }
-    if (searchParams.value.is_panel==='是') {
+    if (searchParams.value.is_panel === '是') {
         andFields.is_panel = true
-    } if (searchParams.value.is_panel==='否') {
+    } if (searchParams.value.is_panel === '否') {
         andFields.is_panel = false
     }
 
@@ -337,7 +316,7 @@ const downloadTemplate = () => {
 };
 const fileSelected = (event) => {
     let data = new FormData();
-    data.append(file, event.target.files[0]);
+    data.append('file', event.target.files[0]);
     api.post("/sample/samplemeta/upload", data)
         .then((resp) => {
             $q.notify({

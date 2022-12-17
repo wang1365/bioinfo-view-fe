@@ -25,11 +25,11 @@
                         <q-icon name="file_upload"></q-icon>
                         批量上传
                         <span style="
-                                width: 0;
-                                height: 0;
-                                overflow: hidden;
-                                display: inline-block;
-                            ">
+                                    width: 0;
+                                    height: 0;
+                                    overflow: hidden;
+                                    display: inline-block;
+                                ">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -45,23 +45,23 @@
                     <thead>
                         <tr>
                             <!-- <td >
-                                <q-checkbox
-                                    v-model="selected"
-                                    color="negative"
-                                />
-                            </td> -->
+                                    <q-checkbox
+                                        v-model="selected"
+                                        color="negative"
+                                    />
+                                </td> -->
 
                             <td>ID</td>
                             <td>项目编码</td>
                             <td>文库编号</td>
                             <!-- <td>捕获试剂盒</td>
-                            <td>核酸打断方式</td>
-                            <td>建库input</td>
-                            <td>index 类型</td>
-                            <td>index 编号</td>
-                            <td>杂交 input</td>
-                            <td>风险上机</td>
-                            <td>核酸降解等级</td> -->
+                                <td>核酸打断方式</td>
+                                <td>建库input</td>
+                                <td>index 类型</td>
+                                <td>index 编号</td>
+                                <td>杂交 input</td>
+                                <td>风险上机</td>
+                                <td>核酸降解等级</td> -->
                             <!-- <td>样本元信息 ID</td> -->
                             <td>样本识别号</td>
                             <td>数据识别号</td>
@@ -70,19 +70,19 @@
                             <td>R1 数据名称</td>
                             <td>R2 数据名称</td>
                             <!-- <td>样本所有者</td>
-                            <td>创建时间</td>
-                            <td>更新时间</td> -->
+                                <td>创建时间</td>
+                                <td>更新时间</td> -->
                             <td>操作</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
                             <!-- <td class="q-pa-md text-center">
-                                <q-checkbox
-                                    v-model="item.selected"
-                                    color="negative"
-                                />
-                            </td> -->
+                                    <q-checkbox
+                                        v-model="item.selected"
+                                        color="negative"
+                                    />
+                                </td> -->
 
                             <td>
                                 {{ item.id }}
@@ -94,22 +94,22 @@
                                 {{ item.library_number }}
                             </td>
                             <!-- <td >{{ item.reagent_box }}</td>
-                            <td >
-                                {{ item.nucleic_break_type }}
-                            </td>
-                            <td >
-                                {{ item.library_input }}
-                            </td>
-                            <td >{{ item.index_type }}</td>
-                            <td >{{ item.index_number }}</td>
-                            <td >{{ item.hybrid_input }}</td>
-                            <td >{{ item.risk }}</td>
-                            <td >
-                                {{ item.nucleic_level }}
-                            </td> -->
+                                <td >
+                                    {{ item.nucleic_break_type }}
+                                </td>
+                                <td >
+                                    {{ item.library_input }}
+                                </td>
+                                <td >{{ item.index_type }}</td>
+                                <td >{{ item.index_number }}</td>
+                                <td >{{ item.hybrid_input }}</td>
+                                <td >{{ item.risk }}</td>
+                                <td >
+                                    {{ item.nucleic_level }}
+                                </td> -->
                             <!-- <td>
-                                {{ item.sample_meta_id }}
-                            </td> -->
+                                    {{ item.sample_meta_id }}
+                                </td> -->
                             <td>
                                 {{ item.sample_identifier }}
                             </td>
@@ -119,8 +119,8 @@
                             <td>{{ item.fastq1_path }}</td>
                             <td>{{ item.fastq2_path }}</td>
                             <!-- <td>{{ item.user_id }}</td>
-                            <td >{{ item.create_time }}</td>
-                            <td >{{ item.modify_time }}</td> -->
+                                <td >{{ item.create_time }}</td>
+                                <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-xs">
                                 <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
@@ -139,23 +139,23 @@
     </q-card>
     <q-dialog persistent v-model="showDataNew">
         <DataNew @refresh="
-    refreshPage();
-showDataNew = false;
-        " />
+            refreshPage();
+        showDataNew = false;
+                    " />
     </q-dialog>
     <q-dialog v-model="showDataInfo">
         <DataInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showDataEdit">
         <DataEdit :id="editId" @refresh="
-    refreshPage();
-showDataEdit = false;
-        " />
+            refreshPage();
+        showDataEdit = false;
+                    " />
     </q-dialog>
     <q-dialog persistent v-model="showLinkSample">
         <SampleList :linkId="linkId" @itemSelected="
-    linkSample($event);
-        " />
+            linkSample($event);
+                    " />
     </q-dialog>
 </template>
 <script setup>
@@ -284,7 +284,7 @@ const downloadTemplate = () => {
 };
 const fileSelected = (event) => {
     let data = new FormData();
-    data.append(file, event.target.files[0]);
+    data.append('file', event.target.files[0]);
     api.post("/sample/samples/upload", data)
         .then((resp) => {
             $q.notify({
