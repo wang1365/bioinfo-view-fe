@@ -154,11 +154,12 @@ const createReport = () => {
     }
     let postData = {
         comment: reportComment.value,
-        data: stepData.value,
+        query: JSON.stringify(stepData.value),
+        task_id:route.params.id
     }
     console.log(JSON.stringify(postData))
     apiPost(
-        '/reports',
+        '/report/report/',
         (res) => {
             console.log(res)
             infoMessage('报告创建完成.')

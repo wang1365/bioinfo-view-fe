@@ -5,20 +5,52 @@
         <q-card class="q-mt-md">
             <q-section>
                 <div class="q-gutter-md row items-start q-pa-md">
-                    <q-input style="width:350px" v-model="searchParams.search" dense label="关键词: 任务名称"
-                        clearable></q-input>
-                    <q-input v-model="searchParams.patient_identifier" dense label="患者识别号" clearable></q-input>
-                    <q-input v-model="searchParams.sample_meta_identifier" dense label="样本识别号" clearable></q-input>
+                    <q-input
+                        style="width:350px"
+                        v-model="searchParams.search"
+                        dense
+                        label="关键词: 任务名称"
+                        clearable
+                    ></q-input>
+                    <q-input
+                        v-model="searchParams.patient_identifier"
+                        dense
+                        label="患者识别号"
+                        clearable
+                    ></q-input>
+                    <q-input
+                        v-model="searchParams.sample_meta_identifier"
+                        dense
+                        label="样本识别号"
+                        clearable
+                    ></q-input>
                     <q-input v-model="searchParams.sample_identifier" dense label="数据识别号" clearable></q-input>
                     <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
                 </div>
 
-                <q-table :rows="rows" :columns="columns" row-key="id" ref="tableRef" v-model:pagination="pagination"
-                    @request="onRequest" rows-per-page-label="每页数量">
+                <q-table
+                    :rows="rows"
+                    :columns="columns"
+                    row-key="id"
+                    ref="tableRef"
+                    v-model:pagination="pagination"
+                    @request="onRequest"
+                    rows-per-page-label="每页数量"
+                >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-sm">
-                            <q-btn icon="download" @click="onEdit(props.row)" color="primary" label="下载报告" />
-                            <q-btn icon="delete" @click="onEdit(props.row)" color="red" label="删除报告" />
+                            <q-btn
+                                icon="download"
+                                @click="onDownload(props.row)"
+                                color="primary"
+                                label="下载报告"
+                            />
+                            <q-btn
+                                icon="delete"
+                                @click="onDelete(props.row)"
+                                color="red"
+                                label="删除报告"
+                            />
                         </q-td>
                     </template>
                 </q-table>
@@ -32,16 +64,18 @@ import { ref, onMounted } from 'vue'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import { useApi } from 'src/api/apiBase'
 import { useQTable } from 'src/utils/q-table'
+import { useQuasar } from 'quasar'
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
-const { apiGet, apiDelete } = useApi()
+const { apiGet, apiDelete, apiPost } = useApi()
 
+const $q = useQuasar()
 const reportUrl = '/reports'
 const searchParams = ref({
     search: '',
-    patient_identifer: '',
-    sample_meta_identifer: '',
-    sample_identifer: '',
+    patient_identifier: '',
+    sample_meta_identifier: '',
+    sample_identifier: '',
 })
 const columns = ref([
     {
@@ -55,9 +89,9 @@ const columns = ref([
     {
         name: 'task_id',
 
-        label: '任务 ID',
+        label: '任务',
         align: 'left',
-        field: (row) => row.task_id,
+        field: (row) => row.task.name,
         format: (val) => `${val}`,
     },
     {
@@ -65,7 +99,13 @@ const columns = ref([
         required: true,
         label: '患者识别号',
         align: 'left',
-        field: (row) => row.patient_id,
+        field: (row) => {
+            let result = ''
+            for (let item of row.task.samples) {
+                if (item.sample_meta && item.sample_meta.patient) result += item.sample_meta.patient.identifier + ' '
+            }
+            return result
+        },
         format: (val) => `${val}`,
     },
     {
@@ -73,7 +113,27 @@ const columns = ref([
         required: true,
         label: '数据识别号',
         align: 'left',
-        field: (row) => row.data_id,
+        field: (row) => {
+            let result = ''
+            for (let item of row.task.samples) {
+                result += item.identifier + ' '
+            }
+            return result
+        },
+        format: (val) => `${val}`,
+    },
+    {
+        name: 'data_id',
+        required: true,
+        label: '样本识别号',
+        align: 'left',
+        field: (row) => {
+            let result = ''
+            for (let item of row.task.samples) {
+                if (item.sample_meta) result += item.sample_meta.identifier + ' '
+            }
+            return result
+        },
         format: (val) => `${val}`,
     },
     {
@@ -85,16 +145,8 @@ const columns = ref([
         format: (val) => `${val}`,
     },
     {
-        name: 'create_time',
-        required: true,
-        label: '创建时间',
-        align: 'left',
-        field: (row) => row.create_time,
-        format: (val) => `${val}`,
-    },
-    {
         name: 'actions',
-        label: 'Actions',
+        label: '操作',
         required: false,
     },
 ])
@@ -110,33 +162,34 @@ const onRequest = (props) => {
         params = `${params}&search=${searchParams.value.search}`
     }
     if (searchParams.value.patient_identifier) {
-        params = `${params}&patient_identifier=${searchParams.value.patient_identifer}`
+        params = `${params}&patient_identifier=${searchParams.value.patient_identifier}`
     }
     if (searchParams.value.sample_meta_identifier) {
-        params = `${params}&sample_meta_identifier=${searchParams.value.sample_meta_identifer}`
+        params = `${params}&sample_meta_identifier=${searchParams.value.sample_meta_identifier}`
     }
     if (searchParams.value.sample_identifier) {
-        params = `${params}&sample_identifier=${searchParams.value.sample_identifer}`
+        params = `${params}&sample_identifier=${searchParams.value.sample_identifier}`
     }
-    apiGet(`/reports?${params}`, (res) => {
-        pagination.value.rowsNumber = res.data.total_count
+    apiGet(`/report/report/${params}`, (res) => {
+        pagination.value.rowsNumber = res.data.count
         pagination.value.page = page
         pagination.value.rowsPerPage = rowsPerPage
-        rows.value = res.data.item_list
+        rows.value = res.data.results
         for (let item of rows.value) {
             item.actions = true
         }
     })
 }
-const confirm = async (patient) => {
+const onDownload = (report) => {}
+const onDelete = (report) => {
     $q.dialog({
         title: `确认报告吗?`,
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/reports/${patient.id}`, (_) => {
-            refreshPage();
-        });
-    });
-};
+        apiDelete(`/report/report/${report.id}/`, (_) => {
+            refreshPage()
+        })
+    })
+}
 </script>
