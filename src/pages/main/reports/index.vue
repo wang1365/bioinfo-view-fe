@@ -44,12 +44,14 @@
                                 @click="onDownload(props.row)"
                                 color="primary"
                                 label="下载报告"
+                                size='sm'
                             />
                             <q-btn
                                 icon="delete"
                                 @click="onDelete(props.row)"
                                 color="red"
                                 label="删除报告"
+                                size='sm'
                             />
                         </q-td>
                     </template>
