@@ -82,7 +82,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.mutationRatio"
-                    label="肿瘤突变频率 >="
+                    label="肿瘤突变频数 >="
                     clearable
                     type="number"
                     stack-label

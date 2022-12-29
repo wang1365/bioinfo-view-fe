@@ -1,17 +1,16 @@
 <template>
     <div>
-        <div class="row justify-between">
-            <div class="col-2 column q-pr-sm">
-                <div class="col">
+        <q-splitter v-model="splitterModel" unit="px" style="height: 760px">
+            <template v-slot:before>
+                <div class="column" style="width:90%">
                     <q-input
                         v-model="searchParams.gene"
                         label="基因"
                         clearable
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-input
                         v-model="searchParams.tumorDepth"
                         label="肿瘤深度 >"
@@ -19,9 +18,8 @@
                         type="number"
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-input
                         v-model="searchParams.compareDepth"
                         label="对照深度 >"
@@ -29,9 +27,8 @@
                         type="number"
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-input
                         v-model="searchParams.tumorRatio"
                         label="肿瘤频率 >"
@@ -39,9 +36,8 @@
                         type="number"
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-input
                         v-model="searchParams.compareRatio"
                         label="对照频率 >"
@@ -49,10 +45,8 @@
                         type="number"
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-
-                <div class="col">
                     <q-select
                         v-model="searchParams.mutationType"
                         clearable
@@ -62,9 +56,9 @@
                         label="突变类型"
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
+
                     <q-select
                         v-model="searchParams.mutationPosition"
                         clearable
@@ -74,9 +68,8 @@
                         label="突变位置"
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-select
                         clearable
                         hide-dropdown-icon
@@ -86,9 +79,8 @@
                         label-color="primary"
                         :options="props.options.mutationMeaning"
                         label="突变意义"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-select
                         clearable
                         hide-dropdown-icon
@@ -98,9 +90,8 @@
                         label-color="primary"
                         :options="props.options.mutationRisk"
                         label="突变危险"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-input
                         v-model="searchParams.humanRatio"
                         label="人群频率 <"
@@ -109,9 +100,8 @@
                         type="number"
                         stack-label
                         label-color="primary"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-select
                         clearable
                         multiple
@@ -121,29 +111,27 @@
                         label-color="primary"
                         :options="['T', 'D', '.']"
                         label="SIFT_pred"
+                        class="full-width"
                     />
-                </div>
-                <div class="col">
                     <q-checkbox
                         left-label
                         v-model="searchParams.drug"
                         label="是否关联药物"
                         color="primary"
                     />
+                    <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
+                    <div class="q-gutter-md text-center q-py-sm">
+                        <q-btn color="primary" label="确定" icon="search" @click="search" />
+                        <q-btn
+                            color="primary"
+                            label="重置"
+                            icon="settings_backup_restore"
+                            @click="reset"
+                        />
+                    </div>
                 </div>
-                <div class="col text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
-                <div class="q-gutter-md text-center q-py-sm">
-                    <q-btn color="primary" label="确定" icon="search" @click="search" />
-                    <q-btn
-                        color="primary"
-                        label="重置"
-                        icon="settings_backup_restore"
-                        @click="reset"
-                    />
-                </div>
-            </div>
-
-            <div class="col-10">
+            </template>
+            <template v-slot:after>
                 <a-table
                     size="small"
                     bordered
@@ -178,11 +166,17 @@
                     <!--                        </q-btn>-->
                     <!--                    </template>-->
                 </a-table>
-            </div>
+            </template>
+        </q-splitter>
+        <div class="row justify-between">
+            <div class="col-2 column q-pr-sm"></div>
+
+            <div class="col-10"></div>
         </div>
     </div>
 
-    <div class="q-my-xs" v-if="!showColumn">
+
+    <div class="q-my-sm" v-if="!showColumn">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
                 <PieChartVue :data="filteredRows" />
@@ -233,7 +227,7 @@ import MutationInfo from './MutationInfo'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
-
+const splitterModel = ref(250)
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
     intro: {

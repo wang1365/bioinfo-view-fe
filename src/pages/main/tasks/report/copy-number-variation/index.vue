@@ -158,6 +158,7 @@ import { uid } from 'quasar'
 import * as echarts from 'echarts'
 
 import { pieOption, columns } from './index'
+import { errorMessage } from 'src/utils/notify'
 
 // hg19基因组数据，/data/bioinfo/database_dir/hg19/hg19_genome/hg19.length
 // hg38基因组数据，/data/bioinfo/database_dir/hg38/hg38_genome/hg38.length
@@ -233,12 +234,20 @@ const resetPie = () => {
 
 const refreshPie = () => {
     const result1 = []
-    // 扩增
-    const extra_variant = toMap(
-        variants.value.filter((t) => t.ratio > pieParams.value.extra),
-        (t) => t.name
-    )
-    chrs.value.forEach((t, idx) => {
+    if(pieParams.value.extra<2 || !pieParams.value.extra){
+        errorMessage('拷贝数扩增阈值 必须大于 2')
+        return
+    }
+     if(pieParams.value.missing>2 ||pieParams.value.missing<0  || !pieParams.value.extra){
+         errorMessage('拷贝数缺失阈值范围是 0~2')
+         return
+     }
+     // 扩增
+     const extra_variant = toMap(
+         variants.value.filter((t) => t.ratio > pieParams.value.extra),
+         (t) => t.name
+     )
+     chrs.value.forEach((t, idx) => {
         const variant = extra_variant[t.name]
         if (variant) {
             result1.push({ name: `${t.name}`, value: variant.start })
