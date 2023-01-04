@@ -24,7 +24,7 @@
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
-                    v-if="column.title === 'actions'"
+                    v-if="column.title === 'Igv'"
                     label="查看"
                     color="primary"
                     size="sm"
@@ -143,7 +143,7 @@ const loadData = () => {
     const width = [30, 30, 60, 60, 60, 60, 200, 50, 50]
     columns.value = []
     header.value.forEach((item, index) => {
-        if (item == 'actions') {
+        if (item == 'Igv') {
             columns.value.push({
                 title: item,
                 dataIndex: index,

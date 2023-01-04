@@ -192,7 +192,8 @@ const loadSingleData = () => {
     readTaskFile(route.params.id, qtFile).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
         let header = getCsvHeader(res)
-        header.push('actions')
+        header.splice(header.length-1,1)
+        header.push('Igv')
         singleData.value.qt.header = header
         singleData.value.qt.rows = lines
     })
@@ -201,7 +202,8 @@ const loadSingleData = () => {
         readTaskFile(route.params.id, qnFile).then((res) => {
             const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
             let header = getCsvHeader(res)
-            header.push('actions')
+         header.splice(header.length-1,1)
+   header.push('Igv')
             singleData.value.qn.header = header
             singleData.value.qn.rows = lines
         })
@@ -214,7 +216,8 @@ const loadNormalData = () => {
     readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
         let header = getCsvHeader(res)
-        header.push('actions')
+        header.splice(header.length-1,1)
+header.push('Igv')
         normalData.value.header = header
         normalData.value.rows = lines
     })

@@ -26,7 +26,7 @@
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
-                    v-if="column.title === 'actions'"
+                    v-if="column.title === 'Igv'"
                     label="查看"
                     color="primary"
                     size="sm"
@@ -62,7 +62,7 @@
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
-                    v-if="column.title === 'actions'"
+                    v-if="column.title === 'Igv'"
                     label="查看"
                     color="primary"
                     size="sm"
@@ -247,7 +247,7 @@ const loadData = () => {
     let width = [30, 30, 60, 60, 60, 60, 60, 200, 60, 50]
     columns1.value = []
     qtHeader.value.forEach((item, index) => {
-        if (item == 'actions') {
+        if (item == 'Igv') {
             columns1.value.push({
                 title: item,
                 dataIndex: index,
@@ -282,7 +282,7 @@ const loadData = () => {
         columns2.value = []
         width = [30, 30, 60, 60, 60, 60, 60, 60, 120, 50]
         qnHeader.value.forEach((item, index) => {
-            if (item == 'actions') {
+            if (item == 'Igv') {
                 columns2.value.push({
                     title: item,
                     dataIndex: index,

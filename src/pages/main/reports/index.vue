@@ -35,17 +35,19 @@
                     ref="tableRef"
                     v-model:pagination="pagination"
                     @request="onRequest"
+	          	:rows-per-page-options="[5,15,35,50]"
                     rows-per-page-label="每页数量"
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-sm">
+				<a :href="'/igv'+props.row.report_path" download>
                             <q-btn
                                 icon="download"
-                                @click="onDownload(props.row)"
                                 color="primary"
                                 label="下载报告"
                                 size='sm'
                             />
+</a>
                             <q-btn
                                 icon="delete"
                                 @click="onDelete(props.row)"
