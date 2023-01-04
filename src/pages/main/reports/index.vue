@@ -35,25 +35,20 @@
                     ref="tableRef"
                     v-model:pagination="pagination"
                     @request="onRequest"
-	          	:rows-per-page-options="[5,15,35,50]"
+                    :rows-per-page-options="[5,15,35,50]"
                     rows-per-page-label="每页数量"
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-sm">
-				<a :href="'/igv'+props.row.report_path" download>
-                            <q-btn
-                                icon="download"
-                                color="primary"
-                                label="下载报告"
-                                size='sm'
-                            />
-</a>
+                            <a :href="'/igv'+props.row.report_path" download>
+                                <q-btn icon="download" color="primary" label="下载报告" size="sm" />
+                            </a>
                             <q-btn
                                 icon="delete"
                                 @click="onDelete(props.row)"
                                 color="red"
                                 label="删除报告"
-                                size='sm'
+                                size="sm"
                             />
                         </q-td>
                     </template>
@@ -95,7 +90,7 @@ const columns = ref([
 
         label: '任务',
         align: 'left',
-        field: (row) => row.task.name,
+        field: (row) => row.task?.name,
         format: (val) => `${val}`,
     },
     {
@@ -105,7 +100,8 @@ const columns = ref([
         align: 'left',
         field: (row) => {
             let result = ''
-            for (let item of row.task.samples) {
+            if (!row.task || !row.task.samples) return result
+            for (let item of row.task?.samples) {
                 if (item.sample_meta && item.sample_meta.patient) result += item.sample_meta.patient.identifier + ' '
             }
             return result
@@ -119,7 +115,8 @@ const columns = ref([
         align: 'left',
         field: (row) => {
             let result = ''
-            for (let item of row.task.samples) {
+            if (!row.task || !row.task.samples) return result
+            for (let item of row.task?.samples) {
                 result += item.identifier + ' '
             }
             return result
@@ -133,7 +130,8 @@ const columns = ref([
         align: 'left',
         field: (row) => {
             let result = ''
-            for (let item of row.task.samples) {
+            if (!row.task || !row.task.samples) return result
+            for (let item of row.task?.samples) {
                 if (item.sample_meta) result += item.sample_meta.identifier + ' '
             }
             return result
@@ -146,6 +144,14 @@ const columns = ref([
         label: '备注',
         align: 'left',
         field: (row) => row.comment,
+        format: (val) => `${val}`,
+    },
+    {
+        name: 'comment',
+        required: true,
+        label: '状态',
+        align: 'left',
+        field: (row) => row.status,
         format: (val) => `${val}`,
     },
     {

@@ -108,7 +108,11 @@
                 <div class="q-py-md text-h6">填写信息</div>
                 <q-input v-model="reportComment" label="报告备注" />
                 <div class="text-center q-pa-md q-gutter-sm">
-                    <q-btn label="确认" color="primary" @click="createReport()" />
+                    <q-btn  :loading="creating" label="确认" color="primary" @click="createReport()">
+                        <!-- <template v-slot:loading>
+                             报告创建中...
+                             </template> -->
+                    </q-btn>
                     <q-btn label="清除数据" color="red" @click="reset()" />
 
                     <q-btn label="去查看报告" color="info" @click="gotoReports()" />
@@ -144,7 +148,7 @@ import HomologousRecombinationDefectVue from '../report/homologous-recombination
 import { api } from 'src/boot/axios'
 
 const { apiPost } = useApi()
-
+const creating=ref(false)
 const reportComment = ref('')
 const step = ref('mutation')
 const stepData = ref({})
@@ -212,6 +216,7 @@ const createReport = () => {
     }
     console.log(JSON.stringify(postData))
     postData.query = postData.query.replaceAll('●', '.')
+    creating.value=true
     apiPost(
         '/report/report/',
         (res) => {
@@ -221,6 +226,7 @@ const createReport = () => {
                 infoMessage(res.data.status)
             }
             console.log(res)
+            creating.value=false
         },
         postData
     )
