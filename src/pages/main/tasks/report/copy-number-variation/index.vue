@@ -34,7 +34,7 @@
                     style="min-width: 600px;max-width:1000px; height: 600px"
                 ></div>
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 column justify-center">
-                    <div class="q-gutter-sm q-pb-md full-width">
+                    <div class="q-gutter-sm q-pb-sm">
                         <div>
                             <q-input
                                 v-model="pieParams.extra"
@@ -54,7 +54,7 @@
                                 stack-label
                             />
                         </div>
-                        <div class="row q-gutter-xs">
+                        <div class="q-gutter-xs">
                             <q-btn
                                 class="col"
                                 color="primary"
@@ -69,21 +69,31 @@
                                 label="复位"
                                 @click="resetPie"
                             />
+                            <q-btn
+                                class="col"
+                                color="primary"
+                                size="small"
+                                :label="showPieTable ? '隐藏详情' : '显示详情'"
+                                @click="showPieTable = !showPieTable"
+                            />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <a-table
-            class="col-5"
-            size="middle"
-            rowKey="lineNumber"
-            bordered
-            :data-source="variantRows"
-            :columns="variantColumns"
-            @change="handleChange"
-            :sticky="true"
-        ></a-table>
+
+        <div v-if="showPieTable">
+            <a-table
+                class="col-5"
+                size="middle"
+                rowKey="lineNumber"
+                bordered
+                :data-source="variantRows"
+                :columns="variantColumns"
+                @change="handleChange"
+                :sticky="true"
+            ></a-table>
+        </div>
 
         <div v-if="props.viewConfig.showCNVtable">
             <q-separator />
@@ -133,8 +143,6 @@
             </div>
         </div>
 
-
-
         <a-table
             class="col-5"
             size="middle"
@@ -146,7 +154,6 @@
             :sticky="true"
             :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
         ></a-table>
-
     </div>
 
     <q-dialog v-model="dlgVisible">
@@ -265,6 +272,7 @@ const searchParams = ref({
 
 const variants = ref([])
 const chrs = ref([])
+const showPieTable = ref(false)
 
 const resetPie = () => {
     pieParams.value = {
