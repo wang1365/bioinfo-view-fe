@@ -74,6 +74,17 @@
                 </div>
             </div>
         </div>
+        <a-table
+            class="col-5"
+            size="middle"
+            rowKey="lineNumber"
+            bordered
+            :data-source="variantRows"
+            :columns="variantColumns"
+            @change="handleChange"
+            :sticky="true"
+        ></a-table>
+
         <div v-if="props.viewConfig.showCNVtable">
             <q-separator />
             <div class="row q-gutter-sm items-start q-py-md">
@@ -122,9 +133,11 @@
             </div>
         </div>
 
+
+
         <a-table
             class="col-5"
-            size="small"
+            size="middle"
             rowKey="lineNumber"
             bordered
             :loading="loading"
@@ -133,6 +146,7 @@
             :sticky="true"
             :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
         ></a-table>
+
     </div>
 
     <q-dialog v-model="dlgVisible">
@@ -153,7 +167,7 @@ import { useRoute } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
 import { getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { readSystemFile } from 'src/api/report'
-import { toMap } from 'src/utils/collection'
+import { toMap, partition } from 'src/utils/collection'
 import { uid } from 'quasar'
 import * as echarts from 'echarts'
 
@@ -188,6 +202,33 @@ const props = defineProps({
         },
     },
 })
+
+const filteredInfo = ref();
+const variantColumns =  computed(() => {
+    const filtered = filteredInfo.value || {};
+    const chrs = Array(22).fill(0).map((_, i) => i+1).concat(['X', 'Y'])
+    return [
+        {   key: 'name', title: 'name', dataIndex: 'name', align: 'center', width: 50,
+            filters: chrs.map(ch => {
+                return {
+                    text: 'chr' + ch,
+                    value: 'chr' + ch,
+                }
+            }),
+            filteredValue: filtered.name || null,
+            onFilter: (value, record) => record.name === value,
+        },
+        {key: 'start', title: 'start', dataIndex: 'start', align: 'center', width: 80},
+        {key: 'end', title: 'end', dataIndex: 'end', align: 'center', width: 80},
+        {key: 'ratio', title: 'ratio', dataIndex: 'ratio', align: 'center', width: 50},
+    ]
+})
+
+const handleChange = (pagination, filters) => {
+    console.log('============Various parameters', pagination, filters);
+    filteredInfo.value = filters;
+};
+
 const emit = defineEmits(['stickDone'])
 const stickFilter = () => {
     let data = {
@@ -214,6 +255,7 @@ const pieParams = ref({
 const rows = ref([])
 const filteredRows = ref([])
 const loading = ref(false)
+const variantRows = ref([])
 const searchParams = ref({
     gene: '',
     type: '', // DUP/DEL
@@ -234,11 +276,11 @@ const resetPie = () => {
 
 const refreshPie = () => {
     const result1 = []
-    if(pieParams.value.extra<2 || !pieParams.value.extra){
+    if(pieParams.value.extra < 2 || !pieParams.value.extra){
         errorMessage('拷贝数扩增阈值 必须大于 2')
         return
     }
-     if(pieParams.value.missing>2 ||pieParams.value.missing<0  || !pieParams.value.extra){
+     if(pieParams.value.missing > 2 ||pieParams.value.missing < 0  || !pieParams.value.extra){
          errorMessage('拷贝数缺失阈值范围是 0~2')
          return
      }
@@ -247,22 +289,32 @@ const refreshPie = () => {
          variants.value.filter((t) => t.ratio > pieParams.value.extra),
          (t) => t.name
      )
+    console.log('>>>>>>>>>>>>>扩增', variants.value, extra_variant)
      chrs.value.forEach((t, idx) => {
-        const variant = extra_variant[t.name]
-        if (variant) {
-            result1.push({ name: `${t.name}`, value: variant.start })
-            result1.push({
-                name: `${t.name}`,
-                value: variant.end - variant.start,
-                start: variant.start,
-                end: variant.end,
-                ratio: variant.ratio,
-            })
-            result1.push({ name: `${t.name}`, value: t.value - variant.end })
-        } else {
-            result1.push(t)
-        }
+         const variant = extra_variant[t.name]
+         const p = partition(t, variant)
+         result1.push(...p)
+        // if (variant && variant.length > 0) {
+        //     variant.forEach( (vi, i) => {
+        //         if (i === 0) {
+        //             result1.push({ name: `${t.name}`, value: vi.start })
+        //         }
+        //         result1.push({
+        //             name: `${t.name}`,
+        //             value: vi.end - vi.start,
+        //             start: vi.start,
+        //             end: vi.end,
+        //             ratio: vi.ratio,
+        //         })
+        //
+        //         result1.push({ name: `${t.name}`, value: t.value - vi.end })
+        //     })
+        // } else {
+        //     result1.push(t)
+        // }
     })
+    console.log('<<<<<<<<<<<<<<result1', result1)
+
     pieOption.series[1].data = result1
 
     const result2 = []
@@ -273,20 +325,23 @@ const refreshPie = () => {
     )
     chrs.value.forEach((t, idx) => {
         const variant = missing_variant[t.name]
-        if (variant) {
-            result2.push({ name: `${t.name}`, value: variant.start })
-            result2.push({
-                name: `${t.name}`,
-                value: variant.end - variant.start,
-                start: variant.start,
-                end: variant.end,
-                ratio: variant.ratio,
-            })
-            result2.push({ name: `${t.name}`, value: t.value - variant.end })
-        } else {
-            result2.push(t)
-        }
+        const p = partition(t, variant)
+        result2.push(...p)
+        // if (variant) {
+        //     result2.push({ name: `${t.name}`, value: variant.start })
+        //     result2.push({
+        //         name: `${t.name}`,
+        //         value: variant.end - variant.start,
+        //         start: variant.start,
+        //         end: variant.end,
+        //         ratio: variant.ratio,
+        //     })
+        //     result2.push({ name: `${t.name}`, value: t.value - variant.end })
+        // } else {
+        //     result2.push(t)
+        // }
     })
+    console.log('<<<<<<<<<<<<<<result2', result1)
     pieOption.series[2].data = result2
 
     pie.value.setOption(pieOption)
@@ -301,8 +356,9 @@ onMounted(() => {
     })
 
     const genome = props.task.env.GENOME
-    const genomeFile =
-        genome === 'hg38' ? 'database_dir/hg38/hg38_genome/hg38.length' : 'database_dir/hg19/hg19_genome/hg19.length'
+    const genomeFile = genome === 'hg38'
+        ? 'database_dir/hg38/hg38_genome/hg38.length'
+        : 'database_dir/hg19/hg19_genome/hg19.length'
     readSystemFile(genomeFile).then((res) => {
         const data = getCsvData(res, { fields: ['name', 'value'], hasHeaderLine: false })
         data.forEach((t) => (t.value = Number(t.value)))
@@ -311,13 +367,16 @@ onMounted(() => {
 
         readTaskFile(route.params.id, 'CNV/cnvkit_result').then((res) => {
             // 变异数据
-            variants.value = getCsvData(res, { fields: ['name', 'start', 'end', 'ratio'], hasHeaderLine: false })
+            console.log('///////////', variantColumns.value)
+            const fields = variantColumns.value.map(t => t.title)
+            variants.value = getCsvData(res, { fields, hasHeaderLine: false })
+            variantRows.value = variants.value
             variants.value.forEach((t) => {
                 t.start = Number(t.start)
                 t.end = Number(t.end)
                 t.ratio = Number(t.ratio)
             })
-
+            console.log('///////////variants.value', variants.value)
             initPie()
         })
     })

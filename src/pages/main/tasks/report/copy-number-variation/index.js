@@ -16,6 +16,9 @@ export const columns = [
     { key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200 },
     { key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80 },
 ]
+
+
+
 export const pieOption = {
   tooltip: {
     trigger: 'item',
