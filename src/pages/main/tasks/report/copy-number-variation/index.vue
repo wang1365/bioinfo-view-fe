@@ -131,7 +131,7 @@
             :data-source="filteredRows"
             :columns="columns"
             :sticky="true"
-            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
+            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
         ></a-table>
     </div>
 

@@ -15,14 +15,14 @@
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <a-table
-            size="small"
+            size="middle"
             bordered
             rowKey="lineNumber"
             :loading="loading1"
             :data-source="filteredRows1"
             :columns="columns1"
             :sticky="true"
-            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
+            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:20 }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
@@ -52,13 +52,13 @@
             <q-btn size="small" color="primary" label="搜索" @click="searchKeyword2"></q-btn>
         </q-toolbar>
         <a-table
-            size="small"
+            size="middle"
             bordered
             :data-source="filteredRows2"
             :columns="columns2"
             :sticky="true"
             rowKey="lineNumber"
-            :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2 }"
+            :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth:20 }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
@@ -244,10 +244,10 @@ onMounted(() => {
 })
 const samples = toRef(props, 'samples')
 const loadData = () => {
-    let width = [30, 30, 60, 60, 60, 60, 60, 200, 60, 50]
+    let width = [32, 32, 60, 60, 60, 60, 60, 200, 60, 50]
     columns1.value = []
     qtHeader.value.forEach((item, index) => {
-        if (item == 'Igv') {
+        if (item === 'Igv') {
             columns1.value.push({
                 title: item,
                 dataIndex: index,
@@ -268,7 +268,7 @@ const loadData = () => {
     for (let item of filteredRows1.value) {
         let finded = false
         for (let lineNumber of qtSelectedRows.value) {
-            if (lineNumber == item.lineNumber) {
+            if (lineNumber === item.lineNumber) {
                 finded = true
                 break
             }
@@ -282,7 +282,7 @@ const loadData = () => {
         columns2.value = []
         width = [30, 30, 60, 60, 60, 60, 60, 60, 120, 50]
         qnHeader.value.forEach((item, index) => {
-            if (item == 'Igv') {
+            if (item === 'Igv') {
                 columns2.value.push({
                     title: item,
                     dataIndex: index,
@@ -303,7 +303,7 @@ const loadData = () => {
         for (let item of filteredRows2.value) {
             let finded = false
             for (let lineNumber of qnSelectedRows.value) {
-                if (lineNumber == item.lineNumber) {
+                if (lineNumber === item.lineNumber) {
                     finded = true
                     break
                 }

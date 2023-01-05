@@ -13,14 +13,14 @@
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <a-table
-            size="small"
+            size="middle"
             bordered
             :loading="loading"
             :data-source="filteredRows"
             :columns="columns"
             :sticky="true"
             rowKey="lineNumber"
-            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
+            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
         >
             <template #bodyCell="{ column, record }">
                 <q-btn
