@@ -223,7 +223,8 @@ const createReport = () => {
             if (res.msg != 'success') {
                 errorMessage(res.msg)
             } else {
-                infoMessage(res.data.status)
+                infoMessage('任务提交成功')
+                router.push(`/main/reports`)
             }
             console.log(res)
             creating.value=false
