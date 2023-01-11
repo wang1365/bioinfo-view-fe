@@ -113,11 +113,21 @@
                         label="SIFT_pred"
                         class="full-width"
                     />
-                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                    <q-checkbox
+                        left-label
+                        v-model="searchParams.drug"
+                        label="是否关联药物"
+                        color="primary"
+                    />
                     <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                     <div class="q-gutter-md text-center q-py-sm">
                         <q-btn color="primary" label="确定" icon="search" @click="search" />
-                        <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
+                        <q-btn
+                            color="primary"
+                            label="重置"
+                            icon="settings_backup_restore"
+                            @click="reset"
+                        />
                     </div>
                 </div>
             </template>
@@ -135,7 +145,11 @@
                     :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
                 >
                     <template #bodyCell="{ column, record }">
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                        <a-tooltip
+                            v-if="column.ellipsis"
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                        >
                             <div>{{record[column.dataIndex]}}</div>
                         </a-tooltip>
                         <span v-else>{{record[column.dataIndex]}}</span>
@@ -202,6 +216,7 @@
 </template>
 
 <script setup>
+import { errorMessage, infoMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef, toRefs, watch } from 'vue'
 import BarChartVue from './SomaticInfoCharts/BarChart.vue'
 import PieChartVue from './SomaticInfoCharts/PieChart.vue'
@@ -212,6 +227,7 @@ import MutationInfo from './MutationInfo'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
+import { filterOption } from 'ant-design-vue/lib/vc-mentions/src/util'
 const splitterModel = ref(250)
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
@@ -313,6 +329,7 @@ const loading = ref(false)
 const filteredRows = ref([])
 const { rows, drugRows, header } = toRefs(props)
 const propSelectedRows = toRef(props, 'selectedRows')
+const showSticky = toRef(props, 'showSticky')
 const tumorColumnIdx = computed(() => {
     // 根据列表头名称，例如Geno_Type(QN11), 检查该列是对比样本列表还是肿瘤样本列
     const tumorIdx = []
@@ -620,6 +637,9 @@ const search = () => {
     }
     selectedRows.value = []
     filterChange()
+    if (showSticky.value && filteredRows.value.length>0) {
+        infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
+    }
 }
 watch(rows, (rows) => {
     loadTable()

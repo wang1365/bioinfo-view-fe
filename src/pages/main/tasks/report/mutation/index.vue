@@ -49,6 +49,7 @@
                     :searchParams="germlineData.searchParams"
                     :drugRows="germlineData.drugRows"
                     :selectedRows="germlineData.selectedRows"
+                    :showSticky="props.viewConfig.showStick"
                     @filterChange="filterChange('germline',$event)"
                 />
             </q-tab-panel>
@@ -63,6 +64,7 @@
                     :searchParams="somaticData.searchParams"
                     :drugRows="somaticData.drugRows"
                     :selectedRows="somaticData.selectedRows"
+                    :showSticky="props.viewConfig.showStick"
                     @filterChange="filterChange('somatic',$event)"
                 />
             </q-tab-panel>
@@ -81,7 +83,7 @@
     </div>
 </template>
 <script setup>
-import { errorMessage } from 'src/utils/notify'
+import { errorMessage,infoMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'

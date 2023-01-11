@@ -99,12 +99,22 @@
                         class="full-width"
                     />
 
-                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                    <q-checkbox
+                        left-label
+                        v-model="searchParams.drug"
+                        label="是否关联药物"
+                        color="primary"
+                    />
 
                     <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
                     <div class="q-gutter-md text-center q-py-sm">
                         <q-btn color="primary" label="确定" icon="search" @click="search" />
-                        <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
+                        <q-btn
+                            color="primary"
+                            label="重置"
+                            icon="settings_backup_restore"
+                            @click="reset"
+                        />
                     </div>
                 </div>
             </template>
@@ -123,7 +133,11 @@
                     :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
                 >
                     <template #bodyCell="{ column, record }">
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                        <a-tooltip
+                            v-if="column.ellipsis"
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                        >
                             <div>{{ record[column.dataIndex] }}</div>
                         </a-tooltip>
                         <span v-else>{{ record[column.dataIndex] }}</span>
@@ -178,6 +192,7 @@ import MutationInfo from './MutationInfo'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
+import { infoMessage } from 'src/utils/notify'
 const splitterModel = ref(250)
 const emit = defineEmits(['filterChange'])
 
@@ -271,6 +286,7 @@ const searchParams = ref({
 const loading = ref(false)
 const { rows, drugRows, header } = toRefs(props)
 const propSelectedRows = toRef(props, 'selectedRows')
+const showSticky = toRef(props, 'showSticky')
 const filteredRows = ref([])
 
 const currentRow = ref({})
@@ -473,7 +489,7 @@ const search = () => {
           */
         param = searchParams.value.humanRatio
         if (param) {
-            if (line.col26 !== '.'  && line.col31 !== '.' && line.col39 !== '.') {
+            if (line.col26 !== '.' && line.col31 !== '.' && line.col39 !== '.') {
                 let count = Number(line.col26) < param ? 1 : 0
                 count += Number(line.col31) < param ? 1 : 0
                 count += Number(line.col39) < param ? 1 : 0
@@ -517,8 +533,12 @@ const search = () => {
         filter: searchParams.value,
         rows: filteredRows,
     }
-    selectedRows.value = []
-    filterChange()
+     selectedRows.value = []
+     filterChange()
+     console.log(showSticky.value)
+     if (showSticky.value && filteredRows.value.length>0) {
+         infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
+    }
 }
 
 watch(rows, (rows) => {
