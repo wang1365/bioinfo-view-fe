@@ -176,8 +176,16 @@ const igvVisible = ref(false)
 const selectedFile = ref('')
 
 const searchKeyword1 = () => {
+    console.log(filteredRows1.value)
     if (keyword1.value) {
-        filteredRows1.value = qtRows.value.filter((t) => t[0].includes(keyword1.value))
+        filteredRows1.value = qtRows.value.filter((t) => {
+            for (let i = 0; i < 8; i++) {
+                if (t[i].includes(keyword1.value)) {
+                    return true
+                }
+            }
+            return false
+        })
     } else {
         filteredRows1.value = qtRows.value
     }
@@ -186,7 +194,14 @@ const searchKeyword1 = () => {
 
 const searchKeyword2 = () => {
     if (keyword2.value) {
-        filteredRows2.value = qnRows.value.filter((t) => t[0].includes(keyword2.value))
+        filteredRows2.value = qnRows.value.filter((t) => {
+            for (let i = 0; i < 8; i++) {
+                if (t[i].includes(keyword2.value)) {
+                    return true
+                }
+            }
+            return false
+        })
     } else {
         filteredRows2.value = qnRows.value
     }
@@ -206,7 +221,7 @@ const clearKeyword2 = () => {
 }
 
 const clickView = (record) => {
-     console.log(record)
+    console.log(record)
     selectedFile.value = record[8]
     igvVisible.value = true
 }
@@ -313,10 +328,10 @@ const loadData = () => {
             }
         }
     }
-     filterChange()
- }
+    filterChange()
+}
 
- const selectedRows = ref([])
+const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     selectedRows.value = selectedRowKeys

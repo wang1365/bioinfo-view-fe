@@ -96,7 +96,14 @@ const props = defineProps({
 })
 const searchKeyword = () => {
     if (keyword.value) {
-        filteredRows.value = rows.value.filter((t) => t[0].includes(keyword.value))
+        filteredRows.value = rows.value.filter((t) => {
+            for (let i = 0; i < 7; i++) {
+                if (t[i].includes(keyword.value)) {
+                    return true
+                }
+            }
+            return false
+        })
     } else {
         filteredRows.value = rows.value
     }
