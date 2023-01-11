@@ -640,8 +640,10 @@ const search = () => {
     if (showSticky.value && filteredRows.value.length>0) {
         infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
     }
-}
-watch(rows, (rows) => {
+
+     
+ }
+ watch(rows, (rows) => {
     loadTable()
 })
 onMounted(() => {
@@ -668,9 +670,11 @@ const loadTable = () => {
             selectedRows.value.push(item.lineNumber)
         }
     }
-    filterChange()
-}
-const selectedRows = ref([])
+     filterChange()
+     let selectAllTh = document.querySelector('table thead tr:first-child th:first-child')
+     selectAllTh.title='仅全选本页筛选结果'
+ }
+ const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     selectedRows.value = selectedRowKeys
