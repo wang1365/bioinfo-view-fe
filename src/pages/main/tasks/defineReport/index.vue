@@ -1,7 +1,14 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>定制报告</h6>
-        <q-stepper v-if="viewConfigLoaded" v-model="step" ref="stepper" header-nav color="primary" animated>
+        <q-stepper
+            v-if="viewConfigLoaded"
+            v-model="step"
+            ref="stepper"
+            header-nav
+            color="primary"
+            animated
+        >
             <q-step
                 v-if="tabValid('mutation')"
                 :done="isStepDone('mutation')"
@@ -85,33 +92,47 @@
                         color="primary"
                         text-color="white"
                         icon="candlestick_chart"
-                    >突变分析</q-chip>
+                    >
+                        突变分析:
+                        <span>已筛选</span>
+                        <span>无数据</span>
+                    </q-chip>
                     <q-chip
                         v-if="isStepDone('fusion')"
                         color="primary"
                         text-color="white"
                         icon="format_strikethrough"
-                    >融合分析</q-chip>
+                    >
+                        融合分析:
+                        <span>已筛选</span>
+                        <span>无数据</span>
+                    </q-chip>
                     <q-chip
                         v-if="isStepDone('copy_number_variation')"
                         color="primary"
                         text-color="white"
                         icon="polyline"
-                    >拷贝数变异分析</q-chip>
+                    >
+                        拷贝数变异分析:
+                        <span  v-if="stepData.copy_number_variation?.table.selected">已筛选</span>
+                        <span  v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered">无数据</span>
+                    </q-chip>
                     <q-chip
                         v-if="isStepDone('tumor_mutation_load')"
                         color="primary"
                         text-color="white"
                         icon="bubble_chart"
-                    >肿瘤突变负荷分析</q-chip>
+                    >
+                        肿瘤突变负荷分析:
+                    </q-chip>
                 </div>
                 <div class="q-py-md text-h6">填写信息</div>
                 <q-input v-model="reportComment" label="报告备注" />
                 <div class="text-center q-pa-md q-gutter-sm">
-                    <q-btn  :loading="creating" label="确认" color="primary" @click="createReport()">
+                    <q-btn :loading="creating" label="确认" color="primary" @click="createReport()">
                         <!-- <template v-slot:loading>
                              报告创建中...
-                             </template> -->
+                        </template>-->
                     </q-btn>
                     <q-btn label="清除数据" color="red" @click="reset()" />
 
@@ -149,7 +170,7 @@ import { api } from 'src/boot/axios'
 
 const { apiPost } = useApi()
 const viewConfigLoaded = ref(false)
-const creating=ref(false)
+const creating = ref(false)
 const reportComment = ref('')
 const step = ref('mutation')
 const stepData = ref({})
@@ -217,7 +238,7 @@ const createReport = () => {
     }
     console.log(JSON.stringify(postData))
     postData.query = postData.query.replaceAll('●', '.')
-    creating.value=true
+    creating.value = true
     apiPost(
         '/report/report/',
         (res) => {
@@ -228,7 +249,7 @@ const createReport = () => {
                 router.push(`/main/reports`)
             }
             console.log(res)
-            creating.value=false
+            creating.value = false
         },
         postData
     )
@@ -300,12 +321,12 @@ const loadViewConfig = () => {
         }
         try {
             data = JSON.parse(res)
-            viewConfigLoaded.value=true
+            viewConfigLoaded.value = true
         } catch (error) {
             // 尝试修复 json 的额外 ","
             try {
                 data = JSON.parse(res.replace(/,[ \t\r\n]+}/g, '}').replace(/,[ \t\r\n]+\]/g, ']'))
-                viewConfigLoaded.value=true
+                viewConfigLoaded.value = true
             } catch (error) {
                 errorMessage(`module.json 文件内容非正确 json 格式`)
             }
@@ -319,7 +340,7 @@ const loadViewConfig = () => {
             }
             viewConfig.value = config
         }
-        viewConfigLoaded.value=true
+        viewConfigLoaded.value = true
     })
 }
 </script>

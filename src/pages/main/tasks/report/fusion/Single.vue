@@ -235,10 +235,14 @@ const filterChange = () => {
         qt: {
             searchParam: keyword1.value,
             selectedRows: selectedRows.value,
+            filtered: qtRows.value.length != filteredRows1.value.length,
+            selected: selectedRows.value.length > 0,
         },
         qn: {
             searchParam: keyword2.value,
             selectedRows: selectedRows2.value,
+            filtered: qnRows.value.length != filteredRows2.value.length,
+            selected: selectedRows2.value.length > 0,
         },
     })
 }

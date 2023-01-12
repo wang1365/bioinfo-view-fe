@@ -210,13 +210,21 @@ const props = defineProps({
     },
 })
 
-const filteredInfo = ref();
-const variantColumns =  computed(() => {
-    const filtered = filteredInfo.value || {};
-    const chrs = Array(22).fill(0).map((_, i) => i+1).concat(['X', 'Y'])
+const filteredInfo = ref()
+const variantColumns = computed(() => {
+    const filtered = filteredInfo.value || {}
+    const chrs = Array(22)
+        .fill(0)
+        .map((_, i) => i + 1)
+        .concat(['X', 'Y'])
     return [
-        {   key: 'name', title: 'name', dataIndex: 'name', align: 'center', width: 50,
-            filters: chrs.map(ch => {
+        {
+            key: 'name',
+            title: 'name',
+            dataIndex: 'name',
+            align: 'center',
+            width: 50,
+            filters: chrs.map((ch) => {
                 return {
                     text: 'chr' + ch,
                     value: 'chr' + ch,
@@ -225,16 +233,16 @@ const variantColumns =  computed(() => {
             filteredValue: filtered.name || null,
             onFilter: (value, record) => record.name === value,
         },
-        {key: 'start', title: 'start', dataIndex: 'start', align: 'center', width: 80},
-        {key: 'end', title: 'end', dataIndex: 'end', align: 'center', width: 80},
-        {key: 'ratio', title: 'ratio', dataIndex: 'ratio', align: 'center', width: 50},
+        { key: 'start', title: 'start', dataIndex: 'start', align: 'center', width: 80 },
+        { key: 'end', title: 'end', dataIndex: 'end', align: 'center', width: 80 },
+        { key: 'ratio', title: 'ratio', dataIndex: 'ratio', align: 'center', width: 50 },
     ]
 })
 
 const handleChange = (pagination, filters) => {
-    console.log('============Various parameters', pagination, filters);
-    filteredInfo.value = filters;
-};
+    console.log('============Various parameters', pagination, filters)
+    filteredInfo.value = filters
+}
 
 const emit = defineEmits(['stickDone'])
 const stickFilter = () => {
@@ -245,6 +253,8 @@ const stickFilter = () => {
         table: {
             searchParams: searchParams.value,
             selectedRows: selectedRows.value,
+            filtered: rows.value.length != filteredRows.value.length,
+            selected: selectedRows.value.length > 0,
         },
     }
     emit('stickDone', data)
@@ -284,24 +294,24 @@ const resetPie = () => {
 
 const refreshPie = () => {
     const result1 = []
-    if(pieParams.value.extra < 2 || !pieParams.value.extra){
+    if (pieParams.value.extra < 2 || !pieParams.value.extra) {
         errorMessage('拷贝数扩增阈值 必须大于 2')
         return
     }
-     if(pieParams.value.missing > 2 ||pieParams.value.missing < 0  || !pieParams.value.extra){
-         errorMessage('拷贝数缺失阈值范围是 0~2')
-         return
-     }
-     // 扩增
-     const extra_variant = toMap(
-         variants.value.filter((t) => t.ratio > pieParams.value.extra),
-         (t) => t.name
-     )
+    if (pieParams.value.missing > 2 || pieParams.value.missing < 0 || !pieParams.value.extra) {
+        errorMessage('拷贝数缺失阈值范围是 0~2')
+        return
+    }
+    // 扩增
+    const extra_variant = toMap(
+        variants.value.filter((t) => t.ratio > pieParams.value.extra),
+        (t) => t.name
+    )
     console.log('>>>>>>>>>>>>>扩增', variants.value, extra_variant)
-     chrs.value.forEach((t, idx) => {
-         const variant = extra_variant[t.name]
-         const p = partition(t, variant)
-         result1.push(...p)
+    chrs.value.forEach((t, idx) => {
+        const variant = extra_variant[t.name]
+        const p = partition(t, variant)
+        result1.push(...p)
         // if (variant && variant.length > 0) {
         //     variant.forEach( (vi, i) => {
         //         if (i === 0) {
@@ -364,9 +374,8 @@ onMounted(() => {
     })
 
     const genome = props.task.env.GENOME
-    const genomeFile = genome === 'hg38'
-        ? 'database_dir/hg38/hg38_genome/hg38.length'
-        : 'database_dir/hg19/hg19_genome/hg19.length'
+    const genomeFile =
+        genome === 'hg38' ? 'database_dir/hg38/hg38_genome/hg38.length' : 'database_dir/hg19/hg19_genome/hg19.length'
     readSystemFile(genomeFile).then((res) => {
         const data = getCsvData(res, { fields: ['name', 'value'], hasHeaderLine: false })
         data.forEach((t) => (t.value = Number(t.value)))
@@ -376,7 +385,7 @@ onMounted(() => {
         readTaskFile(route.params.id, 'CNV/cnvkit_result').then((res) => {
             // 变异数据
             console.log('///////////', variantColumns.value)
-            const fields = variantColumns.value.map(t => t.title)
+            const fields = variantColumns.value.map((t) => t.title)
             variants.value = getCsvData(res, { fields, hasHeaderLine: false })
             variantRows.value = variants.value
             variants.value.forEach((t) => {

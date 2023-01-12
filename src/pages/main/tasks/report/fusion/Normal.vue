@@ -137,6 +137,8 @@ const filterChange = () => {
     emit('filterChange', {
         searchParam: keyword.value,
         selectedRows: selectedRows.value,
+        filtered: rows.value.length != filteredRows.value.length,
+        selected: selectedRows.value.length > 0,
     })
 }
 watch(propSearchParam, () => {

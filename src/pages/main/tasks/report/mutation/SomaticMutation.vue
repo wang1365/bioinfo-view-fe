@@ -637,13 +637,11 @@ const search = () => {
     }
     selectedRows.value = []
     filterChange()
-    if (showSticky.value && filteredRows.value.length>0) {
+    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length != rows.value.length) {
         infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
     }
-
-     
- }
- watch(rows, (rows) => {
+}
+watch(rows, (rows) => {
     loadTable()
 })
 onMounted(() => {
@@ -670,11 +668,11 @@ const loadTable = () => {
             selectedRows.value.push(item.lineNumber)
         }
     }
-     filterChange()
-     let selectAllTh = document.querySelector('table thead tr:first-child th:first-child')
-     selectAllTh.title='仅全选本页筛选结果'
- }
- const selectedRows = ref([])
+    filterChange()
+    let selectAllTh = document.querySelector('table thead tr:first-child th:first-child')
+    selectAllTh.title = '仅全选本页筛选结果'
+}
+const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     selectedRows.value = selectedRowKeys
@@ -682,9 +680,19 @@ const onSelectChange = (selectedRowKeys) => {
 }
 
 const filterChange = () => {
+    let filtered = true
+    if (filteredRows.value.length == rows.value.length) {
+        filtered = false
+    }
+    let selected = true
+    if (selectedRows.value.length == 0) {
+        selected = false
+    }
     emit('filterChange', {
         searchParams: searchParams.value,
         selectedRows: selectedRows.value,
+        filtered: filtered,
+        selected: false,
     })
 }
 </script>
