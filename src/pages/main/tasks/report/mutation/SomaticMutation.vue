@@ -113,45 +113,83 @@
                         label="SIFT_pred"
                         class="full-width"
                     />
-                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                    <q-checkbox
+                        left-label
+                        v-model="searchParams.drug"
+                        label="是否关联药物"
+                        color="primary"
+                    />
                     <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                     <div class="q-gutter-md text-center q-py-sm">
                         <q-btn color="primary" label="确定" icon="search" @click="search" />
-                        <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
+                        <q-btn
+                            color="primary"
+                            label="重置"
+                            icon="settings_backup_restore"
+                            @click="reset"
+                        />
                     </div>
                 </div>
             </template>
             <template v-slot:after>
-                <a-table
-                    size="small"
-                    bordered
-                    :loading="loading"
-                    :data-source="filteredRows"
-                    :columns="columns"
-                    :scroll="{ x: 2000, y: 600 }"
-                    :custom-row="customRow"
-                    :sticky="true"
-                    rowKey="lineNumber"
-                    :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
-                >
-                    <template #bodyCell="{ column, record }">
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
-                            <div>{{record[column.dataIndex]}}</div>
-                        </a-tooltip>
-                        <span v-else>{{record[column.dataIndex]}}</span>
-                    </template>
-                    <!--                    <template #bodyCell="{ column, record }">-->
-                    <!--                        <q-btn-->
-                    <!--                            v-if="column.key === 'operation'"-->
-                    <!--                            label="查看"-->
-                    <!--                            color="primary"-->
-                    <!--                            outline flat-->
-                    <!--                            size="xs"-->
-                    <!--                            @click="clickView(record)"-->
-                    <!--                        >-->
-                    <!--                        </q-btn>-->
-                    <!--                    </template>-->
-                </a-table>
+                <!-- <a-table
+                     size="small"
+                     bordered
+                     :loading="loading"
+                     :data-source="filteredRows"
+                     :columns="columns"
+                     :scroll="{ x: 2000, y: 600 }"
+                     :custom-row="customRow"
+                     :sticky="true"
+                     rowKey="lineNumber"
+                     :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
+                     >
+                     <template #bodyCell="{ column, record }">
+                     <a-tooltip
+                     v-if="column.ellipsis"
+                     color="#3b4146"
+                     :title="record[column.dataIndex]"
+                     >
+                     <div>{{record[column.dataIndex]}}</div>
+                     </a-tooltip>
+                     <span v-else>{{record[column.dataIndex]}}</span>
+                     </template>
+                     </a-table> -->
+
+                <div style="position:relative">
+                    <q-icon
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
+                        <q-tooltip>仅全选本页筛选结果</q-tooltip>
+                    </q-icon>
+                    <a-table
+                        style="z-index:1"
+                        size="small"
+                        bordered
+                        :loading="loading"
+                        :data-source="filteredRows"
+                        :columns="columns"
+                        :scroll="{ x: 2000, y: 600 }"
+                        :custom-row="customRow"
+                        :sticky="true"
+                        rowKey="lineNumber"
+                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
+                    >
+                        <template #bodyCell="{ column, record }">
+                            <a-tooltip
+                                v-if="column.ellipsis"
+                                color="#3b4146"
+                                :title="record[column.dataIndex]"
+                            >
+                                <div>{{record[column.dataIndex]}}</div>
+                            </a-tooltip>
+                            <span v-else>{{record[column.dataIndex]}}</span>
+                        </template>
+                    </a-table>
+                </div>
             </template>
         </q-splitter>
         <div class="row justify-between">
@@ -623,7 +661,7 @@ const search = () => {
     }
     selectedRows.value = []
     filterChange()
-    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !==  rows.value.length) {
+    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
         infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
     }
 }
@@ -655,8 +693,6 @@ const loadTable = () => {
         }
     }
     filterChange()
-    let selectAllTh = document.querySelector('table thead tr:first-child th:first-child')
-    selectAllTh.title = '仅全选本页筛选结果'
 }
 const selectedRows = ref([])
 
@@ -678,7 +714,7 @@ const filterChange = () => {
         searchParams: searchParams.value,
         selectedRows: selectedRows.value,
         filtered: filtered,
-        selected: false,
+        selected: selected,
     })
 }
 </script>

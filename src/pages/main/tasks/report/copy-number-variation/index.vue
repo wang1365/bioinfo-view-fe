@@ -143,17 +143,28 @@
             </div>
         </div>
 
-        <a-table
-            class="col-5"
-            size="middle"
-            rowKey="lineNumber"
-            bordered
-            :loading="loading"
-            :data-source="filteredRows"
-            :columns="columns"
-            :sticky="true"
-            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
-        ></a-table>
+        <div style="position:relative">
+            <q-icon
+                color="accent"
+                name="question_mark"
+                size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px"
+            >
+                <q-tooltip>仅全选本页筛选结果</q-tooltip>
+            </q-icon>
+            <a-table
+                style="z-index:1"
+                class="col-5"
+                size="middle"
+                rowKey="lineNumber"
+                bordered
+                :loading="loading"
+                :data-source="filteredRows"
+                :columns="columns"
+                :sticky="true"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
+            ></a-table>
+        </div>
     </div>
 
     <q-dialog v-model="dlgVisible">
