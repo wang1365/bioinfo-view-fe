@@ -113,21 +113,11 @@
                         label="SIFT_pred"
                         class="full-width"
                     />
-                    <q-checkbox
-                        left-label
-                        v-model="searchParams.drug"
-                        label="是否关联药物"
-                        color="primary"
-                    />
+                    <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
                     <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                     <div class="q-gutter-md text-center q-py-sm">
                         <q-btn color="primary" label="确定" icon="search" @click="search" />
-                        <q-btn
-                            color="primary"
-                            label="重置"
-                            icon="settings_backup_restore"
-                            @click="reset"
-                        />
+                        <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
                     </div>
                 </div>
             </template>
@@ -145,11 +135,7 @@
                     :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
                 >
                     <template #bodyCell="{ column, record }">
-                        <a-tooltip
-                            v-if="column.ellipsis"
-                            color="#3b4146"
-                            :title="record[column.dataIndex]"
-                        >
+                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
                             <div>{{record[column.dataIndex]}}</div>
                         </a-tooltip>
                         <span v-else>{{record[column.dataIndex]}}</span>
@@ -637,7 +623,7 @@ const search = () => {
     }
     selectedRows.value = []
     filterChange()
-    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length != rows.value.length) {
+    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !==  rows.value.length) {
         infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
     }
 }
@@ -659,7 +645,7 @@ const loadTable = () => {
     for (let item of filteredRows.value) {
         let finded = false
         for (let lineNumber of propSelectedRows.value) {
-            if (lineNumber == item.lineNumber) {
+            if (lineNumber === item.lineNumber) {
                 finded = true
                 break
             }
@@ -681,11 +667,11 @@ const onSelectChange = (selectedRowKeys) => {
 
 const filterChange = () => {
     let filtered = true
-    if (filteredRows.value.length == rows.value.length) {
+    if (filteredRows.value.length === rows.value.length) {
         filtered = false
     }
     let selected = true
-    if (selectedRows.value.length == 0) {
+    if (selectedRows.value.length === 0) {
         selected = false
     }
     emit('filterChange', {
