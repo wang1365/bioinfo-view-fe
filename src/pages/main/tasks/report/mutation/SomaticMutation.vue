@@ -132,40 +132,51 @@
                 </div>
             </template>
             <template v-slot:after>
-                <a-table
-                    size="small"
-                    bordered
-                    :loading="loading"
-                    :data-source="filteredRows"
-                    :columns="columns"
-                    :scroll="{ x: 2000, y: 600 }"
-                    :custom-row="customRow"
-                    :sticky="true"
-                    rowKey="lineNumber"
-                    :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
-                >
-                    <template #bodyCell="{ column, record }">
-                        <a-tooltip
-                            v-if="column.ellipsis"
-                            color="#3b4146"
-                            :title="record[column.dataIndex]"
-                        >
-                            <div>{{record[column.dataIndex]}}</div>
-                        </a-tooltip>
-                        <span v-else>{{record[column.dataIndex]}}</span>
-                    </template>
-                    <!--                    <template #bodyCell="{ column, record }">-->
-                    <!--                        <q-btn-->
-                    <!--                            v-if="column.key === 'operation'"-->
-                    <!--                            label="查看"-->
-                    <!--                            color="primary"-->
-                    <!--                            outline flat-->
-                    <!--                            size="xs"-->
-                    <!--                            @click="clickView(record)"-->
-                    <!--                        >-->
-                    <!--                        </q-btn>-->
-                    <!--                    </template>-->
-                </a-table>
+                <div style="position:relative">
+                    <q-icon
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
+                        <q-tooltip>仅全选本页筛选结果</q-tooltip>
+                    </q-icon>
+                    <a-table
+                        style="z-index:1"
+                        size="small"
+                        bordered
+                        :loading="loading"
+                        :data-source="filteredRows"
+                        :columns="columns"
+                        :scroll="{ x: 2000, y: 600 }"
+                        :custom-row="customRow"
+                        :sticky="true"
+                        rowKey="lineNumber"
+                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
+                    >
+                        <template #bodyCell="{ column, record }">
+                            <a-tooltip
+                                v-if="column.ellipsis"
+                                color="#3b4146"
+                                :title="record[column.dataIndex]"
+                            >
+                                <div>{{record[column.dataIndex]}}</div>
+                            </a-tooltip>
+                            <span v-else>{{record[column.dataIndex]}}</span>
+                        </template>
+                        <!--                    <template #bodyCell="{ column, record }">-->
+                        <!--                        <q-btn-->
+                        <!--                            v-if="column.key === 'operation'"-->
+                        <!--                            label="查看"-->
+                        <!--                            color="primary"-->
+                        <!--                            outline flat-->
+                        <!--                            size="xs"-->
+                        <!--                            @click="clickView(record)"-->
+                        <!--                        >-->
+                        <!--                        </q-btn>-->
+                        <!--                    </template>-->
+                    </a-table>
+                </div>
             </template>
         </q-splitter>
         <div class="row justify-between">
@@ -669,8 +680,6 @@ const loadTable = () => {
         }
     }
     filterChange()
-    let selectAllTh = document.querySelector('table thead tr:first-child th:first-child')
-    selectAllTh.title = '仅全选本页筛选结果'
 }
 const selectedRows = ref([])
 
@@ -692,7 +701,7 @@ const filterChange = () => {
         searchParams: searchParams.value,
         selectedRows: selectedRows.value,
         filtered: filtered,
-        selected: false,
+        selected: selected,
     })
 }
 </script>

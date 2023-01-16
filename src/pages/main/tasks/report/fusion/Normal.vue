@@ -12,26 +12,37 @@
         <q-btn size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
-        <a-table
-            size="middle"
-            bordered
-            :loading="loading"
-            :data-source="filteredRows"
-            :columns="columns"
-            :sticky="true"
-            rowKey="lineNumber"
-            :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
-        >
-            <template #bodyCell="{ column, record }">
-                <q-btn
-                    v-if="column.title === 'Igv'"
-                    label="查看"
-                    color="primary"
-                    size="sm"
-                    @click="clickView(record)"
-                ></q-btn>
-            </template>
-        </a-table>
+        <div style="position:relative">
+            <q-icon
+                color="accent"
+                name="question_mark"
+                size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px"
+            >
+                <q-tooltip>仅全选本页筛选结果</q-tooltip>
+            </q-icon>
+            <a-table
+                style="z-index:1"
+                size="middle"
+                bordered
+                :loading="loading"
+                :data-source="filteredRows"
+                :columns="columns"
+                :sticky="true"
+                rowKey="lineNumber"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
+            >
+                <template #bodyCell="{ column, record }">
+                    <q-btn
+                        v-if="column.title === 'Igv'"
+                        label="查看"
+                        color="primary"
+                        size="sm"
+                        @click="clickView(record)"
+                    ></q-btn>
+                </template>
+            </a-table>
+        </div>
         <q-dialog v-model="igvVisible">
             <q-card
                 class="full-width"
