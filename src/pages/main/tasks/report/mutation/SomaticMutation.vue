@@ -155,7 +155,6 @@
                      <span v-else>{{record[column.dataIndex]}}</span>
                      </template>
                      </a-table> -->
-
                 <div style="position:relative">
                     <q-icon
                         color="accent"

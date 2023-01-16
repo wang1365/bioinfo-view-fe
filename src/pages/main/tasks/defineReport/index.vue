@@ -155,12 +155,12 @@
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionSomatic">
                                 体细胞融合分析:
-                                <span v-if="stepData.fusion?.normal.selected">已钩选</span>
+                                <span v-if="stepData.fusion?.normal?.selected">已钩选</span>
                                 <span
-                                    v-if="!stepData.fusion?.normal.selected && stepData.fusion?.normal.filtered"
+                                    v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered"
                                 >已搜索</span>
                                 <span
-                                    v-if="!stepData.fusion?.normal.selected && !stepData.fusion?.normal.filtered"
+                                    v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered"
                                 >无数据</span>
                             </q-chip>
                         </div>
