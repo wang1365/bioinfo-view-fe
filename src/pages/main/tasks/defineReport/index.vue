@@ -96,7 +96,7 @@
                                 v-if="viewConfig.mutation.showMutGermline"
                             >
                                 胚系突变分析:
-                                <span v-if="stepData.mutation?.germline.selected">已钩选</span>
+                                <span v-if="stepData.mutation?.germline.selected">钩选</span>
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered"
                                 >已搜索</span>
@@ -110,7 +110,7 @@
                                 v-if="viewConfig.mutation.showMutSomatic"
                             >
                                 体细胞突变分析:
-                                <span v-if="stepData.mutation?.somatic.selected">已钩选</span>
+                                <span v-if="stepData.mutation?.somatic.selected">钩选</span>
                                 <span
                                     v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
                                 >已搜索</span>
@@ -123,9 +123,13 @@
                     <div v-if="isStepDone('fusion')">
                         <div>
                             <span class="text-bold">融合分析</span>
-                            <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionGermline && samples.length<=1">
+                            <q-chip
+                                color="primary"
+                                text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length<=1"
+                            >
                                 单样品融合分析:
-                                <span v-if="stepData.fusion?.single.qt.selected">已钩选</span>
+                                <span v-if="stepData.fusion?.single.qt.selected">钩选</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
                                 >已搜索</span>
@@ -133,9 +137,13 @@
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
                                 >无数据</span>
                             </q-chip>
-                            <q-chip color="primary" text-color="white"  v-if="viewConfig.fusion.showFusionGermline && samples.length >1">
+                            <q-chip
+                                color="primary"
+                                text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length >1"
+                            >
                                 肿瘤单样品融合:
-                                <span v-if="stepData.fusion?.single.qt.selected">已钩选</span>
+                                <span v-if="stepData.fusion?.single.qt.selected">钩选</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
                                 >已搜索</span>
@@ -143,9 +151,13 @@
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
                                 >无数据</span>
                             </q-chip>
-                            <q-chip color="primary" text-color="white"  v-if="viewConfig.fusion.showFusionGermline && samples.length >1">
+                            <q-chip
+                                color="primary"
+                                text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length >1"
+                            >
                                 对照单样品融合:
-                                <span v-if="stepData.fusion?.single.qn.selected">已钩选</span>
+                                <span v-if="stepData.fusion?.single.qn.selected">钩选</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
                                 >已搜索</span>
@@ -153,9 +165,13 @@
                                     v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered"
                                 >无数据</span>
                             </q-chip>
-                            <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionSomatic">
+                            <q-chip
+                                color="primary"
+                                text-color="white"
+                                v-if="viewConfig.fusion.showFusionSomatic"
+                            >
                                 体细胞融合分析:
-                                <span v-if="stepData.fusion?.normal?.selected">已钩选</span>
+                                <span v-if="stepData.fusion?.normal?.selected">钩选</span>
                                 <span
                                     v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered"
                                 >已搜索</span>
@@ -167,8 +183,8 @@
                     </div>
                     <div v-if="isStepDone('copy_number_variation')">
                         <span class="text-bold">拷贝数变异分析</span>
-                        <q-chip color="primary" text-color="white" icon="polyline">
-                            <span v-if="stepData.copy_number_variation?.table.selected">已钩选</span>
+                        <q-chip color="primary" text-color="white">
+                            <span v-if="stepData.copy_number_variation?.table.selected">钩选</span>
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered"
                             >已搜索</span>
@@ -177,7 +193,12 @@
                             >无数据</span>
                         </q-chip>
                     </div>
-                    <div v-if="isStepDone('tumor_mutation_load')" class="text-bold">肿瘤突变负荷分析</div>
+                    <div v-if="isStepDone('tumor_mutation_load')">
+                        <span class="text-bold">肿瘤突变负荷分析</span>
+                        <q-chip color="primary" text-color="white">
+                            <span>已搜索</span>
+                        </q-chip>
+                    </div>
                 </div>
                 <div class="q-py-md text-h6">填写信息</div>
                 <q-input v-model="reportComment" label="报告备注" />

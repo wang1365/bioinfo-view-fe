@@ -251,7 +251,6 @@ const variantColumns = computed(() => {
 })
 
 const handleChange = (pagination, filters) => {
-    console.log('============Various parameters', pagination, filters)
     filteredInfo.value = filters
 }
 
@@ -264,7 +263,8 @@ const stickFilter = () => {
         table: {
             searchParams: searchParams.value,
             selectedRows: selectedRows.value,
-            filtered: rows.value.length != filteredRows.value.length,
+            filtered: true,
+            // filtered: rows.value.length != filteredRows.value.length,
             selected: selectedRows.value.length > 0,
         },
     }
