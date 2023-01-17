@@ -96,7 +96,7 @@
                                 v-if="viewConfig.mutation.showMutGermline"
                             >
                                 胚系突变分析:
-                                <span v-if="stepData.mutation?.germline.selected">钩选</span>
+                                <span v-if="stepData.mutation?.germline.selected">勾选</span>
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered"
                                 >已搜索</span>
@@ -110,7 +110,7 @@
                                 v-if="viewConfig.mutation.showMutSomatic"
                             >
                                 体细胞突变分析:
-                                <span v-if="stepData.mutation?.somatic.selected">钩选</span>
+                                <span v-if="stepData.mutation?.somatic.selected">勾选</span>
                                 <span
                                     v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
                                 >已搜索</span>
@@ -129,7 +129,7 @@
                                 v-if="viewConfig.fusion.showFusionGermline && samples.length<=1"
                             >
                                 单样品融合分析:
-                                <span v-if="stepData.fusion?.single.qt.selected">钩选</span>
+                                <span v-if="stepData.fusion?.single.qt.selected">勾选</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
                                 >已搜索</span>
@@ -143,7 +143,7 @@
                                 v-if="viewConfig.fusion.showFusionGermline && samples.length >1"
                             >
                                 肿瘤单样品融合:
-                                <span v-if="stepData.fusion?.single.qt.selected">钩选</span>
+                                <span v-if="stepData.fusion?.single.qt.selected">勾选</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
                                 >已搜索</span>
@@ -157,7 +157,7 @@
                                 v-if="viewConfig.fusion.showFusionGermline && samples.length >1"
                             >
                                 对照单样品融合:
-                                <span v-if="stepData.fusion?.single.qn.selected">钩选</span>
+                                <span v-if="stepData.fusion?.single.qn.selected">勾选</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
                                 >已搜索</span>
@@ -171,7 +171,7 @@
                                 v-if="viewConfig.fusion.showFusionSomatic"
                             >
                                 体细胞融合分析:
-                                <span v-if="stepData.fusion?.normal?.selected">钩选</span>
+                                <span v-if="stepData.fusion?.normal?.selected">勾选</span>
                                 <span
                                     v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered"
                                 >已搜索</span>
@@ -184,7 +184,7 @@
                     <div v-if="isStepDone('copy_number_variation')">
                         <span class="text-bold">拷贝数变异分析</span>
                         <q-chip color="primary" text-color="white">
-                            <span v-if="stepData.copy_number_variation?.table.selected">钩选</span>
+                            <span v-if="stepData.copy_number_variation?.table.selected">勾选</span>
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered"
                             >已搜索</span>
