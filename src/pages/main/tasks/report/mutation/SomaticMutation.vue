@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-splitter v-model="splitterModel" unit="px" style="height: 700px">
+        <q-splitter v-model="splitterModel" unit="px" style="height: 720px">
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input
@@ -11,7 +11,7 @@
                         label-color="primary"
                         class="full-width"
                     />
-                    <div class="row q-gutter-xs justify-between">
+                    <div class="row q-col-gutter-sm justify-between">
                         <q-input
                             v-model="searchParams.tumorDepth"
                             label="肿瘤深度 >"
@@ -19,7 +19,7 @@
                             type="number"
                             stack-label
                             label-color="primary"
-                            class="col-5"
+                            class="col-6"
                         />
                         <q-input
                             v-model="searchParams.compareDepth"
@@ -28,10 +28,10 @@
                             type="number"
                             stack-label
                             label-color="primary"
-                            class="col-5"
+                            class="col-6"
                         />
                     </div>
-                    <div class="row q-gutter-xs justify-between">
+                    <div class="row q-col-gutter-sm justify-between">
                         <q-input
                             v-model="searchParams.tumorRatio"
                             label="肿瘤频率 >"
@@ -39,7 +39,7 @@
                             type="number"
                             stack-label
                             label-color="primary"
-                            class="col-5"
+                            class="col-6"
                         />
                         <q-input
                             v-model="searchParams.compareRatio"
@@ -48,7 +48,7 @@
                             type="number"
                             stack-label
                             label-color="primary"
-                            class="col-5"
+                            class="col-6"
                         />
                     </div>
 
