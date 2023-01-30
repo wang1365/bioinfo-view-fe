@@ -16,7 +16,8 @@
             color="primary"
             class="relative-position float-right q-mr-md"
             @click="stickFilter()"
-        >固定过滤</q-btn>
+            >固定过滤</q-btn
+        >
         <q-btn
             icon="help_outline"
             size="small"
@@ -24,7 +25,8 @@
             color="orange"
             class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
-        >说明</q-btn>
+            >说明</q-btn
+        >
         <q-tabs
             v-model="tab"
             active-color="primary"
@@ -190,7 +192,7 @@ onMounted(() => {
 // germlinemutation 和 somaticmutation 的数据同步
 const filterChange = (name, data) => {
     filterData.value[name] = data
-    if (name == 'germline') {
+    if (name === 'germline') {
         germlineData.value.searchParams = data.searchParams
         germlineData.value.selectedRows = data.selectedRows
     }else{

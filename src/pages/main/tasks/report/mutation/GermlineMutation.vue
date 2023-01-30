@@ -99,21 +99,20 @@
                         class="full-width"
                     />
 
-                    <q-checkbox
-                        left-label
-                        v-model="searchParams.drug"
-                        label="是否关联药物"
-                        color="primary"
-                    />
+                    <div class="row items-center">
+                        <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                        <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
+                    </div>
 
-                    <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
-                    <div class="q-gutter-md text-center q-py-sm">
-                        <q-btn color="primary" label="确定" icon="search" @click="search" />
+                    <div class="q-gutter-xs text-center q-py-sm">
+                        <q-btn color="primary" label="确定" size="md" icon="search" @click="search" />
+                        <q-btn color="primary" label="重置" size="md" icon="settings_backup_restore" @click="reset" />
                         <q-btn
                             color="primary"
-                            label="重置"
-                            icon="settings_backup_restore"
-                            @click="reset"
+                            label="扩展列"
+                            size="md"
+                            icon="last_page"
+                            @click="showDrawer = !showDrawer"
                         />
                     </div>
                 </div>
@@ -136,18 +135,14 @@
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
-                        :scroll="{ x: 2000, y: 600 }"
+                        :scroll="{ x: scollX, y: 600 }"
                         :custom-row="customRow"
                         :sticky="true"
                         rowKey="lineNumber"
                         :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange}"
                     >
                         <template #bodyCell="{ column, record }">
-                            <a-tooltip
-                                v-if="column.ellipsis"
-                                color="#3b4146"
-                                :title="record[column.dataIndex]"
-                            >
+                            <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
                                 <div>{{ record[column.dataIndex] }}</div>
                             </a-tooltip>
                             <span v-else>{{ record[column.dataIndex] }}</span>
@@ -156,6 +151,34 @@
                 </div>
             </template>
         </q-splitter>
+        <q-dialog v-model="showDrawer" class="fit">
+            <q-card style="width: 50%">
+                <q-card-section>
+                    <q-div class="q-col">
+                        <div class="text-h6 q-mb-sm">选择扩展列</div>
+                        <q-div class="q-row-2">
+                            <q-separator />
+                            <q-scroll-area style="height: 500px">
+                                <q-option-group
+                                    :options="expandedColumns"
+                                    type="checkbox"
+                                    v-model="selectedExpandColIdx"
+                                    @change="atOptionGroupChange"
+                                    @update:model-value="atOptionGroupChange"
+                                />
+                            </q-scroll-area>
+                            <q-separator />
+                        </q-div>
+                    </q-div>
+                </q-card-section>
+
+                <q-card-actions align="center">
+                    <q-btn color="primary" @click="clickSelectAll">全选</q-btn>
+                    <q-btn color="primary" @click="clickSelectNone">清除</q-btn>
+                    <q-btn color="primary" v-close-popup>确定</q-btn>
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </div>
 
     <div class="q-my-sm" v-if="!showColumn">
@@ -192,7 +215,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted, toRef, toRefs, watch } from 'vue'
+import {ref, onMounted, toRef, toRefs, watch, computed} from 'vue'
 import BarChartVue from './SomaticInfoCharts/BarChart.vue'
 import PieChartVue from './SomaticInfoCharts/PieChart.vue'
 import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
@@ -293,6 +316,8 @@ const searchParams = ref({
     drug: false,
 })
 
+const showDrawer = ref(false)
+
 const loading = ref(false)
 const { rows, drugRows, header } = toRefs(props)
 const propSelectedRows = toRef(props, 'selectedRows')
@@ -301,7 +326,8 @@ const filteredRows = ref([])
 
 const currentRow = ref({})
 
-const columns = ref([
+
+const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
     { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85 }, // End
@@ -342,7 +368,54 @@ const columns = ref([
     { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
 
     // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
-])
+]
+
+const scollX = computed(() => {
+    return 2000 + (fixedColumns.length - 33) * 100
+})
+
+const selectedExpandColIdx = ref([])
+
+
+// 固定显示列的列号
+const fixedIdx = fixedColumns.map(t => t.i)
+// 扩展列的列号（所有列 排除固定列）
+const expandedIdx = new Array(146).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
+const expandedColumns = expandedIdx.map( idx => {
+    return {
+        i: idx, title: header.value[idx-1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
+        label: header.value[idx-1], value: idx
+    }
+})
+
+const clickSelectAll = () => {
+    selectedExpandColIdx.value = [...expandedColumns.map(t => t.i)]
+}
+
+const clickSelectNone = () => {
+    selectedExpandColIdx.value = []
+}
+
+const atOptionGroupChange = () => {
+    console.log('atOptionGroupChange', selectedExpandColIdx)
+}
+
+const columns = computed(() => {
+    const result = [...fixedColumns]
+    selectedExpandColIdx.value.forEach(idx => {
+        result.push({
+            i: idx, title: header.value[idx-1], dataIndex: `col${idx}`, width: 100, ellipsis: true
+        })
+    })
+
+    // 如果有扩展列要展示，需要重置列宽
+    // if (fixedColumns.length > 0) {
+    //     result.forEach(t => t.width = 0)
+    // }
+
+    return result
+})
+
 const customCell = (record, rowIndex, column) => {
     return {
         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
@@ -572,7 +645,7 @@ const loadTable = () => {
     for (let item of filteredRows.value) {
         let finded = false
         for (let lineNumber of propSelectedRows.value) {
-            if (lineNumber == item.lineNumber) {
+            if (lineNumber === item.lineNumber) {
                 finded = true
                 break
             }
@@ -592,11 +665,11 @@ const onSelectChange = (selectedRowKeys) => {
 
 const filterChange = () => {
     let filtered = true
-    if (filteredRows.value.length == rows.value.length) {
+    if (filteredRows.value.length === rows.value.length) {
         filtered = false
     }
     let selected = true
-    if (selectedRows.value.length == 0) {
+    if (selectedRows.value.length === 0) {
         selected = false
     }
     emit('filterChange', {

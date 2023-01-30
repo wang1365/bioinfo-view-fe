@@ -11,42 +11,47 @@
                         label-color="primary"
                         class="full-width"
                     />
-                    <q-input
-                        v-model="searchParams.tumorDepth"
-                        label="肿瘤深度 >"
-                        clearable
-                        type="number"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-                    <q-input
-                        v-model="searchParams.compareDepth"
-                        label="对照深度 >"
-                        clearable
-                        type="number"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-                    <q-input
-                        v-model="searchParams.tumorRatio"
-                        label="肿瘤频率 >"
-                        clearable
-                        type="number"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-                    <q-input
-                        v-model="searchParams.compareRatio"
-                        label="对照频率 >"
-                        clearable
-                        type="number"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
+                    <q-div class="row q-gutter-xs justify-between">
+                        <q-input
+                            v-model="searchParams.tumorDepth"
+                            label="肿瘤深度 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-5"
+                        />
+                        <q-input
+                            v-model="searchParams.compareDepth"
+                            label="对照深度 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-5"
+                        />
+                    </q-div>
+                    <q-div class="row q-gutter-xs justify-between">
+                        <q-input
+                            v-model="searchParams.tumorRatio"
+                            label="肿瘤频率 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-5"
+                        />
+                        <q-input
+                            v-model="searchParams.compareRatio"
+                            label="对照频率 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-5"
+                        />
+                    </q-div>
+
                     <q-select
                         v-model="searchParams.mutationType"
                         clearable
@@ -113,20 +118,20 @@
                         label="SIFT_pred"
                         class="full-width"
                     />
-                    <q-checkbox
-                        left-label
-                        v-model="searchParams.drug"
-                        label="是否关联药物"
-                        color="primary"
-                    />
-                    <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
-                    <div class="q-gutter-md text-center q-py-sm">
+                    <div class="row items-center">
+                        <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary" />
+                        <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
+                    </div>
+
+                    <div class="q-gutter-md text-center q-py-xs">
                         <q-btn color="primary" label="确定" icon="search" @click="search" />
+                        <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset" />
                         <q-btn
                             color="primary"
-                            label="重置"
-                            icon="settings_backup_restore"
-                            @click="reset"
+                            label="扩展列"
+                            size="md"
+                            icon="last_page"
+                            @click="showDrawer = !showDrawer"
                         />
                     </div>
                 </div>
@@ -178,10 +183,10 @@
                         :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }"
                     >
                         <template #bodyCell="{ column, record }">
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
-                            <div>{{record[column.dataIndex]}}</div>
-                        </a-tooltip>
-                        <span v-else>{{record[column.dataIndex]}}</span>
+                            <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                                <div>{{record[column.dataIndex]}}</div>
+                            </a-tooltip>
+                            <span v-else>{{record[column.dataIndex]}}</span>
                         </template>
                     </a-table>
                 </div>
@@ -362,6 +367,8 @@ const tumorColumnIdx = computed(() => {
     })
     return tumorIdx
 })
+
+const showDrawer = ref(false)
 
 const customCell = (record, rowIndex, column) => {
     return {
