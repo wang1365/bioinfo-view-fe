@@ -11,7 +11,7 @@
                         label-color="primary"
                         class="full-width"
                     />
-                    <q-div class="row q-gutter-xs justify-between">
+                    <div class="row q-gutter-xs justify-between">
                         <q-input
                             v-model="searchParams.tumorDepth"
                             label="肿瘤深度 >"
@@ -30,8 +30,8 @@
                             label-color="primary"
                             class="col-5"
                         />
-                    </q-div>
-                    <q-div class="row q-gutter-xs justify-between">
+                    </div>
+                    <div class="row q-gutter-xs justify-between">
                         <q-input
                             v-model="searchParams.tumorRatio"
                             label="肿瘤频率 >"
@@ -50,7 +50,7 @@
                             label-color="primary"
                             class="col-5"
                         />
-                    </q-div>
+                    </div>
 
                     <q-select
                         v-model="searchParams.mutationType"
@@ -195,9 +195,9 @@
         <q-dialog v-model="showDrawer" class="fit">
             <q-card style="width: 50%">
                 <q-card-section>
-                    <q-div class="q-col">
+                    <div class="q-col">
                         <div class="text-h6 q-mb-sm">选择扩展列</div>
-                        <q-div class="q-row-2">
+                        <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
                                 <q-option-group
@@ -209,8 +209,8 @@
                                 />
                             </q-scroll-area>
                             <q-separator />
-                        </q-div>
-                    </q-div>
+                        </div>
+                    </div>
                 </q-card-section>
 
                 <q-card-actions align="center">

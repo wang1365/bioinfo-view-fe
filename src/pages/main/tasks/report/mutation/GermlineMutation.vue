@@ -154,9 +154,9 @@
         <q-dialog v-model="showDrawer" class="fit">
             <q-card style="width: 50%">
                 <q-card-section>
-                    <q-div class="q-col">
+                    <div class="q-col">
                         <div class="text-h6 q-mb-sm">选择扩展列</div>
-                        <q-div class="q-row-2">
+                        <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
                                 <q-option-group
@@ -168,8 +168,8 @@
                                 />
                             </q-scroll-area>
                             <q-separator />
-                        </q-div>
-                    </q-div>
+                        </div>
+                    </div>
                 </q-card-section>
 
                 <q-card-actions align="center">
@@ -238,7 +238,7 @@ const props = defineProps({
     },
     task: {
         type: Object,
-        reuqired: false,
+        required: false,
     },
     showSticky: {
         type: Boolean,
@@ -382,15 +382,17 @@ const selectedExpandColIdx = ref([])
 const fixedIdx = fixedColumns.map(t => t.i)
 // 扩展列的列号（所有列 排除固定列）
 const expandedIdx = new Array(146).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
-const expandedColumns = expandedIdx.map( idx => {
-    return {
-        i: idx, title: header.value[idx-1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
-        label: header.value[idx-1], value: idx
-    }
+const expandedColumns = computed(() => {
+    return expandedIdx.map( idx => {
+        return {
+            i: idx, title: header.value[idx-1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
+            label: header.value[idx-1], value: idx
+        }
+    })
 })
 
 const clickSelectAll = () => {
-    selectedExpandColIdx.value = [...expandedColumns.map(t => t.i)]
+    selectedExpandColIdx.value = [...expandedColumns.value.map(t => t.i)]
 }
 
 const clickSelectNone = () => {

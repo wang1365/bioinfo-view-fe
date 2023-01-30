@@ -26,9 +26,9 @@
             </template>
             <template v-slot:body-cell-panels="props">
                 <q-td :props="props" align="center">
-                    <q-div v-for="item in props.row.panels" :key="item.id">
+                    <div v-for="item in props.row.panels" :key="item.id">
                         <q-chip :label="item.name" color="primary" outline size="sm" />
-                    </q-div>
+                    </div>
 
                     <!--                    <div v-for="item in props.row.panels" :key="item.id">{{item.name}}</div>-->
                 </q-td>
