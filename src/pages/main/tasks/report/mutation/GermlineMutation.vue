@@ -135,7 +135,7 @@
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
-                        :scroll="{ x: scollX, y: 600 }"
+                        :scroll="{ x: scrollX, y: 600 }"
                         :custom-row="customRow"
                         :sticky="true"
                         rowKey="lineNumber"
@@ -370,7 +370,7 @@ const fixedColumns = [
     // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
 ]
 
-const scollX = computed(() => {
+const scrollX = computed(() => {
     return 2000 + (fixedColumns.length - 33) * 100
 })
 
@@ -413,6 +413,7 @@ const columns = computed(() => {
     //     result.forEach(t => t.width = 0)
     // }
 
+    result.forEach((c) => (c.customCell = customCell))
     return result
 })
 
@@ -431,7 +432,6 @@ const customCell = (record, rowIndex, column) => {
         },
     }
 }
-columns.value.forEach((c) => (c.customCell = customCell))
 
 const customRow = (record, index) => {
     return {

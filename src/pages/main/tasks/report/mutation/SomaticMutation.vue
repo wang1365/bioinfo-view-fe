@@ -192,11 +192,34 @@
                 </div>
             </template>
         </q-splitter>
-        <div class="row justify-between">
-            <div class="col-2 column q-pr-sm"></div>
+        <q-dialog v-model="showDrawer" class="fit">
+            <q-card style="width: 50%">
+                <q-card-section>
+                    <q-div class="q-col">
+                        <div class="text-h6 q-mb-sm">选择扩展列</div>
+                        <q-div class="q-row-2">
+                            <q-separator />
+                            <q-scroll-area style="height: 500px">
+                                <q-option-group
+                                    :options="expandedColumns"
+                                    type="checkbox"
+                                    v-model="selectedExpandColIdx"
+                                    @change="atOptionGroupChange"
+                                    @update:model-value="atOptionGroupChange"
+                                />
+                            </q-scroll-area>
+                            <q-separator />
+                        </q-div>
+                    </q-div>
+                </q-card-section>
 
-            <div class="col-10"></div>
-        </div>
+                <q-card-actions align="center">
+                    <q-btn color="primary" @click="clickSelectAll">全选</q-btn>
+                    <q-btn color="primary" @click="clickSelectNone">清除</q-btn>
+                    <q-btn color="primary" v-close-popup>确定</q-btn>
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </div>
 
     <div class="q-my-sm" v-if="!showColumn">
@@ -402,7 +425,7 @@ const customCell = (record, rowIndex, column) => {
     }
 }
 const currentRow = ref({})
-const columns = ref([
+const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
     { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85 }, // End
@@ -444,9 +467,56 @@ const columns = ref([
     { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
 
     { i: 148, title: '', dataIndex: 'col148', align: 'center', width: 100 },
-])
+]
 
-columns.value.forEach((c) => (c.customCell = customCell))
+
+const scrollX = computed(() => {
+    return 2000 + (fixedColumns.length - 33) * 100
+})
+
+const selectedExpandColIdx = ref([])
+
+
+// 固定显示列的列号
+const fixedIdx = fixedColumns.map(t => t.i)
+// 扩展列的列号（所有列 排除固定列）
+const expandedIdx = new Array(146).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
+const expandedColumns = expandedIdx.map( idx => {
+    return {
+        i: idx, title: header.value[idx-1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
+        label: header.value[idx-1], value: idx
+    }
+})
+
+const clickSelectAll = () => {
+    selectedExpandColIdx.value = [...expandedColumns.map(t => t.i)]
+}
+
+const clickSelectNone = () => {
+    selectedExpandColIdx.value = []
+}
+
+const atOptionGroupChange = () => {
+    console.log('atOptionGroupChange', selectedExpandColIdx)
+}
+
+const columns = computed(() => {
+    const result = [...fixedColumns]
+    selectedExpandColIdx.value.forEach(idx => {
+        result.push({
+            i: idx, title: header.value[idx-1], dataIndex: `col${idx}`, width: 100, ellipsis: true
+        })
+    })
+
+    // 如果有扩展列要展示，需要重置列宽
+    // if (fixedColumns.length > 0) {
+    //     result.forEach(t => t.width = 0)
+    // }
+
+    result.forEach((c) => (c.customCell = customCell))
+    return result
+})
+
 
 const customRow = (record, index) => {
     return {
