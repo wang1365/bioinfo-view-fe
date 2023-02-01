@@ -220,7 +220,7 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <q-separator class="q-my-lg" size="2px" color="primary"/>
+        <q-separator class="q-my-lg" size="2px" color="primary" />
     </div>
 
     <div class="q-my-sm" v-if="!showColumn">
@@ -471,17 +471,13 @@ const fixedColumns = [
 ]
 
 
-const scrollX = computed(() => {
-    return 2000 + (fixedColumns.length - 33) * 100
-})
-
 const selectedExpandColIdx = ref([])
 
 
 // 固定显示列的列号
 const fixedIdx = fixedColumns.map(t => t.i)
 // 扩展列的列号（所有列 排除固定列）
-const expandedIdx = new Array(146).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
+const expandedIdx = new Array(150).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
 const expandedColumns = expandedIdx.map( idx => {
     return {
         i: idx, title: header.value[idx-1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
@@ -754,14 +750,14 @@ const loadTable = () => {
     search()
     selectedRows.value = []
     for (let item of filteredRows.value) {
-        let finded = false
+        let found = false
         for (let lineNumber of propSelectedRows.value) {
             if (lineNumber === item.lineNumber) {
-                finded = true
+                found = true
                 break
             }
         }
-        if (finded) {
+        if (found) {
             selectedRows.value.push(item.lineNumber)
         }
     }
