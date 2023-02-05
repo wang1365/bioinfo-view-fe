@@ -23,8 +23,10 @@
     <q-separator color="primary"/>
     <div>
         <template v-for="image in images" :key="image">
-            <q-img class="q-mt-lg text-primary" :src="image.url" height="100%" width="100%" fit="contain"/>
-            <span class="text-primary">{{image.description}}</span>
+            <q-img class="q-mt-lg text-primary" :src="image.url" style="max-height: 500px"
+                   fit="contain" position="0 20px"
+            />
+            <div class="text-primary">{{image.description}}</div>
         </template>
     </div>
 </div>
