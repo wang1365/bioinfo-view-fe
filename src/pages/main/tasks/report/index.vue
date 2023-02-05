@@ -50,6 +50,11 @@
                     icon="line_axis"
                     v-if="tabValid('homologous-recombination-defect')"
                 />
+                <q-tab  v-for="commonTab in commonTabs" :key="commonTab.title"
+                    :name="commonTab.title"
+                    :label="commonTab.title"
+                    icon="line_axis"
+                />
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
@@ -108,6 +113,15 @@
                         :samples="samples"
                     />
                 </q-tab-panel>
+                <q-tab-panel v-for="commonTab in commonTabs" :key="commonTab.title"
+                        :name="commonTab.title"
+                        :viewConfig="commonTab"
+                >
+                    <CommonModuleVue
+                        :viewConfig="commonTab"
+                        :task="taskDetail"
+                    />
+                </q-tab-panel>
             </q-tab-panels>
         </div>
     </q-page>
@@ -123,6 +137,7 @@ import CopyNumberVariationVue from './copy-number-variation/index.vue'
 import MicrosatelliteInstabilityVue from './microsatellite-instability/index.vue'
 import TumorMutationLoadVue from './tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from './homologous-recombination-defect/index.vue'
+import CommonModuleVue from './common-module/index.vue'
 
 import { useRoute } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
@@ -137,6 +152,7 @@ const intros = ref({})
 const tab = ref('qc')
 const taskDetail = ref({})
 const samples = ref([])
+const commonTabs = ref([])
 const module = ref({
     homologous_recombination_defect: { showHRDtable: true, showHRDpicture: true },
     microsatellite_instability: { showMSI: true, showMSIsite: true },
@@ -164,13 +180,14 @@ onMounted(() => {
     })
 
     const dict = {
-        质控: 'qc',
-        突变分析: 'mutation',
-        融合分析: 'fusion',
-        拷贝数变异分析: 'copy-number-variation',
-        微卫星不稳定分析: 'microsatellite-instability',
-        肿瘤突变负荷分析: 'tumor-mutation-load',
-        同源重组缺陷分析: 'homologous-recombination-defect',
+        '质控': 'qc',
+        '突变分析': 'mutation',
+        '融合分析': 'fusion',
+        '拷贝数变异分析': 'copy-number-variation',
+        '微卫星不稳定分析': 'microsatellite-instability',
+        '肿瘤突变负荷分析': 'tumor-mutation-load',
+        '同源重组缺陷分析': 'homologous-recombination-defect',
+        'commonModules': 'commonModules' // 自定义通用模块
     }
     // 读取任务的 result.json 结果文件, 他是一个 json 文件, key:value
     // key 是 页面上的 tab 名称, value 是每个 tab 的说明信息
@@ -193,13 +210,14 @@ onMounted(() => {
     readTaskFile(route.params.id, 'module.json').then((res) => {
         let data = null
         const dict = {
-            质控: 'qc',
-            突变分析: 'mutation',
-            融合分析: 'fusion',
-            拷贝数变异分析: 'copy_number_variation',
-            微卫星不稳定分析: 'microsatellite_instability',
-            肿瘤突变负荷分析: 'tumor_mutation_load',
-            同源重组缺陷分析: 'homologous_recombination_defect',
+            '质控': 'qc',
+            '突变分析': 'mutation',
+            '融合分析': 'fusion',
+            '拷贝数变异分析': 'copy_number_variation',
+            '微卫星不稳定分析': 'microsatellite_instability',
+            '肿瘤突变负荷分析': 'tumor_mutation_load',
+            '同源重组缺陷分析': 'homologous_recombination_defect',
+            'commonModules': 'commonModules' // 自定义通用模块
         }
         try {
             data = JSON.parse(res)
@@ -217,6 +235,7 @@ onMounted(() => {
                 viewConfig[dict[k]] = data[k]
             }
             module.value = viewConfig
+            commonTabs.value = viewConfig.commonModules
         }
     })
 })
