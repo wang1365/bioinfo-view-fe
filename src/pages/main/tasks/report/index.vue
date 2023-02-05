@@ -53,7 +53,7 @@
                 <q-tab  v-for="commonTab in commonTabs" :key="commonTab.title"
                     :name="commonTab.title"
                     :label="commonTab.title"
-                    icon="line_axis"
+                    icon="web_stories"
                 />
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
