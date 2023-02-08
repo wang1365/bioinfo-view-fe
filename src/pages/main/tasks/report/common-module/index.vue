@@ -1,5 +1,22 @@
 <template>
 <div>
+      <q-btn
+        v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        label="已固定过滤"
+    />
+    <q-btn
+        v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        outline
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        @click="stickFilter()"
+    >固定过滤</q-btn>
     <q-btn
         icon="help_outline"
         size="small"
@@ -40,8 +57,13 @@ import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/
 const dlgVisible = ref(false)
 const props = defineProps({
     viewConfig: {
-        required: true,
-        default: () => {}
+        type: Object,
+        required: false,
+        default() {
+            return {
+               showSticky: false,
+            }
+        },
     },
     task: {
         required: true,
@@ -105,6 +127,14 @@ const initImages = () => {
 
 const onChange = () => {
 
+}
+
+const emit = defineEmits(['stickDone'])
+const stickFilter = () => {
+    let data = {
+
+    }
+    emit('stickDone', data)
 }
 </script>
 

@@ -68,7 +68,7 @@
                     :intro="intros['tumor_mutation_load']"
                     :task="taskDetail"
                     :samples="samples"
-                    @stickDone="stickDone('tumor_mutation_load', $event, 'create')"
+                    @stickDone="stickDone('tumor_mutation_load', $event, commonTabs[0].title)"
                 />
             </q-step>
             <!-- <q-step v-if="tabValid('qc')" name="qc" title="质控" icon="border_left" color="secondary">
@@ -84,6 +84,10 @@
                 <HomologousRecombinationDefectVue :viewConfig="viewConfig.homologous_recombination_defect"
                     :intro="intros['homologous_recombination-defect']" :task="taskDetail" :samples="samples" />
             </q-step>-->
+            <q-step v-for="commonTab in commonTabs" :key="commonTab.title" :title="commonTab.title" :name="commonTab.title" :done="isStepDone(commonTab.title)">
+                <CommonModuleVue v-if="commonTab.title" :viewConfig="getCommonConfig(commonTab.title)" :task="taskDetail" @stickDone="stickDone(commonTab.title, $event, 'create')"/>
+
+            </q-step>
             <q-step name="create" title="报告确认" icon="receipt_long">
                 <div>
                     <span class="text-bold text-h6 text-primary">已固定的数据是:</span>
@@ -232,7 +236,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
-
+import CommonModuleVue from 'src/pages/main/tasks/report/common-module/index.vue'
 import QcVue from '../report/qc/index.vue'
 import MutaionVue from '../report/mutation/index.vue'
 import FusionVue from '../report/fusion/index.vue'
@@ -254,17 +258,18 @@ const intros = ref({})
 const taskDetail = ref({})
 const samples = ref([])
 const viewConfig = ref({
-    homologous_recombination_defect: { showHRDtable: true, showHRDpicture: true, showStick: true, stickDone: false },
-    microsatellite_instability: { showMSI: true, showMSIsite: true, showStick: true, stickDone: false },
-    copy_number_variation: { showCNVcircos: true, showCNVtable: true, showStick: true, stickDone: false },
-    mutation: { showMutGermline: true, showMutSomatic: true, showStick: true, stickDone: false },
-    tumor_mutation_load: { showTMB: true, showStick: true, stickDone: false },
-    fusion: { showFusionGermline: true, showFusionSomatic: true, showStick: true, stickDone: false },
-    qc: { showQCsummary: true, showQCdepth: true, showStick: true, stickDone: false },
-})
+     homologous_recombination_defect: { showHRDtable: true, showHRDpicture: true, showStick: true, stickDone: false },
+     microsatellite_instability: { showMSI: true, showMSIsite: true, showStick: true, stickDone: false },
+     copy_number_variation: { showCNVcircos: true, showCNVtable: true, showStick: true, stickDone: false },
+     mutation: { showMutGermline: true, showMutSomatic: true, showStick: true, stickDone: false },
+     tumor_mutation_load: { showTMB: true, showStick: true, stickDone: false },
+     fusion: { showFusionGermline: true, showFusionSomatic: true, showStick: true, stickDone: false },
+     qc: { showQCsummary: true, showQCdepth: true, showStick: true, stickDone: false },
+ })
+ const commonTabs = ref([])
 
-onMounted(() => {
-    loadTaskSamples()
+ onMounted(() => {
+     loadTaskSamples()
     loadIntros()
     loadViewConfig()
 })
@@ -392,6 +397,7 @@ const loadViewConfig = () => {
             微卫星不稳定分析: 'microsatellite_instability',
             肿瘤突变负荷分析: 'tumor_mutation_load',
             同源重组缺陷分析: 'homologous_recombination_defect',
+            'commonModules': 'commonModules' // 自定义通用模块
         }
         try {
             data = JSON.parse(res)
@@ -412,9 +418,22 @@ const loadViewConfig = () => {
                 config[dict[k]].showStick = true
                 config[dict[k]].stickDone = false
             }
+
+            for (let common of data.commonModules) {
+                config[common.title] = common
+                config[common.title].showStick = true
+                config[common.title].stickDone = false
+            }
+            console.log(data.commonModules)
             viewConfig.value = config
+            console.log(config)
+            commonTabs.value = data.commonModules
+
         }
         viewConfigLoaded.value = true
     })
+}
+const getCommonConfig=(title)=>{
+     return viewConfig.value[title]
 }
 </script>
