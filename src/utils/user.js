@@ -4,6 +4,19 @@ export const isSuper = (user) => {
     return isRole(user, 'super')
 }
 
+export const amISuper = () => {
+    const { currentUser } = globalStore()
+    if (!currentUser) {
+        return false
+    }
+
+    const userRoles = currentUser.role_list
+    if (!userRoles) {
+        return false
+    }
+    return userRoles.includes('super')
+}
+
 export const isAdmin = (user) => {
     return isRole(user, 'admin')
 }

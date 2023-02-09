@@ -15,7 +15,8 @@
         color="primary"
         class="relative-position float-right q-mr-md"
         @click="stickFilter()"
-    >固定过滤</q-btn>
+        >固定过滤</q-btn
+    >
 
     <q-btn
         icon="help_outline"
@@ -24,7 +25,8 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-    >说明</q-btn>
+        >说明</q-btn
+    >
     <div>
         <div v-if="props.viewConfig.showCNVcircos">
             <div class="row">
@@ -55,21 +57,10 @@
                             />
                         </div>
                         <div class="q-gutter-xs">
+                            <q-btn class="col" color="primary" size="small" label="确定" @click="refreshPie" />
+                            <q-btn class="col" color="primary" size="small" label="复位" @click="resetPie" />
                             <q-btn
-                                class="col"
-                                color="primary"
-                                size="small"
-                                label="确定"
-                                @click="refreshPie"
-                            />
-                            <q-btn
-                                class="col"
-                                color="primary"
-                                size="small"
-                                label="复位"
-                                @click="resetPie"
-                            />
-                            <q-btn
+                                v-if="amISuper()"
                                 class="col"
                                 color="primary"
                                 size="small"
@@ -187,6 +178,7 @@ import { getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { readSystemFile } from 'src/api/report'
 import { toMap, partition } from 'src/utils/collection'
 import { uid } from 'quasar'
+import { amISuper } from 'src/utils/user'
 import * as echarts from 'echarts'
 
 import { pieOption, columns } from './index'
