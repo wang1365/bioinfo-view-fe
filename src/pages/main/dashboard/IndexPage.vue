@@ -27,7 +27,8 @@
                 <q-card-section class="text-secondary text-h5 text-bold">
                     {{reports.thisWeek}}
                     /
-                    <span>{{reports.total}}</span>份
+                    <span>{{reports.total}}</span
+                    >份
                 </q-card-section>
                 <q-card-section class="desc">新增报告数(本周) / 报告总数</q-card-section>
             </q-card>
@@ -69,26 +70,30 @@
                                     <q-card class="my-card">
                                         <q-card-section
                                             class="text-primary text-h5 text-bold"
-                                        >{{ taskStats.running_task_count }}</q-card-section>
+                                            >{{ taskStats.running_task_count }}</q-card-section
+                                        >
 
                                         <q-card-section class="desc">正在运行</q-card-section>
                                     </q-card>
                                     <q-card class="my-card">
                                         <q-card-section
                                             class="text-negative text-h5 text-bold"
-                                        >{{ taskStats.failured_task_count }}</q-card-section>
+                                            >{{ taskStats.failured_task_count }}</q-card-section
+                                        >
                                         <q-card-section class="desc">失败任务</q-card-section>
                                     </q-card>
                                     <q-card class="my-card">
                                         <q-card-section
                                             class="text-secondary text-h5 text-bold"
-                                        >{{ taskStats.pending_task_count }}</q-card-section>
+                                            >{{ taskStats.pending_task_count }}</q-card-section
+                                        >
                                         <q-card-section class="desc">排队任务</q-card-section>
                                     </q-card>
                                     <q-card class="my-card">
                                         <q-card-section
                                             class="text-warning text-h5 text-bold"
-                                        >{{ taskStats.max_task }}</q-card-section>
+                                            >{{ taskStats.max_task }}</q-card-section
+                                        >
                                         <q-card-section class="desc">
                                             允许最大
                                             <br />任务数
@@ -121,6 +126,11 @@ import { listConfig } from 'src/api/config'
 import { getWeeklyDiskUsage } from 'src/api/resource'
 import { useApi } from 'src/api/apiBase'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
+import { globalStore } from 'src/stores/global'
+import { useRouter }from 'vue-router'
+
+const store = globalStore()
+const router = useRouter()
 
 const { apiGet, apiPost } = useApi()
 const weeklyDiskUsage = ref('0 T')
@@ -164,6 +174,12 @@ const week = () => {
     }
 }
 onMounted(() => {
+    // 普通用户，重定向到项目页面
+    if (store.currentUser.role_list.includes('normal')) {
+        router.push('/main/projects')
+        return
+    }
+
     init()
 })
 
