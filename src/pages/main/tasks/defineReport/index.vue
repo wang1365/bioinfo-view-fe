@@ -444,16 +444,15 @@ const loadViewConfig = () => {
                 config[dict[k]].showStick = true
                 config[dict[k]].stickDone = false
             }
-
-            for (let common of data.commonModules) {
-                config[common.title] = common
-                config[common.title].showStick = true
-                config[common.title].stickDone = false
+            if(data.commonModules){
+                for (let common of data.commonModules) {
+                    config[common.title] = common
+                    config[common.title].showStick = true
+                    config[common.title].stickDone = false
+                }
+                viewConfig.value = config
+                commonTabs.value = data.commonModules
             }
-            console.log(data.commonModules)
-            viewConfig.value = config
-            console.log(config)
-            commonTabs.value = data.commonModules
         }
         viewConfigLoaded.value = true
     })
