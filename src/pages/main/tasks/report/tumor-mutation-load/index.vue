@@ -6,6 +6,7 @@
         color="primary"
         class="relative-position float-right q-mr-md"
         label="已固定过滤"
+        @click="reset()"
     />
     <q-btn
         v-if="props.viewConfig.showStick&& !props.viewConfig.stickDone"
@@ -25,19 +26,13 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-    >说明</q-btn>
+        >说明</q-btn
+    >
 
     <div class="row justify-between">
         <div class="col-3 column q-gutter-xs">
             <div class="col">
-                <q-input
-                    model-value="PASS"
-                    label="VCF Filter"
-                    clearable
-                    readonly
-                    stack-label
-                    label-color="primary"
-                />
+                <q-input model-value="PASS" label="VCF Filter" clearable readonly stack-label label-color="primary" />
             </div>
             <div class="col">
                 <q-input
@@ -136,12 +131,7 @@
             </div>
             <div class="q-gutter-md text-center q-py-sm">
                 <q-btn color="primary" label="确定" icon="search" @click="search()" />
-                <q-btn
-                    color="primary"
-                    label="复位"
-                    icon="settings_backup_restore"
-                    @click="clickReset"
-                />
+                <q-btn color="primary" label="复位" icon="settings_backup_restore" @click="clickReset" />
             </div>
         </div>
 
@@ -151,10 +141,7 @@
             <div class="q-pl-sm q-mt-sm">
                 <div class="text-weight-bold text-primary">仅限研究使用，不用于临床诊断</div>
                 <div class="text-weight-bold text-red">警示：随意过滤造成结果不准确</div>
-                <div
-                    class="text-weight-bold text-primary q-mt-sm"
-                    style="white-space: pre"
-                >{{ guageTip }}</div>
+                <div class="text-weight-bold text-primary q-mt-sm" style="white-space: pre">{{ guageTip }}</div>
             </div>
         </div>
     </div>
@@ -172,7 +159,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted ,toRef} from 'vue'
 import { readTaskFile } from 'src/api/task'
 import { useRoute } from 'vue-router'
 import { getCsvData, getCsvHeader } from 'src/utils/csv'
@@ -233,7 +220,12 @@ const props = defineProps({
             }
         },
     },
+    stepData: {
+        type: Object,
+        default: () => { }
+    }
 })
+const stepData = toRef(props, 'stepData')
 
 // 任务样本数据列表信息（用于查询样本数据识别号是否是肿瘤）
 const samples = ref({})
@@ -243,14 +235,8 @@ const tumorColumns = ref([])
 const mutationPositionOptions = ref([])
 const mutationMeaningOptions = ref([])
 const loading = ref(false)
-const emit = defineEmits(['stickDone'])
-const stickFilter = () => {
-    let data = {
-        tmb: tmb.value,
-        searchParams: searchParams.value,
-    }
-    emit('stickDone', data)
-}
+
+const originSearchParams=ref("") // 用于重置筛选
 onMounted(() => {
     loading.value = true
     // 从filter.txt获取默认参数值
@@ -284,6 +270,10 @@ onMounted(() => {
             }
 
             searchParams.value = Object.assign({}, initialParams)
+            originSearchParams.value=JSON.stringify(searchParams.value)
+            if(stepData.value && stepData.value.searchParams){
+                searchParams.value=stepData.value.searchParams
+            }
 
             // 查询任务样本，用于获取样本（样本识别号）是肿瘤样本还是对照样本
             const query = buildModelQuery([], { id__in: props.task.samples })
@@ -462,5 +452,18 @@ const search = () => {
 
     tmb.value = (filteredLines.value.length / bedRegionValue.value).toFixed(2)
     // tmb.value = Math.round(filteredLines.value.length / bedRegionValue.value)
+}
+const emit = defineEmits(['stickDone','reset'])
+const stickFilter = () => {
+    let data = {
+        tmb: tmb.value,
+        searchParams: searchParams.value,
+    }
+    emit('stickDone', data)
+}
+const reset=()=>{
+    searchParams.value=JSON.parse(originSearchParams.value)
+    emit('reset', null)
+    search()
 }
 </script>

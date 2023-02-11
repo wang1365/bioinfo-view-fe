@@ -179,7 +179,7 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <q-separator class="q-my-lg" size="2px" color="primary"/>
+        <q-separator class="q-my-lg" size="2px" color="primary" />
     </div>
 
     <div class="q-my-sm" v-if="!showColumn">
@@ -645,6 +645,7 @@ const loadTable = () => {
     searchParams.value = propSearchParams.value
     search()
     selectedRows.value = []
+
     for (let item of filteredRows.value) {
         let finded = false
         for (let lineNumber of propSelectedRows.value) {
@@ -657,6 +658,7 @@ const loadTable = () => {
             selectedRows.value.push(item.lineNumber)
         }
     }
+
     filterChange()
 }
 const selectedRows = ref([])

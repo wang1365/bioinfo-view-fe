@@ -8,7 +8,8 @@
                 color="orange"
                 class="q-mr-md"
                 @click="dlgVisible = !dlgVisible"
-            >说明</q-btn>
+                >说明</q-btn
+            >
             <q-btn
                 v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
                 icon="bookmarks"
@@ -16,6 +17,7 @@
                 color="primary"
                 class="q-mr-md"
                 label="已固定过滤"
+                @click="unstick()"
             />
             <q-btn
                 v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
@@ -25,7 +27,8 @@
                 color="primary"
                 class="q-mr-md"
                 @click="stickFilter()"
-            >固定过滤</q-btn>
+                >固定过滤</q-btn
+            >
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 800px; max-width: 2000px">
@@ -90,7 +93,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref ,toRef} from 'vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 
@@ -109,8 +112,12 @@ const props = defineProps({
         required: true,
         default: () => {},
     },
+    stepData: {
+        type: Object,
+        default: () => { }
+    }
 })
-
+const stepData = toRef(props, 'stepData')
 const columns = ref([])
 const rows = ref([])
 const filteredRows = ref([])
@@ -123,11 +130,10 @@ const clearKeyword = () => {
     searchKeyword()
 }
 const searchKeyword = () => {
-    console.log(filteredRows.value)
     if (keyword.value) {
         filteredRows.value = rows.value.filter((t) => {
             for (let key in t) {
-                if (t[key].includes(keyword.value)) {
+                if (t[key].toString().includes(keyword.value)) {
                     return true
                 }
             }
@@ -158,7 +164,6 @@ const initTable = () => {
         readTaskFile(props.task.id, table.file).then((res) => {
             const colNames = getCsvHeader(res)
             rows.value = getCsvDataAndSetLineNumber(res, { fields: colNames })
-            console.log(rows.value)
             columns.value = colNames.map((name) => {
                 // 当前列所有数据去重，作为筛选项
                 const values = [...new Set(rows.value.map((t) => t[name]))]
@@ -173,7 +178,15 @@ const initTable = () => {
                 }
             })
             filteredRows.value = rows.value
-            console.log(rows)
+            if(stepData.value && stepData.value.searchParam){
+                keyword.value=stepData.value.searchParam
+
+                searchKeyword()
+
+            }
+            if(stepData.value && stepData.value.selectedRows){
+                    selectedRows.value=stepData.value.selectedRows
+                }
         })
     }
 }
@@ -193,9 +206,8 @@ const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     selectedRows.value = selectedRowKeys
-     console.log(selectedRows.value)
 }
-const emit = defineEmits(['stickDone'])
+const emit = defineEmits(['stickDone','reset'])
 const stickFilter = () => {
     let data = {
         searchParam: keyword.value,
@@ -205,7 +217,12 @@ const stickFilter = () => {
     }
      emit('stickDone', data)
 }
+const unstick=()=>{
+    emit('reset',null)
+    selectedRows.value=[]
+    keyword.value=""
+    searchKeyword()
+}
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

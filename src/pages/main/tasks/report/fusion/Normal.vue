@@ -44,10 +44,7 @@
             </a-table>
         </div>
         <q-dialog v-model="igvVisible">
-            <q-card
-                class="full-width"
-                style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh"
-            >
+            <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
                 <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
             </q-card>
         </q-dialog>
@@ -128,7 +125,6 @@ const clearKeyword = () => {
 }
 
 const clickView = (record) => {
-    console.log('clickView', record)
     selectedFile.value = record[7]
     igvVisible.value = true
 }

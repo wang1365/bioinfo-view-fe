@@ -198,7 +198,6 @@ const igvVisible = ref(false)
 const selectedFile = ref('')
 
 const searchKeyword1 = () => {
-    console.log(filteredRows1.value)
     if (keyword1.value) {
         filteredRows1.value = qtRows.value.filter((t) => {
             for (let i = 0; i < 8; i++) {
@@ -243,7 +242,6 @@ const clearKeyword2 = () => {
 }
 
 const clickView = (record) => {
-    console.log(record)
     selectedFile.value = record[8]
     igvVisible.value = true
 }

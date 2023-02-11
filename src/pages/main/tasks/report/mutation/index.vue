@@ -7,6 +7,7 @@
             color="primary"
             class="relative-position float-right q-mr-md"
             label="已固定过滤"
+            @click="reset()"
         />
         <q-btn
             v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
@@ -52,7 +53,7 @@
                     :drugRows="germlineData.drugRows"
                     :selectedRows="germlineData.selectedRows"
                     :showSticky="props.viewConfig.showStick"
-                    @filterChange="filterChange('germline',$event)"
+                    @filterChange="filterChange('germline', $event)"
                 />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
@@ -67,7 +68,7 @@
                     :drugRows="somaticData.drugRows"
                     :selectedRows="somaticData.selectedRows"
                     :showSticky="props.viewConfig.showStick"
-                    @filterChange="filterChange('somatic',$event)"
+                    @filterChange="filterChange('somatic', $event)"
                 />
             </q-tab-panel>
         </q-tab-panels>
@@ -85,7 +86,7 @@
     </div>
 </template>
 <script setup>
-import { errorMessage,infoMessage } from 'src/utils/notify'
+import { errorMessage, infoMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
@@ -97,7 +98,7 @@ const route = useRoute()
 const loaded = ref(false)
 const tab = ref('胚系突变分析')
 const dlgVisible = ref(false)
-const emit = defineEmits('stickDone')
+const emit = defineEmits(['stickDone', 'reset'])
 const viewConfig = toRef(props, 'viewConfig')
 const props = defineProps({
     intro: {
@@ -124,6 +125,10 @@ const props = defineProps({
         type: Object,
         required: false,
     },
+    stepData: {
+        type: Object,
+        default: () => { }
+    }
 })
 
 const germlineData = ref({
@@ -150,7 +155,8 @@ const germlineData = ref({
     drugRows: [],
     selectedRows: [],
 })
-
+const origingermlineData = ref('')
+const originsomaticData = ref('')
 const somaticData = ref({
     rows: [],
     header: [],
@@ -179,8 +185,9 @@ const somaticData = ref({
 })
 
 const filterData = ref({ somatic: {}, germline: {} })
-
+const stepData = toRef(props, 'stepData')
 onMounted(() => {
+
     if (viewConfig.value.showMutGermline) {
         loadGermlineData()
     }
@@ -195,13 +202,13 @@ const filterChange = (name, data) => {
     if (name === 'germline') {
         germlineData.value.searchParams = data.searchParams
         germlineData.value.selectedRows = data.selectedRows
-    }else{
+    } else {
         somaticData.value.searchParams = data.searchParams
         somaticData.value.selectedRows = data.selectedRows
     }
- }
- // 同步子组件的过滤参数
- const onSearchParamsChange = (name, data) => {
+}
+// 同步子组件的过滤参数
+const onSearchParamsChange = (name, data) => {
     if (name == 'germline') {
         germlineData.value.searchParams = data
     } else {
@@ -220,6 +227,14 @@ const stickFilter = () => {
     emit('stickDone', filterData.value)
 }
 
+const reset = () => {
+    germlineData.value=JSON.parse(origingermlineData.value)
+    germlineData.value.selectedRows=[]
+    somaticData.value=JSON.parse(originsomaticData.value)
+    somaticData.value.selectedRows=[]
+    emit('rest', null)
+
+}
 const loadGermlineData = () => {
     readTaskMuFile(route.params.id, 'Mut_germline').then((res) => {
         const headNames = getCsvHeader(res, ',')
@@ -252,11 +267,18 @@ const loadGermlineData = () => {
         germlineData.value.options.mutationPosition = Array.from(positions)
         germlineData.value.options.mutationMeaning = Array.from(meanings)
         germlineData.value.options.mutationRisk = Array.from(risks)
+        origingermlineData.value = JSON.stringify(germlineData.value)
+        if (stepData.value && stepData.value.germline) {
+            germlineData.value.searchParams = stepData.value.germline.searchParams
+
+            germlineData.value.selectedRows = stepData.value.germline.selectedRows
+        }
     })
     const tablefile = 'Mut_germline/germline.evidence'
     readTaskFile(route.params.id, tablefile).then((res) => {
         const items = getCsvData(res)
         germlineData.value.drugRows = items
+        origingermlineData.value = JSON.stringify(germlineData.value)
     })
 }
 
@@ -292,11 +314,17 @@ const loadSomaticData = () => {
         somaticData.value.options.mutationPosition = Array.from(positions)
         somaticData.value.options.mutationMeaning = Array.from(meanings)
         somaticData.value.options.mutationRisk = Array.from(risks)
+        originsomaticData.value = JSON.stringify(somaticData.value)
+        if (stepData.value && stepData.value.somatic) {
+            somaticData.value.searchParams = stepData.value.somatic.searchParams
+            somaticData.value.selectedRows = stepData.value.somatic.selectedRows
+        }
     })
     const tablefile = 'Mut_somatic/somatic.evidence'
     readTaskFile(route.params.id, tablefile).then((res) => {
         const items = getCsvData(res)
         somaticData.value.drugRows = items
+        originsomaticData.value = JSON.stringify(somaticData.value)
     })
 }
 </script>

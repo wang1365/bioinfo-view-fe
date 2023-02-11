@@ -6,6 +6,7 @@
         color="primary"
         class="relative-position float-right q-mr-md"
         label="已固定过滤"
+        @click="reset()"
     />
     <q-btn
         v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
@@ -153,7 +154,7 @@
                 :data-source="filteredRows"
                 :columns="columns"
                 :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25 }"
             ></a-table>
         </div>
     </div>
@@ -171,7 +172,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
 import { getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
@@ -211,8 +212,12 @@ const props = defineProps({
             }
         },
     },
+    stepData: {
+        type: Object,
+        default: () => { }
+    }
 })
-
+const stepData = toRef(props, 'stepData')
 const filteredInfo = ref()
 const variantColumns = computed(() => {
     const filtered = filteredInfo.value || {}
@@ -246,22 +251,7 @@ const handleChange = (pagination, filters) => {
     filteredInfo.value = filters
 }
 
-const emit = defineEmits(['stickDone'])
-const stickFilter = () => {
-    let data = {
-        pie: {
-            searchParams: pieParams.value,
-        },
-        table: {
-            searchParams: searchParams.value,
-            selectedRows: selectedRows.value,
-            filtered: true,
-            // filtered: rows.value.length != filteredRows.value.length,
-            selected: selectedRows.value.length > 0,
-        },
-    }
-    emit('stickDone', data)
-}
+
 
 const route = useRoute()
 const dlgVisible = ref(false)
@@ -310,7 +300,6 @@ const refreshPie = () => {
         variants.value.filter((t) => t.ratio > pieParams.value.extra),
         (t) => t.name
     )
-    console.log('>>>>>>>>>>>>>扩增', variants.value, extra_variant)
     chrs.value.forEach((t, idx) => {
         const variant = extra_variant[t.name]
         const p = partition(t, variant)
@@ -334,7 +323,6 @@ const refreshPie = () => {
         //     result1.push(t)
         // }
     })
-    console.log('<<<<<<<<<<<<<<result1', result1)
 
     pieOption.series[1].data = result1
 
@@ -362,18 +350,29 @@ const refreshPie = () => {
         //     result2.push(t)
         // }
     })
-    console.log('<<<<<<<<<<<<<<result2', result1)
     pieOption.series[2].data = result2
 
     pie.value.setOption(pieOption)
 }
 
 onMounted(() => {
+
     readTaskFile(route.params.id, 'CNV/AnnotSV.tsv.filter.txt').then((res) => {
         const columnFields = columns.map((t) => t.dataIndex)
         const results = getCsvDataAndSetLineNumber(res, { fields: columnFields })
         rows.value = results
         filteredRows.value = results
+        if (stepData.value && stepData.value.pie && stepData.value.pie.searchParams) {
+            pieParams.value.extra = stepData.value.pie.searchParams.extra
+            pieParams.value.missing = stepData.value.pie.searchParams.missing
+        }
+
+
+        if (stepData.value && stepData.value.table) {
+            searchParams.value = stepData.value.table.searchParams
+            clickSearch()
+            selectedRows.value = stepData.value.table.selectedRows
+        }
     })
 
     const genome = props.task.env.GENOME
@@ -387,7 +386,6 @@ onMounted(() => {
 
         readTaskFile(route.params.id, 'CNV/cnvkit_result').then((res) => {
             // 变异数据
-            console.log('///////////', variantColumns.value)
             const fields = variantColumns.value.map((t) => t.title)
             variants.value = getCsvData(res, { fields, hasHeaderLine: false })
             variantRows.value = variants.value
@@ -396,7 +394,11 @@ onMounted(() => {
                 t.end = Number(t.end)
                 t.ratio = Number(t.ratio)
             })
-            console.log('///////////variants.value', variants.value)
+            console.log(stepData.value)
+            if (stepData.value && stepData.value.pie && stepData.value.pie.searchParams) {
+                pieParams.value.extra = stepData.value.pie.searchParams.extra
+                pieParams.value.missing = stepData.value.pie.searchParams.missing
+            }
             initPie()
         })
     })
@@ -426,7 +428,7 @@ const clickSearch = () => {
         }
         return result
     })
-    selectedRows.value = []
+    // selectedRows.value = []
 }
 
 const clickClear = () => {
@@ -448,5 +450,37 @@ const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     selectedRows.value = selectedRowKeys
+}
+const emit = defineEmits(['stickDone', 'reset'])
+const stickFilter = () => {
+    let data = {
+        pie: {
+            searchParams: pieParams.value,
+        },
+        table: {
+            searchParams: searchParams.value,
+            selectedRows: selectedRows.value,
+            filtered: true,
+            // filtered: rows.value.length != filteredRows.value.length,
+            selected: selectedRows.value.length > 0,
+        },
+    }
+    emit('stickDone', data)
+}
+const reset = () => {
+
+    emit('reset', null)
+    searchParams.value = {
+        gene: '',
+        type: '', // DUP/DEL
+        drug: '', // YES/NO
+        drugLevel: '', // A/B/C/D/E
+    }
+    clickSearch()
+    pieParams.value = {
+        extra: 2.25,
+        missing: 1.75,
+    }
+    refreshPie()
 }
 </script>

@@ -7,6 +7,7 @@
             color="primary"
             class="relative-position float-right q-mr-md"
             label="已固定过滤"
+            @click="reset()"
         />
         <q-btn
             v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
@@ -25,7 +26,8 @@
             color="orange"
             class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
-        >说明</q-btn>
+            >说明</q-btn
+        >
         <q-tabs
             v-model="tab"
             active-color="primary"
@@ -50,7 +52,7 @@
                     :qnHeader="singleData.qn.header"
                     :qnSearchParam="singleData.qn.searchParam"
                     :qnSelectedRows="singleData.qn.selectedRows"
-                    @filterChange="filterChange('single',$event)"
+                    @filterChange="filterChange('single', $event)"
                 />
             </q-tab-panel>
             <q-tab-panel name="体细胞融合分析">
@@ -60,7 +62,7 @@
                     :header="normalData.header"
                     :searchParam="normalData.searchParam"
                     :selectedRows="normalData.selectedRows"
-                    @filterChange="filterChange('normal',$event)"
+                    @filterChange="filterChange('normal', $event)"
                 />
             </q-tab-panel>
         </q-tab-panels>
@@ -116,6 +118,10 @@ const props = defineProps({
             }
         },
     },
+    stepData: {
+        type: Object,
+        default: () => { }
+    }
 })
 
 const singleData = ref({
@@ -140,10 +146,10 @@ const normalData = ref({
     selectedRows: [],
 })
 const filterData = ref({})
-const emit = defineEmits('stickDone')
+const emit = defineEmits(['stickDone','reset'])
 const viewConfig = toRef(props, 'viewConfig')
 const samples = toRef(props, 'samples')
-
+const stepData = toRef(props, 'stepData')
 onMounted(() => {
     loadData()
 })
@@ -175,6 +181,15 @@ const stickFilter = () => {
     }*/
     emit('stickDone', filterData.value)
 }
+const reset = ()=>{
+    emit('reset', null)
+    singleData.value.qt.searchParam=''
+    singleData.value.qt.selectedRows=[]
+    singleData.value.qn.searchParam=''
+    singleData.value.qn.selectedRows=[]
+    normalData.value.searchParam=''
+    normalData.value.selectedRows=[]
+}
 
 const loadData = () => {
     if (viewConfig.value.showFusionGermline) {
@@ -192,20 +207,32 @@ const loadSingleData = () => {
     readTaskFile(route.params.id, qtFile).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
         let header = getCsvHeader(res)
-        header.splice(header.length-1,1)
+        header.splice(header.length - 1, 1)
         header.push('Igv')
         singleData.value.qt.header = header
         singleData.value.qt.rows = lines
+        if (stepData.value && stepData.value.single) {
+            if (stepData.value.single.qt) {
+                singleData.value.qt.searchParam = stepData.value.single.qt.searchParam
+                singleData.value.qt.selectedRows = stepData.value.single.qt.selectedRows
+            }
+        }
     })
     if (samples.value.length > 1) {
         const qnFile = `fusion_germline/${qn}.fusions`
         readTaskFile(route.params.id, qnFile).then((res) => {
             const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
             let header = getCsvHeader(res)
-         header.splice(header.length-1,1)
-   header.push('Igv')
+            header.splice(header.length - 1, 1)
+            header.push('Igv')
             singleData.value.qn.header = header
             singleData.value.qn.rows = lines
+            if (stepData.value && stepData.value.single) {
+                if (stepData.value.single.qn) {
+                    singleData.value.qn.searchParam = stepData.value.single.qn.searchParam
+                    singleData.value.qn.selectedRows = stepData.value.single.qn.selectedRows
+                }
+            }
         })
     }
 }
@@ -216,10 +243,14 @@ const loadNormalData = () => {
     readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
         let header = getCsvHeader(res)
-        header.splice(header.length-1,1)
-header.push('Igv')
+        header.splice(header.length - 1, 1)
+        header.push('Igv')
         normalData.value.header = header
         normalData.value.rows = lines
+        if (stepData.value && stepData.value.normal) {
+                    normalData.value.searchParam = stepData.value.normal.searchParam
+                    normalData.value.selectedRows = stepData.value.normal.selectedRows
+            }
     })
 }
 </script>
