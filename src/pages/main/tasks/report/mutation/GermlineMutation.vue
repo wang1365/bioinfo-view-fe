@@ -381,7 +381,7 @@ const selectedExpandColIdx = ref([])
 // 固定显示列的列号
 const fixedIdx = fixedColumns.map(t => t.i)
 // 扩展列的列号（所有列 排除固定列）
-const expandedIdx = new Array(146).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
+const expandedIdx = new Array(148).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
 const expandedColumns = computed(() => {
     return expandedIdx.map( idx => {
         return {
