@@ -82,8 +82,10 @@
 import { ref } from 'vue'
 import { createUser } from 'src/api/user'
 import { useQuasar } from 'quasar'
+import { useApi }from 'src/api/apiBase'
 
 const $q = useQuasar()
+const { apiPost } = useApi()
 
 const dlgVisible = ref(false)
 const emit = defineEmits( [ 'success'] )
@@ -101,11 +103,20 @@ const clickOk = () => {
         $q.notify({message: '至少输入6位', type: 'negative'})
         return
     }
-    createUser(form.value).then(() => {
+
+    apiPost('/account/create_user', ()=>{
         emit('success')
         dlgVisible.value = false
         $q.notify({message: '创建用户成功', type: 'positive'})
-    })
+    }, form.value)
+    // createUser(form.value).then(() => {
+    //     emit('success')
+    //     dlgVisible.value = false
+    //     $q.notify({message: '创建用户成功', type: 'positive'})
+    // }).catch(err => {
+    //     console.log('ddddddddddd', err)
+    //     $q.notify({message: err, type: 'negative'})
+    // })
 }
 
 const show = () => {
