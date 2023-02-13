@@ -49,7 +49,8 @@
                             label="密码"
                             lazy-rules
                             :rules="[
-                              val => val !== null && val !== '' || '请输入密码'
+                              val => val !== null && val !== '' || '请输入密码',
+                              val => val !== null && val.length >= 6 || '至少输入6位',
                             ]"
                         />
                     </q-item>
@@ -96,6 +97,10 @@ const form = ref({
     role_list: ['normal']
 })
 const clickOk = () => {
+    if (form.value.password.length < 6) {
+        $q.notify({message: '至少输入6位', type: 'negative'})
+        return
+    }
     createUser(form.value).then(() => {
         emit('success')
         dlgVisible.value = false
