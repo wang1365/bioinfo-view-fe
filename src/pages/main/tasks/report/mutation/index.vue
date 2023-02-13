@@ -209,7 +209,7 @@ const filterChange = (name, data) => {
 }
 // 同步子组件的过滤参数
 const onSearchParamsChange = (name, data) => {
-    if (name == 'germline') {
+    if (name === 'germline') {
         germlineData.value.searchParams = data
     } else {
         somaticData.value.searchParams = data
