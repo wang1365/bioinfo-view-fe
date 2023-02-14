@@ -41,41 +41,56 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <q-toolbar class="text-primary">
-            <q-input
-                v-model="keyword"
-                class="q-mr-sm"
-                dense
-                label="搜索:"
-                clearable
-                @clear="clearKeyword"
-                style="width:300px"
-            />
-            <q-btn size="small" color="primary" label="搜索" @click="searchKeyword"></q-btn>
-        </q-toolbar>
-        <div style="position:relative">
-            <q-icon
-                color="accent"
-                name="question_mark"
-                size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px"
-            >
-                <q-tooltip>仅全选本页筛选结果</q-tooltip>
-            </q-icon>
-            <a-table
-                style="z-index:1"
-                class="col-5"
-                size="middle"
-                rowKey="lineNumber"
-                bordered
-                :loading="loading"
-                :scroll="{ x: 2000, y: 600 }"
-                :data-source="filteredRows"
-                :columns="columns"
-                :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:35 }"
-            ></a-table>
-        </div>
+
+        <q-tabs v-model="tab" dense align="left"
+                active-color="primary"
+                active-bg-color="grey-5"
+                class="bg-grey-2 shadow-2"
+                indicator-color="primary"
+                inline-label
+                :breakpoint="0">
+            <q-tab v-for="table in tables" :label="table.name" :name="table.name" :key="table.name"/>
+        </q-tabs>
+        <q-tab-panels v-model="tab" animated>
+            <q-tab-panel v-for="table in tables" :name="table.name" :key="table.name">
+                <q-toolbar class="text-primary">
+                    <q-input
+                        v-model="table.keyword"
+                        class="q-mr-sm"
+                        dense
+                        label="搜索:"
+                        clearable
+                        @clear="clearKeyword(table)"
+                        style="width:300px"
+                    />
+                    <q-btn size="small" color="primary" label="搜索" @click="searchKeyword(table)"></q-btn>
+                    <q-space/>
+                    <q-btn :href="table.url" label="下载" icon="south" size="sm" flat/>
+                </q-toolbar>
+                <div style="position:relative">
+                    <q-icon
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
+                        <q-tooltip>仅全选本页筛选结果</q-tooltip>
+                    </q-icon>
+                    <a-table
+                        style="z-index:1"
+                        class="col-5"
+                        size="middle"
+                        rowKey="lineNumber"
+                        bordered
+                        :scroll="{ x: 2000, y: 600 }"
+                        :data-source="table.filteredRows"
+                        :columns="table.columns"
+                        :sticky="true"
+                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:35 }"
+                    />
+                </div>
+            </q-tab-panel>
+        </q-tab-panels>
         <!-- <a-table :columns="columns" :data-source="rows" @change="onChange" /> -->
         <q-separator color="primary" />
         <div>
@@ -97,7 +112,9 @@
 import { onMounted, ref ,toRef} from 'vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
+import { useQuasar } from "quasar"
 
+const $q = useQuasar()
 const dlgVisible = ref(false)
 const props = defineProps({
     viewConfig: {
@@ -118,30 +135,30 @@ const props = defineProps({
         default: () => { }
     }
 })
+
+const tab = ref('')
 const stepData = toRef(props, 'stepData')
-const columns = ref([])
-const rows = ref([])
-const filteredRows = ref([])
+const tables = ref([])
 const intro = ref('')
 const images = ref([])
-const keyword = ref('')
-const clearKeyword = () => {
-    filteredRows.value = rows.value
-    keyword.value = ''
-    searchKeyword()
+const clearKeyword = (table) => {
+    table.filteredRows = table.rows
+    table.keyword = ''
+    searchKeyword(table)
 }
-const searchKeyword = () => {
-    if (keyword.value) {
-        filteredRows.value = rows.value.filter((t) => {
+const searchKeyword = (table) => {
+    console.log('searchKeyword', table)
+    if (table.keyword) {
+        table.filteredRows = table.rows.filter((t) => {
             for (let key in t) {
-                if (t[key].toString().includes(keyword.value)) {
+                if (t[key].toString().includes(table.keyword)) {
                     return true
                 }
             }
             return false
         })
     } else {
-        filteredRows.value = rows.value
+        table.filteredRows = table.rows
     }
 }
 onMounted(() => {
@@ -160,14 +177,17 @@ const initIntro = () => {
 }
 
 const initTable = () => {
-    const { table } = props.viewConfig
-    if (table) {
+    $q.loading.show({
+        delay: 100
+    })
+    const { tables: tableList } = props.viewConfig || []
+    tableList.forEach((table, i) => {
         readTaskFile(props.task.id, table.file).then((res) => {
             const colNames = getCsvHeader(res)
-            rows.value = getCsvDataAndSetLineNumber(res, { fields: colNames })
-            columns.value = colNames.map((name) => {
+            const rows = getCsvDataAndSetLineNumber(res, { fields: colNames })
+            const columns = colNames.map((name) => {
                 // 当前列所有数据去重，作为筛选项
-                const values = [...new Set(rows.value.map((t) => t[name]))]
+                const values = [...new Set(rows.map((t) => t[name]))]
                 return {
                     title: name,
                     dataIndex: name,
@@ -180,18 +200,30 @@ const initTable = () => {
                     onFilter: (value, record) => record[name].indexOf(value) === 0,
                 }
             })
-            filteredRows.value = rows.value
+            // 添加表格定义
+            tables.value.push({
+                name: table.name,   // 表格tab名称
+                rows,               // 表格全量数据
+                columns,            // 表格表头
+                filteredRows: rows, // 表格过滤后数据
+                url: '/igv' + table.file, // 下载链接
+                keyword: ''
+            })
+
+            if (i === 0) {
+                tab.value = table.name
+            }
+
             if(stepData.value && stepData.value.searchParam){
                 keyword.value=stepData.value.searchParam
-
                 searchKeyword()
-
             }
             if(stepData.value && stepData.value.selectedRows){
-                    selectedRows.value=stepData.value.selectedRows
-                }
+                selectedRows.value=stepData.value.selectedRows
+            }
+            $q.loading.hide()
         })
-    }
+    })
 }
 
 const initImages = () => {
