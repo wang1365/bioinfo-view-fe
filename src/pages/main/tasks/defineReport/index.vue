@@ -267,6 +267,7 @@ import MicrosatelliteInstabilityVue from '../report/microsatellite-instability/i
 import TumorMutationLoadVue from '../report/tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from '../report/homologous-recombination-defect/index.vue'
 import { api } from 'src/boot/axios'
+import { mutationLoadGermlineData } from './loadDatas'
 
 const { apiPost } = useApi()
 const viewConfigLoaded = ref(false)
@@ -291,6 +292,7 @@ const viewConfig = ref({
 const commonTabs = ref([])
 
 onMounted(() => {
+    mutationLoadGermlineData()
     loadTaskSamples()
     loadIntros()
     loadViewConfig()

@@ -1,75 +1,30 @@
 <template>
     <div>
-        <q-btn
-            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
-            icon="bookmarks"
-            size="small"
-            color="primary"
-            class="relative-position float-right q-mr-md"
-            label="已固定过滤"
-            @click="reset()"
-        />
-        <q-btn
-            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
-            icon="bookmarks"
-            size="small"
-            outline
-            color="primary"
-            class="relative-position float-right q-mr-md"
-            @click="stickFilter()"
-            >固定过滤</q-btn
-        >
-        <q-btn
-            icon="help_outline"
-            size="small"
-            outline
-            color="orange"
-            class="relative-position float-right q-mr-md"
-            @click="dlgVisible = !dlgVisible"
-            >说明</q-btn
-        >
-        <q-tabs
-            v-model="tab"
-            active-color="primary"
-            active-bg-color="grey-4"
-            align="left"
-            class="bg-grey-1"
-            :breakpoint="0"
-            dense
-        >
+        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small"
+            color="primary" class="relative-position float-right q-mr-md" label="已固定过滤" @click="reset()" />
+        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
+            color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()">固定过滤</q-btn>
+        <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
+            @click="dlgVisible = !dlgVisible">说明</q-btn>
+        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
+            :breakpoint="0" dense>
             <q-tab name="胚系突变分析" label="胚系突变分析" v-if="props.viewConfig.showMutGermline" />
             <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.viewConfig.showMutSomatic" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">
-                <GermlineMutationVue
-                    :samples="props.samples"
-                    :task="props.task"
-                    ref="germlineMutationVue"
-                    :rows="germlineData.rows"
-                    :header="germlineData.header"
-                    :options="germlineData.options"
-                    :searchParams="germlineData.searchParams"
-                    :drugRows="germlineData.drugRows"
-                    :selectedRows="germlineData.selectedRows"
-                    :showSticky="props.viewConfig.showStick"
-                    @filterChange="filterChange('germline', $event)"
-                />
+                <GermlineMutationVue :samples="props.samples" :task="props.task" ref="germlineVue"
+                    :rows="germlineData.rows" :header="germlineData.header" :options="germlineData.options"
+                    :searchParams="germlineData.searchParams" :drugRows="germlineData.drugRows"
+                    :selectedRows="germlineData.selectedRows" :showSticky="props.viewConfig.showStick"
+                    :stickDone="props.viewConfig.stickDone" @filterChange="filterChange('germline', $event)" />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
-                <SomaticMutationVue
-                    :samples="props.samples"
-                    :task="props.task"
-                    ref="somaticMutationVue"
-                    :rows="somaticData.rows"
-                    :header="somaticData.header"
-                    :options="somaticData.options"
-                    :searchParams="somaticData.searchParams"
-                    :drugRows="somaticData.drugRows"
-                    :selectedRows="somaticData.selectedRows"
-                    :showSticky="props.viewConfig.showStick"
-                    @filterChange="filterChange('somatic', $event)"
-                />
+                <SomaticMutationVue :samples="props.samples" :task="props.task" ref="somaticVue"
+                    :rows="somaticData.rows" :header="somaticData.header" :options="somaticData.options"
+                    :searchParams="somaticData.searchParams" :drugRows="somaticData.drugRows"
+                    :selectedRows="somaticData.selectedRows" :showSticky="props.viewConfig.showStick"
+                    :stickDone="props.viewConfig.stickDone" @filterChange="filterChange('somatic', $event)" />
             </q-tab-panel>
         </q-tab-panels>
         <q-dialog v-model="dlgVisible">
@@ -95,6 +50,8 @@ import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 import { useQuasar } from 'quasar'
 
+const germlineVue = ref(null)
+const somaticVue = ref(null)
 const $q = useQuasar()
 const route = useRoute()
 const loaded = ref(false)
@@ -186,10 +143,10 @@ const somaticData = ref({
     selectedRows: [],
 })
 
-const filterData = ref({ somatic: {}, germline: {} })
+const filterData = ref({ somatic: null, germline: null })
 const stepData = toRef(props, 'stepData')
 onMounted(() => {
-
+    loaded.value = false
     if (viewConfig.value.showMutGermline) {
         loadGermlineData()
     }
@@ -204,10 +161,11 @@ const filterChange = (name, data) => {
     if (name === 'germline') {
         germlineData.value.searchParams = data.searchParams
         germlineData.value.selectedRows = data.selectedRows
-    } else {
+    } else if (name === 'somatic') {
         somaticData.value.searchParams = data.searchParams
         somaticData.value.selectedRows = data.selectedRows
     }
+    console.log(name, data)
 }
 // 同步子组件的过滤参数
 const onSearchParamsChange = (name, data) => {
@@ -219,30 +177,41 @@ const onSearchParamsChange = (name, data) => {
 }
 const stickFilter = () => {
     if (!filterData.value.germline && viewConfig.value.showMutGermline) {
-        errorMessage('胚系突变分析未进行过滤')
-        return false
+        if (germlineVue.value) {
+            let data = germlineVue.value.getChangedData()
+            filterData.value.germline = data
+        } else {
+            errorMessage('胚系突变分析未进行过滤')
+            return false
+        }
+
     }
     if (!filterData.value.somatic && viewConfig.value.showMutSomatic) {
-        errorMessage('体细胞突变分析未进行过滤')
-        return false
+        if (somaticVue.value) {
+            let data = somaticVue.value.getChangedData()
+            filterData.value.somatic = data
+        } else {
+            errorMessage('体细胞突变分析未进行过滤')
+            return false
+        }
     }
     emit('stickDone', filterData.value)
 }
 
 const reset = () => {
-    germlineData.value=JSON.parse(origingermlineData.value)
-    germlineData.value.selectedRows=[]
-    somaticData.value=JSON.parse(originsomaticData.value)
-    somaticData.value.selectedRows=[]
-    emit('rest', null)
+    germlineData.value = JSON.parse(origingermlineData.value)
+    germlineData.value.selectedRows = []
+    somaticData.value = JSON.parse(originsomaticData.value)
+    somaticData.value.selectedRows = []
+    emit('reset', null)
 
 }
 const loadGermlineData = () => {
-    $q.loading.show({delay:100})
+    $q.loading.show({ delay: 100 })
     readTaskMuFile(route.params.id, 'Mut_germline').then((res) => {
         const headNames = getCsvHeader(res, ',')
 
-        const colKeys = _.range(1, headNames.length+1, 1).map((i) => 'col' + i)
+        const colKeys = _.range(1, headNames.length + 1, 1).map((i) => 'col' + i)
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
         // 提取options
@@ -290,7 +259,7 @@ const loadGermlineData = () => {
 const loadSomaticData = () => {
     readTaskMuFile(route.params.id, 'Mut_somatic').then((res) => {
         const headNames = getCsvHeader(res, ',')
-        const colKeys = _.range(1, headNames.length+1, 1).map((i) => 'col' + i)
+        const colKeys = _.range(1, headNames.length + 1, 1).map((i) => 'col' + i)
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
 
