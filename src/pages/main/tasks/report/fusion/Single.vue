@@ -2,46 +2,23 @@
     <q-toolbar class="text-primary">
         <q-toolbar-title v-if="!isSingle">肿瘤单样品融合</q-toolbar-title>
 
-        <q-input
-            v-model="keyword1"
-            class="q-mr-sm"
-            dense
-            label="搜索:"
-            clearable
-            @clear="clearKeyword1"
-            style="width:300px"
-        />
-        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword1"></q-btn>
+        <q-input v-model="keyword1" class="q-mr-sm" dense label="搜索:" clearable @clear="clearKeyword1"
+            style="width:300px" :disable="showSticky && stickDone" />
+        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword1"
+            :disable="showSticky && stickDone"></q-btn>
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <div style="position:relative">
-            <q-icon
-                color="accent"
-                name="question_mark"
-                size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px"
-            >
+            <q-icon color="accent" name="question_mark" size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px">
                 <q-tooltip>仅全选本页筛选结果</q-tooltip>
             </q-icon>
-            <a-table
-                style="z-index:1"
-                size="middle"
-                bordered
-                rowKey="lineNumber"
-                :loading="loading1"
-                :data-source="filteredRows1"
-                :columns="columns1"
-                :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:20 }"
-            >
+            <a-table style="z-index:1" size="middle" bordered rowKey="lineNumber" :loading="loading1"
+                :data-source="filteredRows1" :columns="columns1" :sticky="true"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 20 }">
                 <template #bodyCell="{ column, record }">
-                    <q-btn
-                        v-if="column.title === 'Igv'"
-                        label="查看"
-                        color="primary"
-                        size="sm"
-                        @click="clickView(record)"
-                    ></q-btn>
+                    <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
+                        @click="clickView(record)"></q-btn>
                 </template>
             </a-table>
         </div>
@@ -51,44 +28,22 @@
         <q-toolbar class="text-primary">
             <q-toolbar-title v-if="!isSingle">对照单样品融合</q-toolbar-title>
 
-            <q-input
-                v-model="keyword2"
-                class="q-mr-sm"
-                dense
-                label="搜索:"
-                clearable
-                @clear="clearKeyword2"
-                style="width:300px"
-            />
-            <q-btn size="small" color="primary" label="搜索" @click="searchKeyword2"></q-btn>
+            <q-input v-model="keyword2" class="q-mr-sm" dense label="搜索:" clearable @clear="clearKeyword2"
+                style="width:300px" :disable="showSticky && stickDone" />
+            <q-btn size="small" color="primary" label="搜索" @click="searchKeyword2"
+                :disable="showSticky && stickDone"></q-btn>
         </q-toolbar>
         <div style="position:relative">
-            <q-icon
-                color="accent"
-                name="question_mark"
-                size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px"
-            >
+            <q-icon color="accent" name="question_mark" size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px">
                 <q-tooltip>仅全选本页筛选结果</q-tooltip>
             </q-icon>
-            <a-table
-                style="z-index:1"
-                size="middle"
-                bordered
-                :data-source="filteredRows2"
-                :columns="columns2"
-                :sticky="true"
-                rowKey="lineNumber"
-                :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth:20 }"
-            >
+            <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
+                :sticky="true" rowKey="lineNumber"
+                :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth: 20 }">
                 <template #bodyCell="{ column, record }">
-                    <q-btn
-                        v-if="column.title === 'Igv'"
-                        label="查看"
-                        color="primary"
-                        size="sm"
-                        @click="clickView(record)"
-                    ></q-btn>
+                    <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
+                        @click="clickView(record)"></q-btn>
                 </template>
             </a-table>
         </div>
@@ -101,18 +56,29 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted, computed, toRefs, watch, toRef } from 'vue'
+import { ref, onMounted, computed, toRefs, watch, toRef, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { exportFile } from 'quasar'
 import IGV from './Igv.vue'
 import { readTaskFile } from 'src/api/task'
 import { getCsvData } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
-
+import { errorMessage } from 'src/utils/notify'
 const props = defineProps({
     intro: {
         type: String,
         required: false,
+    },
+    showSticky: {
+        type: Boolean,
+        required: false,
+        default: () => false,
+    },
+
+    stickDone: {
+        type: Boolean,
+        required: false,
+        default: () => false,
     },
     samples: {
         type: Array,
@@ -197,11 +163,14 @@ const filteredRows2 = ref([])
 const igvVisible = ref(false)
 const selectedFile = ref('')
 
-const searchKeyword1 = () => {
-    if (keyword1.value) {
+const showSticky = toRef(props, 'showSticky')
+const stickDone = toRef(props, 'stickDone')
+
+const searchFilterRows1 = (keyword) => {
+    if (keyword) {
         filteredRows1.value = qtRows.value.filter((t) => {
-            for (let i = 0; i < 8; i++) {
-                if (t[i].includes(keyword1.value)) {
+            for (let i = 0; i < 7; i++) {
+                if (t[i].includes(keyword)) {
                     return true
                 }
             }
@@ -210,14 +179,21 @@ const searchKeyword1 = () => {
     } else {
         filteredRows1.value = qtRows.value
     }
-    filterChange()
 }
 
-const searchKeyword2 = () => {
-    if (keyword2.value) {
+const searchKeyword1 = () => {
+    if (showSticky.value && stickDone.value) {
+        errorMessage('请先取消过滤')
+        return false
+    }
+    searchFilterRows1(keyword1.value)
+}
+
+const searchFilterRows2 = (keyword) => {
+    if (keyword) {
         filteredRows2.value = qnRows.value.filter((t) => {
-            for (let i = 0; i < 8; i++) {
-                if (t[i].includes(keyword2.value)) {
+            for (let i = 0; i < 7; i++) {
+                if (t[i].includes(keyword)) {
                     return true
                 }
             }
@@ -226,7 +202,13 @@ const searchKeyword2 = () => {
     } else {
         filteredRows2.value = qnRows.value
     }
-    filterChange()
+}
+const searchKeyword2 = () => {
+    if (showSticky.value && stickDone.value) {
+        errorMessage('请先取消过滤')
+        return false
+    }
+    searchFilterRows2(keyword2)
 }
 
 const clearKeyword1 = () => {
@@ -250,8 +232,8 @@ const { qtRows, qtHeader, qtSearchParam, qtSelectedRows, qnRows, qnHeader, qnSel
     toRefs(props)
 
 const emit = defineEmits('filterChange')
-const filterChange = () => {
-    emit('filterChange', {
+const getChangedData = () => {
+    return {
         qt: {
             searchParam: keyword1.value,
             selectedRows: selectedRows.value,
@@ -264,8 +246,14 @@ const filterChange = () => {
             filtered: qnRows.value.length != filteredRows2.value.length,
             selected: selectedRows2.value.length > 0,
         },
-    })
+    }
 }
+const filterChange = () => {
+    emit('filterChange', getChangedData())
+}
+onUnmounted(() => {
+    filterChange()
+})
 watch(qtSearchParam, () => {
     loadData()
 })
@@ -302,7 +290,7 @@ const loadData = () => {
             })
     })
     keyword1.value = qtSearchParam.value
-    searchKeyword1()
+    searchFilterRows1(qtSearchParam.value)
     selectedRows.value = []
     for (let item of filteredRows1.value) {
         let finded = false
@@ -337,7 +325,7 @@ const loadData = () => {
                 })
         })
         keyword2.value = qnSearchParam.value
-        searchKeyword2()
+        searchFilterRows2(qnSearchParam.value)
         selectedRows2.value = []
         for (let item of filteredRows2.value) {
             let finded = false
@@ -358,13 +346,29 @@ const loadData = () => {
 const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
+    if (showSticky.value && stickDone.value) {
+        errorMessage('请先取消过滤')
+        return false
+    }
     selectedRows.value = selectedRowKeys
-    filterChange()
 }
 const selectedRows2 = ref([])
 
 const onSelectChange2 = (selectedRowKeys) => {
+    if (showSticky.value && stickDone.value) {
+        errorMessage('请先取消过滤')
+        return false
+    }
     selectedRows2.value = selectedRowKeys
-    filterChange()
 }
+
+const reset = () => {
+    keyword1.value = ''
+    keyword2.value = ''
+    searchFilterRows1(keyword1.value)
+    searchFilterRows2(keyword2.value)
+    selectedRows.value = []
+    selectedRows2.value = []
+}
+defineExpose({ getChangedData, reset })
 </script>
