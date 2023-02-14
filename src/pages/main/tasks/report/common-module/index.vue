@@ -69,10 +69,11 @@
                 rowKey="lineNumber"
                 bordered
                 :loading="loading"
+                :scroll="{ x: 2000, y: 600 }"
                 :data-source="filteredRows"
                 :columns="columns"
                 :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:25 }"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:35 }"
             ></a-table>
         </div>
         <!-- <a-table :columns="columns" :data-source="rows" @change="onChange" /> -->
@@ -170,6 +171,8 @@ const initTable = () => {
                 return {
                     title: name,
                     dataIndex: name,
+                    width: 200,
+                    ellipsis: true,
                     align: 'center',
                     filters: values.map((v) => {
                         return { text: v, value: v }
