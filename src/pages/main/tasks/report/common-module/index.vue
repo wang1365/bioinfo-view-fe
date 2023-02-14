@@ -202,12 +202,12 @@ const initTable = () => {
             })
             // 添加表格定义
             tables.value.push({
-                name: table.name,   // 表格tab名称
-                rows,               // 表格全量数据
-                columns,            // 表格表头
-                filteredRows: rows, // 表格过滤后数据
-                url: '/igv' + table.file, // 下载链接
-                keyword: ''
+                name: table.name,           // 表格tab名称
+                rows,                       // 表格全量数据
+                columns,                    // 表格表头
+                filteredRows: rows,         // 表格过滤后数据
+                url: '/igv' + table.file,   // 下载链接
+                keyword: ''                 // 检索关键字
             })
 
             if (i === 0) {
@@ -219,7 +219,7 @@ const initTable = () => {
                 searchKeyword()
             }
             if(stepData.value && stepData.value.selectedRows){
-                selectedRows.value=stepData.value.selectedRows
+                selectedRows.value = stepData.value.selectedRows
             }
             $q.loading.hide()
         })
@@ -247,7 +247,7 @@ const stickFilter = () => {
     let data = {
         searchParam: keyword.value,
         selectedRows: selectedRows.value,
-        filtered: rows.value.length != filteredRows.value.length,
+        filtered: rows.value.length !== filteredRows.value.length,
         selected: selectedRows.value.length > 0,
     }
      emit('stickDone', data)
