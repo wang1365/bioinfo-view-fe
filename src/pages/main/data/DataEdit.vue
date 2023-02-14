@@ -47,10 +47,11 @@
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
                             <q-input
+                                type="number"
                                 v-model="form.library_input"
                                 :error="errors.library_input.error"
                                 :error-message="errors.library_input.message"
-                                label="*建库input"
+                                label="*建库input(ng)"
                             ></q-input>
                         </div>
                         <div class="col q-pf-sm">
@@ -75,6 +76,7 @@
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
                             <q-input
+                                type="number"
                                 v-model="form.hybrid_input"
                                 :error="errors.hybrid_input.error"
                                 :error-message="errors.hybrid_input.message"
