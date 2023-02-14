@@ -15,7 +15,6 @@
             :columns="columns"
             :sticky="true"
             :pagination="false"
-            @change="tableChange"
         >
         </a-table>
     </div>
