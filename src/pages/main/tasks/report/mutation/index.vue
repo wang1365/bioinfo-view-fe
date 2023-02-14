@@ -93,7 +93,9 @@ import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const route = useRoute()
 const loaded = ref(false)
 const tab = ref('胚系突变分析')
@@ -236,6 +238,7 @@ const reset = () => {
 
 }
 const loadGermlineData = () => {
+    $q.loading.show({delay:100})
     readTaskMuFile(route.params.id, 'Mut_germline').then((res) => {
         const headNames = getCsvHeader(res, ',')
 
@@ -273,6 +276,8 @@ const loadGermlineData = () => {
 
             germlineData.value.selectedRows = stepData.value.germline.selectedRows
         }
+    }).finally(() => {
+        $q.loading.hide()
     })
     const tablefile = 'Mut_germline/germline.evidence'
     readTaskFile(route.params.id, tablefile).then((res) => {
