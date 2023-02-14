@@ -239,7 +239,7 @@ const loadGermlineData = () => {
     readTaskMuFile(route.params.id, 'Mut_germline').then((res) => {
         const headNames = getCsvHeader(res, ',')
 
-        const colKeys = _.range(1, 150, 1).map((i) => 'col' + i)
+        const colKeys = _.range(1, headNames.length+1, 1).map((i) => 'col' + i)
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
         // 提取options
@@ -285,7 +285,7 @@ const loadGermlineData = () => {
 const loadSomaticData = () => {
     readTaskMuFile(route.params.id, 'Mut_somatic').then((res) => {
         const headNames = getCsvHeader(res, ',')
-        const colKeys = _.range(1, 155, 1).map((i) => 'col' + i)
+        const colKeys = _.range(1, headNames.length+1, 1).map((i) => 'col' + i)
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
 
