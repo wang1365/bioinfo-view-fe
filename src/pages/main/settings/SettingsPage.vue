@@ -78,6 +78,20 @@
                                                 >
                                             </q-input>
                                         </q-form-item>
+                                        <q-form-item v-if="amISuper()">
+                                            <div class="row">
+                                                <q-input
+                                                    type="number" class="col-9"
+                                                    v-model.number="allowedRunningDays.value"
+                                                    :rules="[(val) => (val !== null && val > 0) || '允许运行时间数值错误']"
+                                                >
+                                                    <template v-slot:before
+                                                    ><span class="text-h6">允许运行时间(天):</span></template
+                                                    >
+                                                </q-input>
+                                                <div class="text-h6 q-pt-sm q-ml-sm text-grey">已运行 {{allowedRunningDays.used}} 天</div>
+                                            </div>
+                                        </q-form-item>
                                     </q-form>
                                 </div>
                             </div>
@@ -101,12 +115,14 @@ import PieChart3 from "./charts/PieChart3.vue";
 import LineChart from "./charts/LineChart.vue";
 import {ref, onMounted} from 'vue'
 import {useQuasar} from 'quasar'
-import {listConfig, updateConfig} from 'src/api/config'
+import {createConfig, listConfig, updateConfig} from 'src/api/config'
+import { amISuper } from 'src/utils/user'
 
 const form = ref(null)
 const max_task = ref({})
 const memory_rate = ref({})
 const disk = ref({})
+const allowedRunningDays = ref({})
 
 const $q = useQuasar()
 
@@ -117,6 +133,9 @@ onMounted(() => {
 const submit = () => {
     updateConfig(max_task.value)
     updateConfig(memory_rate.value)
+    if (amISuper()) {
+        updateConfig(allowedRunningDays.value)
+    }
     updateConfig(disk.value).then(res => {
         $q.notify({
             message: '设置成功',
@@ -136,6 +155,9 @@ const refresh = () => {
             }
             if (cfg.name === 'disk') {
                 disk.value = cfg
+            }
+            if (cfg.name === 'allowed_running_days') {
+                allowedRunningDays.value = cfg
             }
         }
     })
