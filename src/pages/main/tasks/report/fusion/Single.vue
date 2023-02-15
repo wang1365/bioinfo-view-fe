@@ -15,7 +15,7 @@
             </q-icon>
             <a-table style="z-index:1" size="middle" bordered rowKey="lineNumber" :loading="loading1"
                 :data-source="filteredRows1" :columns="columns1" :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 20 }">
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 20, getCheckboxProps: getCheckboxProps }">
                 <template #bodyCell="{ column, record }">
                     <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
                         @click="clickView(record)"></q-btn>
@@ -40,7 +40,7 @@
             </q-icon>
             <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
                 :sticky="true" rowKey="lineNumber"
-                :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth: 20 }">
+                :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth: 20, getCheckboxProps: getCheckboxProps }">
                 <template #bodyCell="{ column, record }">
                     <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
                         @click="clickView(record)"></q-btn>
@@ -349,7 +349,12 @@ const loadData = () => {
 }
 
 const selectedRows = ref([])
-
+const getCheckboxProps = (record) => {
+    return {
+        disabled: showSticky.value && stickDone.value, // Column configuration not to be checked
+        name: record.lineNumber,
+    }
+}
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
         errorMessage('请先取消过滤')

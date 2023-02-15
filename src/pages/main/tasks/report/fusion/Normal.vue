@@ -13,7 +13,7 @@
             </q-icon>
             <a-table style="z-index:1" size="middle" bordered :loading="loading" :data-source="filteredRows"
                 :columns="columns" :sticky="true" rowKey="lineNumber"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25 }">
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }">
                 <template #bodyCell="{ column, record }">
                     <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
                         @click="clickView(record)"></q-btn>
@@ -138,6 +138,12 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
+}
+const getCheckboxProps = (record) => {
+    return {
+        disabled: showStick.value && stickDone.value, // Column configuration not to be checked
+        name: record.lineNumber,
+    }
 }
 
 const getChangedData = () => {

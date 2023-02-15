@@ -1,73 +1,35 @@
 <template>
-    <q-btn
-        v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
-        icon="bookmarks"
-        size="small"
-        color="primary"
-        class="relative-position float-right q-mr-md"
-        label="已固定过滤"
-        @click="reset()"
-    />
-    <q-btn
-        v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
-        icon="bookmarks"
-        size="small"
-        outline
-        color="primary"
-        class="relative-position float-right q-mr-md"
-        @click="stickFilter()"
-        >固定过滤</q-btn
-    >
+    <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
+        class="relative-position float-right q-mr-md" label="已固定过滤" @click="reset()" />
+    <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
+        color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()">固定过滤</q-btn>
 
-    <q-btn
-        icon="help_outline"
-        size="small"
-        outline
-        color="orange"
-        class="relative-position float-right q-mr-md"
-        @click="dlgVisible = !dlgVisible"
-        >说明</q-btn
-    >
+    <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
+        @click="dlgVisible = !dlgVisible">说明</q-btn>
     <div>
         <div v-if="props.viewConfig.showCNVcircos">
             <div class="row">
-                <div
-                    :id="pieDivId"
-                    class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
-                    style="min-width: 600px;max-width:1000px; height: 600px"
-                ></div>
+                <div :id="pieDivId" class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
+                    style="min-width: 600px;max-width:1000px; height: 600px"></div>
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 column justify-center">
                     <div class="q-gutter-sm q-pb-sm">
                         <div>
-                            <q-input
-                                v-model="pieParams.extra"
-                                class="col-1"
-                                label="拷贝数扩增阈值"
-                                label-color="primary"
-                                stack-label
-                            />
+                            <q-input v-model="pieParams.extra" class="col-1" label="拷贝数扩增阈值" label-color="primary"
+                                stack-label :disable="viewConfig.showStick && viewConfig.stickDone" />
                         </div>
 
                         <div>
-                            <q-input
-                                v-model="pieParams.missing"
-                                class="col-1"
-                                label="拷贝数缺失阈值"
-                                label-color="primary"
-                                stack-label
-                            />
+                            <q-input v-model="pieParams.missing" class="col-1" label="拷贝数缺失阈值" label-color="primary"
+                                stack-label :disable="viewConfig.showStick && viewConfig.stickDone" />
                         </div>
                         <div class="q-gutter-xs">
-                            <q-btn class="col" color="primary" size="small" label="确定" @click="refreshPie" />
-                            <q-btn class="col" color="primary" size="small" label="复位" @click="resetPie" />
-                            <q-btn
-                                v-if="amISuper()"
-                                class="col"
-                                color="primary"
-                                size="small"
-                                :label="showPieTable ? '隐藏详情' : '显示详情'"
-                                @click="showPieTable = !showPieTable"
-                            />
+                            <q-btn class="col" color="primary" size="small" label="确定" @click="refreshPie"
+                                :disable="viewConfig.showStick && viewConfig.stickDone" />
+                            <q-btn class="col" color="primary" size="small" label="复位" @click="resetPie"
+                                :disable="viewConfig.showStick && viewConfig.stickDone" />
+                            <q-btn v-if="amISuper()" class="col" color="primary" size="small"
+                                :label="showPieTable ? '隐藏详情' : '显示详情'" @click="showPieTable = !showPieTable"
+                                :disable="viewConfig.showStick && viewConfig.stickDone" />
                         </div>
                     </div>
                 </div>
@@ -75,87 +37,40 @@
         </div>
 
         <div v-if="showPieTable">
-            <a-table
-                class="col-5"
-                size="middle"
-                rowKey="lineNumber"
-                bordered
-                :data-source="variantRows"
-                :columns="variantColumns"
-                @change="handleChange"
-                :sticky="true"
-            ></a-table>
+            <a-table class="col-5" size="middle" rowKey="lineNumber" bordered :data-source="variantRows"
+                :columns="variantColumns" @change="handleChange" :sticky="true"></a-table>
         </div>
 
         <div v-if="props.viewConfig.showCNVtable">
             <q-separator class="q-my-lg" size="2px" color="primary" />
             <div class="row q-gutter-sm items-start q-py-md">
-                <q-input
-                    v-model="searchParams.gene"
-                    stack-label
-                    label-color="primary"
-                    label="搜索基因:"
-                    clearable
-                    dense
-                    style="width:150px"
-                />
-                <q-select
-                    v-model="searchParams.type"
-                    clearable
-                    stack-label
-                    label-color="primary"
-                    :options="['DUP', 'DEL']"
-                    label="拷贝数变异分类"
-                    style="width:150px"
-                    dense
-                />
-                <q-select
-                    v-model="searchParams.drug"
-                    clearable
-                    stack-label
-                    label-color="primary"
-                    :options="['All', 'Yes', 'No',]"
-                    label="药物靶点"
-                    style="width:150px"
-                    dense
-                />
-                <q-select
-                    v-model="searchParams.drugLevel"
-                    :disable="searchParams.drug !== 'Yes'"
-                    clearable
-                    stack-label
-                    label-color="primary"
-                    :options="['A', 'B', 'C', 'D', 'E']"
-                    label="用药等级"
-                    style="width:150px"
-                    dense
-                />
-                <q-btn color="primary" label="确定" icon="search" @click="clickSearch()" />
-                <q-btn color="grey" label="清除" icon="delete" @click="clickClear()" />
+                <q-input v-model="searchParams.gene" stack-label label-color="primary" label="搜索基因:" clearable dense
+                    style="width:150px" :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-select v-model="searchParams.type" clearable stack-label label-color="primary"
+                    :options="['DUP', 'DEL']" label="拷贝数变异分类" style="width:150px" dense
+                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-select v-model="searchParams.drug" clearable stack-label label-color="primary"
+                    :options="['All', 'Yes', 'No',]" label="药物靶点" style="width:150px" dense
+                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-select v-model="searchParams.drugLevel"
+                    :disable="searchParams.drug !== 'Yes' && viewConfig.showStick && viewConfig.stickDone" clearable
+                    stack-label label-color="primary" :options="['A', 'B', 'C', 'D', 'E']" label="用药等级"
+                    style="width:150px" dense />
+                <q-btn color="primary" label="确定" icon="search" @click="clickSearch()"
+                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-btn color="grey" label="清除" icon="delete" @click="clickClear()"
+                    :disable="viewConfig.showStick && viewConfig.stickDone" />
             </div>
         </div>
 
         <div style="position:relative">
-            <q-icon
-                color="accent"
-                name="question_mark"
-                size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px"
-            >
+            <q-icon color="accent" name="question_mark" size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px">
                 <q-tooltip>仅全选本页筛选结果</q-tooltip>
             </q-icon>
-            <a-table
-                style="z-index:1"
-                class="col-5"
-                size="middle"
-                rowKey="lineNumber"
-                bordered
-                :loading="loading"
-                :data-source="filteredRows"
-                :columns="columns"
-                :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25 }"
-            ></a-table>
+            <a-table style="z-index:1" class="col-5" size="middle" rowKey="lineNumber" bordered :loading="loading"
+                :data-source="filteredRows" :columns="columns" :sticky="true"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"></a-table>
         </div>
     </div>
 
@@ -184,7 +99,12 @@ import * as echarts from 'echarts'
 
 import { pieOption, columns } from './index'
 import { errorMessage } from 'src/utils/notify'
-
+const getCheckboxProps = (record) => {
+    return {
+        disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
+        name: record.lineNumber,
+    }
+}
 // hg19基因组数据，/data/bioinfo/database_dir/hg19/hg19_genome/hg19.length
 // hg38基因组数据，/data/bioinfo/database_dir/hg38/hg38_genome/hg38.length
 const props = defineProps({
@@ -217,6 +137,7 @@ const props = defineProps({
         default: () => { }
     }
 })
+const viewConfig = toRef(props, 'viewConfig')
 const stepData = toRef(props, 'stepData')
 const filteredInfo = ref()
 const variantColumns = computed(() => {
@@ -370,7 +291,7 @@ onMounted(() => {
 
         if (stepData.value && stepData.value.table) {
             searchParams.value = stepData.value.table.searchParams
-            clickSearch()
+            searchFilterRows(stepData.value.table.searchParams)
             selectedRows.value = stepData.value.table.selectedRows
         }
     })
@@ -404,31 +325,37 @@ onMounted(() => {
     })
 })
 
-const clickSearch = () => {
+const searchFilterRows = (searchParams) => {
     filteredRows.value = rows.value.filter((t) => {
         let result = true
-        let param = searchParams.value.gene
+        let param = searchParams.gene
         if (param.length > 0) {
             result &= t.Gene.includes(param)
         }
 
-        param = searchParams.value.type
+        param = searchParams.type
         if (param === 'DUP' || param === 'DEL') {
             result &= t.Type === param
         }
 
-        param = searchParams.value.drug
+        param = searchParams.drug
         if (param === 'Yes' || param === 'No') {
             result &= param === 'Yes' ? t.Drugs.length > 0 : t.Drugs.length === 0
         }
 
-        param = searchParams.value.drugLevel
-        if (searchParams.value.drug === 'Yes' && param.length > 0) {
+        param = searchParams.drugLevel
+        if (searchParams.drug === 'Yes' && param.length > 0) {
             result &= t.Drugs.indexOf(`药物等级:${param}`) >= 0 ? true : false
         }
         return result
     })
-    // selectedRows.value = []
+}
+const clickSearch = () => {
+    if (viewConfig.value.showStick && viewConfig.value.stickDone) {
+        errorMessage('请先取消过滤')
+        return false
+    }
+    searchFilterRows(searchParams.value)
 }
 
 const clickClear = () => {
@@ -449,6 +376,10 @@ const initPie = () => {
 const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
+    // if (viewConfig.value.showStick && viewConfig.value.stickDone) {
+    //     errorMessage('请先取消过滤')
+    //     return false
+    // }
     selectedRows.value = selectedRowKeys
 }
 const emit = defineEmits(['stickDone', 'reset'])
@@ -468,8 +399,8 @@ const stickFilter = () => {
     emit('stickDone', data)
 }
 const reset = () => {
-
     emit('reset', null)
+    selectedRows.value = []
     searchParams.value = {
         gene: '',
         type: '', // DUP/DEL
