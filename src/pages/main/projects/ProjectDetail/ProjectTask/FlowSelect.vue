@@ -7,24 +7,19 @@
                     <q-btn flat round dense icon="close" v-close-popup />
                 </q-toolbar>
             </div>
-            <div
-                style="
+            <div style="
                     margin: 10px;
                     flex: 1 1 auto;
                     overflow-y: scroll;
                     overflow-x: hidden;
-                "
-                class="bio-data-table"
-            >
+                " class="bio-data-table">
                 <table>
-                    <thead
-                        style="
+                    <thead style="
                             background-color: white;
                             position: sticky;
                             top: 0;
                             z-index: 1;
-                        "
-                    >
+                        ">
                         <tr>
                             <td>选择</td>
                             <td>名称</td>
@@ -35,14 +30,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr
-                            class="cursor-pointer"
-                            v-for="(item, index) of flows"
-                            :key="index"
-                            @click="selectFlow(item)"
-                        >
+                        <tr class="cursor-pointer" v-for="(item, index) of flows" :key="index"
+                            @click="selectFlow(item)">
                             <td>
-                                <q-radio v-model="selectedFlow.id" :val="item.id" />
+                                <q-radio v-model="selectedFlowId" :val="item.id" @click="selectFlow(item)" />
                             </td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.code }}</td>
@@ -70,6 +61,7 @@ import { errorMessage } from "src/utils/notify.js";
 
 const emit = defineEmits(["flowSelected"]);
 const { apiGet } = useApi();
+const selectedFlowId = ref('')
 const selectedFlow = ref({});
 const flowSelect = () => {
     if (!selectedFlow.value.id) {
@@ -81,6 +73,7 @@ const flowSelect = () => {
 const flows = ref([]);
 const selectFlow = (flow) => {
     selectedFlow.value = flow;
+    selectedFlowId.value = flow.id
 };
 onMounted(() => {
     getFlows();
