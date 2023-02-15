@@ -72,7 +72,7 @@
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
-                        <q-btn size="xs" outline color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
+                        <q-btn v-if="allowReset(props.row)" size="xs" outline color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
                         <q-btn
                             v-if="isNormal(props.row)"
                             size="xs"
