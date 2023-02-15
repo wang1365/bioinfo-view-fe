@@ -137,12 +137,15 @@
                     </div>
                     <div v-for="commonTab in commonTabs" :key="commonTab.title">
                         <div v-if="isStepDone(commonTab.title)">
-                            <span>{{ commonTab.title }}</span>
-                            <q-chip color="primary" text-color="white">
-                                <span v-if="commonTabSelected(commonTab)">勾选</span>
-                                <span v-if="!commonTabSelected(commonTab) && commonTabFiltered(commonTab)">已搜索</span>
-                                <span v-if="!commonTabSelected(commonTab) && !commonTabFiltered(commonTab)">无数据</span>
-                            </q-chip>
+                            <span class="text-bold">{{ commonTab.title }}</span>:&nbsp;&nbsp;
+                            <span v-for="table in getCommonStepData(commonTab.title).tables" :key="table.name">
+                                {{ table.name }}
+                                <q-chip color="primary" text-color="white">
+                                    <span v-if="table.selected">勾选</span>
+                                    <span v-if="!table.selected && table.filtered">已搜索</span>
+                                    <span v-if="!table.selected && !table.filtered">无数据</span>
+                                </q-chip>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -193,7 +196,7 @@ const { apiPost } = useApi()
 const viewConfigLoaded = ref(false)
 const creating = ref(false)
 const reportComment = ref('')
-const step = ref('fusion')
+const step = ref('mutation')
 const stepData = ref({})
 const route = useRoute()
 const router = useRouter()
