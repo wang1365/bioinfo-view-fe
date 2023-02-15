@@ -1,38 +1,16 @@
 <template>
     <div>
         <div style="text-align:right" class="q-py-md">
-            <q-btn
-                icon="help_outline"
-                size="small"
-                outline
-                color="orange"
-                class="q-mr-md"
-                @click="dlgVisible = !dlgVisible"
-                >说明</q-btn
-            >
-            <q-btn
-                v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
-                icon="bookmarks"
-                size="small"
-                color="primary"
-                class="q-mr-md"
-                label="已固定过滤"
-                @click="unstick()"
-            />
-            <q-btn
-                v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
-                icon="bookmarks"
-                size="small"
-                outline
-                color="primary"
-                class="q-mr-md"
-                @click="stickFilter()"
-                >固定过滤</q-btn
-            >
+            <q-btn icon="help_outline" size="small" outline color="orange" class="q-mr-md"
+                @click="dlgVisible = !dlgVisible">说明</q-btn>
+            <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small"
+                color="primary" class="q-mr-md" label="已固定过滤" @click="unstick()" />
+            <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small"
+                outline color="primary" class="q-mr-md" @click="stickFilter()">固定过滤</q-btn>
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 800px; max-width: 2000px">
-                <q-bar class="bg-primary text-white">{{viewConfig.title}}</q-bar>
+                <q-bar class="bg-primary text-white">{{ viewConfig.title }}</q-bar>
                 <q-card-section>
                     <q-input :model-value="intro" readonly autogrow type="textarea"></q-input>
                 </q-card-section>
@@ -42,52 +20,30 @@
             </q-card>
         </q-dialog>
 
-        <q-tabs v-model="tab" dense align="left"
-                active-color="primary"
-                active-bg-color="grey-5"
-                class="bg-grey-2 shadow-2"
-                indicator-color="primary"
-                inline-label
-                :breakpoint="0">
-            <q-tab v-for="table in tables" :label="table.name" :name="table.name" :key="table.name"/>
+        <q-tabs v-model="tab" dense align="left" active-color="primary" active-bg-color="grey-5"
+            class="bg-grey-2 shadow-2" indicator-color="primary" inline-label :breakpoint="0">
+            <q-tab v-for="table in tables" :label="table.name" :name="table.name" :key="table.name" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel v-for="table in tables" :name="table.name" :key="table.name">
                 <q-toolbar class="text-primary">
-                    <q-input
-                        v-model="table.keyword"
-                        class="q-mr-sm"
-                        dense
-                        label="搜索:"
-                        clearable
-                        @clear="clearKeyword(table)"
-                        style="width:300px"
-                    />
-                    <q-btn size="small" color="primary" label="搜索" @click="searchKeyword(table)"></q-btn>
-                    <q-space/>
-                    <q-btn :href="table.url" label="下载" icon="south" size="sm" flat/>
+                    <q-input v-model="table.keyword" class="q-mr-sm" dense label="搜索:" clearable
+                        @clear="clearKeyword(table)" style="width:300px"
+                        :disable="props.viewConfig.showStick && props.viewConfig.stickDone" />
+                    <q-btn size="small" color="primary" label="搜索" @click="searchKeyword(table)"
+                        :disable="props.viewConfig.showStick && props.viewConfig.stickDone"></q-btn>
+                    <q-space />
+                    <q-btn :href="table.url" label="下载" icon="south" size="sm" flat />
                 </q-toolbar>
                 <div style="position:relative">
-                    <q-icon
-                        color="accent"
-                        name="question_mark"
-                        size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px"
-                    >
+                    <q-icon color="accent" name="question_mark" size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px">
                         <q-tooltip>仅全选本页筛选结果</q-tooltip>
                     </q-icon>
-                    <a-table
-                        style="z-index:1"
-                        class="col-5"
-                        size="middle"
-                        rowKey="lineNumber"
-                        bordered
-                        :scroll="{ x: 2000, y: 600 }"
-                        :data-source="table.filteredRows"
-                        :columns="table.columns"
+                    <a-table style="z-index:1" class="col-5" size="middle" rowKey="lineNumber" bordered
+                        :scroll="{ x: 2000, y: 600 }" :data-source="table.filteredRows" :columns="table.columns"
                         :sticky="true"
-                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth:35 }"
-                    />
+                        :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }" />
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -95,21 +51,16 @@
         <q-separator color="primary" />
         <div>
             <template v-for="image in images" :key="image">
-                <q-img
-                    class="q-mt-lg text-primary"
-                    :src="image.url"
-                    style="max-height: 500px"
-                    fit="contain"
-                    position="0 20px"
-                />
-                <div class="text-primary">{{image.description}}</div>
+                <q-img class="q-mt-lg text-primary" :src="image.url" style="max-height: 500px" fit="contain"
+                    position="0 20px" />
+                <div class="text-primary">{{ image.description }}</div>
             </template>
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref ,toRef} from 'vue'
+import { onMounted, ref, toRef } from 'vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { useQuasar } from "quasar"
@@ -128,7 +79,7 @@ const props = defineProps({
     },
     task: {
         required: true,
-        default: () => {},
+        default: () => { },
     },
     stepData: {
         type: Object,
@@ -147,7 +98,6 @@ const clearKeyword = (table) => {
     searchKeyword(table)
 }
 const searchKeyword = (table) => {
-    console.log('searchKeyword', table)
     if (table.keyword) {
         table.filteredRows = table.rows.filter((t) => {
             for (let key in t) {
@@ -160,6 +110,7 @@ const searchKeyword = (table) => {
     } else {
         table.filteredRows = table.rows
     }
+    if (tableData.value[table.name]) { tableData.value[table.name].selectedRows = [] }
 }
 onMounted(() => {
     initIntro()
@@ -175,13 +126,14 @@ const initIntro = () => {
         })
     }
 }
-
+const tableData = ref({})
 const initTable = () => {
     $q.loading.show({
         delay: 100
     })
     const { tables: tableList } = props.viewConfig || []
     tableList.forEach((table, i) => {
+        tableData.value[table.title] = {}
         readTaskFile(props.task.id, table.file).then((res) => {
             const colNames = getCsvHeader(res)
             const rows = getCsvDataAndSetLineNumber(res, { fields: colNames })
@@ -201,26 +153,32 @@ const initTable = () => {
                 }
             })
             // 添加表格定义
-            tables.value.push({
+            let data = {
                 name: table.name,           // 表格tab名称
                 rows,                       // 表格全量数据
                 columns,                    // 表格表头
                 filteredRows: rows,         // 表格过滤后数据
                 url: '/igv' + table.file,   // 下载链接
                 keyword: ''                 // 检索关键字
-            })
+            }
+            tables.value.push(data)
 
             if (i === 0) {
                 tab.value = table.name
             }
+            console.log(stepData.value)
+            if (stepData.value && stepData.value.tables) {
+                let selectedRows = []
 
-            if(stepData.value && stepData.value.searchParam){
-                keyword.value=stepData.value.searchParam
-                searchKeyword()
+                for (const item of stepData.value.tables) {
+                    if (item.name === table.name) {
+                        data.keyword = item.searchParam
+                        searchKeyword(data)
+                        tableData.value[table.name] = { selectedRows: item.selectedRows }
+                    }
+                }
             }
-            if(stepData.value && stepData.value.selectedRows){
-                selectedRows.value = stepData.value.selectedRows
-            }
+
             $q.loading.hide()
         })
     })
@@ -236,28 +194,55 @@ const initImages = () => {
     })
 }
 
-const onChange = () => {}
-const selectedRows = ref([])
-
-const onSelectChange = (selectedRowKeys) => {
-    selectedRows.value = selectedRowKeys
-}
-const emit = defineEmits(['stickDone','reset'])
-const stickFilter = () => {
-    let data = {
-        searchParam: keyword.value,
-        selectedRows: selectedRows.value,
-        filtered: rows.value.length !== filteredRows.value.length,
-        selected: selectedRows.value.length > 0,
+const getTableSelectedRows = (table) => {
+    if (tableData.value[table.name]) {
+        return tableData.value[table.name].selectedRows
     }
-     emit('stickDone', data)
+    return []
 }
-const unstick=()=>{
-    emit('reset',null)
-    selectedRows.value=[]
-    keyword.value=""
-    searchKeyword()
+const onSelectChange = (selectedRowKeys) => {
+    if (tableData.value[tab.value]) { tableData.value[tab.value].selectedRows = selectedRowKeys }
+    else {
+        tableData.value[tab.value] = { selectedRows: selectedRowKeys }
+    }
+}
+const viewConfig = toRef(props, 'viewConfig')
+const getCheckboxProps = (record) => {
+    return {
+        disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
+        name: record.lineNumber,
+    }
+}
+const emit = defineEmits(['stickDone', 'reset'])
+const stickFilter = () => {
+    var results = []
+    for (const table of tables.value) {
+        let selectedRows = []
+        if (tableData.value[table.name] && tableData.value[table.name].selectedRows) {
+            selectedRows = tableData.value[table.name].selectedRows
+        }
+        let data = {
+            filtered: table.rows.length !== table.filteredRows.length,
+            searchParam: table.keyword,
+            selected: tableData.value[table.name],
+            selectedRows: selectedRows,
+            selected: selectedRows.length > 0,
+            name: table.name
+        }
+        results.push(data)
+    }
+    emit('stickDone', { tables: results })
+}
+const unstick = () => {
+    emit('reset', null)
+    tableData.value = {}
+    for (let table of tables.value) {
+        table.keyword = ''
+        table.filteredRows = table.rows
+    }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

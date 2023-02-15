@@ -366,6 +366,7 @@ const loadViewConfig = () => {
                 config[dict[k]].stickDone = false
             }
             if (data.commonModules) {
+                console.log(data.commonModules)
                 for (let common of data.commonModules) {
                     config[common.title] = common
                     config[common.title].showStick = true
