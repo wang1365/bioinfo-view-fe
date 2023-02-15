@@ -214,13 +214,13 @@ const searchKeyword2 = () => {
 const clearKeyword1 = () => {
     filteredRows1.value = qtRows.value
     keyword1.value = ''
-    filterChange()
+    searchKeyword1()
 }
 
 const clearKeyword2 = () => {
     filteredRows2.value = qnRows.value
     keyword2.value = ''
-    filterChange()
+    searchFilterRows2()
 }
 
 const clickView = (record) => {
@@ -264,6 +264,12 @@ watch(qtRows, () => {
     loadData()
 })
 watch(qnRows, () => {
+    loadData()
+})
+watch(qtSelectedRows, () => {
+    loadData()
+})
+watch(qnSelectedRows, () => {
     loadData()
 })
 onMounted(() => {
@@ -340,7 +346,6 @@ const loadData = () => {
             }
         }
     }
-    filterChange()
 }
 
 const selectedRows = ref([])

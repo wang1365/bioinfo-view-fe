@@ -2,75 +2,37 @@
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <h6>定制报告</h6>
         <q-stepper v-if="viewConfigLoaded" v-model="step" ref="stepper" header-nav color="primary" animated>
-            <q-step
-                v-if="tabValid('mutation')"
-                :done="isStepDone('mutation')"
-                name="mutation"
-                title="突变分析"
-                icon="candlestick_chart"
-            >
-                <MutaionVue
-                    :viewConfig="viewConfig.mutation"
-                    :intro="intros['mutation']"
-                    :samples="samples"
-                    :task="taskDetail"
-                    :stepData="stepData.mutation"
+            <q-step v-if="tabValid('mutation')" :done="isStepDone('mutation')" name="mutation" title="突变分析"
+                icon="candlestick_chart">
+                <MutaionVue :viewConfig="viewConfig.mutation" :intro="intros['mutation']" :samples="samples"
+                    :task="taskDetail" :stepData="stepData.mutation"
                     @stickDone="stickDone('mutation', $event, 'fusion')"
-                    @reset="stickDone('mutation', null, 'create')"
-                />
+                    @reset="stickDone('mutation', null, 'create')" />
             </q-step>
 
-            <q-step
-                v-if="tabValid('fusion')"
-                :done="isStepDone('fusion')"
-                name="fusion"
-                title="融合分析"
-                icon="format_strikethrough"
-            >
-                <FusionVue
-                    :viewConfig="viewConfig.fusion"
-                    :intro="intros['fusion']"
-                    :samples="samples"
-                    :stepData="stepData.fusion"
-                    @stickDone="stickDone('fusion', $event, 'copy_number_variation')"
-                    @reset="stickDone('fusion', null, 'create')"
-                />
+            <q-step v-if="tabValid('fusion')" :done="isStepDone('fusion')" name="fusion" title="融合分析"
+                icon="format_strikethrough">
+                <FusionVue :viewConfig="viewConfig.fusion" :intro="intros['fusion']" :samples="samples"
+                    :stepData="stepData.fusion" @stickDone="stickDone('fusion', $event, 'copy_number_variation')"
+                    @reset="stickDone('fusion', null, 'create')" />
             </q-step>
 
-            <q-step
-                v-if="tabValid('copy_number_variation')"
-                :done="isStepDone('copy_number_variation')"
-                name="copy_number_variation"
-                title="拷贝数变异分析"
-                icon="polyline"
-            >
-                <CopyNumberVariationVue
-                    :viewConfig="viewConfig.copy_number_variation"
-                    :intro="intros['copy_number_variation']"
-                    :task="taskDetail"
-                    :samples="samples"
+            <q-step v-if="tabValid('copy_number_variation')" :done="isStepDone('copy_number_variation')"
+                name="copy_number_variation" title="拷贝数变异分析" icon="polyline">
+                <CopyNumberVariationVue :viewConfig="viewConfig.copy_number_variation"
+                    :intro="intros['copy_number_variation']" :task="taskDetail" :samples="samples"
                     :stepData="stepData.copy_number_variation"
                     @stickDone="stickDone('copy_number_variation', $event, 'tumor_mutation_load')"
-                    @reset="stickDone('copy_number_variation', null, 'create')"
-                />
+                    @reset="stickDone('copy_number_variation', null, 'create')" />
             </q-step>
 
-            <q-step
-                v-if="tabValid('tumor_mutation_load')"
-                :done="isStepDone('tumor_mutation_load')"
-                name="tumor_mutation_load"
-                title="肿瘤突变负荷分析"
-                icon="bubble_chart"
-            >
-                <TumorMutationLoadVue
-                    :viewConfig="viewConfig.tumor_mutation_load"
-                    :intro="intros['tumor_mutation_load']"
-                    :task="taskDetail"
-                    :samples="samples"
+            <q-step v-if="tabValid('tumor_mutation_load')" :done="isStepDone('tumor_mutation_load')"
+                name="tumor_mutation_load" title="肿瘤突变负荷分析" icon="bubble_chart">
+                <TumorMutationLoadVue :viewConfig="viewConfig.tumor_mutation_load"
+                    :intro="intros['tumor_mutation_load']" :task="taskDetail" :samples="samples"
                     :stepData="stepData.tumor_mutation_load"
                     @stickDone="stickDone('tumor_mutation_load', $event, commonTabs[0].title)"
-                    @reset="stickDone('tumor_mutation_load', null, 'create')"
-                />
+                    @reset="stickDone('tumor_mutation_load', null, 'create')" />
             </q-step>
             <!-- <q-step v-if="tabValid('qc')" name="qc" title="质控" icon="border_left" color="secondary">
                 <QcVue :viewConfig="viewConfig.qc" :intro="intros['qc']" :samples="samples" />
@@ -85,21 +47,12 @@
                 <HomologousRecombinationDefectVue :viewConfig="viewConfig.homologous_recombination_defect"
                     :intro="intros['homologous_recombination-defect']" :task="taskDetail" :samples="samples" />
             </q-step>-->
-            <q-step
-                v-for="commonTab in commonTabs"
-                :key="commonTab.title"
-                :title="commonTab.title"
-                :name="commonTab.title"
-                :done="isStepDone(commonTab.title)"
-            >
-                <CommonModuleVue
-                    v-if="commonTab.title"
-                    :viewConfig="getCommonConfig(commonTab.title)"
-                    :task="taskDetail"
-                    :stepData="getCommonStepData(commonTab.title)"
+            <q-step v-for="commonTab in commonTabs" :key="commonTab.title" :title="commonTab.title"
+                :name="commonTab.title" :done="isStepDone(commonTab.title)">
+                <CommonModuleVue v-if="commonTab.title" :viewConfig="getCommonConfig(commonTab.title)"
+                    :task="taskDetail" :stepData="getCommonStepData(commonTab.title)"
                     @stickDone="stickDone(commonTab.title, $event, 'create')"
-                    @reset="stickDone(commonTab.title, null, 'create')"
-                />
+                    @reset="stickDone(commonTab.title, null, 'create')" />
             </q-step>
 
             <q-step name="create" title="报告确认" icon="receipt_long">
@@ -112,84 +65,57 @@
                                 胚系突变分析:
                                 <span v-if="stepData.mutation?.germline.selected">勾选</span>
                                 <span
-                                    v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered"
-                                    >已搜索</span
-                                >
+                                    v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered">已搜索</span>
                                 <span
-                                    v-if="!stepData.mutation?.germline.selected && !stepData.mutation?.germline.filtered"
-                                    >无数据</span
-                                >
+                                    v-if="!stepData.mutation?.germline.selected && !stepData.mutation?.germline.filtered">无数据</span>
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutSomatic">
                                 体细胞突变分析:
                                 <span v-if="stepData.mutation?.somatic.selected">勾选</span>
-                                <span v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
-                                    >已搜索</span
-                                >
                                 <span
-                                    v-if="!stepData.mutation?.somatic.selected && !stepData.mutation?.somatic.filtered"
-                                    >无数据</span
-                                >
+                                    v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered">已搜索</span>
+                                <span
+                                    v-if="!stepData.mutation?.somatic.selected && !stepData.mutation?.somatic.filtered">无数据</span>
                             </q-chip>
                         </div>
                     </div>
                     <div v-if="isStepDone('fusion')">
                         <div>
                             <span class="text-bold">融合分析</span>
-                            <q-chip
-                                color="primary"
-                                text-color="white"
-                                v-if="viewConfig.fusion.showFusionGermline && samples.length<=1"
-                            >
+                            <q-chip color="primary" text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length <= 1">
                                 单样品融合分析:
                                 <span v-if="stepData.fusion?.single.qt.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >已搜索</span
-                                >
                                 <span
-                                    v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >无数据</span
-                                >
+                                    v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered">已搜索</span>
+                                <span
+                                    v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered">无数据</span>
                             </q-chip>
-                            <q-chip
-                                color="primary"
-                                text-color="white"
-                                v-if="viewConfig.fusion.showFusionGermline && samples.length >1"
-                            >
+                            <q-chip color="primary" text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length > 1">
                                 肿瘤单样品融合:
                                 <span v-if="stepData.fusion?.single.qt.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >已搜索</span
-                                >
                                 <span
-                                    v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >无数据</span
-                                >
+                                    v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered">已搜索</span>
+                                <span
+                                    v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered">无数据</span>
                             </q-chip>
-                            <q-chip
-                                color="primary"
-                                text-color="white"
-                                v-if="viewConfig.fusion.showFusionGermline && samples.length >1"
-                            >
+                            <q-chip color="primary" text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length > 1">
                                 对照单样品融合:
                                 <span v-if="stepData.fusion?.single.qn.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
-                                    >已搜索</span
-                                >
                                 <span
-                                    v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered"
-                                    >无数据</span
-                                >
+                                    v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered">已搜索</span>
+                                <span
+                                    v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered">无数据</span>
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionSomatic">
                                 体细胞融合分析:
                                 <span v-if="stepData.fusion?.normal?.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered"
-                                    >已搜索</span
-                                >
-                                <span v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered"
-                                    >无数据</span
-                                >
+                                <span
+                                    v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered">已搜索</span>
+                                <span
+                                    v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered">无数据</span>
                             </q-chip>
                         </div>
                     </div>
@@ -198,13 +124,9 @@
                         <q-chip color="primary" text-color="white">
                             <span v-if="stepData.copy_number_variation?.table.selected">勾选</span>
                             <span
-                                v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered"
-                                >已搜索</span
-                            >
+                                v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered">已搜索</span>
                             <span
-                                v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered"
-                                >无数据</span
-                            >
+                                v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered">无数据</span>
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('tumor_mutation_load')">
@@ -215,13 +137,11 @@
                     </div>
                     <div v-for="commonTab in commonTabs" :key="commonTab.title">
                         <div v-if="isStepDone(commonTab.title)">
-                            <span>{{commonTab.title}}</span>
+                            <span>{{ commonTab.title }}</span>
                             <q-chip color="primary" text-color="white">
                                 <span v-if="commonTabSelected(commonTab)">勾选</span>
                                 <span v-if="!commonTabSelected(commonTab) && commonTabFiltered(commonTab)">已搜索</span>
-                                <span v-if="!commonTabSelected(commonTab) && !commonTabFiltered(commonTab)"
-                                    >无数据</span
-                                >
+                                <span v-if="!commonTabSelected(commonTab) && !commonTabFiltered(commonTab)">无数据</span>
                             </q-chip>
                         </div>
                     </div>
@@ -273,7 +193,7 @@ const { apiPost } = useApi()
 const viewConfigLoaded = ref(false)
 const creating = ref(false)
 const reportComment = ref('')
-const step = ref('mutation')
+const step = ref('fusion')
 const stepData = ref({})
 const route = useRoute()
 const router = useRouter()
@@ -292,7 +212,6 @@ const viewConfig = ref({
 const commonTabs = ref([])
 
 onMounted(() => {
-    mutationLoadGermlineData()
     loadTaskSamples()
     loadIntros()
     loadViewConfig()
@@ -305,8 +224,8 @@ const stickDone = (name, data, nextstep) => {
     /*     step.value = nextstep */
     console.log(stepData.value)
     console.log(name)
-    if(!data){
-        viewConfig.value[name].stickDone=false
+    if (!data) {
+        viewConfig.value[name].stickDone = false
     }
     return true
 }
@@ -446,7 +365,7 @@ const loadViewConfig = () => {
                 config[dict[k]].showStick = true
                 config[dict[k]].stickDone = false
             }
-            if(data.commonModules){
+            if (data.commonModules) {
                 for (let common of data.commonModules) {
                     config[common.title] = common
                     config[common.title].showStick = true

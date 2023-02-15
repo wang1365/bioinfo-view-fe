@@ -113,9 +113,7 @@ const viewConfig = toRef(props, 'viewConfig')
 const samples = toRef(props, 'samples')
 const stepData = toRef(props, 'stepData')
 onMounted(() => {
-    loadData()
-})
-watch(props, () => {
+    console.log('mounted')
     loadData()
 })
 const filterChange = (name, data) => {
@@ -130,7 +128,6 @@ const filterChange = (name, data) => {
         singleData.value.qt.selectedRows = data.qt.selectedRows
         singleData.value.qn.selectedRows = data.qn.selectedRows
     }
-    console.log(name, data)
 }
 
 const stickFilter = () => {
@@ -138,29 +135,34 @@ const stickFilter = () => {
         if (singleVue.value) {
             filterData.value.single = singleVue.value.getChangedData()
         } else {
-
             errorMessage('单样品融合没有过滤数据')
             return false
         }
     }
-    /*if (viewConfig.value.showFusionSomatic && !filterData.value.normal) {
-        errorMessage('体细胞融合分析没有过滤数据')
-        return false
-    }*/
+    if (viewConfig.value.showFusionSomatic && !filterData.value.normal) {
+        if (normalVue.value) {
+            try {
+                filterData.value.single = singleVue.value.getChangedData()
+
+            } catch (error) {
+
+            }
+        }
+    }
     emit('stickDone', filterData.value)
 }
 const reset = () => {
     emit('reset', null)
-    try {
-        singleVue.value.reset()
-    } catch (error) {
+    // try {
+    //     singleVue.value.reset()
+    // } catch (error) {
 
-    }
-    try {
-        normalVue.value.reset()
-    } catch (error) {
+    // }
+    // try {
+    //     normalVue.value.reset()
+    // } catch (error) {
 
-    }
+    // }
 
     singleData.value.qt.searchParam = ''
     singleData.value.qt.selectedRows = []
@@ -169,8 +171,12 @@ const reset = () => {
     normalData.value.searchParam = ''
     normalData.value.selectedRows = []
 }
+watch(samples, () => {
+    loadData()
+})
 
 const loadData = () => {
+    console.log(viewConfig.value)
     if (viewConfig.value.showFusionGermline) {
         loadSingleData()
     }
