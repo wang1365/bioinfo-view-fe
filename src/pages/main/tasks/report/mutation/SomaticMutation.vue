@@ -84,7 +84,7 @@
                     <a-table style="z-index:1" size="small" bordered :loading="loading" :data-source="filteredRows"
                         :columns="columns" :scroll="{ x: 2000, y: 600 }" :custom-row="customRow" :sticky="true"
                         rowKey="lineNumber"
-                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange }">
+                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }">
                         <template #bodyCell="{ column, record }">
                             <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
                                 <div>{{ record[column.dataIndex]}}</div>
@@ -673,6 +673,12 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
+}
+const getCheckboxProps = (record) => {
+    return {
+        disabled: showSticky.value && stickDone.value, // Column configuration not to be checked
+        name: record.lineNumber,
+    }
 }
 onUnmounted(() => {
     filterChange()

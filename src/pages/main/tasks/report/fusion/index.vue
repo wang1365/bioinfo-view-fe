@@ -131,7 +131,7 @@ const filterChange = (name, data) => {
 }
 
 const stickFilter = () => {
-    if (viewConfig.value.showFusionGermline && !filterData.value.single.qt) {
+    if (viewConfig.value.showFusionGermline && !filterData.value.single) {
         if (singleVue.value) {
             filterData.value.single = singleVue.value.getChangedData()
         } else {
