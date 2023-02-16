@@ -31,7 +31,7 @@
                 <TumorMutationLoadVue :viewConfig="viewConfig.tumor_mutation_load"
                     :intro="intros['tumor_mutation_load']" :task="taskDetail" :samples="samples"
                     :stepData="stepData.tumor_mutation_load"
-                    @stickDone="stickDone('tumor_mutation_load', $event, commonTabs[0].title)"
+                    @stickDone="stickDone('tumor_mutation_load', $event, 'create')"
                     @reset="stickDone('tumor_mutation_load', null, 'create')" />
             </q-step>
             <!-- <q-step v-if="tabValid('qc')" name="qc" title="质控" icon="border_left" color="secondary">
