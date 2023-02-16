@@ -109,8 +109,8 @@ const store = globalStore();
 
 const isPwd = ref(true);
 const form = ref({
-    username: "super",
-    password: "1234qwer",
+    username: "",  // super
+    password: "",  // 1234qwer
     captcha: "",
     captcha_id: "",
 });
