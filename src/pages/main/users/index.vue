@@ -73,14 +73,14 @@
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn v-if="allowReset(props.row)" size="xs" outline color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
-                        <q-btn
-                            v-if="isNormal(props.row)"
-                            size="xs"
-                            outline
-                            color="primary"
-                            label="流程授权"
-                            @click="clickFlowAuth(props.row)"
-                        ></q-btn>
+<!--                        <q-btn-->
+<!--                            v-if="isNormal(props.row)"-->
+<!--                            size="xs"-->
+<!--                            outline-->
+<!--                            color="primary"-->
+<!--                            label="流程授权"-->
+<!--                            @click="clickFlowAuth(props.row)"-->
+<!--                        ></q-btn>-->
                         <q-btn
                             v-if="allowReset(props.row)"
                             size="xs"
