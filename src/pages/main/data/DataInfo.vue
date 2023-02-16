@@ -16,14 +16,14 @@
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">建库input: {{ form.library_input }}</div>
+                        <div class="col q-pa-sm">建库input(ng): {{ form.library_input }}</div>
                         <div class="col q-pf-sm">index类型: {{ form.index_type }}</div>
                         <div class="col q-pa-sm">index编号: {{ form.index_number }}</div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">杂交input: {{ form.hybrid_input }}</div>
+                        <div class="col q-pa-sm">杂交input(ng): {{ form.hybrid_input }}</div>
                         <div class="col q-pa-sm">核酸打断方式: {{ form.nucleic_break_type }}</div>
                         <div class="col q-pa-sm">样本元信息ID: {{ form.sample_meta_id }}</div>
                     </div>

@@ -2,38 +2,15 @@
     <q-card class="q-mt-md">
         <q-section>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
-                <q-input
-                    style="width:450px"
-                    v-model="searchParams.search"
-                    dense
-                    label="关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构"
-                    clearable
-                >
+                <q-input style="width:450px" v-model="searchParams.search" dense
+                    label="关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构" clearable>
                 </q-input>
-                <q-select
-                    style="width:100px"
-                    clearable
-                    dense
-                    v-model="searchParams.nucleic_type"
-                    :options='["gDNA", "cfDNA", "RNA"]'
-                    label="核酸类型"
-                />
-                <q-select
-                    style="width:100px"
-                    clearable
-                    dense
-                    v-model="searchParams.nucleic_level"
-                    :options='["A", "B", "C", "D"]'
-                    label="核算降解等级"
-                />
-                <q-select
-                    style="width:100px"
-                    clearable
-                    dense
-                    v-model="searchParams.risk"
-                    :options="['是','否']"
-                    label="风险上机"
-                />
+                <q-select style="width:100px" clearable dense v-model="searchParams.nucleic_type"
+                    :options='["gDNA", "cfDNA", "RNA"]' label="核酸类型" />
+                <q-select style="width:100px" clearable dense v-model="searchParams.nucleic_level"
+                    :options='["A", "B", "C", "D"]' label="核算降解等级" />
+                <q-select style="width:100px" clearable dense v-model="searchParams.risk" :options="['是', '否']"
+                    label="风险上机" />
                 <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
             </div>
         </q-section>
@@ -47,14 +24,12 @@
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         批量上传
-                        <span
-                            style="
+                        <span style="
                                 width: 0;
                                 height: 0;
                                 overflow: hidden;
                                 display: inline-block;
-                            "
-                        >
+                            ">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
@@ -163,32 +138,24 @@
         </q-section>
     </q-card>
     <q-dialog persistent v-model="showDataNew">
-        <DataNew
-            @refresh="
-            refreshPage();
-            showDataNew = false;
-        "
-        />
+        <DataNew @refresh="
+    refreshPage();
+showDataNew = false;
+        " />
     </q-dialog>
     <q-dialog v-model="showDataInfo">
         <DataInfo :id="infoId" />
     </q-dialog>
     <q-dialog persistent v-model="showDataEdit">
-        <DataEdit
-            :id="editId"
-            @refresh="
-            refreshPage();
-            showDataEdit = false;
-        "
-        />
+        <DataEdit :id="editId" @refresh="
+    refreshPage();
+showDataEdit = false;
+        " />
     </q-dialog>
     <q-dialog persistent v-model="showLinkSample">
-        <SampleList
-            :linkId="linkId"
-            @itemSelected="
-            linkSample($event);
-        "
-        />
+        <SampleList :linkId="linkId" @itemSelected="
+    linkSample($event);
+        " />
     </q-dialog>
 </template>
 <script setup>
@@ -262,7 +229,7 @@ const refreshPage = async () => {
 };
 const loadPage = async () => {
     let andFields = {}
-    let searchFields=buildModelQuery()
+    let searchFields = buildModelQuery()
     if (searchParams.value.search) {
         searchFields = buildModelQuery([], {
             library_input__icontains: searchParams.value.search,
@@ -289,10 +256,10 @@ const loadPage = async () => {
     let params = `?page=${currentPage.value}&size=${pageSize.value}`
     apiPost(`/model_query/sample${params}`, (res) => {
         total.value = res.data.count;
-                dataItems.value = [];
-                for (const iterator of res.data.results) {
-                    dataItems.value.push(iterator);
-                }
+        dataItems.value = [];
+        for (const iterator of res.data.results) {
+            dataItems.value.push(iterator);
+        }
     }, query)
 
 };
