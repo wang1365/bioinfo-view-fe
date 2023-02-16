@@ -28,7 +28,7 @@
                     :label="flow.name"
                     color="purple"
                     class="q-ma-sm"
-                    @click="showFlowDlg(flow)"
+                    @click="amISuper() ? showFlowDlg(flow) : () => {}"
                 >
                     <q-badge
                         color="orange"
@@ -63,6 +63,7 @@ import {ref, onMounted, defineProps, watch, toRefs} from "vue"
 import { getPanelDetail } from "src/api/panel"
 import PageTitle from "components/page-title/PageTitle"
 import FlowDialog from "pages/main/settings/flow/FlowDialog"
+import { amISuper } from 'src/utils/user'
 const detail = ref({})
 const currentFlowId = ref(null)
 const dlgFlow = ref(null)
