@@ -13,8 +13,7 @@
             <q-form @submit="onSubmit" class="q-mt-lg gqa-form">
                 <q-input
                     :disable="loading"
-                    outlined
-                    dense
+                    dense outlined
                     no-error-icon
                     v-model.trim="form.username"
                     :placeholder="$t('Username')"
@@ -166,3 +165,14 @@ const onSubmit = async () => {
         });
 };
 </script>
+
+<style lang="scss">
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #4cb494 inset !important;
+}
+
+</style>
