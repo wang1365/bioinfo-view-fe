@@ -181,7 +181,7 @@ const refresh = () => {
         }
 
         options = {
-            // genome,
+            genome,
             reference,
             tracks,
             showCircularViewButton: true

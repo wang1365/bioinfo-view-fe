@@ -1,5 +1,5 @@
 export const hg19 = {
-    // id: "hg19",
+    id: 'hg19',
     // name: "Human (GRCh37/hg19)",
     fastaURL: '/igv/data/bioinfo/database_dir/hg19/hg19_genome/hg19.fa',
     indexURL: '/igv/data/bioinfo/database_dir/hg19/hg19_genome/hg19.fa.fai',
@@ -24,7 +24,7 @@ export const hg19 = {
 }
 
 export const hg38 = {
-    // id: "hg38",
+    id: 'hg38',
     // name: "Human (GRCh38/hg38)",
     fastaURL: '/igv/data/bioinfo/database_dir/hg38/hg38_genome/hg38.fa',
     indexURL: '/igv/data/bioinfo/database_dir/hg38/hg38_genome/hg38.fa.fai',
