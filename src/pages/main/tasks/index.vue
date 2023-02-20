@@ -20,41 +20,33 @@
 
                 <q-btn color="primary" @click="clickCard(options[1])">
                     <div class="text-white" style="width: 7vw">
-                        <div
-                            class="text-white text-h5 text-center text-bold"
-                        >{{ taskSummary.running_task_count }}</div>
+                        <div class="text-white text-h5 text-center text-bold">{{ taskSummary.running_task_count }}</div>
                         <div class="text-white text-h6 text-center text-bold">运行</div>
                     </div>
                 </q-btn>
                 <q-btn color="negative" @click="clickCard(options[3])">
                     <div class="text-white" style="width: 7vw">
-                        <div
-                            class="text-h5 text-center text-bold"
-                        >{{ taskSummary.failured_task_count }}</div>
+                        <div class="text-h5 text-center text-bold">{{ taskSummary.failured_task_count }}</div>
                         <div class="text-h6 text-center text-bold">失败</div>
                     </div>
                 </q-btn>
                 <q-btn color="secondary" @click="clickCard(options[2])">
                     <div class="text-white" style="width: 7vw">
-                        <div
-                            class="text-h5 text-center text-bold"
-                        >{{ taskSummary.pending_task_count }}</div>
+                        <div class="text-h5 text-center text-bold">{{ taskSummary.pending_task_count }}</div>
                         <div class="text-h6 text-center text-bold">排队</div>
                     </div>
                 </q-btn>
-                <q-btn color="warning" @click="clickCard(options[5])">
+                <!-- <q-btn color="warning" @click="clickCard(options[5])">
                     <div class="text-white" style="width: 7vw">
                         <div
                             class="text-h5 text-center text-bold"
                         >{{ taskSummary.canceled_task_count }}</div>
                         <div class="text-h6 text-center text-bold">取消</div>
                     </div>
-                </q-btn>
+                </q-btn> -->
                 <q-btn color="positive" @click="clickCard(options[4])">
                     <div class="text-white" style="width: 7vw">
-                        <div
-                            class="text-h5 text-center text-bold"
-                        >{{ taskSummary.finished_task_count }}</div>
+                        <div class="text-h5 text-center text-bold">{{ taskSummary.finished_task_count }}</div>
                         <div class="text-h6 text-center text-bold">完成</div>
                     </div>
                 </q-btn>
@@ -86,11 +78,7 @@
                             :model-value="'所属项目: ' + projectName"
                         >
                             <template v-slot:prepend>
-                                <q-icon
-                                    class="cursor-pointer"
-                                    name="search"
-                                    @click="showProjectSelect = true"
-                                />
+                                <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                             </template>
                             <template v-slot:append>
                                 <q-icon
@@ -224,13 +212,7 @@ refreshPage();
                                 @click="downlaod(item)"
                                 size="sm"
                             />
-                            <q-btn
-                                color="red"
-                                label="删除"
-                                icon="delete"
-                                size="sm"
-                                @click="confirm(item)"
-                            />
+                            <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
                     </tr>
                 </tbody>
@@ -238,11 +220,7 @@ refreshPage();
 
             <div class="row q-mt-md">
                 <q-space></q-space>
-                <PaginatorVue
-                    :total="total"
-                    :currentPage="currentPage"
-                    @pageChange="pageChange($event)"
-                />
+                <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
             </div>
         </div>
         <q-dialog v-model="showProjectSelect">
@@ -260,7 +238,8 @@ refreshPage();
                 </div>
                 <pre>
                 {{ currentTaskError || "无" }}
-            </pre>
+            </pre
+                >
             </q-card>
         </q-dialog>
     </q-page>
