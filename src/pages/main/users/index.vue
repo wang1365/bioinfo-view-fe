@@ -72,7 +72,7 @@
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
-                        <q-btn v-if="allowReset(props.row)" size="xs" outline color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
+                        <q-btn v-if="allowReset(props.row)" size="xs" color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
 <!--                        <q-btn-->
 <!--                            v-if="isNormal(props.row)"-->
 <!--                            size="xs"-->
@@ -84,9 +84,7 @@
                         <q-btn
                             v-if="allowReset(props.row)"
                             size="xs"
-                            outline
-                            color="red"
-                            text-color="red"
+                            color="orange"
                             label="重置密码"
                             @click="clickReset(props.row)"
                         ></q-btn>
@@ -94,9 +92,7 @@
                         <q-btn
                             v-if="allowDelete(props.row)"
                             size="xs"
-                            outline
                             color="red"
-                            text-color="red"
                             label="删除"
                             @click="clickDelete(props.row)"
                         ></q-btn>

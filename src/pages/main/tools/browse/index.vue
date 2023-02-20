@@ -20,13 +20,16 @@
             :columns="columns"
             :scroll="{x:1200}"
             :sticky="true"
+            class="ant-table-striped"
+            :rowClassName="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
             :pagination="pagination"
             @change="tableChange"
         >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'operation'">
-                    <q-btn label="浏览" color="primary" icon="arrow_drop_down" outline size="xs">
-                        <!--                    <q-btn label="浏览" color="primary" icon="arrow_drop_down" outline size="xs">-->
+                    <q-btn label="浏览" color="primary" icon-right="arrow_drop_down" size="xs"
+                           v-if="filterTasks(record.tasks, 3).length > 0"
+                    >
                         <q-menu>
                             <q-list>
                                 <q-item
@@ -186,7 +189,7 @@ const clickView = (sample_id, task) => {
     padding: 30px 30px 0 0;
     text-align: center;
 }
-
-/* specifying max-width so the example can
-  highlight the sticky column on any browser window */
+.ant-table-striped :deep(.table-striped) td {
+    background-color: #fafafa;
+}
 </style>
