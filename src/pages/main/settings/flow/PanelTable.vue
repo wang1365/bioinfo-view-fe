@@ -33,8 +33,8 @@
             </template>
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
-                    <q-btn label="编辑" color="orange" outline size="sm" @click="showEditDlg(props.row)"></q-btn>
-                    <q-btn label="删除" color="red" outline size="sm" @click="showDeleteDlg(props.row)"></q-btn>
+                    <q-btn label="编辑" color="orange" size="sm" @click="showEditDlg(props.row)"></q-btn>
+                    <q-btn label="删除" color="red" size="sm" @click="showDeleteDlg(props.row)"></q-btn>
                 </q-td>
             </template>
         </q-table>

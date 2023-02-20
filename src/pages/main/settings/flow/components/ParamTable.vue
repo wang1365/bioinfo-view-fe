@@ -19,7 +19,7 @@
                 <template v-slot:top>
                     <div class="text-primary text-h7">自定义参数</div>
                     <q-space />
-                    <q-btn v-if="!readonly" color="primary" label="新增参数" @click="addParameter" />
+                    <q-btn v-if="!readonly" color="primary" size="sm" label="新增参数" @click="addParameter" />
                 </template>
 
                 <template v-slot:body="props">
