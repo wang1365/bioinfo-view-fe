@@ -492,17 +492,19 @@ const searchFilterRows = (searchParams) => {
 
         // 人群频率
         /*
-            原始表格第26、31、39列，大于0的小数， 26、31、39列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，不管什么筛选，都展示
+            原始表格第26、31、39列，大于0的小数， 26、31、39列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，则该列满足条件（即可认为其等于0）
+            2023.03.20说明：
+              一共是三个数据库，看每一个突变位点这三个数据库的人群频率，就是如果是点的话，认为这个突变位点的这个数据库满足过滤条件
+              （点是因为这个突变位点在这个数据库里没有记录，所以是未知的，默认是满足筛选条件的）
+              就是如果ABC三个数据库都没有点的情况下，按照筛选数值筛选来
+              如果A数据库里面有点，BC不是点，那A直接默认小于筛选值，BC按照与筛选值比较，可以认为 这三个数据库里的点=0
           */
         param = searchParams.humanRatio
         if (param) {
-            if (line.col26 !== '.' && line.col31 !== '.' && line.col39 !== '.') {
-                let count = Number(line.col26) < param ? 1 : 0
-                count += Number(line.col31) < param ? 1 : 0
-                count += Number(line.col39) < param ? 1 : 0
-                if (count < 2) {
-                    return false
-                }
+            const ltRatio = (colVal) => colVal === '.' || Number(colVal) < param
+            const ltCount = [line.col26, line.col31, line.col39].map(v => ltRatio(v)).filter(v => v).length
+            if (ltCount < 2) {
+                return false
             }
         }
 

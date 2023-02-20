@@ -585,13 +585,10 @@ const searchFilterRows = (searchParams) => {
           */
         param = searchParams.humanRatio
         if (param) {
-            if (line.col30 !== '.' && line.col35 !== '.' && line.col43 !== '.') {
-                let count = Number(line.col30) < param ? 1 : 0
-                count += Number(line.col35) < param ? 1 : 0
-                count += Number(line.col43) < param ? 1 : 0
-                if (count < 2) {
-                    return false
-                }
+            const ltRatio = (colVal) => colVal === '.' || Number(colVal) < param
+            const ltCount = [line.col30, line.col35, line.col43].map(v => ltRatio(v)).filter(v => v).length
+            if (ltCount < 2) {
+                return false
             }
         }
 
