@@ -10,17 +10,30 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-input @click="showLinkProject = true" readonly v-model="form.project_index"
-                                :error="errors.project_index.error" :error-message="errors.project_index.message"
-                                label="项目编码"></q-input>
+                            <q-input
+                                @click="showLinkProject = true"
+                                readonly
+                                v-model="form.project_index"
+                                :error="errors.project_index.error"
+                                :error-message="errors.project_index.message"
+                                label="项目编码"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input v-model="form.library_number" :error="errors.library_number.error"
-                                :error-message="errors.library_number.message" label="文库编号"></q-input>
+                            <q-input
+                                v-model="form.library_number"
+                                :error="errors.library_number.error"
+                                :error-message="errors.library_number.message"
+                                label="文库编号"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <panel-list label="*捕获试剂盒" v-model="form.reagent_box" :error="errors.reagent_box.error"
-                                :error-message="errors.reagent_box.message" />
+                            <panel-list
+                                label="*捕获试剂盒"
+                                v-model="form.reagent_box"
+                                :error="errors.reagent_box.error"
+                                :error-message="errors.reagent_box.message"
+                            />
                             <!--                            <q-input-->
                             <!--                                v-model="form.reagent_box"-->
                             <!--                                :error="errors.reagent_box.error"-->
@@ -33,77 +46,139 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-input type="number" v-model="form.library_input" :error="errors.library_input.error"
-                                :error-message="errors.library_input.message" label="*建库input(ng)"></q-input>
+                            <q-input
+                                type="number"
+                                v-model="form.library_input"
+                                :error="errors.library_input.error"
+                                :error-message="errors.library_input.message"
+                                label="*建库input(ng)"
+                            ></q-input>
                         </div>
                         <div class="col q-pf-sm">
-                            <q-input v-model="form.index_type" :error="errors.index_type.error"
-                                :error-message="errors.index_type.message" label="index类型"></q-input>
+                            <q-input
+                                v-model="form.index_type"
+                                :error="errors.index_type.error"
+                                :error-message="errors.index_type.message"
+                                label="index类型"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input v-model="form.index_number" :error="errors.index_number.error"
-                                :error-message="errors.index_number.message" label="index编号"></q-input>
+                            <q-input
+                                v-model="form.index_number"
+                                :error="errors.index_number.error"
+                                :error-message="errors.index_number.message"
+                                label="index编号"
+                            ></q-input>
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-input type="number" v-model="form.hybrid_input" :error="errors.hybrid_input.error"
-                                :error-message="errors.hybrid_input.message" label="杂交input(ng)"></q-input>
+                            <q-input
+                                type="number"
+                                v-model="form.hybrid_input"
+                                :error="errors.hybrid_input.error"
+                                :error-message="errors.hybrid_input.message"
+                                label="杂交input(ng)"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input v-model="form.nucleic_break_type" :error="errors.nucleic_break_type.error"
+                            <q-input
+                                v-model="form.nucleic_break_type"
+                                :error="errors.nucleic_break_type.error"
                                 :error-message="
                                     errors.nucleic_break_type.message
-                                " label="*核酸打断方式"></q-input>
+                                "
+                                label="*核酸打断方式"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input v-model="form.identifier" :error="errors.identifier.error"
-                                :error-message="errors.identifier.message" label="*数据识别号"></q-input>
+                            <q-input
+                                v-model="form.identifier"
+                                :error="errors.identifier.error"
+                                :error-message="errors.identifier.message"
+                                label="数据识别号"
+                                :readonly="true"
+                            ></q-input>
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pf-sm">
-                            <q-input v-model="form.company" :error="errors.company.error"
-                                :error-message="errors.company.message" label="*送检机构"></q-input>
+                            <q-input
+                                v-model="form.company"
+                                :error="errors.company.error"
+                                :error-message="errors.company.message"
+                                label="*送检机构"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-select :error="errors.nucleic_type.error" :error-message="errors.nucleic_type.message"
-                                v-model="form.nucleic_type" :options="nucleic_type_options" label="核酸类型" />
+                            <q-select
+                                :error="errors.nucleic_type.error"
+                                :error-message="errors.nucleic_type.message"
+                                v-model="form.nucleic_type"
+                                :options="nucleic_type_options"
+                                label="核酸类型"
+                            />
                         </div>
                         <div class="col q-pr-sm">
-                            <q-select :error="errors.nucleic_level.error" :error-message="errors.nucleic_level.message"
-                                v-model="form.nucleic_level" :options="nucleic_level_options" label="核酸降解等级" />
+                            <q-select
+                                :error="errors.nucleic_level.error"
+                                :error-message="errors.nucleic_level.message"
+                                v-model="form.nucleic_level"
+                                :options="nucleic_level_options"
+                                label="核酸降解等级"
+                            />
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-checkbox :error="errors.risk.error" :error-message="errors.risk.message"
-                                v-model="form.risk" label="风险上机" color="primary" left-label size="lg" />
+                            <q-checkbox
+                                :error="errors.risk.error"
+                                :error-message="errors.risk.message"
+                                v-model="form.risk"
+                                label="风险上机"
+                                color="primary"
+                                left-label
+                                size="lg"
+                            />
                         </div>
 
                         <div class="col q-pr-sm">
-                            <q-input @click="showLinkSample = true" readonly v-model="form.sample_identifier"
-                                :error="errors.sampsample_identifier" :error-message="errors.sampsample_identifier"
-                                label="*样本识别号"></q-input>
+                            <q-input
+                                @click="showLinkSample = true"
+                                readonly
+                                v-model="form.sample_identifier"
+                                :error="errors.sampsample_identifier"
+                                :error-message="errors.sampsample_identifier"
+                                label="*样本识别号"
+                            ></q-input>
                         </div>
                         <div class="col q-pr-sm">
-                            <q-input @click="showLinkSample = true" readonly v-model="form.sample_meta_id"
-                                :error="errors.sample_meta_id.error" :error-message="errors.sample_meta_id.message"
-                                label="*样本元信息ID"></q-input>
+                            <q-input
+                                @click="showLinkSample = true"
+                                readonly
+                                v-model="form.sample_meta_id"
+                                :error="errors.sample_meta_id.error"
+                                :error-message="errors.sample_meta_id.message"
+                                label="*样本元信息ID"
+                            ></q-input>
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <q-input v-model="form.fastq1_path" :error="errors.fastq1_path.error"
-                                :error-message="errors.fastq1_path.message" label="*R1文件"></q-input>
+                            <q-input
+                                v-model="form.fastq1_path"
+                                :error="errors.fastq1_path.error"
+                                :error-message="errors.fastq1_path.message"
+                                label="*R1文件"
+                            ></q-input>
                             <!-- <q-btn
                                 :label="'R1文件: ' + form.fastq1_path"
                                 outline
@@ -121,8 +196,12 @@
                             /> -->
                         </div>
                         <div class="col q-pf-sm">
-                            <q-input v-model="form.fastq2_path" :error="errors.fastq2_path.error"
-                                :error-message="errors.fastq2_path.message" label="*R2文件"></q-input>
+                            <q-input
+                                v-model="form.fastq2_path"
+                                :error="errors.fastq2_path.error"
+                                :error-message="errors.fastq2_path.message"
+                                label="*R2文件"
+                            ></q-input>
                             <!-- <q-btn
                                 :label="'R2文件: ' + form.fastq1_path"
                                 outline
@@ -155,14 +234,20 @@
             </q-list>
         </q-card-actions>
         <q-dialog persistent v-model="showLinkSample">
-            <SampleList :linkId="0" @itemSelected="
+            <SampleList
+                :linkId="0"
+                @itemSelected="
         linkSample($event);
-            " />
+            "
+            />
         </q-dialog>
         <q-dialog persistent v-model="showLinkProject">
-            <ProjectList :linkId="0" @itemSelected="
+            <ProjectList
+                :linkId="0"
+                @itemSelected="
         linkProject($event);
-            " />
+            "
+            />
         </q-dialog>
     </q-card>
 </template>

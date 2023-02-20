@@ -106,7 +106,8 @@
                                 v-model="form.identifier"
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
-                                label="*样本识别号"
+                                label="样本识别号"
+                                :readonly="true"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm cursor-pointer">
@@ -128,7 +129,7 @@
                                 :error-message="
                                     errors.patient_identifier.message
                                 "
-                                label="*患者识别号"
+                                label="患者识别号"
                             ></q-input>
                         </div>
                     </div>
