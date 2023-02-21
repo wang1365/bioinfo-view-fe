@@ -26,7 +26,7 @@
                 ></q-btn>
             </div>
             <div class="col-1">
-                <q-btn class="on-plus" size="md" color="primary" icon="add" label="新建" @click="clickCreate"></q-btn>
+                <q-btn v-if="amISuper()" class="on-plus" size="md" color="primary" icon="add" label="新建" @click="clickCreate"/>
             </div>
         </div>
         <q-separator />
@@ -149,7 +149,7 @@ import { useQuasar } from "quasar"
 import { nextTick, onMounted, ref } from "vue"
 import _ from "lodash";
 import { listUser, batchDeleteUser } from "src/api/user"
-import { isSuper, isAdmin, isNormal } from "src/utils/user"
+import { isSuper, isAdmin, isNormal, amISuper } from "src/utils/user"
 import PageTitle from "components/page-title/PageTitle.vue"
 import CreateUser from "./CreateUser"
 import EditUser from "pages/main/users/EditUser"
