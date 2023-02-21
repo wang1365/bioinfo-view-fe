@@ -10,6 +10,7 @@ export const hg19 = {
             name: 'Refseq Genes',
             format: 'refgene',
             id: 'hg19_genes',
+            // url: '/igv/data/bioinfo/database_dir/hg19/hg19.genome',
             url: '/igv/data/bioinfo/database_dir/refseq/hg19/ncbiRefSeq.sorted.hg19.txt.gz',
             indexURL: '/igv/data/bioinfo/database_dir/refseq/hg19/ncbiRefSeq.sorted.hg19.txt.gz.tbi',
             visibilityWindow: -1,
@@ -34,6 +35,7 @@ export const hg38 = {
         {
             name: 'Refseq Genes',
             format: 'refgene',
+            // url: '/igv/data/bioinfo/database_dir/hg38/hg38.genome',
             url: '/igv/data/bioinfo/database_dir/refseq/hg38/ncbiRefSeq.sorted.hg38.txt.gz',
             indexURL: '/igv/data/bioinfo/database_dir/refseq/hg38/ncbiRefSeq.sorted.hg38.txt.gz.tbi',
             visibilityWindow: -1,
