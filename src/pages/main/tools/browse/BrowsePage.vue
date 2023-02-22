@@ -141,7 +141,7 @@ const refresh = () => {
         const reference = res.env.GENOME === 'hg19' ? refGenomes.hg19 : refGenomes.hg38
 
         function toBai(bam) {
-            return bam.substring(0, bam.length - 1) + 'i'
+            return bam.substring(0, bam.length - 3) + 'bai'
         }
 
         if (res && res.samples) {
@@ -164,7 +164,7 @@ const refresh = () => {
                     genome = line[1]
                 }
 
-                if (line.length === 4) {
+                if (line.length >= 4) {
                     const track = {
                         name: line[0],
                         type: line[1],
@@ -173,7 +173,8 @@ const refresh = () => {
                     }
 
                     if (track.format === 'bam') {
-                        track.indexURL = toBai(track.url)
+                        // IGV_file.txt中指定了index，则使用指定的，没有指定则使用缺省的
+                        track.indexURL = line.length === 5 ? `/igv/${line[4]}` : toBai(track.url)
                     }
                     tracks.push(track)
                 }
