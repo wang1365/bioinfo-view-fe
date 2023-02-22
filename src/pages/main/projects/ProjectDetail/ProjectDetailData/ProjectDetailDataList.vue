@@ -18,7 +18,7 @@
                         <tr>
                             <td>项目编码</td>
                             <td>文库编号</td>
-                            <td>样本识别号</td>
+<!--                            <td>样本识别号</td>-->
                             <td>数据识别号</td>
                             <td>送检机构</td>
                             <td>核酸类型</td>
@@ -49,9 +49,9 @@
                                 {{ item.library_number }}
                             </td>
 
-                            <td>
-                                {{ item.identifier }}
-                            </td>
+<!--                            <td>-->
+<!--                                {{ item.identifier }}-->
+<!--                            </td>-->
                             <td>{{ item.identifier }}</td>
                             <td>{{ item.company }}</td>
                             <td>{{ item.nucleic_type }}</td>
