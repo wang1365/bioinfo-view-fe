@@ -50,7 +50,7 @@
                             </td>
 
                             <td>
-                                {{ item.sample_identifier }}
+                                {{ item.identifier }}
                             </td>
                             <td>{{ item.identifier }}</td>
                             <td>{{ item.company }}</td>
