@@ -146,7 +146,7 @@
                             <td>
                                 {{ item.test_date }}
                             </td>
-                            <td>{{ item.sample_component }}</td>
+                            <td>{{ item.sample_componet }}</td>
                             <td>
                                 {{ item.sample_type }}
                             </td>
