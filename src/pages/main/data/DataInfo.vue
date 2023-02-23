@@ -9,7 +9,7 @@
             <q-list>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">项目编码: {{ form.project_index }}</div>
+                        <div class="col q-pa-sm">数据详情: {{ form.project_index }}</div>
                         <div class="col q-pa-sm">文库编号: {{ form.library_number }}</div>
                         <div class="col q-pa-sm">捕获试剂盒: {{ form.reagent_box }}</div>
                     </div>

@@ -14,7 +14,7 @@
                                 v-model="form.project_index"
                                 :error="errors.project_index.error"
                                 :error-message="errors.project_index.message"
-                                label="项目编码"
+                                label="数据详情"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">

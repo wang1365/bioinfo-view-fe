@@ -27,8 +27,12 @@
         >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'operation'">
-                    <q-btn label="浏览" color="primary" icon-right="arrow_drop_down" size="xs"
-                           v-if="filterTasks(record.tasks, 3).length > 0"
+                    <q-btn
+                        label="浏览"
+                        color="primary"
+                        icon-right="arrow_drop_down"
+                        size="xs"
+                        v-if="filterTasks(record.tasks, 3).length > 0"
                     >
                         <q-menu>
                             <q-list>
@@ -94,7 +98,7 @@ const columns = [
 
     // 样本数据
     {title: '数据识别号', dataIndex: 'identifier', width: 120},
-    {key: 'project_index', title: '项目编码', dataIndex: 'project_index', width: 120},
+    {key: 'project_index', title: '数据详情', dataIndex: 'project_index', width: 120},
     {key: 'library_number', title: '文库编号', dataIndex: 'library_number', width: 120},
     {key: 'reagent_box', title: '捕获试剂盒', dataIndex: 'reagent_box', width: 120},
     {key: 'nucleic_break_type', title: '核酸打断方式', dataIndex: 'nucleic_break_type', width: 120},
