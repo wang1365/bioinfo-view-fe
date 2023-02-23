@@ -331,7 +331,10 @@ const clickCard = (v) => {
 }
 
 const raisePriority = (row, priority) => {
-    updateTask(row.id, { priority }).then(() => {
+    updateTask(row.id, { priority }).then((res) => {
+        if (res.code !== 0) {
+            return
+        }
         const msg = priority === 1 ? '降低' : '提升'
         $q.notify({
             type: "positive",
