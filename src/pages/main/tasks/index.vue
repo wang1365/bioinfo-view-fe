@@ -223,6 +223,14 @@ refreshPage();
                                 @click="downlaod(item)"
                                 size="sm"
                             />
+                            <q-btn
+                                :disable="item.status !== 'FINISHED'"
+                                color="primary"
+                                label="删除中间文件"
+                                icon="delete"
+                                @click="deleteMiddleFiles(item)"
+                                size="sm"
+                            />
                             <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
                     </tr>
@@ -388,11 +396,23 @@ const loadPage = async () => {
 }
 const confirm = async (task) => {
     $q.dialog({
-        title: '确认删除吗?',
+        title: '确认删除任务吗?',
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/task/${task.id}`, (_) => {
+            refreshPage()
+        })
+    })
+}
+
+const deleteMiddleFiles = async (task) => {
+    $q.dialog({
+        title: '确认删除任务的中间文件吗?',
+        cancel: true,
+        persistent: true,
+    }).onOk(() => {
+        apiDelete(`/task/${task.id}/remove_temp/`, (_) => {
             refreshPage()
         })
     })
