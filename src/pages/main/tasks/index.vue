@@ -225,12 +225,13 @@ refreshPage();
                             />
                             <q-btn
                                 :disable="item.status !== 'FINISHED'"
-                                color="primary"
+                                color="red"
                                 label="删除中间文件"
                                 icon="delete"
                                 @click="deleteMiddleFiles(item)"
                                 size="sm"
-                            />
+                                ><q-tooltip>仅会删除任务产生的中间文件,释放空间,不会影响任务结果展示.</q-tooltip></q-btn
+                            >
                             <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
                     </tr>
@@ -273,7 +274,7 @@ import PaginatorVue from 'src/components/paginator/Paginator.vue'
 import { useRouter } from 'vue-router'
 import { format } from 'src/utils/time'
 import {updateTask} from 'src/api/task'
-
+import { infoMessage } from 'src/utils/notify'
 import { useQuasar } from 'quasar'
 const $q = useQuasar()
 const options = ref([
@@ -401,6 +402,7 @@ const confirm = async (task) => {
         persistent: true,
     }).onOk(() => {
         apiDelete(`/task/${task.id}`, (_) => {
+            infoMessage('删除成功')
             refreshPage()
         })
     })
@@ -409,10 +411,13 @@ const confirm = async (task) => {
 const deleteMiddleFiles = async (task) => {
     $q.dialog({
         title: '确认删除任务的中间文件吗?',
+        message:'仅会删除任务产生的中间文件,释放空间,不会影响任务结果展示.',
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/task/${task.id}/remove_temp/`, (_) => {
+        apiDelete(`/task/${task.id}/remove_temp/`, (res) => {
+            console.log(res)
+            infoMessage('删除成功')
             refreshPage()
         })
     })

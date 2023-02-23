@@ -93,7 +93,7 @@ export function defaultHandler(router, resp, onSuccess, onError) {
     const res = resp.data
     const code = resp.data.code
     // const statusCode = res.status_code
-    if (code === 0) {
+    if (code === 0 || code === 200 || code === 204 || code === 201) {
         onSuccess(res)
     } else if (code === 1) {
         if (onError) {

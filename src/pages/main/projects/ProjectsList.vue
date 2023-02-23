@@ -233,7 +233,7 @@ const loadPage = async () => {
 const confirm = (project) => {
     $q.dialog({
         title: "确认删除项目吗?",
-        message:"注意: 删除项目后,项目下的任务也会级联删除掉",
+        message:"注意: 删除项目后,项目下的任务也会级联删除掉, 且不可恢复!",
         cancel: true,
         persistent: true,
     }).onOk(() => {
