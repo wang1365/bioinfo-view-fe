@@ -11,8 +11,6 @@
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
                             <q-input
-                                @click="showLinkProject = true"
-                                readonly
                                 v-model="form.project_index"
                                 :error="errors.project_index.error"
                                 :error-message="errors.project_index.message"
