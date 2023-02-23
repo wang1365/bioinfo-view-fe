@@ -172,11 +172,11 @@ refreshPage();
                         <td>
                             <template v-if="item.priority === 2">
                                 <span class="text-red">优先</span>
-                                <q-btn size="xs" flat icon="north" plain @click="raisePriority(item, 1)" />
+                                <q-btn size="xs" flat icon="south" plain @click="raisePriority(item, 1)" />
                             </template>
                             <template v-else>
                                 <span class="text-primary">普通</span>
-                                <q-btn size="xs" flat icon="south" @click="raisePriority(item, 2)" />
+                                <q-btn size="xs" flat icon="north" @click="raisePriority(item, 2)" />
                             </template>
                         </td>
                         <td>
