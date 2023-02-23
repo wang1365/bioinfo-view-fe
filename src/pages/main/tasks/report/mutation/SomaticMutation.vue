@@ -3,52 +3,166 @@
         <q-splitter v-model="splitterModel" unit="px" style="height: 720px">
             <template v-slot:before>
                 <div class="column" style="width:90%">
-                    <q-input v-model="searchParams.gene" label="基因" clearable stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
+                    <q-input
+                        v-model="searchParams.gene"
+                        label="基因"
+                        clearable
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
                     <div class="row q-col-gutter-sm justify-between">
-                        <q-input v-model="searchParams.tumorDepth" label="肿瘤深度 >" clearable type="number" stack-label
-                            label-color="primary" class="col-6" :disable="showSticky && stickDone" />
-                        <q-input v-model="searchParams.compareDepth" label="对照深度 >" clearable type="number" stack-label
-                            label-color="primary" class="col-6" :disable="showSticky && stickDone" />
+                        <q-input
+                            v-model="searchParams.tumorDepth"
+                            label="肿瘤深度 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-6"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-input
+                            v-model="searchParams.compareDepth"
+                            label="对照深度 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-6"
+                            :disable="showSticky && stickDone"
+                        />
                     </div>
                     <div class="row q-col-gutter-sm justify-between">
-                        <q-input v-model="searchParams.tumorRatio" label="肿瘤频率 >" clearable type="number" stack-label
-                            label-color="primary" class="col-6" :disable="showSticky && stickDone" />
-                        <q-input v-model="searchParams.compareRatio" label="对照频率 >" clearable type="number" stack-label
-                            label-color="primary" class="col-6" :disable="showSticky && stickDone" />
+                        <q-input
+                            v-model="searchParams.tumorRatio"
+                            label="肿瘤频率 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-6"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-input
+                            v-model="searchParams.compareRatio"
+                            label="对照频率 >"
+                            clearable
+                            type="number"
+                            stack-label
+                            label-color="primary"
+                            class="col-6"
+                            :disable="showSticky && stickDone"
+                        />
                     </div>
 
-                    <q-select v-model="searchParams.mutationType" clearable multiple hide-dropdown-icon
-                        :options="props.options.mutationType" label="突变类型" stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
+                    <q-select
+                        v-model="searchParams.mutationType"
+                        clearable
+                        multiple
+                        hide-dropdown-icon
+                        :options="props.options.mutationType"
+                        label="突变类型"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
-                    <q-select v-model="searchParams.mutationPosition" clearable multiple hide-dropdown-icon
-                        :options="props.options.mutationPosition" label="突变位置" stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
-                    <q-select clearable hide-dropdown-icon v-model="searchParams.mutationMeaning" stack-label multiple
-                        label-color="primary" :options="props.options.mutationMeaning" label="突变意义" class="full-width"
-                        :disable="showSticky && stickDone" />
-                    <q-select clearable hide-dropdown-icon v-model="searchParams.mutationRisk" stack-label multiple
-                        label-color="primary" :options="props.options.mutationRisk" label="突变危险" class="full-width"
-                        :disable="showSticky && stickDone" />
-                    <q-input v-model="searchParams.humanRatio" label="人群频率 <" clearable hide-dropdown-icon type="number"
-                        stack-label label-color="primary" class="full-width" :disable="showSticky && stickDone" />
-                    <q-select clearable multiple hide-dropdown-icon v-model="searchParams.sift" stack-label
-                        label-color="primary" :options="['T', 'D', '.']" label="SIFT_pred" class="full-width"
-                        :disable="showSticky && stickDone" />
+                    <q-select
+                        v-model="searchParams.mutationPosition"
+                        clearable
+                        multiple
+                        hide-dropdown-icon
+                        :options="props.options.mutationPosition"
+                        label="突变位置"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-select
+                        clearable
+                        hide-dropdown-icon
+                        v-model="searchParams.mutationMeaning"
+                        stack-label
+                        multiple
+                        label-color="primary"
+                        :options="props.options.mutationMeaning"
+                        label="突变意义"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-select
+                        clearable
+                        hide-dropdown-icon
+                        v-model="searchParams.mutationRisk"
+                        stack-label
+                        multiple
+                        label-color="primary"
+                        :options="props.options.mutationRisk"
+                        label="突变危险"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-input
+                        v-model="searchParams.humanRatio"
+                        label="人群频率 <"
+                        clearable
+                        hide-dropdown-icon
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-select
+                        clearable
+                        multiple
+                        hide-dropdown-icon
+                        v-model="searchParams.sift"
+                        stack-label
+                        label-color="primary"
+                        :options="['T', 'D', '.']"
+                        label="SIFT_pred"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
                     <div class="row items-center">
-                        <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary"
-                            :disable="showSticky && stickDone" />
+                        <q-checkbox
+                            left-label
+                            v-model="searchParams.drug"
+                            label="是否关联药物"
+                            color="primary"
+                            :disable="showSticky && stickDone"
+                        />
                         <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                     </div>
 
                     <div class="q-gutter-md text-center q-py-xs">
-                        <q-btn color="primary" label="确定" icon="search" @click="search"
-                            :disable="showSticky && stickDone" />
-                        <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset"
-                            :disable="showSticky && stickDone" />
-                        <q-btn color="primary" label="扩展列" size="md" icon="last_page" @click="showDrawer = !showDrawer"
-                            :disable="showSticky && stickDone" />
+                        <q-btn
+                            color="primary"
+                            label="确定"
+                            icon="search"
+                            @click="search"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-btn
+                            color="primary"
+                            label="重置"
+                            icon="settings_backup_restore"
+                            @click="reset"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-btn
+                            color="primary"
+                            label="扩展列"
+                            size="md"
+                            icon="last_page"
+                            @click="showDrawer = !showDrawer"
+                            :disable="showSticky && stickDone"
+                        />
                     </div>
                 </div>
             </template>
@@ -77,14 +191,27 @@
                      </template>
                      </a-table> -->
                 <div style="position:relative">
-                    <q-icon color="accent" name="question_mark" size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px">
+                    <q-icon
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
                         <q-tooltip>仅全选本页筛选结果</q-tooltip>
                     </q-icon>
-                    <a-table style="z-index:1" size="small" bordered :loading="loading" :data-source="filteredRows"
-                        :columns="columns" :scroll="{ x: 2000, y: 600 }" :custom-row="customRow" :sticky="true"
+                    <a-table
+                        style="z-index:1"
+                        size="small"
+                        bordered
+                        :loading="loading"
+                        :data-source="filteredRows"
+                        :columns="columns"
+                        :scroll="{ x: 2000, y: 600 }"
+                        :custom-row="customRow"
+                        :sticky="true"
                         rowKey="lineNumber"
-                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }">
+                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }"
+                    >
                         <template #bodyCell="{ column, record }">
                             <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
                                 <div>{{ record[column.dataIndex]}}</div>
@@ -103,9 +230,13 @@
                         <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
-                                <q-option-group :options="expandedColumns" type="checkbox"
-                                    v-model="selectedExpandColIdx" @change="atOptionGroupChange"
-                                    @update:model-value="atOptionGroupChange" />
+                                <q-option-group
+                                    :options="expandedColumns"
+                                    type="checkbox"
+                                    v-model="selectedExpandColIdx"
+                                    @change="atOptionGroupChange"
+                                    @update:model-value="atOptionGroupChange"
+                                />
                             </q-scroll-area>
                             <q-separator />
                         </div>
@@ -283,12 +414,11 @@ const tumorColumnIdx = computed(() => {
     // 根据列表头名称，例如Geno_Type(QN11), 检查该列是对比样本列表还是肿瘤样本列
     const tumorIdx = []
     header.value.forEach((head, i) => {
-        for (let k in props.samples.value) {
-            if (head.includes(`(${k})`) && samples.value[k]) {
+        props.samples.forEach((sample, _) => {
+            if (head.includes(`(${sample.identifier})`) && sample.sample_meta.is_panel) {
                 tumorIdx.push(i)
-                break
             }
-        }
+        })
     })
     return tumorIdx
 })
@@ -402,6 +532,7 @@ const atOptionGroupChange = () => {
 
 const columns = computed(() => {
     const result = [...fixedColumns]
+
     selectedExpandColIdx.value.forEach(idx => {
         result.push({
             i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
@@ -485,7 +616,7 @@ const searchFilterRows = (searchParams) => {
         // 原始表格8、12列，大于0的正整数，
         param = searchParams.tumorDepth
         if (param) {
-            const v = tumorColumnIdx.value.includes(i) ? line.col8 : line.col12
+            const v = tumorColumnIdx.value.includes(8) ? line.col8 : line.col12
             if (!(Number(v) > param)) {
                 return false
             }
@@ -495,7 +626,7 @@ const searchFilterRows = (searchParams) => {
         // 原始表格8、12列，大于0的正整数，
         param = searchParams.compareDepth
         if (param) {
-            const v = tumorColumnIdx.value.includes(i) ? line.col12 : line.col8
+            const v = tumorColumnIdx.value.includes(8) ? line.col12 : line.col8
             if (!(Number(v) > param)) {
                 return false
             }
@@ -505,7 +636,7 @@ const searchFilterRows = (searchParams) => {
         // 原始表格9、13列，大于0的小数
         param = searchParams.tumorRatio
         if (param) {
-            const v = tumorColumnIdx.value.includes(i) ? line.col9 : line.col13
+            const v = tumorColumnIdx.value.includes(9) ? line.col13 : line.col9
             if (!(Number(v) > param)) {
                 return false
             }
@@ -515,7 +646,7 @@ const searchFilterRows = (searchParams) => {
         // 原始表格9、13列，大于0的小数
         param = searchParams.compareRatio
         if (param) {
-            const v = tumorColumnIdx.value.includes(i) ? line.col13 : line.col9
+            const v = tumorColumnIdx.value.includes(9) ? line.col9 : line.col13
             if (!(Number(v) > param)) {
                 return false
             }
