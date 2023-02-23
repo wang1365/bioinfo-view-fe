@@ -46,3 +46,11 @@ export function getWeeklySummary() {
         params,
     })
 }
+
+export function updateTask(id, data) {
+    return api({
+        url: `/task/${id}`,
+        method: 'put',
+        data,
+    })
+}

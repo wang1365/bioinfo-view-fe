@@ -110,6 +110,7 @@ refreshPage();
                         <td>分析流程</td>
                         <td>进度</td>
                         <td>状态</td>
+                        <td>优先级</td>
                         <td>错误信息</td>
                         <td>创建者</td>
                         <td>创建时间</td>
@@ -168,6 +169,16 @@ refreshPage();
                             />
                         </td>
                         <td>{{ getItemStatus(item) }}</td>
+                        <td>
+                            <template v-if="item.priority === 2">
+                                <span class="text-red">优先</span>
+                                <q-btn size="xs" flat icon="north" plain @click="raisePriority(item, 1)" />
+                            </template>
+                            <template v-else>
+                                <span class="text-primary">普通</span>
+                                <q-btn size="xs" flat icon="south" @click="raisePriority(item, 2)" />
+                            </template>
+                        </td>
                         <td>
                             <q-icon
                                 v-if="item.status === 'FAILURED'"
@@ -253,6 +264,7 @@ import ProjectListVue from './components/ProjectList.vue'
 import PaginatorVue from 'src/components/paginator/Paginator.vue'
 import { useRouter } from 'vue-router'
 import { format } from 'src/utils/time'
+import {updateTask} from 'src/api/task'
 
 import { useQuasar } from 'quasar'
 const $q = useQuasar()
@@ -316,6 +328,17 @@ const getItemStatus = (item) => {
 const clickCard = (v) => {
     status.value = v
     refreshPage()
+}
+
+const raisePriority = (row, priority) => {
+    updateTask(row.id, { priority }).then(() => {
+        const msg = priority === 1 ? '降低' : '提升'
+        $q.notify({
+            type: "positive",
+            message: `任务优先级已${msg}`,
+        })
+        refreshPage()
+    })
 }
 
 const clearSelect = () => {
