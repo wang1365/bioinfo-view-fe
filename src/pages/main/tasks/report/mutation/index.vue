@@ -196,7 +196,7 @@ const stickFilter = () => {
         }
     }
     emit('stickDone', filterData.value)
-},
+}
 
 const reset = () => {
     try {
@@ -205,7 +205,7 @@ const reset = () => {
         somaticData.value = JSON.parse(originsomaticData.value)
         somaticData.value.selectedRows = []
     }
-    catch {
+    catch(error) {
 
     }
     emit('reset', null)
