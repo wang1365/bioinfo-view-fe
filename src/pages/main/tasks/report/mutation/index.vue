@@ -1,30 +1,30 @@
 <template>
     <div>
-        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small"
-            color="primary" class="relative-position float-right q-mr-md" label="已固定过滤" @click="reset()" />
+        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
+            class="relative-position float-right q-mr-md" label="已固定过滤" @click="reset()" />
         <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
             color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()">固定过滤</q-btn>
         <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible">说明</q-btn>
-        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-            :breakpoint="0" dense>
+        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1" :breakpoint="0"
+            dense>
             <q-tab name="胚系突变分析" label="胚系突变分析" v-if="props.viewConfig.showMutGermline" />
             <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.viewConfig.showMutSomatic" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">
-                <GermlineMutationVue :samples="props.samples" :task="props.task" ref="germlineVue"
-                    :rows="germlineData.rows" :header="germlineData.header" :options="germlineData.options"
-                    :searchParams="germlineData.searchParams" :drugRows="germlineData.drugRows"
-                    :selectedRows="germlineData.selectedRows" :showSticky="props.viewConfig.showStick"
-                    :stickDone="props.viewConfig.stickDone" @filterChange="filterChange('germline', $event)" />
+                <GermlineMutationVue :samples="props.samples" :task="props.task" ref="germlineVue" :rows="germlineData.rows"
+                    :header="germlineData.header" :options="germlineData.options" :searchParams="germlineData.searchParams"
+                    :drugRows="germlineData.drugRows" :selectedRows="germlineData.selectedRows"
+                    :showSticky="props.viewConfig.showStick" :stickDone="props.viewConfig.stickDone"
+                    @filterChange="filterChange('germline', $event)" />
             </q-tab-panel>
             <q-tab-panel name="体细胞突变分析">
-                <SomaticMutationVue :samples="props.samples" :task="props.task" ref="somaticVue"
-                    :rows="somaticData.rows" :header="somaticData.header" :options="somaticData.options"
-                    :searchParams="somaticData.searchParams" :drugRows="somaticData.drugRows"
-                    :selectedRows="somaticData.selectedRows" :showSticky="props.viewConfig.showStick"
-                    :stickDone="props.viewConfig.stickDone" @filterChange="filterChange('somatic', $event)" />
+                <SomaticMutationVue :samples="props.samples" :task="props.task" ref="somaticVue" :rows="somaticData.rows"
+                    :header="somaticData.header" :options="somaticData.options" :searchParams="somaticData.searchParams"
+                    :drugRows="somaticData.drugRows" :selectedRows="somaticData.selectedRows"
+                    :showSticky="props.viewConfig.showStick" :stickDone="props.viewConfig.stickDone"
+                    @filterChange="filterChange('somatic', $event)" />
             </q-tab-panel>
         </q-tab-panels>
         <q-dialog v-model="dlgVisible">
@@ -86,7 +86,7 @@ const props = defineProps({
     },
     stepData: {
         type: Object,
-        default: () => { }
+        default: () => {}
     }
 })
 
@@ -196,13 +196,18 @@ const stickFilter = () => {
         }
     }
     emit('stickDone', filterData.value)
-}
+},
 
 const reset = () => {
-    germlineData.value = JSON.parse(origingermlineData.value)
-    germlineData.value.selectedRows = []
-    somaticData.value = JSON.parse(originsomaticData.value)
-    somaticData.value.selectedRows = []
+    try {
+        germlineData.value = JSON.parse(origingermlineData.value)
+        germlineData.value.selectedRows = []
+        somaticData.value = JSON.parse(originsomaticData.value)
+        somaticData.value.selectedRows = []
+    }
+    catch {
+
+    }
     emit('reset', null)
 
 }

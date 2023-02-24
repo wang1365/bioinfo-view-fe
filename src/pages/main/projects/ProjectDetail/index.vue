@@ -1,13 +1,13 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="项目详情" />
+        <p class="text-h5">
+            项目详情 <q-btn color="primary" @click="back()" v-if="projectDetail.parent" size="sm">返回上级</q-btn>
+        </p>
+
+        <q-separator />
         <ProjectDetail :projectDetail="projectDetail" @reloadProject="getProjectDetail()" />
-        <ProjectDetailDataList
-            v-if="projectDetail.id"
-            :projectDetail="projectDetail"
-            :projectId="projectDetail.id"
-            @refresh="getProjectDetail()"
-        />
+        <ProjectDetailDataList v-if="projectDetail.id" :projectDetail="projectDetail" :projectId="projectDetail.id"
+            @refresh="getProjectDetail()" />
         <ChildProjectList :projectDetail="projectDetail" v-if="!projectDetail.parent" />
     </q-page>
 </template>
@@ -34,6 +34,9 @@ watch(
 onMounted(() => {
     getProjectDetail();
 });
+const back = () => {
+    window.history.back()
+}
 const getProjectDetail = () => {
     apiGet(`/project/${route.params.id}`, (res) => {
         projectDetail.value = res.data;
