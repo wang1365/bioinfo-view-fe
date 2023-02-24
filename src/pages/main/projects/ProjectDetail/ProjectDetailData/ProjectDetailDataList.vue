@@ -130,7 +130,11 @@ const dataSelected = () => {
 };
 
 const fromParent = (item) => {
-    return props.projectDetail.samples.indexOf(item.id) < 0;
+    for(let sample of props.projectDetail.samples){
+        if(sample.id===item.id) return false
+    }
+    return true
+    //return props.projectDetail.samples.indexOf(item.id) < 0;
 };
 onMounted(() => {
     loadPage();
@@ -152,7 +156,7 @@ const refreshPage = async () => {
 const loadPage = async () => {
     let projectIds = [props.projectDetail.id];
     if (props.projectDetail.parent) {
-        projectIds.push(props.projectDetail.parent);
+        projectIds.push(props.projectDetail.parent.id);
     }
     apiPost(
         `/sample/samples/query?page=${currentPage.value}&size=${pageSize.value}`,
