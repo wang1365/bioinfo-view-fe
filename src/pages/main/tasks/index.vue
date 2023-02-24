@@ -224,7 +224,7 @@ refreshPage();
                                 size="sm"
                             />
                             <q-btn
-                                :disable="item.status !== 'FINISHED'"
+                                :disable="item.status !== 'FINISHED' || item.deleted_tempdir "
                                 color="red"
                                 label="删除中间文件"
                                 icon="delete"
