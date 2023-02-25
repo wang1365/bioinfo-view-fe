@@ -106,7 +106,7 @@ refreshPage();
                         </td>-->
                         <td>ID</td>
                         <td>名称</td>
-                        <td>项目</td>
+                        <td>项目(上级/当前)</td>
                         <td>分析流程</td>
                         <td>进度</td>
                         <td>状态</td>
@@ -128,7 +128,12 @@ refreshPage();
 
                         <td>{{ item.id }}</td>
                         <td>{{ item.name }}</td>
-                        <td>{{ item.project.name }}</td>
+                        <td>
+                            <span v-if="item.project.parent" class="text-bold text-primary q-mr-xs"
+                                >{{ item.project.parent.name }}/</span
+                            >
+                            <span class="text-secondary"> {{ item.project.name }} </span>
+                        </td>
                         <td>{{ item.flow.name }}</td>
 
                         <td>

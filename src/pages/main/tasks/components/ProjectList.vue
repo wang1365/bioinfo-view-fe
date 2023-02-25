@@ -19,7 +19,10 @@
             </template>
             <template v-slot:itemRow="{ row }">
                 <td>
-                    {{ row.name }}
+                    <span v-if="row.parent" class="text-bold text-primary q-mr-xs">{{ row.parent.name }}/</span>
+                    <span class="text-secondary">
+                        {{ row.name }}
+                    </span>
                 </td>
                 <td>{{ row.samples.length }}</td>
                 <td>{{ row.task_count }}</td>
@@ -34,7 +37,7 @@ import { onMounted, ref } from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
 const tableHeaders = ref([
-    "项目名称",
+    "项目名称(上级/当前)",
     "样本数量",
     "任务数量",
     "创建人",
