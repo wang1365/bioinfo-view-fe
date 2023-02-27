@@ -1,18 +1,42 @@
 <template>
     <q-page padding>
         <PageTitle title="样本数据检索" />
-        <div class="row items-center">
+        <div class="row items-center q-gutter-sm q-my-sm">
             <q-input
                 label="患者姓名"
-                v-model="keyword"
-                clearable
-                class="col-4"
-                @clear="refreshSamples"
-                @keypress.enter="refreshSamples"
-            >
-            </q-input>
-            <div class="q-ml-sm col-1 col reverse">
-                <q-btn color="primary" class="row-auto" label="查询" @click="refreshSamples" />
+                v-model="searchOption.keyword"
+                clearable label-color="primary"
+                class="col-2" dense stack-label
+                @clear="refreshUrl"
+                @keypress.enter="clickSearch"
+            />
+            <q-input
+                label="样本识别号"
+                v-model="searchOption.sampleIdentifier"
+                clearable label-color="primary"
+                class="col-2" dense stack-label
+                @clear="refreshUrl"
+                @keypress.enter="clickSearch"
+            />
+            <q-input
+                label="数据识别号"
+                v-model="searchOption.dataIdentifier"
+                clearable label-color="primary"
+                class="col-2" dense stack-label
+                @clear="refreshUrl"
+                @keypress.enter="clickSearch"
+            />
+            <q-input
+                label="捕获试剂盒"
+                v-model="searchOption.reagentBox"
+                clearable label-color="primary"
+                class="col-2" dense stack-label
+                @clear="refreshUrl"
+                @keypress.enter="clickSearch"
+            />
+            <div class="q-ml-sm col-2 col reverse">
+                <q-btn color="warning" class="row-auto q-mx-sm" label="重置" @click="clickReset" />
+                <q-btn color="primary" class="row-auto" label="查询" @click="clickSearch" />
             </div>
         </div>
         <a-table
@@ -56,15 +80,15 @@
 </template>
 
 <script setup>
-import {listSample, getSample} from 'src/api/sample'
-import {ref, reactive, onMounted} from 'vue'
-import {useQuasar} from 'quasar'
-import {useRouter} from 'vue-router'
+import { listSample, getSample } from 'src/api/sample'
+import { ref, watch, onMounted } from 'vue'
+import { useQuasar} from 'quasar'
+import { useRouter, useRoute } from 'vue-router'
 import PageTitle from 'components/page-title/PageTitle'
 
 const loading = ref(false)
-const currentFlowId = ref(null)
 const router = useRouter()
+const route = useRoute()
 
 const columns = [
     {key: 'id', title: 'ID', dataIndex: 'id', fixed: true, align: 'center', width: 50},
@@ -97,7 +121,7 @@ const columns = [
     },
 
     // 样本数据
-    {title: '数据识别号', dataIndex: 'identifier', width: 120},
+    {title: '数据识别号', dataIndex: 'identifier', width: 120, ellipsis: true},
     {key: 'project_index', title: '数据详情', dataIndex: 'project_index', width: 120},
     {key: 'library_number', title: '文库编号', dataIndex: 'library_number', width: 120},
     {key: 'reagent_box', title: '捕获试剂盒', dataIndex: 'reagent_box', width: 120},
@@ -109,8 +133,8 @@ const columns = [
     {key: 'risk', title: '风险上机', dataIndex: 'risk', width: 120},
     {key: 'nucleic_level', title: '核酸降解等级', dataIndex: 'nucleic_level', align: 'center', width: 120},
     {key: 'nucleic_type', title: '核酸类型', dataIndex: 'nucleic_type', align: 'center', width: 120},
-    {key: 'fastq1_path', title: 'fastq1文件地址', dataIndex: 'fastq1_path', width: 130},
-    {key: 'fastq2_path', title: 'fastq2文件地址', dataIndex: 'fastq2_path', width: 130},
+    {key: 'fastq1_path', title: 'fastq1文件地址', dataIndex: 'fastq1_path', width: 130, ellipsis: true},
+    {key: 'fastq2_path', title: 'fastq2文件地址', dataIndex: 'fastq2_path', width: 130, ellipsis: true},
     {key: 'operation', title: '操作', fixed: 'right', align: 'center', width: 120},
 ]
 
@@ -118,36 +142,90 @@ const pagination = ref({
     position: ['bottomRight'],
     current: 1,
     total: 0,
-    pageSize: 10,
+    pageSize: 5,
     showSizeChanger: true,
     // rowsNumber: xx if getting data from a server
 })
 
+const searchOption = ref({
+    keyword: null,
+    sampleIdentifier: null,
+    dataIdentifier: null,
+    reagentBox: null
+})
+
 const rows = ref([])
-const selectedFlow = ref({})
 const mode = ref('info')
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
-const keyword = ref('')
 
 
 const tableChange = (pg, filters, sorter) => {
-    console.log('pagination changes', pg)
     pagination.value = pg
     refreshSamples()
 }
 
 onMounted(() => {
+    searchOption.value = {...route.query}
+    pagination.value.current = Number(route.query.page) || 1
+    pagination.value.pageSize = Number(route.query.size) || 10
     refreshSamples()
 })
+
+watch(
+    () => route.query,
+    (v) => {
+        console.log('==> watch route', v)
+        // searchOption.value = route.query
+        refreshSamples()
+    }
+)
+
+watch(
+    pagination,
+    params => {
+        refreshUrl()
+    }
+)
 
 const filterTasks = (tasks, status) => {
     return tasks.filter(t => status === t.status)
 }
+
+const clickReset = () => {
+    searchOption.value = {
+        keyword: null, sampleIdentifier: null, dataIdentifier: null, reagentBox: null
+    }
+    pagination.value.current = 1
+    pagination.value.pageSize = 10
+    refreshUrl()
+}
+
+const clickSearch = () => {
+    refreshUrl()
+}
+
+const refreshUrl = () => {
+    const { keyword, sampleIdentifier, dataIdentifier, reagentBox } = searchOption.value
+    const query = {
+        keyword, sampleIdentifier, dataIdentifier, reagentBox,
+        page: pagination.value.current,
+        size: pagination.value.pageSize
+    }
+    console.log('===> Push', query)
+    router.replace({ path: route.path, query })
+}
+
 const refreshSamples = () => {
     startLoading()
-    listSample(keyword.value, page.value, total.value)
+
+    const queryData = {
+        ...searchOption.value,
+        page: pagination.value.current,
+        size: pagination.value.pageSize
+    }
+    listSample(queryData)
         .then((data) => {
             rows.value = data.results
             total.value = data.count
