@@ -51,9 +51,15 @@
                                                 v-model.number="max_task.value"
                                                 :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || '任务数数值错误，必须是正整数']"
                                             >
-                                                <template v-slot:before
-                                                    ><span class="text-h6">并行任务限制(>1):</span></template
-                                                >
+                                                <template v-slot:before>
+                                                    <span class="text-h6">并行任务限制(>1):</span>
+                                                </template>
+                                                <template v-slot:after>
+                                                    <q-icon name="help_outline">
+                                                        <q-tooltip>该参数与内存实际大小、测序数据量、捕获试剂盒有关，建议100G内存服务器填写3
+                                                        </q-tooltip>
+                                                    </q-icon>
+                                                </template >
                                             </q-input>
                                         </q-form-item>
                                         <q-form-item>
@@ -62,9 +68,15 @@
                                                 v-model.number="memory_rate.value"
                                                 :rules="[(val) => (val !== null && val > 0 && val <=1) || '内存使用率数值错误']"
                                             >
-                                                <template v-slot:before
-                                                    ><span class="text-h6">内存率使用限制(0-1):</span></template
-                                                >
+                                                <template v-slot:before>
+                                                    <span class="text-h6">内存率使用限制(0-1):</span>
+                                                </template>
+                                                <template v-slot:after>
+                                                    <q-icon name="help_outline">
+                                                        <q-tooltip>该参数为本系统使用的内存大小占服务器的比例，防止部分任务内存超过预计，建议填写0.85
+                                                        </q-tooltip>
+                                                    </q-icon>
+                                                </template>
                                             </q-input>
                                         </q-form-item>
                                         <q-form-item>
@@ -73,9 +85,15 @@
                                                 v-model.number="disk.value"
                                                 :rules="[(val) => (val !== null && val > 0) || '磁盘限制数值错误']"
                                             >
-                                                <template v-slot:before
-                                                    ><span class="text-h6">磁盘使用限制(MB):</span></template
-                                                >
+                                                <template v-slot:before>
+                                                    <span class="text-h6">磁盘使用限制(MB):</span>
+                                                </template>
+                                                <template v-slot:after>
+                                                    <q-icon name="help_outline">
+                                                        <q-tooltip>该参数限制本账号使用空间大小，防止超出服务器存储空间，建议填写扣除预留后的磁盘可用空间
+                                                        </q-tooltip>
+                                                    </q-icon>
+                                                </template>
                                             </q-input>
                                         </q-form-item>
                                         <q-form-item v-if="amISuper()">
