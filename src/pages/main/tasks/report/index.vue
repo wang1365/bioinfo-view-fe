@@ -1,6 +1,10 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
-        <h6>任务结果</h6>
+        <div class="row items-center">
+            <h6>任务结果</h6>
+            <q-space/>
+            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()"/>
+        </div>
         <div class="q-pt-xs">
             <q-tabs
                 v-model="tab"
@@ -139,13 +143,14 @@ import TumorMutationLoadVue from './tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from './homologous-recombination-defect/index.vue'
 import CommonModuleVue from './common-module/index.vue'
 
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
 import { errorMessage } from 'src/utils/notify'
 
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 
 const route = useRoute()
+const router = useRouter()
 const { apiPost } = useApi()
 const intros = ref({})
 
