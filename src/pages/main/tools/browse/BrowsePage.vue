@@ -40,7 +40,13 @@
                     color="primary"
                     size="sm"
                     @click="inputDlgVisible = true"
-                ></q-btn>
+                />
+                <q-btn
+                    label="返 回"
+                    color="primary" icon="arrow_back"
+                    size="sm" class="q-ml-sm"
+                    @click="router.back()"
+                />
                 <q-dialog v-model="inputDlgVisible">
                     <q-card class="my-card">
                         <q-card-section>
@@ -89,7 +95,7 @@
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
 import {ref, reactive, onMounted, nextTick} from "vue"
-import {useRoute, onBeforeRouteUpdate} from "vue-router"
+import {useRoute, useRouter, onBeforeRouteUpdate} from "vue-router"
 import {getSample, listSampleMetaByParams} from 'src/api/sample'
 import {getTask} from 'src/api/task'
 import {errorMessage} from "src/utils/notify"
@@ -103,6 +109,7 @@ import {hg38} from "src/utils/refGenome";
 
 const $q = useQuasar()
 const route = useRoute()
+const router = useRouter()
 const sample = ref(null)
 const task = ref(null)
 const tab = ref('igv')
