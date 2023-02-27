@@ -31,13 +31,13 @@
         </q-tab-panels>
         <q-separator class="bg-separator" />
         <div class="q-py-md">
-            <q-input v-if="tab=='试剂盒捕获质控信息'" :model-value="tip" readonly autogrow type="textarea"></q-input>
+            <q-input v-if="tab === '试剂盒捕获质控信息'" :model-value="tip" readonly autogrow type="textarea"></q-input>
         </div>
         <q-dialog v-model="dlgVisible">
-            <q-card style="width: 800px; max-width: 2000px">
+            <q-card style="width: 75%; max-width: 2000px">
                 <q-bar class="bg-primary text-white">质控</q-bar>
                 <q-card-section>
-                    <q-input :model-value="props.intro" readonly autogrow type="textarea"></q-input>
+                    <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
                     <q-btn v-close-popup color="primary">关闭</q-btn>

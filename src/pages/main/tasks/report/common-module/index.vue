@@ -9,10 +9,10 @@
                 outline color="primary" class="q-mr-md" @click="stickFilter()">固定过滤</q-btn>
         </div>
         <q-dialog v-model="dlgVisible">
-            <q-card style="width: 800px; max-width: 2000px">
+            <q-card style="width: 75%; max-width: 2000px">
                 <q-bar class="bg-primary text-white">{{ viewConfig.title }}</q-bar>
                 <q-card-section>
-                    <q-input :model-value="intro" readonly autogrow type="textarea"></q-input>
+                    <div style="white-space:pre-wrap; line-height: 35px">{{intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
                     <q-btn v-close-popup color="primary">关闭</q-btn>
