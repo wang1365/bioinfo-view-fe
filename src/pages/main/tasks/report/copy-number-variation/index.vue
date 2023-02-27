@@ -53,8 +53,9 @@
                     :options="['All', 'Yes', 'No',]" label="药物靶点" style="width:150px" dense
                     :disable="viewConfig.showStick && viewConfig.stickDone" />
                 <q-select v-model="searchParams.drugLevel"
-                    :disable="searchParams.drug !== 'Yes' && viewConfig.showStick && viewConfig.stickDone" clearable
-                    stack-label label-color="primary" :options="['A', 'B', 'C', 'D', 'E']" label="用药等级"
+                    :disable="searchParams.drug !== 'Yes' && viewConfig.showStick && viewConfig.stickDone"
+                    stack-label label-color="primary" clearable label="用药等级"
+                    :options="['1', '2', '3', '4', 'R1', 'R2', 'Dx1', 'Dx2', 'Dx3', 'Px1', 'Px2', 'Px3']"
                     style="width:150px" dense />
                 <q-btn color="primary" label="确定" icon="search" @click="clickSearch()"
                     :disable="viewConfig.showStick && viewConfig.stickDone" />
@@ -344,8 +345,9 @@ const searchFilterRows = (searchParams) => {
         }
 
         param = searchParams.drugLevel
-        if (searchParams.drug === 'Yes' && param.length > 0) {
-            result &= t.Drugs.indexOf(`药物等级:${param}`) >= 0 ? true : false
+        // if (searchParams.drug === 'Yes' && param.length > 0) {
+        if (searchParams.drugLevel && param.length > 0) {
+            result &= t.Drugs.indexOf(`用药证据等级：${param}`) >= 0
         }
         return result
     })
