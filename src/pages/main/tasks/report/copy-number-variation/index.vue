@@ -54,7 +54,7 @@
                     :disable="viewConfig.showStick && viewConfig.stickDone" />
                 <q-select v-model="searchParams.drugLevel"
                     :disable="searchParams.drug !== 'Yes' && viewConfig.showStick && viewConfig.stickDone"
-                    stack-label label-color="primary" clearable label="用药等级"
+                    stack-label label-color="primary" clearable label="用药等级" multiple
                     :options="['1', '2', '3', '4', 'R1', 'R2', 'Dx1', 'Dx2', 'Dx3', 'Px1', 'Px2', 'Px3']"
                     style="width:150px" dense />
                 <q-btn color="primary" label="确定" icon="search" @click="clickSearch()"
@@ -192,7 +192,7 @@ const searchParams = ref({
     gene: '',
     type: '', // DUP/DEL
     drug: '', // YES/NO
-    drugLevel: '', // A/B/C/D/E
+    drugLevel: [], // 1、2、3、4、R1、R2、Dx1、Dx2、Dx3、Px1、Px2、Px3
 })
 
 const variants = ref([])
@@ -346,8 +346,8 @@ const searchFilterRows = (searchParams) => {
 
         param = searchParams.drugLevel
         // if (searchParams.drug === 'Yes' && param.length > 0) {
-        if (searchParams.drugLevel && param.length > 0) {
-            result &= t.Drugs.indexOf(`用药证据等级：${param}`) >= 0
+        if (param && param.length > 0) {
+            result &= param.some(level => t.Drugs.indexOf(`用药证据等级：${level}`) >= 0)
         }
         return result
     })
