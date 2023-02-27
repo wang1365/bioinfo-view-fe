@@ -24,7 +24,6 @@
                             bottom-slots
                             v-model="imageFile"
                             label="+ 选择图片(最大2M)"
-                            counter
                             class="q-pa-sm"
                             max-file-size="2048000"
                             bg-color="blue"
