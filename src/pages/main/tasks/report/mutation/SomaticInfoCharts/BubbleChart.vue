@@ -68,7 +68,7 @@ const option = ref({
             left: 150,
             type: 'category',
             boundaryGap: false,
-            data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
+            data: ['.', -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
             top: '5%',
             height: 100 / 3 - 10 + '%',
             axisLabel: {
@@ -78,7 +78,7 @@ const option = ref({
             left: 150,
             type: 'category',
             boundaryGap: false,
-            data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
+            data: ['.', -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
             top: 100 / 3 + 5 + '%',
             height: 100 / 3 - 10 + '%',
             axisLabel: {
@@ -88,7 +88,7 @@ const option = ref({
             left: 150,
             type: 'category',
             boundaryGap: false,
-            data: [-1, -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
+            data: ['.', -0.5, ..._.range(0, 1.025, 0.025).map(t => Number(t.toFixed(2)))],
             top: 200 / 3 + 5 + '%',
             height: 100 / 3 - 10 + '%',
             axisLabel: {
