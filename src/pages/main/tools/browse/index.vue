@@ -155,6 +155,7 @@ const pagination = ref({
     total: 0,
     pageSize: 5,
     showSizeChanger: true,
+    showTotal: (total) => `总数：${total}`
     // rowsNumber: xx if getting data from a server
 })
 
