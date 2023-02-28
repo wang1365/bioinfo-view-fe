@@ -166,6 +166,7 @@ const total = ref(0);
 const dataItems = ref([]);
 
 onMounted(() => {
+    loadBackup()
     loadPage();
 });
 const pageChange = async (event) => {
@@ -223,6 +224,7 @@ const loadPage = async () => {
     if(search.value){
         params+=`&name=${search.value}`
     }
+    backupSearch()
     if (currentPage.value) {
         apiGet(
             `/project${params}`,
@@ -236,6 +238,23 @@ const loadPage = async () => {
         );
     }
 };
+const backupSearch = ()=>{
+    let data ={
+        page:currentPage.value,
+        size:pageSize.value,
+        name:search.value
+    }
+    sessionStorage.setItem('project-search',JSON.stringify(data))
+}
+const loadBackup = ()=>{
+    let dataStr = sessionStorage.getItem('project-search')
+    if(dataStr){
+        let data = JSON.parse(dataStr)
+        currentPage.value=data.page
+        pageSize.value=data.size
+        search.value=data.name
+    }
+}
 
 const confirm = (item) => {
     $q.dialog({
