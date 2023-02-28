@@ -174,7 +174,7 @@ const pageSize = ref(10)
 
 
 const tableChange = (pg, filters, sorter) => {
-    pagination.value = pg
+    pagination.value = { ...pg, showTotal: pagination.value.showTotal }
     refreshSamples()
 }
 
