@@ -232,15 +232,11 @@ const refreshUrl = () => {
 const refreshSamples = () => {
     startLoading()
 
-    const queryData = {
-        ...searchOption.value,
-        page: pagination.value.current,
-        size: pagination.value.pageSize
-    }
-    listSample(queryData)
+    listSample(searchOption.value, pagination.value.current, pagination.value.pageSize)
         .then((data) => {
             rows.value = data.results
             total.value = data.count
+            pagination.value.total = data.count
         })
         .finally(stopLoading)
 }

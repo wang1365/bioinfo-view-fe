@@ -1,10 +1,11 @@
 import { api } from 'src/boot/axios'
 
-export function listSample(data) {
+export function listSample(data, page, size) {
     return api({
         url: '/sample/samples/query',
         method: 'post',
         data: data,
+        params: { page, size }
     })
 }
 
