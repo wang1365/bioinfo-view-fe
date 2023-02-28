@@ -5,38 +5,50 @@
             <q-input
                 label="患者姓名"
                 v-model="searchOption.keyword"
-                clearable label-color="primary"
-                class="col-2" dense stack-label
+                clearable
+                label-color="primary"
+                class="col-2"
+                dense
+                stack-label
                 @clear="refreshUrl"
                 @keypress.enter="clickSearch"
             />
             <q-input
                 label="样本识别号"
                 v-model="searchOption.sampleIdentifier"
-                clearable label-color="primary"
-                class="col-2" dense stack-label
+                clearable
+                label-color="primary"
+                class="col-2"
+                dense
+                stack-label
                 @clear="refreshUrl"
                 @keypress.enter="clickSearch"
             />
             <q-input
                 label="数据识别号"
                 v-model="searchOption.dataIdentifier"
-                clearable label-color="primary"
-                class="col-2" dense stack-label
+                clearable
+                label-color="primary"
+                class="col-2"
+                dense
+                stack-label
                 @clear="refreshUrl"
                 @keypress.enter="clickSearch"
             />
             <q-input
                 label="捕获试剂盒"
                 v-model="searchOption.reagentBox"
-                clearable label-color="primary"
-                class="col-2" dense stack-label
+                clearable
+                label-color="primary"
+                class="col-2"
+                dense
+                stack-label
                 @clear="refreshUrl"
                 @keypress.enter="clickSearch"
             />
             <div class="q-ml-sm col-2 col reverse">
-                <q-btn color="warning" class="row-auto q-mx-sm" label="重置" @click="clickReset" />
-                <q-btn color="primary" class="row-auto" label="查询" @click="clickSearch" />
+                <q-btn color="primary" icon="search" class="row-auto" label="查询" @click="clickSearch" />
+                <q-btn color="primary" icon="clear" class="row-auto q-mx-sm" label="重置" @click="clickReset" />
             </div>
         </div>
         <a-table
