@@ -54,7 +54,7 @@
         <a-table
             :data-source="rows"
             :columns="columns"
-            :scroll="{x:1200}"
+            :scroll="{ x: 2000 }"
             :sticky="true"
             class="ant-table-striped"
             :rowClassName="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
@@ -120,7 +120,6 @@ const columns = [
     {
         title: '肿瘤样本',
         dataIndex: ["sample_meta", "is_panel"],
-        fixed: true,
         align: 'center',
         width: 90,
         customRender: (text, record) => text ? '√' : '×'
@@ -134,9 +133,9 @@ const columns = [
 
     // 样本数据
     {title: '数据识别号', dataIndex: 'identifier', width: 120, ellipsis: true},
-    {key: 'project_index', title: '数据详情', dataIndex: 'project_index', width: 120},
+    {key: 'project_index', title: '数据详情', dataIndex: 'project_index', width: 180, ellipsis: true},
     {key: 'library_number', title: '文库编号', dataIndex: 'library_number', width: 120},
-    {key: 'reagent_box', title: '捕获试剂盒', dataIndex: 'reagent_box', width: 120},
+    {key: 'reagent_box', title: '捕获试剂盒', dataIndex: 'reagent_box', width: 200, ellipsis: true},
     {key: 'nucleic_break_type', title: '核酸打断方式', dataIndex: 'nucleic_break_type', width: 120},
     {key: 'library_input', title: '建库input', dataIndex: 'library_input', width: 120},
     {key: 'index_type', title: 'index类型', dataIndex: 'index_type', width: 120},
