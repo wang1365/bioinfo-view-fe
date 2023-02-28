@@ -365,7 +365,7 @@ const clickClear = () => {
         gene: '',
         type: '', // DUP/DEL
         drug: '', // YES/NO
-        drugLevel: '', // A/B/C/D/E
+        drugLevel: [], // A/B/C/D/E
     }
     clickSearch()
 }
