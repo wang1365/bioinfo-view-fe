@@ -182,7 +182,7 @@ const confirm = (item) => {
     }).onOk(() => {
         let sampleIds = [];
         for (const iterator of props.projectDetail.samples) {
-            if (iterator != item.id) sampleIds.push(iterator);
+            if (iterator.id != item.id) sampleIds.push(iterator.id);
         }
         apiPut(
             `/project/${props.projectDetail.id}`,

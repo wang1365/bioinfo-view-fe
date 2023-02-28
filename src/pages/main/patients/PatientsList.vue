@@ -180,6 +180,7 @@ import { useApi } from "src/api/apiBase";
 import SampleList from "./SampleList.vue";
 import { useRouter } from "vue-router";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
+import { infoMessage } from "src/utils/notify";
 
 const router = useRouter()
 const searchParams = ref({
@@ -260,14 +261,31 @@ const pageChange = async (event) => {
     pageSize.value = event.pageSize;
     loadPage();
 };
-const confirm = async (patient) => {
+const confirm = async (item) => {
     $q.dialog({
-        title: `确认删除吗,当前患者关联了 ${patient.samplemeta_set.length} 样本?`,
+        title: `确认删除吗,当前患者关联了 ${item.samplemeta_set.length} 样本?`,
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/patient/patients/${patient.id}`, (_) => {
-            refreshPage();
+        apiDelete(`/patient/patients/${item.id}`, (_) => {
+            infoMessage("删除成功")
+            if (dataItems.value.length > 1) {
+                let index = 0
+                for (let i = 0; i < dataItems.value.length; i++) {
+                    if (dataItems.value[i].id === item.id) {
+                        index = i
+                    }
+                }
+                total.value-=1
+                dataItems.value.splice(index, 1)
+            } else {
+                if (currentPage.value > 1) {
+                    currentPage.value = currentPage.value - 1
+                }else{
+                    currentPage.value = 1
+                }
+                refreshPage()
+            }
         });
     });
 };

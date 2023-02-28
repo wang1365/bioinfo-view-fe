@@ -53,49 +53,45 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-2"></div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="row q-gutter-sm">
-                    <div class="col-2">
-                        <q-select
-                            v-model="status"
-                            :options="options"
-                            stack-label
-                            clearable
-                            filled
-                            @clear="clearSelect()"
-                            :display-value="`状态: ${status.label}`"
-                            dense
-                            @update:model-value="refreshPage()"
-                        ></q-select>
-                    </div>
-                    <div class="col-4 q-pl-sm">
-                        <q-input
-                            readonly
-                            filled
-                            dense
-                            @click="showProjectSelect = true"
-                            :model-value="'所属项目: ' + projectName"
-                        >
-                            <template v-slot:prepend>
-                                <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
-                            </template>
-                            <template v-slot:append>
-                                <q-icon
-                                    class="cursor-pointer"
-                                    name="backspace"
-                                    @click="
-    projectName = '';
+            <div class="row q-gutter-sm">
+                <q-select
+                    style="width:200px"
+                    v-model="status"
+                    :options="options"
+                    stack-label
+                    clearable
+                    filled
+                    @clear="clearSelect()"
+                    :display-value="`状态: ${status.label}`"
+                    dense
+                    @update:model-value="refreshPage()"
+                ></q-select>
+                <q-input
+                    style="width:300px"
+                    readonly
+                    filled
+                    dense
+                    @click="showProjectSelect = true"
+                    :model-value="'所属项目: ' + projectName"
+                >
+                    <template v-slot:prepend>
+                        <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
+                    </template>
+                    <template v-slot:append>
+                        <q-icon
+                            class="cursor-pointer"
+                            name="backspace"
+                            @click="
+projectName = '';
 projectId = '';
 refreshPage();
-                                "
-                                />
-                            </template>
-                        </q-input>
-                    </div>
-                </div>
+                        "
+                        />
+                    </template>
+                </q-input>
+                <q-btn color="primary" v-if="!autoLoad" @click="autoLoadPage()">自动刷新</q-btn>
+                <q-btn color="red" v-if="autoLoad" @click="closeAutoLoadPage">停止自动刷新</q-btn>
             </div>
-            <div class="col-2"></div>
         </div>
         <div class="bio-data-table">
             <table>
@@ -271,7 +267,7 @@ refreshPage();
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed,onUnmounted } from 'vue'
 import { useApi } from 'src/api/apiBase'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import ProjectListVue from './components/ProjectList.vue'
@@ -281,6 +277,9 @@ import { format } from 'src/utils/time'
 import {updateTask} from 'src/api/task'
 import { infoMessage } from 'src/utils/notify'
 import { useQuasar } from 'quasar'
+
+const autoLoad= ref(false)
+const intId= ref(null)
 const $q = useQuasar()
 const options = ref([
     { label: '全部', value: 'ALL' },
@@ -380,6 +379,27 @@ onMounted(() => {
     loadPage()
     summary()
 })
+onUnmounted(()=>{
+    if(intId.value){
+        clearInterval(intId.value)
+    }
+})
+const autoLoadPage=()=>{
+    if(intId.value){
+        clearInterval(intId.value)
+    }
+    intId.value= setInterval(() => {
+        loadPage()
+    }, 5000);
+    autoLoad.value=true
+}
+const closeAutoLoadPage=()=>{
+    if(intId.value){
+        clearInterval(intId.value)
+    }
+    autoLoad.value=false
+}
+
 
 const pageChange = async (event) => {
     currentPage.value = event.currentPage
@@ -400,15 +420,31 @@ const loadPage = async () => {
         dataItems.value = res.data.item_list
     })
 }
-const confirm = async (task) => {
+const confirm = async (item) => {
     $q.dialog({
         title: '确认删除任务吗?',
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/task/${task.id}`, (_) => {
-            infoMessage('删除成功')
-            refreshPage()
+        apiDelete(`/task/${item.id}`, (_) => {
+            infoMessage("删除成功")
+            if (dataItems.value.length > 1) {
+                let index = 0
+                for (let i = 0; i < dataItems.value.length; i++) {
+                    if (dataItems.value[i].id === item.id) {
+                        index = i
+                    }
+                }
+                total.value-=1
+                dataItems.value.splice(index, 1)
+            } else {
+                if (currentPage.value > 1) {
+                    currentPage.value = currentPage.value - 1
+                }else{
+                    currentPage.value = 1
+                }
+                refreshPage()
+            }
         })
     })
 }

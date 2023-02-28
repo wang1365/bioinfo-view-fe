@@ -126,9 +126,10 @@ const ensureSelect = (event) => {
     for (const iterator of event) {
         selectedIds.push(iterator.id);
     }
+
     if (selectedIds.length > 0) {
         for (const iterator of props.projectDetail.samples) {
-            selectedIds.push(iterator);
+            selectedIds.push(iterator.id);
         }
         apiPut(
             `/project/${props.projectDetail.id}`,
@@ -159,7 +160,7 @@ const props = defineProps({
 const loadPage = async () => {
     let projectIds = [props.projectDetail.id];
     if (props.projectDetail.parent) {
-        projectIds.push(props.projectDetail.parent);
+        projectIds.push(props.projectDetail.parent.id);
     }
     let andFields = {}
     let searchFields=buildModelQuery()

@@ -338,7 +338,23 @@ const confirm = (item) => {
     }).onOk(() => {
         apiDelete(`/sample/sampledatas/${item.id}/`, (_) => {
             infoMessage("删除成功");
-            refreshPage();
+            if (dataItems.value.length > 1) {
+                let index = 0
+                for (let i = 0; i < dataItems.value.length; i++) {
+                    if (dataItems.value[i].id === item.id) {
+                        index = i
+                    }
+                }
+                total.value-=1
+                dataItems.value.splice(index, 1)
+            } else {
+                if (currentPage.value > 1) {
+                    currentPage.value = currentPage.value - 1
+                }else{
+                    currentPage.value = 1
+                }
+                refreshPage()
+            }
         });
     });
 };

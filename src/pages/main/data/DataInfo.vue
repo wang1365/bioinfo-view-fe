@@ -17,7 +17,7 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pa-sm">建库input(ng): {{ form.library_input }}</div>
-                        <div class="col q-pf-sm">index类型: {{ form.index_type }}</div>
+                        <div class="col q-pa-sm">index类型: {{ form.index_type }}</div>
                         <div class="col q-pa-sm">index编号: {{ form.index_number }}</div>
                     </div>
                 </q-item>
@@ -32,7 +32,7 @@
                     <div class="row full-width justify-between">
                         <div class="col q-pa-sm">样本识别号: {{ form.sample_identifier }}</div>
                         <div class="col q-pa-sm">数据识别号: {{ form.identifier }}</div>
-                        <div class="col q-pf-sm">送检机构: {{ form.company }}</div>
+                        <div class="col q-pa-sm">送检机构: {{ form.company }}</div>
                     </div>
                 </q-item>
                 <q-item>

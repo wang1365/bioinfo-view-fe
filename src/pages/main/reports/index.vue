@@ -12,20 +12,11 @@
                         label="关键词: 任务名称"
                         clearable
                     ></q-input>
-                    <q-input
-                        v-model="searchParams.patient_identifier"
-                        dense
-                        label="患者识别号"
-                        clearable
-                    ></q-input>
-                    <q-input
-                        v-model="searchParams.sample_meta_identifier"
-                        dense
-                        label="样本识别号"
-                        clearable
-                    ></q-input>
+                    <q-input v-model="searchParams.patient_identifier" dense label="患者识别号" clearable></q-input>
+                    <q-input v-model="searchParams.sample_meta_identifier" dense label="样本识别号" clearable></q-input>
                     <q-input v-model="searchParams.sample_identifier" dense label="数据识别号" clearable></q-input>
                     <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+                    <q-btn color="primary" label="重置" icon="close" @click="reset()" />
                 </div>
 
                 <q-table
@@ -40,20 +31,11 @@
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
-                            <a
-                                :href="'/igv'+props.row.report_path"
-                                download
-                                v-if="props.row.status=='创建成功'"
-                            >
+                            <a :href="'/igv'+props.row.report_path" download v-if="props.row.status=='创建成功'">
                                 <q-btn color="primary" label="下载报告" size="sm" />
                             </a>
                             <a>
-                                <q-btn
-                                    @click="onDelete(props.row)"
-                                    color="red"
-                                    label="删除"
-                                    size="sm"
-                                />
+                                <q-btn @click="onDelete(props.row)" color="red" label="删除" size="sm" />
                             </a>
                         </q-td>
                     </template>
@@ -69,10 +51,10 @@ import PageTitle from 'components/page-title/PageTitle.vue'
 import { useApi } from 'src/api/apiBase'
 import { useQTable } from 'src/utils/q-table'
 import { useQuasar } from 'quasar'
+import { infoMessage } from 'src/utils/notify'
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
 const { apiGet, apiDelete, apiPost } = useApi()
-
 const $q = useQuasar()
 const reportUrl = '/reports'
 const searchParams = ref({
@@ -168,9 +150,17 @@ const columns = ref([
 
 onMounted(() => {
     loadDataOnMount()
-    setInterval(() => refreshPage(), 5000)
+    // setInterval(() => refreshPage(), 5000)
 })
-
+const reset = ()=>{
+    searchParams.value = {
+    search: '',
+    patient_identifier: '',
+    sample_meta_identifier: '',
+    sample_identifier: '',
+}
+refreshPage()
+}
 const onRequest = (props) => {
     const { page, rowsPerPage } = props.pagination
     let params = `?page=${page}&size=${rowsPerPage}`
@@ -197,14 +187,31 @@ const onRequest = (props) => {
     })
 }
 const onDownload = (report) => {}
-const onDelete = (report) => {
+const onDelete = (item) => {
     $q.dialog({
         title: `确认报告吗?`,
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/report/report/${report.id}/`, (_) => {
-            refreshPage()
+        apiDelete(`/report/report/${item.id}/`, (_) => {
+            infoMessage("删除成功")
+            if (rows.value.length > 1) {
+                let index = 0
+                for (let i = 0; i < rows.value.length; i++) {
+                    if (rows.value[i].id === item.id) {
+                        index = i
+                    }
+                }
+                pagination.value.rowsNumber-=1
+                rows.value.splice(index, 1)
+            } else {
+                if (pagination.value.page > 1) {
+                    pagination.value.page = pagination.value.page - 1
+                }else{
+                    pagination.value.page = 1
+                }
+                refreshPage()
+            }
         })
     })
 }

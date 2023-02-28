@@ -4,7 +4,14 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6"> 项目 </q-toolbar-title>
-                <q-input style="width: 250px" dense v-model="search" label="项目名称" clearable />
+                <q-input
+                    style="width: 250px"
+                    dense
+                    v-model="search"
+                    label="项目名称"
+                    clearable
+                    @clear="refreshPage()"
+                />
                 <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
                 <q-btn color="primary" label="新建项目" icon="folder" @click="openNewProject = true" />
             </q-toolbar>
@@ -230,16 +237,32 @@ const loadPage = async () => {
     }
 };
 
-const confirm = (project) => {
+const confirm = (item) => {
     $q.dialog({
         title: "确认删除项目吗?",
         message:"注意: 删除项目后,项目下的任务也会级联删除掉, 且不可恢复!",
         cancel: true,
         persistent: true,
     }).onOk(() => {
-        apiDelete(`/project/${project.id}`, (_) => {
-            infoMessage("删除成功");
-            refreshPage();
+        apiDelete(`/project/${item.id}`, (_) => {
+            infoMessage("删除成功")
+            if (dataItems.value.length > 1) {
+                let index = 0
+                for (let i = 0; i < dataItems.value.length; i++) {
+                    if (dataItems.value[i].id === item.id) {
+                        index = i
+                    }
+                }
+                total.value-=1
+                dataItems.value.splice(index, 1)
+            } else {
+                if (currentPage.value > 1) {
+                    currentPage.value = currentPage.value - 1
+                }else{
+                    currentPage.value = 1
+                }
+                refreshPage()
+            }
         });
     });
 };
