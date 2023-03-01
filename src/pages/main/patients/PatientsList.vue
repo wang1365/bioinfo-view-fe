@@ -420,8 +420,8 @@ const fileSelected = (event) => {
                 timeout: 300,
                 position: "center",
             });
-            if(resp.data.length>0){
-                for(let item in resp.data){
+            if(resp.length>0){
+                for(let item in resp){
                     warnMessage(`"${item.name}" 这条记录没有导入`)
                 }
             }
