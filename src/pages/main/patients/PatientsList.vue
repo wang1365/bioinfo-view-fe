@@ -422,7 +422,7 @@ const fileSelected = (event) => {
             });
             if(resp.length>0){
                 for(let item of resp){
-                    warnMessage(`"${item.name}" 这条记录没有导入`)
+                    warnMessage(`"${item.name}" 这条记录可能已存在,不会被重复导入`)
                 }
             }
             refreshPage();

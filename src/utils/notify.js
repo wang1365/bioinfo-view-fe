@@ -6,9 +6,9 @@ export function infoMessage(message = '成功') {
         message: message,
     })
 }
-export function warnMessage(message = '成功') {
+export function warnMessage(message = '警告') {
     Notify.create({
-        type: 'yellow',
+        type: 'warning',
         message: message,
     })
 }
