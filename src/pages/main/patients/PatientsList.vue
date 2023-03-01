@@ -180,7 +180,7 @@ import { useApi } from "src/api/apiBase";
 import SampleList from "./SampleList.vue";
 import { useRouter } from "vue-router";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
-import { infoMessage } from "src/utils/notify";
+import { infoMessage ,warnMessage} from "src/utils/notify";
 
 const router = useRouter()
 const searchParams = ref({
@@ -420,6 +420,11 @@ const fileSelected = (event) => {
                 timeout: 300,
                 position: "center",
             });
+            if(resp.data.length>0){
+                for(let item in resp.data){
+                    warnMessage(`"${item.name}" 这条记录没有导入`)
+                }
+            }
             refreshPage();
         })
         .catch((e) => {
