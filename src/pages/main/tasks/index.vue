@@ -350,7 +350,7 @@ const raisePriority = (row, priority) => {
             type: "positive",
             message: `任务优先级已${msg}`,
         })
-        refreshPage()
+        loadPage()
     })
 }
 

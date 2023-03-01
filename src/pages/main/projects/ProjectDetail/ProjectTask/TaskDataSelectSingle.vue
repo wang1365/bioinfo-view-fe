@@ -159,7 +159,7 @@ const props = defineProps({
 const loadPage = async () => {
     let projectIds = [props.projectDetail.id];
     if (props.projectDetail.parent) {
-        projectIds.push(props.projectDetail.parent);
+        projectIds.push(props.projectDetail.parent.id);
     }
     let andFields = {}
     let searchFields=buildModelQuery()
