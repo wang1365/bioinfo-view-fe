@@ -1,6 +1,10 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
-        <h6>定制报告</h6>
+        <div class="row items-center q-py-sm">
+            <h6>定制报告</h6>
+            <q-space />
+            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()" />
+        </div>
         <q-stepper v-if="viewConfigLoaded" v-model="step" ref="stepper" header-nav color="primary" animated>
             <q-step
                 v-if="tabValid('mutation')"

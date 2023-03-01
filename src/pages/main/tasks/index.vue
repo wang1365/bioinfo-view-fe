@@ -89,8 +89,8 @@ refreshPage();
                         />
                     </template>
                 </q-input>
-                <q-btn color="primary" v-if="!autoLoad" @click="autoLoadPage()">自动刷新</q-btn>
-                <q-btn color="red" v-if="autoLoad" @click="closeAutoLoadPage">停止自动刷新</q-btn>
+                <!-- <q-btn color="primary" v-if="!autoLoad" @click="autoLoadPage()">自动刷新</q-btn> -->
+                <!-- <q-btn color="red" v-if="autoLoad" @click="closeAutoLoadPage">停止自动刷新</q-btn> -->
             </div>
         </div>
         <div class="bio-data-table">
@@ -379,6 +379,7 @@ onMounted(() => {
     loadBackup()
     loadPage()
     summary()
+    autoLoadPage()
 })
 onUnmounted(()=>{
     if(intId.value){

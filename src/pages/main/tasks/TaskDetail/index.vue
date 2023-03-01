@@ -1,6 +1,10 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
-        <PageTitle title="任务详情" />
+    <q-page padding>
+        <div class="row items-center q-py-sm">
+            <h6>任务详情</h6>
+            <q-space />
+            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()" />
+        </div>
         <q-card>
             <q-section>
                 <div class="text-h6  q-px-md q-py-sm ">项目: {{ taskDetail.project?.name }}</div>
@@ -103,9 +107,10 @@
 import PageTitle from "components/page-title/PageTitle.vue";
 import { useApi } from "src/api/apiBase";
 import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 import { globalStore } from 'src/stores/global'
 const store = globalStore()
+const router = useRouter()
 const { apiGet, apiGetByIds } = useApi();
 const route = useRoute();
 const taskDetail = ref({});
