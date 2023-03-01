@@ -250,7 +250,7 @@ const loadBackup = ()=>{
     let dataStr = sessionStorage.getItem('project-search')
     if(dataStr){
         let data = JSON.parse(dataStr)
-        currentPage.value=data.page
+        // currentPage.value=data.page
         pageSize.value=data.size
         search.value=data.name
     }

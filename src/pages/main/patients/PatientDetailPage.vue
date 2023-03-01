@@ -1,6 +1,10 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
-        <PageTitle title="患者详情" />
+    <q-page padding>
+        <div class="row items-center q-py-sm">
+            <h6>患者详情</h6>
+            <q-space />
+            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()" />
+        </div>
         <PatientInfo :id="infoId" v-if="infoId" />
     </q-page>
 </template>
@@ -11,9 +15,10 @@ import PageTitle from "components/page-title/PageTitle.vue";
 import PatientInfo from "./PatientInfo.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
-import { useRoute } from 'vue-router';
+import { useRoute,useRouter } from 'vue-router';
 const { apiGet, apiDelete, downloadData, apiPatch } = useApi();
 
+const router = useRouter()
 const infoId = ref("")
 const route = useRoute()
 watch(

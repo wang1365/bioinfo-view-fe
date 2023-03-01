@@ -376,6 +376,7 @@ const gotoDefineReport = (item) => {
     router.push(`/main/tasks/${item.id}/define-report`)
 }
 onMounted(() => {
+    loadBackup()
     loadPage()
     summary()
 })
@@ -410,11 +411,32 @@ const refreshPage = async () => {
     currentPage.value = 1
     loadPage()
 }
+const backupSearch = ()=>{
+    let data ={
+        page:currentPage.value,
+        size:pageSize.value,
+        status:status.value,
+        projectId:projectId.value,
+        projectName:projectName.value
+    }
+    sessionStorage.setItem('task-search',JSON.stringify(data))
+}
+const loadBackup = ()=>{
+    let dataStr = sessionStorage.getItem('task-search')
+    if(dataStr){
+        let data = JSON.parse(dataStr)
+        // currentPage.value=data.page
+        pageSize.value=data.size
+        status.value=data.status
+        projectId.value=data.projectId
+        projectName.value=data.projectName
+    }
+}
 const loadPage = async () => {
     let params = `?page=${currentPage.value}&size=${pageSize.value}`
     if (status.value.label !== '全部') params += `&status=${status.value.value}`
     if (projectId.value) params += `&project_id=${projectId.value}`
-
+    backupSearch()
     apiGet(`/task${params}`, (res) => {
         total.value = res.data.total_count
         dataItems.value = res.data.item_list

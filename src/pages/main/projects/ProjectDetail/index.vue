@@ -1,10 +1,10 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
-        <p class="text-h5">
-            项目详情
-            <q-btn color="primary" @click="back()" size="sm">返回</q-btn>
-        </p>
-
+    <q-page padding>
+        <div class="row items-center q-py-sm">
+            <h6>项目详情</h6>
+            <q-space />
+            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()" />
+        </div>
         <q-separator />
         <ProjectDetail :projectDetail="projectDetail" @reloadProject="getProjectDetail()" />
         <ProjectDetailDataList
@@ -24,8 +24,9 @@ import ChildProjectList from "./ChildProjectList.vue";
 import ProjectDetailDataList from "./ProjectDetailData/ProjectDetailDataList.vue";
 import { useApi } from "src/api/apiBase";
 import { onMounted, ref, watch } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute,useRouter } from "vue-router";
 
+const router=useRouter()
 const { apiGet } = useApi();
 const route = useRoute();
 const projectDetail = ref({});

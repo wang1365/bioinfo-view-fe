@@ -253,6 +253,7 @@ const linkSample = (event) => {
 }
 
 onMounted(() => {
+    loadBackup()
     loadPage();
 });
 
@@ -319,6 +320,23 @@ const refreshPage = async () => {
     currentPage.value = 1;
     loadPage();
 };
+const backupSearch = ()=>{
+    let data ={
+        page:currentPage.value,
+        size:pageSize.value,
+        searchParams:searchParams.value
+    }
+    sessionStorage.setItem('patient-search',JSON.stringify(data))
+}
+const loadBackup = ()=>{
+    let dataStr = sessionStorage.getItem('patient-search')
+    if(dataStr){
+        let data = JSON.parse(dataStr)
+        // currentPage.value=data.page
+        pageSize.value=data.size
+        searchParams.value=data.searchParams
+    }
+}
 const loadPage = async () => {
     let andFields = {}
     let searchFields = buildModelQuery()
@@ -346,6 +364,7 @@ const loadPage = async () => {
 
     let query = buildModelQuery([searchFields], andFields)
     let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    backupSearch()
     apiPost(`/model_query/patient${params}`, (res) => {
         total.value = res.data.count;
         dataItems.value = [];
