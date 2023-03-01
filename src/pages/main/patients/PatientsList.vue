@@ -421,7 +421,7 @@ const fileSelected = (event) => {
                 position: "center",
             });
             if(resp.length>0){
-                for(let item in resp){
+                for(let item of resp){
                     warnMessage(`"${item.name}" 这条记录没有导入`)
                 }
             }
