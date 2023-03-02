@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-splitter v-model="splitterModel" unit="px" style="height: 720px">
+        <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input v-model="searchParams.gene" label="基因" clearable stack-label label-color="primary"
@@ -55,8 +55,8 @@
                         style="position:absolute;z-index:100;left:0px;top:0px">
                         <q-tooltip>仅全选本页筛选结果</q-tooltip>
                     </q-icon>
-                    <a-table style="z-index:1" size="small" bordered :loading="loading" :data-source="filteredRows"
-                        :columns="columns" :scroll="{ x: scrollX, y: 600 }" :custom-row="customRow" :sticky="true"
+                    <a-table style="z-index:1" bordered :loading="loading" :data-source="filteredRows"
+                        :columns="columns" :scroll="{ x: scrollX, y: 610 }" :custom-row="customRow" :sticky="true"
                         rowKey="lineNumber"
                         :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }">
                         <template #bodyCell="{ column, record }">
@@ -250,14 +250,14 @@ const currentRow = ref({})
 
 const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
-    { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
-    { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85 }, // End
+    { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 100, fixed: 'left' }, // Start
+    { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 100 }, // End
     { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
     { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
-    { i: 6, title: '', dataIndex: 'col6', align: 'center', width: 90 }, // Geno_Type
-    { i: 7, title: '', dataIndex: 'col7', align: 'center', width: 110 }, // Allelic_depths
-    { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 95 }, // Seq_depths
-    { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 115 }, // Mutation_Rate
+    { i: 6, title: '', dataIndex: 'col6', align: 'center', width: 120 }, // Geno_Type
+    { i: 7, title: '', dataIndex: 'col7', align: 'center', width: 125 }, // Allelic_depths
+    { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 120 }, // Seq_depths
+    { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 130 }, // Mutation_Rate
     { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105 }, // Func.refGene
     { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110 }, // Gene.refGene
 
@@ -271,18 +271,18 @@ const fixedColumns = [
     { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280, ellipsis: true }, // CLNREVSTAT
     { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true }, //CLNSIG
     { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 200, ellipsis: true }, // cosmic70
-    { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 95 }, // ExAC_ALL
+    { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 100 }, // ExAC_ALL
     { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
-    { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 100 }, // ExAC_AMR
+    { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 105 }, // ExAC_AMR
     { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100 }, // ExAC_EAS
 
     { i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100 },
     { i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100 },
 
     { i: 34, title: '', dataIndex: 'col34', align: 'center', width: 100 }, // avsnp150
-    { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 100 },
+    { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 120 },
 
-    { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 100 },
+    { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 120 },
 
     { i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100 },
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <q-splitter v-model="splitterModel" unit="px" style="height: 720px">
+        <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input
