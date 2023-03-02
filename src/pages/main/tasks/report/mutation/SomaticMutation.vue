@@ -29,7 +29,7 @@
                             clearable
                             type="number"
                             stack-label
-                            label-color="primary"
+                            label-color="black"
                             class="col-6"
                             :disable="showSticky && stickDone"
                         />
@@ -51,7 +51,7 @@
                             clearable
                             type="number"
                             stack-label
-                            label-color="primary"
+                            label-color="black"
                             class="col-6"
                             :disable="showSticky && stickDone"
                         />
