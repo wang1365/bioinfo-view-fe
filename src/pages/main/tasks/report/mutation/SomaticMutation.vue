@@ -213,10 +213,23 @@
                         :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }"
                     >
                         <template #bodyCell="{ column, record }">
-                            <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
-                                <div>{{ record[column.dataIndex]}}</div>
-                            </a-tooltip>
-                            <span v-else>{{ record[column.dataIndex]}}</span>
+                            <template v-if="column.key === 'operation'">
+                                <q-btn
+                                    label="详情"
+                                    color="primary"
+                                    size="xs"
+                                    padding="xs"
+                                    class="q-mr-xs"
+                                    @click="clickDetail(record)"
+                                />
+                                <q-btn label="IGV" color="primary" size="xs" padding="xs" @click="clickIgv(record)" />
+                            </template>
+                            <template v-else>
+                                <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                                    <div>{{ record[column.dataIndex] }}</div>
+                                </a-tooltip>
+                                <span v-else>{{ record[column.dataIndex] }}</span>
+                            </template>
                         </template>
                     </a-table>
                 </div>
@@ -287,6 +300,11 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
+    <q-dialog v-model="igvVisible">
+        <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
+            <Igv :taskId="props.task.id" :file="igvFile" />
+        </q-card>
+    </q-dialog>
 </template>
 
 <script setup>
@@ -302,6 +320,8 @@ import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { filterOption } from 'ant-design-vue/lib/vc-mentions/src/util'
+import Igv from './Igv'
+
 const splitterModel = ref(250)
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
@@ -404,6 +424,8 @@ const searchParams = ref({
     drug: false,
 })
 
+const igvVisible = ref(false)
+const igvFile = ref(null)
 const loading = ref(false)
 const filteredRows = ref([])
 const { rows, drugRows, header } = toRefs(props)
@@ -447,7 +469,7 @@ const customCell = (record, rowIndex, column) => {
         onClick: (event) => {
             // 记录当前点击的行标识
             currentRow.value = record
-            clickRow(record)
+            // clickRow(record)
             // if (currentRow.value.id === record.id) {
             //     currentRow.value = {}
             // } else {
@@ -499,6 +521,8 @@ const fixedColumns = [
     { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
 
     { i: 148, title: '', dataIndex: 'col148', align: 'center', width: 100 },
+
+    { title: '操作列',  key: 'operation', align: 'center', fixed: 'right', width: 100 }
 ]
 
 
@@ -531,13 +555,14 @@ const atOptionGroupChange = () => {
 }
 
 const columns = computed(() => {
-    const result = [...fixedColumns]
-
+    let result = [...fixedColumns]
+    result = result.splice(0, result.length-2)
     selectedExpandColIdx.value.forEach(idx => {
         result.push({
             i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
         })
     })
+    result.push(fixedColumns[fixedColumns.length-1])
 
     // 如果有扩展列要展示，需要重置列宽
     // if (fixedColumns.length > 0) {
@@ -597,9 +622,21 @@ const reset = () => {
     search()
 }
 
+function clickDetail (record) {
+    currentRow.value = record
+    dialogVisible.value = true
+}
+
+function clickIgv (record) {
+    currentRow.value = record
+    igvFile.value = `Mut_somatic/${record.col1}-${record.col2}.igv`
+    igvVisible.value = true
+}
+
 const clickRow = (row) => {
     dialogVisible.value = true
 }
+
 const searchFilterRows = (searchParams) => {
 
     filteredRows.value = rows.value.filter((line, i) => {
@@ -775,6 +812,7 @@ onMounted(() => {
 const propSearchParams = toRef(props, 'searchParams')
 const loadTable = () => {
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
+    columns.value[columns.value.length - 1].title = '操 作'
 
     const visibleColIdx = columns.value.map((t) => t.i)
     searchParams.value = propSearchParams.value

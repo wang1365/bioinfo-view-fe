@@ -14,8 +14,8 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, onUpdated, nextTick, onUnmounted } from 'vue'
-import {readTaskFile} from "src/api/task"
+import { ref, onMounted, onUpdated } from 'vue'
+import { readTaskFile } from "src/api/task"
 import { uid } from 'quasar'
 import * as hg from 'src/utils/refGenome'
 import igv from "igv"
@@ -26,7 +26,7 @@ const props = defineProps({
         required: true
     },
     file: {
-        type: String,
+        type: [String, null],
         required: true
     }
 })
@@ -45,7 +45,8 @@ onMounted(() => {
             option.uid = uid()
             // 添加reference属性
             option.reference = genome === 'hg19' ? hg.hg19 : hg.hg38
-            for (let track of option.tracks) {
+            const tracks = option.tracks instanceof Array ? option.tracks : [option.tracks]
+            for (let track of tracks) {
                 const url = track['url']
                 if (url) {
                     track['url'] = '/igv' + url
@@ -67,17 +68,10 @@ onMounted(() => {
     })
 })
 
-onUpdated(() => {
-    console.log('===> onUpdated')
-})
-
 const onResize = () => {
     console.log('========== resize')
 }
 
-onUnmounted(() => {
-    console.log('===> onUnmounted')
-})
 
 const refreshIgvBrowser = (id, options) => {
     const div = document.getElementById(id)

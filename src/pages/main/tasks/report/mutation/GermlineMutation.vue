@@ -3,67 +3,191 @@
         <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
             <template v-slot:before>
                 <div class="column" style="width:90%">
-                    <q-input v-model="searchParams.gene" label="基因" clearable stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
+                    <q-input
+                        v-model="searchParams.gene"
+                        label="基因"
+                        clearable
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
-                    <q-input v-model="searchParams.depth" label="深度 >" clearable type="number" stack-label
-                        label-color="primary" class="full-width" :disable="showSticky && stickDone" />
+                    <q-input
+                        v-model="searchParams.depth"
+                        label="深度 >"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
-                    <q-input v-model="searchParams.ratio" label="肿瘤频率 >" clearable type="number" stack-label
-                        label-color="primary" class="full-width" :disable="showSticky && stickDone" />
-                    <q-select v-model="searchParams.mutationType" clearable multiple hide-dropdown-icon
-                        :options="props.options.mutationType" label="突变类型" stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
+                    <q-input
+                        v-model="searchParams.ratio"
+                        label="肿瘤频率 >"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-select
+                        v-model="searchParams.mutationType"
+                        clearable
+                        multiple
+                        hide-dropdown-icon
+                        :options="props.options.mutationType"
+                        label="突变类型"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
-                    <q-select v-model="searchParams.mutationPosition" clearable multiple
-                        :options="props.options.mutationPosition" label="突变位置" stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
+                    <q-select
+                        v-model="searchParams.mutationPosition"
+                        clearable
+                        multiple
+                        :options="props.options.mutationPosition"
+                        label="突变位置"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
-                    <q-select clearable hide-dropdown-icon v-model="searchParams.mutationMeaning" stack-label multiple
-                        label-color="primary" :options="props.options.mutationMeaning" label="突变意义" class="full-width"
-                        :disable="showSticky && stickDone" />
-                    <q-select clearable hide-dropdown-icon v-model="searchParams.mutationRisk" stack-label multiple
-                        label-color="primary" :options="props.options.mutationRisk" label="突变危险" class="full-width"
-                        :disable="showSticky && stickDone" />
-                    <q-input v-model="searchParams.humanRatio" label="人群频率 <" clearable hide-dropdown-icon type="number"
-                        stack-label label-color="primary" class="full-width" :disable="showSticky && stickDone" />
+                    <q-select
+                        clearable
+                        hide-dropdown-icon
+                        v-model="searchParams.mutationMeaning"
+                        stack-label
+                        multiple
+                        label-color="primary"
+                        :options="props.options.mutationMeaning"
+                        label="突变意义"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-select
+                        clearable
+                        hide-dropdown-icon
+                        v-model="searchParams.mutationRisk"
+                        stack-label
+                        multiple
+                        label-color="primary"
+                        :options="props.options.mutationRisk"
+                        label="突变危险"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-input
+                        v-model="searchParams.humanRatio"
+                        label="人群频率 <"
+                        clearable
+                        hide-dropdown-icon
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
-                    <q-select clearable hide-dropdown-icon v-model="searchParams.sift" stack-label multiple
-                        label-color="primary" :options="['T', 'D', '.']" label="SIFT_pred" class="full-width"
-                        :disable="showSticky && stickDone" />
+                    <q-select
+                        clearable
+                        hide-dropdown-icon
+                        v-model="searchParams.sift"
+                        stack-label
+                        multiple
+                        label-color="primary"
+                        :options="['T', 'D', '.']"
+                        label="SIFT_pred"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
                     <div class="row items-center">
-                        <q-checkbox left-label v-model="searchParams.drug" label="是否关联药物" color="primary"
-                            :disable="showSticky && stickDone" />
+                        <q-checkbox
+                            left-label
+                            v-model="searchParams.drug"
+                            label="是否关联药物"
+                            color="primary"
+                            :disable="showSticky && stickDone"
+                        />
                         <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
                     </div>
 
                     <div class="q-gutter-xs text-center q-py-sm">
-                        <q-btn color="primary" label="确定" size="md" icon="search" @click="search"
-                            :disable="showSticky && stickDone" />
-                        <q-btn color="primary" label="重置" size="md" icon="settings_backup_restore" @click="reset"
-                            :disable="showSticky && stickDone" />
-                        <q-btn color="primary" label="扩展列" size="md" icon="last_page" @click="showDrawer = !showDrawer"
-                            :disable="showSticky && stickDone" />
+                        <q-btn
+                            color="primary"
+                            label="确定"
+                            size="md"
+                            icon="search"
+                            @click="search"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-btn
+                            color="primary"
+                            label="重置"
+                            size="md"
+                            icon="settings_backup_restore"
+                            @click="reset"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-btn
+                            color="primary"
+                            label="扩展列"
+                            size="md"
+                            icon="last_page"
+                            @click="showDrawer = !showDrawer"
+                            :disable="showSticky && stickDone"
+                        />
                     </div>
                 </div>
             </template>
 
             <template v-slot:after>
                 <div style="position:relative">
-                    <q-icon color="accent" name="question_mark" size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px">
+                    <q-icon
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
                         <q-tooltip>仅全选本页筛选结果</q-tooltip>
                     </q-icon>
-                    <a-table style="z-index:1" bordered :loading="loading" :data-source="filteredRows"
-                        :columns="columns" :scroll="{ x: scrollX, y: 610 }" :custom-row="customRow" :sticky="true"
+                    <a-table
+                        style="z-index:1"
+                        bordered
+                        :loading="loading"
+                        :data-source="filteredRows"
+                        :columns="columns"
+                        :scroll="{ x: scrollX, y: 610 }"
+                        :custom-row="customRow"
+                        :sticky="true"
                         rowKey="lineNumber"
-                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }">
+                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }"
+                    >
                         <template #bodyCell="{ column, record }">
-                            <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
-                                <div>{{ record[column.dataIndex] }}</div>
-                            </a-tooltip>
-                            <span v-else>{{ record[column.dataIndex] }}</span>
+                            <template v-if="column.key === 'operation'">
+                                <q-btn
+                                    label="详情"
+                                    color="primary"
+                                    size="xs"
+                                    padding="xs"
+                                    class="q-mr-xs"
+                                    @click="clickDetail(record)"
+                                />
+                                <q-btn label="IGV" color="primary" size="xs" padding="xs" @click="clickIgv(record)" />
+                            </template>
+                            <template v-else>
+                                <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
+                                    <div>{{ record[column.dataIndex] }}</div>
+                                </a-tooltip>
+                                <span v-else>{{ record[column.dataIndex] }}</span>
+                            </template>
                         </template>
                     </a-table>
                 </div>
@@ -77,9 +201,13 @@
                         <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
-                                <q-option-group :options="expandedColumns" type="checkbox"
-                                    v-model="selectedExpandColIdx" @change="atOptionGroupChange"
-                                    @update:model-value="atOptionGroupChange" />
+                                <q-option-group
+                                    :options="expandedColumns"
+                                    type="checkbox"
+                                    v-model="selectedExpandColIdx"
+                                    @change="atOptionGroupChange"
+                                    @update:model-value="atOptionGroupChange"
+                                />
                             </q-scroll-area>
                             <q-separator />
                         </div>
@@ -128,6 +256,11 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
+    <q-dialog v-model="igvVisible">
+        <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
+            <Igv :taskId="props.task.id" :file="igvFile" />
+        </q-card>
+    </q-dialog>
 </template>
 <script setup>
 import { ref, onMounted, toRef, toRefs, watch, computed, onUnmounted } from 'vue'
@@ -137,6 +270,7 @@ import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
 import BubbleChartVue from './SomaticInfoCharts/BubbleChart.vue'
 import RadarChartVue from './SomaticColumnCharts/RadarChart.vue'
 import MutationInfo from './MutationInfo'
+import Igv from './Igv'
 
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
@@ -222,6 +356,8 @@ const props = defineProps({
     },
 })
 const route = useRoute()
+const igvVisible = ref(false)
+const igvFile = ref(null)
 const dialogVisible = ref(false)
 const searchParams = ref({
     gene: null,
@@ -289,6 +425,7 @@ const fixedColumns = [
     { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
 
     // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
+    { title: '操作列',  key: 'operation', align: 'center', fixed: 'right', width: 100 }
 ]
 
 const scrollX = computed(() => {
@@ -324,12 +461,14 @@ const atOptionGroupChange = () => {
 }
 
 const columns = computed(() => {
-    const result = [...fixedColumns]
+    let result = [...fixedColumns]
+    result = result.splice(0, result.length-2)
     selectedExpandColIdx.value.forEach(idx => {
         result.push({
             i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
         })
     })
+    result.push(fixedColumns[fixedColumns.length-1])
 
     // 如果有扩展列要展示，需要重置列宽
     // if (fixedColumns.length > 0) {
@@ -339,6 +478,17 @@ const columns = computed(() => {
     result.forEach((c) => (c.customCell = customCell))
     return result
 })
+
+function clickDetail (record) {
+    currentRow.value = record
+    dialogVisible.value = true
+}
+
+function clickIgv (record) {
+    currentRow.value = record
+    igvFile.value = `Mut_germline/${record.col1}-${record.col2}.igv`
+    igvVisible.value = true
+}
 
 const customCell = (record, rowIndex, column) => {
     return {
@@ -351,7 +501,7 @@ const customCell = (record, rowIndex, column) => {
         onClick: (event) => {
             // 记录当前点击的行标识
             currentRow.value = record
-            clickRow(record)
+            // clickRow(record)
         },
     }
 }
@@ -547,7 +697,7 @@ const search = () => {
     searchFilterRows(searchParams.value)
     selectedRows.value = []
     // filterChange()
-    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length != rows.value.length) {
+    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
         infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
     }
 }
@@ -565,6 +715,7 @@ const propSearchParams = toRef(props, 'searchParams')
 // 加载表格数据
 const loadTable = () => {
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
+    columns.value[columns.value.length - 1].title = '操 作'
 
     const visibleColIdx = columns.value.map((t) => t.i)
 
