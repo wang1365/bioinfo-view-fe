@@ -450,21 +450,21 @@ const showDrawer = ref(false)
 const customCell = (record, rowIndex, column) => {
     return {
         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
-        style: {
-            // 字体颜色
-            // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
-            // 行背景色
-            'background-color': record.id === currentRow.value.id ? '#64b5f6' : 'white',
-            // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
-            // 'border-style': 'solid',
-            // // 下划线
-            // 'text-decoration': 'underline',
-            // // 字体样式-斜体
-            // 'font-style': 'italic',
-            // // 字体样式-斜体
-            'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-            cursor: 'pointer',
-        },
+        // style: {
+        //     // 字体颜色
+        //     // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
+        //     // 行背景色
+        //     'background-color': record.id === currentRow.value.id ? '#64b5f6' : 'white',
+        //     // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
+        //     // 'border-style': 'solid',
+        //     // // 下划线
+        //     // 'text-decoration': 'underline',
+        //     // // 字体样式-斜体
+        //     // 'font-style': 'italic',
+        //     // // 字体样式-斜体
+        //     'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+        //     cursor: 'pointer',
+        // },
         // 鼠标单击行
         onClick: (event) => {
             // 记录当前点击的行标识
