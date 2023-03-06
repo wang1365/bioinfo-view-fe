@@ -214,11 +214,12 @@ const reset = () => {
 const loadGermlineData = () => {
     $q.loading.show({ delay: 100 })
     readTaskMuFile(route.params.id, 'Mut_germline').then((res) => {
-        const headNames = getCsvHeader(res, ',')
+        const headNames = getCsvHeader(res, '\t')
 
         const colKeys = _.range(1, headNames.length + 1, 1).map((i) => 'col' + i)
-        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
+
         // 提取options
         let positions = new Set()
         let meanings = new Set()
@@ -263,9 +264,9 @@ const loadGermlineData = () => {
 
 const loadSomaticData = () => {
     readTaskMuFile(route.params.id, 'Mut_somatic').then((res) => {
-        const headNames = getCsvHeader(res, ',')
+        const headNames = getCsvHeader(res, '\t')
         const colKeys = _.range(1, headNames.length + 1, 1).map((i) => 'col' + i)
-        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: ',', hasHeaderLine: true, fields: colKeys })
+        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: colKeys })
         csvRows.forEach((row, i) => (row.id = i))
 
         // 提取options
