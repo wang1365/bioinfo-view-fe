@@ -70,7 +70,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.compareRatio"
-                    label="对照频率 >="
+                    label="对照频率 <="
                     clearable
                     type="number"
                     stack-label
@@ -81,7 +81,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.mutationRatio"
-                    label="肿瘤突变频数 <="
+                    label="肿瘤突变频数 >="
                     clearable
                     type="number"
                     stack-label
