@@ -1,22 +1,55 @@
 <template>
     <q-toolbar class="text-primary">
-        <q-input v-model="keyword" class="q-mr-sm" dense label="搜索:" clearable @clear="clearKeyword" style="width:300px"
-            :disable="showSticky && stickDone" />
-        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword"
-            :disable="showSticky && stickDone"></q-btn>
+        <q-input
+            v-model="keyword"
+            class="q-mr-sm"
+            dense
+            label="搜索:"
+            clearable
+            @clear="clearKeyword"
+            style="width:300px"
+            :disable="showSticky && stickDone"
+        />
+        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword" :disable="showSticky && stickDone" />
+        <q-btn
+            :href="props.url"
+            label="下载"
+            size="small"
+            icon="south"
+            color="primary"
+            target="_blank"
+            class="q-ml-sm"
+        />
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <div style="position:relative">
-            <q-icon color="accent" name="question_mark" size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px">
+            <q-icon
+                color="accent"
+                name="question_mark"
+                size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px"
+            >
                 <q-tooltip>仅全选本页筛选结果</q-tooltip>
             </q-icon>
-            <a-table style="z-index:1" size="middle" bordered :loading="loading" :data-source="filteredRows"
-                :columns="columns" :sticky="true" rowKey="lineNumber"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }">
+            <a-table
+                style="z-index:1"
+                size="middle"
+                bordered
+                :loading="loading"
+                :data-source="filteredRows"
+                :columns="columns"
+                :sticky="true"
+                rowKey="lineNumber"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"
+            >
                 <template #bodyCell="{ column, record }">
-                    <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
-                        @click="clickView(record)"></q-btn>
+                    <q-btn
+                        v-if="column.title === 'Igv'"
+                        label="查看"
+                        color="primary"
+                        size="sm"
+                        @click="clickView(record)"
+                    ></q-btn>
                 </template>
             </a-table>
         </div>
@@ -90,6 +123,11 @@ const props = defineProps({
             return []
         },
     },
+    url: {
+        type: String,
+        require: false,
+        default: () => ''
+    }
 })
 const searchFilterRows = (keyword) => {
     if (keyword) {

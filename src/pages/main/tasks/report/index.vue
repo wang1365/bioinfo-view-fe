@@ -2,8 +2,8 @@
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <div class="row items-center">
             <h6>任务结果</h6>
-            <q-space/>
-            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()"/>
+            <q-space />
+            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <div class="q-pt-xs">
             <q-tabs
@@ -18,18 +18,8 @@
                 dense
             >
                 <q-tab name="qc" label="质控" icon="border_left" v-if="tabValid('qc')" />
-                <q-tab
-                    name="mutation"
-                    label="突变分析"
-                    icon="candlestick_chart"
-                    v-if="tabValid('mutation')"
-                />
-                <q-tab
-                    name="fusion"
-                    label="融合分析"
-                    icon="format_strikethrough"
-                    v-if="tabValid('fusion')"
-                />
+                <q-tab name="mutation" label="突变分析" icon="candlestick_chart" v-if="tabValid('mutation')" />
+                <q-tab name="fusion" label="融合分析" icon="format_strikethrough" v-if="tabValid('fusion')" />
                 <q-tab
                     name="copy-number-variation"
                     label="拷贝数变异分析"
@@ -54,7 +44,9 @@
                     icon="line_axis"
                     v-if="tabValid('homologous-recombination-defect')"
                 />
-                <q-tab  v-for="commonTab in commonTabs" :key="commonTab.title"
+                <q-tab
+                    v-for="commonTab in commonTabs"
+                    :key="commonTab.title"
                     :name="commonTab.title"
                     :label="commonTab.title"
                     icon="web_stories"
@@ -77,6 +69,7 @@
                         :viewConfig="module.fusion"
                         :intro="intros['fusion']"
                         :samples="samples"
+                        :task="taskDetail"
                     />
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
@@ -87,10 +80,7 @@
                         :samples="samples"
                     />
                 </q-tab-panel>
-                <q-tab-panel
-                    name="microsatellite-instability"
-                    v-if="tabValid('microsatellite-instability')"
-                >
+                <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
                     <MicrosatelliteInstabilityVue
                         :viewConfig="module.microsatellite_instability"
                         :intro="intros['microsatellite-instability']"
@@ -106,10 +96,7 @@
                         :samples="samples"
                     />
                 </q-tab-panel>
-                <q-tab-panel
-                    name="homologous-recombination-defect"
-                    v-if="tabValid('homologous-recombination-defect')"
-                >
+                <q-tab-panel name="homologous-recombination-defect" v-if="tabValid('homologous-recombination-defect')">
                     <HomologousRecombinationDefectVue
                         :viewConfig="module.homologous_recombination_defect"
                         :intro="intros['homologous-recombination-defect']"
@@ -117,14 +104,13 @@
                         :samples="samples"
                     />
                 </q-tab-panel>
-                <q-tab-panel v-for="commonTab in commonTabs" :key="commonTab.title"
-                        :name="commonTab.title"
-                        :viewConfig="commonTab"
+                <q-tab-panel
+                    v-for="commonTab in commonTabs"
+                    :key="commonTab.title"
+                    :name="commonTab.title"
+                    :viewConfig="commonTab"
                 >
-                    <CommonModuleVue
-                        :viewConfig="commonTab"
-                        :task="taskDetail"
-                    />
+                    <CommonModuleVue :viewConfig="commonTab" :task="taskDetail" />
                 </q-tab-panel>
             </q-tab-panels>
         </div>

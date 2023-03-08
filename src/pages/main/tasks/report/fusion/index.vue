@@ -1,30 +1,78 @@
 <template>
     <div class="q-py-sm">
-        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small"
-            color="primary" class="relative-position float-right q-mr-md" label="已固定过滤" @click="reset()" />
-        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-            color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()" label="固定过滤" />
-        <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
-            @click="dlgVisible = !dlgVisible">说明</q-btn>
-        <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1"
-            :breakpoint="0" dense>
+        <q-btn
+            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            color="primary"
+            class="relative-position float-right q-mr-md"
+            label="已固定过滤"
+            @click="reset()"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            outline
+            color="primary"
+            class="relative-position float-right q-mr-md"
+            @click="stickFilter()"
+            label="固定过滤"
+        />
+        <q-btn
+            icon="help_outline"
+            size="small"
+            outline
+            color="orange"
+            class="relative-position float-right q-mr-md"
+            @click="dlgVisible = !dlgVisible"
+            >说明</q-btn
+        >
+        <q-tabs
+            v-model="tab"
+            active-color="primary"
+            active-bg-color="grey-4"
+            align="left"
+            class="bg-grey-1"
+            :breakpoint="0"
+            dense
+        >
             <q-tab name="单样品融合分析" label="单样品融合分析" v-if="props.viewConfig.showFusionGermline" />
             <q-tab name="体细胞融合分析" label="体细胞融合分析" v-if="props.viewConfig.showFusionSomatic" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
-                <Single :samples="props.samples" :qtRows="singleData.qt.rows" :qtHeader="singleData.qt.header"
-                    :qtSearchParam="singleData.qt.searchParam" :qtSelectedRows="singleData.qt.selectedRows"
-                    :qnRows="singleData.qn.rows" :qnHeader="singleData.qn.header"
-                    :qnSearchParam="singleData.qn.searchParam" :qnSelectedRows="singleData.qn.selectedRows"
-                    :showSticky="props.viewConfig.showStick" :stickDone="props.viewConfig.stickDone"
-                    @filterChange="filterChange('single', $event)" ref="singleVue" />
+                <Single
+                    :samples="props.samples"
+                    :qtRows="singleData.qt.rows"
+                    :qtHeader="singleData.qt.header"
+                    :qtSearchParam="singleData.qt.searchParam"
+                    :qtSelectedRows="singleData.qt.selectedRows"
+                    :qnRows="singleData.qn.rows"
+                    :qnHeader="singleData.qn.header"
+                    :qnSearchParam="singleData.qn.searchParam"
+                    :qnSelectedRows="singleData.qn.selectedRows"
+                    :showSticky="props.viewConfig.showStick"
+                    :stickDone="props.viewConfig.stickDone"
+                    :qt="singleData.qt"
+                    :qn="singleData.qn"
+                    @filterChange="filterChange('single', $event)"
+                    ref="singleVue"
+                />
             </q-tab-panel>
             <q-tab-panel name="体细胞融合分析">
-                <NormalVue :samples="props.samples" :rows="normalData.rows" :header="normalData.header"
-                    :searchParam="normalData.searchParam" :selectedRows="normalData.selectedRows"
-                    :showSticky="props.viewConfig.showStick" :stickDone="props.viewConfig.stickDone"
-                    @filterChange="filterChange('normal', $event)" ref="normalVue" />
+                <NormalVue
+                    :samples="props.samples"
+                    :rows="normalData.rows"
+                    :header="normalData.header"
+                    :searchParam="normalData.searchParam"
+                    :selectedRows="normalData.selectedRows"
+                    :showSticky="props.viewConfig.showStick"
+                    :stickDone="props.viewConfig.stickDone"
+                    :url="normalData.url"
+                    @filterChange="filterChange('normal', $event)"
+                    ref="normalVue"
+                />
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
@@ -63,6 +111,11 @@ const props = defineProps({
     intro: {
         type: String,
         required: false,
+    },
+    task: {
+        type: Object,
+        required: true,
+        default: () => {},
     },
     samples: {
         type: Array,
@@ -121,7 +174,7 @@ const filterChange = (name, data) => {
         filterData.value.normal = data
         normalData.value.searchParam = data.searchParam
         normalData.value.selectedRows = data.selectedRows
-    } else if (name == 'single') {
+    } else if (name === 'single') {
         filterData.value.single = data
         singleData.value.qt.searchParam = data.qt.searchParam
         singleData.value.qn.searchParam = data.qn.searchParam
@@ -196,6 +249,7 @@ const loadSingleData = () => {
         header.push('Igv')
         singleData.value.qt.header = header
         singleData.value.qt.rows = lines
+        singleData.value.qt.url = `igv${props.task.result_dir}/${qtFile}`
         if (stepData.value && stepData.value.single) {
             if (stepData.value.single.qt) {
                 singleData.value.qt.searchParam = stepData.value.single.qt.searchParam
@@ -212,6 +266,7 @@ const loadSingleData = () => {
             header.push('Igv')
             singleData.value.qn.header = header
             singleData.value.qn.rows = lines
+            singleData.value.qn.url = `igv${props.task.result_dir}/${qnFile}`
             if (stepData.value && stepData.value.single) {
                 if (stepData.value.single.qn) {
                     singleData.value.qn.searchParam = stepData.value.single.qn.searchParam
@@ -225,13 +280,15 @@ const loadNormalData = () => {
     const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     const { qt, qn } = getDualIdentifiers(props.samples)
     if (!qt || !qn) return
-    readTaskFile(route.params.id, `fusion_somatic/${qn}_${qt}.somatic_fusions`).then((res) => {
+    const filePath = `fusion_somatic/${qn}_${qt}.somatic_fusions`
+    readTaskFile(route.params.id, filePath).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
         let header = getCsvHeader(res)
         header.splice(header.length - 1, 1)
         header.push('Igv')
         normalData.value.header = header
         normalData.value.rows = lines
+        normalData.value.url = `igv${props.task.result_dir}/${filePath}`
         if (stepData.value && stepData.value.normal) {
             normalData.value.searchParam = stepData.value.normal.searchParam
             normalData.value.selectedRows = stepData.value.normal.selectedRows

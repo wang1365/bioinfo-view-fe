@@ -1,24 +1,62 @@
 <template>
     <q-toolbar class="text-primary">
         <q-toolbar-title v-if="!isSingle">肿瘤单样品融合</q-toolbar-title>
-
-        <q-input v-model="keyword1" class="q-mr-sm" dense label="搜索:" clearable @clear="clearKeyword1"
-            style="width:300px" :disable="showSticky && stickDone" />
-        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword1"
-            :disable="showSticky && stickDone"></q-btn>
+        <q-input
+            v-model="keyword1"
+            class="q-mr-sm"
+            dense
+            label="搜索:"
+            clearable
+            @clear="clearKeyword1"
+            style="width:300px"
+            :disable="showSticky && stickDone"
+        />
+        <q-btn
+            size="small"
+            color="primary"
+            label="搜索"
+            @click="searchKeyword1"
+            :disable="showSticky && stickDone"
+        ></q-btn>
+        <q-btn
+            :href="props.qt.url"
+            label="下载"
+            size="small"
+            icon="south"
+            color="primary"
+            target="_blank"
+            class="q-ml-sm"
+        />
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <div style="position:relative">
-            <q-icon color="accent" name="question_mark" size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px">
+            <q-icon
+                color="accent"
+                name="question_mark"
+                size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px"
+            >
                 <q-tooltip>仅全选本页筛选结果</q-tooltip>
             </q-icon>
-            <a-table style="z-index:1" size="middle" bordered rowKey="lineNumber" :loading="loading1"
-                :data-source="filteredRows1" :columns="columns1" :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 20, getCheckboxProps: getCheckboxProps }">
+            <a-table
+                style="z-index:1"
+                size="middle"
+                bordered
+                rowKey="lineNumber"
+                :loading="loading1"
+                :data-source="filteredRows1"
+                :columns="columns1"
+                :sticky="true"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 20, getCheckboxProps: getCheckboxProps }"
+            >
                 <template #bodyCell="{ column, record }">
-                    <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
-                        @click="clickView(record)"></q-btn>
+                    <q-btn
+                        v-if="column.title === 'Igv'"
+                        label="查看"
+                        color="primary"
+                        size="sm"
+                        @click="clickView(record)"
+                    ></q-btn>
                 </template>
             </a-table>
         </div>
@@ -28,22 +66,60 @@
         <q-toolbar class="text-primary">
             <q-toolbar-title v-if="!isSingle">对照单样品融合</q-toolbar-title>
 
-            <q-input v-model="keyword2" class="q-mr-sm" dense label="搜索:" clearable @clear="clearKeyword2"
-                style="width:300px" :disable="showSticky && stickDone" />
-            <q-btn size="small" color="primary" label="搜索" @click="searchKeyword2"
-                :disable="showSticky && stickDone"></q-btn>
+            <q-input
+                v-model="keyword2"
+                class="q-mr-sm"
+                dense
+                label="搜索:"
+                clearable
+                @clear="clearKeyword2"
+                style="width:300px"
+                :disable="showSticky && stickDone"
+            />
+            <q-btn
+                size="small"
+                color="primary"
+                label="搜索"
+                @click="searchKeyword2"
+                :disable="showSticky && stickDone"
+            />
+            <q-btn
+                :href="props.qn.url"
+                label="下载"
+                size="small"
+                icon="south"
+                color="primary"
+                target="_blank"
+                class="q-ml-sm"
+            />
         </q-toolbar>
         <div style="position:relative">
-            <q-icon color="accent" name="question_mark" size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px">
+            <q-icon
+                color="accent"
+                name="question_mark"
+                size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px"
+            >
                 <q-tooltip>仅全选本页筛选结果</q-tooltip>
             </q-icon>
-            <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
-                :sticky="true" rowKey="lineNumber"
-                :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth: 20, getCheckboxProps: getCheckboxProps }">
+            <a-table
+                style="z-index:1"
+                size="middle"
+                bordered
+                :data-source="filteredRows2"
+                :columns="columns2"
+                :sticky="true"
+                rowKey="lineNumber"
+                :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth: 20, getCheckboxProps: getCheckboxProps }"
+            >
                 <template #bodyCell="{ column, record }">
-                    <q-btn v-if="column.title === 'Igv'" label="查看" color="primary" size="sm"
-                        @click="clickView(record)"></q-btn>
+                    <q-btn
+                        v-if="column.title === 'Igv'"
+                        label="查看"
+                        color="primary"
+                        size="sm"
+                        @click="clickView(record)"
+                    ></q-btn>
                 </template>
             </a-table>
         </div>
@@ -133,6 +209,7 @@ const props = defineProps({
                 rows: [],
                 header: {},
                 searchParam: '',
+                url: '',
             }
         },
     },
@@ -144,6 +221,7 @@ const props = defineProps({
                 rows: [],
                 header: {},
                 searchParam: '',
+                url: '',
             }
         },
     },
@@ -237,13 +315,13 @@ const getChangedData = () => {
         qt: {
             searchParam: keyword1.value,
             selectedRows: selectedRows.value,
-            filtered: qtRows.value.length != filteredRows1.value.length,
+            filtered: qtRows.value.length !== filteredRows1.value.length,
             selected: selectedRows.value.length > 0,
         },
         qn: {
             searchParam: keyword2.value,
             selectedRows: selectedRows2.value,
-            filtered: qnRows.value.length != filteredRows2.value.length,
+            filtered: qnRows.value.length !== filteredRows2.value.length,
             selected: selectedRows2.value.length > 0,
         },
     }
