@@ -138,6 +138,18 @@
                     :disable="viewConfig.showStick && viewConfig.stickDone"
                 />
             </div>
+            <div class="col">
+                <span class="text-primary q-mr-md">过滤重复区假突变:</span>
+                <q-btn-toggle
+                    v-model="searchParams.filterDup"
+                    size="sm"
+                    toggle-color="primary"
+                    :options="[
+                      {label: 'Yes', value: true},
+                      {label: 'No', value: false}
+                    ]"
+                />
+            </div>
             <div class="q-gutter-md text-center q-py-sm">
                 <q-btn
                     color="primary"
@@ -209,6 +221,7 @@ const searchParams = ref({
     mutationPosition: [],
     mutationMeaning: null,
     humanRatio: null,
+    filterDup: false, // 是否过滤重复区假突变-yes或者no
 })
 
 const table = ref({
@@ -288,6 +301,7 @@ onMounted(() => {
                 mutationPosition: lines[6][1].split(','),
                 mutationMeaning: lines[7][1],
                 humanRatio: Number(lines[8][1]),
+                filterDup: true,
             }
 
             searchParams.value = Object.assign({}, initialParams)
