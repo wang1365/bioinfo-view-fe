@@ -9,7 +9,17 @@
         >说明</q-btn
     >
     <div class="q-py-md" v-if="props.viewConfig.showMSI">
-        <div class="text-h6 text-primary text-bold">总体微卫星状态表</div>
+        <span class="text-h6 text-primary text-bold q-mr-sm">总体微卫星状态表</span>
+        <q-btn
+            :href="tableFileUrl1"
+            label="下载"
+            icon="south"
+            color="primary"
+            target="_blank"
+            class="q-ml-sm q-mb-xs"
+            :download="tableFileName1"
+            size="sm"
+        />
         <a-table
             class="col-5"
             size="small"
@@ -22,8 +32,18 @@
         </a-table>
     </div>
     <div class="q-py-md" v-if="props.viewConfig.showMSIsite">
-        <div class="text-h6 text-primary text-bold">金标微卫星图</div>
+        <span class="text-h6 text-primary text-bold">金标微卫星图</span>
         <!-- TODO: 这里点击最后一列时,如果没有图片需要提 bed文件不包含金标微卫星位点 -->
+        <q-btn
+            :href="tableFileUrl2"
+            label="下载"
+            icon="south"
+            color="primary"
+            target="_blank"
+            class="q-ml-sm q-mb-xs"
+            :download="tableFileName2"
+            size="sm"
+        />
         <a-table
             class="col-5"
             size="small"
@@ -83,6 +103,11 @@ const loading2 = ref(false)
 const rows1 = ref([])
 const rows2 = ref([])
 
+const tableFileUrl1 = ref('')
+const tableFileName1 = ref('')
+const tableFileUrl2 = ref('')
+const tableFileName2 = ref('')
+
 const columns1 = ref([
     {key: 'k1', title: 'Total_Number_of_Sites', dataIndex: 'k1', align: 'center', width: 50},
     {key: 'k2', title: 'Number_of_Somatic_Sites', dataIndex: 'k2', align: 'center', width: 50},
@@ -127,16 +152,20 @@ const clickView = (record) => {
     imageUrl.value = `/igv${props.task.result_dir}/MSI/${record.k3}.jpeg`
 }
 
+
 onMounted(() => {
     const {qn, qt} = getDualIdentifiers(props.samples)
     if (props.viewConfig.showMSI) {
         let file;
         if (props.samples.length > 1) {
             file = `MSI/${qn}_${qt}.msi`
+            tableFileUrl1.value = `igv${props.task.result_dir}/${file}`
+            tableFileName1.value = `${file}.csv`
             //'MSI/QN11_QT11.msi')
         } else {
             const qt = getSingleIdentifiers(props.samples)
             file = `MSI/${qt}.msi`
+
         }
 
         readTaskFile(route.params.id, file).then(res => {
@@ -145,6 +174,8 @@ onMounted(() => {
     }
 
     if (props.viewConfig.showMSIsite) {
+        tableFileUrl2.value = `igv${props.task.result_dir}/MSI/jingbiao.msi`
+        tableFileName2.value = `jingbiao.msi.csv`
         readTaskFile(route.params.id, 'MSI/jingbiao.msi').then(res => {
             rows2.value = getCsvData(res, { fields: ['k1', 'k2', 'k3']} )
         })
