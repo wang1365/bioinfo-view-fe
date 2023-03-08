@@ -4,7 +4,7 @@
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input
-                        v-model="searchParams.gene"
+                        v-model="innerSearchParams.gene"
                         label="基因"
                         clearable
                         stack-label
@@ -12,53 +12,65 @@
                         class="full-width"
                         :disable="showSticky && stickDone"
                     />
-                    <div class="row q-col-gutter-sm justify-between">
-                        <q-input
-                            v-model="searchParams.tumorDepth"
-                            label="肿瘤深度 >"
-                            clearable
-                            type="number"
-                            stack-label
-                            label-color="primary"
-                            class="col-6"
-                            :disable="showSticky && stickDone"
-                        />
-                        <q-input
-                            v-model="searchParams.compareDepth"
-                            label="对照深度 >"
-                            clearable
-                            type="number"
-                            stack-label
-                            label-color="black"
-                            class="col-6"
-                            :disable="showSticky && stickDone"
-                        />
-                    </div>
-                    <div class="row q-col-gutter-sm justify-between">
-                        <q-input
-                            v-model="searchParams.tumorRatio"
-                            label="肿瘤频率 >"
-                            clearable
-                            type="number"
-                            stack-label
-                            label-color="primary"
-                            class="col-6"
-                            :disable="showSticky && stickDone"
-                        />
-                        <q-input
-                            v-model="searchParams.compareRatio"
-                            label="对照频率 >"
-                            clearable
-                            type="number"
-                            stack-label
-                            label-color="black"
-                            class="col-6"
-                            :disable="showSticky && stickDone"
-                        />
-                    </div>
+                    <q-input
+                        v-model="innerSearchParams.tumorDepth"
+                        :label="'肿瘤深度 ' + innerSearchParams.tumorDepthCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
+                        <template v-slot:after>
+                            <Cmp v-model="innerSearchParams.tumorDepthCmp" />
+                        </template>
+                    </q-input>
+                    <q-input
+                        v-model="innerSearchParams.compareDepth"
+                        :label="'对照深度 ' + innerSearchParams.compareDepthCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="black"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
+                        <template v-slot:after>
+                            <Cmp v-model="innerSearchParams.compareDepthCmp" />
+                        </template>
+                    </q-input>
+                    <q-input
+                        v-model="innerSearchParams.tumorRatio"
+                        :label="'肿瘤频率 ' + innerSearchParams.tumorRatioCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
+                        <template v-slot:after>
+                            <Cmp v-model="innerSearchParams.tumorRatioCmp" />
+                        </template>
+                    </q-input>
+                    <q-input
+                        v-model="innerSearchParams.compareRatio"
+                        :label="'对照频率 ' + innerSearchParams.compareRatioCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="black"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
+                        <template v-slot:after>
+                            <Cmp v-model="innerSearchParams.compareRatioCmp" />
+                        </template>
+                    </q-input>
 
                     <q-select
-                        v-model="searchParams.mutationType"
+                        v-model="innerSearchParams.mutationType"
                         clearable
                         multiple
                         hide-dropdown-icon
@@ -71,7 +83,7 @@
                     />
 
                     <q-select
-                        v-model="searchParams.mutationPosition"
+                        v-model="innerSearchParams.mutationPosition"
                         clearable
                         multiple
                         hide-dropdown-icon
@@ -85,7 +97,7 @@
                     <q-select
                         clearable
                         hide-dropdown-icon
-                        v-model="searchParams.mutationMeaning"
+                        v-model="innerSearchParams.mutationMeaning"
                         stack-label
                         multiple
                         label-color="primary"
@@ -97,7 +109,7 @@
                     <q-select
                         clearable
                         hide-dropdown-icon
-                        v-model="searchParams.mutationRisk"
+                        v-model="innerSearchParams.mutationRisk"
                         stack-label
                         multiple
                         label-color="primary"
@@ -107,8 +119,8 @@
                         :disable="showSticky && stickDone"
                     />
                     <q-input
-                        v-model="searchParams.humanRatio"
-                        label="人群频率 <"
+                        v-model="innerSearchParams.humanRatio"
+                        :label="'人群频率 ' + innerSearchParams.humanRatioCmp"
                         clearable
                         hide-dropdown-icon
                         type="number"
@@ -116,12 +128,16 @@
                         label-color="primary"
                         class="full-width"
                         :disable="showSticky && stickDone"
-                    />
+                    >
+                        <template v-slot:after>
+                            <Cmp v-model="innerSearchParams.humanRatioCmp" />
+                        </template>
+                    </q-input>
                     <q-select
                         clearable
                         multiple
                         hide-dropdown-icon
-                        v-model="searchParams.sift"
+                        v-model="innerSearchParams.sift"
                         stack-label
                         label-color="primary"
                         :options="['T', 'D', '.']"
@@ -132,7 +148,7 @@
                     <div class="row items-center">
                         <q-checkbox
                             left-label
-                            v-model="searchParams.drug"
+                            v-model="innerSearchParams.drug"
                             label="是否关联药物"
                             color="primary"
                             :disable="showSticky && stickDone"
@@ -140,7 +156,7 @@
                         <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                     </div>
 
-                    <div class="q-gutter-md text-center q-py-xs justify-between">
+                    <div class="q-gutter-xs text-center justify-between">
                         <q-btn
                             color="primary"
                             label="确定"
@@ -322,7 +338,9 @@ import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { filterOption } from 'ant-design-vue/lib/vc-mentions/src/util'
 import Igv from './Igv'
+import Cmp from './Comparator'
 import {getDualIdentifiers} from "src/utils/samples"
+import { useComparator } from 'src/utils/comparator'
 
 const splitterModel = ref(250)
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
@@ -411,17 +429,41 @@ const props = defineProps({
 })
 
 const dialogVisible = ref(false)
-const searchParams = ref({
+const innerSearchParamsInit = {
     gene: null,
     tumorDepth: null,
+    tumorDepthCmp: '>',
     compareDepth: null,
+    compareDepthCmp: '>',
     tumorRatio: null,
+    tumorRatioCmp: '>',
     compareRatio: null,
+    compareRatioCmp: '>',
     mutationType: [],
     mutationPosition: [],
     mutationMeaning: [],
     mutationRisk: [],
     humanRatio: null,
+    humanRatioCmp: '<',
+    sift: [],
+    drug: false,
+}
+const innerSearchParams = ref({
+    gene: null,
+    tumorDepth: null,
+    tumorDepthCmp: '>',
+    compareDepth: null,
+    compareDepthCmp: '>',
+    tumorRatio: null,
+    tumorRatioCmp: '>',
+    compareRatio: null,
+    compareRatioCmp: '>',
+    mutationType: [],
+    mutationPosition: [],
+    mutationMeaning: [],
+    mutationRisk: [],
+    humanRatio: null,
+    humanRatioCmp: '<',
     sift: [],
     drug: false,
 })
@@ -613,18 +655,7 @@ const customRow = (record, index) => {
 }
 
 const reset = () => {
-    searchParams.value = {
-        gene: null,
-        depth: null,
-        ratio: null,
-        mutationType: null,
-        mutationPosition: [],
-        mutationMeaning: null,
-        mutationRisk: null,
-        humanRatio: null,
-        sift: null,
-        drug: false,
-    }
+    innerSearchParams.value = Object.assign({}, innerSearchParamsInit)
     search()
 }
 
@@ -660,7 +691,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.tumorDepth
         if (param) {
             const v = tumorColumnIdx.value.includes(8) ? line.col8 : line.col12
-            if (!(Number(v) > param)) {
+            if (!(useComparator(searchParams.tumorDepthCmp).compare(Number(v), param))) {
                 return false
             }
         }
@@ -670,7 +701,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.compareDepth
         if (param) {
             const v = tumorColumnIdx.value.includes(8) ? line.col12 : line.col8
-            if (!(Number(v) > param)) {
+            if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v),  param))) {
                 return false
             }
         }
@@ -680,7 +711,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.tumorRatio
         if (param) {
             const v = tumorColumnIdx.value.includes(9) ? line.col13 : line.col9
-            if (!(Number(v) > param)) {
+            if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
                 return false
             }
         }
@@ -690,7 +721,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.compareRatio
         if (param) {
             const v = tumorColumnIdx.value.includes(9) ? line.col9 : line.col13
-            if (!(Number(v) > param)) {
+            if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
                 return false
             }
         }
@@ -759,7 +790,8 @@ const searchFilterRows = (searchParams) => {
           */
         param = searchParams.humanRatio
         if (param) {
-            const ltRatio = (colVal) => colVal === '.' || Number(colVal) < param
+            const cmp = useComparator(searchParams.humanRatioCmp)
+            const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
             const ltCount = [line.col30, line.col35, line.col43].map(v => ltRatio(v)).filter(v => v).length
             if (ltCount < 2) {
                 return false
@@ -802,7 +834,7 @@ const search = () => {
         errorMessage('请先取消过滤')
         return false
     }
-    searchFilterRows(searchParams.value)
+    searchFilterRows(innerSearchParams.value)
     selectedRows.value = []
     if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
         infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
@@ -821,7 +853,7 @@ const loadTable = () => {
     columns.value[columns.value.length - 1].title = '操 作'
 
     const visibleColIdx = columns.value.map((t) => t.i)
-    searchParams.value = propSearchParams.value
+    innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)
     searchFilterRows(propSearchParams.value)
     selectedRows.value = []
     for (let item of filteredRows.value) {
