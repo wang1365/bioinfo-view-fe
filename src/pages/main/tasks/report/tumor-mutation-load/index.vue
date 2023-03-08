@@ -269,6 +269,7 @@ const tumorColumns = ref([])
 const mutationPositionOptions = ref([])
 const mutationMeaningOptions = ref([])
 const loading = ref(false)
+const headerNames = ref([])
 
 const originSearchParams = ref("") // 用于重置筛选
 onMounted(() => {
@@ -324,13 +325,16 @@ onMounted(() => {
 
                     const { qt, qn } = getDualIdentifiers(props.samples)
                     // 查询具体结果数据
-                    readTaskFile(route.params.id, `TMB/${qn}_${qt}.PASS.standard-new.csv`).then((res) => {
+                    const csvFile = `TMB/${qn}_${qt}.PASS.standard-new.csv`
+                    readTaskFile(route.params.id, csvFile).then((res) => {
                         // csv数据解析
                         const csv = getCsvData(res, { splitter: ',' })
                         totalLines.value = csv
 
                         // 提取csv表头
                         const headers = getCsvHeader(res, ',')
+                        headerNames.value = headers
+                        console.log(`===> ${csvFile}表头：${headers}`)
 
                         // 根据列表头名称，例如Geno_Type(QN11), 检查该列是对比样本列表还是肿瘤样本列
                         const tumorIdx = []
@@ -379,8 +383,6 @@ const clickReset = () => {
 
 const search = () => {
     filteredLines.value = totalLines.value.filter((line) => {
-        let result = true
-
         // 肿瘤深度
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
         let param = searchParams.value.tumorDepth
@@ -482,7 +484,16 @@ const search = () => {
             }
         }
 
-        return result
+        // 是否过滤重复区假突变
+        // 在文件第151列MS_PASS列（目前的最后一列），对MS区域突变进行标注”yes“或”no“，如果选择过滤重复区假突变，仅用yes的突变去计算TMB
+        param = searchParams.value.filterDup
+        if (param) {
+            if (line[150].toLowerCase() !== 'yes') {
+                return false
+            }
+        }
+
+        return true
     })
 
     tmb.value = (filteredLines.value.length / bedRegionValue.value).toFixed(2)
