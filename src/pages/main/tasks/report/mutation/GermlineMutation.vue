@@ -575,7 +575,7 @@ const customRow = (record, index) => {
 }
 
 const reset = () => {
-    searchParams.value = { ...searchParamsInit }
+    innerSearchParams.value = { ...searchParamsInit }
     search()
 }
 
