@@ -1,35 +1,90 @@
 <template>
-    <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-        class="relative-position float-right q-mr-md" label="已固定过滤" @click="reset()" />
-    <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-        color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()">固定过滤</q-btn>
+    <q-btn
+        v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        label="已固定过滤"
+        @click="reset()"
+    />
+    <q-btn
+        v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        outline
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        @click="stickFilter()"
+        >固定过滤</q-btn
+    >
 
-    <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
-        @click="dlgVisible = !dlgVisible">说明</q-btn>
+    <q-btn
+        icon="help_outline"
+        size="small"
+        outline
+        color="orange"
+        class="relative-position float-right q-mr-md"
+        @click="dlgVisible = !dlgVisible"
+        >说明</q-btn
+    >
     <div>
         <div v-if="props.viewConfig.showCNVcircos">
             <div class="row">
-                <div :id="pieDivId" class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
-                    style="min-width: 600px;max-width:1000px; height: 600px"></div>
+                <div
+                    :id="pieDivId"
+                    class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
+                    style="min-width: 600px;max-width:1000px; height: 600px"
+                ></div>
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 column justify-center">
                     <div class="q-gutter-sm q-pb-sm">
                         <div>
-                            <q-input v-model="pieParams.extra" class="col-1" label="拷贝数扩增阈值" label-color="primary"
-                                stack-label :disable="viewConfig.showStick && viewConfig.stickDone" />
+                            <q-input
+                                v-model="pieParams.extra"
+                                class="col-1"
+                                label="拷贝数扩增阈值"
+                                label-color="primary"
+                                stack-label
+                                :disable="viewConfig.showStick && viewConfig.stickDone"
+                            />
                         </div>
 
                         <div>
-                            <q-input v-model="pieParams.missing" class="col-1" label="拷贝数缺失阈值" label-color="primary"
-                                stack-label :disable="viewConfig.showStick && viewConfig.stickDone" />
+                            <q-input
+                                v-model="pieParams.missing"
+                                class="col-1"
+                                label="拷贝数缺失阈值"
+                                label-color="primary"
+                                stack-label
+                                :disable="viewConfig.showStick && viewConfig.stickDone"
+                            />
                         </div>
                         <div class="q-gutter-xs">
-                            <q-btn class="col" color="primary" size="small" label="确定" @click="refreshPie"
-                                :disable="viewConfig.showStick && viewConfig.stickDone" />
-                            <q-btn class="col" color="primary" size="small" label="复位" @click="resetPie"
-                                :disable="viewConfig.showStick && viewConfig.stickDone" />
-                            <q-btn v-if="amISuper()" class="col" color="primary" size="small"
-                                :label="showPieTable ? '隐藏详情' : '显示详情'" @click="showPieTable = !showPieTable"
-                                :disable="viewConfig.showStick && viewConfig.stickDone" />
+                            <q-btn
+                                class="col"
+                                color="primary"
+                                size="small"
+                                label="确定"
+                                @click="refreshPie"
+                                :disable="viewConfig.showStick && viewConfig.stickDone"
+                            />
+                            <q-btn
+                                class="col"
+                                color="primary"
+                                size="small"
+                                label="复位"
+                                @click="resetPie"
+                                :disable="viewConfig.showStick && viewConfig.stickDone"
+                            />
+                            <q-btn
+                                v-if="amISuper()"
+                                class="col"
+                                color="primary"
+                                size="small"
+                                :label="showPieTable ? '隐藏详情' : '显示详情'"
+                                @click="showPieTable = !showPieTable"
+                                :disable="viewConfig.showStick && viewConfig.stickDone"
+                            />
                         </div>
                     </div>
                 </div>
@@ -37,41 +92,112 @@
         </div>
 
         <div v-if="showPieTable">
-            <a-table class="col-5" size="middle" rowKey="lineNumber" bordered :data-source="variantRows"
-                :columns="variantColumns" @change="handleChange" :sticky="true"></a-table>
+            <a-table
+                class="col-5"
+                size="middle"
+                rowKey="lineNumber"
+                bordered
+                :data-source="variantRows"
+                :columns="variantColumns"
+                @change="handleChange"
+                :sticky="true"
+            ></a-table>
         </div>
 
         <div v-if="props.viewConfig.showCNVtable">
             <q-separator class="q-my-lg" size="2px" color="primary" />
             <div class="row q-gutter-sm items-start q-py-md">
-                <q-input v-model="searchParams.gene" stack-label label-color="primary" label="搜索基因:" clearable dense
-                    style="width:150px" :disable="viewConfig.showStick && viewConfig.stickDone" />
-                <q-select v-model="searchParams.type" clearable stack-label label-color="primary"
-                    :options="['DUP', 'DEL']" label="拷贝数变异分类" style="width:150px" dense
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
-                <q-select v-model="searchParams.drug" clearable stack-label label-color="primary"
-                    :options="['All', 'Yes', 'No',]" label="药物靶点" style="width:150px" dense
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
-                <q-select v-model="searchParams.drugLevel"
+                <q-input
+                    v-model="searchParams.gene"
+                    stack-label
+                    label-color="primary"
+                    label="搜索基因:"
+                    clearable
+                    dense
+                    style="width:150px"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
+                <q-select
+                    v-model="searchParams.type"
+                    clearable
+                    stack-label
+                    label-color="primary"
+                    :options="['DUP', 'DEL']"
+                    label="拷贝数变异分类"
+                    style="width:150px"
+                    dense
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
+                <q-select
+                    v-model="searchParams.drug"
+                    clearable
+                    stack-label
+                    label-color="primary"
+                    :options="['All', 'Yes', 'No',]"
+                    label="药物靶点"
+                    style="width:150px"
+                    dense
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
+                <q-select
+                    v-model="searchParams.drugLevel"
                     :disable="searchParams.drug !== 'Yes' && viewConfig.showStick && viewConfig.stickDone"
-                    stack-label label-color="primary" clearable label="用药等级" multiple
+                    stack-label
+                    label-color="primary"
+                    clearable
+                    label="用药等级"
+                    multiple
                     :options="['1', '2', '3', '4', 'R1', 'R2', 'Dx1', 'Dx2', 'Dx3', 'Px1', 'Px2', 'Px3']"
-                    style="width:150px" dense />
-                <q-btn color="primary" label="确定" icon="search" @click="clickSearch()"
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
-                <q-btn color="grey" label="清除" icon="delete" @click="clickClear()"
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                    style="width:150px"
+                    dense
+                />
+                <q-btn
+                    color="primary"
+                    label="确定"
+                    icon="search"
+                    @click="clickSearch()"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
+                <q-btn
+                    color="grey"
+                    label="清除"
+                    icon="delete"
+                    @click="clickClear()"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
+                <q-btn
+                    :href="tableFileUrl"
+                    label="下载"
+                    icon="south"
+                    color="primary"
+                    target="_blank"
+                    class="q-ml-sm"
+                    :download="tableFileName"
+                />
             </div>
         </div>
 
         <div style="position:relative">
-            <q-icon color="accent" name="question_mark" size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px">
+            <q-icon
+                color="accent"
+                name="question_mark"
+                size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px"
+            >
                 <q-tooltip>仅全选本页筛选结果</q-tooltip>
             </q-icon>
-            <a-table style="z-index:1" class="col-5" size="middle" rowKey="lineNumber" bordered :loading="loading"
-                :data-source="filteredRows" :columns="columns" :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"></a-table>
+            <a-table
+                style="z-index:1"
+                class="col-5"
+                size="middle"
+                rowKey="lineNumber"
+                bordered
+                :loading="loading"
+                :data-source="filteredRows"
+                :columns="columns"
+                :sticky="true"
+                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"
+            ></a-table>
         </div>
     </div>
 
@@ -198,6 +324,8 @@ const searchParams = ref({
 const variants = ref([])
 const chrs = ref([])
 const showPieTable = ref(false)
+const tableFileUrl = ref('')
+const tableFileName = ref('')
 
 const resetPie = () => {
     pieParams.value = {
@@ -278,7 +406,8 @@ const refreshPie = () => {
 }
 
 onMounted(() => {
-
+    tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter.txt`
+    tableFileName.value = `AnnotSV.tsv.filter.txt`
     readTaskFile(route.params.id, 'CNV/AnnotSV.tsv.filter.txt').then((res) => {
         const columnFields = columns.map((t) => t.dataIndex)
         const results = getCsvDataAndSetLineNumber(res, { fields: columnFields })
