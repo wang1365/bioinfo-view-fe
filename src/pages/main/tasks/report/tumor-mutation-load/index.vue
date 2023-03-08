@@ -1,11 +1,33 @@
 <template>
-    <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-        class="relative-position float-right q-mr-md" label="已固定过滤" @click="reset()" />
-    <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-        color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()" label="固定过滤" />
+    <q-btn
+        v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        label="已固定过滤"
+        @click="reset()"
+    />
+    <q-btn
+        v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+        icon="bookmarks"
+        size="small"
+        outline
+        color="primary"
+        class="relative-position float-right q-mr-md"
+        @click="stickFilter()"
+        label="固定过滤"
+    />
 
-    <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
-        @click="dlgVisible = !dlgVisible">说明</q-btn>
+    <q-btn
+        icon="help_outline"
+        size="small"
+        outline
+        color="orange"
+        class="relative-position float-right q-mr-md"
+        @click="dlgVisible = !dlgVisible"
+        >说明</q-btn
+    >
 
     <div class="row justify-between">
         <div class="col-3 column q-gutter-xs">
@@ -13,49 +35,124 @@
                 <q-input model-value="PASS" label="VCF Filter" clearable readonly stack-label label-color="primary" />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.tumorDepth" label="肿瘤深度 >=" clearable type="number" stack-label
-                    label-color="primary" :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-input
+                    v-model="searchParams.tumorDepth"
+                    label="肿瘤深度 >="
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.compareDepth" label="对照深度 >=" clearable type="number" stack-label
-                    label-color="primary" :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-input
+                    v-model="searchParams.compareDepth"
+                    label="对照深度 >="
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.tumorRatio" label="肿瘤频率 >=" clearable type="number" stack-label
-                    label-color="primary" :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-input
+                    v-model="searchParams.tumorRatio"
+                    label="肿瘤频率 >="
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.compareRatio" label="对照频率 >=" clearable type="number" stack-label
-                    label-color="primary" :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-input
+                    v-model="searchParams.compareRatio"
+                    label="对照频率 >="
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.mutationRatio" label="肿瘤突变频数 >=" clearable type="number" stack-label
-                    label-color="primary" :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-input
+                    v-model="searchParams.mutationRatio"
+                    label="肿瘤突变频数 <="
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-input v-model="searchParams.humanRatio" label="人群频率 <=" clearable type="number" stack-label
-                    label-color="primary" :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-input
+                    v-model="searchParams.humanRatio"
+                    label="人群频率 <="
+                    clearable
+                    type="number"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-select v-model="searchParams.mutationType" clearable hide-dropdown-icon
-                    :options="[`All`, `SNP`, `INDEL`]" label="突变类型" stack-label label-color="primary"
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-select
+                    v-model="searchParams.mutationType"
+                    clearable
+                    hide-dropdown-icon
+                    :options="[`All`, `SNP`, `INDEL`]"
+                    label="突变类型"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-select v-model="searchParams.mutationPosition" clearable multiple hide-dropdown-icon
-                    :options="mutationPositionOptions" label="突变位置" stack-label label-color="primary"
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-select
+                    v-model="searchParams.mutationPosition"
+                    clearable
+                    multiple
+                    hide-dropdown-icon
+                    :options="mutationPositionOptions"
+                    label="突变位置"
+                    stack-label
+                    label-color="primary"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="col">
-                <q-select clearable v-model="searchParams.mutationMeaning" dense hide-dropdown-icon stack-label
-                    label-color="primary" :options="[`All`, `No synonymous SNV`]" label="突变意义"
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-select
+                    clearable
+                    v-model="searchParams.mutationMeaning"
+                    dense
+                    hide-dropdown-icon
+                    stack-label
+                    label-color="primary"
+                    :options="[`All`, `No synonymous SNV`]"
+                    label="突变意义"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
             <div class="q-gutter-md text-center q-py-sm">
-                <q-btn color="primary" label="确定" icon="search" @click="search()"
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
-                <q-btn color="primary" label="复位" icon="settings_backup_restore" @click="clickReset"
-                    :disable="viewConfig.showStick && viewConfig.stickDone" />
+                <q-btn
+                    color="primary"
+                    label="确定"
+                    icon="search"
+                    @click="search()"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
+                <q-btn
+                    color="primary"
+                    label="复位"
+                    icon="settings_backup_restore"
+                    @click="clickReset"
+                    :disable="viewConfig.showStick && viewConfig.stickDone"
+                />
             </div>
         </div>
 
@@ -301,7 +398,7 @@ const search = () => {
         param = searchParams.value.compareRatio
         if (param) {
             const columnValue = tumorColumns.value.includes(8) ? line[12] : line[8]
-            if (!(Number(columnValue) >= param)) {
+            if (!(Number(columnValue) <= param)) {
                 return false
             }
         }
