@@ -119,7 +119,7 @@
                         <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
                     </div>
 
-                    <div class="q-gutter-xs text-center q-py-sm">
+                    <div class="q-gutter-xs text-center q-py-sm justify-between">
                         <q-btn
                             color="primary"
                             label="确定"
@@ -144,6 +144,7 @@
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
+                        <q-btn :href="tableFile" label="下载" icon="south" color="primary" size="md" />
                     </div>
                 </div>
             </template>
@@ -276,6 +277,7 @@ import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
+import { getDualIdentifiers } from "src/utils/samples"
 const splitterModel = ref(250)
 const emit = defineEmits(['filterChange'])
 const props = defineProps({
@@ -706,6 +708,11 @@ watch(rows, (rows) => {
     loadTable()
 })
 
+const tableFile = computed(() => {
+    const ret = getDualIdentifiers(props.samples)
+    return `igv${props.task.result_dir}/Mut_germline/${ret.qt}.combined.standard-new.csv`
+})
+
 onMounted(() => {
     loadTable()
 })
@@ -758,6 +765,8 @@ const getCheckboxProps = (record) => {
 onUnmounted(() => {
     filterChange()
 })
+
+
 const getChangedData = () => {
     let filtered = true
     if (filteredRows.value.length === rows.value.length) {

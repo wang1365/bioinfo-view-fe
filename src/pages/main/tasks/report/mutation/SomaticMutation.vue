@@ -140,7 +140,7 @@
                         <div class="text-primary text-bold">{{`结果： ${filteredRows.length}条`}}</div>
                     </div>
 
-                    <div class="q-gutter-md text-center q-py-xs">
+                    <div class="q-gutter-md text-center q-py-xs justify-between">
                         <q-btn
                             color="primary"
                             label="确定"
@@ -163,6 +163,7 @@
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
+                        <q-btn :href="tableFile" label="下载" icon="south" color="primary" size="md" />
                     </div>
                 </div>
             </template>
@@ -321,6 +322,7 @@ import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { filterOption } from 'ant-design-vue/lib/vc-mentions/src/util'
 import Igv from './Igv'
+import {getDualIdentifiers} from "src/utils/samples"
 
 const splitterModel = ref(250)
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
@@ -528,6 +530,10 @@ const fixedColumns = [
 
 const selectedExpandColIdx = ref([])
 
+const tableFile = computed(() => {
+    const ret = getDualIdentifiers(props.samples)
+    return `igv${props.task.result_dir}/Mut_somatic/${ret.qn}_${ret.qt}.combined.standard-new.csv`
+})
 
 // 固定显示列的列号
 const fixedIdx = fixedColumns.map(t => t.i)
