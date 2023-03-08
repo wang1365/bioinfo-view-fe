@@ -306,8 +306,8 @@ const dlgVisible = ref(false)
 const pie = ref(null)
 const pieDivId = ref(uid())
 const pieParams = ref({
-    extra: 2.25,
-    missing: 1.75,
+    extra: 3.6,
+    missing: 1.2,
 })
 
 const rows = ref([])
