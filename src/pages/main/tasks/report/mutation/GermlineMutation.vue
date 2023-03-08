@@ -144,7 +144,7 @@
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn :href="tableFile" label="下载" icon="south" color="primary" size="md" />
+                        <q-btn :href="tableFile" label="下载" icon="south" color="primary" target="_blank" size="md" />
                     </div>
                 </div>
             </template>
