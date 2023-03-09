@@ -1,5 +1,5 @@
 <template>
-    <q-page padding class="full-height overflow-hidden">
+    <q-page padding class="">
         <PageTitle title="用户管理" />
         <div class="row justify-end q-gutter-md items-center q-py-xs">
             <div class="col-4">
@@ -26,7 +26,15 @@
                 ></q-btn>
             </div>
             <div class="col-1">
-                <q-btn v-if="amISuper()" class="on-plus" size="md" color="primary" icon="add" label="新建" @click="clickCreate"/>
+                <q-btn
+                    v-if="amISuper()"
+                    class="on-plus"
+                    size="md"
+                    color="primary"
+                    icon="add"
+                    label="新建"
+                    @click="clickCreate"
+                />
             </div>
         </div>
         <q-separator />
@@ -72,15 +80,21 @@
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props">
                     <div class="q-pa-md q-gutter-sm">
-                        <q-btn v-if="allowReset(props.row)" size="xs" color="primary" label="设置" @click="clickEdit(props.row)"></q-btn>
-<!--                        <q-btn-->
-<!--                            v-if="isNormal(props.row)"-->
-<!--                            size="xs"-->
-<!--                            outline-->
-<!--                            color="primary"-->
-<!--                            label="流程授权"-->
-<!--                            @click="clickFlowAuth(props.row)"-->
-<!--                        ></q-btn>-->
+                        <q-btn
+                            v-if="allowReset(props.row)"
+                            size="xs"
+                            color="primary"
+                            label="设置"
+                            @click="clickEdit(props.row)"
+                        ></q-btn>
+                        <!--                        <q-btn-->
+                        <!--                            v-if="isNormal(props.row)"-->
+                        <!--                            size="xs"-->
+                        <!--                            outline-->
+                        <!--                            color="primary"-->
+                        <!--                            label="流程授权"-->
+                        <!--                            @click="clickFlowAuth(props.row)"-->
+                        <!--                        ></q-btn>-->
                         <q-btn
                             v-if="allowReset(props.row)"
                             size="xs"

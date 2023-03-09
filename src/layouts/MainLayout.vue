@@ -84,6 +84,7 @@
             show-if-above
             style="background-image: url('images/lake.jpg') !important"
             elevated
+            width="200"
         >
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
@@ -115,7 +116,9 @@
         </q-drawer>
 
         <q-page-container>
-            <router-view />
+            <div style="height:calc(100vh - 50px);overflow-y: scroll;">
+                <router-view />
+            </div>
         </q-page-container>
     </q-layout>
 </template>
