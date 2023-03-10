@@ -329,8 +329,8 @@ const tableFileName = ref('')
 
 const resetPie = () => {
     pieParams.value = {
-        extra: 2.25,
-        missing: 1.75,
+        extra: 3.6,
+        missing: 1.2,
     }
     refreshPie()
 }
