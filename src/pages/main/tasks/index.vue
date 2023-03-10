@@ -4,9 +4,9 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div
                 style="height: 110px;display: flex; padding-bottom: 15px; padding-top: 15px;
-                                                                                                               justify-content: space-around;
-                                                                                                               justify-items: center;
-                                                                                                               align-items: center; ">
+                                                                                                                                                       justify-content: space-around;
+                                                                                                                                                       justify-items: center;
+                                                                                                                                                       align-items: center; ">
                 <q-btn color="white" @click="clickCard(options[0])">
                     <div class="text-black" style="width: 7vw">
                         <div class="text-h5 text-center text-bold">{{ total_task_count }}</div>
@@ -110,10 +110,10 @@
                             }}/</span>
                             <span class="text-secondary"> {{ item.project.name }} </span>
                         </td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
-                        <td>...</td>
+                        <td>{{ readPatient(item) }}</td>
+                        <td>{{ readSampleId(item) }}</td>
+                        <td>{{ readDataId(item) }}</td>
+                        <td>{{ readLibraryNumber(item) }}</td>
                         <td>{{ item.flow.name }}</td>
 
                         <td>
@@ -181,9 +181,9 @@
                     </div>
                 </div>
                 <pre>
-                                                                                                                                                                                                {{ currentTaskError || "无"
-                                                                                                                                                                                                }}
-                                                                                                                                                                                            </pre>
+                                                                                                                                                                                                                                        {{ currentTaskError || "无"
+                                                                                                                                                                                                                                        }}
+                                                                                                                                                                                                                                    </pre>
             </q-card>
         </q-dialog>
     </q-page>
@@ -312,6 +312,18 @@ onUnmounted(() => {
     }
 })
 
+const readPatient = (item) => {
+    return '...'
+}
+const readSampleId = (item) => {
+    return '...'
+}
+const readDataId = (item) => {
+    return '...'
+}
+const readLibraryNumber = (item) => {
+    return '...'
+}
 const reset = () => {
     projectName.value = ''
     projectId.value = ''
