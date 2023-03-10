@@ -2,10 +2,11 @@
     <q-page padding style="overflow-x: hidden">
         <PageTitle title="任务管理" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div style="height: 110px;display: flex; padding-bottom: 15px; padding-top: 15px;
-                           justify-content: space-around;
-                           justify-items: center;
-                           align-items: center; ">
+            <div
+                style="height: 110px;display: flex; padding-bottom: 15px; padding-top: 15px;
+                                                                                                               justify-content: space-around;
+                                                                                                               justify-items: center;
+                                                                                                               align-items: center; ">
                 <q-btn color="white" @click="clickCard(options[0])">
                     <div class="text-black" style="width: 7vw">
                         <div class="text-h5 text-center text-bold">{{ total_task_count }}</div>
@@ -52,20 +53,17 @@
                 <q-select style="width:200px" v-model="status" :options="options" stack-label clearable filled
                     @clear="clearSelect()" :display-value="`状态: ${status.label}`" dense
                     @update:model-value="refreshPage()"></q-select>
+
+                <q-input style="width:150px" filled dense clearable v-model="patient" label="患者姓名" />
+                <q-input style="width:150px" filled dense clearable v-model="libraryNumber" label="文库编号" />
                 <q-input style="width:300px" readonly filled dense @click="showProjectSelect = true"
                     :model-value="'所属项目: ' + projectName">
                     <template v-slot:prepend>
                         <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                     </template>
-                    <template v-slot:append>
-                        <q-icon class="cursor-pointer" name="backspace"
-                            @click="
-                                projectName = '';
-                            projectId = '';
-                            refreshPage();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        " />
-                    </template>
                 </q-input>
+                <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+                <q-btn color="primary" label="重置" icon="clear" @click="reset()" />
                 <!-- <q-btn color="primary" v-if="!autoLoad" @click="autoLoadPage()">自动刷新</q-btn> -->
                 <!-- <q-btn color="red" v-if="autoLoad" @click="closeAutoLoadPage">停止自动刷新</q-btn> -->
             </div>
@@ -183,9 +181,9 @@
                     </div>
                 </div>
                 <pre>
-                                                                                                            {{ currentTaskError || "无"
-                                                                                                            }}
-                                                                                                        </pre>
+                                                                                                                                                                                                {{ currentTaskError || "无"
+                                                                                                                                                                                                }}
+                                                                                                                                                                                            </pre>
             </q-card>
         </q-dialog>
     </q-page>
@@ -221,6 +219,8 @@ const showProjectSelect = ref(false)
 const showError = ref(false)
 const projectId = ref(0)
 const projectName = ref('')
+const patient = ref('')
+const libraryNumber = ref('')
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
@@ -311,6 +311,15 @@ onUnmounted(() => {
         clearInterval(intId.value)
     }
 })
+
+const reset = () => {
+    projectName.value = ''
+    projectId.value = ''
+    patient.value = ''
+    libraryNumber.value = ''
+    status.value = { label: '全部', value: 'ALL' }
+    refreshPage()
+}
 const autoLoadPage = () => {
     if (intId.value) {
         clearInterval(intId.value)
@@ -343,7 +352,9 @@ const backupSearch = () => {
         size: pageSize.value,
         status: status.value,
         projectId: projectId.value,
-        projectName: projectName.value
+        projectName: projectName.value,
+        patient: patient.value,
+        libraryNumber: libraryNumber.value
     }
     sessionStorage.setItem('task-search', JSON.stringify(data))
 }
@@ -356,12 +367,16 @@ const loadBackup = () => {
         status.value = data.status
         projectId.value = data.projectId
         projectName.value = data.projectName
+        patient.value = data.patient
+        libraryNumber.value = data.libraryNumber
     }
 }
 const loadPage = async () => {
     let params = `?page=${currentPage.value}&size=${pageSize.value}`
     if (status.value.label !== '全部') params += `&status=${status.value.value}`
     if (projectId.value) params += `&project_id=${projectId.value}`
+    if (patient.value) params += `&patient=${patient.value}`
+    if (libraryNumber.value) params += `&libraryNumber=${libraryNumber.value}`
     backupSearch()
     apiGet(`/task${params}`, (res) => {
         total.value = res.data.total_count
