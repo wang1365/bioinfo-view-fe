@@ -160,12 +160,13 @@ onMounted(() => {
         if (props.samples.length > 1) {
             file = `MSI/${qn}_${qt}.msi`
             tableFileUrl1.value = `igv${props.task.result_dir}/${file}`
-            tableFileName1.value = `${file}.csv`
+            tableFileName1.value = `${qn}_${qt}.msi.csv`
             //'MSI/QN11_QT11.msi')
         } else {
             const qt = getSingleIdentifiers(props.samples)
             file = `MSI/${qt}.msi`
-
+            tableFileUrl1.value = `igv${props.task.result_dir}/${file}`
+            tableFileName1.value = `${qt}.msi.csv`
         }
 
         readTaskFile(route.params.id, file).then(res => {
