@@ -4,9 +4,9 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div
                 style="height: 110px;display: flex; padding-bottom: 15px; padding-top: 15px;
-                                                                                                                                                       justify-content: space-around;
-                                                                                                                                                       justify-items: center;
-                                                                                                                                                       align-items: center; ">
+                                                                                                                                                                       justify-content: space-around;
+                                                                                                                                                                       justify-items: center;
+                                                                                                                                                                       align-items: center; ">
                 <q-btn color="white" @click="clickCard(options[0])">
                     <div class="text-black" style="width: 7vw">
                         <div class="text-h5 text-center text-bold">{{ total_task_count }}</div>
@@ -181,9 +181,9 @@
                     </div>
                 </div>
                 <pre>
-                                                                                                                                                                                                                                        {{ currentTaskError || "无"
-                                                                                                                                                                                                                                        }}
-                                                                                                                                                                                                                                    </pre>
+                                                                                                                                                                                                                                                        {{ currentTaskError || "无"
+                                                                                                                                                                                                                                                        }}
+                                                                                                                                                                                                                                                    </pre>
             </q-card>
         </q-dialog>
     </q-page>
@@ -313,16 +313,49 @@ onUnmounted(() => {
 })
 
 const readPatient = (item) => {
-    return '...'
+    let data = new Set()
+    for (const sample of item.sample_data) {
+        data.add(sample.patient_name)
+    }
+    let result = ''
+    for (const sample of data) {
+        result += `${sample} , `
+    }
+    return result.replace(/, $/, '')
 }
 const readSampleId = (item) => {
-    return '...'
+    let data = new Set()
+    for (const sample of item.sample_data) {
+        data.add(sample.sample_id)
+    }
+    let result = ''
+    for (const sample of data) {
+        result += `${sample} , `
+    }
+    return result.replace(/, $/, '')
+
 }
 const readDataId = (item) => {
-    return '...'
+    let data = new Set()
+    for (const sample of item.sample_data) {
+        data.add(sample.sample_data_id)
+    }
+    let result = ''
+    for (const sample of data) {
+        result += `${sample} , `
+    }
+    return result.replace(/, $/, '')
 }
 const readLibraryNumber = (item) => {
-    return '...'
+    let data = new Set()
+    for (const sample of item.sample_data) {
+        data.add(sample.library_number)
+    }
+    let result = ''
+    for (const sample of data) {
+        result += `${sample} , `
+    }
+    return result.replace(/, $/, '')
 }
 const reset = () => {
     projectName.value = ''
@@ -338,7 +371,7 @@ const autoLoadPage = () => {
     }
     intId.value = setInterval(() => {
         loadPage()
-    }, 5000);
+    }, 60000);
     autoLoad.value = true
 }
 const closeAutoLoadPage = () => {
