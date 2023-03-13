@@ -711,7 +711,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.tumorRatio
         if (param) {
             const v = tumorColumnIdx.value.includes(9) ? line.col13 : line.col9
-            if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
+            if (!(useComparator(searchParams.tumorRatioCmp).compare(Number(v), param))) {
                 return false
             }
         }
