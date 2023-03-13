@@ -3,73 +3,182 @@
         <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
             <template v-slot:before>
                 <div class="column" style="width:90%">
-                    <q-input v-model="innerSearchParams.gene" label="基因" clearable stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
-                    <q-input v-model="innerSearchParams.tumorDepth" :label="'肿瘤深度 ' + innerSearchParams.tumorDepthCmp"
-                        clearable type="number" stack-label label-color="primary" class="col-6"
-                        :disable="showSticky && stickDone">
+                    <q-input
+                        v-model="innerSearchParams.gene"
+                        label="基因"
+                        clearable
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-input
+                        v-model="innerSearchParams.tumorDepth"
+                        :label="'肿瘤深度 ' + innerSearchParams.tumorDepthCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
                         <template v-slot:after>
                             <Cmp v-model="innerSearchParams.tumorDepthCmp" />
                         </template>
                     </q-input>
-                    <q-input v-model="innerSearchParams.compareDepth" :label="'对照深度 ' + innerSearchParams.compareDepthCmp"
-                        clearable type="number" stack-label label-color="black" class="col-6"
-                        :disable="showSticky && stickDone">
+                    <q-input
+                        v-model="innerSearchParams.compareDepth"
+                        :label="'对照深度 ' + innerSearchParams.compareDepthCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="black"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
                         <template v-slot:after>
                             <Cmp v-model="innerSearchParams.compareDepthCmp" />
                         </template>
                     </q-input>
-                    <q-input v-model="innerSearchParams.tumorRatio" :label="'肿瘤频率 ' + innerSearchParams.tumorRatioCmp"
-                        clearable type="number" stack-label label-color="primary" class="col-6"
-                        :disable="showSticky && stickDone">
+                    <q-input
+                        v-model="innerSearchParams.tumorRatio"
+                        :label="'肿瘤频率 ' + innerSearchParams.tumorRatioCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
                         <template v-slot:after>
                             <Cmp v-model="innerSearchParams.tumorRatioCmp" />
                         </template>
                     </q-input>
-                    <q-input v-model="innerSearchParams.compareRatio" :label="'对照频率 ' + innerSearchParams.compareRatioCmp"
-                        clearable type="number" stack-label label-color="black" class="col-6"
-                        :disable="showSticky && stickDone">
+                    <q-input
+                        v-model="innerSearchParams.compareRatio"
+                        :label="'对照频率 ' + innerSearchParams.compareRatioCmp"
+                        clearable
+                        type="number"
+                        stack-label
+                        label-color="black"
+                        class="col-6"
+                        :disable="showSticky && stickDone"
+                    >
                         <template v-slot:after>
                             <Cmp v-model="innerSearchParams.compareRatioCmp" />
                         </template>
                     </q-input>
 
-                    <q-select v-model="innerSearchParams.mutationType" clearable multiple hide-dropdown-icon
-                        :options="props.options.mutationType" label="突变类型" stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
+                    <q-select
+                        v-model="innerSearchParams.mutationType"
+                        clearable
+                        multiple
+                        hide-dropdown-icon
+                        :options="props.options.mutationType"
+                        label="突变类型"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
 
-                    <q-select v-model="innerSearchParams.mutationPosition" clearable multiple hide-dropdown-icon
-                        :options="props.options.mutationPosition" label="突变位置" stack-label label-color="primary"
-                        class="full-width" :disable="showSticky && stickDone" />
-                    <q-select clearable hide-dropdown-icon v-model="innerSearchParams.mutationMeaning" stack-label multiple
-                        label-color="primary" :options="props.options.mutationMeaning" label="突变意义" class="full-width"
-                        :disable="showSticky && stickDone" />
-                    <q-select clearable hide-dropdown-icon v-model="innerSearchParams.mutationRisk" stack-label multiple
-                        label-color="primary" :options="props.options.mutationRisk" label="突变危险" class="full-width"
-                        :disable="showSticky && stickDone" />
-                    <q-input v-model="innerSearchParams.humanRatio" :label="'人群频率 ' + innerSearchParams.humanRatioCmp"
-                        clearable hide-dropdown-icon type="number" stack-label label-color="primary" class="full-width"
-                        :disable="showSticky && stickDone">
+                    <q-select
+                        v-model="innerSearchParams.mutationPosition"
+                        clearable
+                        multiple
+                        hide-dropdown-icon
+                        :options="props.options.mutationPosition"
+                        label="突变位置"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-select
+                        clearable
+                        hide-dropdown-icon
+                        v-model="innerSearchParams.mutationMeaning"
+                        stack-label
+                        multiple
+                        label-color="primary"
+                        :options="props.options.mutationMeaning"
+                        label="突变意义"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-select
+                        clearable
+                        hide-dropdown-icon
+                        v-model="innerSearchParams.mutationRisk"
+                        stack-label
+                        multiple
+                        label-color="primary"
+                        :options="props.options.mutationRisk"
+                        label="突变危险"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-input
+                        v-model="innerSearchParams.humanRatio"
+                        :label="'人群频率 ' + innerSearchParams.humanRatioCmp"
+                        clearable
+                        hide-dropdown-icon
+                        type="number"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    >
                         <template v-slot:after>
                             <Cmp v-model="innerSearchParams.humanRatioCmp" />
                         </template>
                     </q-input>
-                    <q-select clearable multiple hide-dropdown-icon v-model="innerSearchParams.sift" stack-label
-                        label-color="primary" :options="['T', 'D', '.']" label="SIFT_pred" class="full-width"
-                        :disable="showSticky && stickDone" />
+                    <q-select
+                        clearable
+                        multiple
+                        hide-dropdown-icon
+                        v-model="innerSearchParams.sift"
+                        stack-label
+                        label-color="primary"
+                        :options="['T', 'D', '.']"
+                        label="SIFT_pred"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
                     <div class="row items-center">
-                        <q-checkbox left-label v-model="innerSearchParams.drug" label="是否关联药物" color="primary"
-                            :disable="showSticky && stickDone" />
+                        <q-checkbox
+                            left-label
+                            v-model="innerSearchParams.drug"
+                            label="是否关联药物"
+                            color="primary"
+                            :disable="showSticky && stickDone"
+                        />
                         <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
                     </div>
 
                     <div class="q-gutter-xs text-center justify-between">
-                        <q-btn color="primary" label="确定" icon="search" @click="search"
-                            :disable="showSticky && stickDone" />
-                        <q-btn color="primary" label="重置" icon="settings_backup_restore" @click="reset"
-                            :disable="showSticky && stickDone" />
-                        <q-btn color="primary" label="扩展列" size="md" icon="last_page" @click="showDrawer = !showDrawer"
-                            :disable="showSticky && stickDone" />
+                        <q-btn
+                            color="primary"
+                            label="确定"
+                            icon="search"
+                            @click="search"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-btn
+                            color="primary"
+                            label="重置"
+                            icon="settings_backup_restore"
+                            @click="reset"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-btn
+                            color="primary"
+                            label="扩展列"
+                            size="md"
+                            icon="last_page"
+                            @click="showDrawer = !showDrawer"
+                            :disable="showSticky && stickDone"
+                        />
                         <q-btn :href="tableFile" label="下载" icon="south" color="primary" target="_blank" size="md" />
                     </div>
                 </div>
@@ -99,18 +208,37 @@
                      </template>
                      </a-table> -->
                 <div style="position:relative">
-                    <q-icon color="accent" name="question_mark" size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px">
+                    <q-icon
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
                         <q-tooltip>仅全选本页筛选结果</q-tooltip>
                     </q-icon>
-                    <a-table style="z-index:1" size="small" bordered :loading="loading" :data-source="filteredRows"
-                        :columns="columns" :scroll="{ x: 2000, y: 600 }" :custom-row="customRow" :sticky="true"
+                    <a-table
+                        style="z-index:1"
+                        size="small"
+                        bordered
+                        :loading="loading"
+                        :data-source="filteredRows"
+                        :columns="columns"
+                        :scroll="{ x: 2000, y: 600 }"
+                        :custom-row="customRow"
+                        :sticky="true"
                         rowKey="lineNumber"
-                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }">
+                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }"
+                    >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.key === 'operation'">
-                                <q-btn label="详情" color="primary" size="xs" padding="xs" class="q-mr-xs"
-                                    @click="clickDetail(record)" />
+                                <q-btn
+                                    label="详情"
+                                    color="primary"
+                                    size="xs"
+                                    padding="xs"
+                                    class="q-mr-xs"
+                                    @click="clickDetail(record)"
+                                />
                                 <q-btn label="IGV" color="primary" size="xs" padding="xs" @click="clickIgv(record)" />
                             </template>
                             <template v-else>
@@ -132,8 +260,13 @@
                         <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
-                                <q-option-group :options="expandedColumns" type="checkbox" v-model="selectedExpandColIdx"
-                                    @change="atOptionGroupChange" @update:model-value="atOptionGroupChange" />
+                                <q-option-group
+                                    :options="expandedColumns"
+                                    type="checkbox"
+                                    v-model="selectedExpandColIdx"
+                                    @change="atOptionGroupChange"
+                                    @update:model-value="atOptionGroupChange"
+                                />
                             </q-scroll-area>
                             <q-separator />
                         </div>
@@ -588,7 +721,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.compareRatio
         if (param) {
             const v = tumorColumnIdx.value.includes(9) ? line.col9 : line.col13
-            if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
+            if (!(useComparator(searchParams.compareRatioCmp).compare(Number(v), param))) {
                 return false
             }
         }
