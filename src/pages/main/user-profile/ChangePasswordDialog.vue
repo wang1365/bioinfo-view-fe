@@ -4,7 +4,7 @@
             <q-card-section>
                 <div class="text-h6">修改密码</div>
             </q-card-section>
-            <q-form class="q-gutter-md" ref="passwordFormRef" @submit="onSubmit">
+            <q-form class="q-gutter-md" @submit="onSubmit">
                 <q-card-section class="q-pt-none">
                     <q-input
                         filled
@@ -75,15 +75,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
-import { useQuasar } from "quasar"
-import { useI18n } from "vue-i18n"
+import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { changePassword } from 'src/api/user'
 import { globalStore} from 'src/stores/global'
 
-const { t } = useI18n();
-const $q = useQuasar();
 const store = globalStore();
 const router = useRouter();
 const passwordDialog = ref(false);
@@ -93,16 +89,9 @@ const passwordForm = ref({
     new_password_2: "",
 })
 const isPwd = ref(true);
-const passwordFormRef = ref(null);
 
-const show = () => {
-    console.log('Password show-1')
-    passwordDialog.value = true;
-    console.log('Password show-2')
-}
-
-defineExpose({
-    show,
+onMounted(() => {
+    console.log('ChangePasswordDialog mounted')
 })
 
 const onSubmit = () => {
