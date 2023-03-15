@@ -83,7 +83,9 @@ const me = {
 
 const changePasswordDialog = ref(null);
 const showPasswordDialog = () => {
+    console.log('showPasswordDialog 1')
     changePasswordDialog.value.show();
+    console.log('showPasswordDialog 2')
 };
 const router = useRouter();
 

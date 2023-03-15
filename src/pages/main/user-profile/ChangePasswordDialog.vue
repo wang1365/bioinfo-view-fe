@@ -75,33 +75,36 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-import {useQuasar} from "quasar";
-import {useI18n} from "vue-i18n";
-import {useRouter} from "vue-router";
-import {changePassword} from 'src/api/user'
-import {globalStore} from 'src/stores/global'
+import { ref } from "vue"
+import { useQuasar } from "quasar"
+import { useI18n } from "vue-i18n"
+import { useRouter } from "vue-router"
+import { changePassword } from 'src/api/user'
+import { globalStore} from 'src/stores/global'
 
+const { t } = useI18n();
 const $q = useQuasar();
 const store = globalStore();
-const {t} = useI18n();
 const router = useRouter();
 const passwordDialog = ref(false);
 const passwordForm = ref({
     old_password: "",
     new_password_1: "",
     new_password_2: "",
-});
+})
 const isPwd = ref(true);
-const changePasswordUrl = "user/change-password";
+const passwordFormRef = ref(null);
 
 const show = () => {
+    console.log('Password show-1')
     passwordDialog.value = true;
-};
+    console.log('Password show-2')
+}
+
 defineExpose({
     show,
-});
-const passwordFormRef = ref(null);
+})
+
 const onSubmit = () => {
     changePassword(store.currentUser.id, passwordForm.value.old_password, passwordForm.value.new_password_1).then((res) => {
         passwordDialog.value = false
@@ -110,8 +113,6 @@ const onSubmit = () => {
                 message:'修改密码成功'
             })
         }
-
-        // TODO 登出
     })
     // const success = await passwordFormRef.value.validate()
     // if (success) {
