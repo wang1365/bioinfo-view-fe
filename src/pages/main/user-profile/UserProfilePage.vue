@@ -56,7 +56,7 @@
                     text-color="white"
                     size="1rem"
                     label="修改密码"
-                    @click="passwordDialogVisible = !passwordDialogVisible"
+                    @click="showPasswordDialog()"
                 ></q-btn>
                 <q-btn icon="logout" color="red-10" text-color="white" size="1rem" label="退出" @click="logout"></q-btn>
             </q-card-actions>
@@ -83,6 +83,11 @@ const me = {
 
 const passwordDialogVisible = ref(false)
 
+const showPasswordDialog = () => {
+    console.log('showPasswordDialog 1')
+    passwordDialogVisible.value = true
+    console.log('showPasswordDialog 2')
+}
 
 const logout = () => {
     store.$reset()
