@@ -67,7 +67,7 @@
                 <q-card-actions align="right" class="text-primary">
                     <q-btn label="取消" v-close-popup />
                     <!--                    <q-btn flat label="确认" @click="handleChangePassword"/>-->
-                    <q-btn label="确认" color="primary" type="submit" />
+                    <q-btn label="确认" color="primary" type="submit" v-close-popup/>
                 </q-card-actions>
             </q-form>
         </q-card>

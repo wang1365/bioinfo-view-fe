@@ -56,11 +56,11 @@
                     text-color="white"
                     size="1rem"
                     label="修改密码"
-                    @click="showPasswordDialog()"
+                    @click="passwordDialogVisible = !passwordDialogVisible"
                 ></q-btn>
                 <q-btn icon="logout" color="red-10" text-color="white" size="1rem" label="退出" @click="logout"></q-btn>
             </q-card-actions>
-            <ChangePasswordDialog ref="changePasswordDialog" />
+            <ChangePasswordDialog ref="changePasswordDialog" v-model="passwordDialogVisible"/>
         </q-card>
     </q-page>
 </template>
@@ -69,7 +69,7 @@
 import PageTitle from "components/page-title/PageTitle.vue";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter } from "vue-router"
 import { globalStore } from "src/stores/global";
 
 const store = globalStore();
@@ -81,13 +81,8 @@ const me = {
     email: store.currentUser.email
 };
 
-const changePasswordDialog = ref(null);
-const showPasswordDialog = () => {
-    console.log('showPasswordDialog 1')
-    changePasswordDialog.value.show();
-    console.log('showPasswordDialog 2')
-};
-const router = useRouter();
+const passwordDialogVisible = ref(false)
+
 
 const logout = () => {
     store.$reset()
