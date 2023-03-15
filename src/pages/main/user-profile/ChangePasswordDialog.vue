@@ -79,7 +79,7 @@ import {ref} from "vue";
 import {useQuasar} from "quasar";
 import {useI18n} from "vue-i18n";
 import {useRouter} from "vue-router";
-import {resetPassword} from 'src/api/user'
+import {changePassword} from 'src/api/user'
 import {globalStore} from 'src/stores/global'
 
 const $q = useQuasar();
@@ -103,7 +103,7 @@ defineExpose({
 });
 const passwordFormRef = ref(null);
 const onSubmit = () => {
-    resetPassword(store.currentUser.id, passwordForm.value.new_password_1).then(() => {
+    changePassword(store.currentUser.id, passwordForm.value.old_password, passwordForm.value.new_password_1).then(() => {
         passwordDialog.value = false
         $q.notify({
             message:'修改密码成功'

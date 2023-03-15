@@ -82,8 +82,16 @@ export function patchUser(userId, data) {
 
 export function resetPassword(userId, password) {
     return api({
+        url: `account/${userId}/reset_password`,
+        method: 'put',
+        data: { password },
+    })
+}
+
+export function changePassword(userId, old_password, new_password) {
+    return api({
         url: `account/${userId}/change_password`,
         method: 'patch',
-        data: { password },
+        data: { old_password, new_password },
     })
 }
