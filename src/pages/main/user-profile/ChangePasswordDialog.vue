@@ -103,11 +103,13 @@ defineExpose({
 });
 const passwordFormRef = ref(null);
 const onSubmit = () => {
-    changePassword(store.currentUser.id, passwordForm.value.old_password, passwordForm.value.new_password_1).then(() => {
+    changePassword(store.currentUser.id, passwordForm.value.old_password, passwordForm.value.new_password_1).then((res) => {
         passwordDialog.value = false
-        $q.notify({
-            message:'修改密码成功'
-        })
+        if (res.length > 0) {
+            $q.notify({
+                message:'修改密码成功'
+            })
+        }
 
         // TODO 登出
     })
