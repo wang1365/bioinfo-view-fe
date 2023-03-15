@@ -5,7 +5,6 @@
             <q-card-section class="row items-center q-pb-none">
                 <div class="text-h6">用户中心</div>
                 <q-space />
-                <!--                <q-btn icon="close" flat round dense v-close-popup />-->
             </q-card-section>
             <q-card-section>
                 <div class="row q-pa-md items-center justify-around" style="max-width: 95vw">
@@ -47,13 +46,6 @@
                         </q-list>
 
                         <q-separator inset spaced />
-
-                        <!--                        <div class="row q-gutter-md">-->
-                        <!--                            <q-btn color="primary" :label="$t('Change') + ' ' + $t('Nickname')"-->
-                        <!--                                   @click="showNicknameDialog"></q-btn>-->
-                        <!--                            <q-btn color="primary" :label="$t('Change') + ' ' + $t('Password')"-->
-                        <!--                                   @click="showPasswordDialog"></q-btn>-->
-                        <!--                        </div>-->
                     </div>
                 </div>
             </q-card-section>
@@ -69,7 +61,6 @@
                 <q-btn icon="logout" color="red-10" text-color="white" size="1rem" label="退出" @click="logout"></q-btn>
             </q-card-actions>
             <ChangePasswordDialog ref="changePasswordDialog" />
-            <ChangeNicknameDialog ref="changeNicknameDialog" />
         </q-card>
     </q-page>
 </template>
@@ -94,7 +85,6 @@ const changePasswordDialog = ref(null);
 const showPasswordDialog = () => {
     changePasswordDialog.value.show();
 };
-const showProfile = ref(false);
 const router = useRouter();
 
 const logout = () => {
