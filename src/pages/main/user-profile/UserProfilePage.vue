@@ -56,7 +56,7 @@
                     text-color="white"
                     size="1rem"
                     label="修改密码"
-                    @click="showPasswordDialog"
+                    @click="showPasswordDialog()"
                 ></q-btn>
                 <q-btn icon="logout" color="red-10" text-color="white" size="1rem" label="退出" @click="logout"></q-btn>
             </q-card-actions>
