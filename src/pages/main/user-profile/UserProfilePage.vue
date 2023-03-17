@@ -60,7 +60,7 @@
                 ></q-btn>
                 <q-btn icon="logout" color="red-10" text-color="white" size="1rem" label="退出" @click="logout"></q-btn>
             </q-card-actions>
-            <ChangePasswordDialog ref="changePasswordDialog" v-model="passwordDialogVisible"/>
+            <ChangePasswordDialog ref="changePasswordDialog" v-model="passwordDialogVisible" />
         </q-card>
     </q-page>
 </template>
@@ -72,7 +72,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router"
 import { globalStore } from "src/stores/global";
 
-const store = globalStore();
+const router = useRouter()
+const store = globalStore()
 
 const me = {
     username: store.currentUser ? store.currentUser.username : "",
