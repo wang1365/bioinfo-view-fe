@@ -77,9 +77,11 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
+import { useQuasar } from 'quasar'
 import { changePassword } from 'src/api/user'
 import { globalStore} from 'src/stores/global'
 
+const $q = useQuasar()
 const store = globalStore();
 const router = useRouter();
 const passwordDialog = ref(false);
