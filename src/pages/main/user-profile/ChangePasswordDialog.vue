@@ -67,7 +67,7 @@
                 <q-card-actions align="right" class="text-primary">
                     <q-btn label="取消" v-close-popup />
                     <!--                    <q-btn flat label="确认" @click="handleChangePassword"/>-->
-                    <q-btn label="确认" color="primary" type="submit" v-close-popup/>
+                    <q-btn label="确认" color="primary" type="submit" v-close-popup />
                 </q-card-actions>
             </q-form>
         </q-card>
@@ -96,6 +96,7 @@ onMounted(() => {
 
 const onSubmit = () => {
     changePassword(store.currentUser.id, passwordForm.value.old_password, passwordForm.value.new_password_1).then((res) => {
+        console.log('Pwd changed', res)
         if (res.length > 0) {
             $q.notify({
                 message:'修改密码成功'
