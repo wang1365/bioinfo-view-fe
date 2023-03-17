@@ -96,12 +96,12 @@ onMounted(() => {
 
 const onSubmit = () => {
     changePassword(store.currentUser.id, passwordForm.value.old_password, passwordForm.value.new_password_1).then((res) => {
-        passwordDialog.value = false
         if (res.length > 0) {
             $q.notify({
                 message:'修改密码成功'
             })
         }
+        passwordDialog.value = false
     })
     // const success = await passwordFormRef.value.validate()
     // if (success) {
