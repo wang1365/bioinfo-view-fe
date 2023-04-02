@@ -66,7 +66,7 @@
                         <q-td v-if="!readonly" align="center">
                             <q-btn
                                 v-if="!readonly"
-                                label="删除"
+                                :label="$t('Delete')"
                                 size="xs"
                                 color="red"
                                 glossy
@@ -82,7 +82,7 @@
                         <q-input v-model="choice" label="值域" clearable :readonly="readonly" />
                     </q-card-section>
                     <q-card-actions align="center">
-                        <q-btn label="确定" size="sm" color="primary" @click="confirmAddChoice" />
+                        <q-btn :label="$t('Confirm')" size="sm" color="primary" @click="confirmAddChoice" />
                         <q-btn label="取消" size="sm" v-close-popup />
                     </q-card-actions>
                 </q-card>

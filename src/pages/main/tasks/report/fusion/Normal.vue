@@ -10,10 +10,10 @@
             style="width:300px"
             :disable="showSticky && stickDone"
         />
-        <q-btn size="small" color="primary" label="搜索" @click="searchKeyword" :disable="showSticky && stickDone" />
+        <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword" :disable="showSticky && stickDone" />
         <q-btn
             :href="props.url"
-            label="下载"
+            :label="$t('Download')"
             size="small"
             icon="south"
             color="primary"

@@ -62,8 +62,8 @@
                         <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                     </template>
                 </q-input>
-                <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
-                <q-btn color="primary" label="重置" icon="clear" @click="reset()" />
+                <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
                 <!-- <q-btn color="primary" v-if="!autoLoad" @click="autoLoadPage()">自动刷新</q-btn> -->
                 <!-- <q-btn color="red" v-if="autoLoad" @click="closeAutoLoadPage">停止自动刷新</q-btn> -->
             </div>
@@ -151,12 +151,12 @@
                                 @click="gotoReport(item)" size="sm" />
                             <q-btn :disable="item.status !== 'FINISHED'" color="positive" label="定制报告" icon="query_stats"
                                 @click="gotoDefineReport(item)" size="sm" />
-                            <q-btn :disable="item.status !== 'FINISHED'" color="primary" label="下载" icon="download"
+                            <q-btn :disable="item.status !== 'FINISHED'" color="primary" :label="$t('Download')" icon="download"
                                 @click="downlaod(item)" size="sm" />
                             <q-btn :disable="item.status !== 'FINISHED' || item.deleted_tempdir" color="red" label="删除中间文件"
                                 icon="delete" @click="deleteMiddleFiles(item)"
                                 size="sm"><q-tooltip>仅会删除任务产生的中间文件,释放空间,不会影响任务结果展示.</q-tooltip></q-btn>
-                            <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(item)" />
+                            <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
                     </tr>
                 </tbody>

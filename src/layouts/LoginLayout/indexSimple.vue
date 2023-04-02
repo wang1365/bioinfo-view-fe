@@ -8,7 +8,7 @@
             <span class="text-weight-bold text-h3 text-white">
                 {{ store.ui.title }}
             </span>
-            <span class="text-white text-subtitle1" style="margin-top: 20px"> 一站式解决基因文库分析结果. </span>
+            <span class="text-white text-subtitle1" style="margin-top: 20px"> {{$t('LoginSubtitle')}} </span>
             <span class="q-gutter-md">
                 <!-- <q-btn
                     push

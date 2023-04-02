@@ -1,4 +1,7 @@
 export default {
+    // 登录页面
+    LoginSubtitle: '一站式解决基因文库分析结果.',
+
     // Help
     InitDbHelp1: 'Make sure MySQL is installed and started',
     InitDbHelp2:
@@ -68,6 +71,7 @@ export default {
     Edit: 'Edit',
     Add: 'Add',
     Delete: 'Delete',
+    Download: 'Download',
     Save: 'Save',
     Cancel: 'Cancel',
     Select: 'Select',

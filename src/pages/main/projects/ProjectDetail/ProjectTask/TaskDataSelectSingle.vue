@@ -45,7 +45,7 @@
                         :options="['是','否']"
                         label="风险上机"
                     />
-                    <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+                    <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 </div>
             </template>
             <template v-slot:itemRow="{ row }">

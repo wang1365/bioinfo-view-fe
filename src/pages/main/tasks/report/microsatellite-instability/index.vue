@@ -12,7 +12,7 @@
         <span class="text-h6 text-primary text-bold q-mr-sm">总体微卫星状态表</span>
         <q-btn
             :href="tableFileUrl1"
-            label="下载"
+            :label="$t('Download')"
             icon="south"
             color="primary"
             target="_blank"
@@ -36,7 +36,7 @@
         <!-- TODO: 这里点击最后一列时,如果没有图片需要提 bed文件不包含金标微卫星位点 -->
         <q-btn
             :href="tableFileUrl2"
-            label="下载"
+            :label="$t('Download')"
             icon="south"
             color="primary"
             target="_blank"

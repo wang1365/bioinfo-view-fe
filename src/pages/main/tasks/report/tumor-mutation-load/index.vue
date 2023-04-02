@@ -153,7 +153,7 @@
             <div class="q-gutter-md text-center q-py-sm">
                 <q-btn
                     color="primary"
-                    label="确定"
+                    :label="$t('Confirm')"
                     icon="search"
                     @click="search()"
                     :disable="viewConfig.showStick && viewConfig.stickDone"

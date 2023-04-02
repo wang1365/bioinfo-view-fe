@@ -68,7 +68,7 @@
                                 <q-btn color="secondary" label="详情" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn
                                     color="red"
-                                    label="删除"
+                                    :label="$t('Delete')"
                                     icon="delete"
                                     @click="confirm(item)"
                                     size="sm"

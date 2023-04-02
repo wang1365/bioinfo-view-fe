@@ -64,7 +64,7 @@
                                 class="col"
                                 color="primary"
                                 size="small"
-                                label="确定"
+                                :label="$t('Confirm')"
                                 @click="refreshPie"
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
                             />
@@ -153,7 +153,7 @@
                 />
                 <q-btn
                     color="primary"
-                    label="确定"
+                    :label="$t('Confirm')"
                     icon="search"
                     @click="clickSearch()"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -167,7 +167,7 @@
                 />
                 <q-btn
                     :href="tableFileUrl"
-                    label="下载"
+                    :label="$t('Download')"
                     icon="south"
                     color="primary"
                     target="_blank"

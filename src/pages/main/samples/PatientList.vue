@@ -24,7 +24,7 @@
                     <q-input type="number" v-model="searchParams.age_start" dense label="年龄起始" clearable> </q-input>
                     <q-input type="number" v-model="searchParams.age_end" dense label="截止年龄" clearable> </q-input>
 
-                    <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+                    <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 </div>
             </template>
             <!-- <template v-slot:itemRow="{ row }">

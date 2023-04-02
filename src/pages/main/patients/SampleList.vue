@@ -32,7 +32,7 @@
                                 :options="['是', '否']"
                                 label="肿瘤样本"
                             />
-                            <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
+                            <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                         </div>
                     </q-section>
                 </q-card>

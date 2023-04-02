@@ -159,14 +159,14 @@
                     <div class="q-gutter-xs text-center justify-between">
                         <q-btn
                             color="primary"
-                            label="确定"
+                            :label="$t('Confirm')"
                             icon="search"
                             @click="search"
                             :disable="showSticky && stickDone"
                         />
                         <q-btn
                             color="primary"
-                            label="重置"
+                            :label="$t('Reset')"
                             icon="settings_backup_restore"
                             @click="reset"
                             :disable="showSticky && stickDone"
@@ -179,7 +179,7 @@
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn :href="tableFile" label="下载" icon="south" color="primary" target="_blank" size="md" />
+                        <q-btn :href="tableFile" :label="$t('Download')" icon="south" color="primary" target="_blank" size="md" />
                     </div>
                 </div>
             </template>

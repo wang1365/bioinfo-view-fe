@@ -30,10 +30,10 @@
                     <q-input v-model="table.keyword" class="q-mr-sm" dense label="搜索:" clearable
                         @clear="clearKeyword(table)" style="width:300px"
                         :disable="props.viewConfig.showStick && props.viewConfig.stickDone" />
-                    <q-btn size="small" color="primary" label="搜索" @click="searchKeyword(table)"
+                    <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword(table)"
                         :disable="props.viewConfig.showStick && props.viewConfig.stickDone"></q-btn>
                     <q-space />
-                    <q-btn :href="table.url" label="下载" icon="south" size="sm" flat />
+                    <q-btn :href="table.url" :label="$t('Download')" icon="south" size="sm" flat />
                 </q-toolbar>
                 <div style="position:relative">
                     <q-icon color="accent" name="question_mark" size="xs"

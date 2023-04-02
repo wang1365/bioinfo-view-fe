@@ -56,7 +56,7 @@
                 </template>
             </q-table>
             <q-card-actions align="right">
-                <q-btn color="primary" label="确定" @click="clickConfirm" />
+                <q-btn color="primary" :label="$t('Confirm')" @click="clickConfirm" />
                 <q-btn label="取消" v-close-popup />
             </q-card-actions>
         </q-card>

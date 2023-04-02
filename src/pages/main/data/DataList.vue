@@ -34,8 +34,8 @@
                     :options="['是', '否']"
                     label="风险上机"
                 />
-                <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
-                <q-btn color="primary" label="重置" icon="clear" @click="reset()" />
+                <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
             </div>
         </q-section>
         <q-section>
@@ -149,9 +149,9 @@
                                 <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-xs">
                                 <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
-                                <q-btn color="primary" label="编辑" icon="edit" @click="edit(item)" size="sm" />
+                                <q-btn color="primary" :label="$t('Edit')" icon="edit" @click="edit(item)" size="sm" />
                                 <q-btn color="secondary" label="关联样本" icon="link" @click="link(item)" size="sm" />
-                                <q-btn color="red" label="删除" icon="delete" @click="confirm(item)" size="sm" />
+                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)" size="sm" />
                             </td>
                         </tr>
                     </tbody>

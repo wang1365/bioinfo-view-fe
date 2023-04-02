@@ -13,7 +13,7 @@
                 </q-form>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn color="primary" label="确定" @click="clickSubmit" />
+                <q-btn color="primary" :label="$t('Confirm')" @click="clickSubmit" />
                 <q-btn label="取消" v-close-popup />
             </q-card-actions>
         </q-card>

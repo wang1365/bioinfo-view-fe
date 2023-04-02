@@ -77,7 +77,7 @@
                             <q-input type="textarea" v-model="inputForm.refText" readonly />
                         </q-card-section>
                         <q-card-actions align="right">
-                            <q-btn label="确定" color="primary" @click="addIgvFile" v-close-popup />
+                            <q-btn :label="$t('Confirm')" color="primary" @click="addIgvFile" v-close-popup />
                             <q-btn label="取消" v-close-popup />
                         </q-card-actions>
                     </q-card>

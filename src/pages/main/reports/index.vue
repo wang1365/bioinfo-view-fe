@@ -15,8 +15,8 @@
                     <q-input v-model="searchParams.patient_identifier" dense label="患者识别号" clearable></q-input>
                     <q-input v-model="searchParams.sample_meta_identifier" dense label="样本识别号" clearable></q-input>
                     <q-input v-model="searchParams.sample_identifier" dense label="数据识别号" clearable></q-input>
-                    <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
-                    <q-btn color="primary" label="重置" icon="close" @click="reset()" />
+                    <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                    <q-btn color="primary" :label="$t('Reset')" icon="close" @click="reset()" />
                 </div>
 
                 <q-table
@@ -35,7 +35,7 @@
                                 <q-btn color="primary" label="下载报告" size="sm" />
                             </a>
                             <a>
-                                <q-btn @click="onDelete(props.row)" color="red" label="删除" size="sm" />
+                                <q-btn @click="onDelete(props.row)" color="red" :label="$t('Delete')" size="sm" />
                             </a>
                         </q-td>
                     </template>

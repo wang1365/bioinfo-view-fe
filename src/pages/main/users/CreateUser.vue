@@ -69,7 +69,7 @@
                         />
                     </q-item>
                     <q-card-actions align="right">
-                        <q-btn label="确定" type="button" color="primary" @click="clickOk" />
+                        <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk" />
                         <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>

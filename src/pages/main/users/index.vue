@@ -21,7 +21,7 @@
                     size="md"
                     color="primary"
                     icon="search"
-                    label="搜索"
+                    :label="$t('Search')"
                     @click="refreshUsers"
                 ></q-btn>
             </div>
@@ -107,7 +107,7 @@
                             v-if="allowDelete(props.row)"
                             size="xs"
                             color="red"
-                            label="删除"
+                            :label="$t('Delete')"
                             @click="clickDelete(props.row)"
                         ></q-btn>
                     </div>

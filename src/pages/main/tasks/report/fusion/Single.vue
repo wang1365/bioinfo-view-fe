@@ -14,13 +14,13 @@
         <q-btn
             size="small"
             color="primary"
-            label="搜索"
+            :label="$t('Search')"
             @click="searchKeyword1"
             :disable="showSticky && stickDone"
         ></q-btn>
         <q-btn
             :href="props.qt.url"
-            label="下载"
+            :label="$t('Download')"
             size="small"
             icon="south"
             color="primary"
@@ -79,13 +79,13 @@
             <q-btn
                 size="small"
                 color="primary"
-                label="搜索"
+                :label="$t('Search')"
                 @click="searchKeyword2"
                 :disable="showSticky && stickDone"
             />
             <q-btn
                 :href="props.qn.url"
-                label="下载"
+                :label="$t('Download')"
                 size="small"
                 icon="south"
                 color="primary"

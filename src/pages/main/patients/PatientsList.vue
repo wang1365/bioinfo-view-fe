@@ -39,8 +39,8 @@
                     </template>
                 </q-input>
 
-                <q-btn color="primary" label="搜索" icon="search" @click="refreshPage()" />
-                <q-btn color="primary" label="重置" icon="clear" @click="reset()" />
+                <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
             </div>
         </q-section>
         <q-section>
@@ -103,7 +103,7 @@
                             <td>{{ patient.family_history }}</td>
                             <td>{{ patient.samplemeta_set.length }}</td>
                             <td class="q-gutter-xs">
-                                <q-btn color="primary" label="编辑" icon="edit" size="sm" @click="edit(patient)" />
+                                <q-btn color="primary" :label="$t('Edit')" icon="edit" size="sm" @click="edit(patient)" />
                                 <q-btn
                                     color="secondary"
                                     label="关联样本"
@@ -118,7 +118,7 @@
                                     @click="info(patient)"
                                     size="sm"
                                 />
-                                <q-btn color="red" label="删除" icon="delete" size="sm" @click="confirm(patient)" />
+                                <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(patient)" />
                             </td>
                         </tr>
                     </tbody>

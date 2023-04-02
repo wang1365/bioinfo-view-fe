@@ -185,7 +185,7 @@
             </template>
             <template v-slot:contentFooter>
                 <q-btn label="取消" v-close-popup />
-                <q-btn color="primary" label="确定" @click="confirmTaskCreated()" />
+                <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()" />
             </template>
         </PopupContentScroll>
         <q-dialog persistent v-model="openDataSelectorSingle">

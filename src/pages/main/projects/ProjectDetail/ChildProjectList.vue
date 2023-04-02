@@ -48,7 +48,7 @@
                                     "
                                     size="sm"
                                 />
-                                <q-btn color="red" label="删除" icon="delete" @click="confirm(item)" size="sm" />
+                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)" size="sm" />
                             </td>
                         </tr>
                     </tbody>
