@@ -9,7 +9,7 @@
             <div class="text-h5 text-center text-primary">
                 {{ "" }}
             </div>
-            <div class="text-h7 text-center text-primary q-mt-md q-mb-xs">欢迎回来</div>
+            <div class="text-h7 text-center text-primary q-mt-md q-mb-xs">{{$t('WelcomeBack')}}</div>
             <q-form @submit="onSubmit" class="q-mt-lg gqa-form">
                 <q-input
                     :disable="loading"
@@ -65,21 +65,29 @@
                         </q-btn>
                     </template>
                 </q-input> -->
-                <div class="column q-gutter-y-md q-mt-none">
+                <div class="row q-gutter-y-md q-mt-none">
                     <q-checkbox
                         :disable="loading"
                         v-model="rememberMe"
-                        label="记住我"
-                        dense
+                        :label="$t('RememberMe')"
+                        dense class="col"
                         @update:model-value="changeRememberMe"
                     />
+<!--                    <q-select dense v-model:model-value="lang" class="col-4" :options="langOptions" options-dense>-->
+<!--                        <template v-slot:before>-->
+<!--                            <q-btn flat dense color="primary" :label="lang === 'cn' ? '语言' : 'Language'"/>-->
+<!--                        </template>-->
+<!--                    </q-select>-->
+                    <div class="col-4">
+                        <SelectLanguage />
+                    </div>
                 </div>
                 <div class="items-center justify-around q-mt-md row">
-                    <q-btn label="登录" type="submit" color="primary" :loading="loading" style="width: 100%" />
+                    <q-btn :label="$t('Login')" type="submit" color="primary" :loading="loading" style="width: 100%" />
                 </div>
-                <div class="items-center justify-around q-mt-md row">
-                    <q-btn label="回到首页" type="button" color="default" :loading="loading" style="width: 100%" />
-                </div>
+<!--                <div class="items-center justify-around q-mt-md row">-->
+<!--                    <q-btn :label="$t('BackToHome')" type="button" color="default" :loading="loading" style="width: 100%" />-->
+<!--                </div>-->
             </q-form>
             <q-inner-loading :showing="loading" style="background-color: rgba(0, 0, 0, 0)">
                 <q-spinner-hourglass color="primary" size="3em" />
@@ -101,6 +109,7 @@ import { globalStore } from "src/stores/global";
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
 import { refreshSystemUi } from "src/api/ui";
+import SelectLanguage from 'src/components/SelectLanguage.vue'
 
 const $q = useQuasar();
 // const { t } = useI18n();
@@ -118,6 +127,13 @@ const route = useRoute();
 const rememberMe = ref(true);
 const captchaImage = ref("");
 const loading = ref(false);
+const langOptions = [
+    { label: 'English', value:'en' },
+    { label: '简体中文', value:'cn' },
+]
+const lang = ref('cn')
+
+
 const getCaptcha = () => {
     // postAction('public/get-captcha').then((res) => {
     //     captchaImage.value = res.data.captcha_image

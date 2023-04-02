@@ -11,6 +11,7 @@ export const globalStore = defineStore('global', {
             title: '纳昂达可视化解读系统',
             image: '~assets/nanodi.svg',
         },
+        lang: navigator.language || 'en-US'
     }),
     getters: {
         doubleCount: (state) => state.counter * 2,
