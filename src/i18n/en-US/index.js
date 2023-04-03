@@ -192,4 +192,6 @@ export default {
     PageError404Title: 'Oops. Nothing here...',
     PageError404Home: 'Take Me Home',
     DeptDataPermissionType: 'Department Data Permission Type',
+
+    ChangePassword: 'Change Password',
 }

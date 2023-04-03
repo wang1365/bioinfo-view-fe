@@ -1,9 +1,9 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="个人中心" />
+        <PageTitle :title="$t('UserProfile')" />
         <q-card class="column full-height full-width bg-white">
             <q-card-section class="row items-center q-pb-none">
-                <div class="text-h6">用户中心</div>
+                <div class="text-h6">{{$t('UserProfile')}}</div>
                 <q-space />
             </q-card-section>
             <q-card-section>
@@ -20,7 +20,7 @@
                                     <q-icon size="lg" name="star" class="text-warning" />
                                 </q-item-section>
                                 <q-item-section>{{
-                                        "账号: " + me.username
+                                        $t('Username') + ': ' + me.username
                                 }}</q-item-section>
                             </q-item>
                             <q-item clickable>
@@ -28,20 +28,20 @@
                                     <q-icon size="lg" name="person_add" class="text-warning" />
                                 </q-item-section>
                                 <q-item-section>{{
-                                        "姓名: " + me.nickname
+                                        $t('Nickname') + ': ' + me.nickname
                                 }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
                                     <q-icon size="lg" name="face" class="text-warning" />
                                 </q-item-section>
-                                <q-item-section>{{'角色: ' + getRole() }}</q-item-section>
+                                <q-item-section>{{$t('Role') + ': ' + getRole() }}</q-item-section>
                             </q-item>
                             <q-item clickable>
                                 <q-item-section avatar>
                                     <q-icon size="lg" name="email" class="text-warning" />
                                 </q-item-section>
-                                <q-item-section>{{'邮箱: ' + me.email }} </q-item-section>
+                                <q-item-section>{{$t('Email') + ': ' + me.email }} </q-item-section>
                             </q-item>
                         </q-list>
 
@@ -55,10 +55,10 @@
                     color="primary"
                     text-color="white"
                     size="1rem"
-                    label="修改密码"
+                    :label="$t('ChangePassword')"
                     @click="showPasswordDialog()"
                 ></q-btn>
-                <q-btn icon="logout" color="red-10" text-color="white" size="1rem" label="退出" @click="logout"></q-btn>
+                <q-btn icon="logout" color="red-10" text-color="white" size="1rem" :label="$t('Logout')" @click="logout"></q-btn>
             </q-card-actions>
             <ChangePasswordDialog ref="changePasswordDialog" v-model="passwordDialogVisible" />
         </q-card>

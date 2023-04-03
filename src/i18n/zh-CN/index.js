@@ -191,4 +191,6 @@ export default {
     PageError404Title: '你发现了一个没人来过的页面',
     PageError404Home: '带我回去',
     DeptDataPermissionType: '部门数据权限分类',
+
+    ChangePassword: 'Change Password',
 }
