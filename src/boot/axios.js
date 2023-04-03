@@ -2,6 +2,7 @@ import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 import { Notify } from 'quasar'
 import { Cookies } from 'quasar'
+import { globalStore } from 'src/stores/global'
 
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
@@ -44,6 +45,15 @@ export default boot(({ app, router, store }) => {
     app.config.globalProperties.$api = api
     // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
     //       so you can easily perform requests against your app's API
+
+    api.interceptors.request.use(
+        (config) => {
+            // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
+            const { lang } = globalStore()
+            config.headers.Language = lang
+            return config
+        }
+    )
 
     // 响应拦截
     api.interceptors.response.use(
