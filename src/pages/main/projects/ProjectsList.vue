@@ -45,7 +45,7 @@
                             <td class="q-gutter-x-sm">
                                 <q-btn
                                     color="info"
-                                    label="详情"
+                                    :label="$t('Detail')"
                                     icon="arrow_outward"
                                     @click="gotoChild(item)"
                                     size="sm"

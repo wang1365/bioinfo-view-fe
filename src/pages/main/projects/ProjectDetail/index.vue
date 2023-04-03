@@ -3,7 +3,7 @@
         <div class="row items-center q-py-sm">
             <h6>项目详情</h6>
             <q-space />
-            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()" />
+            <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <q-separator />
         <ProjectDetail :projectDetail="projectDetail" @reloadProject="getProjectDetail()" />

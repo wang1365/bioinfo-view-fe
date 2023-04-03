@@ -66,6 +66,7 @@ export default {
     Role: '角色',
     Dept: '部门',
     Reset: '重置',
+    FuWei: '复位',
     Edit: '编辑',
     Add: '新增',
     Delete: '删除',
@@ -198,6 +199,12 @@ export default {
     CreateSuccess: '创建成功',
     AddSuccess: '添加成功',
     UpdateSuccess: '修改成功',
+    ShowDetail: '显示详情',
+    HideDetail: '隐藏详情',
+
+    Intro: '说明',
+    Back: '返回',
+    TaskResult: '任务结果',
 
     // 菜单
     PanelFlow: 'Panel分析流程',

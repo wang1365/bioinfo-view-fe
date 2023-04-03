@@ -6,7 +6,7 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-        >说明</q-btn
+        >{{$t('Intro')}}</q-btn
     >
     <div class="q-py-md" v-if="props.viewConfig.showMSI">
         <span class="text-h6 text-primary text-bold q-mr-sm">总体微卫星状态表</span>

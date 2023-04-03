@@ -148,7 +148,7 @@
                                 <td >{{ item.create_time }}</td>
                                 <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-xs">
-                                <q-btn color="info" label="详情" icon="visibility" @click="info(item)" size="sm" />
+                                <q-btn color="info" :label="$t('Detail')" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn color="primary" :label="$t('Edit')" icon="edit" @click="edit(item)" size="sm" />
                                 <q-btn color="secondary" label="关联样本" icon="link" @click="link(item)" size="sm" />
                                 <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)" size="sm" />

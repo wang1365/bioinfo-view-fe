@@ -2,7 +2,7 @@
     <div>
         <div style="text-align:right" class="q-py-md">
             <q-btn icon="help_outline" size="small" outline color="orange" class="q-mr-md"
-                @click="dlgVisible = !dlgVisible">说明</q-btn>
+                @click="dlgVisible = !dlgVisible">{{$t('Intro')}}</q-btn>
             <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small"
                 color="primary" class="q-mr-md" label="已固定过滤" @click="unstick()" />
             <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small"

@@ -237,7 +237,7 @@
                 </q-card-section>
             </template>
             <template v-slot:contentFooter>
-                <q-btn label="关闭" @click="close()" />
+                <q-btn :label="$t('Close')" @click="close()" />
                 <q-btn color="primary" label="保存" @click="save()" />
             </template>
         </PopupContentScroll>

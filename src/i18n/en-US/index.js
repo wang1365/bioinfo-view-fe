@@ -68,6 +68,7 @@ export default {
     Role: 'Role',
     Dept: 'Department',
     Reset: 'Reset',
+    FuWei: 'Reset',
     Edit: 'Edit',
     Add: 'Add',
     Delete: 'Delete',
@@ -199,6 +200,12 @@ export default {
     CreateSuccess: 'Success to create',
     AddSuccess: 'Success to add',
     UpdateSuccess: 'Success to update',
+    ShowDetail: 'Show Detail',
+    HideDetail: 'Hide Detail',
+
+    Intro: 'Intro.',
+    Back: 'Back',
+    TaskResult: 'Task Result',
 
     // 菜单
     PanelFlow: 'Panel Flow',

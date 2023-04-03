@@ -54,7 +54,7 @@
             <q-list>
                 <q-item>
                     <q-section class="q-gutter-x-sm">
-                        <q-btn label="关闭" v-close-popup />
+                        <q-btn :label="$t('Close')" v-close-popup />
                     </q-section>
                 </q-item>
             </q-list>

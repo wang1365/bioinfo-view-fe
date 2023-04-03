@@ -145,7 +145,7 @@
             <q-list>
                 <q-item>
                     <q-section class="q-gutter-x-sm">
-                        <q-btn label="关闭" @click="close()" />
+                        <q-btn :label="$t('Close')" @click="close()" />
                         <q-btn color="primary" label="保存" @click="save()" />
                     </q-section>
                 </q-item>

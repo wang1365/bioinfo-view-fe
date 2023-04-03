@@ -3,7 +3,7 @@
         <div class="row items-center">
             <h6>任务结果</h6>
             <q-space />
-            <q-btn label="返回" icon="arrow_back" color="primary" @click="router.back()" />
+            <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <div class="q-pt-xs">
             <q-tabs

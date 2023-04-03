@@ -7,7 +7,7 @@
             color="orange"
             class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
-            >说明</q-btn
+            >{{$t('Intro')}}</q-btn
         >
         <q-tabs
             v-model="tab"

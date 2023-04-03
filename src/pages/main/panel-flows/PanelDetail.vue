@@ -41,7 +41,7 @@
                 </q-btn>
             </q-expansion-item>
             <q-expansion-item
-                label="说明"
+                :label="$t('Intro')"
                 dense
                 default-opened
                 class="shadow-1 overflow-hidden q-my-sm"

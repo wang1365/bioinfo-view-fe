@@ -26,7 +26,7 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-        >说明</q-btn
+        >{{$t('Intro')}}</q-btn
     >
 
     <div class="row justify-between">
@@ -160,7 +160,7 @@
                 />
                 <q-btn
                     color="primary"
-                    label="复位"
+                    :label="$t('FuWei')"
                     icon="settings_backup_restore"
                     @click="clickReset"
                     :disable="viewConfig.showStick && viewConfig.stickDone"

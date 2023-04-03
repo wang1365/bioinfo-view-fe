@@ -65,7 +65,7 @@
                             <td>{{ item.sample_meta?.is_panel }}</td>
 
                             <td class="q-gutter-x-sm">
-                                <q-btn color="secondary" label="详情" icon="visibility" @click="info(item)" size="sm" />
+                                <q-btn color="secondary" :label="$t('Detail')" icon="visibility" @click="info(item)" size="sm" />
                                 <q-btn
                                     color="red"
                                     :label="$t('Delete')"

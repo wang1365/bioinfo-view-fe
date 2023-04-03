@@ -146,7 +146,7 @@
                         <td>{{ item.creator.username }}</td>
                         <td>{{ format(item.create_time) }}</td>
                         <td class="q-gutter-sm">
-                            <q-btn color="secondary" label="详情" icon="visibility" @click="gotoDetail(item)" size="sm" />
+                            <q-btn color="secondary" :label="$t('Detail')" icon="visibility" @click="gotoDetail(item)" size="sm" />
                             <q-btn :disable="item.status !== 'FINISHED'" color="info" label="结果" icon="query_stats"
                                 @click="gotoReport(item)" size="sm" />
                             <q-btn :disable="item.status !== 'FINISHED'" color="positive" label="定制报告" icon="query_stats"

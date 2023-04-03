@@ -26,7 +26,7 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-        >说明</q-btn
+        >{{$t('Intro')}}</q-btn
     >
     <div>
         <div v-if="props.viewConfig.showCNVcircos">
@@ -72,7 +72,7 @@
                                 class="col"
                                 color="primary"
                                 size="small"
-                                label="复位"
+                                :label="$t('FuWei')"
                                 @click="resetPie"
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
                             />
@@ -81,7 +81,7 @@
                                 class="col"
                                 color="primary"
                                 size="small"
-                                :label="showPieTable ? '隐藏详情' : '显示详情'"
+                                :label="showPieTable ? $t('HideDetail') : $t('ShowDetail')"
                                 @click="showPieTable = !showPieTable"
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
                             />
@@ -160,7 +160,7 @@
                 />
                 <q-btn
                     color="grey"
-                    label="清除"
+                    :label="$t('Clear')"
                     icon="delete"
                     @click="clickClear()"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -208,7 +208,7 @@
                 <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">关闭</q-btn>
+                <q-btn v-close-popup color="primary">$t('Close')</q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>
