@@ -13,7 +13,7 @@
                 </q-toolbar-title>
                 <q-space />
                 <div class="q-gutter-sm row items-center no-wrap">
-                    <SelectLanguage />
+                    <SelectLanguage dark />
                     <Fullscreen />
                     <q-btn dense flat>
                         <q-icon name="person_pin" />
@@ -169,7 +169,11 @@ onBeforeMount(() => {
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
+
+.q-field__input {
+    color: white !important;
+}
 .q-drawer {
     /*background-image: url(https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg) !important;*/
     background-image: url("/images/lake.jpg") !important;

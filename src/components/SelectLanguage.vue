@@ -1,6 +1,7 @@
 <template>
-    <q-select dense v-model="locale" :options="langOptions" borderless options-dense emit-value map-options style="min-width: 120px">
-        <template v-slot:before>
+    <q-select dense v-model="locale" :options="langOptions"
+              borderless options-dense emit-value map-options style="min-width: 80px;color:white">
+        <template v-if="false" v-slot:before>
             <q-btn flat dense color="amber-1" :label="$t('Language') + ':'"/>
         </template>
     </q-select>
