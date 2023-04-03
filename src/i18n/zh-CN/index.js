@@ -212,9 +212,18 @@ export default {
     DiskUsage: '磁盘使用',
 
     // 系统界面配置
-    'SystemUiConfig': '系统界面设置',
-    'SystemIcon': '系统图标',
-    'SystemTitle': '系统标题',
-    'SelectImage': '+选择图片(限制2M)',
-    'LimitTo': '最大限制',
+    SystemUiConfig: '系统界面设置',
+    SystemIcon: '系统图标',
+    SystemTitle: '系统标题',
+    SelectImage: '+选择图片(限制2M)',
+    LimitTo: '最大限制',
+
+    // 系统配置
+    ServerResourceSetting: '服务器资源设置',
+    ParallelTaskLimit: '并行任务限制(>1)',
+    MemoryUsageLimit: '内存使用率限制(0-1)',
+    DiskUsageLimit: '磁盘使用限制(MB)',
+    AllowedRunningTime: '允许运行时间(天)',
+    AlreadyRun: '已运行',
+    Days: '天',
 }

@@ -201,19 +201,28 @@ export default {
     UiSetting: 'UI Setting',
 
     // 个人中心
-    ChangePassword: 'Change Password',
-    ResetPassword: 'Reset Password',
+    ChangePassword: 'Change password',
+    ResetPassword: 'Reset password',
     UserAndNameAndEmailSearch: 'Username, Nickname, Email Search',
     Unlimited: 'Unlimited',
-    SuperAdmin: 'Super Admin',
+    SuperAdmin: 'Super admin',
     Enabled: 'Enabled',
     Disable: 'Disable',
-    DiskUsage: 'Disk Usage',
+    DiskUsage: 'Disk usage',
 
     // 系统界面配置
-    'SystemUiConfig': 'System UI Config',
-    'SystemIcon': 'System Icon',
-    'SystemTitle': 'System Title',
-    'SelectImage': '+Choose Image(<2M)',
-    'LimitTo': 'Limit to',
+    SystemUiConfig: 'System UI Config',
+    SystemIcon: 'System Icon',
+    SystemTitle: 'System Title',
+    SelectImage: '+Choose image(<2M)',
+    LimitTo: 'Limit to',
+
+    // 系统配置
+    ServerResourceSetting: 'Server resource setting',
+    ParallelTaskLimit: 'Parallel task limit(>1)',
+    MemoryUsageLimit: 'Memory usage limit(0-1)',
+    DiskUsageLimit: 'Disk usage limit(MB)',
+    AllowedRunningTime: 'Allowed running duration(Days)',
+    AlreadyRun: 'Already run',
+    Days: 'Day(s)',
 }

@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="系统设置" />
+        <PageTitle :title="$t('SystemSetting')" />
         <!-- <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm justify-center">
              <div class="col-lg-6 col-md-6 col-sm-10 col-xs-12">
              <PieChart3 />
@@ -39,7 +39,7 @@
                     </q-card>
                 </q-expansion-item> -->
 
-                <q-expansion-item expand-separator default-opened icon="auto_mode" label="服务器资源设置">
+                <q-expansion-item expand-separator default-opened icon="auto_mode" :label="$t('ServerResourceSetting')">
                     <q-card>
                         <q-card-section row>
                             <div class="row">
@@ -52,7 +52,7 @@
                                                 :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || '任务数数值错误，必须是正整数']"
                                             >
                                                 <template v-slot:before>
-                                                    <span class="text-h6">并行任务限制(>1):</span>
+                                                    <span class="text-h6">{{$t('ParallelTaskLimit')}}:</span>
                                                 </template>
                                                 <template v-slot:after>
                                                     <q-icon name="help_outline">
@@ -69,7 +69,7 @@
                                                 :rules="[(val) => (val !== null && val > 0 && val <=1) || '内存使用率数值错误']"
                                             >
                                                 <template v-slot:before>
-                                                    <span class="text-h6">内存率使用限制(0-1):</span>
+                                                    <span class="text-h6">{{$t('MemoryUsageLimit')}}:</span>
                                                 </template>
                                                 <template v-slot:after>
                                                     <q-icon name="help_outline">
@@ -86,7 +86,7 @@
                                                 :rules="[(val) => (val !== null && val > 0) || '磁盘限制数值错误']"
                                             >
                                                 <template v-slot:before>
-                                                    <span class="text-h6">磁盘使用限制(MB):</span>
+                                                    <span class="text-h6">{{$t('DiskUsageLimit')}}:</span>
                                                 </template>
                                                 <template v-slot:after>
                                                     <q-icon name="help_outline">
@@ -104,10 +104,10 @@
                                                     :rules="[(val) => (val !== null && val > 0) || '允许运行时间数值错误']"
                                                 >
                                                     <template v-slot:before
-                                                    ><span class="text-h6">允许运行时间(天):</span></template
+                                                    ><span class="text-h6">{{$t('AllowedRunningTime')}}:</span></template
                                                     >
                                                 </q-input>
-                                                <div class="text-h6 q-pt-sm q-ml-sm text-grey">已运行 {{allowedRunningDays.used}} 天</div>
+                                                <div class="text-h6 q-pt-sm q-ml-sm text-grey">{{$t('AlreadyRun')}}: {{allowedRunningDays.used + $t('Days')}} </div>
                                             </div>
                                         </q-form-item>
                                     </q-form>
@@ -115,7 +115,7 @@
                             </div>
                         </q-card-section>
                         <q-card-actions>
-                            <q-btn class="q-ml-lg" color="primary" type="submit" label="确 定" @click="submit" />
+                            <q-btn class="q-ml-lg" color="primary" type="submit" icon="save_as" :label="$t('Confirm')" @click="submit" />
                         </q-card-actions>
                     </q-card>
                 </q-expansion-item>
