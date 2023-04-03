@@ -192,11 +192,29 @@ export default {
     PageError404Home: '带我回去',
     DeptDataPermissionType: '部门数据权限分类',
 
+    // 菜单
+    PanelFlow: 'Panel分析流程',
+    GeneBrowser: '基因组浏览器',
+    SystemSetting: '系统配置',
+    FlowManage: '流程管理',
+    UiSetting: 'UI配置',
+
+    // 个人中心
     ChangePassword: '修改密码',
     ResetPassword: '重置密码',
     UserAndNameAndEmailSearch: '用户账号、姓名、邮箱搜索',
-    NoLimit: '无限制',
+    Unlimited: '无限制',
     SuperAdmin: '超级管理员',
+    Admin: '管理员',
+    NormalUser: '普通用户',
     Enabled: '启用',
     Disable: '禁用',
+    DiskUsage: '磁盘使用',
+
+    // 系统界面配置
+    'SystemUiConfig': '系统界面设置',
+    'SystemIcon': '系统图标',
+    'SystemTitle': '系统标题',
+    'SelectImage': '+选择图片(限制2M)',
+    'LimitTo': '最大限制',
 }

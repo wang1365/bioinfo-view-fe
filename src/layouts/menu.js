@@ -46,7 +46,7 @@ const menu = [
     },
     {
         icon: 'hub',
-        label: 'Panel分析流程',
+        label: 'PanelFlow',
         separator: false,
         path: '/main/panel',
     },
@@ -83,33 +83,33 @@ const menu = [
     // },
     {
         icon: 'biotech',
-        label: '基因组浏览器',
+        label: 'GeneBrowser',
         separator: true,
         path: '/main/tools/browse',
     },
     {
         icon: 'settings',
-        label: '系统设置',
+        label: 'SystemSetting',
         separator: false,
         path: '/main/settings',
         roles: ['super', 'admin'],
         children: [
             {
                 icon: 'mediation',
-                label: '流程管理',
+                label: 'FlowManage',
                 separator: false,
                 path: '/main/settings/flowManagement',
                 roles: ['super'],
             },
             {
                 icon: 'handyman',
-                label: '系统设置',
+                label: 'SystemSetting',
                 separator: false,
                 path: '/main/settings/system',
             },
             {
                 icon: 'wallpaper',
-                label: '界面配置',
+                label: 'UiSetting',
                 separator: false,
                 path: '/main/settings/ui',
             },
@@ -124,7 +124,7 @@ const menu = [
     },
     {
         icon: 'manage_accounts',
-        label: '个人中心',
+        label: 'UserProfile',
         separator: false,
         path: '/main/profile',
     },

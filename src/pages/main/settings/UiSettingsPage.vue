@@ -1,9 +1,9 @@
 <template>
     <q-page padding>
-        <PageTitle title="系统界面设置"></PageTitle>
+        <PageTitle :title="$t('SystemUiConfig')"></PageTitle>
         <q-card class="width:600px">
             <q-card-section>
-                <div class="text-h6">系统标题：</div>
+                <div class="text-h6">{{$t('SystemTitle') + ':'}}</div>
                 <q-input v-model="form.title" outlined>
                     <template v-slot:before>
                         <q-icon name="flight_takeoff" />
@@ -15,7 +15,7 @@
                 <q-list>
                     <q-item>
                         <q-img :src="form.image" spinner-color="white" style="height: 200px; max-width: 200px">
-                            <div class="absolute-top text-center">系统图标</div>
+                            <div class="absolute-top text-center">{{$t('SystemIcon')}}</div>
                         </q-img>
                     </q-item>
                     <q-item>
@@ -23,7 +23,7 @@
                             filled
                             bottom-slots
                             v-model="imageFile"
-                            label="+ 选择图片(最大2M)"
+                            :label="$t('SelectImage')"
                             class="q-pa-sm"
                             max-file-size="2048000"
                             bg-color="blue"
@@ -38,7 +38,7 @@
             <q-separator />
             <q-card-actions align="left">
                 <q-card-section>
-                    <q-btn label="保存配置" color="primary" size="md" @click="clickSet"></q-btn>
+                    <q-btn :label="$t('Save')" color="primary" icon="save_as" @click="clickSet"></q-btn>
                 </q-card-section>
             </q-card-actions>
         </q-card>

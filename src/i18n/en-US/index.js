@@ -193,11 +193,27 @@ export default {
     PageError404Home: 'Take Me Home',
     DeptDataPermissionType: 'Department Data Permission Type',
 
+    // 菜单
+    PanelFlow: 'Panel Flow',
+    GeneBrowser: 'Gene Browser',
+    SystemSetting: 'SYS Setting',
+    FlowManage: 'Flow Manage',
+    UiSetting: 'UI Setting',
+
+    // 个人中心
     ChangePassword: 'Change Password',
     ResetPassword: 'Reset Password',
     UserAndNameAndEmailSearch: 'Username, Nickname, Email Search',
-    NoLimit: 'No Limit',
+    Unlimited: 'Unlimited',
     SuperAdmin: 'Super Admin',
     Enabled: 'Enabled',
     Disable: 'Disable',
+    DiskUsage: 'Disk Usage',
+
+    // 系统界面配置
+    'SystemUiConfig': 'System UI Config',
+    'SystemIcon': 'System Icon',
+    'SystemTitle': 'System Title',
+    'SelectImage': '+Choose Image(<2M)',
+    'LimitTo': 'Limit to',
 }

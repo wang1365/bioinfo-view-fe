@@ -86,7 +86,7 @@
                             <td>遗传病</td>
                             <td>家族史</td>
                             <td>样本数</td>
-                            <td>操作</td>
+                            <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
                     <tbody>

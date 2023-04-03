@@ -123,7 +123,7 @@ let columns = [
     {name: "required", label: "必填", field: "required", align: "center"},
     {name: "choices", label: "值域", align: "center", field: "choices"},
     {name: "description", label: "说明", field: "description", align: "center",},
-    {name: "operation", label: "操作", align: "center",},
+    {name: "operation", label: this.$t('Operation'), align: "center",},
 ]
 
 const isEditMode = computed(() => {

@@ -126,7 +126,7 @@
                             <!-- <td>样本所有者</td> -->
                             <!-- <td>创建时间</td>
                                 <td>更新时间</td> -->
-                            <td>操作</td>
+                            <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
                     <tbody>

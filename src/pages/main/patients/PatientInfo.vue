@@ -62,7 +62,7 @@
                             <td>肿瘤含量</td>
                             <td>肿瘤样本</td>
                             <td>样本识别号</td>
-                            <td>操作</td>
+                            <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
                     <tbody>

@@ -1,6 +1,6 @@
 <template>
     <q-page padding class="">
-        <PageTitle title="$t('UserManage')" />
+        <PageTitle :title="$t('UserManage')" />
         <div class="row justify-end q-gutter-md items-center q-py-xs">
             <div class="col-4">
                 <q-input
@@ -49,7 +49,7 @@
             dense
             wrap-cells
             v-model:pagination="pagination"
-            rows-per-page-label="每页条数"
+            :rows-per-page-label="$t('-')"
             :rows-per-page-options="[10, 20, 50, 100]"
             @request="refreshUsersForEvent"
         >
@@ -58,7 +58,7 @@
                     {{
                         (props.row.used_disk || 0) +
                         "/" +
-                        (props.row.disk_limit || $t('NoLimit'))
+                        (props.row.disk_limit || $t('Unlimited'))
                     }}
                 </q-td>
             </template>
@@ -160,7 +160,7 @@
 
 <script setup>
 import { useQuasar } from "quasar"
-import { nextTick, onMounted, ref } from "vue"
+import {computed, nextTick, onMounted, ref} from "vue"
 import _ from "lodash";
 import { listUser, batchDeleteUser } from "src/api/user"
 import { isSuper, isAdmin, isNormal, amISuper } from "src/utils/user"
@@ -168,11 +168,12 @@ import PageTitle from "components/page-title/PageTitle.vue"
 import CreateUser from "./CreateUser"
 import EditUser from "pages/main/users/EditUser"
 import { deleteFlow } from "src/api/flow"
-
+import { useI18n } from 'vue-i18n'
 import ResetPassword from "pages/main/users/ResetPassword"
 import { storeToRefs } from "pinia"
 import { globalStore } from "src/stores/global"
 
+const { t } = useI18n()
 const createUserDlg = ref(null)
 const editUserDlg = ref(null)
 const resetPasswordDlg = ref(null)
@@ -180,7 +181,7 @@ const resetResourceLimitDlg = ref(false)
 const user = ref(null);
 const $q = useQuasar();
 const store = globalStore();
-const columns = [
+const columns = computed(() => [
     {
         name: "id",
         label: "ID",
@@ -191,21 +192,21 @@ const columns = [
     },
     {
         name: "username",
-        label: "账号",
+        label: t("Username"),
         field: "username",
         sortable: false,
         align: "center",
     },
     {
         name: "nickname",
-        label: "姓名",
+        label: t("Nickname"),
         field: "nickname",
         sortable: false,
         align: "center",
     },
     {
         name: "disk",
-        label: "磁盘使用(MB)",
+        label: t("DiskUsage") + "(MB)",
         field: "disk",
         sortable: false,
         align: "center",
@@ -214,24 +215,25 @@ const columns = [
     // {name: "email", label: "邮箱", field: "email", align: "center"},
     {
         name: "role",
-        label: "角色",
+        label: t("Role"),
         align: "center",
         field: "role",
         format: (v) => getRoleName(v),
     },
     {
         name: "is_active",
-        label: "状态",
+        label: t("Status"),
         field: "is_active",
         align: "center",
-        format: (v) => `${v ? "启用" : "禁用"}`,
+        format: (v) => `${v ? t('Enabled') : t('Disable')}`,
     },
-    { name: "operation", label: "操作", align: "center", style: "width:350px" },
-];
+    { name: "operation", label: t('Actions'), align: "center", style: "width:350px" },
+]);
 
 const loading = ref(false);
 let rows = ref([]);
 onMounted(() => {
+    console.log('quasar===', this, $q)
     refreshUsers();
 });
 const searchKeyword = ref("");
@@ -241,12 +243,12 @@ const getRoleName = (roles) => {
         return "";
     }
     return roles
-        .map(function (t) {
+        .map(function (role) {
             return (
                 {
-                    super: "系统管理员",
-                    admin: "管理员",
-                }[t] || "普通用户"
+                    super: t('SuperAdmin'),
+                    admin: t('Admin'),
+                }[role] || t('NormalUser')
             );
         })
         .join(",");
