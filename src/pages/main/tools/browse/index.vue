@@ -47,7 +47,7 @@
                 @keypress.enter="clickSearch"
             />
             <div class="q-ml-sm col-2 col reverse">
-                <q-btn color="primary" icon="search" class="row-auto" label="查询" @click="clickSearch" />
+                <q-btn color="primary" icon="search" class="row-auto" :label="$t('Search')" @click="clickSearch" />
                 <q-btn color="primary" icon="clear" class="row-auto q-mx-sm" :label="$t('Reset')" @click="clickReset" />
             </div>
         </div>
