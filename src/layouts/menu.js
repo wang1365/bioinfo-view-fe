@@ -117,7 +117,7 @@ const menu = [
     },
     {
         icon: 'people',
-        label: '用户管理',
+        label: 'UserManage',
         separator: false,
         path: '/main/users',
         roles: ['super', 'admin'],

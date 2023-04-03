@@ -13,6 +13,7 @@
                 </q-toolbar-title>
                 <q-space />
                 <div class="q-gutter-sm row items-center no-wrap">
+                    <SelectLanguage />
                     <Fullscreen />
                     <q-btn dense flat>
                         <q-icon name="person_pin" />
@@ -130,6 +131,7 @@ import {onBeforeMount, ref} from "vue";
 import {useRouter} from "vue-router";
 import {globalStore} from "src/stores/global";
 import {getAuthMenu} from './menu'
+import SelectLanguage from "components/SelectLanguage.vue";
 
 const store = globalStore();
 const menuList = getAuthMenu(store.currentUser)

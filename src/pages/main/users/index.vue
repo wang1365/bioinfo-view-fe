@@ -1,6 +1,6 @@
 <template>
     <q-page padding class="">
-        <PageTitle title="用户管理" />
+        <PageTitle title="$t('UserManage')" />
         <div class="row justify-end q-gutter-md items-center q-py-xs">
             <div class="col-4">
                 <q-input
