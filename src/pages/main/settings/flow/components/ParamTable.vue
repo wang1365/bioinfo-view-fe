@@ -93,6 +93,7 @@
 
 <script setup>
 import {defineProps, computed, defineExpose, ref, toRefs, onMounted, onBeforeMount} from "vue"
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
     data: {
@@ -115,15 +116,16 @@ const props = defineProps({
     }
 })
 
-const {readonly} = toRefs(props)
+const { t } = useI18n()
+const { readonly } = toRefs(props)
 
 let columns = [
-    {name: "key", label: "参数名", field: "key", align: "center"},
-    {name: "type", label: "值类型", align: "center", field: "type"},
-    {name: "required", label: "必填", field: "required", align: "center"},
-    {name: "choices", label: "值域", align: "center", field: "choices"},
-    {name: "description", label: "说明", field: "description", align: "center",},
-    {name: "operation", label: this.$t('Operation'), align: "center",},
+    { name: "key", label: "参数名", field: "key", align: "center" },
+    { name: "type", label: "值类型", align: "center", field: "type" },
+    { name: "required", label: "必填", field: "required", align: "center" },
+    { name: "choices", label: "值域", align: "center", field: "choices" },
+    { name: "description", label: "说明", field: "description", align: "center", },
+    { name: "operation", label: t('Actions'), align: "center", },
 ]
 
 const isEditMode = computed(() => {

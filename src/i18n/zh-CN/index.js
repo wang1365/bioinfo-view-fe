@@ -192,6 +192,13 @@ export default {
     PageError404Home: '带我回去',
     DeptDataPermissionType: '部门数据权限分类',
 
+    // 通用
+    ConfirmToDelete: '是否确认删除?',
+    DeleteSuccess: '删除成功',
+    CreateSuccess: '创建成功',
+    AddSuccess: '添加成功',
+    UpdateSuccess: '修改成功',
+
     // 菜单
     PanelFlow: 'Panel分析流程',
     GeneBrowser: '基因组浏览器',
@@ -210,6 +217,16 @@ export default {
     Enabled: '启用',
     Disable: '禁用',
     DiskUsage: '磁盘使用',
+
+    // 流程管理
+    Category: '分类',
+    Memory: '内存',
+    DockerArchive: 'Docker存档',
+    DockerImageName: 'Docker镜像名称',
+    CreateTime: '创建时间',
+    AnalysisModule: '分析模块',
+    ModuleName: '模块名称',
+    FlowName: '流程名称',
 
     // 系统界面配置
     SystemUiConfig: '系统界面设置',

@@ -11,10 +11,10 @@
         <q-card class="my-card">
             <q-bar class="bg-primary text-white">
                 <q-icon name="mediation" />
-                <div>流程管理</div>
+                <div>{{$t('FlowManage')}}</div>
                 <q-space />
                 <q-btn dense flat icon="close" v-close-popup>
-                    <q-tooltip>取消</q-tooltip>
+                    <q-tooltip>{{$t('Cancel')}}</q-tooltip>
                 </q-btn>
             </q-bar>
             <q-form ref="qForm" @submit="onSubmit">
@@ -23,7 +23,7 @@
                         <q-input
                             class="col-3"
                             v-model="form.name"
-                            label="流程名称"
+                            :label="$t('FlowName')"
                             :label-color="labelColor"
                             stack-label
                             filled
@@ -35,7 +35,7 @@
                             class="col-3"
                             :label-color="labelColor"
                             v-model="form.code"
-                            label="流程code"
+                            label="Code"
                             stack-label
                             filled
                             clearable
@@ -71,7 +71,7 @@
                             v-model="form.memory"
                             :min="0"
                             :step="100"
-                            label="内存(m)"
+                            :label="$t('Memory') + '(m)'"
                             :label-color="labelColor"
                             stack-label
                             filled
@@ -83,7 +83,7 @@
                         <q-input
                             class="col-3"
                             v-model="form.tar_path"
-                            label="Docker存档地址"
+                            :label="$t('DockerArchive')"
                             :label-color="labelColor"
                             stack-label
                             filled
@@ -94,7 +94,7 @@
                         <q-input
                             class="col-3"
                             v-model="form.image_name"
-                            label="Docker镜像名称"
+                            :label="$t('DockerImageName')"
                             :label-color="labelColor"
                             stack-label
                             filled
@@ -216,9 +216,9 @@
                 />
 
                 <q-card-actions align="right">
-                    <q-btn v-if="isInfoMode" label="确 定" color="primary" v-close-popup />
-                    <q-btn v-if="!isInfoMode" label="确 定" class="q-mx-sm" color="primary" type="submit" />
-                    <q-btn v-if="!isInfoMode" label="取 消" color="negative" v-close-popup />
+                    <q-btn v-if="isInfoMode" :label="$t('Confirm')" color="primary" v-close-popup />
+                    <q-btn v-if="!isInfoMode" :label="$t('Confirm')" class="q-mx-sm" color="primary" type="submit" />
+                    <q-btn v-if="!isInfoMode" :label="$t('Cancel')" color="negative" v-close-popup />
                 </q-card-actions>
             </q-form>
         </q-card>

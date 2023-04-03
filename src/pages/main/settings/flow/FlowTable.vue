@@ -16,15 +16,15 @@
         >
             <template v-slot:top>
                 <q-input
-                    label="模块名称"
+                    :label="$t('ModuleName')"
                     v-model="keyword"
                     clearable
                     @clear="refreshFlows"
                     @keypress.enter="refreshFlows"
                 >
                 </q-input>
-                <q-btn color="primary" icon="search" class="q-mx-sm" label="查询" @click="refreshFlows" />
-                <q-btn color="primary" label="新建分析模块" @click="addFlow" />
+                <q-btn color="primary" icon="search" class="q-mx-sm" :label="$t('Search')" @click="refreshFlows" />
+                <q-btn color="primary" :label="$t('Add')" @click="addFlow" />
             </template>
             <!--            <template v-slot:header="props">-->
             <!--                <q-tr :props="props">-->
@@ -35,7 +35,7 @@
             <!--            </template>-->
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
-                    <q-btn label="查看" color="primary" size="sm" @click="showInfoDlg(props.row)"></q-btn>
+                    <q-btn :label="$t('Detail')" color="primary" size="sm" @click="showInfoDlg(props.row)"></q-btn>
                     <q-btn :label="$t('Edit')" color="orange" size="sm" @click="showEditDlg(props.row)"></q-btn>
                     <q-btn :label="$t('Delete')" color="red" size="sm" @click="showDeleteDlg(props.row)"></q-btn>
                     <!--                    <q-btn label="+" color="red-10" flat size="xs" @click="showCreateTaskDlg(props.row)"></q-btn>-->
@@ -49,14 +49,15 @@
 </template>
 
 <script setup>
-import {getFlows, deleteFlow} from 'src/api/flow'
-import {ref, onMounted, computed, nextTick} from 'vue'
-import {useQuasar} from 'quasar'
-import PageTitle from 'components/page-title/PageTitle'
-import FlowDialog from './FlowDialog'
-import TaskParamTable from './components/TaskParamTable'
+import { getFlows, deleteFlow } from 'src/api/flow'
+import { ref, onMounted, computed, nextTick } from 'vue'
+import { useQuasar } from 'quasar'
 import { format } from 'src/utils/time'
+import { useI18n } from 'vue-i18n'
+import FlowDialog from './FlowDialog'
 
+
+const { t } = useI18n()
 const loading = ref(false)
 const dlgFlow = ref(null)
 const dlgFlowCreate = ref(null)
@@ -66,23 +67,24 @@ const keyword = ref('')
 const action = ref('info')
 const selected = ref([])
 const $q = useQuasar()
-const columns = [
+
+const columns = computed(() => [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center'},
-    {name: 'code', label: '类型', field: 'code', align: 'center', sortable: true, },
+    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center'},
+    {name: 'code', label: t('Type'), field: 'code', align: 'center', sortable: true, },
     {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true},
-    {name: 'flow_category', label: '分 类', field: 'flow_category', align: 'center', },
-    {name: 'memory', label: '内存(m)', align: 'center', field: 'memory', style: 'width:85px',},
-    {name: 'tar_path', label: 'Docker存档', field: 'tar_path', align: 'center' },
-    {name: 'image_name', label: 'Docker镜像名称', field: 'image_name', align: 'center'},
+    {name: 'flow_category', label: t('Category'), field: 'flow_category', align: 'center', },
+    {name: 'memory', label: t('Memory') +'(m)', align: 'center', field: 'memory', style: 'width:85px',},
+    {name: 'tar_path', label: t('DockerArchive'), field: 'tar_path', align: 'center' },
+    {name: 'image_name', label: t('DockerImageName'), field: 'image_name', align: 'center'},
     // {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', format: v => format(v)},
-    {name: 'operation', label: '操 作', align: 'center'},
-]
+    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', format: v => format(v)},
+    {name: 'operation', label: t('Actions'), align: 'center'},
+])
 
 const visibleColumns = computed(() => {
     console.log('visibleColumns', props.columns)
-    return props.columns || columns.map(t => t.name)
+    return props.columns || columns.value.map(t => t.name)
 })
 
 const pagination = ref({
@@ -180,14 +182,14 @@ const showEditDlg = (row) => {
 
 const showDeleteDlg = (row) => {
     $q.dialog({
-        title: `是否要删除流程“${row.name}”?`,
-        ok: '确认',
-        cancel: '取消',
+        title:  t('ConfirmDelete'),
+        ok: t('Confirm'),
+        cancel: t('Cancel'),
     }).onOk(() => {
         startLoading()
         deleteFlow(row.id)
             .then(() => {
-                $q.notify({type: 'positive', message: '删除成功'})
+                $q.notify({type: 'positive', message: t('DeleteSuccess')})
                 refreshFlows()
             })
             .finally(stopLoading)

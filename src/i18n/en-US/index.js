@@ -193,6 +193,13 @@ export default {
     PageError404Home: 'Take Me Home',
     DeptDataPermissionType: 'Department Data Permission Type',
 
+    // 通用
+    ConfirmToDelete: 'Confirm to delete ?',
+    DeleteSuccess: 'Success to delete',
+    CreateSuccess: 'Success to create',
+    AddSuccess: 'Success to add',
+    UpdateSuccess: 'Success to update',
+
     // 菜单
     PanelFlow: 'Panel Flow',
     GeneBrowser: 'Gene Browser',
@@ -209,6 +216,16 @@ export default {
     Enabled: 'Enabled',
     Disable: 'Disable',
     DiskUsage: 'Disk usage',
+
+    // 流程管理
+    Category: 'Category',
+    Memory: 'Memory',
+    DockerArchive: 'Docker Archive',
+    DockerImageName: 'Docker Image',
+    CreateTime: 'Create Time',
+    AnalysisModule: 'Analysis Module',
+    ModuleName: 'Module Name',
+    FlowName: 'Flow Name',
 
     // 系统界面配置
     SystemUiConfig: 'System UI Config',
