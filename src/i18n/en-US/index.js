@@ -194,4 +194,10 @@ export default {
     DeptDataPermissionType: 'Department Data Permission Type',
 
     ChangePassword: 'Change Password',
+    ResetPassword: 'Reset Password',
+    UserAndNameAndEmailSearch: 'Username, Nickname, Email Search',
+    NoLimit: 'No Limit',
+    SuperAdmin: 'Super Admin',
+    Enabled: 'Enabled',
+    Disable: 'Disable',
 }

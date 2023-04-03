@@ -192,5 +192,11 @@ export default {
     PageError404Home: '带我回去',
     DeptDataPermissionType: '部门数据权限分类',
 
-    ChangePassword: 'Change Password',
+    ChangePassword: '修改密码',
+    ResetPassword: '重置密码',
+    UserAndNameAndEmailSearch: '用户账号、姓名、邮箱搜索',
+    NoLimit: '无限制',
+    SuperAdmin: '超级管理员',
+    Enabled: '启用',
+    Disable: '禁用',
 }

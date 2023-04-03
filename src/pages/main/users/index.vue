@@ -4,7 +4,7 @@
         <div class="row justify-end q-gutter-md items-center q-py-xs">
             <div class="col-4">
                 <q-input
-                    label="用户账号、姓名、邮箱搜索"
+                    :label="$t('UserAndNameAndEmailSearch')"
                     clearable
                     @clear="refreshUsers"
                     @keypress.enter="refreshUsers"
@@ -32,7 +32,7 @@
                     size="md"
                     color="primary"
                     icon="add"
-                    label="新建"
+                    :label="$t('Add')"
                     @click="clickCreate"
                 />
             </div>
@@ -58,7 +58,7 @@
                     {{
                         (props.row.used_disk || 0) +
                         "/" +
-                        (props.row.disk_limit || "无限制")
+                        (props.row.disk_limit || $t('NoLimit'))
                     }}
                 </q-td>
             </template>
@@ -66,15 +66,15 @@
                 <q-td align="center">
                     <q-chip v-if="_.get(props.row, 'role[0]') === 'super'" color="primary" text-color="white">
                         <q-avatar icon="bookmark" color="red" text-color="white" />
-                        超级管理员
+                        {{ $t('SuperAdmin') }}
                     </q-chip>
                     <span v-else>{{ getRoleName(props.row.role) }}</span>
                 </q-td>
             </template>
             <template v-slot:body-cell-is_active="props">
                 <q-td align="center">
-                    <q-chip v-if="props.row.is_active" label="启用" color="green" size="sm" />
-                    <q-chip v-else label="禁用" color="orange" size="sm" />
+                    <q-chip v-if="props.row.is_active" :label="$t('Enabled')" color="green" size="sm" />
+                    <q-chip v-else :label="$t('Disable')" color="orange" size="sm" />
                 </q-td>
             </template>
             <template v-slot:body-cell-operation="props">
@@ -84,7 +84,7 @@
                             v-if="allowReset(props.row)"
                             size="xs"
                             color="primary"
-                            label="设置"
+                            :label="$t('Setting')"
                             @click="clickEdit(props.row)"
                         ></q-btn>
                         <!--                        <q-btn-->
@@ -99,7 +99,7 @@
                             v-if="allowReset(props.row)"
                             size="xs"
                             color="orange"
-                            label="重置密码"
+                            :label="$t('ResetPassword')"
                             @click="clickReset(props.row)"
                         ></q-btn>
 
