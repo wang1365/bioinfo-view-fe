@@ -112,11 +112,8 @@ const init = () => {
     chart.value = markRaw(echarts.init(ct));
 
     refreshChart()
-}
-
+};
 const onResize = () => {
-    if (chart.value) {
-        chart.value.resize()
-    }
-}
+    chart.value.resize();
+};
 </script>

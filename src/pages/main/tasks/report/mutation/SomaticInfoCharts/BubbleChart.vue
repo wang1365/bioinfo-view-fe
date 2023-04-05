@@ -300,8 +300,6 @@ const groupAndCount = (colName) => {
 }
 
 const onResize = () => {
-    if (chart.value) {
-        chart.value.resize()
-    }
-}
+    chart.value.resize();
+};
 </script>
