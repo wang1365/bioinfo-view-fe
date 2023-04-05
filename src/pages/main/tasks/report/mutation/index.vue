@@ -37,8 +37,8 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="胚系突变分析" label="胚系突变分析" v-if="props.viewConfig.showMutGermline" />
-            <q-tab name="体细胞突变分析" label="体细胞突变分析" v-if="props.viewConfig.showMutSomatic" />
+            <q-tab name="胚系突变分析" :label="$t('GermlineMutationAnalysis')" v-if="props.viewConfig.showMutGermline" />
+            <q-tab name="体细胞突变分析" :label="$t('SomaticMutationAnalysis')" v-if="props.viewConfig.showMutSomatic" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">
@@ -76,12 +76,12 @@
         </q-tab-panels>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
-                <q-bar class="bg-primary text-white">突变分析</q-bar>
+                <q-bar class="bg-primary text-white">{{ $t('MutationAnalysis') }}</q-bar>
                 <q-card-section>
                     <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">关闭</q-btn>
+                    <q-btn v-close-popup color="primary">{{ $t('Close') }}</q-btn>
                 </q-card-actions>
             </q-card>
         </q-dialog>

@@ -313,7 +313,7 @@
             </q-card-section>
             <q-space></q-space>
             <q-card-actions align="center" vertical>
-                <q-btn label="关 闭" color="primary" v-close-popup></q-btn>
+                <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>

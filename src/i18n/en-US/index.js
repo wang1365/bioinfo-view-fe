@@ -145,6 +145,7 @@ export default {
     CopyTo: 'Copy To',
     CopyToClipboard: 'Copy To Clipboard',
     Clipboard: 'Clipboard',
+    Result: 'Result',
 
     // phrase
     SystemManage: 'System Manage',
@@ -281,6 +282,7 @@ export default {
 
     // 突变分析
     GermlineMutationAnalysis: 'Germline Mutation Analysis',
+    SomaticMutationAnalysis: 'Somatic Mutation Analysis',
     Depth: 'Depth',
     TumorFrequency: 'Tumor Frequency',
     MutationType: 'Mutation Type',
@@ -289,4 +291,6 @@ export default {
     MutationRisk: 'Mutation Risk',
     CrowdFrequency: 'Crowd Frequency',
     RelatedToDrugs: 'Related to Drugs',
+    MoreColumns: 'More Columns',
+    SelectAll: 'Select All',
 }

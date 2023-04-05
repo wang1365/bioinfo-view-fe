@@ -143,6 +143,7 @@ export default {
     CopyTo: '拷贝到',
     CopyToClipboard: '拷贝到剪切板',
     Clipboard: '剪切板',
+    Result: '结果',
 
     // 词组
     SystemManage: '系统管理',
@@ -281,6 +282,7 @@ export default {
 
     // 突变分析
     GermlineMutationAnalysis: '胚系突变分析',
+    SomaticMutationAnalysis: '体细胞突变分析',
     Depth: '深度',
     TumorFrequency: '肿瘤频率',
     MutationType: '突变类型',
@@ -289,6 +291,8 @@ export default {
     MutationRisk: '突变危险',
     CrowdFrequency: '人群频率',
     RelatedToDrugs: '是否关联药物',
+    MoreColumns: '扩展列',
+    SelectAll: '全选',
     // Depth: '',
     // Depth: '',
     // Depth: '',

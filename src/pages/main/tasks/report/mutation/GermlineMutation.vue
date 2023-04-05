@@ -5,7 +5,7 @@
                 <div class="column" style="width:90%">
                     <q-input
                         v-model="innerSearchParams.gene"
-                        label="基因"
+                        :label="$t('Gene')"
                         clearable
                         stack-label
                         label-color="primary"
@@ -15,7 +15,7 @@
 
                     <q-input
                         v-model="innerSearchParams.depth"
-                        :label="'深度 ' + innerSearchParams.depthCmp"
+                        :label="$t('Depth') + ' ' + innerSearchParams.depthCmp"
                         clearable
                         type="number"
                         stack-label
@@ -30,7 +30,7 @@
 
                     <q-input
                         v-model="innerSearchParams.ratio"
-                        :label="'肿瘤频率' + innerSearchParams.ratioCmp"
+                        :label="$t('TumorFrequency') + ' ' + innerSearchParams.ratioCmp"
                         clearable
                         type="number"
                         stack-label
@@ -48,7 +48,7 @@
                         multiple
                         hide-dropdown-icon
                         :options="props.options.mutationType"
-                        label="突变类型"
+                        :label="$t('MutationType')"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -60,7 +60,7 @@
                         clearable
                         multiple
                         :options="props.options.mutationPosition"
-                        label="突变位置"
+                        :label="$t('MutationPosition')"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -75,7 +75,7 @@
                         multiple
                         label-color="primary"
                         :options="props.options.mutationMeaning"
-                        label="突变意义"
+                        :label="$t('MutationMeaning')"
                         class="full-width"
                         :disable="showSticky && stickDone"
                     />
@@ -87,13 +87,13 @@
                         multiple
                         label-color="primary"
                         :options="props.options.mutationRisk"
-                        label="突变危险"
+                        :label="$t('MutationRisk')"
                         class="full-width"
                         :disable="showSticky && stickDone"
                     />
                     <q-input
                         v-model="innerSearchParams.humanRatio"
-                        :label="'人群频率 ' + innerSearchParams.humanRatioCmp"
+                        :label="$t('CrowdFrequency') + ' ' + innerSearchParams.humanRatioCmp"
                         clearable
                         hide-dropdown-icon
                         type="number"
@@ -124,18 +124,18 @@
                         <q-checkbox
                             left-label
                             v-model="innerSearchParams.drug"
-                            label="是否关联药物"
+                            :label="$t('RelatedToDrugs')"
                             color="primary"
                             :disable="showSticky && stickDone"
                         />
-                        <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
+                        <div class="text-primary text-bold">{{ $t('Result') + `： ${filteredRows.length}` }}</div>
                     </div>
 
                     <div class="q-gutter-xs text-center q-py-sm justify-between">
                         <q-btn
                             color="primary"
                             :label="$t('Confirm')"
-                            size="md"
+                            size="md" padding="sm"
                             icon="search"
                             @click="search"
                             :disable="showSticky && stickDone"
@@ -143,20 +143,20 @@
                         <q-btn
                             color="primary"
                             :label="$t('Reset')"
-                            size="md"
+                            size="md" padding="sm"
                             icon="settings_backup_restore"
                             @click="reset"
                             :disable="showSticky && stickDone"
                         />
                         <q-btn
                             color="primary"
-                            label="扩展列"
-                            size="md"
+                            :label="$t('MoreColumns')"
+                            size="md" padding="sm"
                             icon="last_page"
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn :href="tableFile" :label="$t('Download')" icon="south" color="primary" target="_blank" size="md" />
+                        <q-btn :href="tableFile" :label="$t('Download')" padding="sm" icon="south" color="primary" target="_blank" size="md" />
                     </div>
                 </div>
             </template>
@@ -210,7 +210,7 @@
             <q-card style="width: 50%">
                 <q-card-section>
                     <div class="q-col">
-                        <div class="text-h6 q-mb-sm">选择扩展列</div>
+                        <div class="text-h6 q-mb-sm">{{$t('MoreColumns')}}</div>
                         <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
@@ -228,9 +228,9 @@
                 </q-card-section>
 
                 <q-card-actions align="center">
-                    <q-btn color="primary" @click="clickSelectAll">全选</q-btn>
+                    <q-btn color="primary" @click="clickSelectAll">{{ $t('SelectAll') }}</q-btn>
                     <q-btn color="primary" @click="clickSelectNone">$t('Clear')</q-btn>
-                    <q-btn color="primary" v-close-popup>确定</q-btn>
+                    <q-btn color="primary" v-close-popup>{{ $t('Confirm') }}</q-btn>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -265,7 +265,7 @@
                 <MutationInfo :row="currentRow" :task="props.task" :samples="props.samples"></MutationInfo>
             </q-card-section>
             <q-card-actions align="center" vertical>
-                <q-btn label="关 闭" color="primary" v-close-popup></q-btn>
+                <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -291,7 +291,9 @@ import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const splitterModel = ref(250)
 const emit = defineEmits(['filterChange'])
 const props = defineProps({
@@ -742,11 +744,14 @@ onMounted(() => {
 })
 
 const propSearchParams = toRef(props, 'searchParams')
+const actionTitle = computed(() => t('Actions'))
 
 // 加载表格数据
 const loadTable = () => {
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
-    columns.value[columns.value.length - 1].title = '操 作'
+    const actionColumn = columns.value[columns.value.length - 1]
+    actionColumn.title = actionTitle
+    actionColumn.width = 105
 
     const visibleColIdx = columns.value.map((t) => t.i)
 
