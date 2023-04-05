@@ -79,6 +79,7 @@ export default {
     All: 'All',
     Search: 'Search',
     Confirm: 'Confirm',
+    Close: 'Close',
     Some: 'Some',
     Title: 'Title',
     Menu: 'Menu',
@@ -249,4 +250,43 @@ export default {
     AllowedRunningTime: 'Allowed running duration(Days)',
     AlreadyRun: 'Already run',
     Days: 'Day(s)',
+
+    // 任务结果
+    QC: 'QC',
+    MutationAnalysis: 'Mutation Analysis',
+    FusionAnalysis: 'Fusion',
+    TumorMutationLoadAnalysis: 'Tumor Mutation Load Analysis',
+    HomologousRecombinationDefectAnalysis: 'Homologous Recombination Defect Analysis',
+    CopyNumberVariationAnalysis: 'Copy Number Variation Analysis',
+    MicroSatelliteInstability: 'Micro-satellite Instability',
+
+    // QC
+    CaptureKitQcInformation: 'Capture Kit QC Information',
+    DepthInformation:'Depth Information',
+    OnTargetRateOfTumorSamples: 'On-Target Rate of Tumor Samples',
+    OnTargetRateOfControlSamples: 'On-Target Rate of Control Samples',
+    QualityParameters: 'Quality Parameters',
+    TumorValue: 'Tumor Value',
+    ControlValue: 'Control Value',
+    QcStandards: 'Qc Standards',
+
+    InputGeneToSearch: 'Input gene to search',
+    GeneSearch: 'Gene Search',
+    Gene: 'Gene',
+    DepthAverage: 'Depth Average',
+    DepthMedian: 'Depth Median',
+    GeneCoverage: 'Gene Coverage',
+    ControlSample: 'Control Sample',
+    TumorSample: 'Tumor Sample',
+
+    // 突变分析
+    GermlineMutationAnalysis: 'Germline Mutation Analysis',
+    Depth: 'Depth',
+    TumorFrequency: 'Tumor Frequency',
+    MutationType: 'Mutation Type',
+    MutationPosition: 'Mutation Position',
+    MutationMeaning: 'Mutation Meaning',
+    MutationRisk: 'Mutation Risk',
+    CrowdFrequency: 'Crowd Frequency',
+    RelatedToDrugs: 'Related to Drugs',
 }

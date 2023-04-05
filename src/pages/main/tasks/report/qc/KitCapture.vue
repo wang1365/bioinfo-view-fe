@@ -1,8 +1,8 @@
 <template>
     <div class="q-py-sm">
         <div class="text-bold">
-            <span>{{`肿瘤样本的中靶率：${onTarget.v1}`}}</span>
-            <span v-if="props.samples.length > 1">{{`，对照样本中靶率：${onTarget.v2}`}}</span>
+            <span>{{$t('OnTargetRateOfTumorSamples') + `：${onTarget.v1}`}}</span>
+            <span v-if="props.samples.length > 1">{{'，' + $t('OnTargetRateOfControlSamples') + `：${onTarget.v2}`}}</span>
         </div>
     </div>
     <q-separator></q-separator>
@@ -25,7 +25,9 @@ import { useRoute } from 'vue-router'
 import { getReportTable, getReportText } from "src/api/report"
 import { readTaskFile } from "src/api/task"
 import { getCsvData } from "src/utils/csv"
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const route = useRoute()
 const loading = ref(false)
 const props = defineProps({
@@ -78,16 +80,16 @@ const columns = computed(() => {
                 }
             }
         },
-        {title: '质量参数', dataIndex: 'k1',  align: 'left', width: 100, customCell: groupCustomCell},
-        {title: '肿瘤数值', dataIndex: 'k2', align: 'center', width: 120, customCell: groupCustomCell},
+        {title: t('QualityParameters'), dataIndex: 'k1',  align: 'left', width: 100, customCell: groupCustomCell},
+        {title: t('TumorValue'), dataIndex: 'k2', align: 'center', width: 120, customCell: groupCustomCell},
         // {title: '对照数值', dataIndex: 'k3', align: 'center', width: 120, customCell: groupCustomCell},
         // {title: '质控标准', dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell},
     ]
 
     if (props.samples.length !== 1) {
-        result.push({title: '对照数值', dataIndex: 'k3', align: 'center', width: 120, customCell: groupCustomCell})
+        result.push({title: t('ControlValue'), dataIndex: 'k3', align: 'center', width: 120, customCell: groupCustomCell})
     }
-    result.push({title: '质控标准', dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell})
+    result.push({title: t('QC Standards'), dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell})
     return result
 })
 

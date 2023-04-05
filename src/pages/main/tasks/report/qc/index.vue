@@ -18,8 +18,8 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="试剂盒捕获质控信息" label="捕获试剂盒质控信息" v-if="props.viewConfig.showQCsummary" />
-            <q-tab name="深度信息" label="深度信息" v-if="props.viewConfig.showQCdepth" />
+            <q-tab name="试剂盒捕获质控信息" :label="$t('CaptureKitQcInformation')" v-if="props.viewConfig.showQCsummary" />
+            <q-tab name="深度信息" :label="$t('DepthInformation')" v-if="props.viewConfig.showQCdepth" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="试剂盒捕获质控信息">
@@ -35,12 +35,12 @@
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
-                <q-bar class="bg-primary text-white">质控</q-bar>
+                <q-bar class="bg-primary text-white">{{$t('QC')}}</q-bar>
                 <q-card-section>
                     <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">关闭</q-btn>
+                    <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
                 </q-card-actions>
             </q-card>
         </q-dialog>

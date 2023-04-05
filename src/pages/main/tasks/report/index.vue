@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <div class="row items-center">
-            <h6>任务结果</h6>
+            <h6>{{$t('TaskResult')}}</h6>
             <q-space />
             <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
@@ -17,30 +17,30 @@
                 :breakpoint="0"
                 dense
             >
-                <q-tab name="qc" label="质控" icon="border_left" v-if="tabValid('qc')" />
-                <q-tab name="mutation" label="突变分析" icon="candlestick_chart" v-if="tabValid('mutation')" />
-                <q-tab name="fusion" label="融合分析" icon="format_strikethrough" v-if="tabValid('fusion')" />
+                <q-tab name="qc" :label="$t('QC')" icon="border_left" v-if="tabValid('qc')" />
+                <q-tab name="mutation" :label="$t('MutationAnalysis')" icon="candlestick_chart" v-if="tabValid('mutation')" />
+                <q-tab name="fusion" :label="$t('FusionAnalysis')" icon="format_strikethrough" v-if="tabValid('fusion')" />
                 <q-tab
                     name="copy-number-variation"
-                    label="拷贝数变异分析"
+                    :label="$t('CopyNumberVariationAnalysis')"
                     icon="polyline"
                     v-if="tabValid('copy-number-variation')"
                 />
                 <q-tab
                     name="microsatellite-instability"
-                    label="微卫星不稳定"
+                    :label="$t('MicroSatelliteInstability')"
                     icon="shape_line"
                     v-if="tabValid('microsatellite-instability')"
                 />
                 <q-tab
                     name="tumor-mutation-load"
-                    label="肿瘤突变负荷分析"
+                    :label="$t('TumorMutationLoadAnalysis')"
                     icon="bubble_chart"
                     v-if="tabValid('tumor-mutation-load')"
                 />
                 <q-tab
                     name="homologous-recombination-defect"
-                    label="同源重组缺陷分析"
+                    :label="$t('HomologousRecombinationDefectAnalysis')"
                     icon="line_axis"
                     v-if="tabValid('homologous-recombination-defect')"
                 />
