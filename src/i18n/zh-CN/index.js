@@ -335,13 +335,20 @@ export default {
 
     // 患者
     Patient: '患者',
-    PatientName: '患者姓名',
     Age: '年龄',
+    PatientIdentifier: '患者标识号',
+    PatientName: '患者姓名',
+    PatientAge: '患者年龄',
 
     // 样本
-    SamplingSite: '采样部位',
-    SampleIdentifier: '样本识别号',
     SampleInformation: '样本信息',
+    SampleComponent: '采样部位',
+    SampleIdentifier: '样本识别号',
+    SampleType: '样本类型',
+    IsTumor: '是否肿瘤',
+    TumorDose: '肿瘤含量',
+    SamplingDate: '采样日期',
+    TestDate: '送测日期',
 
     // 样本数据
     SampleDataSearch: '样本数据检索',

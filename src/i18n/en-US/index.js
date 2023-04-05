@@ -335,13 +335,20 @@ export default {
 
     // 患者
     Patient: 'Patient',
-    PatientName: 'Patient Name',
     Age: 'Age',
+    PatientIdentifier: 'Patient Identifier',
+    PatientName: 'Patient Name',
+    PatientAge: 'Patient Age',
 
     // 样本
-    SamplingSite: 'Sampling Site',
-    SampleIdentifier: 'Sample Identifier',
     SampleInformation: 'Sample Information',
+    SampleComponent: 'Sample Component',
+    SampleIdentifier: 'Sample Identifier',
+    SampleType: 'Sample Type',
+    IsTumor: 'Is Tumor',
+    TumorDose: 'Tumor Dose',
+    SamplingDate: 'Sampling Date',
+    TestDate: 'Test Date',
 
     // 样本数据
     SampleDataSearch: 'Sample Data Search',
