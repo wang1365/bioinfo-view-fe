@@ -293,4 +293,10 @@ export default {
     RelatedToDrugs: 'Related to Drugs',
     MoreColumns: 'More Columns',
     SelectAll: 'Select All',
+    MutationTypeStatistics: 'Mutation Type Statistics',
+    MutationPositionStatistics: 'Mutation Position Statistics',
+    MutationMeaningStatistics: 'Mutation Meaning Statistics',
+    MutationRiskStatistics: 'Mutation Risk Statistics',
+    CrowdFrequencyStatistics: 'Crowd Frequency Statistics',
+    SnpStatistics: 'SNP Statistics',
 }

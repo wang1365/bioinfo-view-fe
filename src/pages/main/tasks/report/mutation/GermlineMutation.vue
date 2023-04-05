@@ -240,22 +240,22 @@
     <div class="q-my-sm" v-if="!showColumn">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
-                <PieChartVue :data="filteredRows" />
+                <PieChartVue :data="filteredRows" :titleKey="chartTitles.type" />
             </div>
             <div class="col q-px-xs">
-                <RoseChartVue :data="filteredRows" col-key="col13" title="突变意义统计" />
+                <RoseChartVue :data="filteredRows" col-key="col13" :titleKey="chartTitles.meaning" />
             </div>
             <div class="col q-px-xs">
-                <RoseChartVue :data="filteredRows" col-key="col21" title="突变危险统计" />
+                <RoseChartVue :data="filteredRows" col-key="col21" :titleKey="chartTitles.risk" />
             </div>
         </div>
         <div class="row">
             <div class="col-4 q-px-xs">
-                <BarChartVue :data="filteredRows" />
+                <BarChartVue :data="filteredRows" :titleKey="chartTitles.snp" />
             </div>
 
             <div class="col-8 q-px-xs">
-                <BubbleChartVue :data="filteredRows" :colKeys="['col26', 'col31', 'col39']" />
+                <BubbleChartVue :data="filteredRows" :titleKey="chartTitles.crowd" :colKeys="['col26', 'col31', 'col39']" />
             </div>
         </div>
     </div>
@@ -409,6 +409,14 @@ const innerSearchParams = ref({
     sift: null,
     drug: false,
 })
+
+const chartTitles = {
+        type: 'MutationTypeStatistics',
+        meaning: 'MutationMeaningStatistics',
+        risk: 'MutationRiskStatistics',
+        crowd: 'CrowdFrequencyStatistics',
+        snp: 'SnpStatistics',
+}
 
 const showDrawer = ref(false)
 

@@ -6,15 +6,29 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch, toRefs } from "vue";
+import {markRaw, onMounted, ref, watch, toRefs, computed} from "vue";
 import * as echarts from 'echarts'
+import { useI18n } from 'vue-i18n'
 
+const { t, locale } = useI18n()
+const props = defineProps({
+    data: {
+        type: Array,
+        required: false,
+        default: () => []
+    },
+    titleKey: {
+        type: String,
+        required: false,
+        default: () => ''
+    }
+})
 
 const chart = ref(null);
 const piechart = ref(null);
 const option = ref({
     title: {
-      text: '突变类型统计'
+      text: computed(() => t(props.titleKey))
     },
     tooltip: {
         trigger: "item",
@@ -49,13 +63,6 @@ const option = ref({
     ],
 })
 
-const props = defineProps({
-    data: {
-        type: Array,
-        required: false,
-        default: () => []
-    }
-})
 
 const { data } = toRefs(props)
 
@@ -66,6 +73,7 @@ onMounted(() => {
 watch(data, () => {
     refreshChart()
 })
+watch(locale, () => refreshChart() )
 
 const refreshChart = () => {
     const snp = ['A','T','C','G']

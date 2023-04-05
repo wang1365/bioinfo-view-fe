@@ -9,7 +9,9 @@
 import {markRaw, onMounted, ref, watch, toRefs, computed} from "vue";
 import * as echarts from 'echarts'
 import * as _ from 'lodash'
+import { useI18n } from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const chart = ref(null);
 const piechart = ref(null);
 
@@ -25,7 +27,7 @@ const props = defineProps({
         required: false,
         default: () => ''
     },
-    title: {
+    titleKey: {
         type: String,
         required: false,
         default: () => ''
@@ -34,7 +36,7 @@ const props = defineProps({
 
 const option = ref({
     title: {
-        text: props.title
+        text: computed(() => t(props.titleKey))
     },
     legend: {
         show: false,
@@ -79,6 +81,7 @@ const {data} = toRefs(props)
 watch(data, () => {
     refreshChart()
 })
+watch(locale, () => refreshChart())
 
 onMounted(() => {
     init();

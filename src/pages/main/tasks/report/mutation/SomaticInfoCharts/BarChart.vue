@@ -6,10 +6,12 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch, toRefs } from "vue";
+import {markRaw, onMounted, ref, watch, toRefs, computed} from "vue";
 import * as _ from 'lodash'
 import * as echarts from 'echarts'
+import { useI18n }from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const chart = ref(null);
 const barchart = ref(null);
 
@@ -18,6 +20,11 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => { return [] }
+    },
+    titleKey: {
+        type: String,
+        required: false,
+        default: () => ''
     }
 })
 
@@ -25,7 +32,7 @@ const { data } = toRefs(props)
 
 const option = ref({
     title: {
-      text: 'SNP统计'
+      text: computed(() => t(props.titleKey)) || 'SNP统计'
     },
     xAxis: {
         type: 'category',
@@ -57,9 +64,8 @@ const option = ref({
     ]
 })
 
-watch(data, v => {
-    refreshChart()
-})
+watch(locale, v => refreshChart() )
+watch(data, v => refreshChart() )
 
 const refreshChart = () => {
     const snp = ['A','T','C','G']

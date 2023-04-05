@@ -6,9 +6,11 @@
 </template>
 
 <script setup>
-import {markRaw, onMounted, ref, watch, toRefs} from "vue";
+import {markRaw, onMounted, ref, watch, toRefs, computed} from "vue";
 import * as echarts from 'echarts'
+import { useI18n }from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const chart = ref(null);
 const piechart = ref(null);
 const adjustedData = ref([])
@@ -23,6 +25,11 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => []
+    },
+    titleKey: {
+        type: String,
+        required: false,
+        default: () => ''
     }
 })
 
@@ -32,10 +39,12 @@ watch(data, () => {
     refresh()
 })
 
+watch(locale, () => refresh() )
+
 const option = ref({
     title: [
         {
-            text: '人群频率分布',
+            text: computed(() => t(props.titleKey))
         },
         {
             text: 'ExAC_EAS',
