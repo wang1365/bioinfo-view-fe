@@ -5,7 +5,7 @@
                 <div class="column" style="width:90%">
                     <q-input
                         v-model="innerSearchParams.gene"
-                        label="基因"
+                        :label="$t('Gene')"
                         clearable
                         stack-label
                         label-color="primary"
@@ -14,7 +14,7 @@
                     />
                     <q-input
                         v-model="innerSearchParams.tumorDepth"
-                        :label="'肿瘤深度 ' + innerSearchParams.tumorDepthCmp"
+                        :label="$t('TumorDepth') + ' ' + innerSearchParams.tumorDepthCmp"
                         clearable
                         type="number"
                         stack-label
@@ -28,7 +28,7 @@
                     </q-input>
                     <q-input
                         v-model="innerSearchParams.compareDepth"
-                        :label="'对照深度 ' + innerSearchParams.compareDepthCmp"
+                        :label="$t('ControlDepth') + innerSearchParams.compareDepthCmp"
                         clearable
                         type="number"
                         stack-label
@@ -42,7 +42,7 @@
                     </q-input>
                     <q-input
                         v-model="innerSearchParams.tumorRatio"
-                        :label="'肿瘤频率 ' + innerSearchParams.tumorRatioCmp"
+                        :label="$t('TumorFrequency') + ' ' + innerSearchParams.tumorRatioCmp"
                         clearable
                         type="number"
                         stack-label
@@ -56,7 +56,7 @@
                     </q-input>
                     <q-input
                         v-model="innerSearchParams.compareRatio"
-                        :label="'对照频率 ' + innerSearchParams.compareRatioCmp"
+                        :label="$t('ControlFrequency') + ' ' + innerSearchParams.compareRatioCmp"
                         clearable
                         type="number"
                         stack-label
@@ -75,7 +75,7 @@
                         multiple
                         hide-dropdown-icon
                         :options="props.options.mutationType"
-                        label="突变类型"
+                        :label="$t('MutationType')"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -88,7 +88,7 @@
                         multiple
                         hide-dropdown-icon
                         :options="props.options.mutationPosition"
-                        label="突变位置"
+                        :label="$t('MutationPosition')"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -102,7 +102,7 @@
                         multiple
                         label-color="primary"
                         :options="props.options.mutationMeaning"
-                        label="突变意义"
+                        :label="$t('MutationMeaning')"
                         class="full-width"
                         :disable="showSticky && stickDone"
                     />
@@ -114,13 +114,13 @@
                         multiple
                         label-color="primary"
                         :options="props.options.mutationRisk"
-                        label="突变危险"
+                        :label="$t('MutationRisk')"
                         class="full-width"
                         :disable="showSticky && stickDone"
                     />
                     <q-input
                         v-model="innerSearchParams.humanRatio"
-                        :label="'人群频率 ' + innerSearchParams.humanRatioCmp"
+                        :label="$t('CrowdFrequency') + ' ' + innerSearchParams.humanRatioCmp"
                         clearable
                         hide-dropdown-icon
                         type="number"
@@ -149,18 +149,18 @@
                         <q-checkbox
                             left-label
                             v-model="innerSearchParams.drug"
-                            label="是否关联药物"
+                            :label="$t('RelatedToDrugs')"
                             color="primary"
                             :disable="showSticky && stickDone"
                         />
-                        <div class="text-primary text-bold">{{ `结果： ${filteredRows.length}条` }}</div>
+                        <div class="text-primary text-bold">{{ $t('Result') + `： ${filteredRows.length}` }}</div>
                     </div>
 
                     <div class="q-gutter-xs text-center justify-between">
                         <q-btn
                             color="primary"
                             :label="$t('Confirm')"
-                            icon="search"
+                            icon="search" padding="sm"
                             @click="search"
                             :disable="showSticky && stickDone"
                         />
@@ -168,18 +168,18 @@
                             color="primary"
                             :label="$t('Reset')"
                             icon="settings_backup_restore"
-                            @click="reset"
+                            @click="reset" padding="sm"
                             :disable="showSticky && stickDone"
                         />
                         <q-btn
                             color="primary"
-                            label="扩展列"
-                            size="md"
+                            :label="$t('MoreColumns')"
+                            size="md" padding="sm"
                             icon="last_page"
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn :href="tableFile" :label="$t('Download')" icon="south" color="primary" target="_blank" size="md" />
+                        <q-btn :href="tableFile"  padding="sm" :label="$t('Download')" icon="south" color="primary" target="_blank" size="md" />
                     </div>
                 </div>
             </template>
@@ -286,22 +286,22 @@
     <div class="q-my-sm" v-if="!showColumn">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
-                <PieChartVue :data="filteredRows" />
+                <PieChartVue :data="filteredRows" :titleKey="chartTitles.type"/>
             </div>
             <div class="col q-px-xs">
-                <RoseChartVue :data="filteredRows" col-key="col17" title="突变意义统计" />
+                <RoseChartVue :data="filteredRows" col-key="col17" :titleKey="chartTitles.meaning"/>
             </div>
             <div class="col q-px-xs">
-                <RoseChartVue :data="filteredRows" col-key="col25" title="突变危险统计" />
+                <RoseChartVue :data="filteredRows" col-key="col25" :titleKey="chartTitles.risk" />
             </div>
         </div>
         <div class="row">
             <div class="col-4 q-px-xs">
-                <BarChartVue :data="filteredRows" />
+                <BarChartVue :data="filteredRows" :titleKey="chartTitles.snp"/>
             </div>
 
             <div class="col-8 q-px-xs">
-                <BubbleChartVue :data="filteredRows" :colKeys="['col30', 'col35', 'col43']" />
+                <BubbleChartVue :data="filteredRows" :titleKey="chartTitles.crowd" :colKeys="['col30', 'col35', 'col43']" />
             </div>
         </div>
     </div>
@@ -341,7 +341,9 @@ import Igv from './Igv'
 import Cmp from './Comparator'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useComparator } from 'src/utils/comparator'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const splitterModel = ref(250)
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
@@ -490,6 +492,14 @@ const tumorColumnIdx = computed(() => {
 })
 
 const showDrawer = ref(false)
+
+const chartTitles = {
+    type: 'MutationTypeStatistics',
+    meaning: 'MutationMeaningStatistics',
+    risk: 'MutationRiskStatistics',
+    crowd: 'CrowdFrequencyStatistics',
+    snp: 'SnpStatistics',
+}
 
 const customCell = (record, rowIndex, column) => {
     return {
@@ -850,7 +860,7 @@ onMounted(() => {
 const propSearchParams = toRef(props, 'searchParams')
 const loadTable = () => {
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
-    columns.value[columns.value.length - 1].title = '操 作'
+    columns.value[columns.value.length - 1].title = computed(() => t('Action'))
 
     const visibleColIdx = columns.value.map((t) => t.i)
     innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)

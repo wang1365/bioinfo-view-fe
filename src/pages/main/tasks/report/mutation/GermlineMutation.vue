@@ -411,11 +411,11 @@ const innerSearchParams = ref({
 })
 
 const chartTitles = {
-        type: 'MutationTypeStatistics',
-        meaning: 'MutationMeaningStatistics',
-        risk: 'MutationRiskStatistics',
-        crowd: 'CrowdFrequencyStatistics',
-        snp: 'SnpStatistics',
+    type: 'MutationTypeStatistics',
+    meaning: 'MutationMeaningStatistics',
+    risk: 'MutationRiskStatistics',
+    crowd: 'CrowdFrequencyStatistics',
+    snp: 'SnpStatistics',
 }
 
 const showDrawer = ref(false)
