@@ -209,6 +209,7 @@ export default {
     Intro: 'Intro.',
     Back: 'Back',
     TaskResult: 'Task Result',
+    TotalCount: 'Total Count',
 
     // 菜单
     PanelFlow: 'Panel Flow',
@@ -340,6 +341,7 @@ export default {
     // 样本
     SamplingSite: 'Sampling Site',
     SampleIdentifier: 'Sample Identifier',
+    SampleInformation: 'Sample Information',
 
     // 样本数据
     SampleDataSearch: 'Sample Data Search',
@@ -357,4 +359,11 @@ export default {
     NucleicType: 'Nucleic Type',
     Fastq1Path: 'fastq1 Path',
     Fastq2Path: 'fastq2 Path',
+
+    // 基因组浏览
+    GenomeView: 'Genome View',
+    SelectGenomeFile: 'Select genome file',
+    InputResultFilePath: 'Input result file path',
+    SelectFileFormat:'Select file format',
+    SelectTrackType: 'Select track type',
 }

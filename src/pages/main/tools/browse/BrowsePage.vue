@@ -31,18 +31,18 @@
         <!--        </q-expansion-item>-->
         <q-banner>
             <q-tabs v-model="tab" dense>
-                <q-tab label="基因组浏览" name="igv"></q-tab>
-                <q-tab label="样本信息" name="sample"></q-tab>
+                <q-tab :label="$t('GenomeView')" name="igv"></q-tab>
+                <q-tab :label="$t('SampleInformation')" name="sample"></q-tab>
                 <q-space />
                 <q-btn
                     v-if="hasAnyRole(['super'])"
-                    label="选择基因组文件"
+                    :label="$t('SelectGenomeFile')"
                     color="primary"
                     size="sm"
                     @click="inputDlgVisible = true"
                 />
                 <q-btn
-                    label="返 回"
+                    :label="$t('Back')"
                     color="primary" icon="arrow_back"
                     size="sm" class="q-ml-sm"
                     @click="router.back()"
@@ -53,13 +53,13 @@
                             <q-input
                                 v-model="inputForm.file"
                                 label-color="primary"
-                                label="输入结果文件路径"
+                                :label="$t('InputResultFilePath')"
                                 stack-label
                             />
                             <div class="row">
                                 <q-select
                                     v-model="inputForm.format"
-                                    label="选择文件格式"
+                                    :label="$t('SelectFileFormat')"
                                     label-color="primary"
                                     stack-label
                                     class="col-6"
@@ -67,7 +67,7 @@
                                 />
                                 <q-select
                                     v-model="inputForm.type"
-                                    label="选择Track类型"
+                                    :label="$t('SelectTrackType')"
                                     label-color="primary"
                                     stack-label
                                     class="col-6"
@@ -78,7 +78,7 @@
                         </q-card-section>
                         <q-card-actions align="right">
                             <q-btn :label="$t('Confirm')" color="primary" @click="addIgvFile" v-close-popup />
-                            <q-btn label="取消" v-close-popup />
+                            <q-btn :label="$t('Cancel')" v-close-popup />
                         </q-card-actions>
                     </q-card>
                 </q-dialog>

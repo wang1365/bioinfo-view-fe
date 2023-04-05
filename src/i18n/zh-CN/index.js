@@ -207,6 +207,7 @@ export default {
     Intro: '说明',
     Back: '返回',
     TaskResult: '任务结果',
+    TotalCount: '总数',
 
     // 菜单
     PanelFlow: 'Panel分析流程',
@@ -340,6 +341,7 @@ export default {
     // 样本
     SamplingSite: '采样部位',
     SampleIdentifier: '样本识别号',
+    SampleInformation: '样本信息',
 
     // 样本数据
     SampleDataSearch: '样本数据检索',
@@ -358,4 +360,10 @@ export default {
     Fastq1Path: 'fastq1文件地址',
     Fastq2Path: 'fastq2文件地址',
 
+    // 基因组浏览
+    GenomeView: '基因组浏览',
+    SelectGenomeFile: '选择基因组文件',
+    InputResultFilePath: '输入结果文件路径',
+    SelectFileFormat:'选择文件格式',
+    SelectTrackType: '选择Track类型',
 }
