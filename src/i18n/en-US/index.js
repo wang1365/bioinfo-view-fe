@@ -271,6 +271,9 @@ export default {
     TumorValue: 'Tumor Value',
     ControlValue: 'Control Value',
     QcStandards: 'Qc Standards',
+    PathologicalEvaluation: 'Pathological Evaluation',
+    DNAQualityAssessment: 'DNA Quality Assessment',
+    SequencingQualityAssessment: 'Sequencing Quality Assessment',
 
     InputGeneToSearch: 'Input gene to search',
     GeneSearch: 'Gene Search',

@@ -271,6 +271,9 @@ export default {
     TumorValue: '肿瘤数值',
     ControlValue: '对照数值',
     QcStandards: '质量标准',
+    PathologicalEvaluation: '病理评估',
+    DNAQualityAssessment: 'DNA质量评估',
+    SequencingQualityAssessment: '测序质量评估',
 
     InputGeneToSearch: '输入基因进行搜索',
     GeneSearch: '基因搜索',

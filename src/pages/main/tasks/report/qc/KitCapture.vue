@@ -70,13 +70,13 @@ const columns = computed(() => {
             },
             customRender: ({text, record, index, column}) => {
                 if (index === 0) {
-                    return '病理评估'
+                    return t('PathologicalEvaluation')
                 }
                 if (index === 1) {
-                    return 'DNA质量评估'
+                    return t('DNAQualityAssessment')
                 }
                 if (index === 4) {
-                    return '测序质量评估'
+                    return t('SequencingQualityAssessment')
                 }
             }
         },
