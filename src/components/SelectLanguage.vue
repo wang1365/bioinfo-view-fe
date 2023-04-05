@@ -26,6 +26,9 @@ onMounted(() => {
     console.log('==========> navigator.language', navigator.language)
     console.log('==========> store.lang', store.lang)
     console.log('==========> locale', locale)
+    if (store.lang !== locale.value) {
+        locale.value = store.lang
+    }
 })
 
 const updateLang = (v) => {
