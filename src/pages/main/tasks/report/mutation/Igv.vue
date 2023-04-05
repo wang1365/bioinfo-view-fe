@@ -18,7 +18,7 @@ import { ref, onMounted, onUpdated } from 'vue'
 import { readTaskFile } from "src/api/task"
 import { uid } from 'quasar'
 import * as hg from 'src/utils/refGenome'
-import igv from "igv"
+import * as igvs from "igv"
 
 const props = defineProps({
     taskId: {
@@ -76,7 +76,9 @@ const onResize = () => {
 const refreshIgvBrowser = (id, options) => {
     const div = document.getElementById(id)
 
-    console.log('==> 创建IGV浏览器节点', id, div, options)
+    console.log('==> 创建IGV浏览器节点', id, igvs, options)
+    const { igv } = igvs
+    console.log('==> 创建IGV浏览器节点', igv)
     igv.createBrowser(div, options)
         .then(function (browser) {
             console.log("Created IGV browser", browser)
