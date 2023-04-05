@@ -33,7 +33,7 @@ const menu = [
     },
     {
         icon: 'description',
-        label: 'SampleMange',
+        label: 'SampleManage',
         separator: false,
         path: '/main/samples',
     },

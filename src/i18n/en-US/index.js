@@ -270,6 +270,9 @@ export default {
     EditFlow: 'Edit Flow',
     FlowDetail: 'Flow Detail',
     ShowGroup: 'Show Group',
+    AnalysisFlowComment: 'Analysis Flow Comment',
+    CapturePanelDescription: 'Capture Panel Description',
+    Pair: 'Paired',
 
     // 系统界面配置
     SystemUiConfig: 'System UI Config',

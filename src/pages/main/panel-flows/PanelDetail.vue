@@ -1,9 +1,9 @@
 <template>
     <div class="q-pa-xs">
-        <PageTitle :title="detail.name + '分析流程说明'" />
+        <PageTitle :title="detail.name + $t('AnalysisFlowComment')" />
         <q-list>
             <q-expansion-item
-                label="捕获Panel介绍"
+                :label="$t('CapturePanelDescription')"
                 dense
                 default-opened
                 class="shadow-1 overflow-hidden"
@@ -14,7 +14,7 @@
                 <q-input v-model="detail.desp" type="textarea" readonly> </q-input>
             </q-expansion-item>
             <q-expansion-item
-                label="流程分析模块"
+                :label="$t('FlowAnalysisModule')"
                 dense
                 default-opened
                 class="shadow-1 overflow-hidden q-my-sm"
@@ -33,7 +33,7 @@
                     <q-badge
                         color="orange"
                         v-if="flow.sample_type === 'double'"
-                        label="配对"
+                        :label="$t('Pair')"
                         floating
                         transparent
                         align="bottom"

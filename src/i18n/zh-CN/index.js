@@ -270,6 +270,9 @@ export default {
     EditFlow: '修改流程',
     FlowDetail: '流程详情',
     ShowGroup: '是否展示分组',
+    AnalysisFlowComment: '分析流程说明',
+    CapturePanelDescription: '捕获Panel介绍',
+    Pair: '配对',
 
     // 系统界面配置
     SystemUiConfig: '系统界面设置',
