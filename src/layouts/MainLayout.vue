@@ -20,27 +20,27 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;{{store.currentUser.nickname}}
                         <q-menu class="row items-center justify-around q-pa-md">
                             <div class="column">
-                                <div class="text-h6">{{ $t('UserProfile' )}}</div>
+                                <div class="text-h6">个人信息</div>
                                 <q-list>
                                     <q-item clickable>
                                         <q-item-section avatar>
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
                                         <q-item-section>
-                                            {{ $t('Username') + ": " + store.currentUser.username }}
+                                            {{ "账号: " + store.currentUser.username }}
                                         </q-item-section>
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section>{{ $t('Nickname') + ": " + store.currentUser.nickname  }}</q-item-section>
+                                        <q-item-section>{{ "姓名: " + store.currentUser.nickname  }}</q-item-section>
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section>{{ $t('Role') + ': ' + getRole() }}</q-item-section>
+                                        <q-item-section>{{ '角色: ' + getRole() }}</q-item-section>
                                     </q-item>
                                 </q-list>
                             </div>
@@ -55,7 +55,7 @@
                                     <q-btn
                                         icon="person_pin"
                                         color="primary"
-                                        :label="$t('UserProfile' )"
+                                        label="个人中心"
                                         push
                                         size="sm"
                                         v-close-popup
@@ -64,7 +64,7 @@
                                     <q-btn
                                         icon="logout"
                                         color="primary"
-                                        :label="$t('Logout' )"
+                                        label="退出"
                                         push
                                         size="sm"
                                         v-close-popup
