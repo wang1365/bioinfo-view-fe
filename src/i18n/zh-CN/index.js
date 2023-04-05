@@ -235,6 +235,7 @@ export default {
     DiskUsage: '磁盘使用',
 
     // 流程管理
+    PanelGroup: 'Panel分组',
     Category: '分类',
     Memory: '内存',
     DockerArchive: 'Docker存档',
@@ -252,6 +253,7 @@ export default {
     AddFlow: '新建流程',
     EditFlow: '修改流程',
     FlowDetail: '流程详情',
+    ShowGroup: '是否展示分组',
 
     // 系统界面配置
     SystemUiConfig: '系统界面设置',

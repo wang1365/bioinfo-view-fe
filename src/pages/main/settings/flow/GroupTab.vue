@@ -12,7 +12,7 @@
             rows-per-page-options="0"
         >
             <template v-slot:top>
-                <q-btn color="primary" label="新建分组" @click="addRow" />
+                <q-btn color="primary" :label="$t('Add')" @click="addRow" />
                 <q-toggle
                     v-model="config.value"
                     :true-value="1"
@@ -20,7 +20,7 @@
                     color="green"
                     checked-icon="check"
                     unchecked-icon="clear"
-                    label="是否展示分组"
+                    :label="$t('ShowGroup')"
                     @update:model-value="clickEnabled()"
                 />
             </template>
@@ -51,12 +51,13 @@
 <script setup>
 import {getPanelGroups, deletePanelGroup} from 'src/api/panelGroup'
 import { createConfig, listConfig, updateConfig } from "src/api/config"
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import {useQuasar} from 'quasar'
-import PageTitle from 'components/page-title/PageTitle'
 import GroupDialog from "pages/main/settings/flow/GroupDialog";
 import { format } from 'src/utils/time'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const loading = ref(false)
 const dlgCreate = ref(null)
 const dlgEdit = ref(null)
@@ -65,13 +66,13 @@ const currentFlowId = ref(null)
 const config = ref({value: 0})
 
 const $q = useQuasar()
-const columns = [
+const columns = computed( () => [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center', required: true},
-    {name: 'panels', label: 'Panel列表', field: 'panels', sortable: true, align: 'center', required: true},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', format: v => format(v)},
-    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px'},
-]
+    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center', required: true},
+    {name: 'panels', label: 'Panel', field: 'panels', sortable: true, align: 'center', required: true},
+    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:220px', format: v => format(v)},
+    {name: 'operation', label: t('Actions'), align: 'center', style: 'width:250px'},
+])
 
 
 const rows = ref([

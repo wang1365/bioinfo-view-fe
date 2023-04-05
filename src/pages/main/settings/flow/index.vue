@@ -8,9 +8,9 @@
             class="bg-gray text-black shadow-2"
             align="justify"
         >
-            <q-tab name="flow" label="分析模块" />
-            <q-tab name="panel" label="Panel流程" />
-            <q-tab name="group" label="Panel分组" />
+            <q-tab name="flow" :label="$t('AnalysisModule')" />
+            <q-tab name="panel" :label="$t('PanelFlow')" />
+            <q-tab name="group" :label="$t('PanelGroup')" />
         </q-tabs>
         <q-tab-panels v-model="tabValue">
             <q-tab-panel name="flow">

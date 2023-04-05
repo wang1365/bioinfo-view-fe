@@ -14,15 +14,15 @@
         >
             <template v-slot:top>
                 <q-input
-                    label="流程名称"
+                    :label="$t('FlowName')"
                     v-model="keyword"
                     clearable
                     @clear="refreshRows"
                     @keypress.enter="refreshRows"
                 >
                 </q-input>
-                <q-btn color="primary" icon="search" class="q-mx-sm" label="查询" @click="refreshRows" />
-                <q-btn v-if="!props.readonly" color="primary" label="新建Panel流程" @click="addRow" />
+                <q-btn color="primary" icon="search" class="q-mx-sm" :label="$t('Search')" @click="refreshRows" />
+                <q-btn v-if="!props.readonly" color="primary" :label="$t('Add')" @click="addRow" />
             </template>
             <template v-slot:body-cell-flows="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
@@ -51,7 +51,9 @@ import {ref, onMounted, computed} from 'vue'
 import {useQuasar} from 'quasar'
 import { format } from 'src/utils/time'
 import PanelDialog from "pages/main/settings/flow/PanelDialog"
+import { useI18n }from 'vue-i18n'
 
+const { t } = useI18n()
 const loading = ref(false)
 const dlgCreate = ref(null)
 const dlgEdit = ref(null)
@@ -60,14 +62,14 @@ const currentFlowId = ref(null)
 const keyword = ref('')
 
 const $q = useQuasar()
-const columns = [
+const columns = computed(() => [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: '名 称', field: 'name', sortable: true, align: 'center'},
-    {name: 'panel_group_name', label: 'Panel分组', field: row => row.panel_group_name, sortable: true, align: 'center'},
-    {name: 'flows', label: '分析模块', field: 'flows', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: '创建时间', field: 'create_time', align: 'center', style: 'width:220px', 'format': v => format(v)},
-    {name: 'operation', label: '操 作', align: 'center', style: 'width:250px'},
-]
+    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center'},
+    {name: 'panel_group_name', label: t('PanelGroup'), field: row => row.panel_group_name, sortable: true, align: 'center'},
+    {name: 'flows', label: t('AnalysisModule'), field: 'flows', align: 'center', style: 'width:220px'},
+    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:220px', 'format': v => format(v)},
+    {name: 'operation', label: t('Actions'), align: 'center', style: 'width:250px'},
+])
 
 
 const rows = ref([])
@@ -96,7 +98,7 @@ const props = defineProps({
 })
 
 const visibleColumns = computed(() => {
-    const vcs = props.columns || columns.map(t => t.name)
+    const vcs = props.columns || columns.value.map(t => t.name)
     if (props.readonly) {
         return vcs.filter( t => t.name !== 'operation')
     } else {

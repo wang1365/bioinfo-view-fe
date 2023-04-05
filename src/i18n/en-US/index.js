@@ -235,6 +235,7 @@ export default {
     DiskUsage: 'Disk usage',
 
     // 流程管理
+    PanelGroup: 'Panel Group',
     Category: 'Category',
     Memory: 'Memory',
     DockerArchive: 'Docker Archive',
@@ -252,6 +253,7 @@ export default {
     AddFlow: 'Add Flow',
     EditFlow: 'Edit Flow',
     FlowDetail: 'Flow Detail',
+    ShowGroup: 'Show Group',
 
     // 系统界面配置
     SystemUiConfig: 'System UI Config',
