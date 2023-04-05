@@ -197,6 +197,9 @@ export default {
     DeptDataPermissionType: 'Department Data Permission Type',
 
     // 通用
+    Yes: 'Yes',
+    No: 'No',
+    Required: 'Required',
     ConfirmToDelete: 'Confirm to delete ?',
     DeleteSuccess: 'Success to delete',
     CreateSuccess: 'Success to create',
@@ -205,8 +208,11 @@ export default {
     ShowDetail: 'Show Detail',
     HideDetail: 'Hide Detail',
     OnlySelectAllThisPageFilterResult:'Only select all this page filter results',
+    NotAllowEmpty: 'Required, empty is not allowed',
 
     Intro: 'Intro.',
+    Tips: 'Tips',
+    Comment: 'Comment',
     Back: 'Back',
     TaskResult: 'Task Result',
     TotalCount: 'Total Count',
@@ -237,6 +243,15 @@ export default {
     AnalysisModule: 'Analysis Module',
     ModuleName: 'Module Name',
     FlowName: 'Flow Name',
+    CustomParameters: 'Custom Parameters',
+    ParameterName: 'Parameter Name',
+    ValueType: 'Value Type',
+    ValueRange: 'Value Range',
+    CategoryName: 'Category Name',
+    AlignmentTool: 'Alignment Tool',
+    AddFlow: 'Add Flow',
+    EditFlow: 'Edit Flow',
+    FlowDetail: 'Flow Detail',
 
     // 系统界面配置
     SystemUiConfig: 'System UI Config',
@@ -349,6 +364,11 @@ export default {
     TumorDose: 'Tumor Dose',
     SamplingDate: 'Sampling Date',
     TestDate: 'Test Date',
+    SampleCount: 'Sample Count',
+    SingleSample: 'Single Sample',
+    PairSample: 'Pair Sample',
+    MultipleSample: 'Multiple Sample',
+    SupportNonStandardSample: 'Support Non Standard Sample',
 
     // 样本数据
     SampleDataSearch: 'Sample Data Search',

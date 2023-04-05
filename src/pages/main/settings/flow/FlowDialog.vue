@@ -29,7 +29,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || '请输入流程名称']"
+                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-input
                             class="col-3"
@@ -40,7 +40,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
+                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-select
                             class="col-3"
@@ -58,13 +58,13 @@
                         <q-input
                             class="col-3"
                             v-model="form.flow_category"
-                            label="分类名称"
+                            :label="$t('CategoryName')"
                             :label-color="labelColor"
                             stack-label
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || '请输入流程code']"
+                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-input
                             class="col-3"
@@ -77,7 +77,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || '请输入内存数值']"
+                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
                         />
 
                         <q-input
@@ -89,7 +89,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || '请输入docker存档路径']"
+                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-input
                             class="col-3"
@@ -100,19 +100,19 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || '请输入docker镜像名称']"
+                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
                         />
 
                         <q-input
                             class="col-3"
                             v-model="form.alignment_tool"
-                            label="对比软件"
+                            :label="$t('AlignmentTool')"
                             :label-color="labelColor"
                             stack-label
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || '请输入对比软件']"
+                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <div class="col-12 row q-gutter-sm justify-around">
                             <q-expansion-item
@@ -120,13 +120,13 @@
                                 default-opened
                                 icon="perm_identity"
                                 header-class="bg-blue-5 text-white"
-                                label="样本数目"
+                                :label="$t('SampleCount')"
                                 class="col shadow-1 bg-grey-3"
                             >
                                 <q-radio
                                     v-model="form.sample_type"
                                     val="single"
-                                    label="单样本"
+                                    :label="$t('SingleSample')"
                                     color="teal"
                                     keep-color
                                     :disable="isInfoMode"
@@ -134,7 +134,7 @@
                                 <q-radio
                                     v-model="form.sample_type"
                                     val="double"
-                                    label="配对样本"
+                                    :label="$t('PairSample')"
                                     color="orange"
                                     keep-color
                                     :disable="isInfoMode"
@@ -142,7 +142,7 @@
                                 <q-radio
                                     v-model="form.sample_type"
                                     val="multiple"
-                                    label="多样本"
+                                    :label="$t('MultipleSample')"
                                     color="cyan"
                                     keep-color
                                     :disable="isInfoMode"
@@ -153,14 +153,14 @@
                                 default-opened
                                 dense
                                 icon="perm_identity"
-                                label="支持非标准样本"
+                                :label="$t('SupportNonStandardSample')"
                                 header-class="bg-blue-5 text-white"
                                 class="col shadow-1 bg-grey-3"
                             >
                                 <q-radio
                                     v-model="form.allow_nonstandard_samples"
                                     :val="true"
-                                    label="是"
+                                    :label="$t('Yes')"
                                     color="teal"
                                     keep-color
                                     :disable="isInfoMode"
@@ -168,7 +168,7 @@
                                 <q-radio
                                     v-model="form.allow_nonstandard_samples"
                                     :val="false"
-                                    label="否"
+                                    :label="$t('No')"
                                     color="orange"
                                     keep-color
                                     :disable="isInfoMode"
@@ -181,7 +181,7 @@
                                 v-model="form.desp"
                                 type="textarea"
                                 filled
-                                label="描 述"
+                                :label="$t('Describe')"
                                 label-color="primary"
                                 stack-label
                                 clearable
@@ -196,7 +196,7 @@
                                 type="textarea"
                                 filled
                                 :autosize="{ minRows: 18, maxRows: 380 }"
-                                label="提示说明"
+                                :label="$t('Comment')"
                                 label-color="primary"
                                 stack-label
                                 clearable
@@ -209,7 +209,7 @@
                 <!--        <param-table ref="builtinParams" :data="form.builtin_parameters" title="内置参数" />-->
                 <param-table
                     ref="paramsTable"
-                    title="自定义参数"
+                    :title="$t('CustomParameters')"
                     :readonly="isInfoMode"
                     :data="form.parameters"
                     :action="action"
@@ -231,14 +231,16 @@ import {getFlowDetail, createFlow, updateFlow} from 'src/api/flow'
 import {getPanels} from "src/api/panel"
 import {defineProps, computed, ref, toRefs, defineExpose, defineEmits, onMounted, watch} from 'vue'
 import {useQuasar} from 'quasar'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const $q = useQuasar()
 const dlgVisible = ref(false)
 const panels = ref([])
 const titles = ref({
-    edit: '修改流程',
-    info: '流程详情',
-    create: '新建流程',
+    edit: t('EditFlow'),
+    info: t('FlowDetail'),
+    create: t('AddFlow'),
 })
 const props = defineProps({
     action: {

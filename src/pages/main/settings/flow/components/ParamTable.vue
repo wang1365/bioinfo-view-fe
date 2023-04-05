@@ -4,7 +4,7 @@
         <div style="padding-left: 40px; padding-right: 40px">
             <q-table
                 ref="paramTable"
-                title="自定义参数"
+                :title="$t('CustomParameters')"
                 :rows="params"
                 :columns="columns"
                 row-key="name"
@@ -17,9 +17,9 @@
                 wrap-cells
             >
                 <template v-slot:top>
-                    <div class="text-primary text-h7">自定义参数</div>
+                    <div class="text-primary text-h7">{{$t('CustomParameters')}}</div>
                     <q-space />
-                    <q-btn v-if="!readonly" color="primary" size="sm" label="新增参数" @click="addParameter" />
+                    <q-btn v-if="!readonly" color="primary" size="sm" :label="$t('Add')" @click="addParameter" />
                 </template>
 
                 <template v-slot:body="props">
@@ -79,11 +79,11 @@
             <q-dialog ref="choiceDlg" v-model="choiceDlgVisible" class="relative-position" @before-show="choice = ''">
                 <q-card>
                     <q-card-section>
-                        <q-input v-model="choice" label="值域" clearable :readonly="readonly" />
+                        <q-input v-model="choice" :label="$t('ValueRange')" clearable :readonly="readonly" />
                     </q-card-section>
                     <q-card-actions align="center">
                         <q-btn :label="$t('Confirm')" size="sm" color="primary" @click="confirmAddChoice" />
-                        <q-btn label="取消" size="sm" v-close-popup />
+                        <q-btn :label="$t('Cancel')" size="sm" v-close-popup />
                     </q-card-actions>
                 </q-card>
             </q-dialog>
@@ -119,14 +119,14 @@ const props = defineProps({
 const { t } = useI18n()
 const { readonly } = toRefs(props)
 
-let columns = [
-    { name: "key", label: "参数名", field: "key", align: "center" },
-    { name: "type", label: "值类型", align: "center", field: "type" },
-    { name: "required", label: "必填", field: "required", align: "center" },
-    { name: "choices", label: "值域", align: "center", field: "choices" },
-    { name: "description", label: "说明", field: "description", align: "center", },
+let columns = computed(() => [
+    { name: "key", label: t('ParameterName'), field: "key", align: "center" },
+    { name: "type", label: t('ValueType'), align: "center", field: "type" },
+    { name: "required", label: t('Required'), field: "required", align: "center" },
+    { name: "choices", label: t('ValueRange'), align: "center", field: "choices" },
+    { name: "description", label: t('Comment'), field: "description", align: "center", },
     { name: "operation", label: t('Actions'), align: "center", },
-]
+])
 
 const isEditMode = computed(() => {
     return props.action === "edit";

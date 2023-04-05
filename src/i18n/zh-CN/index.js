@@ -195,6 +195,9 @@ export default {
     DeptDataPermissionType: '部门数据权限分类',
 
     // 通用
+    Yes: '是',
+    No: '否',
+    Required: '必填',
     ConfirmToDelete: '是否确认删除?',
     DeleteSuccess: '删除成功',
     CreateSuccess: '创建成功',
@@ -203,8 +206,11 @@ export default {
     ShowDetail: '显示详情',
     HideDetail: '隐藏详情',
     OnlySelectAllThisPageFilterResult:'仅全选本页筛选结果',
+    NotAllowEmpty: '必填字段，不能为空',
 
     Intro: '说明',
+    Tips: '说明',
+    Comment: '说明',
     Back: '返回',
     TaskResult: '任务结果',
     TotalCount: '总数',
@@ -237,6 +243,15 @@ export default {
     AnalysisModule: '分析模块',
     ModuleName: '模块名称',
     FlowName: '流程名称',
+    CustomParameters: '自定义参数',
+    ParameterName: '参数名',
+    ValueType: '值类型',
+    ValueRange: '值域',
+    CategoryName: '分类名称',
+    AlignmentTool: '对比软件',
+    AddFlow: '新建流程',
+    EditFlow: '修改流程',
+    FlowDetail: '流程详情',
 
     // 系统界面配置
     SystemUiConfig: '系统界面设置',
@@ -349,6 +364,11 @@ export default {
     TumorDose: '肿瘤含量',
     SamplingDate: '采样日期',
     TestDate: '送测日期',
+    SampleCount: '样本梳理',
+    SingleSample: '单样本',
+    PairSample: '配对样本',
+    MultipleSample: '多样本',
+    SupportNonStandardSample: '支持非标准样本',
 
     // 样本数据
     SampleDataSearch: '样本数据检索',
