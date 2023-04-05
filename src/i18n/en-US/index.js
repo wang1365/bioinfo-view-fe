@@ -344,6 +344,9 @@ export default {
     MutationRiskStatistics: 'Mutation Risk Statistics',
     CrowdFrequencyStatistics: 'Crowd Frequency Statistics',
     SnpStatistics: 'SNP Statistics',
+    MutationInfo: 'Mutation Info',
+    DrugRelatedInfo: 'Drug Related Info',
+    NonsynonymousMutationTest: 'Nonsynonymous Mutation Test',
 
     // 融合分析
     SingleSampleFusionAnalysis: 'Single Sample Fusion Analysis',

@@ -344,6 +344,9 @@ export default {
     MutationRiskStatistics: '突变危险统计',
     CrowdFrequencyStatistics: '人群频率统计',
     SnpStatistics: 'SNP统计',
+    MutationInfo: '突变信息',
+    DrugRelatedInfo: '药物关联信息',
+    NonsynonymousMutationTest: '非同义突变检测',
 
     // 融合分析
     SingleSampleFusionAnalysis: '单样品融合分析',

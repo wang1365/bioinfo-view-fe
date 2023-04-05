@@ -18,14 +18,16 @@
 </template>
 
 <script setup>
-import {markRaw, onMounted, ref, watch, toRefs} from "vue";
+import {markRaw, onMounted, ref, watch, toRefs, computed} from "vue";
 import * as echarts from 'echarts'
+import { useI18n } from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const chart = ref(null);
 const barchart = ref(null);
 const option = ref({
     title: {
-        text: '非同义突变检测'
+        text: computed(() => t(props.titleKey))
     },
     tooltip: {
         trigger: 'axis'
@@ -74,13 +76,18 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: () => true
+    },
+    titleKey: {
+        type: String,
+        required: false,
+        default: ''
     }
 })
 
 
 const {data, isGermline} = toRefs(props)
 
-watch([data, isGermline], () => {
+watch([data, isGermline, locale], () => {
     refresh()
 })
 

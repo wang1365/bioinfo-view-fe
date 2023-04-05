@@ -9,16 +9,15 @@
             class="bg-grey-1"
             :breakpoint="0"
         >
-            <q-tab name="突变信息" label="突变信息" />
-            <q-tab name="药物关联信息" label="药物关联信息" />
+            <q-tab name="突变信息" :label="$t('MutationInfo')" />
+            <q-tab name="药物关联信息" :label="$t('DrugRelatedInfo')" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="突变信息">
                 <div class="row q-gutter-xs">
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>
-                            {{`VCF filter: `
-                            }}
+                            <span>{{'VCF filter: '}}</span>>
                             <span
                                 class="text-purple"
                             >{{isGermline ? props.row.col147 : props.row.col151}}</span>
@@ -70,7 +69,7 @@
                 </div>
                 <q-separator class="q-my-sm" />
                 <div class="q-mt-sm">
-                    <RadarChartVue :data="props.row" :is-germline="props.isGermline"/>
+                    <RadarChartVue :data="props.row" :title-key="'NonsynonymousMutationTest'" :is-germline="props.isGermline"/>
                 </div>
             </q-tab-panel>
 
@@ -98,6 +97,7 @@ import RadarChartVue from './SomaticColumnCharts/RadarChart'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
+import MutationInfo from "pages/main/tasks/report/mutation/MutationInfo.vue";
 
 const route = useRoute()
 const tab = ref('突变信息')
