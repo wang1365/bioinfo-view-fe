@@ -316,4 +316,8 @@ export default {
     DrugTarget: 'Drug Target',
     MedicationLevel: 'Medication Level',
 
+    // 微卫星不稳定
+    OverallMicrosatelliteStatusTable: 'Overall Microsatellite Status Table',
+    GoldStandardMicrosatelliteImage: 'Gold Standard Microsatellite Image'
+
 }

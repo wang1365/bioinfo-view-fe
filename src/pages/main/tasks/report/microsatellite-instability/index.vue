@@ -9,11 +9,11 @@
         >{{$t('Intro')}}</q-btn
     >
     <div class="q-py-md" v-if="props.viewConfig.showMSI">
-        <span class="text-h6 text-primary text-bold q-mr-sm">总体微卫星状态表</span>
+        <span class="text-h6 text-primary text-bold q-mr-sm">{{$t('OverallMicrosatelliteStatusTable')}}</span>
         <q-btn
             :href="tableFileUrl1"
             :label="$t('Download')"
-            icon="south"
+            icon="south" padding="sm"
             color="primary"
             target="_blank"
             class="q-ml-sm q-mb-xs"
@@ -22,7 +22,7 @@
         />
         <a-table
             class="col-5"
-            size="small"
+            size="sm"
             bordered
             :loading="loading1"
             :data-source="rows1"
@@ -32,12 +32,12 @@
         </a-table>
     </div>
     <div class="q-py-md" v-if="props.viewConfig.showMSIsite">
-        <span class="text-h6 text-primary text-bold">金标微卫星图</span>
+        <span class="text-h6 text-primary text-bold">{{$t('GoldStandardMicrosatelliteImage')}}</span>
         <!-- TODO: 这里点击最后一列时,如果没有图片需要提 bed文件不包含金标微卫星位点 -->
         <q-btn
             :href="tableFileUrl2"
             :label="$t('Download')"
-            icon="south"
+            icon="south" padding="sm"
             color="primary"
             target="_blank"
             class="q-ml-sm q-mb-xs"
@@ -75,12 +75,12 @@
     </q-dialog>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
-            <q-bar class="bg-primary text-white">微卫星不稳定</q-bar>
+            <q-bar class="bg-primary text-white">{{$t('MicroSatelliteInstability')}}</q-bar>
             <q-card-section>
                 <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">关闭</q-btn>
+                <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>

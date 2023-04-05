@@ -315,6 +315,10 @@ export default {
     CopyNumberVariationClassification: '拷贝数变异分类',
     DrugTarget: '药物靶点',
     MedicationLevel: '用药等级',
+
+    // 微卫星不稳定
+    OverallMicrosatelliteStatusTable: '总体微卫星状态表',
+    GoldStandardMicrosatelliteImage: '金标微卫星图'
     // Depth: '',
     // Depth: '',
     // Depth: '',
