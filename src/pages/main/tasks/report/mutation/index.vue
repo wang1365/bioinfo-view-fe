@@ -96,6 +96,7 @@ import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/
 import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 import { useQuasar } from 'quasar'
+import igv from "igv"
 
 const germlineVue = ref(null)
 const somaticVue = ref(null)
@@ -195,6 +196,7 @@ const somaticData = ref({
 const filterData = ref({ somatic: null, germline: null })
 const stepData = toRef(props, 'stepData')
 onMounted(() => {
+    console.log('===================>>>>', igv)
     loaded.value = false
     if (viewConfig.value.showMutGermline) {
         loadGermlineData()
