@@ -1,12 +1,12 @@
 <template>
     <q-page padding>
-        <PageTitle title="样本数据检索" />
+        <PageTitle :title="$t('SampleDataSearch')" />
         <div class="row items-center q-gutter-sm q-my-sm">
             <q-input
-                label="患者姓名"
+                :label="$t('PatientName')"
                 v-model="searchOption.keyword"
                 clearable
-                label-color="primary"
+                :label-color="primary"
                 class="col-2"
                 dense
                 stack-label
@@ -14,10 +14,10 @@
                 @keypress.enter="clickSearch"
             />
             <q-input
-                label="样本识别号"
+                :label="$t('SampleIdentifier')"
                 v-model="searchOption.sampleIdentifier"
                 clearable
-                label-color="primary"
+                :label-color="primary"
                 class="col-2"
                 dense
                 stack-label
@@ -25,10 +25,10 @@
                 @keypress.enter="clickSearch"
             />
             <q-input
-                label="数据识别号"
+                :label="$t('DataIdentifier')"
                 v-model="searchOption.dataIdentifier"
                 clearable
-                label-color="primary"
+                :label-color="primary"
                 class="col-2"
                 dense
                 stack-label
@@ -36,10 +36,10 @@
                 @keypress.enter="clickSearch"
             />
             <q-input
-                label="捕获试剂盒"
+                :label="$t('CaptureKit')"
                 v-model="searchOption.reagentBox"
                 clearable
-                label-color="primary"
+                :label-color="primary"
                 class="col-2"
                 dense
                 stack-label
@@ -64,7 +64,7 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'operation'">
                     <q-btn
-                        label="浏览"
+                        label="Igv"
                         color="primary"
                         icon-right="arrow_drop_down"
                         size="xs"
@@ -93,61 +93,63 @@
 
 <script setup>
 import { listSample, getSample } from 'src/api/sample'
-import { ref, watch, onMounted } from 'vue'
+import {ref, watch, onMounted, computed} from 'vue'
 import { useQuasar} from 'quasar'
 import { useRouter, useRoute } from 'vue-router'
 import PageTitle from 'components/page-title/PageTitle'
+import { useI18n }from 'vue-i18n'
 
+const { t } = useI18n()
 const loading = ref(false)
 const router = useRouter()
 const route = useRoute()
 
-const columns = [
+const columns = computed(() => [
     {key: 'id', title: 'ID', dataIndex: 'id', fixed: true, align: 'center', width: 50},
 
     // 患者
-    {key: 'patient_key', title: '患者', dataIndex: ["patient", "name"], fixed: true, width: 80},
-    {key: 'patient_age', title: '年龄', dataIndex: ["patient", "age"], fixed: true, align: 'center', width: 60},
+    {key: 'patient_key', title: t('Patient'), dataIndex: ["patient", "name"], fixed: true, width: 80},
+    {key: 'patient_age', title: t('Age'), dataIndex: ["patient", "age"], fixed: true, align: 'center', width: 60},
 
     // 样本
     {
-        title: '采样部位',
+        title: t('SamplingSite'),
         dataIndex: ["sample_meta", "sample_componet"],
         fixed: true,
         align: 'center',
         width: 90
     },
     {
-        title: '肿瘤样本',
+        title: t('TumorSample'),
         dataIndex: ["sample_meta", "is_panel"],
         align: 'center',
         width: 90,
         customRender: (text, record) => text ? '√' : '×'
     },
     {
-        title: '样本标识号',
+        title: t('SampleIdentifier'),
         dataIndex: ["sample_meta", "identifier"],
         align: 'center',
         width: 120
     },
 
     // 样本数据
-    {title: '数据识别号', dataIndex: 'identifier', width: 120, ellipsis: true},
-    {key: 'project_index', title: '数据详情', dataIndex: 'project_index', width: 180, ellipsis: true},
-    {key: 'library_number', title: '文库编号', dataIndex: 'library_number', width: 120},
-    {key: 'reagent_box', title: '捕获试剂盒', dataIndex: 'reagent_box', width: 200, ellipsis: true},
-    {key: 'nucleic_break_type', title: '核酸打断方式', dataIndex: 'nucleic_break_type', width: 120},
-    {key: 'library_input', title: '建库input', dataIndex: 'library_input', width: 120},
-    {key: 'index_type', title: 'index类型', dataIndex: 'index_type', width: 120},
-    {key: 'index_number', title: 'index编号', dataIndex: 'index_number', width: 120},
-    {key: 'hybrid_input', title: '杂交input', dataIndex: 'hybrid_input', width: 120},
-    {key: 'risk', title: '风险上机', dataIndex: 'risk', width: 120},
-    {key: 'nucleic_level', title: '核酸降解等级', dataIndex: 'nucleic_level', align: 'center', width: 120},
-    {key: 'nucleic_type', title: '核酸类型', dataIndex: 'nucleic_type', align: 'center', width: 120},
-    {key: 'fastq1_path', title: 'fastq1文件地址', dataIndex: 'fastq1_path', width: 130, ellipsis: true},
-    {key: 'fastq2_path', title: 'fastq2文件地址', dataIndex: 'fastq2_path', width: 130, ellipsis: true},
-    {key: 'operation', title: '操作', fixed: 'right', align: 'center', width: 120},
-]
+    {title: t('DataIdentifier'), dataIndex: 'identifier', width: 120, ellipsis: true},
+    {key: 'project_index', title: t('DataDetail'), dataIndex: 'project_index', width: 180, ellipsis: true},
+    {key: 'library_number', title: t('LibraryNumber'), dataIndex: 'library_number', width: 120},
+    {key: 'reagent_box', title: t('CaptureKit'), dataIndex: 'reagent_box', width: 200, ellipsis: true},
+    {key: 'nucleic_break_type', title: t('NucleicBreakType'), dataIndex: 'nucleic_break_type', width: 120},
+    {key: 'library_input', title: t('LibraryInput'), dataIndex: 'library_input', width: 120},
+    {key: 'index_type', title: t('IndexType'), dataIndex: 'index_type', width: 120},
+    {key: 'index_number', title: t('IndexNumber'), dataIndex: 'index_number', width: 120},
+    {key: 'hybrid_input', title: t('HybridInput'), dataIndex: 'hybrid_input', width: 120},
+    {key: 'risk', title: t('TakeRisks'), dataIndex: 'risk', width: 120},
+    {key: 'nucleic_level', title: t('NucleicLevel'), dataIndex: 'nucleic_level', align: 'center', width: 120},
+    {key: 'nucleic_type', title: t('NucleicType'), dataIndex: 'nucleic_type', align: 'center', width: 120},
+    {key: 'fastq1_path', title: t('Fastq1Path'), dataIndex: 'fastq1_path', width: 130, ellipsis: true},
+    {key: 'fastq2_path', title: t('Fastq2Path'), dataIndex: 'fastq2_path', width: 130, ellipsis: true},
+    {key: 'operation', title: t('Actions'), fixed: 'right', align: 'center', width: 120},
+])
 
 const pagination = ref({
     position: ['bottomRight'],

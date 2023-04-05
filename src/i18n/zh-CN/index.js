@@ -332,4 +332,30 @@ export default {
     TmlTip2: '警示：随意过滤造成结果不准确',
     TmlTip3: 'TMB-low\\暂无推荐药物信息',
 
+    // 患者
+    Patient: '患者',
+    PatientName: '患者姓名',
+    Age: '年龄',
+
+    // 样本
+    SamplingSite: '采样部位',
+    SampleIdentifier: '样本识别号',
+
+    // 样本数据
+    SampleDataSearch: '样本数据检索',
+    DataIdentifier: '数据识别号',
+    DataDetail: '数据详情',
+    LibraryNumber: '文库编号',
+    CaptureKit: '捕获试剂盒',
+    NucleicBreakMethod: '核酸打断方式',
+    BuildDatabaseInput: '建库input',
+    IndexType: 'input类型',
+    IndexNumber: 'index编号',
+    HybridInput: '杂交input',
+    TakeRisks: '风险上机',
+    NucleicLevel: '核酸降解等级',
+    NucleicType: '核酸类型',
+    Fastq1Path: 'fastq1文件地址',
+    Fastq2Path: 'fastq2文件地址',
+
 }

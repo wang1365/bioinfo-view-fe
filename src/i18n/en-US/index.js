@@ -331,4 +331,30 @@ export default {
     TmlTip1: 'For research use only, not for clinical diagnosis',
     TmlTip2: 'Warning: Random filtering may result in inaccurate results',
     TmlTip3: 'TMB-low\\No recommended drug information',
+
+    // 患者
+    Patient: 'Patient',
+    PatientName: 'Patient Name',
+    Age: 'Age',
+
+    // 样本
+    SamplingSite: 'Sampling Site',
+    SampleIdentifier: 'Sample Identifier',
+
+    // 样本数据
+    SampleDataSearch: 'Sample Data Search',
+    DataIdentifier: 'Data Identifier',
+    DataDetail: 'Data Detail',
+    LibraryNumber: 'Library Number',
+    CaptureKit: 'Capture Kit',
+    NucleicBreakType: 'Nucleic Break Type',
+    BuildDatabaseInput: 'Build Database Input',
+    IndexType: 'Index Type',
+    IndexNumber: 'Index Number',
+    HybridInput: 'Hybrid Input',
+    TakeRisks: 'Risk',
+    NucleicLevel: 'Nucleic Level',
+    NucleicType: 'Nucleic Type',
+    Fastq1Path: 'fastq1 Path',
+    Fastq2Path: 'fastq2 Path',
 }
