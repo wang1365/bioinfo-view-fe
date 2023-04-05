@@ -96,8 +96,11 @@ const init = () => {
     echarts.dispose(ct);
     chart.value = markRaw(echarts.init(ct));
     refreshChart()
-};
+}
+
 const onResize = () => {
-    chart.value.resize();
-};
+    if (chart.value) {
+        chart.value.resize()
+    }
+}
 </script>
