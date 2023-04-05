@@ -37,7 +37,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.tumorDepth"
-                    label="肿瘤深度 >="
+                    :label="$t('TumorDepth') + ' >='"
                     clearable
                     type="number"
                     stack-label
@@ -48,7 +48,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.compareDepth"
-                    label="对照深度 >="
+                    :label="$t('ControlDepth') + ' >='"
                     clearable
                     type="number"
                     stack-label
@@ -59,7 +59,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.tumorRatio"
-                    label="肿瘤频率 >="
+                    :label="$t('TumorFrequency') + ' >='"
                     clearable
                     type="number"
                     stack-label
@@ -70,7 +70,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.compareRatio"
-                    label="对照频率 <="
+                    :label="$t('ControlFrequency') + ' <='"
                     clearable
                     type="number"
                     stack-label
@@ -81,7 +81,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.mutationRatio"
-                    label="肿瘤突变频数 >="
+                    :label="$t('TumorMutationFrequency') + ' >='"
                     clearable
                     type="number"
                     stack-label
@@ -92,7 +92,7 @@
             <div class="col">
                 <q-input
                     v-model="searchParams.humanRatio"
-                    label="人群频率 <="
+                    :label="$t('CrowdFrequency') + ' <='"
                     clearable
                     type="number"
                     stack-label
@@ -106,7 +106,7 @@
                     clearable
                     hide-dropdown-icon
                     :options="[`All`, `SNP`, `INDEL`]"
-                    label="突变类型"
+                    :label="$t('MutationType')"
                     stack-label
                     label-color="primary"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -119,7 +119,7 @@
                     multiple
                     hide-dropdown-icon
                     :options="mutationPositionOptions"
-                    label="突变位置"
+                    :label="$t('MutationPosition')"
                     stack-label
                     label-color="primary"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -134,12 +134,12 @@
                     stack-label
                     label-color="primary"
                     :options="[`All`, `No synonymous SNV`]"
-                    label="突变意义"
+                    :label="$t('MutationMeaning')"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
                 />
             </div>
             <div class="col">
-                <span class="text-primary q-mr-md">过滤重复区假突变:</span>
+                <span class="text-primary q-mr-md">{{$t('FilterRepeatRegionFalseMutations')}}:</span>
                 <q-btn-toggle
                     v-model="searchParams.filterDup"
                     size="sm"
@@ -169,11 +169,11 @@
         </div>
 
         <div class="col-8">
-            <div class="q-py-md text-primary text-bold text-h6">肿瘤突变负荷</div>
+            <div class="q-py-md text-primary text-bold text-h6">{{$t('TumorMutationLoad')}}</div>
             <GuageChartVue :loading="loading" :tmb="tmb" />
             <div class="q-pl-sm q-mt-sm">
-                <div class="text-weight-bold text-primary">仅限研究使用，不用于临床诊断</div>
-                <div class="text-weight-bold text-red">警示：随意过滤造成结果不准确</div>
+                <div class="text-weight-bold text-primary">{{$t('TmlTip1')}}</div>
+                <div class="text-weight-bold text-red">{{$t('TmlTip2')}}</div>
                 <div class="text-weight-bold text-primary q-mt-sm" style="white-space: pre">{{ guageTip }}</div>
             </div>
         </div>
@@ -181,12 +181,12 @@
 
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
-            <q-bar class="bg-primary text-white">肿瘤突变符合分析</q-bar>
+            <q-bar class="bg-primary text-white">{{$t('TumorMutationLoadAnalysis')}}</q-bar>
             <q-card-section>
                 <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">关闭</q-btn>
+                <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>

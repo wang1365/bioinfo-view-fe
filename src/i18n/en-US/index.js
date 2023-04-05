@@ -204,6 +204,7 @@ export default {
     UpdateSuccess: 'Success to update',
     ShowDetail: 'Show Detail',
     HideDetail: 'Hide Detail',
+    OnlySelectAllThisPageFilterResult:'Only select all this page filter results',
 
     Intro: 'Intro.',
     Back: 'Back',
@@ -318,6 +319,13 @@ export default {
 
     // 微卫星不稳定
     OverallMicrosatelliteStatusTable: 'Overall Microsatellite Status Table',
-    GoldStandardMicrosatelliteImage: 'Gold Standard Microsatellite Image'
+    GoldStandardMicrosatelliteImage: 'Gold Standard Microsatellite Image',
 
+    // 肿瘤突变负荷分析
+    TumorMutationLoad: 'Tumor Mutation Load',
+    TumorMutationFrequency: 'Tumor Mutation Frequency',
+    FilterRepeatRegionFalseMutations: 'Filter Repeat Region False Mutations',
+    TmlTip1: 'For research use only, not for clinical diagnosis',
+    TmlTip2: 'Warning: Random filtering may result in inaccurate results',
+    TmlTip3: 'TMB-low\\No recommended drug information',
 }

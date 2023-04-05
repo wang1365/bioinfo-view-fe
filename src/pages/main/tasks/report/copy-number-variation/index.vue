@@ -184,7 +184,7 @@
                 size="xs"
                 style="position:absolute;z-index:100;left:0px;top:0px"
             >
-                <q-tooltip>仅全选本页筛选结果</q-tooltip>
+                <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
             </q-icon>
             <a-table
                 style="z-index:1"

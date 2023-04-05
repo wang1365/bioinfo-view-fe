@@ -15,7 +15,7 @@
                     <div style="white-space:pre-wrap; line-height: 35px">{{intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">关闭</q-btn>
+                    <q-btn v-close-popup color="primary">{{ $t('Close')}}</q-btn>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -27,7 +27,7 @@
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel v-for="table in tables" :name="table.name" :key="table.name">
                 <q-toolbar class="text-primary">
-                    <q-input v-model="table.keyword" class="q-mr-sm" dense label="搜索:" clearable
+                    <q-input v-model="table.keyword" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable
                         @clear="clearKeyword(table)" style="width:300px"
                         :disable="props.viewConfig.showStick && props.viewConfig.stickDone" />
                     <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword(table)"
@@ -38,7 +38,7 @@
                 <div style="position:relative">
                     <q-icon color="accent" name="question_mark" size="xs"
                         style="position:absolute;z-index:100;left:0px;top:0px">
-                        <q-tooltip>仅全选本页筛选结果</q-tooltip>
+                        <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
                     <a-table style="z-index:1" class="col-5" size="middle" rowKey="lineNumber" bordered
                         :scroll="{ x: 2000, y: 600 }" :data-source="table.filteredRows" :columns="table.columns"

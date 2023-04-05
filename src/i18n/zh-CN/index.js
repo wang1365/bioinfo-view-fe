@@ -202,6 +202,7 @@ export default {
     UpdateSuccess: '修改成功',
     ShowDetail: '显示详情',
     HideDetail: '隐藏详情',
+    OnlySelectAllThisPageFilterResult:'仅全选本页筛选结果',
 
     Intro: '说明',
     Back: '返回',
@@ -318,12 +319,14 @@ export default {
 
     // 微卫星不稳定
     OverallMicrosatelliteStatusTable: '总体微卫星状态表',
-    GoldStandardMicrosatelliteImage: '金标微卫星图'
-    // Depth: '',
-    // Depth: '',
-    // Depth: '',
-    // Depth: '',
-    // Depth: '',
-    // Depth: '',
-    // Depth: '',
+    GoldStandardMicrosatelliteImage: '金标微卫星图',
+
+    // 肿瘤突变负荷分析
+    TumorMutationLoad: '肿瘤突变负荷',
+    TumorMutationFrequency: '肿瘤突变频数',
+    FilterRepeatRegionFalseMutations: '过滤重复区假突变',
+    TmlTip1: '仅限研究使用，不用于临床诊断',
+    TmlTip2: '警示：随意过滤造成结果不准确',
+    TmlTip3: 'TMB-low\\暂无推荐药物信息',
+
 }
