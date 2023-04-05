@@ -17,9 +17,6 @@ export const globalStore = defineStore('global', {
         doubleCount: (state) => state.counter * 2,
     },
     actions: {
-        setLang(lang) {
-            this.lang = lang
-        },
         increment() {
             this.counter++
         },

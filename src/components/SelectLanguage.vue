@@ -1,6 +1,5 @@
 <template>
-    <q-select dense v-model="store.lang" :options="langOptions" item-aligned
-              @update:model-value="updateLang"
+    <q-select dense v-model="locale" :options="langOptions" item-aligned
               borderless options-dense emit-value map-options style="max-width: 120px;color:white">
         <template v-if="false" v-slot:before>
             <q-btn flat dense color="amber-1" :label="$t('Language') + ':'"/>
@@ -9,29 +8,29 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { globalStore } from 'src/stores/global'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const store = globalStore()
-const { lang } = store
 const { locale } = useI18n({ useScope: 'global' })
 
 const langOptions = [
     { label: 'English', value:'en-US' },
     { label: '简体中文', value:'zh-CN' },
 ]
+const lang = ref(locale)
 
-onMounted(() => {
-    console.log('==========> navigator.language', navigator.language)
-    console.log('==========> store.lang', store.lang)
-    console.log('==========> locale', locale)
+watch(lang, v => {
 })
 
-const updateLang = (v) => {
-    console.log('==========> 语言切换到:', v)
-    locale.value = v
-}
+
+onMounted(() => {
+    console.log('init lang', navigator.language, store.lang, lang.value)
+    console.log('quasar', $q)
+})
 
 
 </script>
