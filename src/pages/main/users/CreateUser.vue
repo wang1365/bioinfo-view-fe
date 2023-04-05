@@ -2,7 +2,7 @@
     <q-dialog v-model="dlgVisible" transition-hide="scale">
         <q-card style="width: 500px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>新建用户</q-toolbar-title>
+                <q-toolbar-title>{{$t('AddUser')}}</q-toolbar-title>
             </q-toolbar>
             <q-card-section>
                 <q-list>
@@ -11,10 +11,9 @@
                             class="full-width"
                             filled
                             v-model="form.username"
-                            label="账号"
-                            hint="登录账号"
+                            :label="$t('Username')"
                             lazy-rules
-                            :rules="[ val => val && val.length > 0 || '请输入账号']"
+                            :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <q-item>
@@ -22,10 +21,9 @@
                             class="full-width"
                             filled
                             v-model="form.nickname"
-                            label="姓名"
-                            hint="登录账号"
+                            :label="$t('Nickname')"
                             lazy-rules
-                            :rules="[ val => val && val.length > 0 || '请输入姓名']"
+                            :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <!--                <q-item>-->
@@ -46,11 +44,11 @@
                             filled
                             type="password"
                             v-model="form.password"
-                            label="密码"
+                            :label="$t('Password')"
                             lazy-rules
                             :rules="[
-                              val => val !== null && val !== '' || '请输入密码',
-                              val => val !== null && val.length >= 6 || '至少输入6位',
+                              val => val !== null && val !== '' || $t('NotAllowEmpty'),
+                              val => val !== null && val.length >= 6 || $t('PasswordLengthValidateFailed'),
                             ]"
                         />
                     </q-item>
@@ -60,17 +58,17 @@
                             filled
                             type="password"
                             v-model="form.password_again"
-                            label="确认密码"
+                            :label="$t('ConfirmPassword')"
                             lazy-rules
                             :rules="[
-                                  val => val !== null && val !== '' || '请输入确认密码',
-                                  val => val === form.password || '两次输入密码不一致'
+                                  val => val !== null && val !== '' || $t('NotAllowEmpty'),
+                                  val => val === form.password || $t('PasswordIsNotSame')
                                 ]"
                         />
                     </q-item>
                     <q-card-actions align="right">
                         <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk" />
-                        <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
+                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>
             </q-card-section>

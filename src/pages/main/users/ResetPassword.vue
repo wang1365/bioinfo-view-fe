@@ -2,7 +2,7 @@
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 500px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>{{'修改密码:' + user.username}}</q-toolbar-title>
+                <q-toolbar-title>{{$t('ChangePassword') + ':' + user.username}}</q-toolbar-title>
             </q-toolbar>
             <q-card-section>
                 <q-list>
@@ -12,10 +12,10 @@
                             filled
                             type="password"
                             v-model="password"
-                            label="密码"
+                            :label="$t('Password')"
                             lazy-rules
                             :rules="[
-                              val => val !== null && val !== '' || '请输入密码'
+                              val => val !== null && val !== '' || $t('NotAllowEmpty')
                             ]"
                         />
                     </q-item>
@@ -26,17 +26,17 @@
                             filled
                             type="password"
                             v-model="password_again"
-                            label="确认密码"
+                            :label="$t('ConfirmPassword')"
                             lazy-rules
                             :rules="[
-                                  val => val !== null && val !== '' || '请输入确认密码',
-                                  val => val === password || '两次输入密码不一致'
+                                  val => val !== null && val !== '' || $t('NotAllowEmpty'),
+                                  val => val === password || $t('PasswordIsNotSame')
                                 ]"
                         />
                     </q-item>
                     <q-card-actions align="right">
                         <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk" />
-                        <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
+                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>
             </q-card-section>
@@ -46,9 +46,11 @@
 
 <script setup>
 import { ref, defineProps, toRefs, onMounted } from 'vue'
-import {createUser, resetPassword} from 'src/api/user'
+import { createUser, resetPassword } from 'src/api/user'
 import { useQuasar } from 'quasar'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const $q = useQuasar()
 
 
@@ -75,7 +77,7 @@ const againInput = ref(null)
 const clickOk = () => {
     if (againInput.value.validate()) {
         resetPassword(user.value.id, password.value).then(() => {
-            $q.notify({message: '修改密码用户成功', type: 'positive'})
+            $q.notify({message: t('ChangePasswordSuccess'), type: 'positive'})
             dlgVisible.value = false
         })
     }
@@ -87,7 +89,6 @@ const show = () => {
 
 defineExpose({ show })
 onMounted(() => {
-    console.log('============> ', user)
 })
 
 const onReset = () => {

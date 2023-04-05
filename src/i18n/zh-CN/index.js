@@ -222,9 +222,12 @@ export default {
     FlowManage: '流程管理',
     UiSetting: 'UI配置',
 
-    // 个人中心
+    // 个人中心 & 用户管理
     ChangePassword: '修改密码',
     ResetPassword: '重置密码',
+    ConfirmPassword: '确认密码',
+    PasswordIsNotSame: '两次输入密码不一致',
+    PasswordLengthValidateFailed: '至少输入6位',
     UserAndNameAndEmailSearch: '用户账号、姓名、邮箱搜索',
     Unlimited: '无限制',
     SuperAdmin: '超级管理员',
@@ -233,6 +236,10 @@ export default {
     Enabled: '启用',
     Disable: '禁用',
     DiskUsage: '磁盘使用',
+    AddUser: '新建用户',
+    EditUser: '编辑用户',
+    UserDetail: '用户详情',
+    ChangePasswordSuccess: '修改密码用户成功',
 
     // 流程管理
     PanelGroup: 'Panel分组',

@@ -227,12 +227,19 @@ export default {
     // 个人中心
     ChangePassword: 'Change password',
     ResetPassword: 'Reset password',
+    ConfirmPassword: 'Confirm password',
+    PasswordIsNotSame: 'Confirm password is not same with password',
+    PasswordLengthValidateFailed: 'At least 6 characters',
     UserAndNameAndEmailSearch: 'Username, Nickname, Email Search',
     Unlimited: 'Unlimited',
     SuperAdmin: 'Super admin',
     Enabled: 'Enabled',
     Disable: 'Disable',
     DiskUsage: 'Disk usage',
+    AddUser: 'Add User',
+    EditUser: 'Edit User',
+    UserDetail: 'User Detail',
+    ChangePasswordSuccess: 'Success to change password',
 
     // 流程管理
     PanelGroup: 'Panel Group',

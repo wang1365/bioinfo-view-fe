@@ -2,7 +2,7 @@
     <q-dialog v-model="dlgVisible" transition-show="scale">
         <q-card style="width: 500px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>用户设置</q-toolbar-title>
+                <q-toolbar-title>{{$t('EditUser')}}</q-toolbar-title>
             </q-toolbar>
             <q-card-section>
                 <q-list>
@@ -13,8 +13,8 @@
                             filled
                             stack-label
                             v-model="form.username"
-                            label="用户名"
-                            :rules="[ val => val && val.length > 0 || '请输入用户名']"
+                            :label="$t('Username')"
+                            :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <q-item>
@@ -22,19 +22,19 @@
                             class="full-width"
                             stack-label
                             v-model="form.nickname"
-                            label="姓名"
-                            :rules="[ val => val && val.length > 0 || '请输入用户名']"
+                            :label="$t('Nickname')"
+                            :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <q-item>
-                        <q-input class="full-width" stack-label v-model.number="form.disk_limit" label="磁盘配额(MB)" />
+                        <q-input class="full-width" stack-label v-model.number="form.disk_limit" :label="$t('DiskUsageLimit') + '(MB)'" />
                     </q-item>
                     <q-item>
                         <q-toggle
                             v-model="form.is_active"
                             checked-icon="check"
                             color="green"
-                            label="启用"
+                            :label="$t('Enabled')"
                             left-label
                             unchecked-icon="clear"
                         />
@@ -79,7 +79,7 @@
                     <!--                    </q-item>-->
                     <q-card-actions align="right">
                         <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk" />
-                        <q-btn label="取消" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
+                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>
             </q-card-section>
