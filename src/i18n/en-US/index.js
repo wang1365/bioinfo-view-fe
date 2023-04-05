@@ -271,6 +271,7 @@ export default {
     FlowDetail: 'Flow Detail',
     ShowGroup: 'Show Group',
     AnalysisFlowComment: 'Analysis Flow Comment',
+    FlowAnalysisModule: 'Flow Analysis Module',
     CapturePanelDescription: 'Capture Panel Description',
     Pair: 'Paired',
 

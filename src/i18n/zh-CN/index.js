@@ -271,6 +271,7 @@ export default {
     FlowDetail: '流程详情',
     ShowGroup: '是否展示分组',
     AnalysisFlowComment: '分析流程说明',
+    FlowAnalysisModule: '流程分析模块',
     CapturePanelDescription: '捕获Panel介绍',
     Pair: '配对',
 
