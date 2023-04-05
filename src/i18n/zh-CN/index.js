@@ -302,6 +302,19 @@ export default {
     MutationRiskStatistics: '突变危险统计',
     CrowdFrequencyStatistics: '人群频率统计',
     SnpStatistics: 'SNP统计',
+
+    // 融合分析
+    SingleSampleFusionAnalysis: '单样品融合分析',
+    SomaticCellFusionAnalysis: '体细胞融合分析',
+    ControlSingleSampleFusion: '对照单样品融合',
+    TumorSingleSampleFusion: '肿瘤单样品融合',
+
+    // 拷贝变异分析
+    CopyNumberAmplificationThreshold: '拷贝数扩增阈值',
+    CopyNumberDeletionThreshold: '拷贝数缺失阈值',
+    CopyNumberVariationClassification: '拷贝数变异分类',
+    DrugTarget: '药物靶点',
+    MedicationLevel: '用药等级',
     // Depth: '',
     // Depth: '',
     // Depth: '',

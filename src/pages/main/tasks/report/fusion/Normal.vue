@@ -4,7 +4,7 @@
             v-model="keyword"
             class="q-mr-sm"
             dense
-            label="搜索:"
+            :label="$t('Search') + ':'"
             clearable
             @clear="clearKeyword"
             style="width:300px"
@@ -45,7 +45,7 @@
                 <template #bodyCell="{ column, record }">
                     <q-btn
                         v-if="column.title === 'Igv'"
-                        label="查看"
+                        label="Igv"
                         color="primary"
                         size="sm"
                         @click="clickView(record)"
@@ -207,7 +207,7 @@ const loadData = () => {
     const width = [30, 30, 60, 60, 60, 60, 200, 50, 50]
     columns.value = []
     header.value.forEach((item, index) => {
-        if (item == 'Igv') {
+        if (item === 'Igv') {
             columns.value.push({
                 title: item,
                 dataIndex: index,
@@ -228,7 +228,7 @@ const loadData = () => {
     for (let item of filteredRows.value) {
         let finded = false
         for (let lineNumber of propSelectedRows.value) {
-            if (lineNumber == item.lineNumber) {
+            if (lineNumber === item.lineNumber) {
                 finded = true
                 break
             }

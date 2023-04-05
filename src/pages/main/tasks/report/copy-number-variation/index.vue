@@ -42,7 +42,7 @@
                             <q-input
                                 v-model="pieParams.extra"
                                 class="col-1"
-                                label="拷贝数扩增阈值"
+                                :label="$t('CopyNumberAmplificationThreshold')"
                                 label-color="primary"
                                 stack-label
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -53,7 +53,7 @@
                             <q-input
                                 v-model="pieParams.missing"
                                 class="col-1"
-                                label="拷贝数缺失阈值"
+                                :label="$t('CopyNumberDeletionThreshold')"
                                 label-color="primary"
                                 stack-label
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -111,7 +111,7 @@
                     v-model="searchParams.gene"
                     stack-label
                     label-color="primary"
-                    label="搜索基因:"
+                    :label="$t('GeneSearch') + ':'"
                     clearable
                     dense
                     style="width:150px"
@@ -123,7 +123,7 @@
                     stack-label
                     label-color="primary"
                     :options="['DUP', 'DEL']"
-                    label="拷贝数变异分类"
+                    :label="$t('CopyNumberVariationClassification')"
                     style="width:150px"
                     dense
                     :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -134,7 +134,7 @@
                     stack-label
                     label-color="primary"
                     :options="['All', 'Yes', 'No',]"
-                    label="药物靶点"
+                    :label="$t('DrugTarget')"
                     style="width:150px"
                     dense
                     :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -145,7 +145,7 @@
                     stack-label
                     label-color="primary"
                     clearable
-                    label="用药等级"
+                    :label="$t('MedicationLevel')"
                     multiple
                     :options="['1', '2', '3', '4', 'R1', 'R2', 'Dx1', 'Dx2', 'Dx3', 'Px1', 'Px2', 'Px3']"
                     style="width:150px"
@@ -159,7 +159,7 @@
                     :disable="viewConfig.showStick && viewConfig.stickDone"
                 />
                 <q-btn
-                    color="grey"
+                    color="primary"
                     :label="$t('Clear')"
                     icon="delete"
                     @click="clickClear()"

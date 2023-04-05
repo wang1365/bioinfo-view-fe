@@ -1,11 +1,11 @@
 <template>
     <q-toolbar class="text-primary">
-        <q-toolbar-title v-if="!isSingle">肿瘤单样品融合</q-toolbar-title>
+        <q-toolbar-title v-if="!isSingle">{{$t('TumorSingleSampleFusion')}}</q-toolbar-title>
         <q-input
             v-model="keyword1"
             class="q-mr-sm"
             dense
-            label="搜索:"
+            :label="$t('Search') + ':'"
             clearable
             @clear="clearKeyword1"
             style="width:300px"
@@ -64,13 +64,13 @@
 
     <div v-if="!isSingle">
         <q-toolbar class="text-primary">
-            <q-toolbar-title v-if="!isSingle">对照单样品融合</q-toolbar-title>
+            <q-toolbar-title v-if="!isSingle">{{$t('ControlSingleSampleFusion')}}</q-toolbar-title>
 
             <q-input
                 v-model="keyword2"
                 class="q-mr-sm"
                 dense
-                label="搜索:"
+                :label="$t('Search') + ':'"
                 clearable
                 @clear="clearKeyword2"
                 style="width:300px"

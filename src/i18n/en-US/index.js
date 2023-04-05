@@ -302,4 +302,18 @@ export default {
     MutationRiskStatistics: 'Mutation Risk Statistics',
     CrowdFrequencyStatistics: 'Crowd Frequency Statistics',
     SnpStatistics: 'SNP Statistics',
+
+    // 融合分析
+    SingleSampleFusionAnalysis: 'Single Sample Fusion Analysis',
+    SomaticCellFusionAnalysis: 'Somatic Cell Fusion Analysis',
+    ControlSingleSampleFusion: 'Control Single Sample Fusion',
+    TumorSingleSampleFusion: 'Tumor Single Sample Fusion',
+
+    // 拷贝变异分析
+    CopyNumberAmplificationThreshold: 'Copy Number Amplification Threshold',
+    CopyNumberDeletionThreshold: 'Copy Number Deletion Threshold',
+    CopyNumberVariationClassification: 'Copy Number Variation Classification',
+    DrugTarget: 'Drug Target',
+    MedicationLevel: 'Medication Level',
+
 }

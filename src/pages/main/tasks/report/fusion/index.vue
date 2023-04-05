@@ -37,8 +37,8 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="单样品融合分析" label="单样品融合分析" v-if="props.viewConfig.showFusionGermline" />
-            <q-tab name="体细胞融合分析" label="体细胞融合分析" v-if="props.viewConfig.showFusionSomatic" />
+            <q-tab name="单样品融合分析" :label="$t('SingleSampleFusionAnalysis')" v-if="props.viewConfig.showFusionGermline" />
+            <q-tab name="体细胞融合分析" :label="$t('SomaticCellFusionAnalysis')" v-if="props.viewConfig.showFusionSomatic" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
@@ -81,12 +81,12 @@
         <!--        </div>-->
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
-                <q-bar class="bg-primary text-white">融合分析</q-bar>
+                <q-bar class="bg-primary text-white">{{ $t('FusionAnalysis') }}</q-bar>
                 <q-card-section>
                     <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">关闭</q-btn>
+                    <q-btn v-close-popup color="primary">{{ $t('Close') }}</q-btn>
                 </q-card-actions>
             </q-card>
         </q-dialog>
