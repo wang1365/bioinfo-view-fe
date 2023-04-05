@@ -218,6 +218,13 @@ export default {
     TotalCount: 'Total Count',
 
     // 菜单
+    PlatformMonitoring: 'Platform Monitoring',
+    ProjectManage: 'Project Manage',
+    TaskManage:'Task Manage',
+    CustomReport: 'Custom Report',
+    PatientManage: 'Patient Manage',
+    SampleManage: 'Sample Manage',
+    DataManage: 'Data Manage',
     PanelFlow: 'Panel Flow',
     GeneBrowser: 'Gene Browser',
     SystemSetting: 'SYS Setting',
@@ -238,7 +245,9 @@ export default {
     DiskUsage: 'Disk usage',
     AddUser: 'Add User',
     EditUser: 'Edit User',
+    DeleteUser: 'Delete User',
     UserDetail: 'User Detail',
+    ConfirmToDeleteUser: 'Confirm to delete user',
     ChangePasswordSuccess: 'Success to change password',
 
     // 流程管理

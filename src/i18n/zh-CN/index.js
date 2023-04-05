@@ -216,6 +216,13 @@ export default {
     TotalCount: '总数',
 
     // 菜单
+    PlatformMonitoring: '平台监控',
+    ProjectManage: '项目管理',
+    TaskManage:'任务管理',
+    CustomReport: '自定义报告',
+    PatientManage: '患者管理',
+    SampleManage: '样本管理',
+    DataManage: '数据管理',
     PanelFlow: 'Panel分析流程',
     GeneBrowser: '基因组浏览器',
     SystemSetting: '系统配置',
@@ -238,7 +245,9 @@ export default {
     DiskUsage: '磁盘使用',
     AddUser: '新建用户',
     EditUser: '编辑用户',
+    DeleteUser: '删除用户',
     UserDetail: '用户详情',
+    ConfirmToDeleteUser: '是否确认删除用户',
     ChangePasswordSuccess: '修改密码用户成功',
 
     // 流程管理

@@ -304,13 +304,13 @@ const clickSetResourceLimit = (row) => {};
 const clickDelete = (row) => {
     $q.dialog({
         title: "确认删除",
-        message: `是否要删除用户"${row.username}"?`,
-        cancel: "取消",
-        ok: "确定",
+        message: t('ConfirmToDeleteUser') + `${row.username}?`,
+        cancel: t('Cancel'),
+        ok: t('Confirm'),
     })
         .onOk(() => {
             batchDeleteUser({ ids: [row.id] }).then(() => {
-                $q.notify("删除成功");
+                $q.notify(t('DeleteSuccess'));
             });
         })
         .onCancel(() => {

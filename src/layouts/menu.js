@@ -1,46 +1,46 @@
 const menu = [
     {
         icon: 'inbox',
-        label: '平台监控',
+        label: 'PlatformMonitoring',
         separator: true,
         path: '/main/dashboard',
         roles: ['super', 'admin'],
     },
     {
         icon: 'folder',
-        label: '项目管理',
+        label: 'ProjectManage',
         separator: false,
         path: '/main/projects',
     },
     {
         icon: 'auto_mode',
-        label: '任务管理',
+        label: 'TaskManage',
         separator: false,
         path: '/main/tasks',
     },
     {
         icon: 'receipt_long',
-        label: '自定义报告',
+        label: 'CustomReport',
         separator: false,
         path: '/main/reports',
     },
 
     {
         icon: 'groups_2',
-        label: '患者管理',
+        label: 'PatientManage',
         separator: false,
         path: '/main/patients',
     },
     {
         icon: 'description',
-        label: '样本管理',
+        label: 'SampleMange',
         separator: false,
         path: '/main/samples',
     },
 
     {
         icon: 'save',
-        label: '数据管理',
+        label: 'DataManage',
         separator: false,
         path: '/main/data',
     },

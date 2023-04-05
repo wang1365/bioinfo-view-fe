@@ -182,7 +182,7 @@ const showEditDlg = (row) => {
 
 const showDeleteDlg = (row) => {
     $q.dialog({
-        title:  t('ConfirmDelete'),
+        title:  t('ConfirmToDelete'),
         ok: t('Confirm'),
         cancel: t('Cancel'),
     }).onOk(() => {
