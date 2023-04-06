@@ -439,6 +439,11 @@ export default {
     PatientNewFormSave: "保存",
     // 修改患者表单
     PatientEditFormTitle: "修改患者信息",
+    // 患者详情页面
+    PatientInfoPageTitle: "患者详情",
+    PatientInfoPageBtnBack: "返回",
+    PatientInfoPageAge: '年龄',
+    PatientInfoPageSamplesTitle: "患者的样本",
 
 
     // 样本

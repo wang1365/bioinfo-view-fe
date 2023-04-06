@@ -1,9 +1,9 @@
 <template>
     <q-page padding>
         <div class="row items-center q-py-sm">
-            <h6>患者详情</h6>
+            <h6>{{ $t('PatientInfoPageTitle') }}</h6>
             <q-space />
-            <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
+            <q-btn :label="$t('PatientInfoPageBtnBack')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <PatientInfo :id="infoId" v-if="infoId" />
     </q-page>
