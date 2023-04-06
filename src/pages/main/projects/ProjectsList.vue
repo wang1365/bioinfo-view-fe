@@ -3,7 +3,7 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
-                <q-toolbar-title class="text-h6"> $t("ProjectPageListSearchName") </q-toolbar-title>
+                <q-toolbar-title class="text-h6"> {{$t("ProjectPageListSearchName")}} </q-toolbar-title>
                 <q-input
                     style="width: 250px"
                     dense
@@ -27,11 +27,11 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>$t('ProjectPageListTableName')</td>
-                            <td>$t('ProjectPageListTableCreater')</td>
-                            <td>$t('ProjectPageListTableCreateTime')</td>
-                            <td>$t('ProjectPageListTableSampleCount')</td>
-                            <td>$t('ProjectPageListTableTaskCount')</td>
+                            <td>{{$t('ProjectPageListTableName')}}</td>
+                            <td>{{$t('ProjectPageListTableCreater')}}</td>
+                            <td>{{$t('ProjectPageListTableCreateTime')}}</td>
+                            <td>{{$t('ProjectPageListTableSampleCount')}}</td>
+                            <td>{{$t('ProjectPageListTableTaskCount')}}</td>
                             <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
@@ -88,7 +88,7 @@
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>$t('ProjectPageListSearchNewBtn')</q-toolbar-title>
+                <q-toolbar-title>{{$t('ProjectPageListSearchNewBtn')}}</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-separator></q-separator>
@@ -121,7 +121,7 @@
     <q-dialog v-model="openEditProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>$t('ProjectPageListEditProject')</q-toolbar-title>
+                <q-toolbar-title>{{$t('ProjectPageListEditProject')}}</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-card-section>

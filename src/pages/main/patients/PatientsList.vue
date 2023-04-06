@@ -58,8 +58,13 @@
                     </template>
                 </q-input>
 
-                <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
-                <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
+                <q-btn
+                    color="primary"
+                    :label="$t('PatientPageListSearchEnsure')"
+                    icon="search"
+                    @click="refreshPage()"
+                />
+                <q-btn color="primary" :label="$t('PatientPageListSearchReset')" icon="clear" @click="reset()" />
             </div>
         </q-section>
         <q-section>
@@ -108,7 +113,7 @@
                             <td>{{$t('PatientPageListTableColumnGeneticDisease')}}</td>
                             <td>{{$t('PatientPageListTableColumnFamilyHistory')}}</td>
                             <td>{{$t('PatientPageListTableColumnSampleSize')}}</td>
-                            <td>{{$t('Action')}}</td>
+                            <td>{{$t('PatientPageListTableColumnOperations')}}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,7 +132,7 @@
                             <td class="q-gutter-xs">
                                 <q-btn
                                     color="primary"
-                                    :label="$t('Edit')"
+                                    :label="$t('PatientPageListTableRowBtnEdit')"
                                     icon="edit"
                                     size="sm"
                                     @click="edit(patient)"
@@ -148,7 +153,7 @@
                                 />
                                 <q-btn
                                     color="red"
-                                    :label="$t('Delete')"
+                                    :label="$t('PatientPageListTableRowBtnDelete')"
                                     icon="delete"
                                     size="sm"
                                     @click="confirm(patient)"
