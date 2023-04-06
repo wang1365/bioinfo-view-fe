@@ -207,7 +207,7 @@ export default {
     UpdateSuccess: 'Success to update',
     ShowDetail: 'Show Detail',
     HideDetail: 'Hide Detail',
-    OnlySelectAllThisPageFilterResult:'Only select all this page filter results',
+    OnlySelectAllThisPageFilterResult: 'Only select all this page filter results',
     NotAllowEmpty: 'Required, empty is not allowed',
 
     Intro: 'Intro.',
@@ -220,7 +220,7 @@ export default {
     // 菜单
     PlatformMonitoring: 'Platform Monitoring',
     ProjectManage: 'Project Manage',
-    TaskManage:'Task Manage',
+    TaskManage: 'Task Manage',
     CustomReport: 'Custom Report',
     PatientManage: 'Patient Manage',
     SampleManage: 'Sample Manage',
@@ -302,7 +302,7 @@ export default {
 
     // QC
     CaptureKitQcInformation: 'Capture Kit QC Information',
-    DepthInformation:'Depth Information',
+    DepthInformation: 'Depth Information',
     OnTargetRateOfTumorSamples: 'On-Target Rate of Tumor Samples',
     OnTargetRateOfControlSamples: 'On-Target Rate of Control Samples',
     QualityParameters: 'Quality Parameters',
@@ -373,12 +373,41 @@ export default {
     TmlTip2: 'Warning: Random filtering may result in inaccurate results',
     TmlTip3: 'TMB-low\\No recommended drug information',
 
+    // 患者,样本,数据 管理的表格按钮
+    PageListTableExport: "Export Data",
+    PageListTableUpload: "Batch Upload",
+    PageListTableTemplate: "Template Download",
     // 患者
     Patient: 'Patient',
     Age: 'Age',
     PatientIdentifier: 'Patient Identifier',
     PatientName: 'Patient Name',
     PatientAge: 'Patient Age',
+
+
+    PatientPageListTitle: "Patient Manage",
+    PatientPageListSearchKeyWord: "Keywords: Name, Patient Identification Number, Clinical Diagnosis, Physician, Gender.",
+    PatientPageListSearchAgeStart: "Starting Age",
+    PatientPageListSearchAgeEnd: "Ending Age",
+    PatientPageListSearchEntryStart: "Starting Entry Time(YYYY-MM-DD)",
+    PatientPageListSearchEntryEnd: "Ending Entry Time(YYYY-MM-DD)",
+    PatientPageListTableTitle: "Patient Data",
+    PatientPageListTableCreate: "Create New Patient",
+    PatientPageListTableColumnName: "Name",
+    PatientPageListTableColumnSubmissionUnit: "Submission Unit",
+    PatientPageListTableColumnTreatingPhysician: "Treating Physician",
+    PatientPageListTableColumnGender: "Gender",
+    PatientPageListTableColumnAge: "Age",
+    PatientPageListTableColumnClinicalDiagnosis: "Clinical Diagnosis",
+    PatientPageListTableColumnTumorStaging: "Tumor Staging",
+    PatientPageListTableColumnGeneticDisease: "Genetic Disease",
+    PatientPageListTableColumnFamilyHistory: "Family History",
+    PatientPageListTableColumnSampleSize: "Sample Size",
+    PatientPageListTableRowBtnEdit: "Edit",
+    PatientPageListTableRowBtnAssociateWithSamples: "Associate With Samples",
+    PatientPageListTableRowBtnPatientInformation: "Patient Information",
+    PatientPageListTableRowBtnDelete: "Delete",
+
 
     // 样本
     SampleInformation: 'Sample Information',
@@ -416,6 +445,6 @@ export default {
     GenomeView: 'Genome View',
     SelectGenomeFile: 'Select genome file',
     InputResultFilePath: 'Input result file path',
-    SelectFileFormat:'Select file format',
+    SelectFileFormat: 'Select file format',
     SelectTrackType: 'Select track type',
 }
