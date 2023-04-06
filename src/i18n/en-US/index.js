@@ -383,8 +383,7 @@ export default {
     PatientIdentifier: 'Patient Identifier',
     PatientName: 'Patient Name',
     PatientAge: 'Patient Age',
-
-
+    // 患者列表
     PatientPageListTitle: "Patient Manage",
     PatientPageListSearchKeyWord: "Keywords: Name, Patient Identification Number, Clinical Diagnosis, Physician, Gender.",
     PatientPageListSearchAgeStart: "Starting Age",
@@ -410,6 +409,34 @@ export default {
     PatientPageListTableRowBtnAssociateWithSamples: "Associate With Samples",
     PatientPageListTableRowBtnPatientInformation: "Patient Information",
     PatientPageListTableRowBtnDelete: "Delete",
+    // 新建患者表单
+    PatientNewFormTitle: "Create New Patient",
+    PatientNewFormPatientInfo: "Patient Information",
+    PatientNewFormName: "*Name",
+    PatientNewFormGender: "*Gender",
+    PatientNewFormBirthday: "*Date of Birth(YYYY-MM-DD)",
+    PatientNewFormIDCard: "*ID card",
+    PatientNewFormHomeAddress: "Home Address",
+    PatientNewFormPatientIdentificationNumber: "Patient Identification Number",
+    PatientNewFormSubmissionUnit: "*Submission Unit",
+    PatientNewFormTreatingPhysician: "*Treating Physician",
+    PatientNewFormClinicalInformatiaon: "Clinical Informatiaon",
+    PatientNewFormClinicalDiagnosis: "*Clinical Diagnosis",
+    PatientNewFormTumorStaging: "Tumor Staging",
+    PatientNewFormGeneticDisease: "Genetic Disease",
+    PatientNewFormFamilyHistory: "Family History",
+    PatientNewFormGrugUsingHistory: "Grug Using History",
+    PatientNewFormSmoking: "Smoking",
+    PatientNewFormAlcoholDrinking: "Alcohol Drinking ",
+    PatientNewFormViralInfection: "Viral Infection",
+    PatientNewFormOtherInformation: "Other Information",
+    PatientNewFormTreatmentHistory: "Treatment History",
+    PatientNewFormPrognosisInformation: "Prognosis Information",
+    PatientNewFormPrognosisTime: "Prognosis Time(day)",
+    PatientNewFormTimeToRelapse: "Time to Relapse(day)",
+    PatientNewFormSurvivalTime: "Survival Time(day)",
+    PatientNewFormClose: "Close",
+    PatientNewFormSave: "Save",
 
 
     // 样本
