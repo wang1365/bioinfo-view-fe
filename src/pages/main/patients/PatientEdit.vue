@@ -1,9 +1,9 @@
 <template>
     <q-card style="width: 80vw; max-width: 80vw">
-        <PopupContentScroll title="修改患者">
+        <PopupContentScroll :title="$t('PatientEditFormTitle')">
             <template v-slot:contentBody>
                 <q-card-section>
-                    <div class="text-h6 text-bold">患者信息</div>
+                    <div class="text-h6 text-bold">{{ $t('PatientNewFormPatientInfo') }}</div>
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
@@ -11,7 +11,7 @@
                                 :error="errors.name.error"
                                 :error-message="errors.name.message"
                                 v-model="form.name"
-                                label="*姓名"
+                                :label="$t('PatientNewFormName')"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -20,23 +20,14 @@
                                 :error-message="errors.gender.message"
                                 v-model="form.gender"
                                 :options="genderOptions"
-                                label="*性别"
+                                :label="$t('PatientNewFormGender')"
                             />
                         </div>
-                        <!-- <div class="col">
-                            <q-input
-                                :error="errors.age.error"
-                                :error-message="errors.age.message"
-                                type="number"
-                                v-model="form.age"
-                                label="年龄"
-                            ></q-input>
-                        </div> -->
                         <div class="col">
                             <q-input
                                 :error="errors.birthday.error"
                                 :error-message="errors.birthday.message"
-                                label="*出生日期(YYYY-MM-DD)"
+                                :label="$t('PatientNewFormBirthday')"
                                 v-model="form.birthday"
                                 readonly
                             >
@@ -60,7 +51,7 @@
                                 :error="errors.id_card.error"
                                 :error-message="errors.id_card.message"
                                 v-model="form.id_card"
-                                label="*身份证"
+                                :label="$t('PatientNewFormIDCard')"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -68,7 +59,7 @@
                                 :error="errors.location.error"
                                 :error-message="errors.location.message"
                                 v-model="form.location"
-                                label="家庭地址"
+                                :label="$t('PatientNewFormIDCard')"
                             ></q-input>
                         </div>
                     </div>
@@ -78,7 +69,7 @@
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
                                 v-model="form.identifier"
-                                label="患者识别号"
+                                :label="$t('PatientNewFormPatientIdentificationNumber')"
                                 readonly
                             ></q-input>
                         </div>
@@ -89,7 +80,7 @@
                                 errors.inspection_agency.message
                             "
                                 v-model="form.inspection_agency"
-                                label="*送检机构"
+                                :label="$t('PatientNewFormSubmissionUnit')"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -97,11 +88,11 @@
                                 :error="errors.medical_doctor.error"
                                 :error-message="errors.medical_doctor.message"
                                 v-model="form.medical_doctor"
-                                label="*诊疗医生"
+                                :label="$t('PatientNewFormTreatingPhysician')"
                             ></q-input>
                         </div>
                     </div>
-                    <div class="text-h6 text-bold">临床信息</div>
+                    <div class="text-h6 text-bold">{{ $t('PatientNewFormClinicalInformatiaon') }}</div>
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
@@ -109,7 +100,7 @@
                                 :error="errors.diagnosis.error"
                                 :error-message="errors.diagnosis.message"
                                 v-model="form.diagnosis"
-                                label="临床诊断"
+                                :label="$t('PatientNewFormClinicalDiagnosis')"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -117,7 +108,7 @@
                                 :error="errors.tumor_stage.error"
                                 :error-message="errors.tumor_stage.message"
                                 v-model="form.tumor_stage"
-                                label="肿瘤分期"
+                                :label="$t('PatientNewFormTumorStaging')"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -125,7 +116,7 @@
                                 :error="errors.disease.error"
                                 :error-message="errors.disease.message"
                                 v-model="form.disease"
-                                label="遗传病"
+                                :label="$t('PatientNewFormGeneticDisease')"
                             ></q-input>
                         </div>
                     </div>
@@ -135,7 +126,7 @@
                                 :error="errors.family_history.error"
                                 :error-message="errors.family_history.message"
                                 v-model="form.family_history"
-                                label="家族史"
+                                :label="$t('PatientNewFormFamilyHistory')"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -145,7 +136,7 @@
                                 errors.medication_history.message
                             "
                                 v-model="form.medication_history"
-                                label="用药史"
+                                :label="$t('PatientNewFormGrugUsingHistory')"
                             ></q-input>
                         </div>
                     </div>
@@ -155,7 +146,7 @@
                                 :error="errors.smoking.error"
                                 :error-message="errors.smoking.message"
                                 v-model="form.smoking"
-                                label="吸烟"
+                                :label="$t('PatientNewFormSmoking')"
                                 :options="['是','否']"
                             />
                         </div>
@@ -164,7 +155,7 @@
                                 :error="errors.drinking.error"
                                 :error-message="errors.drinking.message"
                                 v-model="form.drinking"
-                                label="饮酒"
+                                :label="$t('PatientNewFormAlcoholDrinking')"
                                 :options="['是','否']"
                             />
                         </div>
@@ -173,12 +164,12 @@
                                 :error="errors.viral_infection.error"
                                 :error-message="errors.viral_infection.message"
                                 v-model="form.viral_infection"
-                                label="病毒感染"
+                                :label="$t('PatientNewFormViralInfection')"
                                 :options="['是','否']"
                             />
                         </div>
                     </div>
-                    <div class="text-h6 text-bold">其他信息</div>
+                    <div class="text-h6 text-bold">{{$t('PatientNewFormOtherInformation')}}</div>
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
@@ -188,7 +179,7 @@
                                 errors.treatment_history.message
                             "
                                 v-model="form.treatment_history"
-                                label="治疗史"
+                                :label="$t('PatientNewFormTreatmentHistory')"
                             ></q-input>
                         </div>
                         <div class="col">
@@ -198,7 +189,7 @@
                                 errors.prognosis.message
                             "
                                 v-model="form.prognosis"
-                                label="预后信息"
+                                :label="$t('PatientNewFormPrognosisInformation')"
                             ></q-input>
                         </div>
                     </div>
@@ -208,7 +199,7 @@
                                 type="number"
                                 :error="errors.prognosis_time.error"
                                 :error-message="errors.prognosis_time.message"
-                                label="预后时间(天)"
+                                :label="$t('PatientNewFormPrognosisTime')"
                                 v-model="form.prognosis_time"
                             >
                             </q-input>
@@ -218,7 +209,7 @@
                                 type="number"
                                 :error="errors.recurrence_time.error"
                                 :error-message="errors.recurrence_time.message"
-                                label="复发时间(天)"
+                                :label="$t('PatientNewFormTimeToRelapse')"
                                 v-model="form.recurrence_time"
                             >
                             </q-input>
@@ -228,7 +219,7 @@
                                 type="number"
                                 :error="errors.survival_time.error"
                                 :error-message="errors.survival_time.message"
-                                label="存活时间(天)"
+                                :label="$t('PatientNewFormSurvivalTime')"
                                 v-model="form.survival_time"
                             >
                             </q-input>
@@ -237,8 +228,8 @@
                 </q-card-section>
             </template>
             <template v-slot:contentFooter>
-                <q-btn :label="$t('Close')" @click="close()" />
-                <q-btn color="primary" label="保存" @click="save()" />
+                <q-btn :label="$t('PatientNewFormClose')" @click="close()" />
+                <q-btn color="primary" :label="$t('PatientNewFormSave')" @click="save()" />
             </template>
         </PopupContentScroll>
     </q-card>

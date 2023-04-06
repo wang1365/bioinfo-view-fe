@@ -437,6 +437,8 @@ export default {
     PatientNewFormSurvivalTime: "存活时间(天)",
     PatientNewFormClose: "关闭",
     PatientNewFormSave: "保存",
+    // 修改患者表单
+    PatientEditFormTitle: "修改患者信息",
 
 
     // 样本
