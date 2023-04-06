@@ -6,12 +6,17 @@
                     style="width:350px"
                     v-model="searchParams.search"
                     dense
-                    label="关键词: 采样部位, 样本类型, 患者识别号, 样本识别号"
+                    :label="$t('SampleListPageSearchInput')"
                     clearable
                 >
                 </q-input>
 
-                <q-input clearable dense label="起始送检日期(YYYY-MM-DD)" v-model="searchParams.test_date_start">
+                <q-input
+                    clearable
+                    dense
+                    :label="$t('SampleListPageSearchStartTestDate')"
+                    v-model="searchParams.test_date_start"
+                >
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -24,7 +29,12 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-input clearable dense label="截止送检日期(YYYY-MM-DD)" v-model="searchParams.test_date_end">
+                <q-input
+                    clearable
+                    dense
+                    :label="$t('SampleListPageSearchEndTestDate')"
+                    v-model="searchParams.test_date_end"
+                >
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -37,7 +47,12 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-input clearable dense label="起始采样日期(YYYY-MM-DD)" v-model="searchParams.sample_date_start">
+                <q-input
+                    clearable
+                    dense
+                    :label="$t('SampleListPageSearchStartTestDate')"
+                    v-model="searchParams.sample_date_start"
+                >
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -50,7 +65,12 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-input clearable dense label="截止采样日期(YYYY-MM-DD)" v-model="searchParams.sample_date_end">
+                <q-input
+                    clearable
+                    dense
+                    :label="$t('SampleListPageSearchEndTestDate')"
+                    v-model="searchParams.sample_date_end"
+                >
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -69,7 +89,7 @@
                     dense
                     v-model="searchParams.is_panel"
                     :options="['是', '否']"
-                    label="肿瘤样本"
+                    :label="$t('SampleListPageSearchIsPanel')"
                 />
                 <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
@@ -78,27 +98,29 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
-                <q-toolbar-title class="text-h6"> 样本 </q-toolbar-title>
-                <q-btn color="primary" label="新建样本" icon="description" @click="showSampleNew = true" />
-                <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
+                <q-toolbar-title class="text-h6"> {{$t('SampleListTableTitle')}} </q-toolbar-title>
+                <q-btn
+                    color="primary"
+                    :label="$t('SampleListTableBtnNew')"
+                    icon="description"
+                    @click="showSampleNew = true"
+                />
+                <q-btn color="info" :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
-                        批量上传
-                        <span
-                            style="
-                                        width: 0;
-                                        height: 0;
-                                        overflow: hidden;
-                                        display: inline-block;
-                                    "
-                        >
+                        {{ $t('PageListTableUpload') }}
+                        <span style="width: 0;height: 0;overflow: hidden;display: inline-block;">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
                 </q-btn>
-                <q-btn color="positive" label="模板下载" icon="file_download" @click="downloadTemplate()">
-                    <q-tooltip>批量上传使用的模板文件 </q-tooltip>
+                <q-btn
+                    color="positive"
+                    :label="$t('PageListTableTemplate')"
+                    icon="file_download"
+                    @click="downloadTemplate()"
+                >
                 </q-btn>
             </q-toolbar>
         </q-section>
@@ -108,15 +130,15 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>采样日期</td>
-                            <td>送测日期</td>
-                            <td>采样部位</td>
-                            <td>样本类型</td>
-                            <td>肿瘤含量</td>
-                            <td>肿瘤样本</td>
-                            <td>患者识别号</td>
-                            <td>样本识别号</td>
-                            <td>{{$t('Action')}}</td>
+                            <td>{{$t('SampleListTableColumnSamplingDate')}}</td>
+                            <td>{{$t('SampleListTableColumnSubmissionDate')}}</td>
+                            <td>{{$t('SampleListTableColumnSamplingSite')}}</td>
+                            <td>{{$t('SampleListTableColumnSampleType')}}</td>
+                            <td>{{$t('SampleListTableColumnTumorContent')}}</td>
+                            <td>{{$t('SampleListTableColumnTumorSample')}}</td>
+                            <td>{{$t('SampleListTableColumnPatientIdentificationNumber')}}</td>
+                            <td>{{$t('SampleListTableColumnSampleIdentificationNumber')}}</td>
+                            <td>{{$t('SampleListTableColumnOperations')}}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -143,17 +165,29 @@
                             <td class="q-gutter-xs">
                                 <q-btn
                                     color="info"
-                                    :label="$t('Detail')"
+                                    :label="$t('SampleListTableColumnBtnDetail')"
                                     icon="visibility"
                                     @click="info(item)"
                                     size="sm"
                                 />
-                                <q-btn color="primary" :label="$t('Edit')" icon="edit" @click="edit(item)" size="sm" />
-                                <q-btn color="secondary" label="关联患者" icon="link" @click="link(item)" size="sm" />
+                                <q-btn
+                                    color="primary"
+                                    :label="$t('SampleListTableColumnBtnEdit')"
+                                    icon="edit"
+                                    @click="edit(item)"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="secondary"
+                                    :label="$t('SampleListTableColumnBtnAssociatewithPatient')"
+                                    icon="link"
+                                    @click="link(item)"
+                                    size="sm"
+                                />
 
                                 <q-btn
                                     color="red"
-                                    :label="$t('Delete')"
+                                    :label="$t('SampleListTableColumnBtnDelete')"
                                     icon="delete"
                                     @click="confirm(item)"
                                     size="sm"

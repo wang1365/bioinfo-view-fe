@@ -448,6 +448,29 @@ export default {
     // 样本
     // 样本列表页面
     SampleListPageTitle: "样本管理",
+    SampleListPageSearchInput: "关键词: 采样部位, 样本类型, 患者识别号, 样本识别号",
+    SampleListPageSearchStartTestDate: "起始送检日期(YYYY-MM-DD)",
+    SampleListPageSearchEndTestDate: "截止送检日期(YYYY-MM-DD)",
+    SampleListPageSearchStartTestDate: "起始采样日期(YYYY-MM-DD)",
+    SampleListPageSearchEndTestDate: "截止采样日期(YYYY-MM-DD)",
+    SampleListPageSearchIsPanel: "肿瘤样本",
+    SampleListTableTitle: "样本",
+    SampleListTableBtnNew: "新建样本",
+    SampleListTableColumnSamplingDate: "采样日期",
+    SampleListTableColumnSubmissionDate: "送测日期",
+    SampleListTableColumnSamplingSite: "采样部位",
+    SampleListTableColumnSampleType: "样本类型",
+    SampleListTableColumnTumorContent: "肿瘤含量",
+    SampleListTableColumnTumorSample: "肿瘤样本",
+    SampleListTableColumnPatientIdentificationNumber: "患者识别号",
+    SampleListTableColumnSampleIdentificationNumber: "样本识别号",
+    SampleListTableColumnOperations: "操作",
+    SampleListTableColumnBtnDetail: "详情",
+    SampleListTableColumnBtnEdit: "编辑",
+    SampleListTableColumnBtnAssociatewithPatient: "关联患者",
+    SampleListTableColumnBtnDelete: "删除",
+
+
 
 
 
