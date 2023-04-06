@@ -438,7 +438,7 @@ export default {
     PatientNewFormClose: "Close",
     PatientNewFormSave: "Save",
     // 修改患者表单
-    PatientEditFormTitle: "Edit Patient",
+    PatientEditFormTitle: "Patient Information Modification",
     // 患者详情
     PatientInfoPageTitle: "Patient Info",
     PatientInfoPageBtnBack: "Back",
