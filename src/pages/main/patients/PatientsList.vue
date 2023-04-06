@@ -6,13 +6,32 @@
                     style="width:350px"
                     v-model="searchParams.search"
                     dense
-                    label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
+                    :label="$t('PatientPageListSearchKeyWord')"
                     clearable
                 >
                 </q-input>
-                <q-input type="number" v-model="searchParams.age_start" dense label="年龄起始" clearable> </q-input>
-                <q-input type="number" v-model="searchParams.age_end" dense label="截止年龄" clearable> </q-input>
-                <q-input clearable dense label="起始录入时间(YYYY-MM-DD)" v-model="searchParams.ctime_start">
+                <q-input
+                    type="number"
+                    v-model="searchParams.age_start"
+                    dense
+                    :label="$t('PatientPageListSearchAgeStart')"
+                    clearable
+                >
+                </q-input>
+                <q-input
+                    type="number"
+                    v-model="searchParams.age_end"
+                    dense
+                    :label="$t('PatientPageListSearchAgeEnd')"
+                    clearable
+                >
+                </q-input>
+                <q-input
+                    clearable
+                    dense
+                    :label="$t('PatientPageListSearchEntryStart')"
+                    v-model="searchParams.ctime_start"
+                >
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -25,7 +44,7 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-input clearable dense label="截止录入时间(YYYY-MM-DD)" v-model="searchParams.ctime_end">
+                <q-input clearable dense :label="$t('PatientPageListSearchEntryEnd')" v-model="searchParams.ctime_end">
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -46,27 +65,30 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="groups_2" />
-                <q-toolbar-title class="text-h6"> 患者数据 </q-toolbar-title>
-                <q-btn color="primary" label="新建患者" icon="groups_2" @click="showPatientNew = true" />
-                <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
+                <q-toolbar-title class="text-h6"> {{$t('PatientPageListTableTitle')}} </q-toolbar-title>
+                <q-btn
+                    color="primary"
+                    :label="$t('PatientPageListTableCreate')"
+                    icon="groups_2"
+                    @click="showPatientNew = true"
+                />
+                <q-btn color="info" :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
-                        批量上传
-                        <span
-                            style="
-                                                        width: 0;
-                                                        height: 0;
-                                                        overflow: hidden;
-                                                        display: inline-block;
-                                                    "
-                        >
+                        {{ $t('PageListTableUpload') }}
+                        <span style="width: 0;height: 0;overflow: hidden;display: inline-block;">
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
                 </q-btn>
-                <q-btn color="positive" label="模板下载" icon="file_download" @click="downlaodTemplate()">
-                    <q-tooltip>批量上传使用的模板文件 </q-tooltip>
+                <q-btn
+                    color="positive"
+                    :label="$t('PageListTableTemplate')"
+                    icon="file_download"
+                    @click="downlaodTemplate()"
+                >
+                    <q-tooltip>{{ $t('PageListTableTemplate') }} </q-tooltip>
                 </q-btn>
             </q-toolbar>
         </q-section>
@@ -76,16 +98,16 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>姓名</td>
-                            <td>送检机构</td>
-                            <td>诊疗医生</td>
-                            <td>性别</td>
-                            <td>年龄</td>
-                            <td>临床诊断</td>
-                            <td>肿瘤分期</td>
-                            <td>遗传病</td>
-                            <td>家族史</td>
-                            <td>样本数</td>
+                            <td>{{$t('PatientPageListTableColumnName')}}</td>
+                            <td>{{$t('PatientPageListTableColumnSubmissionUnit')}}</td>
+                            <td>{{$t('PatientPageListTableColumnTreatingPhysician')}}</td>
+                            <td>{{$t('PatientPageListTableColumnGender')}}</td>
+                            <td>{{$t('PatientPageListTableColumnAge')}}</td>
+                            <td>{{$t('PatientPageListTableColumnClinicalDiagnosis')}}</td>
+                            <td>{{$t('PatientPageListTableColumnTumorStaging')}}</td>
+                            <td>{{$t('PatientPageListTableColumnGeneticDisease')}}</td>
+                            <td>{{$t('PatientPageListTableColumnFamilyHistory')}}</td>
+                            <td>{{$t('PatientPageListTableColumnSampleSize')}}</td>
                             <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
@@ -103,22 +125,34 @@
                             <td>{{ patient.family_history }}</td>
                             <td>{{ patient.samplemeta_set.length }}</td>
                             <td class="q-gutter-xs">
-                                <q-btn color="primary" :label="$t('Edit')" icon="edit" size="sm" @click="edit(patient)" />
+                                <q-btn
+                                    color="primary"
+                                    :label="$t('Edit')"
+                                    icon="edit"
+                                    size="sm"
+                                    @click="edit(patient)"
+                                />
                                 <q-btn
                                     color="secondary"
-                                    label="关联样本"
+                                    :label="$t('PatientPageListTableRowBtnAssociateWithSamples')"
                                     icon="link"
                                     size="sm"
                                     @click="link(patient)"
                                 />
                                 <q-btn
                                     color="info"
-                                    label="患者信息"
+                                    :label="$t('PatientPageListTableRowBtnPatientInformation')"
                                     icon="visibility"
                                     @click="info(patient)"
                                     size="sm"
                                 />
-                                <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(patient)" />
+                                <q-btn
+                                    color="red"
+                                    :label="$t('Delete')"
+                                    icon="delete"
+                                    size="sm"
+                                    @click="confirm(patient)"
+                                />
                             </td>
                         </tr>
                     </tbody>

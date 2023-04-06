@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="患者管理" />
+        <PageTitle :title="$t('PatientPageListTitle')" />
         <PatientsList />
     </q-page>
 </template>
