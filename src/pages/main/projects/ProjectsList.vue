@@ -3,17 +3,22 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
-                <q-toolbar-title class="text-h6"> 项目 </q-toolbar-title>
+                <q-toolbar-title class="text-h6"> $t("ProjectPageListSearchName") </q-toolbar-title>
                 <q-input
                     style="width: 250px"
                     dense
                     v-model="search"
-                    label="项目名称"
+                    :label="$t('ProjectPageListSearchInput')"
                     clearable
                     @clear="refreshPage()"
                 />
                 <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
-                <q-btn color="primary" label="新建项目" icon="folder" @click="openNewProject = true" />
+                <q-btn
+                    color="primary"
+                    :label="$t('ProjectPageListSearchNewBtn')"
+                    icon="folder"
+                    @click="openNewProject = true"
+                />
             </q-toolbar>
         </q-section>
         <q-section>
@@ -22,11 +27,11 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>项目名称</td>
-                            <td>创建人</td>
-                            <td>创建时间</td>
-                            <td>样本数量</td>
-                            <td>任务数量</td>
+                            <td>$t('ProjectPageListTableName')</td>
+                            <td>$t('ProjectPageListTableCreater')</td>
+                            <td>$t('ProjectPageListTableCreateTime')</td>
+                            <td>$t('ProjectPageListTableSampleCount')</td>
+                            <td>$t('ProjectPageListTableTaskCount')</td>
                             <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
@@ -61,7 +66,13 @@
                                     "
                                     size="sm"
                                 />
-                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)" size="sm" />
+                                <q-btn
+                                    color="red"
+                                    :label="$t('Delete')"
+                                    icon="delete"
+                                    @click="confirm(item)"
+                                    size="sm"
+                                />
                             </td>
                         </tr>
                     </tbody>
@@ -77,14 +88,16 @@
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>新建项目</q-toolbar-title>
+                <q-toolbar-title>$t('ProjectPageListSearchNewBtn')</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-separator></q-separator>
             <q-card-section>
                 <q-list>
                     <q-item>
-                        <q-section class="full-width"> <q-input v-model="newProjectName" label="项目名称" /></q-section>
+                        <q-section class="full-width">
+                            <q-input v-model="newProjectName" :label="$t('ProjectPageListSearchInput')"
+                        /></q-section>
                     </q-item>
                     <q-item>
                         <q-section v-if="newProjectNameError" class="full-width text-red">
@@ -97,8 +110,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="q-gutter-x-sm">
-                            <q-btn label="取消" v-close-popup />
-                            <q-btn color="primary" label="确认" @click="createProject()" />
+                            <q-btn :label="$t('Cancel')" v-close-popup />
+                            <q-btn color="primary" :label="$t('Confirm')" @click="createProject()" />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -108,14 +121,14 @@
     <q-dialog v-model="openEditProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>修改项目</q-toolbar-title>
+                <q-toolbar-title>$t('ProjectPageListEditProject')</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-card-section>
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="updateProjectName" label="项目名称"
+                            <q-input v-model="updateProjectName" :label="$('ProjectPageListSearchInput')"
                         /></q-section>
                     </q-item>
                     <q-item>
@@ -129,8 +142,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="q-gutter-x-sm">
-                            <q-btn label="取消" v-close-popup />
-                            <q-btn color="primary" label="确认" @click="updateProject()" />
+                            <q-btn :label="$t('Cancel')" v-close-popup />
+                            <q-btn color="primary" :label="$t('Confirm')" @click="updateProject()" />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -180,7 +193,7 @@ const gotoChild = (item) => {
 const createProject = () => {
     newProjectName.value = newProjectName.value.trim();
     if (!newProjectName.value) {
-        newProjectNameError.value = "项目名称不可为空";
+        newProjectNameError.value = $t('ProjectPageListEditProjectNameRequired');
         return;
     }
     apiPost(
@@ -189,7 +202,7 @@ const createProject = () => {
             newProjectNameError.value = "";
             newProjectName.value = "";
             openNewProject.value = false;
-            infoMessage("创建成功");
+            infoMessage($t('Success'));
             refreshPage();
         },
         { name: newProjectName.value }
@@ -198,7 +211,7 @@ const createProject = () => {
 const updateProject = () => {
     updateProjectName.value = updateProjectName.value.trim();
     if (!updateProjectName.value) {
-        updateProjectNameError.value = "项目名称不可为空";
+        updateProjectNameError.value = $t('ProjectPageListEditProjectNameRequired');
         return;
     }
     apiPut(
@@ -206,7 +219,7 @@ const updateProject = () => {
         (_) => {
             openEditProject.value = false;
             updateProjectNameError.value = "";
-            infoMessage("更新成功");
+            infoMessage($t('Success'));
             refreshPage();
         },
         {
@@ -258,13 +271,13 @@ const loadBackup = ()=>{
 
 const confirm = (item) => {
     $q.dialog({
-        title: "确认删除项目吗?",
-        message:"注意: 删除项目后,项目下的任务也会级联删除掉, 且不可恢复!",
+        title: $t('ProjectPageListEditProjectDeleteTitle'),
+        message:$t('ProjectPageListEditProjectDeleteDesc'),
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/project/${item.id}`, (_) => {
-            infoMessage("删除成功")
+            infoMessage($t('Success'))
             if (dataItems.value.length > 1) {
                 let index = 0
                 for (let i = 0; i < dataItems.value.length; i++) {
