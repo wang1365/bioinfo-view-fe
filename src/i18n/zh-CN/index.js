@@ -205,7 +205,7 @@ export default {
     UpdateSuccess: '修改成功',
     ShowDetail: '显示详情',
     HideDetail: '隐藏详情',
-    OnlySelectAllThisPageFilterResult:'仅全选本页筛选结果',
+    OnlySelectAllThisPageFilterResult: '仅全选本页筛选结果',
     NotAllowEmpty: '必填字段，不能为空',
 
     Intro: '说明',
@@ -218,7 +218,7 @@ export default {
     // 菜单
     PlatformMonitoring: '平台监控',
     ProjectManage: '项目管理',
-    TaskManage:'任务管理',
+    TaskManage: '任务管理',
     CustomReport: '自定义报告',
     PatientManage: '患者管理',
     SampleManage: '样本管理',
@@ -302,7 +302,7 @@ export default {
 
     // QC
     CaptureKitQcInformation: '捕获试剂盒质控信息',
-    DepthInformation:'深度信息',
+    DepthInformation: '深度信息',
     OnTargetRateOfTumorSamples: '肿瘤样本的中靶率',
     OnTargetRateOfControlSamples: '对照样本中靶率',
     QualityParameters: '质量参数',
@@ -416,6 +416,22 @@ export default {
     GenomeView: '基因组浏览',
     SelectGenomeFile: '选择基因组文件',
     InputResultFilePath: '输入结果文件路径',
-    SelectFileFormat:'选择文件格式',
+    SelectFileFormat: '选择文件格式',
     SelectTrackType: '选择Track类型',
+
+    // 项目
+    ProjectPageIndexTitle: "项目管理",
+    ProjectPageListSearchName: "项目",
+    ProjectPageListSearchInput: "项目名称",
+    ProjectPageListSearchNewBtn: "新建项目",
+    ProjectPageListTableName: "项目名称",
+    ProjectPageListTableCreater: "创建人",
+    ProjectPageListTableCreateTime: "创建时间",
+    ProjectPageListTableSampleCount: "样本数量",
+    ProjectPageListTableTaskCount: "任务数量",
+    ProjectPageListEditProject: "修改项目",
+    ProjectPageListEditProjectNameRequired: "项目名称不可为空",
+    ProjectPageListEditProjectDeleteTitle: "确认删除项目吗?",
+    ProjectPageListEditProjectDeleteDesc: "注意: 删除项目后,项目下的任务也会级联删除掉, 且不可恢复!",
+
 }
