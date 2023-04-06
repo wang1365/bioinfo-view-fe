@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="样本管理" />
+        <PageTitle :title="$t('SampleListPageTitle')" />
         <SamplesList />
     </q-page>
 </template>

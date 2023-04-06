@@ -107,12 +107,6 @@
                 <table>
                     <thead>
                         <tr>
-                            <!-- <td >
-                                    <q-checkbox
-                                        v-model="selected"
-                                        color="negative"
-                                    />
-                                </td> -->
                             <td>ID</td>
                             <td>采样日期</td>
                             <td>送测日期</td>
@@ -120,23 +114,13 @@
                             <td>样本类型</td>
                             <td>肿瘤含量</td>
                             <td>肿瘤样本</td>
-                            <!-- <td>患者ID</td> -->
                             <td>患者识别号</td>
                             <td>样本识别号</td>
-                            <!-- <td>样本所有者</td> -->
-                            <!-- <td>创建时间</td>
-                                <td>更新时间</td> -->
                             <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
-                            <!-- <td class="q-pa-md text-center">
-                                    <q-checkbox
-                                        v-model="item.selected"
-                                        color="negative"
-                                    />
-                                </td> -->
                             <td>
                                 {{ item.id }}
                             </td>
@@ -154,18 +138,26 @@
                                 {{ item.panel_proportion }}
                             </td>
                             <td>{{ item.is_panel }}</td>
-                            <!-- <td>{{ item.patient_id }}</td> -->
                             <td>{{ item.patient?.identifier }}</td>
                             <td>{{ item.identifier }}</td>
-                            <!-- <td>{{ item.user_id }}</td> -->
-                            <!-- <td>{{ item.create_time }}</td>
-                                <td>{{ item.modify_time }}</td> -->
                             <td class="q-gutter-xs">
-                                <q-btn color="info" :label="$t('Detail')" icon="visibility" @click="info(item)" size="sm" />
+                                <q-btn
+                                    color="info"
+                                    :label="$t('Detail')"
+                                    icon="visibility"
+                                    @click="info(item)"
+                                    size="sm"
+                                />
                                 <q-btn color="primary" :label="$t('Edit')" icon="edit" @click="edit(item)" size="sm" />
                                 <q-btn color="secondary" label="关联患者" icon="link" @click="link(item)" size="sm" />
 
-                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)" size="sm" />
+                                <q-btn
+                                    color="red"
+                                    :label="$t('Delete')"
+                                    icon="delete"
+                                    @click="confirm(item)"
+                                    size="sm"
+                                />
                             </td>
                         </tr>
                     </tbody>

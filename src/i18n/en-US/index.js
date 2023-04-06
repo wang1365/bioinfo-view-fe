@@ -446,6 +446,11 @@ export default {
     PatientInfoPageSamplesTitle: "Patient's Samples",
 
     // 样本
+    // 样本列表页面
+    SampleListPageTitle: "Sample management",
+
+
+    // 样本
     SampleInformation: 'Sample Information',
     SampleComponent: 'Sample Component',
     SampleIdentifier: 'Sample Identifier',

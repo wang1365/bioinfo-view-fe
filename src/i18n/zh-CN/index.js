@@ -445,6 +445,11 @@ export default {
     PatientInfoPageAge: '年龄',
     PatientInfoPageSamplesTitle: "患者的样本",
 
+    // 样本
+    // 样本列表页面
+    SampleListPageTitle: "样本管理",
+
+
 
     // 样本
     SampleInformation: '样本信息',
