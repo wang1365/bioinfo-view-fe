@@ -17,25 +17,30 @@
                         style="width:350px"
                         v-model="searchParams.search"
                         dense
-                        label="关键词: 姓名, 患者识别号,临床诊断,医生, 性别"
+                        :label="$t('PatientPageListSearchKeyWord')"
                         clearable
                     >
                     </q-input>
-                    <q-input type="number" v-model="searchParams.age_start" dense label="年龄起始" clearable> </q-input>
-                    <q-input type="number" v-model="searchParams.age_end" dense label="截止年龄" clearable> </q-input>
+                    <q-input
+                        type="number"
+                        v-model="searchParams.age_start"
+                        dense
+                        :label="$t('PatientPageListSearchAgeStart')"
+                        clearable
+                    >
+                    </q-input>
+                    <q-input
+                        type="number"
+                        v-model="searchParams.age_end"
+                        dense
+                        :label="$t('PatientPageListSearchAgeEnd')"
+                        clearable
+                    >
+                    </q-input>
 
                     <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 </div>
             </template>
-            <!-- <template v-slot:itemRow="{ row }">
-                <td>
-                    {{ row.name }}
-                </td>
-                <td>{{ row.samples.length }}</td>
-                <td>{{ row.task_count }}</td>
-                <td>{{ row.owner }}</td>
-                <td>{{ row.create_time }}</td>
-            </template> -->
         </PopupSingleSelector>
     </div>
 </template>
