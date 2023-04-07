@@ -12,9 +12,24 @@
                         label="关键词: 任务名称"
                         clearable
                     ></q-input>
-                    <q-input v-model="searchParams.patient_identifier" dense label="患者识别号" clearable></q-input>
-                    <q-input v-model="searchParams.sample_meta_identifier" dense label="样本识别号" clearable></q-input>
-                    <q-input v-model="searchParams.sample_identifier" dense label="数据识别号" clearable></q-input>
+                    <q-input
+                        v-model="searchParams.patient_identifier"
+                        dense
+                        :label="$t('PatientNewFormPatientIdentificationNumber')"
+                        clearable
+                    ></q-input>
+                    <q-input
+                        v-model="searchParams.sample_meta_identifier"
+                        dense
+                        :label="$t('SampleListTableColumnSampleIdentificationNumber')"
+                        clearable
+                    ></q-input>
+                    <q-input
+                        v-model="searchParams.sample_identifier"
+                        dense
+                        :label="$t('DataNewFormDataIdentificationNumber')"
+                        clearable
+                    ></q-input>
                     <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                     <q-btn color="primary" :label="$t('Reset')" icon="close" @click="reset()" />
                 </div>
@@ -27,12 +42,11 @@
                     v-model:pagination="pagination"
                     @request="onRequest"
                     :rows-per-page-options="[5,15,35,50]"
-                    rows-per-page-label="每页数量"
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
                             <a :href="'/igv'+props.row.report_path" download v-if="props.row.status=='创建成功'">
-                                <q-btn color="primary" label="下载报告" size="sm" />
+                                <q-btn color="primary" :label="$t('Download')" size="sm" />
                             </a>
                             <a>
                                 <q-btn @click="onDelete(props.row)" color="red" :label="$t('Delete')" size="sm" />
@@ -52,6 +66,7 @@ import { useApi } from 'src/api/apiBase'
 import { useQTable } from 'src/utils/q-table'
 import { useQuasar } from 'quasar'
 import { infoMessage } from 'src/utils/notify'
+import { useI18n } from "vue-i18n";
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
 const { apiGet, apiDelete, apiPost } = useApi()
@@ -63,6 +78,7 @@ const searchParams = ref({
     sample_meta_identifier: '',
     sample_identifier: '',
 })
+const { t } = useI18n();
 const columns = ref([
     {
         name: 'id',
@@ -74,7 +90,6 @@ const columns = ref([
     },
     {
         name: 'task_id',
-
         label: '任务',
         align: 'left',
         field: (row) => row.task?.name,

@@ -45,6 +45,8 @@ import { onMounted, ref } from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupMultiSelector from "components/popup-multi-selector/PopupMultiSelector.vue";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const searchParams = ref({
     search: '',
     is_panel: '',
@@ -58,11 +60,11 @@ const searchParams = ref({
 
 const tableHeaders = ref([
     "ID",
-    "样本识别号",
-    "患者识别号",
-    "样本类型",
-    "肿瘤样本",
-    "采样日期",
+    t('SampleListTableColumnSampleIdentificationNumber'),
+    t('SampleListTableColumnPatientIdentificationNumber'),
+    t('SampleListTableColumnSampleType'),
+    t('SampleListTableColumnTumorSample'),
+    t('SampleNewFormSamplingDate'),
 ]);
 const tableRowFields = ref([
     "id",

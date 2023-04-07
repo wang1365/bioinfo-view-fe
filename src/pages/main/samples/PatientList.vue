@@ -49,15 +49,22 @@ import { onMounted, ref } from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const tableHeaders = ref([
     "ID",
-    "姓名",
-    "患者识别号",
-    "送检机构",
-    "诊疗医生",
-    "性别",
-    "年龄",
+    t('PatientNewFormName'),
+    t('PatientNewFormPatientIdentificationNumber'),
+    t('PatientNewFormSubmissionUnit'),
+    t('PatientNewFormTreatingPhysician'),
+    t('PatientNewFormGender'),
+    t('PatientPageListTableColumnAge'),
+    // "姓名",
+    // "患者识别号",
+    // "送检机构",
+    // "诊疗医生",
+    // "性别",
+    // "年龄",
 ]);
 const tableRowFields = ref([
     "id",
