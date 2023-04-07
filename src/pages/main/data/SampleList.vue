@@ -57,16 +57,24 @@ import { onMounted, ref } from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const tableHeaders = ref([
     "ID",
-    "样本识别号",
-    "患者识别号",
-    "患者姓名",
-    "性别",
-    "样本类型",
-    "肿瘤样本",
-    "采样日期",
+    t('SampleListTableColumnSampleIdentificationNumber'),
+    t('SampleListTableColumnPatientIdentificationNumber'),
+    t('PatientNewFormName'),
+    t('PatientNewFormGender'),
+    t('SampleListTableColumnSampleType'),
+    t('SampleListTableColumnTumorSample'),
+    t('SampleListTableColumnSamplingDate'),
+    // "样本识别号",
+    // "患者识别号",
+    // "患者姓名",
+    // "性别",
+    // "样本类型",
+    // "肿瘤样本",
+    // "采样日期",
 ]);
 const tableRowFields = ref([
     "id",
