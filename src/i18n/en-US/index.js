@@ -373,6 +373,12 @@ export default {
     TmlTip2: 'Warning: Random filtering may result in inaccurate results',
     TmlTip3: 'TMB-low\\No recommended drug information',
 
+
+    // 任务
+
+    // 自定义报告
+    ReportPageTitle: "Custom Report",
+
     // 弹出框选择
     PopupSelectCurrrentSelected: "Selected",
     PopupSelectNoData: "No Data",

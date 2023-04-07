@@ -373,6 +373,12 @@ export default {
     TmlTip2: '警示：随意过滤造成结果不准确',
     TmlTip3: 'TMB-low\\暂无推荐药物信息',
 
+    // 任务
+
+    // 自定义报告
+    ReportPageTitle: "自定义报告",
+
+
     // 表格头部的按钮
     PageListTableExport: "导出数据",
     PageListTableUpload: "批量上传",

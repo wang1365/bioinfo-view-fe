@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="自定义报告" />
+        <PageTitle :title="$t('ReportPageTitle')" />
         <q-separator />
         <q-card class="q-mt-md">
             <q-section>
@@ -9,7 +9,7 @@
                         style="width:350px"
                         v-model="searchParams.search"
                         dense
-                        label="关键词: 任务名称"
+                        :label="$t('Task')+' ' +$t('Name')"
                         clearable
                     ></q-input>
                     <q-input
@@ -67,6 +67,7 @@ import { useQTable } from 'src/utils/q-table'
 import { useQuasar } from 'quasar'
 import { infoMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
 const { apiGet, apiDelete, apiPost } = useApi()
@@ -78,19 +79,18 @@ const searchParams = ref({
     sample_meta_identifier: '',
     sample_identifier: '',
 })
-const { t } = useI18n();
 const columns = ref([
     {
         name: 'id',
         required: false,
-        label: '报告 ID',
+        label: 'ID',
         align: 'left',
         field: (row) => row.id,
         format: (val) => `${val}`,
     },
     {
         name: 'task_id',
-        label: '任务',
+        label: t('Task'),
         align: 'left',
         field: (row) => row.task?.name,
         format: (val) => `${val}`,
@@ -98,7 +98,7 @@ const columns = ref([
     {
         name: 'patient_id',
         required: true,
-        label: '患者识别号',
+        label:t('SampleListTableColumnPatientIdentificationNumber') ,
         align: 'left',
         field: (row) => {
             let result = ''
@@ -113,7 +113,7 @@ const columns = ref([
     {
         name: 'data_id',
         required: true,
-        label: '数据识别号',
+        label: t('DataNewFormDataIdentificationNumber'),
         align: 'left',
         field: (row) => {
             let result = ''
@@ -128,7 +128,7 @@ const columns = ref([
     {
         name: 'data_id',
         required: true,
-        label: '样本识别号',
+        label: t('SampleListTableColumnSampleIdentificationNumber'),
         align: 'left',
         field: (row) => {
             let result = ''
@@ -143,7 +143,7 @@ const columns = ref([
     {
         name: 'comment',
         required: true,
-        label: '备注',
+        label: t('Comment'),
         align: 'left',
         field: (row) => row.comment,
         format: (val) => `${val}`,
@@ -151,14 +151,14 @@ const columns = ref([
     {
         name: 'comment',
         required: true,
-        label: '状态',
+        label: t('Status'),
         align: 'left',
         field: (row) => row.status,
         format: (val) => `${val}`,
     },
     {
         name: 'actions',
-        label: '操作',
+        label: t('Action'),
         required: false,
     },
 ])
