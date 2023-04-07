@@ -512,6 +512,27 @@ export default {
 
     // 新建数据表单
     DataNewFormTitle: "修改样本信息",
+    // 新建数据页面
+    DataNewFormTitle: "新建数据",
+    DataNewFormDataDetails: "数据详情",
+    DataNewFormLibraryNumber: "文库编号",
+    DataNewFormCaptureKit: "捕获试剂盒",
+    DataNewFormLibraryConstructionInput: "建库input(ng)",
+    DataNewFormIndexType: "index类型",
+    DataNewFormIndexNumber: "index编号",
+    DataNewFormHybridInput: "杂交input(ng)",
+    DataNewFormNucleicAcidFragmentationMethod: "核酸打断方式",
+    DataNewFormDataIdentificationNumber: "数据识别号",
+    DataNewFormSubmissionUnit: "送检机构",
+    DataNewFormTypeOfNucleicAcids: "核酸类型",
+    DataNewFormDegradationGradeOfNucleicAcids: "核酸降解等级",
+    DataNewFormRiskSequencing: "风险上机",
+    DataNewFormSampleIdentificationNumber: "样本识别号",
+    DataNewFormSampleID: "样本元信息ID",
+    DataNewFormDataNameOfR1: "R1文件",
+    DataNewFormDataNameOfR2: "R2文件",
+    DataNewFormClose: "关闭",
+    DataNewFormSave: "保存",
     // 修改数据表单
     DataEditFormTitle: "修改样本信息",
     // 数据详情

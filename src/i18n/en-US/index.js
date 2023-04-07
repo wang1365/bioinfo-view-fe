@@ -511,6 +511,31 @@ export default {
     DataListTableColumnBtnEdit: "Edit",
     DataListTableColumnBtnAssociatewithSample: "Associate With Samples",
     DataListTableColumnBtnDelete: "Delete",
+    // 新建数据表单
+    DataNewFormTitle: "Create New Data",
+    DataNewFormDataDetails: "Data Details",
+    DataNewFormLibraryNumber: "Library Number",
+    DataNewFormCaptureKit: "Capture Kit",
+    DataNewFormLibraryConstructionInput: "Library Construction Input(ng)",
+    DataNewFormIndexType: "Index Type",
+    DataNewFormIndexNumber: "Index Number",
+    DataNewFormHybridInput: "Hybrid Input (ng)",
+    DataNewFormNucleicAcidFragmentationMethod: "Nucleic Acid Fragmentation Method",
+    DataNewFormDataIdentificationNumber: "Data Identification Number",
+    DataNewFormSubmissionUnit: "Submission Unit",
+    DataNewFormTypeOfNucleicAcids: "Type of Nucleic Acids",
+    DataNewFormDegradationGradeOfNucleicAcids: "Degradation Grade of Nucleic Acids",
+    DataNewFormRiskSequencing: "Risk Sequencing",
+    DataNewFormSampleIdentificationNumber: "Sample Identification Number",
+    DataNewFormSampleID: "Sample ID",
+    DataNewFormDataNameOfR1: "Data Name Of R1",
+    DataNewFormDataNameOfR2: "Data Name Of R2",
+    DataNewFormClose: "Close",
+    DataNewFormSave: "Save",
+    // 修改数据表单
+    DataEditFormTitle: "Edit Data Info",
+    // 数据详情
+    DataInfoPageTitle: "Data Info",
 
 
     // 样本

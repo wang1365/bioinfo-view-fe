@@ -1,7 +1,7 @@
 <template>
     <q-card style="width: 70vw; max-width: 80vw">
         <q-toolbar>
-            <q-toolbar-title>新建数据</q-toolbar-title>
+            <q-toolbar-title>{{ $t('DataNewFormTitle') }}</q-toolbar-title>
             <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
         <q-separator></q-separator>
@@ -14,7 +14,7 @@
                                 v-model="form.project_index"
                                 :error="errors.project_index.error"
                                 :error-message="errors.project_index.message"
-                                label="数据详情"
+                                :label="$t('DataNewFormDataDetails')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -22,22 +22,16 @@
                                 v-model="form.library_number"
                                 :error="errors.library_number.error"
                                 :error-message="errors.library_number.message"
-                                label="文库编号"
+                                :label="$t('DataNewFormLibraryNumber')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
                             <panel-list
-                                label="*捕获试剂盒"
+                                :label="'*'+$t('DataNewFormCaptureKit')"
                                 v-model="form.reagent_box"
                                 :error="errors.reagent_box.error"
                                 :error-message="errors.reagent_box.message"
                             />
-                            <!-- <q-input
-                                v-model="form.reagent_box"
-                                :error="errors.reagent_box.error"
-                                :error-message="errors.reagent_box.message"
-                                label="*捕获试剂盒"
-                            ></q-input> -->
                         </div>
                     </div>
                 </q-item>
@@ -49,7 +43,7 @@
                                 v-model="form.library_input"
                                 :error="errors.library_input.error"
                                 :error-message="errors.library_input.message"
-                                label="*建库input(ng)"
+                                :label="'*'+$t('DataNewFormLibraryConstructionInput')"
                             ></q-input>
                         </div>
                         <div class="col q-pf-sm">
@@ -57,7 +51,7 @@
                                 v-model="form.index_type"
                                 :error="errors.index_type.error"
                                 :error-message="errors.index_type.message"
-                                label="index类型"
+                                :label="$t('DataNewFormIndexType')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -65,7 +59,7 @@
                                 v-model="form.index_number"
                                 :error="errors.index_number.error"
                                 :error-message="errors.index_number.message"
-                                label="index编号"
+                                :label="$t('DataNewFormIndexNumber')"
                             ></q-input>
                         </div>
                     </div>
@@ -78,7 +72,7 @@
                                 v-model="form.hybrid_input"
                                 :error="errors.hybrid_input.error"
                                 :error-message="errors.hybrid_input.message"
-                                label="杂交input(ng)"
+                                :label="$t('DataNewFormHybridInput')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -88,7 +82,7 @@
                                 :error-message="
                                     errors.nucleic_break_type.message
                                 "
-                                label="*核酸打断方式"
+                                :label="'*'+$t('DataNewFormNucleicAcidFragmentationMethod')"
                             ></q-input>
                         </div>
 
@@ -97,7 +91,7 @@
                                 v-model="form.identifier"
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
-                                label="数据识别号"
+                                :label="$t('DataNewFormDataIdentificationNumber')"
                                 :readonly="true"
                             ></q-input>
                         </div>
@@ -110,7 +104,7 @@
                                 v-model="form.company"
                                 :error="errors.company.error"
                                 :error-message="errors.company.message"
-                                label="*送检机构"
+                                :label="'*'+$t('DataNewFormSubmissionUnit')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -119,7 +113,7 @@
                                 :error-message="errors.nucleic_type.message"
                                 v-model="form.nucleic_type"
                                 :options="nucleic_type_options"
-                                label="核酸类型"
+                                :label="$t('DataNewFormTypeOfNucleicAcids')"
                             />
                         </div>
                         <div class="col q-pr-sm">
@@ -128,7 +122,7 @@
                                 :error-message="errors.nucleic_level.message"
                                 v-model="form.nucleic_level"
                                 :options="nucleic_level_options"
-                                label="核酸降解等级"
+                                :label="$t('DataNewFormDegradationGradeOfNucleicAcids')"
                             />
                         </div>
                     </div>
@@ -140,7 +134,7 @@
                                 :error="errors.risk.error"
                                 :error-message="errors.risk.message"
                                 v-model="form.risk"
-                                label="风险上机"
+                                :label="$t('DataNewFormRiskSequencing')"
                                 color="primary"
                                 left-label
                                 size="lg"
@@ -153,7 +147,7 @@
                                 v-model="form.sample_identifier"
                                 :error="errors.sampsample_identifier"
                                 :error-message="errors.sampsample_identifier"
-                                label="*样本识别号"
+                                :label="'*'+$t('DataNewFormSampleIdentificationNumber')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -163,7 +157,7 @@
                                 v-model="form.sample_meta_id"
                                 :error="errors.sample_meta_id.error"
                                 :error-message="errors.sample_meta_id.message"
-                                label="*样本元信息ID"
+                                :label="'*'+$t('DataNewFormSampleID')"
                             ></q-input>
                         </div>
                     </div>
@@ -175,46 +169,16 @@
                                 v-model="form.fastq1_path"
                                 :error="errors.fastq1_path.error"
                                 :error-message="errors.fastq1_path.message"
-                                label="*R1文件"
+                                :label="'*'+$t('DataNewFormDataNameOfR1')"
                             ></q-input>
-                            <!-- <q-btn
-                                label="R1文件"
-                                outline
-                                color="primary"
-                                class="full-width"
-                            />
-                            <q-btn
-                                flat
-                                outline
-                                v-if="errors.fastq1_path.error"
-                                color="negative"
-                                :label="errors.fastq1_path.message"
-                                class="full-width"
-                                disable
-                            /> -->
                         </div>
                         <div class="col q-pf-sm">
                             <q-input
                                 v-model="form.fastq2_path"
                                 :error="errors.fastq2_path.error"
                                 :error-message="errors.fastq2_path.message"
-                                label="*R2文件"
+                                :label="'*'+$t('DataNewFormDataNameOfR2')"
                             ></q-input>
-                            <!-- <q-btn
-                                label="R2文件"
-                                outline
-                                color="secondary"
-                                class="full-width"
-                            />
-                            <q-btn
-                                flat
-                                outline
-                                v-if="errors.fastq2_path.error"
-                                color="negative"
-                                :label="errors.fastq2_path.message"
-                                class="full-width"
-                                disable
-                            /> -->
                         </div>
                     </div>
                 </q-item>
@@ -225,8 +189,8 @@
             <q-list>
                 <q-item>
                     <q-section class="q-gutter-x-sm">
-                        <q-btn :label="$t('Close')" @click="close()" />
-                        <q-btn color="primary" label="保存" @click="save()" />
+                        <q-btn :label="$t('DataNewFormClose')" @click="close()" />
+                        <q-btn color="primary" :label="$t('DataNewFormSave')" @click="save()" />
                     </q-section>
                 </q-item>
             </q-list>
@@ -239,14 +203,6 @@
             "
             />
         </q-dialog>
-        <q-dialog persistent v-model="showLinkProject">
-            <ProjectList
-                :linkId="0"
-                @itemSelected="
-        linkProject($event);
-            "
-            />
-        </q-dialog>
     </q-card>
 </template>
 <script setup>
@@ -254,7 +210,6 @@ import { ref, defineEmits } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import SampleList from "./SampleList.vue";
-import ProjectList from "./ProjectList.vue";
 import PanelList from "src/pages/main/settings/flow/components/PanelList";
 
 const nucleic_level_options = ref(["A", "B", "C", "D"]);
