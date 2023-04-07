@@ -1,7 +1,7 @@
 <template>
     <div style="max-width: 100%">
         <PopupMultiSelector
-            title="选择样本"
+            :title="$t('Select')+' '+$t('Sample')"
             :dataItems="dataItems"
             :total="total"
             :tableHeaders="tableHeaders"

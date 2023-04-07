@@ -1,7 +1,7 @@
 <template>
     <div style="max-width: 100%">
         <PopupSingleSelector
-            title="选择患者"
+            :title="$t('Select')+' '+$t('Patient')"
             :dataItems="dataItems"
             :total="total"
             :tableHeaders="tableHeaders"
