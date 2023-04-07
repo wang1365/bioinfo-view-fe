@@ -469,6 +469,23 @@ export default {
     SampleListTableColumnBtnEdit: "编辑",
     SampleListTableColumnBtnAssociatewithPatient: "关联患者",
     SampleListTableColumnBtnDelete: "删除",
+    // 新建样本表单
+    SampleNewFormTitle: "新建样本",
+    SampleNewFormSamplingDate: "*采样日期(YYYY-MM-DD)",
+    SampleNewFormSubmissionData: "*送测日期(YYYY-MM-DD)",
+    SampleNewFormSamplingSite: "*采样部位",
+    SampleNewFormSampleType: "*样本类型",
+    SampleNewFormTumorContent: "肿瘤含量",
+    SampleNewFormTumorSample: "肿瘤样本",
+    SampleNewFormSampleIdentificationNumber: "样本识别号",
+    SampleNewFormPatientID: "*患者ID",
+    SampleNewFormPatientIdentificationNumber: "患者识别号",
+    SampleNewFormClose: "关闭",
+    SampleNewFormSave: "保存",
+    // 修改样本表单
+    SampleEditFormTitle: "修改样本信息",
+    // 样本详情
+    SampleInfoPageTitle: "样本详情",
 
 
 

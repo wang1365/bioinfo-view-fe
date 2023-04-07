@@ -471,7 +471,23 @@ export default {
     SampleListTableColumnBtnEdit: "Edit",
     SampleListTableColumnBtnAssociatewithPatient: "Associate with Patient",
     SampleListTableColumnBtnDelete: "Delete",
-
+    // 新建样本表单
+    SampleNewFormTitle: "Create Sample",
+    SampleNewFormSamplingDate: "*SamplingD(YYYY-MM-DD)",
+    SampleNewFormSubmissionData: "*Submission Data(YYYY-MM-DD)",
+    SampleNewFormSamplingSite: "*Sampling Site",
+    SampleNewFormSampleType: "*Sample Type",
+    SampleNewFormTumorContent: "Tumor Content",
+    SampleNewFormTumorSample: "Tumor Sample",
+    SampleNewFormSampleIdentificationNumber: "Sample Identification Number",
+    SampleNewFormPatientID: "*Patient ID",
+    SampleNewFormPatientIdentificationNumber: "Patient Identification Number",
+    SampleNewFormClose: "Close",
+    SampleNewFormSave: "Save",
+    // 修改样本表单
+    SampleEditFormTitle: "Sample Information Editing",
+    // 样本详情
+    SampleInfoPageTitle: "Sample Information",
 
 
     // 样本

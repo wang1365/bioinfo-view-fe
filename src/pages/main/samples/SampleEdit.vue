@@ -1,7 +1,7 @@
 <template>
     <q-card style="width: 70vw; max-width: 80vw">
         <q-toolbar>
-            <q-toolbar-title>编辑样本</q-toolbar-title>
+            <q-toolbar-title>{{ $t('SampleEditFormTitle') }}</q-toolbar-title>
             <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
         <q-separator></q-separator>
@@ -13,7 +13,7 @@
                             <q-input
                                 :error="errors.sample_date.error"
                                 :error-message="errors.sample_date.message"
-                                label="*采样日期(YYYY-MM-DD)"
+                                :label="$t('SampleNewFormSamplingDate')"
                                 v-model="form.sample_date"
                                 readonly
                             >
@@ -35,7 +35,7 @@
                                 readonly
                                 :error="errors.test_date.error"
                                 :error-message="errors.test_date.message"
-                                label="*送测日期(YYYY-MM-DD)"
+                                :label="$t('SampleNewFormSubmissionData')"
                                 v-model="form.test_date"
                             >
                                 <template v-slot:append>
@@ -56,7 +56,7 @@
                                 v-model="form.sample_componet"
                                 :error="errors.sample_componet.error"
                                 :error-message="errors.sample_componet.message"
-                                label="*采样部位"
+                                :label="$t('SampleNewFormSamplingSite')"
                             ></q-input>
                         </div>
                     </div>
@@ -64,12 +64,6 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <!-- <q-input
-                                v-model="form.sample_type"
-                                :error="errors.sample_type.error"
-                                :error-message="errors.sample_type.message"
-                                label="*样本类型"
-                            ></q-input> -->
                             <q-select
                                 v-model="form.sample_type"
                                 :error="errors.sample_type.error"
@@ -78,7 +72,7 @@
                                 input-debounce="0"
                                 @new-value="createValue"
                                 :options="sampleTypeOptions"
-                                label="*样本类型"
+                                :label="$t('SampleNewFormSampleType')"
                             />
                         </div>
                         <div class="col q-pf-sm">
@@ -87,7 +81,7 @@
                                 v-model="form.panel_proportion"
                                 :error="errors.panel_proportion.error"
                                 :error-message="errors.panel_proportion.message"
-                                label="肿瘤含量"
+                                :label="$t('SampleNewFormTumorContent')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -95,7 +89,7 @@
                                 :error="errors.is_panel.error"
                                 :error-message="errors.is_panel.message"
                                 v-model="form.is_panel"
-                                label="肿瘤样本"
+                                :label="$t('SampleNewFormTumorSample')"
                                 color="primary"
                                 left-label
                                 size="lg"
@@ -110,7 +104,7 @@
                                 v-model="form.identifier"
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
-                                label="样本识别号"
+                                :label="$t('SampleNewFormSampleIdentificationNumber')"
                                 :readonly="true"
                             ></q-input>
                         </div>
@@ -121,7 +115,7 @@
                                 v-model="form.patient_id"
                                 :error="errors.patient_id.error"
                                 :error-message="errors.patient_id.message"
-                                label="*患者ID"
+                                :label="$t('SampleNewFormPatientID')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
@@ -133,7 +127,7 @@
                                 :error-message="
                                     errors.patient_identifier.message
                                 "
-                                label="*患者识别号"
+                                :label="$t('SampleNewFormPatientIdentificationNumber')"
                             ></q-input>
                         </div>
                     </div>
@@ -145,8 +139,8 @@
             <q-list>
                 <q-item>
                     <q-section class="q-gutter-x-sm">
-                        <q-btn :label="$t('Close')" @click="close()" />
-                        <q-btn color="primary" label="保存" @click="save()" />
+                        <q-btn :label="$t('SampleNewFormClose')" @click="close()" />
+                        <q-btn color="primary" :label="$t('SampleNewFormSave')" @click="save()" />
                     </q-section>
                 </q-item>
             </q-list>

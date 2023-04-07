@@ -1,25 +1,25 @@
 <template>
     <q-card style="width: 700px; max-width: 80vw">
         <q-toolbar>
-            <q-toolbar-title>样本详情</q-toolbar-title>
+            <q-toolbar-title>{{ $t('SampleInfoPageTitle') }}</q-toolbar-title>
             <q-btn flat round dense icon="close" v-close-popup />
         </q-toolbar>
         <q-separator></q-separator>
         <q-card-section>
             <div class="row q-my-sm">
-                <div class="col q-pa-sm">采样日期: {{ form.sample_date }}</div>
-                <div class="col q-pa-sm">送测日期: {{ form.test_date }}</div>
-                <div class="col q-pa-sm">采样部位: {{ form.sample_componet }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormSamplingDate')}}: {{ form.sample_date }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormSubmissionData')}}: {{ form.test_date }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormSamplingSite')}}: {{ form.sample_componet }}</div>
             </div>
             <div class="row q-my-sm">
-                <div class="col q-pa-sm">样本类型: {{ form.sample_type }}</div>
-                <div class="col q-pa-sm">肿瘤含量: {{ form.panel_proportion }}</div>
-                <div class="col q-pa-sm">肿瘤样本: {{ form.is_panel }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormSampleType')}}: {{ form.sample_type }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormTumorContent')}}: {{ form.panel_proportion }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormTumorSample')}}: {{ form.is_panel }}</div>
             </div>
             <div class="row q-my-sm">
-                <div class="col q-pa-sm">患者ID: {{ form.patient_id }}</div>
-                <div class="col q-pa-sm">患者识别号: {{ form.patient_identifier }}</div>
-                <div class="col q-pa-sm">样本识别号: {{ form.identifier }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormSampleIdentificationNumber')}}: {{ form.patient_id }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormPatientID')}}: {{ form.patient_identifier }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormPatientIdentificationNumber')}}: {{ form.identifier }}</div>
             </div>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
