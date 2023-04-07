@@ -19,7 +19,7 @@
                                 style="width:350px"
                                 v-model="searchParams.search"
                                 dense
-                                label="关键词: 采样部位, 样本类型, 患者识别号, 样本识别号"
+                                :label="$t('SampleListPageSearchInput')"
                                 clearable
                             >
                             </q-input>
@@ -30,7 +30,7 @@
                                 dense
                                 v-model="searchParams.is_panel"
                                 :options="['是','否']"
-                                label="肿瘤样本"
+                                :label="$t('SampleListPageSearchIsPanel')"
                             />
                             <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                         </div>
