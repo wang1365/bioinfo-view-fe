@@ -487,6 +487,35 @@ export default {
     // 样本详情
     SampleInfoPageTitle: "样本详情",
 
+    // 数据
+    // 数据列表页面
+    DataListPageTitle: "数据管理",
+    DataListPageSearchInput: "关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构",
+    DataListPageSearchTypeOfNucleicAcids: "核酸类型",
+    DataListPageSearchDegradationGradeOfNucleicAcids: "核算降解等级",
+    DataListPageSearchRiskSequencing: "风险上机",
+    DataListPageListSearchEnsure: "搜索",
+    DataListPageListSearchReset: "重置",
+    DataListTableTitle: "数据管理",
+    DataListTableBtnNew: "新建数据",
+    DataListTableColumnDataDetails: "数据详情",
+    DataListTableColumnLibraryNumber: "文库编号",
+    DataListTableColumnSampleIdentificationNumber: "样本识别号",
+    DataListTableColumnDataIdentificationNumber: "数据识别号",
+    DataListTableColumnDataNameOfR1: "R1数据名称",
+    DataListTableColumnDataNameOfR2: "R2数据名称",
+    DataListTableColumnOperations: "操作",
+    DataListTableColumnBtnDetail: "详情",
+    DataListTableColumnBtnEdit: "编辑",
+    DataListTableColumnBtnAssociatewithSample: "关联样本",
+    DataListTableColumnBtnDelete: "删除",
+
+    // 新建数据表单
+    DataNewFormTitle: "修改样本信息",
+    // 修改数据表单
+    DataEditFormTitle: "修改样本信息",
+    // 数据详情
+    DataInfoPageTitle: "数据详情",
 
 
 

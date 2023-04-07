@@ -6,7 +6,7 @@
                     style="width:450px"
                     v-model="searchParams.search"
                     dense
-                    label="关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构"
+                    :label="$t('DataListPageSearchInput')"
                     clearable
                 >
                 </q-input>
@@ -16,7 +16,7 @@
                     dense
                     v-model="searchParams.nucleic_type"
                     :options='["gDNA", "cfDNA", "RNA"]'
-                    label="核酸类型"
+                    :label="$t('DataListPageSearchTypeOfNucleicAcids')"
                 />
                 <q-select
                     style="width:100px"
@@ -24,7 +24,7 @@
                     dense
                     v-model="searchParams.nucleic_level"
                     :options='["A", "B", "C", "D"]'
-                    label="核算降解等级"
+                    :label="$t('DataListPageSearchDegradationGradeOfNucleicAcids')"
                 />
                 <q-select
                     style="width:100px"
@@ -32,22 +32,32 @@
                     dense
                     v-model="searchParams.risk"
                     :options="['是', '否']"
-                    label="风险上机"
+                    :label="$t('DataListPageSearchRiskSequencing')"
                 />
-                <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
-                <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
+                <q-btn
+                    color="primary"
+                    :label="$t('DataListPageListSearchEnsure')"
+                    icon="search"
+                    @click="refreshPage()"
+                />
+                <q-btn color="primary" :label="$t('DataListPageListSearchReset')" icon="clear" @click="reset()" />
             </div>
         </q-section>
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
-                <q-toolbar-title class="text-h6"> 数据 </q-toolbar-title>
-                <q-btn color="primary" label="新建数据" icon="description" @click="showDataNew = true" />
-                <q-btn color="info" label="导出数据" icon="file_download" @click="exportData()" />
+                <q-toolbar-title class="text-h6"> {{ $t('DataListTableTitle') }} </q-toolbar-title>
+                <q-btn
+                    color="primary"
+                    :label="$t('DataListTableBtnNew')"
+                    icon="description"
+                    @click="showDataNew = true"
+                />
+                <q-btn color="info" :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
                 <q-btn color="positive">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
-                        批量上传
+                        {{ $t('PageListTableUpload') }}
                         <span
                             style="
                                             width: 0;
@@ -60,8 +70,12 @@
                         </span>
                     </label>
                 </q-btn>
-                <q-btn color="positive" label="模板下载" icon="file_download" @click="downloadTemplate()">
-                    <q-tooltip>批量上传使用的模板文件 </q-tooltip>
+                <q-btn
+                    color="positive"
+                    :label="$t('PageListTableTemplate')"
+                    icon="file_download"
+                    @click="downloadTemplate()"
+                >
                 </q-btn>
             </q-toolbar>
         </q-section>
@@ -70,46 +84,18 @@
                 <table>
                     <thead>
                         <tr>
-                            <!-- <td >
-                                    <q-checkbox
-                                        v-model="selected"
-                                        color="negative"
-                                    />
-                                </td> -->
-
                             <td>ID</td>
-                            <td>数据详情</td>
-                            <td>文库编号</td>
-                            <!-- <td>捕获试剂盒</td>
-                                <td>核酸打断方式</td>
-                                <td>建库input</td>
-                                <td>index 类型</td>
-                                <td>index 编号</td>
-                                <td>杂交 input</td>
-                                <td>风险上机</td>
-                                <td>核酸降解等级</td> -->
-                            <!-- <td>样本元信息 ID</td> -->
-                            <td>样本识别号</td>
-                            <td>数据识别号</td>
-                            <!-- <td>送检机构</td> -->
-                            <!-- <td>核酸类型</td> -->
-                            <td>R1 数据名称</td>
-                            <td>R2 数据名称</td>
-                            <!-- <td>样本所有者</td>
-                                <td>创建时间</td>
-                                <td>更新时间</td> -->
-                            <td>{{$t('Action')}}</td>
+                            <td>{{$t('DataListTableColumnDataDetails')}}</td>
+                            <td>{{$t('DataListTableColumnLibraryNumber')}}</td>
+                            <td>{{$t('DataListTableColumnSampleIdentificationNumber')}}</td>
+                            <td>{{$t('DataListTableColumnDataIdentificationNumber')}}</td>
+                            <td>{{$t('DataListTableColumnDataNameOfR1')}}</td>
+                            <td>{{$t('DataListTableColumnDataNameOfR2')}}</td>
+                            <td>{{$t('DataListTableColumnOperations')}}</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="hover" v-for="item in dataItems" v-bind:key="item.name">
-                            <!-- <td class="q-pa-md text-center">
-                                    <q-checkbox
-                                        v-model="item.selected"
-                                        color="negative"
-                                    />
-                                </td> -->
-
                             <td>
                                 {{ item.id }}
                             </td>
@@ -119,39 +105,41 @@
                             <td>
                                 {{ item.library_number }}
                             </td>
-                            <!-- <td >{{ item.reagent_box }}</td>
-                                <td >
-                                    {{ item.nucleic_break_type }}
-                                </td>
-                                <td >
-                                    {{ item.library_input }}
-                                </td>
-                                <td >{{ item.index_type }}</td>
-                                <td >{{ item.index_number }}</td>
-                                <td >{{ item.hybrid_input }}</td>
-                                <td >{{ item.risk }}</td>
-                                <td >
-                                    {{ item.nucleic_level }}
-                                </td> -->
-                            <!-- <td>
-                                    {{ item.sample_meta_id }}
-                                </td> -->
                             <td>
                                 {{ item.sample_identifier }}
                             </td>
                             <td>{{ item.identifier }}</td>
-                            <!-- <td>{{ item.company }}</td> -->
-                            <!-- <td>{{ item.nucleic_type }}</td> -->
                             <td>{{ item.fastq1_path }}</td>
                             <td>{{ item.fastq2_path }}</td>
-                            <!-- <td>{{ item.user_id }}</td>
-                                <td >{{ item.create_time }}</td>
-                                <td >{{ item.modify_time }}</td> -->
                             <td class="q-gutter-xs">
-                                <q-btn color="info" :label="$t('Detail')" icon="visibility" @click="info(item)" size="sm" />
-                                <q-btn color="primary" :label="$t('Edit')" icon="edit" @click="edit(item)" size="sm" />
-                                <q-btn color="secondary" label="关联样本" icon="link" @click="link(item)" size="sm" />
-                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)" size="sm" />
+                                <q-btn
+                                    color="info"
+                                    :label="$t('DataListTableColumnBtnDetail')"
+                                    icon="visibility"
+                                    @click="info(item)"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="primary"
+                                    :label="$t('DataListTableColumnBtnEdit')"
+                                    icon="edit"
+                                    @click="edit(item)"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="secondary"
+                                    :label="$t('DataListTableColumnBtnAssociatewithSample')"
+                                    icon="link"
+                                    @click="link(item)"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="red"
+                                    :label="$t('DataListTableColumnBtnDelete')"
+                                    icon="delete"
+                                    @click="confirm(item)"
+                                    size="sm"
+                                />
                             </td>
                         </tr>
                     </tbody>

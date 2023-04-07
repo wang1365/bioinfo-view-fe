@@ -489,6 +489,29 @@ export default {
     // 样本详情
     SampleInfoPageTitle: "Sample Information",
 
+    // 数据
+    // 数据列表页面
+    DataListPageTitle: "Data management",
+    DataListPageSearchInput: "Keywords: Library construction input, nucleic acid fragmentation method，capture reagent kit, data identification number, sample identification number，Referral institution",
+    DataListPageSearchTypeOfNucleicAcids: "Type of Nucleic Acids",
+    DataListPageSearchDegradationGradeOfNucleicAcids: "Degradation Grade of Nucleic Acids",
+    DataListPageSearchRiskSequencing: "Risk Sequencing",
+    DataListPageListSearchEnsure: "Search",
+    DataListPageListSearchReset: "Reset",
+    DataListTableTitle: "Data",
+    DataListTableBtnNew: "Create New Data",
+    DataListTableColumnDataDetails: "Data Details",
+    DataListTableColumnLibraryNumber: "Library Number",
+    DataListTableColumnSampleIdentificationNumber: "Sample Identification Number",
+    DataListTableColumnDataIdentificationNumber: "Data Identification Number",
+    DataListTableColumnDataNameOfR1: "Data name of R1",
+    DataListTableColumnDataNameOfR2: "Data name of R2",
+    DataListTableColumnOperations: "Operations",
+    DataListTableColumnBtnDetail: "Detail",
+    DataListTableColumnBtnEdit: "Edit",
+    DataListTableColumnBtnAssociatewithSample: "Associate With Samples",
+    DataListTableColumnBtnDelete: "Delete",
+
 
     // 样本
     SampleInformation: 'Sample Information',
