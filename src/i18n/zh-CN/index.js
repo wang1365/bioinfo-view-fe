@@ -373,10 +373,16 @@ export default {
     TmlTip2: '警示：随意过滤造成结果不准确',
     TmlTip3: 'TMB-low\\暂无推荐药物信息',
 
+    // 表格头部的按钮
     PageListTableExport: "导出数据",
     PageListTableUpload: "批量上传",
     PageListTableTemplate: "模板下载",
-
+    // 弹出选择框翻译
+    PopupSelectCurrrentSelected: "当前选择的是",
+    PopupSelectNoData: "无数据",
+    PopupSelectRowCheck: "选择",
+    PopupSelectCancel: "取消",
+    PopupSelectEnsure: "确认",
     // 患者
     Patient: '患者',
     Age: '年龄',

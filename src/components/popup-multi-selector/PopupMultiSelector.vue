@@ -49,7 +49,7 @@
             </div>
             <div class="popup-content-multi-footer">
                 <div class="row popup-content-multi-footer-selected-sticky">
-                    <q-btn flat class="text-bold text-h6">当前选择的是:</q-btn>
+                    <q-btn flat class="text-bold text-h6">{{ $t('PopupSelectCurrrentSelected') }}:</q-btn>
                     <q-space></q-space>
                     <PaginatorVue
                         :total="props.total"
@@ -74,8 +74,8 @@
             <div>
                 <q-toolbar>
                     <q-toolbar-title></q-toolbar-title>
-                    <q-btn class="q-mr-md" label="取消" v-close-popup />
-                    <q-btn color="primary" label="确认" @click="ensureSelect()" />
+                    <q-btn class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
+                    <q-btn color="primary" :label="$t('PopupSelectEnsure')" @click="ensureSelect()" />
                 </q-toolbar>
             </div>
         </div>

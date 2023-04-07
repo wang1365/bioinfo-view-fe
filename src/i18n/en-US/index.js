@@ -373,6 +373,12 @@ export default {
     TmlTip2: 'Warning: Random filtering may result in inaccurate results',
     TmlTip3: 'TMB-low\\No recommended drug information',
 
+    // 弹出框选择
+    PopupSelectCurrrentSelected: "Selected",
+    PopupSelectNoData: "No Data",
+    PopupSelectRowCheck: "Select",
+    PopupSelectCancel: "Cancel",
+    PopupSelectEnsure: "Ensure",
     // 患者,样本,数据 管理的表格按钮
     PageListTableExport: "Export Data",
     PageListTableUpload: "Batch Upload",

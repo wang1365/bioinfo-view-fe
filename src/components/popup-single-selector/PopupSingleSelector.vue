@@ -12,7 +12,7 @@
                 <table>
                     <thead class="popup-content-table-head">
                         <tr>
-                            <td>选择</td>
+                            <td>{{ $t('PopupSelectRowCheck') }}</td>
                             <td v-for="item of props.tableHeaders" :key="item">
                                 {{ item }}
                             </td>
@@ -20,7 +20,7 @@
                     </thead>
                     <tbody>
                         <tr v-if="dataItems.length===0">
-                            <td colspan="10" class="text-center">无数据</td>
+                            <td colspan="10" class="text-center">{{ $t('PopupSelectNoData') }}</td>
                         </tr>
                         <tr class="cursor-pointer" v-for="item of dataItems" :key="item" @click="selectedItem=item">
                             <td>
@@ -50,7 +50,7 @@
             <div>
                 <q-toolbar>
                     <q-toolbar-title
-                        >当前选择的是:
+                        >{{ $t('PopupSelectCurrrentSelected') }}:
                         {{
                             selectedItem[props.selectedShowField]
                         }}</q-toolbar-title
@@ -60,11 +60,11 @@
                         :currentPage="props.currentPage"
                         @pageChange="pageChange($event)"
                     />
-                    <q-btn class="q-mr-md" label="取消" v-close-popup />
+                    <q-btn class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
                     <q-btn
                         v-if="selectedItem[props.selectedShowField]"
                         color="primary"
-                        label="确认"
+                        :label="$t('PopupSelectEnsure')"
                         @click="ensureSelect()"
                     />
                 </q-toolbar>
