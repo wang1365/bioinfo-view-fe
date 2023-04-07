@@ -490,9 +490,9 @@ export default {
     // 数据
     // 数据列表页面
     DataListPageTitle: "数据管理",
-    DataListPageSearchInput: "关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构",
+    DataListPageSearchInput: "关键词: 建库 input, 核酸打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构",
     DataListPageSearchTypeOfNucleicAcids: "核酸类型",
-    DataListPageSearchDegradationGradeOfNucleicAcids: "核算降解等级",
+    DataListPageSearchDegradationGradeOfNucleicAcids: "核酸降解等级",
     DataListPageSearchRiskSequencing: "风险上机",
     DataListPageListSearchEnsure: "搜索",
     DataListPageListSearchReset: "重置",

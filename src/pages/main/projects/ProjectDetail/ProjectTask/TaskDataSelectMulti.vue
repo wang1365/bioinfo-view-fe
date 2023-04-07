@@ -17,7 +17,7 @@
                         style="width:450px"
                         v-model="searchParams.search"
                         dense
-                        label="关键词: 建库 input, 核算打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构"
+                        label="关键词: 建库 input, 核酸打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构"
                         clearable
                     >
                     </q-input>
@@ -35,7 +35,7 @@
                         dense
                         v-model="searchParams.nucleic_level"
                         :options='["A", "B", "C", "D"]'
-                        label="核算降解等级"
+                        label="核酸降解等级"
                     />
                     <q-select
                         style="width:100px"
