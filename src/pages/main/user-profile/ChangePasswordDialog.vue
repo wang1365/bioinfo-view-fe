@@ -2,7 +2,7 @@
     <q-dialog v-model="passwordDialog" persistent>
         <q-card style="min-width: 350px">
             <q-card-section>
-                <div class="text-h6">修改密码</div>
+                <div class="text-h6">{{$t('ChangePassword')}}</div>
             </q-card-section>
             <q-form class="q-gutter-md" @submit="onSubmit">
                 <q-card-section class="q-pt-none">
@@ -10,10 +10,10 @@
                         filled
                         v-model.trim="passwordForm.old_password"
                         autocomplete="off"
-                        label="原密码"
+                        :label="$t('OldPassword')"
                         :type="isPwd ? 'password' : 'text'"
                         :rules="[
-                            (val) => (val && val.length > 0) || '请输入密码',
+                            (val) => (val && val.length > 0) || $t('NotAllowEmpty'),
                         ]"
                     >
                         <template v-slot:append>
@@ -29,10 +29,10 @@
                         filled
                         v-model.trim="passwordForm.new_password_1"
                         autocomplete="off"
-                        label="新密码"
+                        :label="$t('NewPassword')"
                         :type="isPwd ? 'password' : 'text'"
                         :rules="[
-                            (val) => (val && val.length > 0) || '请输入密码',
+                            (val) => (val && val.length > 0) || $t('NotAllowEmpty'),
                         ]"
                     >
                         <template v-slot:append>
@@ -48,10 +48,10 @@
                         filled
                         v-model.trim="passwordForm.new_password_2"
                         autocomplete="off"
-                        label="确认密码"
+                        :label="$t('ConfirmPassword')"
                         :type="isPwd ? 'password' : 'text'"
                         :rules="[
-                            (val) => (val && val.length > 0) || '请输入密码',
+                            (val) => (val && val.length > 0) || $t('NotAllowEmpty'),
                         ]"
                     >
                         <template v-slot:append>
@@ -65,9 +65,9 @@
                 </q-card-section>
 
                 <q-card-actions align="right" class="text-primary">
-                    <q-btn label="取消" v-close-popup />
+                    <q-btn :label="$t('Cancel')" v-close-popup />
                     <!--                    <q-btn flat label="确认" @click="handleChangePassword"/>-->
-                    <q-btn label="确认" color="primary" type="submit" v-close-popup />
+                    <q-btn :label="$t('Confirm')" color="primary" type="submit" v-close-popup />
                 </q-card-actions>
             </q-form>
         </q-card>
@@ -80,7 +80,9 @@ import { useRouter } from "vue-router"
 import { useQuasar } from 'quasar'
 import { changePassword } from 'src/api/user'
 import { globalStore} from 'src/stores/global'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const $q = useQuasar()
 const store = globalStore();
 const router = useRouter();
@@ -101,7 +103,7 @@ const onSubmit = () => {
         console.log('Pwd changed', res)
         if (res.length > 0) {
             $q.notify({
-                message:'修改密码成功'
+                message: t('ChangePasswordSuccess')
             })
         }
         passwordDialog.value = false

@@ -235,6 +235,8 @@ export default {
     // 个人中心 & 用户管理
     ChangePassword: '修改密码',
     ResetPassword: '重置密码',
+    OldPassword: '原密码',
+    NewPassword: '新密码',
     ConfirmPassword: '确认密码',
     PasswordIsNotSame: '两次输入密码不一致',
     PasswordLengthValidateFailed: '至少输入6位',

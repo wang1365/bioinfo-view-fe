@@ -237,6 +237,8 @@ export default {
     // 个人中心
     ChangePassword: 'Change password',
     ResetPassword: 'Reset password',
+    OldPassword: 'Old password',
+    NewPassword: 'New password',
     ConfirmPassword: 'Confirm password',
     PasswordIsNotSame: 'Confirm password is not same with password',
     PasswordLengthValidateFailed: 'At least 6 characters',
