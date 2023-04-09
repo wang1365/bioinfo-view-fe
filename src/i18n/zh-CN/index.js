@@ -320,7 +320,6 @@ export default {
     DepthMedian: '深度中位值',
     GeneCoverage: '基因覆盖率',
     ControlSample: '对照样本',
-    TumorSample: '肿瘤样本',
 
     // 突变分析
     GermlineMutationAnalysis: '胚系突变分析',
@@ -555,13 +554,13 @@ export default {
 
     // 样本
     SampleInformation: '样本信息',
-    SampleComponent: '采样部位',
+    SamplingSite: '采样部位',
     SampleIdentifier: '样本识别号',
     SampleType: '样本类型',
-    IsTumor: '是否肿瘤',
-    TumorDose: '肿瘤含量',
+    TumorSample: '肿瘤样本',
+    TumorContent: '肿瘤含量',
     SamplingDate: '采样日期',
-    TestDate: '送测日期',
+    SubmissionDate: '送测日期',
     SampleCount: '样本梳理',
     SingleSample: '单样本',
     PairSample: '配对样本',

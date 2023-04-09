@@ -113,7 +113,7 @@ const columns = computed(() => [
 
     // 样本
     {
-        title: t('SampleComponent'),
+        title: t('SamplingSite'),
         dataIndex: ["sample_meta", "sample_componet"],
         fixed: true,
         align: 'center',

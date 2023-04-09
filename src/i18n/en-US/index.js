@@ -320,7 +320,6 @@ export default {
     DepthMedian: 'Depth Median',
     GeneCoverage: 'Gene Coverage',
     ControlSample: 'Control Sample',
-    TumorSample: 'Tumor Sample',
 
     // 突变分析
     GermlineMutationAnalysis: 'Germline Mutation Analysis',
@@ -552,13 +551,13 @@ export default {
 
     // 样本
     SampleInformation: 'Sample Information',
-    SampleComponent: 'Sample Component',
+    SamplingSite: 'Sampling Site',
     SampleIdentifier: 'Sample Identification Number',
     SampleType: 'Sample Type',
-    IsTumor: 'Is Tumor',
-    TumorDose: 'Tumor Dose',
+    TumorSample: 'Tumor Sample',
+    TumorContent: 'Tumor Content',
     SamplingDate: 'Sampling Date',
-    TestDate: 'Test Date',
+    SubmissionDate: 'Submission Date',
     SampleCount: 'Sample Count',
     SingleSample: 'Single Sample',
     PairSample: 'Pair Sample',
