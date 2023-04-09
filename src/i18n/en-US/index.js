@@ -229,7 +229,7 @@ export default {
     SampleManage: 'Sample Manage',
     DataManage: 'Data Manage',
     PanelFlow: 'Panel Flow',
-    GeneBrowser: 'Gene Browser',
+    GeneBrowser: 'Genome Browser',
     SystemSetting: 'SYS Setting',
     FlowManage: 'Flow Manage',
     UiSetting: 'UI Setting',
