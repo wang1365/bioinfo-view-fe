@@ -11,8 +11,10 @@
                                 :error="errors.name.error"
                                 :error-message="errors.name.message"
                                 v-model="form.name"
-                                :label="'* '+$t('PatientNewFormName')"
-                            ></q-input>
+                                :label="$t('PatientNewFormName')"
+                            >
+                                <template v-slot:prepend><span style="color:red">*</span></template>
+                            </q-input>
                         </div>
                         <div class="col">
                             <q-select
@@ -20,14 +22,16 @@
                                 :error-message="errors.gender.message"
                                 v-model="form.gender"
                                 :options="genderOptions"
-                                :label="'* '+$t('PatientNewFormGender')"
-                            />
+                                :label="$t('PatientNewFormGender')"
+                            >
+                                <template v-slot:prepend><span style="color:red">*</span></template>
+                            </q-select>>
                         </div>
                         <div class="col">
                             <q-input
                                 :error="errors.birthday.error"
                                 :error-message="errors.birthday.message"
-                                :label="'* '+$t('PatientNewFormBirthday')"
+                                :label="$t('PatientNewFormBirthday')"
                                 v-model="form.birthday"
                                 readonly
                             >
@@ -42,6 +46,7 @@
                                         </q-popup-proxy>
                                     </q-icon>
                                 </template>
+                                <template v-slot:prepend><span style="color:red">*</span></template>
                             </q-input>
                         </div>
                     </div>
@@ -51,8 +56,10 @@
                                 :error="errors.id_card.error"
                                 :error-message="errors.id_card.message"
                                 v-model="form.id_card"
-                                :label="'* '+$t('PatientNewFormIDCard')"
-                            ></q-input>
+                                :label="$t('PatientNewFormIDCard')"
+                            >
+                                <template v-slot:prepend><span style="color:red">*</span></template>
+                            </q-input>
                         </div>
                         <div class="col">
                             <q-input
@@ -80,16 +87,20 @@
                                 errors.inspection_agency.message
                             "
                                 v-model="form.inspection_agency"
-                                :label="'* '+$t('PatientNewFormSubmissionUnit')"
-                            ></q-input>
+                                :label="$t('PatientNewFormSubmissionUnit')"
+                            >
+                                <template v-slot:prepend><span style="color:red">*</span></template>
+                            </q-input>
                         </div>
                         <div class="col">
                             <q-input
                                 :error="errors.medical_doctor.error"
                                 :error-message="errors.medical_doctor.message"
                                 v-model="form.medical_doctor"
-                                :label="'* '+$t('PatientNewFormTreatingPhysician')"
-                            ></q-input>
+                                :label="$t('PatientNewFormTreatingPhysician')"
+                            >
+                                <template v-slot:prepend><span style="color:red">*</span></template>
+                            </q-input>
                         </div>
                     </div>
                     <div class="text-h6 text-bold">{{ $t('PatientNewFormClinicalInformatiaon') }}</div>
@@ -100,8 +111,10 @@
                                 :error="errors.diagnosis.error"
                                 :error-message="errors.diagnosis.message"
                                 v-model="form.diagnosis"
-                                :label="'* '+$t('PatientNewFormClinicalDiagnosis')"
-                            ></q-input>
+                                :label="$t('PatientNewFormClinicalDiagnosis')"
+                            >
+                                <template v-slot:prepend><span style="color:red">*</span></template>
+                            </q-input>
                         </div>
                         <div class="col">
                             <q-input
