@@ -17,7 +17,7 @@
                             <td>创建时间</td>
                             <td>样本数量</td>
                             <td>任务数量</td>
-                            <td>{{$t('Action')}}</td>
+                            <td>{{$t('Actions')}}</td>
                         </tr>
                     </thead>
                     <tbody>

@@ -30,7 +30,7 @@
                             <td>样本识别号</td>
                             <td>采样部位</td>
                             <td>肿瘤样本</td>
-                            <td>{{$t('Action')}}</td>
+                            <td>{{$t('Actions')}}</td>
                         </tr>
                     </thead>
                     <tbody>
