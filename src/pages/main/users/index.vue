@@ -68,7 +68,8 @@
                         <q-avatar icon="bookmark" color="red" text-color="white" />
                         {{ $t('SuperAdmin') }}
                     </q-chip>
-                    <span v-else>{{ getRoleName(props.row.role) }}</span>
+                    <span v-else-if="_.get(props.row, 'role[0]') === 'admin'">{{ $t('Admin') }}</span>
+                    <span v-else>{{ $t('NormalUser') }}</span>
                 </q-td>
             </template>
             <template v-slot:body-cell-is_active="props">
@@ -238,20 +239,21 @@ onMounted(() => {
 });
 const searchKeyword = ref("");
 
-const getRoleName = (roles) => {
+const roleMap =  {
+    super: computed(() => t('SuperAdmin')),
+    admin: computed(() => t('Admin')),
+    normal: computed(() => t('NormalUser'))
+}
+
+const getRoleName =  (roles) => {
     if (!_.isArray(roles)) {
-        return "";
+        return ''
     }
-    return roles
-        .map(function (role) {
-            return (
-                {
-                    super: t('SuperAdmin'),
-                    admin: t('Admin'),
-                }[role] || t('NormalUser')
-            );
-        })
-        .join(",");
+    if (roles.length === 0) {
+        return ''
+    }
+
+    return roleMap[roles[0]] || ''
 };
 
 const allowReset = (row) => {

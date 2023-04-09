@@ -125,14 +125,16 @@
 </template>
 
 <script setup>
-import Fullscreen from "./Fullscreen.vue";
-import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue";
-import {onBeforeMount, ref} from "vue";
-import {useRouter} from "vue-router";
-import {globalStore} from "src/stores/global";
-import {getAuthMenu} from './menu'
-import SelectLanguage from "components/SelectLanguage.vue";
+import Fullscreen from "./Fullscreen.vue"
+import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue"
+import { onBeforeMount, ref } from "vue"
+import { useRouter } from "vue-router"
+import { globalStore } from "src/stores/global"
+import { getAuthMenu } from './menu'
+import SelectLanguage from "components/SelectLanguage.vue"
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const store = globalStore();
 const menuList = getAuthMenu(store.currentUser)
 
@@ -155,14 +157,14 @@ function logout() {
 const getRole = () => {
     const roles = store.currentUser.role_list
     if (roles.includes('super')) {
-        return '超级管理员'
+        return t('SuperAdmin')
     }
 
     if (roles.includes('admin')) {
-        return '管理员'
+        return t('Admin')
     }
 
-    return '普通用户'
+    return t('NormalUser')
 }
 onBeforeMount(() => {
     //    console.log(store.currentUser);
