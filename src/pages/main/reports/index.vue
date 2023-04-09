@@ -160,7 +160,7 @@ const columns = computed(()=>[
     },
     {
         name: 'actions',
-        label: t('Action'),
+        label: t('Actions'),
         required: false,
     },
 ])

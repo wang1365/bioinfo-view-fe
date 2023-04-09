@@ -103,7 +103,7 @@
                         <td>{{ $t('Error') }}</td>
                         <td>{{ $t('CreatedBy') }}</td>
                         <td>{{ $t('CreatedAt') }}</td>
-                        <td>{{$t('Action')}}</td>
+                        <td>{{$t('Actions')}}</td>
                     </tr>
                 </thead>
                 <tbody>
