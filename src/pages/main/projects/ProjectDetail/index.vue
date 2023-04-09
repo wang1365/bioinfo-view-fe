@@ -1,7 +1,7 @@
 <template>
     <q-page padding>
         <div class="row items-center q-py-sm">
-            <h6>项目详情</h6>
+            <h6>{{`${$t('ProjectDetailPageTitle')}`}}</h6>
             <q-space />
             <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>

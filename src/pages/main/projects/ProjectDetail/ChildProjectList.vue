@@ -3,8 +3,13 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
-                <q-toolbar-title class="text-h6"> 子项目 </q-toolbar-title>
-                <q-btn color="primary" label="新建子项目" icon="folder" @click="openNewProject = true" />
+                <q-toolbar-title class="text-h6"> {{ $t('ProjectDetailPageChildTitle') }} </q-toolbar-title>
+                <q-btn
+                    color="primary"
+                    :label="$t('ProjectDetailPageCreateChildProject')"
+                    icon="folder"
+                    @click="openNewProject = true"
+                />
             </q-toolbar>
         </q-section>
         <q-section>
@@ -12,12 +17,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <td>项目名称</td>
-                            <td>创建人</td>
-                            <td>创建时间</td>
-                            <td>样本数量</td>
-                            <td>任务数量</td>
-                            <td>{{$t('Actions')}}</td>
+                            <td>{{$t('ProjectPageListTableName')}}</td>
+                            <td>{{$t('ProjectPageListTableCreater')}}</td>
+                            <td>{{$t('ProjectPageListTableCreateTime')}}</td>
+                            <td>{{$t('ProjectPageListTableSampleCount')}}</td>
+                            <td>{{$t('ProjectPageListTableTaskCount')}}</td>
+                            <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,7 +44,7 @@
                                 />
                                 <q-btn
                                     color="primary"
-                                    label="修改"
+                                    :label="$t('Edit')"
                                     icon="edit"
                                     @click="
                                         updateProjectName = item.name;
@@ -48,7 +53,13 @@
                                     "
                                     size="sm"
                                 />
-                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)" size="sm" />
+                                <q-btn
+                                    color="red"
+                                    :label="$t('Delete')"
+                                    icon="delete"
+                                    @click="confirm(item)"
+                                    size="sm"
+                                />
                             </td>
                         </tr>
                     </tbody>
@@ -64,14 +75,14 @@
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>新建项目</q-toolbar-title>
+                <q-toolbar-title>{{ $t('ProjectPageListSearchNewBtn') }}</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-card-section>
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="newProjectName" label="项目名称" />
+                            <q-input v-model="newProjectName" :label="$t('ProjectPageListTableName')" />
                         </q-section>
                     </q-item>
                     <q-item>
@@ -85,8 +96,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="q-gutter-x-sm">
-                            <q-btn label="取消" v-close-popup />
-                            <q-btn color="primary" label="确认" @click="createProject()" />
+                            <q-btn :label="$t('Cancel')" v-close-popup />
+                            <q-btn color="primary" :label="$t('Confirm')" @click="createProject()" />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -96,14 +107,14 @@
     <q-dialog v-model="openEditProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>修改项目</q-toolbar-title>
+                <q-toolbar-title>{{ $t('ProjectDetailPageEditProjectTitle') }}</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-card-section>
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="updateProjectName" label="项目名称" />
+                            <q-input v-model="updateProjectName" :label="$t('ProjectPageListTableName')" />
                         </q-section>
                     </q-item>
                     <q-item>
@@ -117,8 +128,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="q-gutter-x-sm">
-                            <q-btn label="取消" v-close-popup />
-                            <q-btn color="primary" label="确认" @click="updateProject()" />
+                            <q-btn :label="$t('Cancel')" v-close-popup />
+                            <q-btn color="primary" :label="$t('Confirm')" @click="updateProject()" />
                         </q-section>
                     </q-item>
                 </q-list>

@@ -9,7 +9,12 @@
                         props.projectDetail.create_time
                     }}</span>
                 </q-toolbar-title>
-                <q-btn color="primary" label="创建任务" icon="auto_mode" @click="openFlowSelector = true" />
+                <q-btn
+                    color="primary"
+                    :label="$t('ProjectDetailPageCreateTask')"
+                    icon="auto_mode"
+                    @click="openFlowSelector = true"
+                />
             </q-toolbar>
         </q-section>
 
@@ -20,42 +25,42 @@
                         {{ props.projectDetail.running_task_count }}
                     </q-card-section>
 
-                    <q-card-section class="desc"> 正在运行 </q-card-section>
+                    <q-card-section class="desc"> {{ $t('TaskPageListStatusRun') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-secondary text-center text-h5 text-bold">
                         {{ props.projectDetail.pending_task_count }}
                     </q-card-section>
 
-                    <q-card-section class="desc"> 等待中 </q-card-section>
+                    <q-card-section class="desc"> {{ $t('TaskPageListStatusQueue') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-negative text-center text-h5 text-bold">
                         {{ props.projectDetail.failured_task_count }}
                     </q-card-section>
 
-                    <q-card-section class="desc"> 运行失败 </q-card-section>
+                    <q-card-section class="desc"> {{ $t('TaskPageListStatusFail') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-grey text-center text-h5 text-bold">
                         {{ props.projectDetail.canceled_task_count }}
                     </q-card-section>
 
-                    <q-card-section class="desc"> 已取消 </q-card-section>
+                    <q-card-section class="desc"> {{ $t('TaskPageListStatusCancel') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-info text-center text-h5 text-bold">
                         {{ props.projectDetail.finished_task_count }}
                     </q-card-section>
 
-                    <q-card-section class="desc"> 已完成 </q-card-section>
+                    <q-card-section class="desc"> {{ $t('TaskPageListStatusFinish') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-positive text-center text-h5 text-bold">
                         {{ props.projectDetail.total_task_count }}
                     </q-card-section>
 
-                    <q-card-section class="desc"> 总数 </q-card-section>
+                    <q-card-section class="desc"> {{ $t('TaskPageListStatusAll') }} </q-card-section>
                 </q-card>
             </div>
         </q-section>

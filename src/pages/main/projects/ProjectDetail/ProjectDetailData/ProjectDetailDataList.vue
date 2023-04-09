@@ -4,11 +4,20 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6">
-                    数据
+                    {{ $t('Data') }}
 
-                    <span v-if="props.projectDetail.parent" class="text-body2 bg-yellow-11">继承自于上级项目</span>
+                    <span
+                        v-if="props.projectDetail.parent"
+                        class="text-body2 bg-yellow-11"
+                        >{{ $t('ProjectDetailPageDataFromParent') }}</span
+                    >
                 </q-toolbar-title>
-                <q-btn color="primary" label="选择数据" icon="description" @click="openDataSelector = true" />
+                <q-btn
+                    color="primary"
+                    :label="$t('ProjectDetailPageSelectData')"
+                    icon="description"
+                    @click="openDataSelector = true"
+                />
             </q-toolbar>
         </q-section>
         <q-section>
@@ -16,21 +25,20 @@
                 <table style="min-width: 1000px;">
                     <thead>
                         <tr>
-                            <td>数据详情</td>
-                            <td>文库编号</td>
-                            <!--                            <td>样本识别号</td>-->
-                            <td>数据识别号</td>
-                            <td>送检机构</td>
-                            <td>核酸类型</td>
-                            <td>R1 数据名称</td>
-                            <td>R2 数据名称</td>
-                            <td>患者识别号</td>
-                            <td>患者姓名</td>
-                            <td>性别</td>
-                            <td>样本识别号</td>
-                            <td>采样部位</td>
-                            <td>肿瘤样本</td>
-                            <td>{{$t('Actions')}}</td>
+                            <td>{{$t('DataNewFormDataDetails')}}</td>
+                            <td>{{$t('DataNewFormLibraryNumber')}}</td>
+                            <td>{{$t('DataNewFormDataIdentificationNumber')}}</td>
+                            <td>{{$t('DataNewFormSubmissionUnit')}}</td>
+                            <td>{{$t('DataNewFormTypeOfNucleicAcids')}}</td>
+                            <td>{{$t('DataNewFormDataNameOfR1')}}</td>
+                            <td>{{$t('DataNewFormDataNameOfR2')}}</td>
+                            <td>{{$t('PatientNewFormPatientIdentificationNumber')}}</td>
+                            <td>{{$t('PatientName')}}</td>
+                            <td>{{$t('PatientPageListTableColumnGender')}}</td>
+                            <td>{{$t('SampleListTableColumnSampleIdentificationNumber')}}</td>
+                            <td>{{$t('SampleListTableColumnSamplingSite')}}</td>
+                            <td>{{$t('SampleListTableColumnTumorSample')}}</td>
+                            <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,10 +56,6 @@
                             <td>
                                 {{ item.library_number }}
                             </td>
-
-                            <!--                            <td>-->
-                            <!--                                {{ item.identifier }}-->
-                            <!--                            </td>-->
                             <td>{{ item.identifier }}</td>
                             <td>{{ item.company }}</td>
                             <td>{{ item.nucleic_type }}</td>
@@ -65,7 +69,13 @@
                             <td>{{ item.sample_meta?.is_panel }}</td>
 
                             <td class="q-gutter-x-sm">
-                                <q-btn color="secondary" :label="$t('Detail')" icon="visibility" @click="info(item)" size="sm" />
+                                <q-btn
+                                    color="secondary"
+                                    :label="$t('Detail')"
+                                    icon="visibility"
+                                    @click="info(item)"
+                                    size="sm"
+                                />
                                 <q-btn
                                     color="red"
                                     :label="$t('Delete')"

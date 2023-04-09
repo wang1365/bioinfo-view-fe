@@ -121,28 +121,7 @@ onMounted(() => {
 });
 const ensureSelect = (event) => {
     emit("refresh", event);
-    // console.log(event);
-    // let selectedIds = [];
-    // for (const iterator of event) {
-    //     selectedIds.push(iterator.id);
-    // }
-    // if (selectedIds.length > 0) {
-    //     for (const iterator of props.projectDetail.samples) {
-    //         selectedIds.push(iterator);
-    //     }
-    //     apiPut(
-    //         `/project/${props.projectDetail.id}`,
-    //         (_) => {
-    //             infoMessage("更新成功");
-    //             emit("refresh");
-    //         },
-    //         {
-    //             samples: selectedIds,
-    //         }
-    //     );
-    // } else {
-    //     errorMessage("没有选择数据");
-    // }
+
 };
 const pageChange = async (event) => {
     currentPage.value = event.currentPage;
