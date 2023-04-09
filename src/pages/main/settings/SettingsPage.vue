@@ -49,15 +49,14 @@
                                             <q-input
                                                 type="number"
                                                 v-model.number="max_task.value"
-                                                :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || '任务数数值错误，必须是正整数']"
+                                                :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
                                             >
                                                 <template v-slot:before>
-                                                    <span class="text-h6">{{$t('ParallelTaskLimit')}}:</span>
+                                                    <span class="text-bold" style="font-size: 16px">{{$t('ParallelTaskLimit')}}:</span>
                                                 </template>
                                                 <template v-slot:after>
                                                     <q-icon name="help_outline">
-                                                        <q-tooltip>该参数与内存实际大小、测序数据量、捕获试剂盒有关，建议100G内存服务器填写3
-                                                        </q-tooltip>
+                                                        <q-tooltip>{{ $t('TaskSettingTip') }}</q-tooltip>
                                                     </q-icon>
                                                 </template >
                                             </q-input>
@@ -66,15 +65,14 @@
                                             <q-input
                                                 type="number"
                                                 v-model.number="memory_rate.value"
-                                                :rules="[(val) => (val !== null && val > 0 && val <=1) || '内存使用率数值错误']"
+                                                :rules="[(val) => (val !== null && val > 0 && val <=1) || $t('InvalidValue')]"
                                             >
                                                 <template v-slot:before>
-                                                    <span class="text-h6">{{$t('MemoryUsageLimit')}}:</span>
+                                                    <span class="text-bold" style="font-size: 16px">{{$t('MemoryUsageLimit')}}:</span>
                                                 </template>
                                                 <template v-slot:after>
                                                     <q-icon name="help_outline">
-                                                        <q-tooltip>该参数为本系统使用的内存大小占服务器的比例，防止部分任务内存超过预计，建议填写0.85
-                                                        </q-tooltip>
+                                                        <q-tooltip>{{ $t('MemorySettingTip') }}</q-tooltip>
                                                     </q-icon>
                                                 </template>
                                             </q-input>
@@ -83,15 +81,14 @@
                                             <q-input
                                                 type="number"
                                                 v-model.number="disk.value"
-                                                :rules="[(val) => (val !== null && val > 0) || '磁盘限制数值错误']"
+                                                :rules="[(val) => (val !== null && val > 0) || $t('InvalidValue')]"
                                             >
                                                 <template v-slot:before>
-                                                    <span class="text-h6">{{$t('DiskUsageLimit')}}:</span>
+                                                    <span class="text-bold" style="font-size: 16px">{{$t('DiskUsageLimit')}}:</span>
                                                 </template>
                                                 <template v-slot:after>
                                                     <q-icon name="help_outline">
-                                                        <q-tooltip>该参数限制本账号使用空间大小，防止超出服务器存储空间，建议填写扣除预留后的磁盘可用空间
-                                                        </q-tooltip>
+                                                        <q-tooltip>{{ $t('DiskSettingTip') }}</q-tooltip>
                                                     </q-icon>
                                                 </template>
                                             </q-input>
@@ -99,15 +96,17 @@
                                         <q-form-item v-if="amISuper()">
                                             <div class="row">
                                                 <q-input
-                                                    type="number" class="col-9"
+                                                    type="number" class="col-10"
                                                     v-model.number="allowedRunningDays.value"
-                                                    :rules="[(val) => (val !== null && val > 0) || '允许运行时间数值错误']"
+                                                    :rules="[(val) => (val !== null && val > 0) || $t('InvalidValue')]"
                                                 >
-                                                    <template v-slot:before
-                                                    ><span class="text-h6">{{$t('AllowedRunningTime')}}:</span></template
-                                                    >
+                                                    <template v-slot:before >
+                                                        <span class="text-bold" style="font-size: 16px">{{$t('AllowedRunningTime')}}:</span>
+                                                    </template>
+                                                    <template v-slot:after >
+                                                        <span class="q-ml-sm text-grey" style="font-size: 14px">{{$t('AlreadyRun')}}: {{allowedRunningDays.used + $t('Days')}} </span>
+                                                    </template>
                                                 </q-input>
-                                                <div class="text-h6 q-pt-sm q-ml-sm text-grey">{{$t('AlreadyRun')}}: {{allowedRunningDays.used + $t('Days')}} </div>
                                             </div>
                                         </q-form-item>
                                     </q-form>
@@ -156,7 +155,7 @@ const submit = () => {
     }
     updateConfig(disk.value).then(res => {
         $q.notify({
-            message: '设置成功',
+            message: t('Success'),
             type: 'positive'
         })
     })

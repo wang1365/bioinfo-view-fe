@@ -212,6 +212,8 @@ export default {
     HideDetail: '隐藏详情',
     OnlySelectAllThisPageFilterResult: '仅全选本页筛选结果',
     NotAllowEmpty: '必填字段，不能为空',
+    InvalidValue: '无效的数值',
+
 
     Intro: '说明',
     Tips: '说明',
@@ -298,6 +300,9 @@ export default {
     AllowedRunningTime: '允许运行时间(天)',
     AlreadyRun: '已运行',
     Days: '天',
+    TaskSettingTip: '该参数与内存实际大小、测序数据量、捕获试剂盒有关，建议100G内存服务器填写3',
+    MemorySettingTip: '该参数为本系统使用的内存大小占服务器的比例，防止部分任务内存超过预计，建议填写0.85',
+    DiskSettingTip: '该参数限制本账号使用空间大小，防止超出服务器存储空间，建议填写扣除预留后的磁盘可用空间',
 
     // 任务结果
     QC: '质控',

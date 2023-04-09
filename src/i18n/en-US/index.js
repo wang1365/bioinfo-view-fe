@@ -214,6 +214,7 @@ export default {
     HideDetail: 'Hide Detail',
     OnlySelectAllThisPageFilterResult: 'Only select all this page filter results',
     NotAllowEmpty: 'Required, empty is not allowed',
+    InvalidValue: 'Invalid Value',
 
     Intro: 'Intro.',
     Tips: 'Tips',
@@ -293,13 +294,16 @@ export default {
     LimitTo: 'Limit to',
 
     // 系统配置
-    ServerResourceSetting: 'Server resource setting',
-    ParallelTaskLimit: 'Parallel task limit(>1)',
-    MemoryUsageLimit: 'Memory usage limit(0-1)',
-    DiskUsageLimit: 'Disk usage limit(MB)',
+    ServerResourceSetting: 'Server Resource Setting',
+    ParallelTaskLimit: 'Parallel Task Limit(>1)',
+    MemoryUsageLimit: 'Memory Usage Limit(0-1)',
+    DiskUsageLimit: 'Disk Usage Limit(MB)',
     AllowedRunningTime: 'Allowed running duration(Days)',
     AlreadyRun: 'Already run',
     Days: 'Day(s)',
+    TaskSettingTip: '该参数与内存实际大小、测序数据量、捕获试剂盒有关，建议100G内存服务器填写3',
+    MemorySettingTip: '该参数为本系统使用的内存大小占服务器的比例，防止部分任务内存超过预计，建议填写0.85',
+    DiskSettingTip: '该参数限制本账号使用空间大小，防止超出服务器存储空间，建议填写扣除预留后的磁盘可用空间',
 
     // 任务结果
     QC: 'QC',
