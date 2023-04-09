@@ -1,40 +1,45 @@
 <template>
     <q-card style="width: 80vw; max-width: 80vw">
-        <PopupContentScroll title="创建任务">
+        <PopupContentScroll :title="$t('ProjectDetailPageCreateTask')">
             <template v-slot:contentBody>
-                <div class="text-h6 q-py-md">流程信息:</div>
+                <div class="text-h6 q-py-md">{{ $t('Flow') }}:</div>
                 <div>
-                    <div class="row">
-                        <div class="col">名称: {{ props.flowDetail.name }}</div>
-                        <div class="col">Code: {{ props.flowDetail.code }}</div>
+                    <div class="row q-col-gutter-md">
+                        <div class="col">{{ $t('FlowName') }}: {{ props.flowDetail.name }}</div>
+                        <div class="col">{{ $t('Code') }}: {{ props.flowDetail.code }}</div>
                     </div>
                     <div class="row q-col-gutter-md">
                         <div class="col">
-                            样本数目:
+                            {{ $t('Sample') }}:
                             {{ sampleTypetrans(props.flowDetail) }}
                         </div>
                         <div class="col">
-                            是否支持非标准样本:
+                            {{ $t('SupportNonStandardSample') }}:
                             {{
                             props.flowDetail.allow_nonstandard_samples
-                            ? "是"
-                            : "否"
+                            ? $t('Yes')
+                            : $t('No')
                             }}
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col">描述: {{ props.flowDetail.desc }}</div>
+                        <div class="col">{{$t('FlowDetail')}}: {{ props.flowDetail.desc }}</div>
                     </div>
                     <div class="row">
-                        <div class="col">提示说明: {{ props.flowDetail.details }}</div>
+                        <div class="col">{{ $t('Note') }}: {{ props.flowDetail.details }}</div>
                     </div>
                 </div>
                 <q-separator />
                 <div class="q-py-md">
-                    <div class="text-h6">参数填写:</div>
+                    <div class="text-h6">{{ $t('CustomParameters') }}:</div>
                     <div>
-                        <q-input v-model="newTaskName" label="任务名称" :error="newTaskNameError" error-message="必填">
+                        <q-input
+                            v-model="newTaskName"
+                            :label="$t('Task')"
+                            :error="newTaskNameError"
+                            :error-message="$t('Required')"
+                        >
                         </q-input>
                     </div>
                     <div class="row">
@@ -106,13 +111,13 @@
                             </div>
                         </template>
                     </div>
-                    <div class="text-h6 q-py-md">数据</div>
+                    <div class="text-h6 q-py-md">{{ $t('Data') }}</div>
                     <div v-if="props.flowDetail.sample_type == 'single'">
                         <div class="row">
                             <div class="col-6">
                                 <q-btn
                                     :label="
-                                        '选择数据-1: ' + sampleFirst?.identifier
+                                        `${$t('Select')}${$t('Data')}-1: ` + sampleFirst?.identifier
                                     "
                                     color="primary"
                                     style="width: 100%"
@@ -120,7 +125,7 @@
                                 ></q-btn>
                             </div>
                             <div class="col-6" v-if="sampleFirstError">
-                                <span class="text-red text-bold">请选择样本</span>
+                                <span class="text-red text-bold">{{`${$t('Data')} ${$t('Required')}`}}</span>
                             </div>
                         </div>
                     </div>
@@ -129,7 +134,7 @@
                             <div class="col-6">
                                 <q-btn
                                     :label="
-                                        '选择数据-1: ' + sampleFirst?.identifier
+                                        `${$t('Select')}${$t('Data')}-1: ` + sampleFirst?.identifier
                                     "
                                     color="primary"
                                     style="width: 99%"
@@ -139,7 +144,7 @@
                             <div class="col-6">
                                 <q-btn
                                     :label="
-                                        '选择数据-2: ' +
+                                        `${$t('Select')}${$t('Data')}-2: ` +
                                         sampleSecond?.identifier
                                     "
                                     color="secondary"
@@ -148,10 +153,18 @@
                                 ></q-btn>
                             </div>
                             <div class="col-6">
-                                <span v-if="sampleFirstError" class="text-red text-bold">请选择样本</span>
+                                <span
+                                    v-if="sampleFirstError"
+                                    class="text-red text-bold"
+                                    >{{`${$t('Data')} ${$t('Required')}`}}</span
+                                >
                             </div>
                             <div class="col-6">
-                                <span v-if="sampleSecondError" class="text-red text-bold">请选择样本</span>
+                                <span
+                                    v-if="sampleSecondError"
+                                    class="text-red text-bold"
+                                    >{{`${$t('Data')} ${$t('Required')}`}}</span
+                                >
                             </div>
                         </div>
                     </div>
@@ -159,14 +172,14 @@
                         <div class="row">
                             <div class="col-6">
                                 <q-btn
-                                    label="选择数据"
+                                    :label="$t('Select')+$t('Data')"
                                     color="primary"
                                     style="width: 100%"
                                     @click="selectMulti()"
                                 ></q-btn>
                             </div>
                             <div class="col-6" v-if="samplesError">
-                                <span class="text-red text-bold">请选择样本</span>
+                                <span class="text-red text-bold">{{`${$t('Data')} ${$t('Required')}`}}</span>
                             </div>
                             <div class="col-12">
                                 <q-chip
@@ -184,7 +197,7 @@
                 </div>
             </template>
             <template v-slot:contentFooter>
-                <q-btn label="取消" v-close-popup />
+                <q-btn :label="$t('Cancel')" v-close-popup />
                 <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()" />
             </template>
         </PopupContentScroll>
@@ -204,7 +217,8 @@ import TaskDataSelectMulti from "./TaskDataSelectMulti.vue";
 import TaskDataSelectSingle from "./TaskDataSelectSingle.vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage,infoMessage } from "src/utils/notify";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const { apiPost } = useApi();
 const openDataSelectorSingle = ref(false);
 const openDataSelectorMulti = ref(false);
@@ -237,7 +251,7 @@ onMounted(() => {
             type: param.type,
             description: param.description,
             choices: param.choices,
-            error: "必填",
+            error: t('Required'),
             isError: false,
         });
         params.value[param.key] = null;
@@ -350,7 +364,7 @@ const confirmTaskCreated = () => {
         }
     }
     if (paramsError) {
-        errorMessage("请更正表单");
+        errorMessage("Fix Error");
         return;
     }
 
@@ -364,7 +378,7 @@ const confirmTaskCreated = () => {
     apiPost(
         "/task",
         (res) => {
-            infoMessage("任务创建成功")
+            infoMessage("Success")
             emit("taskCreated");
         },
         data
@@ -373,11 +387,11 @@ const confirmTaskCreated = () => {
 const sampleTypetrans = (flow) => {
     switch (flow.sample_type) {
         case "single":
-            return "单样本";
+            return t('SingleSample');
         case "double":
-            return "配对样本";
+            return t('PairSample');
         case "multiple":
-            return "多样本";
+            return t('MultipleSample');
     }
 };
 </script>
