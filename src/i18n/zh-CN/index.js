@@ -378,6 +378,30 @@ export default {
 
     // 项目
     Project: '项目',
+    // 项目
+    ProjectPageIndexTitle: '项目管理',
+    ProjectPageListSearchName: '项目',
+    ProjectPageListSearchInput: '项目名称',
+    ProjectPageListSearchNewBtn: '新建项目',
+    ProjectPageListTableName: '项目名称',
+    ProjectPageListTableCreater: '创建人',
+    ProjectPageListTableCreateTime: '创建时间',
+    ProjectPageListTableSampleCount: '样本数量',
+    ProjectPageListTableTaskCount: '任务数量',
+    ProjectPageListEditProject: '修改项目',
+    ProjectPageListEditProjectNameRequired: '项目名称不可为空',
+    ProjectPageListEditProjectDeleteTitle: '确认删除项目吗?',
+    ProjectPageListEditProjectDeleteDesc: '注意: 删除项目后,项目下的任务也会级联删除掉, 且不可恢复!',
+    ProjectDetailPageTitle: '项目详情',
+    ProjectDetailPageCreateTask: '创建任务',
+    ProjectDetailPageSelectData: '选择数据',
+    ProjectDetailPageDataFromParent: '继承自于上级项目',
+    ProjectDetailPageChildTitle: '子项目',
+    ProjectDetailPageCreateChildProject: '新建子项目',
+    ProjectDetailPageEditProjectTitle: '修改项目',
+    ProjectSelectDataTitle: '选择数据',
+    ProjectSelectFlowTitle: '选择分析流程',
+
     // 任务
     Task: '任务',
     TaskPriority: '优先级',
@@ -617,19 +641,4 @@ export default {
     InputResultFilePath: '输入结果文件路径',
     SelectFileFormat: '选择文件格式',
     SelectTrackType: '选择Track类型',
-
-    // 项目
-    ProjectPageIndexTitle: '项目管理',
-    ProjectPageListSearchName: '项目',
-    ProjectPageListSearchInput: '项目名称',
-    ProjectPageListSearchNewBtn: '新建项目',
-    ProjectPageListTableName: '项目名称',
-    ProjectPageListTableCreater: '创建人',
-    ProjectPageListTableCreateTime: '创建时间',
-    ProjectPageListTableSampleCount: '样本数量',
-    ProjectPageListTableTaskCount: '任务数量',
-    ProjectPageListEditProject: '修改项目',
-    ProjectPageListEditProjectNameRequired: '项目名称不可为空',
-    ProjectPageListEditProjectDeleteTitle: '确认删除项目吗?',
-    ProjectPageListEditProjectDeleteDesc: '注意: 删除项目后,项目下的任务也会级联删除掉, 且不可恢复!',
 }

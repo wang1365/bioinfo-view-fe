@@ -1,7 +1,7 @@
 <template>
     <div style="max-width: 100%">
         <PopupMultiSelector
-            title="选择数据"
+            :title="$t('ProjectSelectDataTitle')"
             :dataItems="dataItems"
             :total="total"
             :tableHeaders="tableHeaders"
@@ -17,7 +17,7 @@
                         style="width:450px"
                         v-model="searchParams.search"
                         dense
-                        label="关键词: 建库 input, 核酸打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构"
+                        :label="$t('DataListPageSearchInput')"
                         clearable
                     >
                     </q-input>
@@ -27,7 +27,7 @@
                         dense
                         v-model="searchParams.nucleic_type"
                         :options='["gDNA", "cfDNA", "RNA"]'
-                        label="核酸类型"
+                        :label="$t('DataListPageSearchTypeOfNucleicAcids')"
                     />
                     <q-select
                         style="width:100px"
@@ -35,15 +35,15 @@
                         dense
                         v-model="searchParams.nucleic_level"
                         :options='["A", "B", "C", "D"]'
-                        label="核酸降解等级"
+                        :label="$t('DataListPageSearchDegradationGradeOfNucleicAcids')"
                     />
                     <q-select
                         style="width:100px"
                         clearable
                         dense
                         v-model="searchParams.risk"
-                        :options="['是','否']"
-                        label="风险上机"
+                        :options="['是', '否']"
+                        :label="$t('DataListPageSearchRiskSequencing')"
                     />
                     <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 </div>
@@ -69,26 +69,28 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupMultiSelector from "components/popup-multi-selector/PopupMultiSelector.vue";
 import { infoMessage } from "src/utils/notify";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 
-const tableHeaders = ref([
-    "数据识别号",
-    "文库编号",
-    "送检机构",
-    "核酸类型",
-    "index 类型",
-    "R1 数据名称",
-    "R2 数据名称",
-    "患者识别号",
-    "患者姓名",
-    "性别",
-    "样本识别号",
-    "采样部位",
-    "肿瘤样本",
+const tableHeaders = computed(() => [
+    t('DataListTableColumnDataIdentificationNumber'),
+    t('DataListTableColumnLibraryNumber'),
+    t('DataNewFormSubmissionUnit'),
+    t('DataNewFormTypeOfNucleicAcids'),
+    t('DataNewFormIndexType'),
+    t('DataNewFormDataNameOfR1'),
+    t('DataNewFormDataNameOfR2'),
+    t('PatientNewFormPatientIdentificationNumber'),
+    t('PatientName'),
+    t('PatientPageListTableColumnGender'),
+    t('SampleListTableColumnSampleIdentificationNumbe'),
+    t('SampleListTableColumnSamplingSite'),
+    t('SampleListTableColumnTumorSample'),
 ]);
 const tableRowFields = ref([
     "identifier",
@@ -163,7 +165,7 @@ const loadPage = async () => {
         projectIds.push(props.projectDetail.parent.id);
     }
     let andFields = {}
-    let searchFields=buildModelQuery()
+    let searchFields = buildModelQuery()
     if (searchParams.value.search) {
         searchFields = buildModelQuery([], {
             library_input__icontains: searchParams.value.search,
@@ -187,18 +189,18 @@ const loadPage = async () => {
         andFields.risk = false
     }
     let notInProject = buildModelQuery([], {
-        project__id__in:projectIds
-        }, 'NOT',true)
-    let query = buildModelQuery([searchFields,notInProject], andFields)
+        project__id__in: projectIds
+    }, 'NOT', true)
+    let query = buildModelQuery([searchFields, notInProject], andFields)
     console.log(query)
     let params = `?page=${currentPage.value}&size=${pageSize.value}`
     apiPost(`/model_query/sample${params}`, (res) => {
         total.value = res.data.count;
-                dataItems.value = [];
-                for (const iterator of res.data.results) {
-                    iterator.selected = false;
-                    dataItems.value.push(iterator);
-                }
+        dataItems.value = [];
+        for (const iterator of res.data.results) {
+            iterator.selected = false;
+            dataItems.value.push(iterator);
+        }
     }, query)
     // let params = `?page=${currentPage.value}&size=${pageSize.value}`;
     // if (indexType.value) params += `&index_type=${indexType.value}`;

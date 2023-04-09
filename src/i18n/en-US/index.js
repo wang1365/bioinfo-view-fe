@@ -378,6 +378,30 @@ export default {
 
     // 项目
     Project: 'Project',
+    ProjectPageIndexTitle: 'Project Manage',
+    ProjectPageListSearchTitle: 'Project',
+    ProjectPageListSearchInput: 'Project Name',
+    ProjectPageListSearchNewBtn: 'Create New Project',
+    ProjectPageListTableName: 'Project Name',
+    ProjectPageListTableCreater: 'Create By',
+    ProjectPageListTableCreateTime: 'Create Time',
+    ProjectPageListTableSampleCount: 'Sample Count',
+    ProjectPageListTableTaskCount: 'Task Count',
+    ProjectPageListEditProject: 'Edit Project',
+    ProjectPageListEditProjectNameRequired: 'Project Name Required',
+    ProjectPageListEditProjectDeleteTitle: 'Confirm Delete Project?',
+    ProjectPageListEditProjectDeleteDesc:
+        'Note: After deleting the project, the tasks under the project will also be deleted in cascade and cannot be restored!',
+    ProjectDetailPageTitle: 'Project Detail',
+    ProjectDetailPageCreateTask: 'Create Task',
+    ProjectDetailPageSelectData: 'Select Data',
+    ProjectDetailPageDataFromParent: 'From Parent Project',
+    ProjectDetailPageChildTitle: 'Child Project',
+    ProjectDetailPageCreateChildProject: 'Create Child Project',
+    ProjectDetailPageEditProjectTitle: 'Edit Project',
+    ProjectSelectDataTitle: 'Select Data',
+    ProjectSelectFlowTitle: 'Select Flow',
+
     // 任务
     Task: 'Task',
     TaskPriority: 'Priority',

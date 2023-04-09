@@ -3,7 +3,9 @@
         <q-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
-                <q-toolbar-title class="text-h6"> {{$t("ProjectPageListSearchName")}} </q-toolbar-title>
+                <q-toolbar-title class="text-h6">
+                    {{$t("ProjectPageListSearchTitle")}}
+                </q-toolbar-title>
                 <q-input
                     style="width: 250px"
                     dense
@@ -57,13 +59,10 @@
                                 />
                                 <q-btn
                                     color="primary"
-                                    label="修改"
+                                    :label="$t('Edit')"
                                     icon="edit"
-                                    @click="
-                                        updateProjectName = item.name;
-                                        currentProject = item;
-                                        openEditProject = true;
-                                    "
+                                    @click=" updateProjectName =
+                                item.name; currentProject = item; openEditProject = true; "
                                     size="sm"
                                 />
                                 <q-btn
@@ -128,7 +127,7 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="updateProjectName" :label="$('ProjectPageListSearchInput')"
+                            <q-input v-model="updateProjectName" :label="$t('ProjectPageListSearchInput')"
                         /></q-section>
                     </q-item>
                     <q-item>
@@ -158,7 +157,8 @@ import { useRouter } from "vue-router";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 
 const search=ref("")
@@ -193,7 +193,7 @@ const gotoChild = (item) => {
 const createProject = () => {
     newProjectName.value = newProjectName.value.trim();
     if (!newProjectName.value) {
-        newProjectNameError.value = $t('ProjectPageListEditProjectNameRequired');
+        newProjectNameError.value = t('ProjectPageListEditProjectNameRequired');
         return;
     }
     apiPost(
@@ -202,7 +202,7 @@ const createProject = () => {
             newProjectNameError.value = "";
             newProjectName.value = "";
             openNewProject.value = false;
-            infoMessage($t('Success'));
+            infoMessage(t('Success'));
             refreshPage();
         },
         { name: newProjectName.value }
@@ -211,7 +211,7 @@ const createProject = () => {
 const updateProject = () => {
     updateProjectName.value = updateProjectName.value.trim();
     if (!updateProjectName.value) {
-        updateProjectNameError.value = $t('ProjectPageListEditProjectNameRequired');
+        updateProjectNameError.value = t('ProjectPageListEditProjectNameRequired');
         return;
     }
     apiPut(
@@ -219,7 +219,7 @@ const updateProject = () => {
         (_) => {
             openEditProject.value = false;
             updateProjectNameError.value = "";
-            infoMessage($t('Success'));
+            infoMessage(t('Success'));
             refreshPage();
         },
         {
@@ -271,13 +271,13 @@ const loadBackup = ()=>{
 
 const confirm = (item) => {
     $q.dialog({
-        title: $t('ProjectPageListEditProjectDeleteTitle'),
-        message:$t('ProjectPageListEditProjectDeleteDesc'),
+        title: t('ProjectPageListEditProjectDeleteTitle'),
+        message:t('ProjectPageListEditProjectDeleteDesc'),
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/project/${item.id}`, (_) => {
-            infoMessage($t('Success'))
+            infoMessage(t('Success'))
             if (dataItems.value.length > 1) {
                 let index = 0
                 for (let i = 0; i < dataItems.value.length; i++) {
