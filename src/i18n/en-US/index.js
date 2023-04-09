@@ -1,6 +1,6 @@
 export default {
     // 登录页面
-    LoginSubtitle: '一站式解决基因文库分析结果.',
+    LoginSubtitle: 'One-stop solution to gene library analysis results',
 
     // Help
     InitDbHelp1: 'Make sure MySQL is installed and started',
@@ -301,9 +301,9 @@ export default {
     AllowedRunningTime: 'Allowed running duration(Days)',
     AlreadyRun: 'Already run',
     Days: 'Day(s)',
-    TaskSettingTip: '该参数与内存实际大小、测序数据量、捕获试剂盒有关，建议100G内存服务器填写3',
-    MemorySettingTip: '该参数为本系统使用的内存大小占服务器的比例，防止部分任务内存超过预计，建议填写0.85',
-    DiskSettingTip: '该参数限制本账号使用空间大小，防止超出服务器存储空间，建议填写扣除预留后的磁盘可用空间',
+    TaskSettingTip: 'This parameter is related to the actual size of the memory, the amount of sequencing data, and the capture kit. It is recommended to fill in 3 for a 100G memory server',
+    MemorySettingTip: 'This parameter is the ratio of the memory size used by the system to the server, to prevent some tasks from exceeding the expected memory size, it is recommended to fill in 0.85',
+    DiskSettingTip: 'This parameter limits the space used by this account to prevent exceeding the storage space of the server. It is recommended to fill in the available disk space after deducting the reserved space',
 
     // 任务结果
     QC: 'QC',
