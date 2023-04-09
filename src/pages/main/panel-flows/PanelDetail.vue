@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-xs">
-        <PageTitle :title="detail.name + $t('AnalysisFlowComment')" />
+        <PageTitle :title="detail.name + ' ' + $t('AnalysisFlowComment')" />
         <q-list>
             <q-expansion-item
                 :label="$t('CapturePanelDescription')"
