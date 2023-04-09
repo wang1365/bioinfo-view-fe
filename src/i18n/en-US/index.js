@@ -148,6 +148,8 @@ export default {
     Result: 'Result',
 
     // phrase
+    Disk: 'Disk',
+    Unit: 'Unit',
     ShellEnvs: 'Env',
     Normal: 'Normal',
     High: 'High',
@@ -380,6 +382,16 @@ export default {
     TmlTip2: 'Warning: Random filtering may result in inaccurate results',
     TmlTip3: 'TMB-low\\No recommended drug information',
 
+    // 看板
+    DashboardTitle: 'DashBoard',
+    DashboardDiskUseWeek: 'Disk Use(Week)',
+    DashboardTaskWeek: 'Task Count(Week)(Finish/Total)',
+    DashboardNewTask: 'New Sample Count(Week)/ Total',
+    DashboardReportWeek: 'New Report(Week)/ Total',
+    DashboardUsers: 'Users',
+    DashboardUsersRegist: 'Users Regist(Month)',
+    DashboardUsed: 'Used',
+    DashboardFree: 'Free',
     // 项目
     Project: 'Project',
     ProjectPageIndexTitle: 'Project Manage',

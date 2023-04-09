@@ -7,7 +7,8 @@
 
 <script setup>
 import { markRaw, onMounted, onUpdated, ref, watch } from 'vue'
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const echarts = require('echarts')
 const chart = ref(null)
 const piechart = ref(null)
@@ -36,8 +37,8 @@ const init = () => {
     chart.value = markRaw(echarts.init(ct))
     chart.value.setOption({
         title: {
-            text: `内存占用情况, 总共 ${props.total}G`,
-            subtext: '单位 G',
+            text: `${t('Memory')}, ${t('TotalCount')} ${props.total}G`,
+            subtext: `${t('Unit')} G`,
             left: 'center',
         },
         tooltip: {
@@ -49,12 +50,12 @@ const init = () => {
         },
         series: [
             {
-                name: '内存',
+                name: t('Memory'),
                 type: 'pie',
                 radius: '50%',
                 data: [
-                    { value: props.total - props.used, name: '剩余内存' },
-                    { value: props.used, name: '当前占用' },
+                    { value: props.total - props.used, name: t('DashboardFree') },
+                    { value: props.used, name: t('DashboardUsed') },
                 ],
                 emphasis: {
                     itemStyle: {
