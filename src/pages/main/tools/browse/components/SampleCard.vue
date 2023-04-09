@@ -11,7 +11,7 @@
                 <sample-field :model-value="sample.sample_componet" :label="$t('SamplingSite')" />
                 <sample-field :model-value="sample.sample_date" :label="$t('SamplingDate')" />
                 <sample-field :model-value="sample.sample_type" :label="$t('SampleType')" />
-                <sample-field :model-value="sample.test_date" :label="$t(SubmissionDate')" />
+                <sample-field :model-value="sample.test_date" :label="$t('SubmissionDate')" />
             </div>
         </q-card-section>
     </q-card>
