@@ -146,6 +146,7 @@ export default {
     Result: '结果',
 
     // 词组
+    ShellEnvs: '环境变量',
     Normal: '普通',
     High: '高',
     SystemManage: '系统管理',

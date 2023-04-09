@@ -319,9 +319,9 @@ const getItemStatus = (item) => {
         case 'RUNNING':
             return t('TaskPageListStatusQueue')
         case 'FINISHED':
-            return t('TaskPageListStatusFail')
-        case 'FAILURED':
             return t('TaskPageListStatusFinish')
+        case 'FAILURED':
+            return t('TaskPageListStatusFail')
         case 'CANCELED':
             return  t('TaskPageListStatusCancel')
         default:

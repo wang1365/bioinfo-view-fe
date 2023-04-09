@@ -148,6 +148,7 @@ export default {
     Result: 'Result',
 
     // phrase
+    ShellEnvs: 'Env',
     Normal: 'Normal',
     High: 'High',
     SystemManage: 'System Manage',

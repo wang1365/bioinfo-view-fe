@@ -1,16 +1,16 @@
 <template>
     <q-page padding>
         <div class="row items-center q-py-sm">
-            <h6>任务详情</h6>
+            <h6>{{ `${$t('Task')} ${$t('Info')}` }}</h6>
             <q-space />
             <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <q-card>
             <q-section>
-                <div class="text-h6  q-px-md q-py-sm ">项目: {{ taskDetail.project?.name }}</div>
-                <div class="text-h6  q-px-md q-py-sm">任务名称: {{ taskDetail.name }}</div>
+                <div class="text-h6  q-px-md q-py-sm ">{{ $t('Project') }}: {{ taskDetail.project?.name }}</div>
+                <div class="text-h6  q-px-md q-py-sm">{{ `${$t('Task')}${$t('Name')}` }}: {{ taskDetail.name }}</div>
                 <div class="text-h6 q-px-md q-py-sm">
-                    任务状态:
+                    {{ `${$t('Task')}${$t('Status')}` }}:
                     <span
                         class="q-px-md brand-color text-center row inline flex-center text-white rounded-borders"
                         :class="getItemStatusColor(taskDetail)"
@@ -20,24 +20,45 @@
             </q-section>
             <q-separator></q-separator>
             <q-section>
-                <div class="text-h6 q-px-md q-py-sm">样本:</div>
+                <div class="text-h6 q-px-md q-py-sm">{{$t('Sample')}}:</div>
                 <div class="text-body q-px-md q-py-sm">
                     <div v-for="item of taskSamples" :key="item.id">
                         <div class="row bg-grey-3 q-px-sm">
                             <div class="col-4">
-                                <div class="q-py-sm">患者姓名: {{ item.sample_meta?.patient?.name }}</div>
-                                <div class="q-py-sm">患者性别: {{ item.sample_meta?.patient?.gender }}</div>
-                                <div class="q-py-sm">患者识别号: {{ item.sample_meta?.patient?.identifier }}</div>
+                                <div class="q-py-sm">
+                                    {{ `${$t('Patient')}${$t('Name')}` }}: {{ item.sample_meta?.patient?.name }}
+                                </div>
+                                <div class="q-py-sm">
+                                    {{ `${$t('Patient')}${$t('Gender')}` }}: {{ item.sample_meta?.patient?.gender }}
+                                </div>
+                                <div class="q-py-sm">
+                                    {{ $t('PatientNewFormPatientIdentificationNumber') }}:
+                                    {{ item.sample_meta?.patient?.identifier }}
+                                </div>
                             </div>
                             <div class="col-4">
-                                <div class="q-py-sm">样本识别号: {{ item.sample_meta?.identifier }}</div>
-                                <div class="q-py-sm">采样部位: {{ item.sample_meta?.sample_componet }}</div>
-                                <div class="q-py-sm">肿瘤样本: {{ item.sample_meta?.is_panel }}</div>
+                                <div class="q-py-sm">
+                                    {{ $t('SampleListTableColumnSampleIdentificationNumber') }}:
+                                    {{ item.sample_meta?.identifier }}
+                                </div>
+                                <div class="q-py-sm">
+                                    {{ $t('SampleListTableColumnSamplingSite') }}:
+                                    {{ item.sample_meta?.sample_componet }}
+                                </div>
+                                <div class="q-py-sm">
+                                    {{$t('SampleListTableColumnTumorSample')}}: {{ item.sample_meta?.is_panel }}
+                                </div>
                             </div>
                             <div class="col-4">
-                                <div class="q-py-sm">数据识别号: {{ item.identifier }}</div>
-                                <div class="q-py-sm">R1 文件: {{ item.fastq1_path }}</div>
-                                <div class="q-py-sm">R2 文件: {{ item.fastq2_path }}</div>
+                                <div class="q-py-sm">
+                                    {{ $t('DataListTableColumnDataIdentificationNumber') }}: {{ item.identifier }}
+                                </div>
+                                <div class="q-py-sm">
+                                    {{ $t('DataListTableColumnDataNameOfR1') }}: {{ item.fastq1_path }}
+                                </div>
+                                <div class="q-py-sm">
+                                    {{ $t('DataListTableColumnDataNameOfR2') }}: {{ item.fastq2_path }}
+                                </div>
                             </div>
                         </div>
                         <q-separator color="primary"></q-separator>
@@ -46,14 +67,14 @@
             </q-section>
             <q-separator></q-separator>
             <q-section>
-                <div class="text-h6 q-pa-md">环境变量:</div>
+                <div class="text-h6 q-pa-md">{{$t('ShellEnvs')}}:</div>
                 <div class="text-body q-px-md q-py-xs" v-for="item of taskEnvs" :key="item.key">
                     <span class="text-bold">{{ item.key }} : </span> {{ item.value }}
                 </div>
             </q-section>
             <q-separator></q-separator>
             <q-section>
-                <div class="text-h6 q-pa-md">任务进度:</div>
+                <div class="text-h6 q-pa-md">{{ $t('Progress') }}:</div>
                 <div id="task-step" class="text-body q-px-md q-py-md">
                     <q-stepper v-model="lastStageIndex" color="primary">
                         <q-step
@@ -69,16 +90,10 @@
                         </q-step>
                     </q-stepper>
                 </div>
-                <!-- <div>
-                    {{lastStageIndex}}
-                </div>
-                <div class="text-body q-pa-md" v-for="(item,key) of stages" :key="item">
-                    <span class="text-bold">{{key}} : </span> {{item}}
-                </div> -->
             </q-section>
             <q-separator></q-separator>
             <q-section>
-                <div class="text-h6 q-pa-md">任务日志:</div>
+                <div class="text-h6 q-pa-md">{{ $t('Log') }}:</div>
                 <div class="text-body q-px-md q-py-xs">
                     <q-timeline color="secondary">
                         <q-timeline-entry
@@ -90,14 +105,6 @@
                         />
                     </q-timeline>
                 </div>
-                <!-- <div class="text-body q-px-md q-py-xs" v-for="(item,key) of logs" :key="key">
-                    <span class="text-primary text-bold text-subtitle1"> {{item.stage}}</span
-                    >:<span class="text-primary text-bold text-subtitle1"> {{item.status}}</span>
-                    <div>
-                        <span class="text-bold">{{item.time}} {{item.title}}: </span>
-                        <span class="q-ml-sm"> {{item.detail}} </span>
-                    </div>
-                </div> -->
             </q-section>
         </q-card>
     </q-page>
@@ -109,6 +116,8 @@ import { useApi } from "src/api/apiBase";
 import { onMounted, ref, watch } from "vue";
 import { useRoute,useRouter } from "vue-router";
 import { globalStore } from 'src/stores/global'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const store = globalStore()
 const router = useRouter()
 const { apiGet, apiGetByIds } = useApi();
@@ -122,18 +131,18 @@ const lastStageIndex = ref(0)
 const taskEnvs = ref([])
 const getItemStatus = (item) => {
     switch (item.status) {
-        case "PENDING":
-            return "排队中";
-        case "RUNNING":
-            return "运行中";
-        case "FINISHED":
-            return "完成";
-        case "FAILURED":
-            return "失败";
-        case "CANCELED":
-            return "取消";
+        case 'PENDING':
+            return  t('TaskPageListStatusRun')
+        case 'RUNNING':
+            return t('TaskPageListStatusQueue')
+        case 'FINISHED':
+            return t('TaskPageListStatusFinish')
+        case 'FAILURED':
+            return t('TaskPageListStatusFail')
+        case 'CANCELED':
+            return  t('TaskPageListStatusCancel')
         default:
-            return item.status;
+            return item.status
     }
 };
 const getItemStatusColor = (item) => {
