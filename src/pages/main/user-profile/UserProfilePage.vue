@@ -70,8 +70,10 @@ import PageTitle from "components/page-title/PageTitle.vue";
 import ChangePasswordDialog from "./ChangePasswordDialog";
 import { ref } from "vue";
 import { useRouter } from "vue-router"
-import { globalStore } from "src/stores/global";
+import { globalStore } from "src/stores/global"
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const store = globalStore()
 
@@ -97,13 +99,13 @@ const logout = () => {
 
 const getRole = () => {
     if (me.roles.includes('super')) {
-        return '超级管理员'
+        return t('SuperAdmin')
     }
 
     if (me.roles.includes('admin')) {
-        return '管理员'
+        return t('Admin')
     }
 
-    return '普通用户'
+    return t('NormalUser')
 }
 </script>
