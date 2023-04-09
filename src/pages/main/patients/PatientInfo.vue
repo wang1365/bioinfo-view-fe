@@ -61,13 +61,13 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>采样日期</td>
-                            <td>送测日期</td>
-                            <td>采样部位</td>
-                            <td>样本类型</td>
-                            <td>肿瘤含量</td>
-                            <td>肿瘤样本</td>
-                            <td>样本识别号</td>
+                            <td>{{$t('SampleNewFormSamplingDate')}}</td>
+                            <td>{{$t('SampleNewFormSubmissionDate')}}</td>
+                            <td>{{$t('SampleNewFormSamplingSite')}}</td>
+                            <td>{{$t('SampleNewFormSampleType')}}</td>
+                            <td>{{$t('SampleNewFormTumorContent')}}</td>
+                            <td>{{$t('SampleNewFormTumorSample')}}</td>
+                            <td>{{$t('SampleNewFormSampleIdentificationNumber')}}</td>
                             <td>{{$t('Action')}}</td>
                         </tr>
                     </thead>
