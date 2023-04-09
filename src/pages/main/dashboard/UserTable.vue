@@ -1,7 +1,7 @@
 <template>
     <q-table
         class="my-sticky-header-column-table"
-        title="用户情况"
+        :title="$t('DashboardUsers')"
         :rows="rows"
         :columns="columns"
         row-key="id"
@@ -13,8 +13,9 @@
 
 <script setup>
 import { useApi } from 'src/api/apiBase'
-import { onMounted, ref } from 'vue'
-
+import { onMounted, ref ,computed} from 'vue'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const { apiGet } = useApi()
 
 const tableRef = ref({})
@@ -37,27 +38,19 @@ const onRequest = (props) => {
     })
 
 }
-const columns = ref([
+const columns = computed(()=>[
     {
         name: 'nickname',
         required: true,
-        label: '用户',
+        label: t('User'),
         align: 'left',
         field: (row) => row.nickname,
         format: (val) => `${val}`,
     },
-    /* {
-     *     name: "regist",
-     *     align: "center",
-     *     label: "注册时间",
-     *     field: "regist",
-     * },
-     * { name: "lastLogin", label: "最近登录时间", field: "lastLogin" }, */
-    { name: 'used_disk', label: '磁盘使用G', field: (row) => (row.used_disk/1024).toFixed(2) },
-    { name: 'sodium', label: '运行中的任务', field: 'running_task' },
+    { name: 'used_disk', label: t('DiskUsage'), field: (row) => (row.used_disk/1024).toFixed(2) },
+    { name: 'sodium', label: t('Task')+t('TaskPageListStatusRun'), field: 'running_task' },
 ])
 const rows = ref([])
-
 </script>
 
 <style lang="scss">

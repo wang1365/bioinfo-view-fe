@@ -1,19 +1,19 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="平台监控" />
+        <PageTitle :title="$t('DashboardTitle')" />
 
         <div class="q-pa-md row items-start q-gutter-md" style="justify-content: space-around">
             <q-card class="my-card">
                 <q-card-section class="text-primary text-h5 text-bold">{{weeklyDiskUsage}}</q-card-section>
 
-                <q-card-section class="desc">本周磁盘空间使用</q-card-section>
+                <q-card-section class="desc">{{$t('DashboardDiskUseWeek')}}</q-card-section>
             </q-card>
             <q-card class="my-card">
                 <q-card-section class="text-secondary text-h5 text-bold">
                     <span class="text-primary">{{ weeklyTaskStats.success }}</span>
                     {{ ` / ${weeklyTaskStats.total}` }}
                 </q-card-section>
-                <q-card-section class="desc">本周任务数(成功/总数)</q-card-section>
+                <q-card-section class="desc">{{$t('DashboardTaskWeek')}}</q-card-section>
             </q-card>
             <q-card class="my-card">
                 <q-card-section class="text-primary text-h5 text-bold">
@@ -21,7 +21,7 @@
                     /
                     <span>{{samples.total}}</span>
                 </q-card-section>
-                <q-card-section class="desc">新增样本数(本周) / 样本总数</q-card-section>
+                <q-card-section class="desc">{{$t('DashboardNewTask')}}</q-card-section>
             </q-card>
             <q-card class="my-card">
                 <q-card-section class="text-secondary text-h5 text-bold">
@@ -30,7 +30,7 @@
                     <span>{{reports.total}}</span
                     >份
                 </q-card-section>
-                <q-card-section class="desc">新增报告数(本周) / 报告总数</q-card-section>
+                <q-card-section class="desc">{{$t('DashboardReportWeek')}}</q-card-section>
             </q-card>
         </div>
         <q-separator />
@@ -57,7 +57,7 @@
                                 <PieChart2 :used="resource.disk_used" :total="resource.disk_total" />
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <PageTitle title="任务概览" />
+                                <PageTitle :title="$t('Task')" />
                                 <div
                                     style="
                                         height: 300px;
@@ -72,22 +72,24 @@
                                             class="text-primary text-h5 text-bold"
                                             >{{ taskStats.running_task_count }}</q-card-section
                                         >
-
-                                        <q-card-section class="desc">正在运行</q-card-section>
+                                        <q-card-section class="desc">{{ $t('TaskPageListStatusRun') }}</q-card-section>
                                     </q-card>
                                     <q-card class="my-card">
                                         <q-card-section
                                             class="text-negative text-h5 text-bold"
                                             >{{ taskStats.failured_task_count }}</q-card-section
                                         >
-                                        <q-card-section class="desc">失败任务</q-card-section>
+                                        <q-card-section class="desc">{{ $t('TaskPageListStatusFail') }}</q-card-section>
                                     </q-card>
                                     <q-card class="my-card">
                                         <q-card-section
                                             class="text-secondary text-h5 text-bold"
                                             >{{ taskStats.pending_task_count }}</q-card-section
                                         >
-                                        <q-card-section class="desc">排队任务</q-card-section>
+                                        <q-card-section
+                                            class="desc"
+                                            >{{ $t('TaskPageListStatusQueue') }}</q-card-section
+                                        >
                                     </q-card>
                                     <q-card class="my-card">
                                         <q-card-section
@@ -95,8 +97,7 @@
                                             >{{ taskStats.max_task }}</q-card-section
                                         >
                                         <q-card-section class="desc">
-                                            允许最大
-                                            <br />任务数
+                                            {{ $t('LimitTo') }}
                                         </q-card-section>
                                     </q-card>
                                 </div>

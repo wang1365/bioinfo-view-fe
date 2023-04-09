@@ -146,6 +146,8 @@ export default {
     Result: '结果',
 
     // 词组
+    Disk: '磁盘',
+    Unit: '单位',
     ShellEnvs: '环境变量',
     Normal: '普通',
     High: '高',
@@ -376,6 +378,16 @@ export default {
     TmlTip2: '警示：随意过滤造成结果不准确',
     TmlTip3: 'TMB-low\\暂无推荐药物信息',
 
+    // 看板
+    DashboardTitle: '平台监控',
+    DashboardDiskUseWeek: '本周磁盘空间使用',
+    DashboardTaskWeek: '本周任务数(成功/总数)',
+    DashboardNewTask: '新增样本数(本周) / 样本总数',
+    DashboardReportWeek: '新增报告数(本周) / 报告总数',
+    DashboardUsers: '用户情况',
+    DashboardUsersRegist: '月度用户注册情况',
+    DashboardUsed: '当前使用',
+    DashboardFree: '当前剩余',
     // 项目
     Project: '项目',
     // 项目
