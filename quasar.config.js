@@ -89,7 +89,7 @@ module.exports = configure(function (ctx) {
                 },
                 '/igv': {
                     changeOrigin: true,
-                    target: 'http://10.10.0.208',
+                    target: process.env.host || 'http://10.10.0.208',
                 },
             },
         },

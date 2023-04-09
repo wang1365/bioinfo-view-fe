@@ -392,7 +392,7 @@ export default {
     // 患者
     Patient: 'Patient',
     Age: 'Age',
-    PatientIdentifier: 'Patient Identifier',
+    PatientIdentifier: 'Patient Identification Number',
     PatientName: 'Patient Name',
     PatientAge: 'Patient Age',
     // 患者列表
@@ -553,7 +553,7 @@ export default {
     // 样本
     SampleInformation: 'Sample Information',
     SampleComponent: 'Sample Component',
-    SampleIdentifier: 'Sample Identifier',
+    SampleIdentifier: 'Sample Identification Number',
     SampleType: 'Sample Type',
     IsTumor: 'Is Tumor',
     TumorDose: 'Tumor Dose',
@@ -567,18 +567,18 @@ export default {
 
     // 样本数据
     SampleDataSearch: 'Sample Data Search',
-    DataIdentifier: 'Data Identifier',
+    DataIdentifier: 'Data Identification Number',
     DataDetail: 'Data Detail',
     LibraryNumber: 'Library Number',
     CaptureKit: 'Capture Kit',
-    NucleicBreakType: 'Nucleic Break Type',
-    BuildDatabaseInput: 'Build Database Input',
+    NucleicBreakType: 'Nucleic Acid Fragmentation Method',
+    BuildDatabaseInput: 'Library Construction Input',
     IndexType: 'Index Type',
     IndexNumber: 'Index Number',
     HybridInput: 'Hybrid Input',
-    TakeRisks: 'Risk',
-    NucleicLevel: 'Nucleic Level',
-    NucleicType: 'Nucleic Type',
+    TakeRisks: 'Risk Sequencing',
+    NucleicLevel: 'Degradation Grade of Nucleic Acids',
+    NucleicType: 'Type of Nucleic Acids',
     Fastq1Path: 'fastq1 Path',
     Fastq2Path: 'fastq2 Path',
 
