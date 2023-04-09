@@ -396,6 +396,16 @@ export default {
 
     // 自定义报告
     ReportPageTitle: 'Custom Report',
+    ReportDefineEnsureTab: 'Ensure Report',
+    ReportDefineResultTitle: 'Data Detail',
+    ReportDefineSelected: 'Selected',
+    ReportDefineSearched: 'Searched',
+    ReportDefineNoData: 'No Data',
+    ReportDefineInputInfoTitle: 'Input Info',
+    ReportDefineClearData: 'Clear Data',
+    ReportDefineGoToReport: 'Go To Report Page',
+    ReportStickData: 'Stick Result',
+    ReportStickDone: 'Sticked',
 
     // 弹出框选择
     PopupSelectCurrrentSelected: 'Selected',

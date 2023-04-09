@@ -1,12 +1,34 @@
 <template>
     <div>
         <div style="text-align:right" class="q-py-md">
-            <q-btn icon="help_outline" size="small" outline color="orange" class="q-mr-md"
-                @click="dlgVisible = !dlgVisible">{{$t('Intro')}}</q-btn>
-            <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small"
-                color="primary" class="q-mr-md" label="已固定过滤" @click="unstick()" />
-            <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small"
-                outline color="primary" class="q-mr-md" @click="stickFilter()">固定过滤</q-btn>
+            <q-btn
+                icon="help_outline"
+                size="small"
+                outline
+                color="orange"
+                class="q-mr-md"
+                @click="dlgVisible = !dlgVisible"
+                >{{$t('Intro')}}</q-btn
+            >
+            <q-btn
+                v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+                icon="bookmarks"
+                size="small"
+                color="primary"
+                class="q-mr-md"
+                :label="$t('ReportStickDone')"
+                @click="unstick()"
+            />
+            <q-btn
+                v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+                icon="bookmarks"
+                size="small"
+                outline
+                color="primary"
+                class="q-mr-md"
+                @click="stickFilter()"
+                :label="$t('ReportStickData')"
+            />
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
@@ -20,30 +42,63 @@
             </q-card>
         </q-dialog>
 
-        <q-tabs v-model="tab" dense align="left" active-color="primary" active-bg-color="grey-5"
-            class="bg-grey-2 shadow-2" indicator-color="primary" inline-label :breakpoint="0">
+        <q-tabs
+            v-model="tab"
+            dense
+            align="left"
+            active-color="primary"
+            active-bg-color="grey-5"
+            class="bg-grey-2 shadow-2"
+            indicator-color="primary"
+            inline-label
+            :breakpoint="0"
+        >
             <q-tab v-for="table in tables" :label="table.name" :name="table.name" :key="table.name" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel v-for="table in tables" :name="table.name" :key="table.name">
                 <q-toolbar class="text-primary">
-                    <q-input v-model="table.keyword" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable
-                        @clear="clearKeyword(table)" style="width:300px"
-                        :disable="props.viewConfig.showStick && props.viewConfig.stickDone" />
-                    <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword(table)"
-                        :disable="props.viewConfig.showStick && props.viewConfig.stickDone"></q-btn>
+                    <q-input
+                        v-model="table.keyword"
+                        class="q-mr-sm"
+                        dense
+                        :label="$t('Search') + ':'"
+                        clearable
+                        @clear="clearKeyword(table)"
+                        style="width:300px"
+                        :disable="props.viewConfig.showStick && props.viewConfig.stickDone"
+                    />
+                    <q-btn
+                        size="small"
+                        color="primary"
+                        :label="$t('Search')"
+                        @click="searchKeyword(table)"
+                        :disable="props.viewConfig.showStick && props.viewConfig.stickDone"
+                    ></q-btn>
                     <q-space />
                     <q-btn :href="table.url" :label="$t('Download')" icon="south" size="sm" flat />
                 </q-toolbar>
                 <div style="position:relative">
-                    <q-icon color="accent" name="question_mark" size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px">
+                    <q-icon
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
-                    <a-table style="z-index:1" class="col-5" size="middle" rowKey="lineNumber" bordered
-                        :scroll="{ x: 2000, y: 600 }" :data-source="table.filteredRows" :columns="table.columns"
+                    <a-table
+                        style="z-index:1"
+                        class="col-5"
+                        size="middle"
+                        rowKey="lineNumber"
+                        bordered
+                        :scroll="{ x: 2000, y: 600 }"
+                        :data-source="table.filteredRows"
+                        :columns="table.columns"
                         :sticky="true"
-                        :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }" />
+                        :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }"
+                    />
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -51,8 +106,13 @@
         <q-separator color="primary" />
         <div>
             <template v-for="image in images" :key="image">
-                <q-img class="q-mt-lg text-primary" :src="image.url" style="max-height: 500px" fit="contain"
-                    position="0 20px" />
+                <q-img
+                    class="q-mt-lg text-primary"
+                    :src="image.url"
+                    style="max-height: 500px"
+                    fit="contain"
+                    position="0 20px"
+                />
                 <div class="text-primary">{{ image.description }}</div>
             </template>
         </div>
@@ -243,6 +303,4 @@ const unstick = () => {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

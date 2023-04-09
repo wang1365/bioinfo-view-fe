@@ -396,6 +396,16 @@ export default {
 
     // 自定义报告
     ReportPageTitle: '自定义报告',
+    ReportDefineEnsureTab: '报告确认',
+    ReportDefineResultTitle: '已固定的数据是',
+    ReportDefineSelected: '勾选',
+    ReportDefineSearched: '已搜索',
+    ReportDefineNoData: '无数据',
+    ReportDefineInputInfoTitle: '填写信息',
+    ReportDefineClearData: '清除数据',
+    ReportDefineGoToReport: '填写信息',
+    ReportStickData: '固定过滤',
+    ReportStickDone: '已固定过滤',
 
     // 表格头部的按钮
     PageListTableExport: '导出数据',

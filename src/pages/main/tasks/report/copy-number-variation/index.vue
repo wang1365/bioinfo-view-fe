@@ -5,7 +5,7 @@
         size="small"
         color="primary"
         class="relative-position float-right q-mr-md"
-        label="已固定过滤"
+        :label="$t('ReportStickDone')"
         @click="reset()"
     />
     <q-btn
@@ -16,8 +16,8 @@
         color="primary"
         class="relative-position float-right q-mr-md"
         @click="stickFilter()"
-        >固定过滤</q-btn
-    >
+        :label="$t('ReportStickData')"
+    />
 
     <q-btn
         icon="help_outline"

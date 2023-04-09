@@ -6,7 +6,7 @@
             size="small"
             color="primary"
             class="relative-position float-right q-mr-md"
-            label="已固定过滤"
+            :label="$t('ReportStickDone')"
             @click="reset()"
         />
         <q-btn
@@ -17,7 +17,8 @@
             color="primary"
             class="relative-position float-right q-mr-md"
             @click="stickFilter()"
-            >固定过滤</q-btn
+            :label="$t('ReportStickData')"
+        />
         >
         <q-btn
             icon="help_outline"
@@ -37,8 +38,16 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="胚系突变分析" :label="$t('GermlineMutationAnalysis')" v-if="props.viewConfig.showMutGermline" />
-            <q-tab name="体细胞突变分析" :label="$t('SomaticMutationAnalysis')" v-if="props.viewConfig.showMutSomatic" />
+            <q-tab
+                name="胚系突变分析"
+                :label="$t('GermlineMutationAnalysis')"
+                v-if="props.viewConfig.showMutGermline"
+            />
+            <q-tab
+                name="体细胞突变分析"
+                :label="$t('SomaticMutationAnalysis')"
+                v-if="props.viewConfig.showMutSomatic"
+            />
         </q-tabs>
         <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">

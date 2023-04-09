@@ -67,6 +67,7 @@ import { useQTable } from 'src/utils/q-table'
 import { useQuasar } from 'quasar'
 import { infoMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n";
+import { computed } from 'vue'
 const { t } = useI18n();
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
@@ -79,7 +80,8 @@ const searchParams = ref({
     sample_meta_identifier: '',
     sample_identifier: '',
 })
-const columns = ref([
+
+const columns = computed(()=>[
     {
         name: 'id',
         required: false,

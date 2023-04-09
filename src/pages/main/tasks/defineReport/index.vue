@@ -1,7 +1,7 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <div class="row items-center q-py-sm">
-            <h6>定制报告</h6>
+            <h6>{{ $t('ReportPageTitle') }}</h6>
             <q-space />
             <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
@@ -10,7 +10,7 @@
                 v-if="tabValid('mutation')"
                 :done="isStepDone('mutation')"
                 name="mutation"
-                title="突变分析"
+                :title="$t('MutationAnalysis')"
                 icon="candlestick_chart"
             >
                 <MutaionVue
@@ -28,7 +28,7 @@
                 v-if="tabValid('fusion')"
                 :done="isStepDone('fusion')"
                 name="fusion"
-                title="融合分析"
+                :title="$t('FusionAnalysis')"
                 icon="format_strikethrough"
             >
                 <FusionVue
@@ -45,7 +45,7 @@
                 v-if="tabValid('copy_number_variation')"
                 :done="isStepDone('copy_number_variation')"
                 name="copy_number_variation"
-                title="拷贝数变异分析"
+                :title="$t('CopyNumberVariationAnalysis')"
                 icon="polyline"
             >
                 <CopyNumberVariationVue
@@ -63,7 +63,7 @@
                 v-if="tabValid('tumor_mutation_load')"
                 :done="isStepDone('tumor_mutation_load')"
                 name="tumor_mutation_load"
-                title="肿瘤突变负荷分析"
+                :title="$t('TumorMutationLoadAnalysis')"
                 icon="bubble_chart"
             >
                 <TumorMutationLoadVue
@@ -76,19 +76,6 @@
                     @reset="stickDone('tumor_mutation_load', null, 'create')"
                 />
             </q-step>
-            <!-- <q-step v-if="tabValid('qc')" name="qc" title="质控" icon="border_left" color="secondary">
-                <QcVue :viewConfig="viewConfig.qc" :intro="intros['qc']" :samples="samples" />
-            </q-step>
-            <q-step v-if="tabValid('microsatellite_instability')" name="microsatellite_instability" title="微卫星不稳定"
-                icon="shape_line" color="secondary">
-                <MicrosatelliteInstabilityVue :viewConfig="viewConfig.microsatellite_instability"
-                    :intro="intros['microsatellite_instability']" :task="taskDetail" :samples="samples" />
-            </q-step>
-            <q-step v-if="tabValid('homologous_recombination_defect')" name="homologous_recombination_defect" title="同源重组缺陷分析"
-                icon="line_axis" color="secondary">
-                <HomologousRecombinationDefectVue :viewConfig="viewConfig.homologous_recombination_defect"
-                    :intro="intros['homologous_recombination-defect']" :task="taskDetail" :samples="samples" />
-            </q-step>-->
             <q-step
                 v-for="commonTab in commonTabs"
                 :key="commonTab.title"
@@ -106,53 +93,55 @@
                 />
             </q-step>
 
-            <q-step name="create" title="报告确认" icon="receipt_long">
+            <q-step name="create" :title="$t('ReportDefineEnsureTab')" icon="receipt_long">
                 <div>
-                    <span class="text-bold text-h6 text-primary">已固定的数据是:</span>
+                    <span class="text-bold text-h6 text-primary">{{ $t('ReportDefineResultTitle') }}:</span>
                     <div v-if="isStepDone('mutation')">
                         <div>
-                            <span class="text-bold">突变分析</span>
+                            <span class="text-bold">{{$t('MutationAnalysis')}}</span>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutGermline">
-                                胚系突变分析:
-                                <span v-if="stepData.mutation?.germline.selected">勾选</span>
+                                {{ $t('GermlineMutationAnalysis') }}:
+                                <span v-if="stepData.mutation?.germline.selected">{{$t('ReportDefineSelected')}}</span>
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered"
-                                    >已搜索</span
+                                    >{{$t('ReportDefineSearched')}}</span
                                 >
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && !stepData.mutation?.germline.filtered"
-                                    >无数据</span
+                                    >{{$t('ReportDefineNoData')}}</span
                                 >
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutSomatic">
-                                体细胞突变分析:
-                                <span v-if="stepData.mutation?.somatic.selected">勾选</span>
-                                <span v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
-                                    >已搜索</span
+                                {{ $t('SomaticMutationAnalysis') }}:
+                                <span v-if="stepData.mutation?.somatic.selected">{{$t('ReportDefineSelected')}}</span>
+                                <span
+                                    v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
+                                    >{{$t('ReportDefineSearched')}}</span
                                 >
                                 <span
                                     v-if="!stepData.mutation?.somatic.selected && !stepData.mutation?.somatic.filtered"
-                                    >无数据</span
+                                    >{{$t('ReportDefineNoData')}}</span
                                 >
                             </q-chip>
                         </div>
                     </div>
                     <div v-if="isStepDone('fusion')">
                         <div>
-                            <span class="text-bold">融合分析</span>
+                            <span class="text-bold">{{$t('FusionAnalysis')}}</span>
                             <q-chip
                                 color="primary"
                                 text-color="white"
                                 v-if="viewConfig.fusion.showFusionGermline && samples.length <= 1"
                             >
-                                单样品融合分析:
-                                <span v-if="stepData.fusion?.single.qt.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >已搜索</span
+                                {{$t('SingleSampleFusionAnalysis')}}:
+                                <span v-if="stepData.fusion?.single.qt.selected">{{$t('ReportDefineSelected')}}</span>
+                                <span
+                                    v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
+                                    >{{$t('ReportDefineSearched')}}</span
                                 >
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >无数据</span
+                                    >{{$t('ReportDefineNoData')}}</span
                                 >
                             </q-chip>
                             <q-chip
@@ -160,14 +149,15 @@
                                 text-color="white"
                                 v-if="viewConfig.fusion.showFusionGermline && samples.length > 1"
                             >
-                                肿瘤单样品融合:
-                                <span v-if="stepData.fusion?.single.qt.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >已搜索</span
+                                {{$t('TumorSingleSampleFusion')}}:
+                                <span v-if="stepData.fusion?.single.qt.selected">{{$t('ReportDefineSelected')}}</span>
+                                <span
+                                    v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
+                                    >{{$t('ReportDefineSearched')}}</span
                                 >
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >无数据</span
+                                    >{{$t('ReportDefineNoData')}}</span
                                 >
                             </q-chip>
                             <q-chip
@@ -175,46 +165,52 @@
                                 text-color="white"
                                 v-if="viewConfig.fusion.showFusionGermline && samples.length > 1"
                             >
-                                对照单样品融合:
-                                <span v-if="stepData.fusion?.single.qn.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
-                                    >已搜索</span
+                                {{$t('ControlSingleSampleFusion')}}:
+                                <span v-if="stepData.fusion?.single.qn.selected">{{$t('ReportDefineSelected')}}</span>
+                                <span
+                                    v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
+                                    >{{$t('ReportDefineSearched')}}</span
                                 >
                                 <span
                                     v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered"
-                                    >无数据</span
+                                    >{{$t('ReportDefineNoData')}}</span
                                 >
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionSomatic">
-                                体细胞融合分析:
-                                <span v-if="stepData.fusion?.normal?.selected">勾选</span>
-                                <span v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered"
-                                    >已搜索</span
+                                {{ $t('SomaticCellFusionAnalysis') }}:
+                                <span v-if="stepData.fusion?.normal?.selected">{{$t('ReportDefineSelected')}}</span>
+                                <span
+                                    v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered"
+                                    >{{$t('ReportDefineSearched')}}</span
                                 >
-                                <span v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered"
-                                    >无数据</span
+                                <span
+                                    v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered"
+                                    >{{$t('ReportDefineNoData')}}</span
                                 >
                             </q-chip>
                         </div>
                     </div>
                     <div v-if="isStepDone('copy_number_variation')">
-                        <span class="text-bold">拷贝数变异分析</span>
+                        <span class="text-bold">{{ $t('CopyNumberVariationAnalysis') }}</span>
                         <q-chip color="primary" text-color="white">
-                            <span v-if="stepData.copy_number_variation?.table.selected">勾选</span>
+                            <span
+                                v-if="stepData.copy_number_variation?.table.selected"
+                                >{{$t('ReportDefineSelected')}}</span
+                            >
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered"
-                                >已搜索</span
+                                >{{$t('ReportDefineSearched')}}</span
                             >
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered"
-                                >无数据</span
+                                >{{$t('ReportDefineNoData')}}</span
                             >
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('tumor_mutation_load')">
-                        <span class="text-bold">肿瘤突变负荷分析</span>
+                        <span class="text-bold">{{$t('TumorMutationLoadAnalysis')}}</span>
                         <q-chip color="primary" text-color="white">
-                            <span>已搜索</span>
+                            <span>{{$t('ReportDefineSearched')}}</span>
                         </q-chip>
                     </div>
                     <div v-for="commonTab in commonTabs" :key="commonTab.title">
@@ -224,35 +220,23 @@
                             <span v-for="table in getCommonStepData(commonTab.title).tables" :key="table.name">
                                 {{ table.name }}
                                 <q-chip color="primary" text-color="white">
-                                    <span v-if="table.selected">勾选</span>
-                                    <span v-if="!table.selected && table.filtered">已搜索</span>
-                                    <span v-if="!table.selected && !table.filtered">无数据</span>
+                                    <span v-if="table.selected">{{$t('ReportDefineSelected')}}</span>
+                                    <span v-if="!table.selected && table.filtered">{{$t('ReportDefineSearched')}}</span>
+                                    <span v-if="!table.selected && !table.filtered">{{$t('ReportDefineNoData')}}</span>
                                 </q-chip>
                             </span>
                         </div>
                     </div>
                 </div>
-                <div class="q-py-md text-h6">填写信息</div>
-                <q-input v-model="reportComment" label="报告备注" />
+                <div class="q-py-md text-h6">{{ $t('ReportDefineInputInfoTitle') }}</div>
+                <q-input v-model="reportComment" :label="$t('Comment')" />
                 <div class="text-center q-pa-md q-gutter-sm">
-                    <q-btn :loading="creating" label="确认" color="primary" @click="createReport()">
-                        <!-- <template v-slot:loading>
-                             报告创建中...
-                        </template>-->
-                    </q-btn>
-                    <q-btn label="清除数据" color="red" @click="reset()" />
+                    <q-btn :loading="creating" :label="$t('Confirm')" color="primary" @click="createReport()"> </q-btn>
+                    <q-btn :label="$t('ReportDefineClearData')" color="red" @click="reset()" />
 
-                    <q-btn label="去查看报告" color="info" @click="gotoReports()" />
+                    <q-btn :label="$t('ReportDefineGoToReport')" color="info" @click="gotoReports()" />
                 </div>
             </q-step>
-            <!--
-                 <template v-slot:navigation>
-                 <q-stepper-navigation>
-                 <q-btn @click="$refs.stepper.next()" color="primary" :label="step === 4 ? 'Finish' : 'Continue'" />
-                 <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Back"
-                 class="q-ml-sm" />
-                 </q-stepper-navigation>
-            </template>-->
         </q-stepper>
     </q-page>
 </template>
@@ -322,13 +306,10 @@ const isStepDone = (name) => {
     return Boolean(stepData.value[name])
 }
 const tabMap = {
-    /*     qc: '质控', */
     mutation: '突变分析',
     fusion: '融合分析',
     copy_number_variation: '拷贝数变异分析',
-    /*     microsatellite_instability: '微卫星不稳定分析', */
     tumor_mutation_load: '肿瘤突变负荷分析',
-    /*     homologous_recombination_defect: '同源重组缺陷分析', */
 }
 const createReport = () => {
     console.log(stepData.value)

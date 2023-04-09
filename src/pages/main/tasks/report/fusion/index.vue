@@ -6,7 +6,7 @@
             size="small"
             color="primary"
             class="relative-position float-right q-mr-md"
-            label="已固定过滤"
+            :label="$t('ReportStickDone')"
             @click="reset()"
         />
         <q-btn
@@ -17,7 +17,7 @@
             color="primary"
             class="relative-position float-right q-mr-md"
             @click="stickFilter()"
-            label="固定过滤"
+            :label="$t('ReportStickData')"
         />
         <q-btn
             icon="help_outline"
@@ -37,8 +37,16 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="单样品融合分析" :label="$t('SingleSampleFusionAnalysis')" v-if="props.viewConfig.showFusionGermline" />
-            <q-tab name="体细胞融合分析" :label="$t('SomaticCellFusionAnalysis')" v-if="props.viewConfig.showFusionSomatic" />
+            <q-tab
+                name="单样品融合分析"
+                :label="$t('SingleSampleFusionAnalysis')"
+                v-if="props.viewConfig.showFusionGermline"
+            />
+            <q-tab
+                name="体细胞融合分析"
+                :label="$t('SomaticCellFusionAnalysis')"
+                v-if="props.viewConfig.showFusionSomatic"
+            />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="单样品融合分析">
