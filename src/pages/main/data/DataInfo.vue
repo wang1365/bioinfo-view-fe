@@ -46,7 +46,7 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pa-sm">
-                            {{$t('DataNewFormRiskSequencing')}}: {{ form.risk ? "是" : "否" }}
+                            {{$t('DataNewFormRiskSequencing')}}: {{ form.risk ? $t('Yes') : $t('No') }}
                         </div>
                         <div class="col q-pa-sm">
                             {{$t('DataNewFormSampleIdentificationNumber')}}: {{ form.nucleic_type }}

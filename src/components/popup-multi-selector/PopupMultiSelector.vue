@@ -27,7 +27,7 @@
                     </thead>
                     <tbody>
                         <tr v-if="!dataItems">
-                            无数据
+                            {{ $t('PopupSelectNoData') }}
                         </tr>
                         <tr class="cursor-pointer" v-for="item of dataItems" :key="item" @click="checkItem(item)">
                             <td>

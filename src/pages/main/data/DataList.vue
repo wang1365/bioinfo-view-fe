@@ -31,7 +31,7 @@
                     clearable
                     dense
                     v-model="searchParams.risk"
-                    :options="['是', '否']"
+                    :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
                     :label="$t('DataListPageSearchRiskSequencing')"
                 />
                 <q-btn
@@ -193,7 +193,9 @@ import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
-
+import { useI18n } from "vue-i18n";
+import { computed } from "vue";
+const { t } = useI18n();
 
 const { apiGet, downloadData, apiDelete, apiPatch, apiPost } = useApi();
 const showDataEdit = ref(false);
@@ -298,12 +300,12 @@ const loadPage = async () => {
 
 const confirm = (item) => {
     $q.dialog({
-        title: "确认删除吗?",
+        title: t("Confirm"),
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/sample/samples/${item.id}/`, (_) => {
-            infoMessage("删除成功");
+            infoMessage(t("Success"));
             if (dataItems.value.length > 1) {
                 let index = 0
                 for (let i = 0; i < dataItems.value.length; i++) {
@@ -336,7 +338,7 @@ const fileSelected = (event) => {
     api.post("/sample/samples/upload", data)
         .then((resp) => {
             $q.notify({
-                message: "上传完成",
+                message: t('Success'),
                 timeout: 300,
                 position: "center",
             });
