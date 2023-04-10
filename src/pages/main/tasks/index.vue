@@ -103,7 +103,7 @@
                         <td>{{ $t('Error') }}</td>
                         <td>{{ $t('CreatedBy') }}</td>
                         <td>{{ $t('CreatedAt') }}</td>
-                        <td>{{$t('Actions')}}</td>
+                        <td>{{$t('TaskPageListTableColumnOperate')}}</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -221,7 +221,7 @@
                                 icon="delete"
                                 @click="deleteMiddleFiles(item)"
                                 size="sm"
-                                ><q-tooltip>仅会删除任务产生的中间文件,释放空间,不会影响任务结果展示.</q-tooltip></q-btn
+                                ><q-tooltip>{{ $t('TaskPageListTableRowBtnDeleteTmpTip') }}</q-tooltip></q-btn
                             >
                             <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(item)" />
                         </td>
@@ -525,8 +525,8 @@ const confirm = async (item) => {
 
 const deleteMiddleFiles = async (task) => {
     $q.dialog({
-        title: '确认删除任务的中间文件吗?',
-        message: '仅会删除任务产生的中间文件,释放空间,不会影响任务结果展示.',
+        title: t('TaskPageListTableRowBtnDeleteTmpTitle'),
+        message: t('TaskPageListTableRowBtnDeleteTmpComment'),
         cancel: true,
         persistent: true,
     }).onOk(() => {
