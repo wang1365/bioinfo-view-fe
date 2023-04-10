@@ -454,8 +454,8 @@ export default {
     ReportDefineInputInfoTitle: 'Input Info',
     ReportDefineClearData: 'Clear Data',
     ReportDefineGoToReport: 'Go To Report Page',
-    ReportStickData: 'Stick Result',
-    ReportStickDone: 'Sticked',
+    ReportStickData: 'Lock result',
+    ReportStickDone: 'Locked',
 
     // 弹出框选择
     PopupSelectCurrrentSelected: 'Selected',
