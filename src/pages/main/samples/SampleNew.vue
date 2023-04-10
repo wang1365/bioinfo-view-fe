@@ -64,8 +64,6 @@
                 <q-item>
                     <div class="row full-width justify-between">
                         <div class="col q-pr-sm">
-                            <!-- <q-input v-model="form.sample_type" :error="errors.sample_type.error"
-                                :error-message="errors.sample_type.message" label="*样本类型"></q-input> -->
                             <q-select
                                 v-model="form.sample_type"
                                 :error="errors.sample_type.error"
@@ -162,7 +160,9 @@ import { ref, defineEmits } from "vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import PatientsList from "./PatientList.vue";
-
+import { useI18n } from "vue-i18n";
+import { computed } from 'vue'
+const { t } = useI18n();
 const { apiPost } = useApi();
 
 const emit = defineEmits(["refresh"]);
@@ -174,7 +174,7 @@ const linkPatient = (event) => {
 }
 const rref = ref;
 
-const sampleTypeOptions = ref(['FFPE蜡块', '新鲜组织', '血液'])
+const sampleTypeOptions = computed(()=>[t('SampleFormTypeFFPE'), t('SampleFormTypeFreshTissue'), t('SampleFormTypeBlood'),])
 const createValue = (val, done) => {
     if (val.length > 0) {
         if (!sampleTypeOptions.value.includes(val)) {
@@ -190,48 +190,39 @@ const close = () => {
 };
 const errors = ref({
     sample_date: {
-        // 采样日期
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     test_date: {
-        // 送测日期
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     sample_componet: {
-        // 采样部位
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     sample_type: {
-        // 样本类型
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     panel_proportion: {
-        // 肿瘤含量
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     is_panel: {
-        // 肿瘤样本
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     patient_id: {
-        // 患者ID
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     patient_identifier: {
-        // 患者识别号
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     identifier: {
-        // 样本识别号
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
 });
@@ -246,21 +237,11 @@ const form = ref({
     patient_identifier: "",
     identifier: "",
 });
-/* const form = ref({
-*    sample_date: "2022-09-01",
-*    test_date: "2022-09-01",
-*    sample_componet: "sample_componet",
-*    sample_type: "sample_type",
-*    panel_proportion: 1,
-*    is_panel: false,
-*    patient_id: "patient_id",
-*    patient_identifier: "patient_identifier",
-*    identifier: "identifier",
-}); */
+
 const save = async () => {
     for (const key in errors.value) {
         errors.value[key].error = false;
-        errors.value[key].message = "必填";
+        errors.value[key].message = t('Required');
     }
     const data = {
         sample_date: form.value.sample_date,
@@ -277,7 +258,7 @@ const save = async () => {
     apiPost(
         "/sample/sampledatas/",
         (_) => {
-            infoMessage("创建成功");
+            infoMessage(t('Success'));
             emit("refresh");
         },
         data,

@@ -567,6 +567,9 @@ export default {
     SampleListTableColumnBtnEdit: 'Edit',
     SampleListTableColumnBtnAssociatewithPatient: 'Associate with Patient',
     SampleListTableColumnBtnDelete: 'Delete',
+    SampleFormTypeFFPE: 'FFPE',
+    SampleFormTypeFreshTissue: 'Fresh Tissue',
+    SampleFormTypeBlood: 'Blood',
     // 新建样本表单
     SampleNewFormTitle: 'Create Sample',
     SampleNewFormSamplingDate: 'Sampling Date',

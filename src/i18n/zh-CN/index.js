@@ -562,6 +562,9 @@ export default {
     SampleListTableColumnBtnEdit: '编辑',
     SampleListTableColumnBtnAssociatewithPatient: '关联患者',
     SampleListTableColumnBtnDelete: '删除',
+    SampleFormTypeFFPE: 'FFPE蜡块',
+    SampleFormTypeFreshTissue: '新鲜组织',
+    SampleFormTypeBlood: '血液',
     // 新建样本表单
     SampleNewFormTitle: '新建样本',
     SampleNewFormSamplingDate: '采样日期',

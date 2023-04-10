@@ -88,7 +88,7 @@
                     clearable
                     dense
                     v-model="searchParams.is_panel"
-                    :options="['是', '否']"
+                    :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
                     :label="$t('SampleListPageSearchIsPanel')"
                 />
                 <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
@@ -245,6 +245,9 @@ import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { api } from "src/boot/axios";
 import { buildModelQuery } from "src/api/modelQueryBuilder"
+import { useI18n } from "vue-i18n";
+import { computed } from 'vue'
+const { t } = useI18n();
 const { apiGet, apiDelete, downloadData, apiPatch, apiPost } = useApi();
 const showSampleEdit = ref(false);
 const showSampleInfo = ref(false);
@@ -358,12 +361,12 @@ const loadPage = async () => {
 
 const confirm = (item) => {
     $q.dialog({
-        title: "确认删除吗?",
+        title: t('Confirm'),
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/sample/sampledatas/${item.id}/`, (_) => {
-            infoMessage("删除成功");
+            infoMessage(t('Success'));
             if (dataItems.value.length > 1) {
                 let index = 0
                 for (let i = 0; i < dataItems.value.length; i++) {
@@ -397,7 +400,7 @@ const fileSelected = (event) => {
     api.post("/sample/samplemeta/upload", data)
         .then((resp) => {
             $q.notify({
-                message: "上传完成",
+                message: t('Success'),
                 timeout: 300,
                 position: "center",
             });
