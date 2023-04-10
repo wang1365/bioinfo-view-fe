@@ -474,7 +474,7 @@ export default {
     PatientName: 'Patient Name',
     PatientAge: 'Patient Age',
     // 患者列表
-    PatientPageListTitle: 'Patient Manage',
+    PatientPageListTitle: 'Patient Management',
     PatientPageListSearchKeyWord:
         'Keywords: Name, Patient Identification Number, Clinical Diagnosis, Physician, Gender.',
     PatientPageListSearchAgeStart: 'Starting Age',
@@ -494,8 +494,8 @@ export default {
     PatientPageListTableColumnTumorStaging: 'Tumor Staging',
     PatientPageListTableColumnGeneticDisease: 'Genetic Disease',
     PatientPageListTableColumnFamilyHistory: 'Family History',
-    PatientPageListTableColumnSampleSize: 'Sample Size',
-    PatientPageListTableColumnOperations: 'Operations',
+    PatientPageListTableColumnSampleSize: 'Samples',
+    PatientPageListTableColumnOperations: 'Operate',
     PatientPageListTableRowBtnEdit: 'Edit',
     PatientPageListTableRowBtnAssociateWithSamples: 'Associate With Samples',
     PatientPageListTableRowBtnPatientInformation: 'Patient Information',
@@ -539,9 +539,8 @@ export default {
     // 样本
     Sample: 'Sample',
     // 样本列表页面
-    SampleListPageTitle: 'Sample management',
+    SampleListPageTitle: 'Sample Management',
     // 样本列表页面
-    SampleListPageTitle: 'Sample management',
     SampleListPageSearchInput:
         'Keywords: Sampling site, Sample type, Patient identification number, Sample identification number',
     SampleListPageSearchStartTestDate: 'Starting Submission  Date （YYYY-MM-DD）',
@@ -549,7 +548,7 @@ export default {
     SampleListPageSearchStartTestDate: 'Starting Sampling Date （YYYY-MM-DD）',
     SampleListPageSearchEndTestDate: 'Ending Sampling Date （YYYY-MM-DD）',
     SampleListPageSearchIsPanel: 'Tumor Sample',
-    SampleListTableTitle: 'Sampling Data',
+    SampleListTableTitle: 'Samples',
     SampleListTableBtnNew: 'Create New Sample',
     SampleListTableColumnSamplingDate: 'Sampling Date',
     SampleListTableColumnSubmissionDate: 'Submission  Date',
@@ -559,7 +558,7 @@ export default {
     SampleListTableColumnTumorSample: 'Tumor Sample',
     SampleListTableColumnPatientIdentificationNumber: 'Patient Identification Number',
     SampleListTableColumnSampleIdentificationNumber: 'Sample Identification Number',
-    SampleListTableColumnOperations: 'Operations',
+    SampleListTableColumnOperations: 'Operate',
     SampleListTableColumnBtnDetail: 'Detail',
     SampleListTableColumnBtnEdit: 'Edit',
     SampleListTableColumnBtnAssociatewithPatient: 'Associate with Patient',
