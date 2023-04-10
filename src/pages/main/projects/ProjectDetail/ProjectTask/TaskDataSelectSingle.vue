@@ -1,7 +1,7 @@
 <template>
     <div style="max-width: 100%">
         <PopupSingleSelector
-            title="选择数据"
+            :title="$t('ProjectSelectDataTitle')"
             :dataItems="dataItems"
             :total="total"
             :tableHeaders="tableHeaders"
@@ -17,7 +17,7 @@
                         style="width:450px"
                         v-model="searchParams.search"
                         dense
-                        label="关键词: 建库 input, 核酸打断方式, 捕获试剂盒, 数据识别号, 样本识别号, 送检机构"
+                        :label="$t('DataListPageSearchInput')"
                         clearable
                     >
                     </q-input>
@@ -27,7 +27,7 @@
                         dense
                         v-model="searchParams.nucleic_type"
                         :options='["gDNA", "cfDNA", "RNA"]'
-                        label="核酸类型"
+                        :label="$t('DataListPageSearchTypeOfNucleicAcids')"
                     />
                     <q-select
                         style="width:100px"
@@ -35,15 +35,15 @@
                         dense
                         v-model="searchParams.nucleic_level"
                         :options='["A", "B", "C", "D"]'
-                        label="核酸降解等级"
+                        :label="$t('DataListPageSearchDegradationGradeOfNucleicAcids')"
                     />
                     <q-select
                         style="width:100px"
                         clearable
                         dense
                         v-model="searchParams.risk"
-                        :options="['是','否']"
-                        label="风险上机"
+                        :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                        :label="$t('DataListPageSearchRiskSequencing')"
                     />
                     <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 </div>
@@ -74,29 +74,23 @@ import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
 
-const tableHeaders = ref([
-    "数据识别号",
-    "文库编号",
-    "送检机构",
-    "核酸类型",
-    "index 类型",
-    "R1 数据名称",
-    "R2 数据名称",
-    "患者识别号",
-    "患者姓名",
-    "性别",
-    "样本识别号",
-    "采样部位",
-    "肿瘤样本",
-]);
-const tableRowFields = ref([
-    "identifier",
-    "library_number",
-    "company",
-    "nucleic_type",
-    "index_type",
-    "fastq1_path",
-    "fastq2_path",
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
+const tableHeaders = computed(() => [
+    t('DataListTableColumnDataIdentificationNumber'),
+    t('DataListTableColumnLibraryNumber'),
+    t('DataNewFormSubmissionUnit'),
+    t('DataNewFormTypeOfNucleicAcids'),
+    t('DataNewFormIndexType'),
+    t('DataNewFormDataNameOfR1'),
+    t('DataNewFormDataNameOfR2'),
+    t('PatientNewFormPatientIdentificationNumber'),
+    t('PatientName'),
+    t('PatientPageListTableColumnGender'),
+    t('SampleListTableColumnSampleIdentificationNumbe'),
+    t('SampleListTableColumnSamplingSite'),
+    t('SampleListTableColumnTumorSample'),
 ]);
 const searchParams = ref({
     search: '',

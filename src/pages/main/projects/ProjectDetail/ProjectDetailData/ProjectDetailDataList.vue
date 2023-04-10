@@ -186,7 +186,7 @@ const loadPage = async () => {
 };
 const confirm = (item) => {
     $q.dialog({
-        title: "确认删除吗?",
+        title: t('Confirm'),
         cancel: true,
         persistent: true,
     }).onOk(() => {

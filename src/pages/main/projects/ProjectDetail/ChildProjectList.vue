@@ -145,7 +145,8 @@ import { useRoute, useRouter } from "vue-router";
 import { useApi } from "src/api/apiBase";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { infoMessage } from "src/utils/notify";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const props = defineProps({ projectDetail: Object });
 
 const { apiGet, apiDelete } = useApi();
@@ -185,7 +186,7 @@ const gotoChild = (item) => {
 const createProject = () => {
     newProjectName.value = newProjectName.value.trim();
     if (!newProjectName.value) {
-        newProjectNameError.value = "项目名称不可为空";
+        newProjectNameError.value = t('ProjectPageListTableName')+t('Required');
         return;
     }
     api.post("/project", {
@@ -200,7 +201,7 @@ const createProject = () => {
 const updateProject = () => {
     updateProjectName.value = updateProjectName.value.trim();
     if (!updateProjectName.value) {
-        updateProjectNameError.value = "项目名称不可为空";
+        updateProjectNameError.value = t('ProjectPageListTableName')+t('Required');
         return;
     }
     api.put(`/project/${currentProject.value.id}`, {
@@ -235,12 +236,12 @@ const loadPage = async () => {
 
 const confirm = (project) => {
     $q.dialog({
-        title: "确认删除吗?",
+        title: t('Confirm'),
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/project/${project.id}`, (_) => {
-            infoMessage("删除成功");
+            infoMessage(t('Success'));
             refreshPage();
         });
     });

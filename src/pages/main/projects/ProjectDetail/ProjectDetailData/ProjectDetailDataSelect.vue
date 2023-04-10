@@ -42,7 +42,7 @@
                         clearable
                         dense
                         v-model="searchParams.risk"
-                        :options="['是', '否']"
+                        :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
                         :label="$t('DataListPageSearchRiskSequencing')"
                     />
                     <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
@@ -92,15 +92,6 @@ const tableHeaders = computed(() => [
     t('SampleListTableColumnSamplingSite'),
     t('SampleListTableColumnTumorSample'),
 ]);
-const tableRowFields = ref([
-    "identifier",
-    "library_number",
-    "company",
-    "nucleic_type",
-    "index_type",
-    "fastq1_path",
-    "fastq2_path",
-]);
 const searchParams = ref({
     search: '',
     risk: '',
@@ -136,7 +127,7 @@ const ensureSelect = (event) => {
         apiPut(
             `/project/${props.projectDetail.id}`,
             (_) => {
-                infoMessage("更新成功");
+                infoMessage(t('Success'));
                 emit("refresh");
             },
             {
@@ -144,7 +135,7 @@ const ensureSelect = (event) => {
             }
         );
     } else {
-        errorMessage("没有选择数据");
+        errorMessage(t('Data')+' '+t('Required'));
     }
 };
 const pageChange = async (event) => {
@@ -202,24 +193,5 @@ const loadPage = async () => {
             dataItems.value.push(iterator);
         }
     }, query)
-    // let params = `?page=${currentPage.value}&size=${pageSize.value}`;
-    // if (indexType.value) params += `&index_type=${indexType.value}`;
-    // if (company.value) params += `&company=${company.value}`;
-    // apiPost(
-    //     `/sample/samples/query/${params}`,
-    //     (res) => {
-    //         total.value = res.data.count;
-    //         dataItems.value = [];
-    //         for (let iterator of res.data.results) {
-    //             iterator.selected = false;
-    //             dataItems.value.push(iterator);
-    //         }
-    //     },
-    //     {
-    //         project_id: {
-    //             not_in: projectIds,
-    //         },
-    //     }
-    // );
 };
 </script>
