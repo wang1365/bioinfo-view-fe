@@ -20,6 +20,7 @@ export default {
     ClipboardSuccess: 'Successfully copied to the clipboard',
     ClipboardFailed: 'Error on copy to clipboard',
     FileRejected: 'Duplicate file or size / type not allowed',
+    FixFormErrors: 'Please Fix Errors',
     // word
     Welcome: 'Welcome',
     WelcomeTo: 'Welcome to',
@@ -500,6 +501,9 @@ export default {
     PatientPageListTableRowBtnAssociateWithSamples: 'Associate With Samples',
     PatientPageListTableRowBtnPatientInformation: 'Patient Information',
     PatientPageListTableRowBtnDelete: 'Delete',
+    PatientPageListTableRowBtnDeleteTitle: 'Are you sure to delete, the current patient is associated with {count} samples',
+    PatientPageListTableImportDup: 'This record may already exist and will not be re-imported',
+
     // 新建患者表单
     PatientNewFormTitle: 'Create New Patient',
     PatientNewFormPatientInfo: 'Patient Information',

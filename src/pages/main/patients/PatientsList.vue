@@ -220,7 +220,8 @@ import SampleList from "./SampleList.vue";
 import { useRouter } from "vue-router";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
 import { infoMessage ,warnMessage} from "src/utils/notify";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const router = useRouter()
 const searchParams = ref({
     search: '',
@@ -284,10 +285,6 @@ const linkSample = (event) => {
         }
         showLinkSample.value = false;
         refreshPage()
-        // apiPatch(`/patient/patients/${linkId.value}`, (res) => {
-        //     showLinkSample.value = false;
-        //     refreshPage()
-        // }, { samplemeta_set: samples })
     }
 }
 
@@ -303,12 +300,12 @@ const pageChange = async (event) => {
 };
 const confirm = async (item) => {
     $q.dialog({
-        title: `确认删除吗,当前患者关联了 ${item.samplemeta_set.length} 样本?`,
+        title: t('PatientPageListTableRowBtnDeleteTitle',{count:item.samplemeta_set.length}),
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/patient/patients/${item.id}`, (_) => {
-            infoMessage("删除成功")
+            infoMessage(t('Success'))
             if (dataItems.value.length > 1) {
                 let index = 0
                 for (let i = 0; i < dataItems.value.length; i++) {
@@ -455,13 +452,13 @@ const fileSelected = (event) => {
     api.post("/patient/patients/upload", data)
         .then((resp) => {
             $q.notify({
-                message: "上传完成",
+                message: t('Success'),
                 timeout: 300,
                 position: "center",
             });
             if(resp.length>0){
                 for(let item of resp){
-                    warnMessage(`"${item.name}" 这条记录可能已存在,不会被重复导入`)
+                    warnMessage(`"${item.name}" ${t('PatientPageListTableImportDup')}`)
                 }
             }
             refreshPage();

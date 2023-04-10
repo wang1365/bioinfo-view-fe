@@ -18,6 +18,7 @@ export default {
     ClipboardSuccess: '成功复制到剪切板',
     ClipboardFailed: '复制到剪切板失败',
     FileRejected: '文件重复或大小/类型不被允许',
+    FixFormErrors: '请更正表单信息',
     // 单词
     Welcome: '欢迎',
     WelcomeTo: '欢迎使用',
@@ -497,6 +498,9 @@ export default {
     PatientPageListTableRowBtnAssociateWithSamples: '关联样本',
     PatientPageListTableRowBtnPatientInformation: '患者信息',
     PatientPageListTableRowBtnDelete: '删除',
+    PatientPageListTableRowBtnDeleteTitle: '确认删除吗,当前患者关联了{count}样本?',
+    PatientPageListTableImportDup: '这条记录可能已存在,不会被重复导入',
+
     // 新建患者页面
     PatientNewFormTitle: '新建患者',
     PatientNewFormPatientInfo: '患者信息',

@@ -29,7 +29,7 @@
                                 clearable
                                 dense
                                 v-model="searchParams.is_panel"
-                                :options="['是', '否']"
+                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
                                 :label="$t('SampleListPageSearchIsPanel')"
                             />
                             <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />

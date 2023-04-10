@@ -160,7 +160,7 @@
                                 :error-message="errors.smoking.message"
                                 v-model="form.smoking"
                                 :label="$t('PatientNewFormSmoking')"
-                                :options="['是','否']"
+                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
                             />
                         </div>
                         <div class="col q-pr-sm">
@@ -169,7 +169,7 @@
                                 :error-message="errors.drinking.message"
                                 v-model="form.drinking"
                                 :label="$t('PatientNewFormAlcoholDrinking')"
-                                :options="['是','否']"
+                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
                             />
                         </div>
                         <div class="col q-pr-sm">
@@ -178,7 +178,7 @@
                                 :error-message="errors.viral_infection.message"
                                 v-model="form.viral_infection"
                                 :label="$t('PatientNewFormViralInfection')"
-                                :options="['是','否']"
+                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
                             />
                         </div>
                     </div>
@@ -253,10 +253,15 @@ import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { onMounted, ref } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
-
+import { useI18n } from "vue-i18n";
+import { computed } from "vue";
+const { t } = useI18n();
 const { apiGet, apiPut } = useApi();
 const emit = defineEmits(["refresh"]);
-const genderOptions = ['男', '女']
+const genderOptions = computed(()=>[
+    {label:t('Male'),value:'男'},
+    {label:t('Female'),value:'女'},
+])
 const close = () => {
     emit("refresh");
 };
@@ -293,91 +298,91 @@ const form = ref({
 
 const errors = ref({
     name: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     gender: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     age: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     birthday: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     id_card: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     location: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     identifier: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     inspection_agency: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     medical_doctor: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     diagnosis: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     tumor_stage: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     disease: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     family_history: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     medication_history: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     treatment_history: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     smoking: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     drinking: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     viral_infection: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     prognosis: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     prognosis_time: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     recurrence_time: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
     survival_time: {
-        message: "必填",
+        message: t('Required'),
         error: false,
     },
 });
@@ -422,13 +427,13 @@ const save = async () => {
     apiPut(
         `/patient/patients/${props.id}`,
         (_) => {
-            infoMessage("更新成功");
+            infoMessage(t('Success'));
             emit("refresh");
         },
         data,
         null,
         (res) => {
-            errorMessage("请更正表单信息");
+            errorMessage(t('FixFormErrors'));
             const errorDetail = res.data;
             for (const key in errorDetail) {
                 errors.value[key].error = true;
