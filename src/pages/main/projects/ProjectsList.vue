@@ -34,7 +34,7 @@
                             <td>{{$t('ProjectPageListTableCreateTime')}}</td>
                             <td>{{$t('ProjectPageListTableSampleCount')}}</td>
                             <td>{{$t('ProjectPageListTableTaskCount')}}</td>
-                            <td>{{$t('Actions')}}</td>
+                            <td>{{$t('ProjectPageListTableOperate')}}</td>
                         </tr>
                     </thead>
                     <tbody>
