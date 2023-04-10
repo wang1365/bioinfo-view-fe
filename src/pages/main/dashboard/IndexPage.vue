@@ -27,8 +27,7 @@
                 <q-card-section class="text-secondary text-h5 text-bold">
                     {{reports.thisWeek}}
                     /
-                    <span>{{reports.total}}</span
-                    >份
+                    <span>{{reports.total}}</span>
                 </q-card-section>
                 <q-card-section class="desc">{{$t('DashboardReportWeek')}}</q-card-section>
             </q-card>

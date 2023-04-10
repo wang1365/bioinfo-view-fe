@@ -392,6 +392,7 @@ export default {
     DashboardNewTask: '新增样本数(本周) / 样本总数',
     DashboardReportWeek: '新增报告数(本周) / 报告总数',
     DashboardUsers: '用户情况',
+    DashboardUsersColumnTask: '运行任务数',
     DashboardUsersRegist: '月度用户注册情况',
     DashboardUsed: '当前使用',
     DashboardFree: '当前剩余',

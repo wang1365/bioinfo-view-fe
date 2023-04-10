@@ -48,7 +48,7 @@ const columns = computed(()=>[
         format: (val) => `${val}`,
     },
     { name: 'used_disk', label: t('DiskUsage'), field: (row) => (row.used_disk/1024).toFixed(2) },
-    { name: 'sodium', label: t('Task')+t('TaskPageListStatusRun'), field: 'running_task' },
+    { name: 'sodium', label: t('DashboardUsersColumnTask'), field: 'running_task' },
 ])
 const rows = ref([])
 </script>
