@@ -45,7 +45,7 @@
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
-                            <a :href="'/igv'+props.row.report_path" download v-if="props.row.status=='创建成功'">
+                            <a :href="'/igv'+props.row.report_path" download v-if="props.row.status==t('Success')">
                                 <q-btn color="primary" :label="$t('Download')" size="sm" />
                             </a>
                             <a>
@@ -206,12 +206,12 @@ const onRequest = (props) => {
 const onDownload = (report) => {}
 const onDelete = (item) => {
     $q.dialog({
-        title: `确认报告吗?`,
+        title: t('Confirm'),
         cancel: true,
         persistent: true,
     }).onOk(() => {
         apiDelete(`/report/report/${item.id}/`, (_) => {
-            infoMessage("删除成功")
+            infoMessage(t('Success'))
             if (rows.value.length > 1) {
                 let index = 0
                 for (let i = 0; i < rows.value.length; i++) {
