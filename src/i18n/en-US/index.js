@@ -226,16 +226,16 @@ export default {
 
     // 菜单
     PlatformMonitoring: 'Platform Monitoring',
-    ProjectManage: 'Project Manage',
-    TaskManage: 'Task Manage',
+    ProjectManage: 'Project Management',
+    TaskManage: 'Task Management',
     CustomReport: 'Custom Report',
-    PatientManage: 'Patient Manage',
-    SampleManage: 'Sample Manage',
-    DataManage: 'Data Manage',
+    PatientManage: 'Patient Management',
+    SampleManage: 'Sample Management',
+    DataManage: 'Data Management',
     PanelFlow: 'Panel Flow',
     GeneBrowser: 'Genome Browser',
     SystemSetting: 'SYS Setting',
-    FlowManage: 'Flow Manage',
+    FlowManage: 'Flow Management',
     UiSetting: 'UI Setting',
 
     // 个人中心

@@ -34,7 +34,9 @@
                                         <q-item-section avatar>
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
-                                        <q-item-section>{{ $t('Nickname')  + ": " + store.currentUser.nickname  }}</q-item-section>
+                                        <q-item-section
+                                            >{{ $t('Nickname')  + ": " + store.currentUser.nickname  }}</q-item-section
+                                        >
                                     </q-item>
                                     <q-item clickable>
                                         <q-item-section avatar>
@@ -85,7 +87,7 @@
             show-if-above
             style="background-image: url('images/lake.jpg') !important"
             elevated
-            width="200"
+            width="250"
         >
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
