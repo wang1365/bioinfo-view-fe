@@ -79,7 +79,7 @@ const columns = computed(() => [
     {name: 'image_name', label: t('DockerImageName'), field: 'image_name', align: 'center'},
     // {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
     {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', format: v => format(v)},
-    {name: 'operation', label: t('Actions'), align: 'center'},
+    {name: 'operation', label: t('Operate'), align: 'center'},
 ])
 
 const visibleColumns = computed(() => {

@@ -71,7 +71,7 @@ const columns = computed( () => [
     {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center', required: true},
     {name: 'panels', label: 'Panel', field: 'panels', sortable: true, align: 'center', required: true},
     {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:220px', format: v => format(v)},
-    {name: 'operation', label: t('Actions'), align: 'center', style: 'width:250px'},
+    {name: 'operation', label: t('Operate'), align: 'center', style: 'width:250px'},
 ])
 
 

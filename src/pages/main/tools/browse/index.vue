@@ -148,7 +148,7 @@ const columns = computed(() => [
     {key: 'nucleic_type', title: t('NucleicType'), dataIndex: 'nucleic_type', align: 'center', width: 120},
     {key: 'fastq1_path', title: t('Fastq1Path'), dataIndex: 'fastq1_path', width: 130, ellipsis: true},
     {key: 'fastq2_path', title: t('Fastq2Path'), dataIndex: 'fastq2_path', width: 130, ellipsis: true},
-    {key: 'operation', title: t('Actions'), fixed: 'right', align: 'center', width: 120},
+    {key: 'operation', title: t('Operate'), fixed: 'right', align: 'center', width: 120},
 ])
 
 const pagination = ref({

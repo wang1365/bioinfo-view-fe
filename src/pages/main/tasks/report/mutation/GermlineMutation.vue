@@ -752,7 +752,7 @@ onMounted(() => {
 })
 
 const propSearchParams = toRef(props, 'searchParams')
-const actionTitle = computed(() => t('Actions'))
+const actionTitle = computed(() => t('Operate'))
 
 // 加载表格数据
 const loadTable = () => {
