@@ -87,7 +87,7 @@
             show-if-above
             style="background-image: url('images/lake.jpg') !important"
             elevated
-            width="250"
+            width="225"
         >
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
