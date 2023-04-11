@@ -275,7 +275,7 @@
 
                 <q-card-actions align="center">
                     <q-btn color="primary" @click="clickSelectAll">{{$t('SelectAll')}}</q-btn>
-                    <q-btn color="primary" @click="clickSelectNone">{{$t('Clear')</q-btn>
+                    <q-btn color="primary" @click="clickSelectNone">{{$t('Clear')}}</q-btn>
                     <q-btn color="primary" v-close-popup>{{$t('Confirm')}}</q-btn>
                 </q-card-actions>
             </q-card>
