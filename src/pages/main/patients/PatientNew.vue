@@ -24,8 +24,8 @@
                                 :options="genderOptions"
                                 :label="$t('PatientNewFormGender')"
                             >
-                                <template v-slot:prepend><span style="color:red">*</span></template> </q-select
-                            >>
+                                <template v-slot:prepend><span style="color:red">*</span></template>
+                            </q-select>
                         </div>
                         <div class="col">
                             <q-input
@@ -66,7 +66,7 @@
                                 :error="errors.location.error"
                                 :error-message="errors.location.message"
                                 v-model="form.location"
-                                :label="$t('PatientNewFormIDCard')"
+                                :label="$t('PatientNewFormHomeAddress')"
                             ></q-input>
                         </div>
                     </div>
