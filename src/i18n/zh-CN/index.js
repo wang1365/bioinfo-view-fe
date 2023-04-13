@@ -402,6 +402,7 @@ export default {
     Project: '项目',
     // 项目
     ProjectPageIndexTitle: '项目管理',
+    ProjectPageListSearchTitle: '项目',
     ProjectPageListSearchName: '项目',
     ProjectPageListSearchInput: '项目名称',
     ProjectPageListSearchNewBtn: '新建项目',
@@ -410,6 +411,7 @@ export default {
     ProjectPageListTableCreateTime: '创建时间',
     ProjectPageListTableSampleCount: '样本数量',
     ProjectPageListTableTaskCount: '任务数量',
+    ProjectPageListTableOperate: '操作',
     ProjectPageListEditProject: '修改项目',
     ProjectPageListEditProjectNameRequired: '项目名称不可为空',
     ProjectPageListEditProjectDeleteTitle: '确认删除项目吗?',
