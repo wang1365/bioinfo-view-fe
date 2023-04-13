@@ -37,6 +37,14 @@ const api = axios.create({
     //     console.log("<-----", progressEvent);
     // },
 })
+api.interceptors.request.use(
+    (config) => {
+        // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
+        const { lang } = globalStore()
+        config.headers.Language = lang
+        return config
+    }
+)
 export function defaultErrorHandler(data) {
     Notify.create({
         type: 'negative',
