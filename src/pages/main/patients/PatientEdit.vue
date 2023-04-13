@@ -66,7 +66,7 @@
                                 :error="errors.location.error"
                                 :error-message="errors.location.message"
                                 v-model="form.location"
-                                :label="$t('PatientNewFormIDCard')"
+                                :label="$t('PatientNewFormHomeAddress')"
                             ></q-input>
                         </div>
                     </div>
