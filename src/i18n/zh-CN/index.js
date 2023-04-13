@@ -58,6 +58,7 @@ export default {
     Status: '状态',
     Stable: '内置',
     Actions: '操作',
+    Operate: '操作',
     Avatar: '头像',
     Nickname: '昵称',
     RealName: '真实姓名',

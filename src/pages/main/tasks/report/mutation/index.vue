@@ -19,7 +19,6 @@
             @click="stickFilter()"
             :label="$t('ReportStickData')"
         />
-        >
         <q-btn
             icon="help_outline"
             size="small"

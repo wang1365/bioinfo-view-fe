@@ -203,12 +203,12 @@
 
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
-            <q-bar class="bg-primary text-white">拷贝数变异分析</q-bar>
+            <q-bar class="bg-primary text-white">{{$t('CopyNumberVariationAnalysis')}}</q-bar>
             <q-card-section>
                 <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">$t('Close')</q-btn>
+                <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>

@@ -125,7 +125,7 @@ let columns = computed(() => [
     { name: "required", label: t('Required'), field: "required", align: "center" },
     { name: "choices", label: t('ValueRange'), align: "center", field: "choices" },
     { name: "description", label: t('Comment'), field: "description", align: "center", },
-    { name: "operation", label: t('Actions'), align: "center", },
+    { name: "operation", label: t('Operate'), align: "center", },
 ])
 
 const isEditMode = computed(() => {

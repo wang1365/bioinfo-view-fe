@@ -256,7 +256,7 @@
             <q-card style="width: 50%">
                 <q-card-section>
                     <div class="q-col">
-                        <div class="text-h6 q-mb-sm">选择扩展列</div>
+                        <div class="text-h6 q-mb-sm">{{$t('MoreColumns')}}</div>
                         <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
@@ -274,9 +274,9 @@
                 </q-card-section>
 
                 <q-card-actions align="center">
-                    <q-btn color="primary" @click="clickSelectAll">全选</q-btn>
-                    <q-btn color="primary" @click="clickSelectNone">$t('Clear')</q-btn>
-                    <q-btn color="primary" v-close-popup>确定</q-btn>
+                    <q-btn color="primary" @click="clickSelectAll">{{$t('SelectAll')}}</q-btn>
+                    <q-btn color="primary" @click="clickSelectNone">{{$t('Clear')}}</q-btn>
+                    <q-btn color="primary" v-close-popup>{{$t('Confirm')}}</q-btn>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -860,7 +860,7 @@ onMounted(() => {
 const propSearchParams = toRef(props, 'searchParams')
 const loadTable = () => {
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
-    columns.value[columns.value.length - 1].title = computed(() => t('Actions'))
+    columns.value[columns.value.length - 1].title = computed(() => t('Operate'))
 
     const visibleColIdx = columns.value.map((t) => t.i)
     innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)

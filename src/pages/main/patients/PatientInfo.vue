@@ -68,7 +68,7 @@
                             <td>{{$t('SampleNewFormTumorContent')}}</td>
                             <td>{{$t('SampleNewFormTumorSample')}}</td>
                             <td>{{$t('SampleNewFormSampleIdentificationNumber')}}</td>
-                            <td>{{$t('Actions')}}</td>
+                            <td>{{$t('Operate')}}</td>
                         </tr>
                     </thead>
                     <tbody>

@@ -68,7 +68,7 @@ const columns = computed(() => [
     {name: 'panel_group_name', label: t('PanelGroup'), field: row => row.panel_group_name, sortable: true, align: 'center'},
     {name: 'flows', label: t('AnalysisModule'), field: 'flows', align: 'center', style: 'width:220px'},
     {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:220px', 'format': v => format(v)},
-    {name: 'operation', label: t('Actions'), align: 'center', style: 'width:250px'},
+    {name: 'operation', label: t('Operate'), align: 'center', style: 'width:250px'},
 ])
 
 

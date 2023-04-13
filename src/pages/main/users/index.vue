@@ -228,7 +228,7 @@ const columns = computed(() => [
         align: "center",
         format: (v) => `${v ? t('Enabled') : t('Disable')}`,
     },
-    { name: "operation", label: t('Actions'), align: "center", style: "width:350px" },
+    { name: "operation", label: t('Operate'), align: "center", style: "width:350px" },
 ]);
 
 const loading = ref(false);
