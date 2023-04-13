@@ -349,6 +349,7 @@ export default {
     MutationPosition: 'Mutation Position',
     MutationMeaning: 'Mutation Meaning',
     MutationRisk: 'Mutation Risk',
+    Population: 'Population',
     CrowdFrequency: 'Population Frequency',
     RelatedToDrugs: 'Related to Drugs',
     MoreColumns: 'More Columns',
