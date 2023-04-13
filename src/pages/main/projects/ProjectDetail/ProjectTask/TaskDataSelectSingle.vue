@@ -69,7 +69,7 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref ,computed} from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
 import { buildModelQuery } from "src/api/modelQueryBuilder";

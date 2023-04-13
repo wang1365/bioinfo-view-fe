@@ -5,6 +5,7 @@ import { errorMessage } from 'src/utils/notify'
 import { LoadingBar } from 'quasar'
 import { Cookies } from 'quasar'
 import { buildModelQuery } from './modelQueryBuilder'
+import { globalStore } from 'src/stores/global'
 
 LoadingBar.setDefaults({
     color: 'purple',

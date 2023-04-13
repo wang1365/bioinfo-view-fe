@@ -249,7 +249,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits,computed } from "vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";

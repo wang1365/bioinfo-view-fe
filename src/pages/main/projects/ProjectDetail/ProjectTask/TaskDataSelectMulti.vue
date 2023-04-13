@@ -69,7 +69,7 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref ,computed} from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupMultiSelector from "components/popup-multi-selector/PopupMultiSelector.vue";
 import { infoMessage } from "src/utils/notify";
