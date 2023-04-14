@@ -449,6 +449,10 @@ export default {
     TaskPageProjectParent: 'Parent',
     TaskPageProjectSelf: 'Self',
 
+    DefineReportUnlockMessage: 'should lock',
+    DefineReportCommentReuiredMessage: 'Comment Required',
+    DefineReportModuleNotJsonErrorMessage: 'module file is not json format',
+
     // 自定义报告
     ReportPageTitle: 'Custom Report',
     ReportDefineEnsureTab: 'Ensure Report',

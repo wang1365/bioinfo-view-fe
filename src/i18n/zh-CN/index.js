@@ -449,6 +449,11 @@ export default {
     TaskPageProjectParent: '上级',
     TaskPageProjectSelf: '当前',
 
+    DefineReportUnlockMessage: '未固定过滤',
+    DefineReportCommentReuiredMessage: '请填写备注',
+    DefineReportModuleNotJsonErrorMessage: 'module.json 文件内容非正确 json 格式',
+
+
     // 自定义报告
     ReportPageTitle: '自定义报告',
     ReportDefineEnsureTab: '报告确认',

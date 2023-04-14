@@ -258,6 +258,9 @@ import TumorMutationLoadVue from '../report/tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from '../report/homologous-recombination-defect/index.vue'
 import { api } from 'src/boot/axios'
 import { mutationLoadGermlineData } from './loadDatas'
+import { useI18n } from "vue-i18n";
+import { computed } from 'vue'
+const { t } = useI18n();
 
 const { apiPost } = useApi()
 const viewConfigLoaded = ref(false)
@@ -315,13 +318,13 @@ const createReport = () => {
     console.log(stepData.value)
     for (let key in tabMap) {
         if (tabValid(key) && !stepData.value[key]) {
-            errorMessage(tabMap[key] + '未固定过滤')
+            errorMessage(tabMap[key] + t('DefineReportUnlockMessage'))
             return
         }
         console.log(key, tabValid(key), Boolean(stepData.value[key]))
     }
     if (!reportComment.value) {
-        errorMessage('请填写备注')
+        errorMessage(t('DefineReportCommentReuiredMessage'))
         return
     }
     let postData = {
@@ -338,7 +341,7 @@ const createReport = () => {
             if (res.msg != 'success') {
                 errorMessage(res.msg)
             } else {
-                infoMessage('任务提交成功')
+                infoMessage(t('Success'))
                 router.push(`/main/reports`)
             }
             console.log(res)
@@ -421,7 +424,7 @@ const loadViewConfig = () => {
             try {
                 data = JSON.parse(res.replace(/,[ \t\r\n]+}/g, '}').replace(/,[ \t\r\n]+\]/g, ']'))
             } catch (error) {
-                errorMessage(`module.json 文件内容非正确 json 格式`)
+                errorMessage(t('DefineReportModuleNotJsonErrorMessage'))
             }
         }
         if (data) {
