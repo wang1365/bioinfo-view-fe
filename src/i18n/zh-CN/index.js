@@ -146,6 +146,8 @@ export default {
     CopyToClipboard: '拷贝到剪切板',
     Clipboard: '剪切板',
     Result: '结果',
+    Male: '男',
+    Female: '女',
 
     // 词组
     Disk: '磁盘',

@@ -32,6 +32,8 @@
                     dense
                     v-model="searchParams.risk"
                     :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                    emit-value
+                    map-options
                     :label="$t('DataListPageSearchRiskSequencing')"
                 />
                 <q-btn

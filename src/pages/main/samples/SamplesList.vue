@@ -89,6 +89,8 @@
                     dense
                     v-model="searchParams.is_panel"
                     :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                    emit-value
+                    map-options
                     :label="$t('SampleListPageSearchIsPanel')"
                 />
                 <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />

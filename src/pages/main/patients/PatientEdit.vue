@@ -161,6 +161,8 @@
                                 v-model="form.smoking"
                                 :label="$t('PatientNewFormSmoking')"
                                 :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                emit-value
+                                map-options
                             />
                         </div>
                         <div class="col q-pr-sm">
@@ -170,6 +172,10 @@
                                 v-model="form.drinking"
                                 :label="$t('PatientNewFormAlcoholDrinking')"
                                 :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                emit-value
+                                map-options
+                                option-value="value"
+                                option-label="label"
                             />
                         </div>
                         <div class="col q-pr-sm">
@@ -179,6 +185,8 @@
                                 v-model="form.viral_infection"
                                 :label="$t('PatientNewFormViralInfection')"
                                 :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                emit-value
+                                map-options
                             />
                         </div>
                     </div>

@@ -148,6 +148,8 @@ export default {
     CopyToClipboard: 'Copy To Clipboard',
     Clipboard: 'Clipboard',
     Result: 'Result',
+    Male: 'Male',
+    Female: 'Female',
 
     // phrase
     Disk: 'Disk',

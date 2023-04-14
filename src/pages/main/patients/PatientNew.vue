@@ -21,7 +21,12 @@
                                 :error="errors.gender.error"
                                 :error-message="errors.gender.message"
                                 v-model="form.gender"
-                                :options="genderOptions"
+                                :options="[
+    {label:$t('Male'),value:'男'},
+    {label:$t('Female'),value:'女'},
+]"
+                                emit-value
+                                map-options
                                 :label="$t('PatientNewFormGender')"
                             >
                                 <template v-slot:prepend><span style="color:red">*</span></template>
@@ -161,6 +166,8 @@
                                 v-model="form.smoking"
                                 :label="$t('PatientNewFormSmoking')"
                                 :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                emit-value
+                                map-options
                             />
                         </div>
                         <div class="col q-pr-sm">
@@ -170,6 +177,8 @@
                                 v-model="form.drinking"
                                 :label="$t('PatientNewFormAlcoholDrinking')"
                                 :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                emit-value
+                                map-options
                             />
                         </div>
                         <div class="col q-pr-sm">
@@ -179,6 +188,8 @@
                                 v-model="form.viral_infection"
                                 :label="$t('PatientNewFormViralInfection')"
                                 :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                emit-value
+                                map-options
                             />
                         </div>
                     </div>
