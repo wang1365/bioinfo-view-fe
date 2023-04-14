@@ -350,6 +350,7 @@ export default {
     MutationPosition: '突变位置',
     MutationMeaning: '突变意义',
     MutationRisk: '突变危险',
+    Population: '人群',
     CrowdFrequency: '人群频率',
     RelatedToDrugs: '是否关联药物',
     MoreColumns: '扩展列',

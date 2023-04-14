@@ -204,7 +204,6 @@ const somaticData = ref({
 const filterData = ref({ somatic: null, germline: null })
 const stepData = toRef(props, 'stepData')
 onMounted(() => {
-    console.log('===================>>>>', igv)
     loaded.value = false
     if (viewConfig.value.showMutGermline) {
         loadGermlineData()

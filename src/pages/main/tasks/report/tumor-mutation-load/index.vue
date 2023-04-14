@@ -89,6 +89,16 @@
                     :disable="viewConfig.showStick && viewConfig.stickDone"
                 />
             </div>
+            <q-select
+                hide-dropdown-icon
+                v-model="searchParams.human"
+                stack-label
+                label-color="primary"
+                :options="['ALL', 'African', 'American', 'East Asian', 'European', 'South Asian']"
+                :label="$t('Population')"
+                class="full-width"
+                :disable="viewConfig.showStick && viewConfig.stickDone"
+            />
             <div class="col">
                 <q-input
                     v-model="searchParams.humanRatio"
@@ -220,6 +230,7 @@ const searchParams = ref({
     mutationType: null,
     mutationPosition: [],
     mutationMeaning: null,
+    human: 'ALL',
     humanRatio: null,
     filterDup: false, // 是否过滤重复区假突变-yes或者no
 })
@@ -301,6 +312,7 @@ onMounted(() => {
                 mutationType: lines[5][1],
                 mutationPosition: lines[6][1].split(','),
                 mutationMeaning: lines[7][1],
+                human: 'ALL',
                 humanRatio: Number(lines[8][1]),
                 filterDup: true,
             }
@@ -473,11 +485,25 @@ const search = () => {
          */
         param = searchParams.value.humanRatio
         if (param) {
+            // 不同地区人群使用的数据列
+            let hrColumns = {
+                'ALL': [27, 35, 43],
+                'African': [28, 36, 37],
+                'American': [29, 37, 45],
+                'East Asian': [30, 38, 39],
+                'European': [31, 39, 48],
+                'South Asian': [34, 40]
+            }[searchParams.value.human]
+            hrColumns = hrColumns.map(h => line[h])
+            if (hrColumns.length === 2) {
+                // 如果没有第三列，认为第三列数据为.
+                hrColumns.add('.')
+            }
             if (
                 !(
-                    (line[29] === '.' || Number(line[29]) <= param) &&
-                    (line[34] === '.' || Number(line[34]) <= param) &&
-                    (line[42] === '.' || Number(line[42]) <= param)
+                    (hrColumns[0] === '.' || Number(hrColumns[0]) <= param) &&
+                    (hrColumns[1] === '.' || Number(hrColumns[1]) <= param) &&
+                    (hrColumns[2] === '.' || Number(hrColumns[2]) <= param)
                 )
             ) {
                 return false

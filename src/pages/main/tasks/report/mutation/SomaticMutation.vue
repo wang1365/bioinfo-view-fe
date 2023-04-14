@@ -118,6 +118,16 @@
                         class="full-width"
                         :disable="showSticky && stickDone"
                     />
+                    <q-select
+                        hide-dropdown-icon
+                        v-model="innerSearchParams.human"
+                        stack-label
+                        label-color="primary"
+                        :options="['ALL', 'African', 'American', 'East Asian', 'European', 'South Asian']"
+                        :label="$t('Population')"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
                     <q-input
                         v-model="innerSearchParams.humanRatio"
                         :label="$t('CrowdFrequency') + ' ' + innerSearchParams.humanRatioCmp"
@@ -410,6 +420,7 @@ const props = defineProps({
                 mutationPosition: [],
                 mutationMeaning: null,
                 mutationRisk: null,
+                human: 'ALL',
                 humanRatio: null,
                 sift: null,
                 drug: true,
@@ -445,6 +456,7 @@ const innerSearchParamsInit = {
     mutationPosition: [],
     mutationMeaning: [],
     mutationRisk: [],
+    human: 'ALL',
     humanRatio: null,
     humanRatioCmp: '<',
     sift: [],
@@ -464,6 +476,7 @@ const innerSearchParams = ref({
     mutationPosition: [],
     mutationMeaning: [],
     mutationRisk: [],
+    human: 'ALL',
     humanRatio: null,
     humanRatioCmp: '<',
     sift: [],
@@ -666,6 +679,7 @@ const customRow = (record, index) => {
 
 const reset = () => {
     innerSearchParams.value = Object.assign({}, innerSearchParamsInit)
+    innerSearchParams.value.humanRatioCmp = '<'
     search()
 }
 
@@ -800,9 +814,23 @@ const searchFilterRows = (searchParams) => {
           */
         param = searchParams.humanRatio
         if (param) {
+            // 不同地区人群使用的数据列
+            let hrColumns = {
+                'ALL': [27, 35, 43],
+                'African': [28, 36, 37],
+                'American': [29, 37, 45],
+                'East Asian': [30, 38, 39],
+                'European': [31, 39, 48],
+                'South Asian': [34, 40]
+            }[searchParams.human]
+            hrColumns = hrColumns.map(h => line[`col${h}`])
+            if (hrColumns.length === 2) {
+                // 如果没有第三列，认为第三列数据为.
+                hrColumns.add('.')
+            }
             const cmp = useComparator(searchParams.humanRatioCmp)
             const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
-            const ltCount = [line.col30, line.col35, line.col43].map(v => ltRatio(v)).filter(v => v).length
+            const ltCount = hrColumns.map(v => ltRatio(v)).filter(v => v).length
             if (ltCount < 2) {
                 return false
             }
