@@ -452,6 +452,10 @@ export default {
     DefineReportUnlockMessage: '未固定过滤',
     DefineReportCommentReuiredMessage: '请填写备注',
     DefineReportModuleNotJsonErrorMessage: 'module.json 文件内容非正确 json 格式',
+    DefineReportUnlockReuired: '请先取消过滤',
+    DefineReportSelectAlertMessage: '条筛选结果将提交定制报告, 或自定义选择筛选结果',
+    DefineReportMutationGermlineUnlock: '胚系突变分析未进行过滤',
+    DefineReportMutationSomaticUnlock: '胚系突变分析未进行过滤',
 
 
     // 自定义报告

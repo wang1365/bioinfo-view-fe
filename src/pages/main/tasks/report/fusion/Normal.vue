@@ -10,7 +10,13 @@
             style="width:300px"
             :disable="showSticky && stickDone"
         />
-        <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword" :disable="showSticky && stickDone" />
+        <q-btn
+            size="small"
+            color="primary"
+            :label="$t('Search')"
+            @click="searchKeyword"
+            :disable="showSticky && stickDone"
+        />
         <q-btn
             :href="props.url"
             :label="$t('Download')"
@@ -65,7 +71,8 @@ import { errorMessage, infoMessage } from 'src/utils/notify';
 import { ref, onMounted, toRef, watch, onUnmounted, defineExpose } from 'vue'
 import { useRoute } from 'vue-router'
 import IGV from './Igv.vue'
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const route = useRoute()
 const columns = ref([])
 
@@ -145,7 +152,7 @@ const searchFilterRows = (keyword) => {
 }
 const searchKeyword = () => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     searchFilterRows(keyword.value)
@@ -172,7 +179,7 @@ const stickDone = toRef(props, 'stickDone')
 
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     selectedRows.value = selectedRowKeys

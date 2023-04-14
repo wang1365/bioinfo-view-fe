@@ -452,7 +452,9 @@ export default {
     DefineReportUnlockMessage: 'should lock',
     DefineReportCommentReuiredMessage: 'Comment Required',
     DefineReportModuleNotJsonErrorMessage: 'module file is not json format',
-
+    DefineReportUnlockReuired: 'Please Unlock First',
+    DefineReportMutationGermlineUnlock: 'Germline Require Lock',
+    DefineReportMutationSomaticUnlock: 'Somatic Require Lock',
     // 自定义报告
     ReportPageTitle: 'Custom Report',
     ReportDefineEnsureTab: 'Ensure Report',

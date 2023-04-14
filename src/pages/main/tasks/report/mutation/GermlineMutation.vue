@@ -145,7 +145,8 @@
                         <q-btn
                             color="primary"
                             :label="$t('Confirm')"
-                            size="md" padding="sm"
+                            size="md"
+                            padding="sm"
                             icon="search"
                             @click="search"
                             :disable="showSticky && stickDone"
@@ -153,7 +154,8 @@
                         <q-btn
                             color="primary"
                             :label="$t('Reset')"
-                            size="md" padding="sm"
+                            size="md"
+                            padding="sm"
                             icon="settings_backup_restore"
                             @click="reset"
                             :disable="showSticky && stickDone"
@@ -161,12 +163,21 @@
                         <q-btn
                             color="primary"
                             :label="$t('MoreColumns')"
-                            size="md" padding="sm"
+                            size="md"
+                            padding="sm"
                             icon="last_page"
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn :href="tableFile" :label="$t('Download')" padding="sm" icon="south" color="primary" target="_blank" size="md" />
+                        <q-btn
+                            :href="tableFile"
+                            :label="$t('Download')"
+                            padding="sm"
+                            icon="south"
+                            color="primary"
+                            target="_blank"
+                            size="md"
+                        />
                     </div>
                 </div>
             </template>
@@ -265,7 +276,11 @@
             </div>
 
             <div class="col-8 q-px-xs">
-                <BubbleChartVue :data="filteredRows" :titleKey="chartTitles.crowd" :colKeys="['col26', 'col31', 'col39']" />
+                <BubbleChartVue
+                    :data="filteredRows"
+                    :titleKey="chartTitles.crowd"
+                    :colKeys="['col26', 'col31', 'col39']"
+                />
             </div>
         </div>
     </div>
@@ -755,14 +770,14 @@ const searchFilterRows = (searchParams) => {
 }
 const search = () => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     searchFilterRows(innerSearchParams.value)
     selectedRows.value = []
     // filterChange()
     if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
-        infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
+        infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
     }
 }
 
@@ -814,7 +829,7 @@ const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     selectedRows.value = selectedRowKeys

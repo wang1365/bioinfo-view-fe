@@ -140,6 +140,8 @@ import { readTaskFile } from 'src/api/task'
 import { getCsvData } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { errorMessage } from 'src/utils/notify'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const props = defineProps({
     intro: {
         type: String,
@@ -261,7 +263,7 @@ const searchFilterRows1 = (keyword) => {
 
 const searchKeyword1 = () => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     searchFilterRows1(keyword1.value)
@@ -283,7 +285,7 @@ const searchFilterRows2 = (keyword) => {
 }
 const searchKeyword2 = () => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     searchFilterRows2(keyword2)
@@ -435,7 +437,7 @@ const getCheckboxProps = (record) => {
 }
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     selectedRows.value = selectedRowKeys
@@ -444,7 +446,7 @@ const selectedRows2 = ref([])
 
 const onSelectChange2 = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     selectedRows2.value = selectedRowKeys

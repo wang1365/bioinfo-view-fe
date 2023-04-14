@@ -170,7 +170,8 @@
                         <q-btn
                             color="primary"
                             :label="$t('Confirm')"
-                            icon="search" padding="sm"
+                            icon="search"
+                            padding="sm"
                             @click="search"
                             :disable="showSticky && stickDone"
                         />
@@ -178,18 +179,28 @@
                             color="primary"
                             :label="$t('Reset')"
                             icon="settings_backup_restore"
-                            @click="reset" padding="sm"
+                            @click="reset"
+                            padding="sm"
                             :disable="showSticky && stickDone"
                         />
                         <q-btn
                             color="primary"
                             :label="$t('MoreColumns')"
-                            size="md" padding="sm"
+                            size="md"
+                            padding="sm"
                             icon="last_page"
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn :href="tableFile"  padding="sm" :label="$t('Download')" icon="south" color="primary" target="_blank" size="md" />
+                        <q-btn
+                            :href="tableFile"
+                            padding="sm"
+                            :label="$t('Download')"
+                            icon="south"
+                            color="primary"
+                            target="_blank"
+                            size="md"
+                        />
                     </div>
                 </div>
             </template>
@@ -296,10 +307,10 @@
     <div class="q-my-sm" v-if="!showColumn">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
-                <PieChartVue :data="filteredRows" :titleKey="chartTitles.type"/>
+                <PieChartVue :data="filteredRows" :titleKey="chartTitles.type" />
             </div>
             <div class="col q-px-xs">
-                <RoseChartVue :data="filteredRows" col-key="col17" :titleKey="chartTitles.meaning"/>
+                <RoseChartVue :data="filteredRows" col-key="col17" :titleKey="chartTitles.meaning" />
             </div>
             <div class="col q-px-xs">
                 <RoseChartVue :data="filteredRows" col-key="col25" :titleKey="chartTitles.risk" />
@@ -307,11 +318,15 @@
         </div>
         <div class="row">
             <div class="col-4 q-px-xs">
-                <BarChartVue :data="filteredRows" :titleKey="chartTitles.snp"/>
+                <BarChartVue :data="filteredRows" :titleKey="chartTitles.snp" />
             </div>
 
             <div class="col-8 q-px-xs">
-                <BubbleChartVue :data="filteredRows" :titleKey="chartTitles.crowd" :colKeys="['col30', 'col35', 'col43']" />
+                <BubbleChartVue
+                    :data="filteredRows"
+                    :titleKey="chartTitles.crowd"
+                    :colKeys="['col30', 'col35', 'col43']"
+                />
             </div>
         </div>
     </div>
@@ -869,13 +884,13 @@ const searchFilterRows = (searchParams) => {
 }
 const search = () => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     searchFilterRows(innerSearchParams.value)
     selectedRows.value = []
     if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
-        infoMessage(`${filteredRows.value.length} 条筛选结果将提交定制报告, 或自定义选择筛选结果`)
+        infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
     }
 }
 watch(rows, (rows) => {
@@ -911,7 +926,7 @@ const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     selectedRows.value = selectedRowKeys

@@ -105,7 +105,8 @@ import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 import { useQuasar } from 'quasar'
 import igv from "igv"
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const germlineVue = ref(null)
 const somaticVue = ref(null)
 const $q = useQuasar()
@@ -239,7 +240,7 @@ const stickFilter = () => {
             let data = germlineVue.value.getChangedData()
             filterData.value.germline = data
         } else {
-            errorMessage('胚系突变分析未进行过滤')
+            errorMessage(t('DefineReportMutationGermlineUnlock'))
             return false
         }
 
@@ -249,7 +250,7 @@ const stickFilter = () => {
             let data = somaticVue.value.getChangedData()
             filterData.value.somatic = data
         } else {
-            errorMessage('体细胞突变分析未进行过滤')
+            errorMessage(t('DefineReportMutationSomaticUnlock'))
             return false
         }
     }

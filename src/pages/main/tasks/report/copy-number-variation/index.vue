@@ -223,9 +223,10 @@ import { toMap, partition } from 'src/utils/collection'
 import { uid } from 'quasar'
 import { amISuper } from 'src/utils/user'
 import * as echarts from 'echarts'
-
 import { pieOption, columns } from './index'
 import { errorMessage } from 'src/utils/notify'
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const getCheckboxProps = (record) => {
     return {
         disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
@@ -483,7 +484,7 @@ const searchFilterRows = (searchParams) => {
 }
 const clickSearch = () => {
     if (viewConfig.value.showStick && viewConfig.value.stickDone) {
-        errorMessage('请先取消过滤')
+        errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
     searchFilterRows(searchParams.value)
