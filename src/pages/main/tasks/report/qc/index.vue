@@ -52,7 +52,6 @@ import KitCaptureVue from './KitCapture.vue'
 import DeepInfoVue from './DeepInfo.vue'
 import { useRoute } from 'vue-router'
 import { getReportText } from 'src/api/report'
-import { object } from 'vue-types'
 
 const route = useRoute()
 const tab = ref('试剂盒捕获质控信息')

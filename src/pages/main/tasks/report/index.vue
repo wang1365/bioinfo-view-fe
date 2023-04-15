@@ -117,7 +117,7 @@
     </q-page>
 </template>
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useApi } from 'src/api/apiBase'
 import { getTask } from 'src/api/task'
 import QcVue from './qc/index.vue'
@@ -128,6 +128,8 @@ import MicrosatelliteInstabilityVue from './microsatellite-instability/index.vue
 import TumorMutationLoadVue from './tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from './homologous-recombination-defect/index.vue'
 import CommonModuleVue from './common-module/index.vue'
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 
 import { useRoute, useRouter } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
@@ -135,11 +137,13 @@ import { errorMessage } from 'src/utils/notify'
 
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 
+const store = globalStore()
 const route = useRoute()
 const router = useRouter()
 const { apiPost } = useApi()
 const intros = ref({})
 
+const { langCode } = storeToRefs(store)
 const tab = ref('qc')
 const taskDetail = ref({})
 const samples = ref([])
@@ -170,6 +174,15 @@ onMounted(() => {
         )
     })
 
+    readResultAndModuleJson()
+})
+
+watch(langCode, lc => {
+    readResultAndModuleJson()
+})
+
+const readResultAndModuleJson = () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     const dict = {
         '质控': 'qc',
         '突变分析': 'mutation',
@@ -184,7 +197,7 @@ onMounted(() => {
     // key 是 页面上的 tab 名称, value 是每个 tab 的说明信息
     // 如果没有 key 那么对应的 tab 也就不显示
     // 这里将 每个 tab 的说明信息放入 intros 中传递到 tab 中
-    readTaskFile(route.params.id, 'result.json').then((res) => {
+    readTaskFile(route.params.id, `result_${suffix}.json`).then((res) => {
         const raw = JSON.parse(res)
         const result = {}
         for (let k in raw) {
@@ -198,7 +211,7 @@ onMounted(() => {
     /* if(samples.value.length==1){
 
         } */
-    readTaskFile(route.params.id, 'module.json').then((res) => {
+    readTaskFile(route.params.id, `module_${suffix}.json`).then((res) => {
         let data = null
         const dict = {
             '质控': 'qc',
@@ -229,7 +242,7 @@ onMounted(() => {
             commonTabs.value = viewConfig.commonModules
         }
     })
-})
+}
 
 const tabValid = (name) => {
     return intros.value[name]

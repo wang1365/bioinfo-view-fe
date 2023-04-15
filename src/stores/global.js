@@ -14,7 +14,8 @@ export const globalStore = defineStore('global', {
         lang: navigator.language || 'en-US'
     }),
     getters: {
-        doubleCount: (state) => state.counter * 2,
+        doubleCount: (state ) => state.counter * 2,
+        langCode: (state ) => state.lang === 'en-US' ? 'en' : 'cn',
     },
     actions: {
         increment() {
