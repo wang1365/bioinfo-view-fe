@@ -20,13 +20,17 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, computed} from "vue";
+import {ref, onMounted, computed, watch} from "vue";
 import { useRoute } from 'vue-router'
 import { getReportTable, getReportText } from "src/api/report"
 import { readTaskFile } from "src/api/task"
 import { getCsvData } from "src/utils/csv"
 import { useI18n } from 'vue-i18n'
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const { t } = useI18n()
 const route = useRoute()
 const loading = ref(false)
@@ -99,22 +103,34 @@ const onTarget = ref({
 })
 
 onMounted(() => {
-    loading.value = true
+    readQcInfo()
+    readReportText()
+})
 
-    readTaskFile(route.params.id, 'QC/QC_info').then(res => {
+watch(langCode, v => {
+    readQcInfo()
+})
+
+const readQcInfo = () => {
+    loading.value = true
+    const suffix = langCode === 'en' ? 'EN' : 'CN'
+    readTaskFile(route.params.id, `QC/QC_info_${suffix}`).then(res => {
         const ks = columns.value.map(t => t.dataIndex).splice(1)
         rows.value = getCsvData(res, {fields: ks, splitter:'\t',    hasHeaderLine:false})
     }).finally(() => {
         loading.value = false
     })
+}
 
+const readReportText = () => {
     getReportText(route.params.id, 'ONTARGET').then(res => {
         const vs = res.split('\n')
         onTarget.value = {
             v1: vs[0], v2: vs[1]
         }
     })
-})
+}
+
 </script>
 <style lang="scss">
 table {
