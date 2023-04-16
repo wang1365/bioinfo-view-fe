@@ -390,7 +390,7 @@ onMounted(() => {
 const readTmbDrug = (lc) => {
     const suffix = lc === 'en' ? 'EN' : 'CN'
     // 从TMB_drug.txt获取用药说明
-    readTaskFile(route.params.id, 'TMB/TMB_drug_${suffix}.txt').then((res) => {
+    readTaskFile(route.params.id, `TMB/TMB_drug_${suffix}.txt`).then((res) => {
         guageTip.value = res
     })
 }
