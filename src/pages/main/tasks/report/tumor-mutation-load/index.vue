@@ -202,7 +202,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, onMounted, toRef } from 'vue'
+import { ref, onMounted, toRef, watch } from 'vue'
 import { readTaskFile } from 'src/api/task'
 import { useRoute } from 'vue-router'
 import { getCsvData, getCsvHeader } from 'src/utils/csv'
@@ -210,7 +210,11 @@ import GuageChartVue from './GuageChart.vue'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import { useApi } from 'src/api/apiBase'
 import { getDualIdentifiers } from 'src/utils/samples'
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const { apiPost } = useApi()
 const route = useRoute()
 const dlgVisible = ref(false)
@@ -381,12 +385,19 @@ onMounted(() => {
             )
         })
         .finally(() => (loading.value = false))
+})
 
+const readTmbDrug = (lc) => {
+    const suffix = lc === 'en' ? 'EN' : 'CN'
     // 从TMB_drug.txt获取用药说明
-    readTaskFile(route.params.id, 'TMB/TMB_drug.txt').then((res) => {
+    readTaskFile(route.params.id, 'TMB/TMB_drug_${suffix}.txt').then((res) => {
         guageTip.value = res
     })
-})
+}
+
+watch(langCode, v => {
+    readTmbDrug(v)
+}, { immediate: true })
 
 const clickReset = () => {
     searchParams.value = Object.assign({}, initialParams)

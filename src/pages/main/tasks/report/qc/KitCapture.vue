@@ -108,6 +108,7 @@ onMounted(() => {
 })
 
 watch(langCode, v => {
+    // 国际化切换，刷新qc info
     readQcInfo()
 })
 
