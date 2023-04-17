@@ -114,7 +114,7 @@ watch(langCode, v => {
 
 const readQcInfo = () => {
     loading.value = true
-    const suffix = langCode === 'en' ? 'EN' : 'CN'
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     readTaskFile(route.params.id, `QC/QC_info_${suffix}`).then(res => {
         const ks = columns.value.map(t => t.dataIndex).splice(1)
         rows.value = getCsvData(res, {fields: ks, splitter:'\t',    hasHeaderLine:false})

@@ -47,12 +47,16 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, toRefs } from 'vue'
+import { ref, onMounted, toRefs, watch } from 'vue'
 import KitCaptureVue from './KitCapture.vue'
 import DeepInfoVue from './DeepInfo.vue'
 import { useRoute } from 'vue-router'
-import { getReportText } from 'src/api/report'
+import { readTaskFile } from "src/api/task";
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const route = useRoute()
 const tab = ref('试剂盒捕获质控信息')
 const dlgVisible = ref(false)
@@ -83,8 +87,18 @@ const props = defineProps({
 const { samples } = toRefs(props)
 
 onMounted(() => {
-    getReportText(route.params.id, 'QC_TIP').then((res) => {
+    getQcTip()
+})
+
+watch(langCode, v => {
+    getQcTip()
+})
+
+
+const getQcTip = () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
+    readTaskFile(route.params.id, `QC/QC_tip_${suffix}`).then(res => {
         tip.value = res
     })
-})
+}
 </script>
