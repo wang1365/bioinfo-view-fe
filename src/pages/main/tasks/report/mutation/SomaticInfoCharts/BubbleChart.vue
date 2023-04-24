@@ -26,6 +26,11 @@ const props = defineProps({
         required: false,
         default: () => []
     },
+    serialTitles: {
+        type: Array,
+        required: false,
+        default: () => []
+    },
     titleKey: {
         type: String,
         required: false,
@@ -33,13 +38,11 @@ const props = defineProps({
     }
 })
 
-const {data} = toRefs(props)
+const { data, colKeys } = toRefs(props)
 
-watch(data, () => {
+watch([data, colKeys, locale], () => {
     refresh()
 })
-
-watch(locale, () => refresh() )
 
 const option = ref({
     title: [
@@ -47,22 +50,23 @@ const option = ref({
             text: computed(() => t(props.titleKey))
         },
         {
-            text: 'ExAC_EAS',
+            text: computed(() => props.serialTitles[0]),
             textBaseline: 'middle',
             top: (0.5 * 100) / 3 + '%',
             textStyle: {
                 color: 'blue'
             }
         }, {
-            text: '1000g2015aug_eas',
+            text: computed(() => props.serialTitles[1]),
             textBaseline: 'middle',
             top: (100) / 3 + 15 + '%',
             textStyle: {
                 color: 'green'
             }
         }, {
-            text: 'gnomAD_genome_EAS',
+            text: computed(() => props.serialTitles[2] || ''),
             textBaseline: 'middle',
+            show: props.serialTitles.length > 2,
             top: (2 * 100) / 3 + 15 + '%',
             textStyle: {
                 color: 'orange'
@@ -112,7 +116,6 @@ const option = ref({
     },
     series: [
         {
-            name: 'ExAC_EAS',
             data: [],
             type: 'scatter',
             singleAxisIndex: 0,
@@ -121,15 +124,10 @@ const option = ref({
             symbolOffset: [0, 40],
             symbolSize: function (data, {dataIndex}) {
                 return adjustedData.value[0][dataIndex]
-                // let ret = data[1]
-                // return ret;
-                // return Math.sqrt(data[1])
-                // return 10
             },
             tooltip: {
                 trigger: 'item',
                 formatter: function (param) {
-                    // return `${param.data[0]} - ${param.data[1]}`;
                     return `${param.data[1]}`;
                 },
                 textStyle: {
@@ -149,7 +147,6 @@ const option = ref({
             },
         },
         {
-            name: '1000g2015aug_eas',
             data: [],
             type: 'scatter',
             singleAxisIndex: 1,
@@ -158,15 +155,10 @@ const option = ref({
             coordinateSystem: 'singleAxis',
             symbolSize: function (data, {dataIndex}) {
                 return adjustedData.value[1][dataIndex]
-                // let ret = data[1]
-                // return ret;
-                // return Math.sqrt(data[1])
-                // return 10
             },
             tooltip: {
                 trigger: 'item',
                 formatter: function (param) {
-                    // return `${param.data[0]} - ${param.data[1]}`;
                     return `${param.data[1]}`;
                 },
                 textStyle: {
@@ -186,7 +178,6 @@ const option = ref({
             },
         },
         {
-            name: 'gnomAD_genome_EAS',
             data: [],
             type: 'scatter',
             singleAxisIndex: 2,
@@ -195,19 +186,10 @@ const option = ref({
             coordinateSystem: 'singleAxis',
             symbolSize: function (data, {dataIndex}) {
                 return adjustedData.value[2][dataIndex]
-
-                // let ret = data[1]
-                // if (dataIndex === 0 && ret > 100) {
-                //     ret = 100
-                // }
-                // return ret;
-                // return Math.sqrt(data[1])
-                // return 10
             },
             tooltip: {
                 trigger: 'item',
                 formatter: function (param) {
-                    // return `${param.data[0]} - ${param.data[1]}`;
                     return `${param.data[1]}`;
                 },
                 textStyle: {
@@ -220,7 +202,6 @@ const option = ref({
                 label: {
                     show: false,
                     formatter: function (param) {
-                        // return `${param.data[0]} - ${param.data[1]}`;
                         return `${param.data[1]}`;
                     },
                     position: 'center'
@@ -241,9 +222,12 @@ const init = () => {
 };
 
 const refresh = () => {
+    console.log('======> refresh', props.colKeys)
     props.colKeys.forEach((key, i) => {
         const result = groupAndCount(props.colKeys[i])
+        console.log('groupAndCount', result)
         // 原始数据分布概率
+        option.value.series[i].type = 'scatter'
         option.value.series[i].data = result
 
         // 根据原始数据调整bubble大小
@@ -259,6 +243,12 @@ const refresh = () => {
             return t[1] === 0 ? 0 : Math.round(t[1] * scale) + 10
         })
     })
+
+    // 第三列没有数据时，隐藏第三列的标题和图形
+    if (props.colKeys.length < 3) {
+        option.value.series[2].type = ''
+        option.value.series[2].data = []
+    }
 
     chart.value.setOption(option.value);
 }

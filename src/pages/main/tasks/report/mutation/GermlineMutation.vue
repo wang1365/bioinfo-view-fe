@@ -279,7 +279,8 @@
                 <BubbleChartVue
                     :data="filteredRows"
                     :titleKey="chartTitles.crowd"
-                    :colKeys="['col26', 'col31', 'col39']"
+                    :colKeys="bubbleColKeys"
+                    :serialTitles="serialTitles"
                 />
             </div>
         </div>
@@ -321,6 +322,15 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const splitterModel = ref(250)
 const emit = defineEmits(['filterChange'])
+const crowdCols = {
+    // ['col26', 'col31', 'col39']
+    'ALL': [23, 31, 39],
+    'African': [24, 32, 40],
+    'American': [25, 33, 41],
+    'East Asian': [26, 34, 43],
+    'European': [27, 35, 44],
+    'South Asian': [30, 36]
+}
 const props = defineProps({
     samples: {
         type: Array,
@@ -446,6 +456,16 @@ const chartTitles = {
     crowd: 'CrowdFrequencyStatistics',
     snp: 'SnpStatistics',
 }
+
+const bubbleColKeys = computed(() => {
+    // ['col26', 'col31', 'col39']
+    return crowdCols[innerSearchParams.value.human].map(idx => `col${idx}`)
+})
+
+const serialTitles = computed(() => {
+    // ['col26', 'col31', 'col39']
+    return crowdCols[innerSearchParams.value.human].map(idx => props.header[idx])
+})
 
 const showDrawer = ref(false)
 
@@ -716,14 +736,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.humanRatio
         if (param) {
             // 不同地区人群使用的数据列
-            let hrColumns = {
-                'ALL': [23, 31, 39],
-                'African': [24, 32, 40],
-                'American': [25, 33, 41],
-                'East Asian': [26, 34, 43],
-                'European': [27, 35, 44],
-                'South Asian': [30, 36]
-            }[searchParams.human]
+            let hrColumns = crowdCols[searchParams.human]
             hrColumns = hrColumns.map(h => line[`col${h}`])
             if (hrColumns.length === 2) {
                 // 如果没有第三列，认为第三列数据为.
