@@ -8,7 +8,7 @@
         <q-card-section>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">{{$t('SampleNewFormSamplingDate')}}: {{ form.sample_date }}</div>
-                <div class="col q-pa-sm">{{$t('SampleNewFormSubmissionData')}}: {{ form.test_date }}</div>
+                <div class="col q-pa-sm">{{$t('SampleNewFormSubmissionDate')}}: {{ form.test_date }}</div>
                 <div class="col q-pa-sm">{{$t('SampleNewFormSamplingSite')}}: {{ form.sample_componet }}</div>
             </div>
             <div class="row q-my-sm">

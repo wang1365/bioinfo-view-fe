@@ -148,6 +148,12 @@ export default {
     Result: '结果',
     Male: '男',
     Female: '女',
+    ServerError: "服务器错误",
+    NotAuthenticated: "未登录",
+    PermissionDenied: "无权限",
+    RouteNotFound: "路由不存在",
+    ParamsError: "请求参数错误",
+    Template: '模板',
 
     // 词组
     Disk: '磁盘',
@@ -583,7 +589,7 @@ export default {
     // 新建样本表单
     SampleNewFormTitle: '新建样本',
     SampleNewFormSamplingDate: '采样日期',
-    SampleNewFormSubmissionDate: '送测日期(YYYY-MM-DD)',
+    SampleNewFormSubmissionDate: '送测日期',
     SampleNewFormSamplingSite: '采样部位',
     SampleNewFormSampleType: '样本类型',
     SampleNewFormTumorContent: '肿瘤含量',

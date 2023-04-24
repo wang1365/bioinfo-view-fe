@@ -7,6 +7,10 @@
 
 <script setup>
 import { markRaw, onMounted, ref, watch } from "vue";
+import { storeToRefs } from 'pinia'
+import { globalStore } from 'src/stores/global'
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 
 const echarts = require("echarts");
 const chart = ref(null);
@@ -98,4 +102,7 @@ const onResize = () => {
     if (chart.value)
         chart.value.resize();
 };
+watch(langCode, lc => {
+    init()
+})
 </script>

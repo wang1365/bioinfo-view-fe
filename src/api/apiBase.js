@@ -47,33 +47,35 @@ api.interceptors.request.use(
     }
 )
 export function defaultErrorHandler(data) {
+
     Notify.create({
         type: 'negative',
-        message: `服务器错误：${data.msg}`,
+        message: `Sever Error::${data.msg}`,
     })
 }
 export function defaultHttpErrorHandler(error, onError, router) {
+    console.log(error)
     let status = error.response.status
     const data = error.response.data
     let errorData = (data ? data.msg : data) || data
     if (status === 401) {
         Notify.create({
             type: 'negative',
-            message: `未登录 ${status}:`,
+            message: `Login Required: ${status}:`,
         })
         Cookies.remove('token')
         router.push('/login')
     } else if (status === 403) {
         Notify.create({
             type: 'negative',
-            message: `无权限 ${status}`,
+            message: `PermissionDenied: ${status}`,
         })
         Cookies.remove('token')
         router.push('/login')
     } else if (status === 404) {
         Notify.create({
             type: 'negative',
-            message: '路由不存在',
+            message: `RouteNotFound`,
         })
         console.log(errorData)
     } else if (status >= 500) {
@@ -81,7 +83,7 @@ export function defaultHttpErrorHandler(error, onError, router) {
         let url = window.URL.createObjectURL(blob)
         Notify.create({
             type: 'negative',
-            message: `服务器错误 ${status}`,
+            message: `Sever Error: ${status}`,
             html: true,
             timeout: 10000,
         })
@@ -90,7 +92,7 @@ export function defaultHttpErrorHandler(error, onError, router) {
         if (!onError) {
             Notify.create({
                 type: 'negative',
-                message: `请求参数错误 ${status}：${errorData}`,
+                message: `ParamsError ${status}：${errorData}`,
             })
         } else {
             onError(error.response)
@@ -113,14 +115,14 @@ export function defaultHandler(router, resp, onSuccess, onError) {
     } else if (statusCode === 401) {
         Notify.create({
             type: 'negative',
-            message: '未登录',
+            message: `Login Required:`,
         })
         Cookies.remove('token')
         router.push('/login')
     } else if (statusCode === 403) {
         Notify.create({
             type: 'negative',
-            message: '无权限',
+            message: `PermissionDenied:`,
         })
         router.push('/login')
     } else if (statusCode === 400 || code === 1) {
@@ -132,13 +134,13 @@ export function defaultHandler(router, resp, onSuccess, onError) {
     } else if (statusCode === 404) {
         Notify.create({
             type: 'negative',
-            message: '路由不存在',
+            message: `RouteNotFound`,
         })
         console.log(resp.data.data)
     } else {
         Notify.create({
             type: 'negative',
-            message: `服务异常: ${res.msg}`,
+            message: `Sever Error: : ${res.msg}`,
         })
     }
 }
@@ -225,10 +227,11 @@ export function useApi() {
     function downloadData(url, config = {}) {
         api.get(url, config)
             .then((resp) => {
+
                 let contentDiposition = resp.headers['content-disposition']
                 if (contentDiposition) {
                     let items = contentDiposition.split('; ')
-                    let filename = '模板'
+                    let filename = 'Template'
                     for (const item of items) {
                         if (item.indexOf('filename') >= 0) {
                             filename = item.split('=')[1]

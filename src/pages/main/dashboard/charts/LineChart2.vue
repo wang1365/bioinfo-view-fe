@@ -9,6 +9,12 @@
 import { markRaw, onMounted, ref, watch } from "vue";
 import { useApi } from "src/api/apiBase";
 import { useI18n } from "vue-i18n";
+
+import { storeToRefs } from 'pinia'
+import { globalStore } from 'src/stores/global'
+const store = globalStore()
+const { langCode } = storeToRefs(store)
+
 const { t } = useI18n();
 const { apiGet } = useApi()
 
@@ -87,4 +93,7 @@ const onResize = () => {
     if (chart.value)
         chart.value.resize();
 };
+watch(langCode, lc => {
+    init()
+})
 </script>

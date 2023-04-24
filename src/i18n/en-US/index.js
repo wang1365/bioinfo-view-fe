@@ -150,6 +150,12 @@ export default {
     Result: 'Result',
     Male: 'Male',
     Female: 'Female',
+    ServerError: "Sever Error",
+    NotAuthenticated: "Login Required",
+    PermissionDenied: "Permission Denied",
+    RouteNotFound: "Not Found",
+    ParamsError: "Params Error",
+    Template: 'Template',
 
     // phrase
     Disk: 'Disk',

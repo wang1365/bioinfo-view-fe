@@ -259,8 +259,12 @@ import HomologousRecombinationDefectVue from '../report/homologous-recombination
 import { api } from 'src/boot/axios'
 import { mutationLoadGermlineData } from './loadDatas'
 import { useI18n } from "vue-i18n";
-import { computed } from 'vue'
+import { computed,watch } from 'vue'
+import { storeToRefs } from 'pinia'
+import { globalStore } from 'src/stores/global'
 const { t } = useI18n();
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 
 const { apiPost } = useApi()
 const viewConfigLoaded = ref(false)
@@ -316,9 +320,22 @@ const tabMap = {
 }
 const createReport = () => {
     console.log(stepData.value)
+    const dict = {
+        突变分析: 'MutationAnalysis',
+        融合分析: 'FusionAnalysis',
+        拷贝数变异分析: 'CopyNumberVariationAnalysis',
+        肿瘤突变负荷分析: 'TumorMutationLoadAnalysis',
+    }
+
     for (let key in tabMap) {
         if (tabValid(key) && !stepData.value[key]) {
-            errorMessage(tabMap[key] + t('DefineReportUnlockMessage'))
+            const enKey=dict[tabMap[key]]
+            let tabName=tabMap[key]
+            console.log(enKey)
+            if(enKey){
+                tabName=t(enKey)
+            }
+            errorMessage(tabName +': '+ t('DefineReportUnlockMessage'))
             return
         }
         console.log(key, tabValid(key), Boolean(stepData.value[key]))
@@ -381,6 +398,7 @@ const loadTaskSamples = () => {
 // 如果没有 key 那么对应的 tab 也就不显示
 // 这里将 每个 tab 的说明信息放入 intros 中传递到 tab 中
 const loadIntros = () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     const dict = {
         质控: 'qc',
         突变分析: 'mutation',
@@ -391,7 +409,7 @@ const loadIntros = () => {
         同源重组缺陷分析: 'homologous_recombination_defect',
     }
 
-    readTaskFile(route.params.id, 'result.json').then((res) => {
+    readTaskFile(route.params.id, `result_${suffix}.json`).then((res) => {
         const raw = JSON.parse(res)
         const result = {}
         for (let k in raw) {
@@ -401,10 +419,15 @@ const loadIntros = () => {
         intros.value = result
     })
 }
+watch(langCode, lc => {
+    loadViewConfig()
+    loadIntros()
+})
 const loadViewConfig = () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     // module.json
     // 这个文件中配置每个 tab 下展示的内容
-    readTaskFile(route.params.id, 'module.json').then((res) => {
+    readTaskFile(route.params.id, `module_${suffix}.json`).then((res) => {
         let data = null
         const dict = {
             质控: 'qc',

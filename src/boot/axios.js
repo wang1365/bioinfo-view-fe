@@ -70,7 +70,7 @@ export default boot(({ app, router, store }) => {
             } else {
                 Notify.create({
                     type: 'negative',
-                    message: `服务器错误：${responseData.msg}`,
+                    message: `Server Error:${responseData.msg}`,
                 })
             }
         },
