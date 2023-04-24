@@ -344,11 +344,13 @@ const resetPie = () => {
 const refreshPie = () => {
     const result1 = []
     if (pieParams.value.extra < 2 || !pieParams.value.extra) {
-        errorMessage('拷贝数扩增阈值 必须大于 2')
+        const msg = langCode.value === 'en' ? 'Copy number amplification threshold should be greater than 2' : '拷贝数扩增阈值 必须大于 2'
+        errorMessage(msg)
         return
     }
     if (pieParams.value.missing > 2 || pieParams.value.missing < 0 || !pieParams.value.extra) {
-        errorMessage('拷贝数缺失阈值范围是 0~2')
+        const msg = langCode.value === 'en' ? 'Copy number amplification threshold should be 0~2' : '拷贝数缺失阈值范围是 0~2'
+        errorMessage(msg)
         return
     }
     // 扩增
@@ -413,7 +415,7 @@ const refreshPie = () => {
 
 onMounted(() => loadData())
 const loadData = () => {
-    const suffix = langCode === 'en' ? 'EN' : 'CN'
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter_${suffix}.txt`
     tableFileName.value = `AnnotSV.tsv.filter_${suffix}.txt`
     readTaskFile(route.params.id, `CNV/AnnotSV.tsv.filter_${suffix}.txt`).then((res) => {
