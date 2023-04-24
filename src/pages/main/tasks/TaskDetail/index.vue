@@ -20,7 +20,7 @@
             </q-section>
             <q-separator></q-separator>
             <q-section>
-                <div class="text-h6 q-px-md q-py-sm">{{$t('Sample')}}:</div>
+                <div class="text-h6 q-px-md q-py-sm">{{ $t('Sample') }}:</div>
                 <div class="text-body q-px-md q-py-sm">
                     <div v-for="item of taskSamples" :key="item.id">
                         <div class="row bg-grey-3 q-px-sm">
@@ -46,7 +46,7 @@
                                     {{ item.sample_meta?.sample_componet }}
                                 </div>
                                 <div class="q-py-sm">
-                                    {{$t('SampleListTableColumnTumorSample')}}: {{ item.sample_meta?.is_panel }}
+                                    {{ $t('SampleListTableColumnTumorSample') }}: {{ item.sample_meta?.is_panel }}
                                 </div>
                             </div>
                             <div class="col-4">
@@ -67,7 +67,7 @@
             </q-section>
             <q-separator></q-separator>
             <q-section>
-                <div class="text-h6 q-pa-md">{{$t('ShellEnvs')}}:</div>
+                <div class="text-h6 q-pa-md">{{ $t('ShellEnvs') }}:</div>
                 <div class="text-body q-px-md q-py-xs" v-for="item of taskEnvs" :key="item.key">
                     <span class="text-bold">{{ item.key }} : </span> {{ item.value }}
                 </div>
@@ -114,7 +114,7 @@
 import PageTitle from "components/page-title/PageTitle.vue";
 import { useApi } from "src/api/apiBase";
 import { onMounted, ref, watch } from "vue";
-import { useRoute,useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { globalStore } from 'src/stores/global'
 import { useI18n } from "vue-i18n";
 const { t } = useI18n();
@@ -132,7 +132,7 @@ const taskEnvs = ref([])
 const getItemStatus = (item) => {
     switch (item.status) {
         case 'PENDING':
-            return  t('TaskPageListStatusRun')
+            return t('TaskPageListStatusRun')
         case 'RUNNING':
             return t('TaskPageListStatusQueue')
         case 'FINISHED':
@@ -140,7 +140,7 @@ const getItemStatus = (item) => {
         case 'FAILURED':
             return t('TaskPageListStatusFail')
         case 'CANCELED':
-            return  t('TaskPageListStatusCancel')
+            return t('TaskPageListStatusCancel')
         default:
             return item.status
     }
@@ -189,18 +189,19 @@ onMounted(() => {
 const getTaskDetail = () => {
     apiGet(`/task/${route.params.id}`, (res) => {
         taskDetail.value = res.data;
-        if (taskDetail.value.log.length === 0) {
-            taskDetail.value.log = [
-                // {'stages':['test-检查','test-运行中','test-完成']},
-                // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
-                // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
-                // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
-                // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
-                // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"}
-            ]
+        if (res.data.log) {
+            if (taskDetail.value.log.length === 0) {
+                taskDetail.value.log = [
+                    // {'stages':['test-检查','test-运行中','test-完成']},
+                    // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+                    // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+                    // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+                    // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},
+                    // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"}
+                ]
+            }
+            buildTaskStageAndLog(taskDetail.value)
         }
-
-        buildTaskStageAndLog(taskDetail.value)
         getTaskSamples(taskDetail.value.samples)
         buildTaskEnvs(taskDetail.value)
     });
