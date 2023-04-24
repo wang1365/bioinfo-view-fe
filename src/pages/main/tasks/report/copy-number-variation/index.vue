@@ -225,8 +225,13 @@ import { amISuper } from 'src/utils/user'
 import * as echarts from 'echarts'
 import { pieOption, columns } from './index'
 import { errorMessage } from 'src/utils/notify'
-import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+import { useI18n } from "vue-i18n"
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
+
+const store = globalStore()
+const { langCode } = storeToRefs(store)
+const { t } = useI18n()
 const getCheckboxProps = (record) => {
     return {
         disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
@@ -300,7 +305,7 @@ const handleChange = (pagination, filters) => {
     filteredInfo.value = filters
 }
 
-
+watch(langCode, v => loadData())
 
 const route = useRoute()
 const dlgVisible = ref(false)
@@ -406,10 +411,12 @@ const refreshPie = () => {
     pie.value.setOption(pieOption)
 }
 
-onMounted(() => {
-    tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter.txt`
-    tableFileName.value = `AnnotSV.tsv.filter.txt`
-    readTaskFile(route.params.id, 'CNV/AnnotSV.tsv.filter.txt').then((res) => {
+onMounted(() => loadData())
+const loadData = () => {
+    const suffix = langCode === 'en' ? 'EN' : 'CN'
+    tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter_${suffix}.txt`
+    tableFileName.value = `AnnotSV.tsv.filter_${suffix}.txt`
+    readTaskFile(route.params.id, `CNV/AnnotSV.tsv.filter_${suffix}.txt`).then((res) => {
         const columnFields = columns.map((t) => t.dataIndex)
         const results = getCsvDataAndSetLineNumber(res, { fields: columnFields })
         rows.value = results
@@ -454,9 +461,10 @@ onMounted(() => {
             initPie()
         })
     })
-})
+}
 
 const searchFilterRows = (searchParams) => {
+
     filteredRows.value = rows.value.filter((t) => {
         let result = true
         let param = searchParams.gene
@@ -477,7 +485,8 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.drugLevel
         // if (searchParams.drug === 'Yes' && param.length > 0) {
         if (param && param.length > 0) {
-            result &= param.some(level => t.Drugs.indexOf(`用药证据等级：${level}`) >= 0)
+            const word = langCode === 'cn' ? '用药证据等级：' : 'Drug Evidence Level:'
+            result &= param.some(level => t.Drugs.indexOf(`${word}${level}`) >= 0)
         }
         return result
     })
