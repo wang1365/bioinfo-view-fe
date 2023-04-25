@@ -464,7 +464,7 @@ const bubbleColKeys = computed(() => {
 
 const serialTitles = computed(() => {
     // ['col26', 'col31', 'col39']
-    return crowdCols[innerSearchParams.value.human].map(idx => props.header[idx])
+    return crowdCols[innerSearchParams.value.human].map(idx => props.header[idx-1])
 })
 
 const showDrawer = ref(false)
@@ -478,6 +478,9 @@ const filteredRows = ref([])
 
 const currentRow = ref({})
 
+onMounted(() => {
+    console.log('Headers', props.header)
+})
 
 const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
