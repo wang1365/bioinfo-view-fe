@@ -60,7 +60,7 @@ const columns = computed(() => {
    let result = [
         {
             key: 'a',
-            width: 40,
+            width: 50,
             dataIndex: 'group',
             customCell: (_, rowIndex, column) => {
                 let ret = { style: 'font-weight: bold;'}
@@ -93,7 +93,9 @@ const columns = computed(() => {
     if (props.samples.length !== 1) {
         result.push({title: t('ControlValue'), dataIndex: 'k3', align: 'center', width: 120, customCell: groupCustomCell})
     }
-    result.push({title: t('QC Standards'), dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell})
+
+    // 2023.04.25 去掉该列
+    // result.push({title: t('QC Standards'), dataIndex: 'k4', align: 'center', width: 120, customCell: groupCustomCell})
     return result
 })
 
