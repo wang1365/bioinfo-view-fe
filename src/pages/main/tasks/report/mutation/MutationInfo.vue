@@ -92,13 +92,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, toRefs, computed } from 'vue'
+import { ref, onMounted, toRefs, computed, watch } from 'vue'
 import RadarChartVue from './SomaticColumnCharts/RadarChart'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 import MutationInfo from "pages/main/tasks/report/mutation/MutationInfo.vue";
 
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const route = useRoute()
 const tab = ref('突变信息')
 
@@ -170,9 +174,14 @@ const omim = computed(() => {
     return isGermline.value ? props.row.col144 : props.row.col148
 })
 
-const tableData = ref(null)
-const tableRow = ref('')
 onMounted(() => {
+    loadRows()
+})
+
+watch(langCode, () => loadRows())
+
+const loadRows = () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     let row = props.row
     let match = ''
     if (props.isGermline) {
@@ -182,12 +191,12 @@ onMounted(() => {
         intro.value = props.row.col152
         match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col15}`
     }
-    const tablefile = props.isGermline ? 'Mut_germline/germline.evidence' : 'Mut_somatic/somatic.evidence'
+    const tablefile = props.isGermline ? `Mut_germline/germline_${suffix}.evidence` : `Mut_somatic/somatic_${suffix}.evidence`
     readTaskFile(route.params.id, tablefile).then((res) => {
         const items = getCsvData(res)
 
         for (const iterator of items) {
-            if (iterator[0] == match) {
+            if (iterator[0] === match) {
                 let item = {}
                 for (let index = 1; index < iterator.length; index++) {
                     item[`k${index}`] = iterator[index]
@@ -196,5 +205,5 @@ onMounted(() => {
             }
         }
     })
-})
+}
 </script>
