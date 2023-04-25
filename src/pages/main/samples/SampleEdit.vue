@@ -173,7 +173,7 @@ const linkPatient = (event) => {
     form.value.patient_id = event.id
     form.value.patient_identifier = event.identifier
 }
-const sampleTypeOptions = computed(()=>[t('SampleFormTypeFFPE'), t('SampleFormTypeFreshTissue'), t('SampleFormTypeBlood')])
+const sampleTypeOptions = computed(() => [t('SampleFormTypeFFPE'), t('SampleFormTypeFreshTissue'), t('SampleFormTypeBlood'),t('SampleFormTypeCerebrospinal'),t('SampleFormTypePleuralEffusion'),t('SampleFormTypeOtherBodyFluids'),t('SampleFormTypeBoneMarrow'),])
 const createValue = (val, done) => {
     if (val.length > 0) {
         if (!sampleTypeOptions.value.includes(val)) {

@@ -585,7 +585,11 @@ export default {
     SampleListTableColumnBtnDelete: '删除',
     SampleFormTypeFFPE: 'FFPE蜡块',
     SampleFormTypeFreshTissue: '新鲜组织',
-    SampleFormTypeBlood: '血液',
+    SampleFormTypeCerebrospinal: '脑脊液',
+    SampleFormTypePleuralEffusion: 'Fluid胸水',
+    SampleFormTypeOtherBodyFluids: '其他体液',
+    SampleFormTypeBoneMarrow: '骨髓',
+
     // 新建样本表单
     SampleNewFormTitle: '新建样本',
     SampleNewFormSamplingDate: '采样日期',

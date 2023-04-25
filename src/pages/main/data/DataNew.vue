@@ -238,96 +238,97 @@ const linkProject = (event) => {
 const close = () => {
     emit("refresh");
 };
-
-const errors = computed(()=>{
-    return {
+const defaultInputMessage=computed(()=>{
+    return t('Required')
+})
+const errors = ref({
     project_index: {
         //项目编码
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     library_number: {
         //文库编号
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     reagent_box: {
         //捕获试剂盒
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     nucleic_break_type: {
         // 核酸打断方式
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     library_input: {
         //建库input
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     index_type: {
         //index类型
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     index_number: {
         // index编号
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     hybrid_input: {
         // 杂交input
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     risk: {
         // 风险上机
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     nucleic_level: {
         // 核酸降解等级
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     sample_meta_id: {
         // 样本元信息ID
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     sample_identifier: {
         // 样本识别号
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     identifier: {
         // 数据识别号
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     company: {
         // 送检机构
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     nucleic_type: {
         // 核酸类型
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     fastq1_path: {
         // R1数据名称
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     },
     fastq2_path: {
         // R2数据名称
-        message: t('Required'),
+        message: defaultInputMessage.value,
         error: false,
     }
-}
 });
+
 const form = ref({
     project_index: "",
     library_number: "",
@@ -347,25 +348,6 @@ const form = ref({
     fastq1_path: "",
     fastq2_path: "",
 });
-/* const form = ref({
-*     project_index: "project_index",
-*     library_number: "library_number",
-*     reagent_box: "reagent_box",
-*     nucleic_break_type: "nucleic_break_type",
-*     library_input: "library_input",
-*     index_type: "index_type",
-*     index_number: "index_number",
-*     hybrid_input: "hybrid_input",
-*     risk: true,
-*     nucleic_level: "A",
-*     sample_meta_id: "sample_meta_id",
-*     sample_identifier: "sample_identifier",
-*     identifier: "identifier",
-*     company: "company",
-*     nucleic_type: "gDNA",
-*     fastq1_path: "fastq1_path",
-*     fastq2_path: "fastq2_path",
-* }); */
 const save = async () => {
     for (const key in errors.value) {
         errors.value[key].error = false;

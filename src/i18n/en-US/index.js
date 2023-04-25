@@ -586,6 +586,10 @@ export default {
     SampleFormTypeFFPE: 'FFPE',
     SampleFormTypeFreshTissue: 'Fresh Tissue',
     SampleFormTypeBlood: 'Blood',
+    SampleFormTypeCerebrospinal: 'Cerebrospinal Fluid',
+    SampleFormTypePleuralEffusion: 'Pleural Effusion',
+    SampleFormTypeOtherBodyFluids: 'Other Body Fluids',
+    SampleFormTypeBoneMarrow: 'Bone Marrow',
     // 新建样本表单
     SampleNewFormTitle: 'Create Sample',
     SampleNewFormSamplingDate: 'Sampling Date',

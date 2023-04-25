@@ -315,9 +315,9 @@ const total_task_count = computed(() => {
 const getItemStatus = (item) => {
     switch (item.status) {
         case 'PENDING':
-            return  t('TaskPageListStatusRun')
+            return  t('TaskPageListStatusQueue')
         case 'RUNNING':
-            return t('TaskPageListStatusQueue')
+            return t('TaskPageListStatusRun')
         case 'FINISHED':
             return t('TaskPageListStatusFinish')
         case 'FAILURED':

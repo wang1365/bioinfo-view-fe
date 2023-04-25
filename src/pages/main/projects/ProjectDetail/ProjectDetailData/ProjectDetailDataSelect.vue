@@ -90,7 +90,7 @@ const tableHeaders = computed(() => [
     t('PatientNewFormPatientIdentificationNumber'),
     t('PatientName'),
     t('PatientPageListTableColumnGender'),
-    t('SampleListTableColumnSampleIdentificationNumbe'),
+    t('SampleListTableColumnSampleIdentificationNumber'),
     t('SampleListTableColumnSamplingSite'),
     t('SampleListTableColumnTumorSample'),
 ]);

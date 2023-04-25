@@ -13,7 +13,7 @@
                             <q-input
                                 :error="errors.sample_date.error"
                                 :error-message="errors.sample_date.message"
-                                :label="'*'+$t('SampleNewFormSamplingDate')+'(YYYY-MM-DD)'"
+                                :label="'*' + $t('SampleNewFormSamplingDate') + '(YYYY-MM-DD)'"
                                 v-model="form.sample_date"
                                 readonly
                             >
@@ -34,7 +34,7 @@
                             <q-input
                                 :error="errors.test_date.error"
                                 :error-message="errors.test_date.message"
-                                :label="'*'+$t('SampleNewFormSubmissionDate')+'(YYYY-MM-DD)'"
+                                :label="'*' + $t('SampleNewFormSubmissionDate') + '(YYYY-MM-DD)'"
                                 v-model="form.test_date"
                                 readonly
                             >
@@ -56,7 +56,7 @@
                                 v-model="form.sample_componet"
                                 :error="errors.sample_componet.error"
                                 :error-message="errors.sample_componet.message"
-                                :label="'*'+$t('SampleNewFormSamplingSite')"
+                                :label="'*' + $t('SampleNewFormSamplingSite')"
                             ></q-input>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                                 input-debounce="0"
                                 @new-value="createValue"
                                 :options="sampleTypeOptions"
-                                :label="'*'+$t('SampleNewFormSampleType')"
+                                :label="'*' + $t('SampleNewFormSampleType')"
                             />
                         </div>
                         <div class="col q-pf-sm">
@@ -110,17 +110,17 @@
                         </div>
                         <div class="col q-pr-sm cursor-pointer">
                             <q-input
-                                @click="showLinkPatient=true"
+                                @click="showLinkPatient = true"
                                 readonly
                                 v-model="form.patient_id"
                                 :error="errors.patient_id.error"
                                 :error-message="errors.patient_id.message"
-                                :label="'*'+$t('SampleNewFormPatientID')"
+                                :label="'*' + $t('SampleNewFormPatientID')"
                             ></q-input>
                         </div>
                         <div class="col q-pr-sm">
                             <q-input
-                                @click="showLinkPatient=true"
+                                @click="showLinkPatient = true"
                                 readonly
                                 v-model="form.patient_identifier"
                                 :error="errors.patient_identifier.error"
@@ -150,7 +150,7 @@
                 :linkId="0"
                 @refresh="
                 linkPatient($event);
-            "
+                            "
             />
         </q-dialog>
     </q-card>
@@ -174,7 +174,7 @@ const linkPatient = (event) => {
 }
 const rref = ref;
 
-const sampleTypeOptions = computed(()=>[t('SampleFormTypeFFPE'), t('SampleFormTypeFreshTissue'), t('SampleFormTypeBlood'),])
+const sampleTypeOptions = computed(() => [t('SampleFormTypeFFPE'), t('SampleFormTypeFreshTissue'), t('SampleFormTypeBlood'),t('SampleFormTypeCerebrospinal'),t('SampleFormTypePleuralEffusion'),t('SampleFormTypeOtherBodyFluids'),t('SampleFormTypeBoneMarrow'),])
 const createValue = (val, done) => {
     if (val.length > 0) {
         if (!sampleTypeOptions.value.includes(val)) {
