@@ -334,27 +334,14 @@ const filterChange = () => {
 onUnmounted(() => {
     filterChange()
 })
-watch(qtSearchParam, () => {
+watch([qtSearchParam, qnSearchParam, qtRows, qnRows, qtSelectedRows, qnSelectedRows], () => {
     loadData()
 })
-watch(qnSearchParam, () => {
-    loadData()
-})
-watch(qtRows, () => {
-    loadData()
-})
-watch(qnRows, () => {
-    loadData()
-})
-watch(qtSelectedRows, () => {
-    loadData()
-})
-watch(qnSelectedRows, () => {
-    loadData()
-})
+
 onMounted(() => {
     loadData()
 })
+
 const samples = toRef(props, 'samples')
 const loadData = () => {
     let width = [32, 32, 60, 60, 60, 60, 60, 200, 60, 50]

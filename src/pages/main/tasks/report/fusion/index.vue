@@ -109,6 +109,11 @@ import { getCsvData, getCsvDataAndSetLineNumber, getCsvHeader } from 'src/utils/
 import { getDualIdentifiers } from 'src/utils/samples'
 import { useRoute } from 'vue-router'
 import { errorMessage } from 'src/utils/notify'
+import { globalStore }from 'src/stores/global'
+import { storeToRefs } from 'pinia'
+
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const singleVue = ref(null)
 const normalVue = ref(null)
 const route = useRoute()
@@ -173,10 +178,12 @@ const emit = defineEmits(['stickDone', 'reset'])
 const viewConfig = toRef(props, 'viewConfig')
 const samples = toRef(props, 'samples')
 const stepData = toRef(props, 'stepData')
+
 onMounted(() => {
     console.log('mounted')
     loadData()
 })
+
 const filterChange = (name, data) => {
     if (name === 'normal') {
         filterData.value.normal = data
@@ -232,7 +239,7 @@ const reset = () => {
     normalData.value.searchParam = ''
     normalData.value.selectedRows = []
 }
-watch(samples, () => {
+watch([samples, langCode], () => {
     loadData()
 })
 
@@ -245,11 +252,14 @@ const loadData = () => {
         loadNormalData()
     }
 }
+
 const loadSingleData = () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
+
     const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const { qt, qn } = getDualIdentifiers(samples.value)
     if (!qt) return
-    const qtFile = `fusion_germline/${qt}.fusions`
+    const qtFile = `fusion_germline/${qt}_${suffix}.fusions`
     readTaskFile(route.params.id, qtFile).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
         let header = getCsvHeader(res)
@@ -266,7 +276,7 @@ const loadSingleData = () => {
         }
     })
     if (samples.value.length > 1) {
-        const qnFile = `fusion_germline/${qn}.fusions`
+        const qnFile = `fusion_germline/${qn}_${suffix}.fusions`
         readTaskFile(route.params.id, qnFile).then((res) => {
             const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
             let header = getCsvHeader(res)
