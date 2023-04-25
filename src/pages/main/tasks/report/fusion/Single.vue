@@ -288,7 +288,7 @@ const searchKeyword2 = () => {
         errorMessage(t('DefineReportUnlockReuired'))
         return false
     }
-    searchFilterRows2(keyword2)
+    searchFilterRows2(keyword2.value)
 }
 
 const clearKeyword1 = () => {
