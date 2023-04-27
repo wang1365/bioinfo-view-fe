@@ -117,8 +117,12 @@ import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { globalStore } from 'src/stores/global'
 import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+import { storeToRefs } from 'pinia'
+
 const store = globalStore()
+const { langCode } = storeToRefs(store)
+
+const { t } = useI18n();
 const router = useRouter()
 const { apiGet, apiGetByIds } = useApi();
 const route = useRoute();
@@ -163,7 +167,7 @@ const getItemStatusColor = (item) => {
 };
 
 const buildTaskStageAndLog = (task) => {
-    let log = task.log
+    let log = langCode.value === 'en' ? task.log_EN : task.log_CN
     if (log.length >= 0) {
         stages.value = log[0].stages
 
@@ -183,14 +187,19 @@ watch(
         if (route.params.id) getTaskDetail();
     }
 );
+watch(langCode, lc => {
+    logs.value=[]
+    buildTaskStageAndLog(taskDetail.value)
+})
 onMounted(() => {
     getTaskDetail();
 });
 const getTaskDetail = () => {
     apiGet(`/task/${route.params.id}`, (res) => {
         taskDetail.value = res.data;
-        if (res.data.log) {
-            if (taskDetail.value.log.length === 0) {
+        let logAttr = langCode.value === 'en' ? 'log_EN' : 'log_CN'
+        if (res.data[logAttr]) {
+            if (taskDetail.value[logAttr].length === 0) {
                 taskDetail.value.log = [
                     // {'stages':['test-检查','test-运行中','test-完成']},
                     // {time:"YYYY-MM-DD HH:MM:SS",stage:"test-运行中",title:"test-测试",detail:"test-测试数据",status:"test-运行中"},

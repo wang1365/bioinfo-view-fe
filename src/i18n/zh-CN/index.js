@@ -584,6 +584,7 @@ export default {
     SampleListTableColumnBtnAssociatewithPatient: '关联患者',
     SampleListTableColumnBtnDelete: '删除',
     SampleFormTypeFFPE: 'FFPE蜡块',
+    SampleFormTypeBlood: '血液',
     SampleFormTypeFreshTissue: '新鲜组织',
     SampleFormTypeCerebrospinal: '脑脊液',
     SampleFormTypePleuralEffusion: 'Fluid胸水',

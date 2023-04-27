@@ -176,7 +176,7 @@
                                 class="cursor-pointer"
                                 color="red"
                                 name="find_in_page"
-                                @click="showError = true; currentTaskError = item.error_message"
+                                @click="showTaskError(item)"
                                 size="sm"
                             />
                         </td>
@@ -265,6 +265,11 @@ import { updateTask } from 'src/api/task'
 import { infoMessage } from 'src/utils/notify'
 import { useQuasar } from 'quasar'
 import { useI18n } from "vue-i18n";
+import { globalStore }from 'src/stores/global'
+import { storeToRefs } from 'pinia'
+
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const { t } = useI18n();
 
 const autoLoad = ref(false)
@@ -311,7 +316,10 @@ const total_task_count = computed(() => {
         ts.running_task_count
     )
 })
-
+const showTaskError =(item)=>{
+    showError.value=true
+    return langCode.value === 'en' ? item.error_message_EN : item.error_message_CN
+}
 const getItemStatus = (item) => {
     switch (item.status) {
         case 'PENDING':
