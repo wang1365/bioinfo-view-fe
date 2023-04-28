@@ -17,45 +17,40 @@
                 <div class="row q-gutter-xs">
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>
-                            <span>{{'VCF filter: '}}</span>>
-                            <span
-                                class="text-purple"
-                            >{{isGermline ? props.row.col147 : props.row.col151}}</span>
+                            <span>{{'VCF filter: '}}</span>
+                            <span class="text-purple">{{isGermline ? props.row.col248 : props.row.col252}}</span>
                         </div>
                     </div>
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>
                             {{`Gene: `}}
-                            <span class="text-purple">{{col146.gene}}</span>
+                            <span class="text-purple">{{geneProperties.gene}}</span>
                         </div>
                         <div>
                             {{`Transcript: `}}
-                            <span class="text-purple">{{col146.transcript}}</span>
+                            <span class="text-purple">{{geneProperties.transcript}}</span>
                         </div>
                         <div>
                             {{`Exon: `}}
-                            <span class="text-purple">{{col146.exon}}</span>
+                            <span class="text-purple">{{geneProperties.exon}}</span>
                         </div>
                         <div>
                             {{`cDNA: `}}
-                            <span class="text-purple">{{col146.cDna}}</span>
+                            <span class="text-purple">{{geneProperties.cDna}}</span>
                         </div>
                         <div>
                             {{`Ref/Alt: `}}
-                            <span class="text-purple">{{col146.ref}}</span>
+                            <span class="text-purple">{{geneProperties.ref}}</span>
                         </div>
                         <div>
                             {{`Protein: `}}
-                            <span class="text-purple">{{col146.protein}}</span>
+                            <span class="text-purple">{{geneProperties.protein}}</span>
                         </div>
                     </div>
                     <div class="col" style="padding-left: 5px">
                         <div>
                             <span>{{'RS: '}}</span>
-                            <a
-                                :href="'https://www.ncbi.nlm.nih.gov/snp/' + rs"
-                                target="_blank"
-                            >{{rs}}</a>
+                            <a :href="'https://www.ncbi.nlm.nih.gov/snp/' + rs" target="_blank">{{rs}}</a>
                         </div>
                         <div>
                             {{`ClinVar Allele ID: `}}
@@ -69,7 +64,11 @@
                 </div>
                 <q-separator class="q-my-sm" />
                 <div class="q-mt-sm">
-                    <RadarChartVue :data="props.row" :title-key="'NonsynonymousMutationTest'" :is-germline="props.isGermline"/>
+                    <RadarChartVue
+                        :data="props.row"
+                        :title-key="'NonsynonymousMutationTest'"
+                        :is-germline="props.isGermline"
+                    />
                 </div>
             </q-tab-panel>
 
@@ -142,11 +141,11 @@ const columns = [
     { title: 'Inferred Tier', dataIndex: 'k9', align: 'center', width: 80 },
 ]
 const rows = ref([])
-const col146 = computed(() => {
+const geneProperties = computed(() => {
     const result = {
         ref: `${row.value.col4} > ${row.value.col5}`,
     }
-    const col = isGermline.value ? row.value.col146 : row.value.col150
+    const col = isGermline.value ? row.value.col247 : row.value.col251
     const items = col.split(':')
     if (items.length < 5) {
         return result
@@ -163,7 +162,7 @@ const col146 = computed(() => {
 })
 
 const rs = computed(() => {
-    return isGermline.value ? props.row.col34 : props.row.col38
+    return isGermline.value ? props.row.col38 : props.row.col42
 })
 
 const clinVar = computed(() => {
@@ -171,7 +170,7 @@ const clinVar = computed(() => {
 })
 
 const omim = computed(() => {
-    return isGermline.value ? props.row.col144 : props.row.col148
+    return isGermline.value ? props.row.col245 : props.row.col249
 })
 
 onMounted(() => {

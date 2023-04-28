@@ -97,7 +97,7 @@
 </template>
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify'
-import { ref, onMounted, computed, toRef } from 'vue'
+import { ref, onMounted, computed, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
@@ -105,8 +105,13 @@ import GermlineMutationVue from './GermlineMutation.vue'
 import SomaticMutationVue from './SomaticMutation.vue'
 import { useQuasar } from 'quasar'
 import igv from "igv"
-import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+import { useI18n } from "vue-i18n"
+import { globalStore }from 'src/stores/global'
+import { storeToRefs } from 'pinia'
+
+const store = globalStore()
+const { langCode } = storeToRefs(store)
+const { t } = useI18n()
 const germlineVue = ref(null)
 const somaticVue = ref(null)
 const $q = useQuasar()
@@ -204,16 +209,34 @@ const somaticData = ref({
 
 const filterData = ref({ somatic: null, germline: null })
 const stepData = toRef(props, 'stepData')
+
 onMounted(() => {
     loaded.value = false
     if (viewConfig.value.showMutGermline) {
         loadGermlineData()
+        loadGermlineEvidenceData()
     }
     if (viewConfig.value.showMutSomatic) {
         loadSomaticData()
+        loadSomaticEvidenceData()
     }
     loaded.value = true
 })
+
+
+watch(langCode, () => {
+    // 只需要刷新evidence data
+    loaded.value = false
+    if (viewConfig.value.showMutGermline) {
+        loadGermlineEvidenceData()
+    }
+    if (viewConfig.value.showMutSomatic) {
+        loadSomaticEvidenceData()
+    }
+    loaded.value = true
+})
+
+
 // germlinemutation 和 somaticmutation 的数据同步
 const filterChange = (name, data) => {
     filterData.value[name] = data
@@ -270,6 +293,8 @@ const reset = () => {
     emit('reset', null)
 
 }
+
+
 const loadGermlineData = () => {
     $q.loading.show({ delay: 100 })
     readTaskMuFile(route.params.id, 'Mut_germline').then((res) => {
@@ -313,7 +338,11 @@ const loadGermlineData = () => {
     }).finally(() => {
         $q.loading.hide()
     })
-    const tablefile = 'Mut_germline/germline.evidence'
+}
+
+const loadGermlineEvidenceData = () => {
+    const suffix = langCode.value === "en" ? "EN" : "CN"
+    const tablefile = `Mut_germline/germline_${suffix}.evidence`
     readTaskFile(route.params.id, tablefile).then((res) => {
         const items = getCsvData(res)
         germlineData.value.drugRows = items
@@ -359,7 +388,11 @@ const loadSomaticData = () => {
             somaticData.value.selectedRows = stepData.value.somatic.selectedRows
         }
     })
-    const tablefile = 'Mut_somatic/somatic.evidence'
+}
+
+const loadSomaticEvidenceData = () => {
+    const suffix = langCode.value === "en" ? "EN" : "CN"
+    const tablefile = `Mut_somatic/somatic_${suffix}.evidence`
     readTaskFile(route.params.id, tablefile).then((res) => {
         const items = getCsvData(res)
         somaticData.value.drugRows = items
