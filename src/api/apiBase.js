@@ -107,6 +107,13 @@ export function defaultHandler(router, resp, onSuccess, onError) {
     if (code === 0 || code === 200 || code === 204 || code === 201) {
         onSuccess(res)
     } else if (code === 1) {
+        if (resp.data.status_code === 500) {
+            Notify.create({
+                type: 'negative',
+                message: `Sever Error: : ${res.msg}`,
+            })
+            return
+        }
         if (onError) {
             onError(res)
         } else {

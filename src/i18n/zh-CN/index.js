@@ -587,7 +587,7 @@ export default {
     SampleFormTypeBlood: '血液',
     SampleFormTypeFreshTissue: '新鲜组织',
     SampleFormTypeCerebrospinal: '脑脊液',
-    SampleFormTypePleuralEffusion: 'Fluid胸水',
+    SampleFormTypePleuralEffusion: '胸水',
     SampleFormTypeOtherBodyFluids: '其他体液',
     SampleFormTypeBoneMarrow: '骨髓',
 

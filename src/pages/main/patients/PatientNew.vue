@@ -22,9 +22,9 @@
                                 :error-message="errors.gender.message"
                                 v-model="form.gender"
                                 :options="[
-    {label:$t('Male'),value:'男'},
-    {label:$t('Female'),value:'女'},
-]"
+                                    { label: $t('Male'), value: '男' },
+                                    { label: $t('Female'), value: '女' },
+                                ]"
                                 emit-value
                                 map-options
                                 :label="$t('PatientNewFormGender')"
@@ -165,7 +165,7 @@
                                 :error-message="errors.smoking.message"
                                 v-model="form.smoking"
                                 :label="$t('PatientNewFormSmoking')"
-                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                :options="[{ label: $t('Yes'), value: '是' }, { label: $t('No'), value: '否' }]"
                                 emit-value
                                 map-options
                             />
@@ -176,7 +176,7 @@
                                 :error-message="errors.drinking.message"
                                 v-model="form.drinking"
                                 :label="$t('PatientNewFormAlcoholDrinking')"
-                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                :options="[{ label: $t('Yes'), value: '是' }, { label: $t('No'), value: '否' }]"
                                 emit-value
                                 map-options
                             />
@@ -187,13 +187,13 @@
                                 :error-message="errors.viral_infection.message"
                                 v-model="form.viral_infection"
                                 :label="$t('PatientNewFormViralInfection')"
-                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
+                                :options="[{ label: $t('Yes'), value: '是' }, { label: $t('No'), value: '否' }]"
                                 emit-value
                                 map-options
                             />
                         </div>
                     </div>
-                    <div class="text-h6 text-bold">{{$t('PatientNewFormOtherInformation')}}</div>
+                    <div class="text-h6 text-bold">{{ $t('PatientNewFormOtherInformation') }}</div>
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
@@ -260,7 +260,7 @@
 </template>
 
 <script setup>
-import { ref, defineEmits,computed } from "vue";
+import { ref, defineEmits, computed } from "vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
@@ -268,9 +268,9 @@ import { useI18n } from "vue-i18n";
 const { apiPost } = useApi();
 const { t } = useI18n();
 const emit = defineEmits(["refresh"]);
-const genderOptions = computed(()=>[
-    {label:t('Male'),value:'男'},
-    {label:t('Female'),value:'女'},
+const genderOptions = computed(() => [
+    { label: t('Male'), value: '男' },
+    { label: t('Female'), value: '女' },
 ])
 
 const close = () => {
