@@ -195,7 +195,7 @@ const getChangedData = () => {
     return {
         searchParam: keyword.value,
         selectedRows: selectedRows.value,
-        filtered: rows.value.length != filteredRows.value.length,
+        filtered: rows.value.length !== filteredRows.value.length,
         selected: selectedRows.value.length > 0,
     }
 }
