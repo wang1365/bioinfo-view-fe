@@ -607,19 +607,21 @@ const fixedColumns = [
     { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 200, ellipsis: true }, // cosmic70
     { i: 27, title: '', dataIndex: 'col27', align: 'center', width: 100 }, // ExAC_ALL
 
-    { i: 30, title: '', dataIndex: 'col30', align: 'center', width: 100 },
+    // { i: 30, title: '', dataIndex: 'col30', align: 'center', width: 100 },
 
     { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 100 },
-    { i: 36, title: '', dataIndex: 'col36', align: 'center', width: 100 },
+    // { i: 36, title: '', dataIndex: 'col36', align: 'center', width: 100 },
 
-    { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 100 },
-    { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 100 },
+    // { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 100 },
+    // { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 100 },
 
+    { i: 42, title: '', dataIndex: 'col42', align: 'center', width: 100 },
     { i: 43, title: '', dataIndex: 'col43', align: 'center', width: 100 },
 
-    { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
+    // { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
+    { i: 64, title: '', dataIndex: 'col64', align: 'center', width: 100 },
 
-    { i: 148, title: '', dataIndex: 'col148', align: 'center', width: 100 },
+    // { i: 148, title: '', dataIndex: 'col148', align: 'center', width: 100 },
 
     { title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 100 }
 ]
@@ -874,7 +876,7 @@ const searchFilterRows = (searchParams) => {
           */
         param = searchParams.sift
         if (param && param.length > 0) {
-            if (!param.includes(line.col60)) {
+            if (!param.includes(line.col64)) {
                 return false
             }
         }

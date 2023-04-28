@@ -506,21 +506,23 @@ const fixedColumns = [
     { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true }, //CLNSIG
     { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 200, ellipsis: true }, // cosmic70
     { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 100 }, // ExAC_ALL
-    { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
-    { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 105 }, // ExAC_AMR
-    { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100 }, // ExAC_EAS
+    // { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
+    // { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 105 }, // ExAC_AMR
+    // { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100 }, // ExAC_EAS
 
     { i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100 },
-    { i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100 },
+    // { i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100 },
 
-    { i: 34, title: '', dataIndex: 'col34', align: 'center', width: 100 }, // avsnp150
-    { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 120 },
+    // { i: 34, title: '', dataIndex: 'col34', align: 'center', width: 100 }, // avsnp150
+    // { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 120 },
 
-    { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 120 },
+    { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 120 },
+    // { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 120 },
 
-    { i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100 },
+    // { i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100 },
+    { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
 
-    { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
+    // { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
 
     // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
     { title: '操作列',  key: 'operation', align: 'center', fixed: 'right', width: 100 }
@@ -759,7 +761,7 @@ const searchFilterRows = (searchParams) => {
           */
         param = searchParams.sift
         if (param && param.length > 0) {
-            if (!param.includes(line.col56)) {
+            if (!param.includes(line.col60)) {
                 return false
             }
         }
