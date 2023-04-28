@@ -295,10 +295,11 @@ const loadSingleData = () => {
     }
 }
 const loadNormalData = () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     const { qt, qn } = getDualIdentifiers(props.samples)
     if (!qt || !qn) return
-    const filePath = `fusion_somatic/${qn}_${qt}.somatic_fusions`
+    const filePath = `fusion_somatic/${qn}_${qt}_${suffix}.somatic_fusions`
     readTaskFile(route.params.id, filePath).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
         let header = getCsvHeader(res)
