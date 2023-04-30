@@ -36,9 +36,9 @@ const option = ref({
         {
             indicator: [
                 {text: 'SIFT', max: 1},
-                {text: 'LRT', max: 1},
+                {text: 'LRT', min:-16.13, max: 10.64},
                 {text: 'MutationTaster', max: 1},
-                {text: 'MutationAssessor', max: 1},
+                {text: 'MutationAssessor', min:-5.135, max: 6.49},
                 {text: 'FATHMM', max: 1}
             ],
             // center: ['50%', '50%'],
@@ -104,7 +104,7 @@ const init = () => {
 };
 
 const refresh = () => {
-    let colKeys = props.isGermline ? ['col58', 'col64', 'col67', 'col70', 'col73'] : ['col62', 'col68', 'col71', 'col74', 'col77']
+    let colKeys = props.isGermline ? ['col59', 'col65', 'col68', 'col71', 'col74'] : ['col62', 'col68', 'col71', 'col74', 'col77']
     const v1 = data.value[colKeys[0]] === '.' ? 0 : Number(data.value[colKeys[0]])
     const v2 = data.value[colKeys[1]] === '.' ? 0 : Number(data.value[colKeys[1]])
     const v3 = data.value[colKeys[2]] === '.' ? 0 : Number(data.value[colKeys[2]])
