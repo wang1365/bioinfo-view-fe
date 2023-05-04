@@ -104,7 +104,7 @@ const init = () => {
 };
 
 const refresh = () => {
-    let colKeys = props.isGermline ? ['col59', 'col65', 'col68', 'col71', 'col74'] : ['col62', 'col68', 'col71', 'col74', 'col77']
+    let colKeys = props.isGermline ? ['col59', 'col65', 'col68', 'col71', 'col74'] : ['col63', 'col69', 'col72', 'col75', 'col78']
     const v1 = data.value[colKeys[0]] === '.' ? 0 : Number(data.value[colKeys[0]])
     const v2 = data.value[colKeys[1]] === '.' ? 0 : Number(data.value[colKeys[1]])
     const v3 = data.value[colKeys[2]] === '.' ? 0 : Number(data.value[colKeys[2]])
