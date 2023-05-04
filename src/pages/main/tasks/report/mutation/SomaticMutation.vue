@@ -194,6 +194,7 @@
                         />
                         <q-btn
                             :href="tableFile"
+                            :download="tableFileName"
                             padding="sm"
                             :label="$t('Download')"
                             icon="south"
@@ -632,6 +633,11 @@ const selectedExpandColIdx = ref([])
 const tableFile = computed(() => {
     const ret = getDualIdentifiers(props.samples)
     return `igv${props.task.result_dir}/Mut_somatic/${ret.qn}_${ret.qt}.combined.standard-new.csv`
+})
+
+const tableFileName = computed(() => {
+    const ret = getDualIdentifiers(props.samples)
+    return `${ret.qn}_${ret.qt}.combined.standard-new.txt`
 })
 
 // 固定显示列的列号

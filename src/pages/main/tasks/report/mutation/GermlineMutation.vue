@@ -171,6 +171,7 @@
                         />
                         <q-btn
                             :href="tableFile"
+                            :download="tableFileName"
                             :label="$t('Download')"
                             padding="sm"
                             icon="south"
@@ -806,6 +807,11 @@ watch(rows, (rows) => {
 const tableFile = computed(() => {
     const ret = getDualIdentifiers(props.samples)
     return `igv${props.task.result_dir}/Mut_germline/${ret.qt}.combined.standard-new.csv`
+})
+
+const tableFileName = computed(() => {
+    const ret = getDualIdentifiers(props.samples)
+    return `${ret.qt}.combined.standard-new.txt`
 })
 
 onMounted(() => {
