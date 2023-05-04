@@ -405,6 +405,8 @@ const clickReset = () => {
 }
 
 const search = () => {
+    const ms_pass_idx = headerNames.value.findIndex(name => name === 'MS_PASS')
+
     filteredLines.value = totalLines.value.filter((line) => {
         // 肿瘤深度
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
@@ -499,9 +501,9 @@ const search = () => {
             // 不同地区人群使用的数据列
             let hrColumns = {
                 'ALL': [27, 35, 43],
-                'African': [28, 36, 37],
+                'African': [28, 36, 44],
                 'American': [29, 37, 45],
-                'East Asian': [30, 38, 39],
+                'East Asian': [30, 38, 47],
                 'European': [31, 39, 48],
                 'South Asian': [34, 40]
             }[searchParams.value.human]
@@ -522,10 +524,10 @@ const search = () => {
         }
 
         // 是否过滤重复区假突变
-        // 在文件第151列MS_PASS列（目前的最后一列），对MS区域突变进行标注”yes“或”no“，如果选择过滤重复区假突变，仅用yes的突变去计算TMB
+        // 在文件第252列MS_PASS列（目前的最后一列），对MS区域突变进行标注”yes“或”no“，如果选择过滤重复区假突变，仅用yes的突变去计算TMB
         param = searchParams.value.filterDup
         if (param) {
-            if (line[150].toLowerCase() !== 'yes') {
+            if (line[ms_pass_idx].toLowerCase() !== 'yes') {
                 return false
             }
         }
