@@ -184,10 +184,10 @@ const loadRows = () => {
     let row = props.row
     let match = ''
     if (props.isGermline) {
-        intro.value = props.row.col148
+        intro.value = props.row.col249
         match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col11}`
     } else {
-        intro.value = props.row.col152
+        intro.value = props.row.col253
         match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col15}`
     }
     const tablefile = props.isGermline ? `Mut_germline/germline_${suffix}.evidence` : `Mut_somatic/somatic_${suffix}.evidence`
