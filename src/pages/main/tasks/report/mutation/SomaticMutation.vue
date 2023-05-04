@@ -851,9 +851,9 @@ const searchFilterRows = (searchParams) => {
             // 不同地区人群使用的数据列
             let hrColumns = {
                 'ALL': [27, 35, 43],
-                'African': [28, 36, 37],
+                'African': [28, 36, 44],
                 'American': [29, 37, 45],
-                'East Asian': [30, 38, 39],
+                'East Asian': [30, 38, 47],
                 'European': [31, 39, 48],
                 'South Asian': [34, 40]
             }[searchParams.human]
