@@ -289,7 +289,7 @@
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
-                <MutationInfo :row="currentRow" :task="props.task" :samples="props.samples"></MutationInfo>
+                <MutationInfo :row="currentRow" :task="props.task" :samples="props.samples" :headers="props.header"></MutationInfo>
             </q-card-section>
             <q-card-actions align="center" vertical>
                 <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>

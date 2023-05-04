@@ -335,7 +335,7 @@
     <q-dialog v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
-                <MutationInfo :row="currentRow" :isGermline="false" :task="props.task" :samples="props.samples">
+                <MutationInfo :row="currentRow" :isGermline="false" :task="props.task" :samples="props.samples" :headers="props.header">
                 </MutationInfo>
             </q-card-section>
             <q-space></q-space>

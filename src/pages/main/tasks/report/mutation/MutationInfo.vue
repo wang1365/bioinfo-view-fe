@@ -120,6 +120,10 @@ const props = defineProps({
         type: Array,
         required: false,
     },
+    headers: {
+        type: Array,
+        required: false,
+    },
     task: {
         type: Object,
         required: false,
@@ -129,7 +133,7 @@ const props = defineProps({
 const { row, isGermline } = toRefs(props)
 const intro = ref('')
 
-const columns = [
+const fullColumns = [
     { title: 'Molecular Profile', dataIndex: 'k1', align: 'center', width: 80 },
     { title: 'Tumor Type', dataIndex: 'k2', align: 'center', width: 100 },
     { title: 'Response Type', dataIndex: 'k3', align: 'center', width: 80 },
@@ -140,6 +144,8 @@ const columns = [
     { title: 'Efficacy Level', dataIndex: 'k8', align: 'center', width: 80 },
     { title: 'Inferred Tier', dataIndex: 'k9', align: 'center', width: 80 },
 ]
+
+const columns = ref([])
 const rows = ref([])
 const geneProperties = computed(() => {
     const result = {
@@ -183,13 +189,17 @@ const loadRows = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     let row = props.row
     let match = ''
+    const introIdx = props.headers.findIndex(name => name === 'Mut_info')
+    intro.value = props.row[`col${introIdx+1}`]
     if (props.isGermline) {
-        intro.value = props.row.col249
         match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col11}`
     } else {
-        intro.value = props.row.col253
         match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col15}`
     }
+
+    // 根据匹配列数取前n列
+    columns.value = fullColumns.splice(0, 6)
+
     const tablefile = props.isGermline ? `Mut_germline/germline_${suffix}.evidence` : `Mut_somatic/somatic_${suffix}.evidence`
     readTaskFile(route.params.id, tablefile).then((res) => {
         const items = getCsvData(res)
