@@ -860,7 +860,7 @@ const searchFilterRows = (searchParams) => {
             hrColumns = hrColumns.map(h => line[`col${h}`])
             if (hrColumns.length === 2) {
                 // 如果没有第三列，认为第三列数据为.
-                hrColumns.add('.')
+                hrColumns.push('.')
             }
             const cmp = useComparator(searchParams.humanRatioCmp)
             const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
