@@ -36,9 +36,9 @@ const option = ref({
         {
             indicator: [
                 {text: 'SIFT', max: 1},
-                {text: 'LRT', min:-16.13, max: 10.64},
+                {text: 'LRT', min: 0, max: 10.64}, // -16.13 - 10.64
                 {text: 'MutationTaster', max: 1},
-                {text: 'MutationAssessor', min:-5.135, max: 6.49},
+                {text: 'MutationAssessor', min: 0, max: 6.49}, // -5.135 - 6.49
                 {text: 'FATHMM', max: 1}
             ],
             // center: ['50%', '50%'],

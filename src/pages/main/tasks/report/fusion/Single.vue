@@ -386,7 +386,7 @@ onMounted(() => {
 
 const samples = toRef(props, 'samples')
 const loadData = () => {
-    let width = [32, 32, 60, 60, 60, 60, 60, 200, 60, 50]
+    let width = [30, 30, 75, 75, 30, 60, 60, 120, 30]
     columns1.value = []
     qtHeader.value.forEach((item, index) => {
         if (item === 'Igv') {
@@ -402,6 +402,7 @@ const loadData = () => {
                 dataIndex: index,
                 align: 'center',
                 width: width[index],
+                ellipsis: true
             })
     })
     keyword1.value = qtSearchParam.value
@@ -422,14 +423,14 @@ const loadData = () => {
 
     if (samples.value.length > 1) {
         columns2.value = []
-        width = [30, 30, 60, 60, 60, 60, 60, 60, 120, 50]
+        width = [30, 30, 75, 75, 30, 60, 60, 120, 30]
         qnHeader.value.forEach((item, index) => {
             if (item === 'Igv') {
                 columns2.value.push({
                     title: item,
                     dataIndex: index,
                     align: 'center',
-                    width: width[index],
+                    width: width[index]
                 })
             } else
                 columns2.value.push({
@@ -437,6 +438,7 @@ const loadData = () => {
                     dataIndex: index,
                     align: 'center',
                     width: width[index],
+                    ellipsis: true
                 })
         })
         keyword2.value = qnSearchParam.value
