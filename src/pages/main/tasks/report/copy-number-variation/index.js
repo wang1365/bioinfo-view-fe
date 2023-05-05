@@ -92,7 +92,7 @@ export const pieOption = {
         },
         formatter: (param) => {
           return param.data.ratio
-            ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio}拷贝`
+            ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio} copy`
             : null
         },
       },
@@ -139,7 +139,7 @@ export const pieOption = {
         },
         formatter: (param) => {
           return param.data.ratio
-            ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio}拷贝`
+            ? `${param.data.name}: ${param.data.start}-${param.data.end} ${param.data.ratio} copy`
             : null
         },
       },
