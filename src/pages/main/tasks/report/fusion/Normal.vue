@@ -211,7 +211,7 @@ onUnmounted(() => {
 })
 
 const loadData = () => {
-    const width = [30, 30, 60, 60, 60, 60, 200, 50, 50]
+    const width = [30, 30, 60, 60, 60, 60, 200, 50, 30]
     columns.value = []
     header.value.forEach((item, index) => {
         if (item === 'Igv') {
