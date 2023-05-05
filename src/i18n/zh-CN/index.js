@@ -369,7 +369,7 @@ export default {
     SnpStatistics: 'SNP统计',
     MutationInfo: '突变信息',
     DrugRelatedInfo: '药物关联信息',
-    NonsynonymousMutationTest: '非同义突变检测',
+    NonsynonymousMutationTest: '蛋白质风险预测',
 
     // 融合分析
     SingleSampleFusionAnalysis: '单样品融合分析',

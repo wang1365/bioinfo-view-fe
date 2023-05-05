@@ -370,7 +370,7 @@ export default {
     SnpStatistics: 'SNP Statistics',
     MutationInfo: 'Mutation Info',
     DrugRelatedInfo: 'Drug Related Info',
-    NonsynonymousMutationTest: 'Nonsynonymous Mutation Test',
+    NonsynonymousMutationTest: 'Protein risk prediction',
 
     // 融合分析
     SingleSampleFusionAnalysis: 'Single Sample Fusion Analysis',
