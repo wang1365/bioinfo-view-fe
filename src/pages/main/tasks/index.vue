@@ -45,10 +45,11 @@
                     v-model="status"
                     :options="options"
                     stack-label
+                    emit-value
+                    map-options
                     clearable
                     filled
                     @clear="clearSelect()"
-                    :display-value="`${$t('Status')}: ${status.label}`"
                     dense
                     @update:model-value="refreshPage()"
                 ></q-select>
@@ -247,7 +248,7 @@
                         </q-toolbar>
                     </div>
                 </div>
-                <pre>{{ currentTaskError || "None"}}</pre>
+                <p class="q-pa-sm">{{ currentTaskError || "None"}}</p>
             </q-card>
         </q-dialog>
     </q-page>
@@ -275,7 +276,7 @@ const { t } = useI18n();
 const autoLoad = ref(false)
 const intId = ref(null)
 const $q = useQuasar()
-const options = ref([
+const options = computed(()=>[
     { label: t('TaskPageListStatusAll'), value: 'ALL' },
     { label: t('TaskPageListStatusRun'), value: 'RUNNING' },
     { label:t('TaskPageListStatusQueue') , value: 'PENDING' },
@@ -288,6 +289,7 @@ const endTime = ref('')
 const status = ref({ label: t('TaskPageListStatusAll'), value: 'ALL' })
 const showProjectSelect = ref(false)
 const showError = ref(false)
+const currentTaskError=ref('')
 const projectId = ref(0)
 const projectName = ref('')
 const patient = ref('')
@@ -318,7 +320,7 @@ const total_task_count = computed(() => {
 })
 const showTaskError =(item)=>{
     showError.value=true
-    return langCode.value === 'en' ? item.error_message_EN : item.error_message_CN
+    currentTaskError.value= langCode.value === 'en' ? item.error_message_EN : item.error_message_CN
 }
 const getItemStatus = (item) => {
     switch (item.status) {

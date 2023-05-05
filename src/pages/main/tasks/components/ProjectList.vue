@@ -1,7 +1,7 @@
 <template>
     <div style="max-width: 100%">
         <PopupSingleSelector
-            title="选择项目"
+            :title="$t('Project')"
             :dataItems="dataItems"
             :total="total"
             :tableHeaders="tableHeaders"
@@ -13,7 +13,13 @@
         >
             <template v-slot:tableFilter>
                 <div class="row q-px-md q-gutter-sm">
-                    <q-input style="width: 250px" dense v-model="projectName" label="项目名称" clearable />
+                    <q-input
+                        style="width: 250px"
+                        dense
+                        v-model="projectName"
+                        :label="$t('ProjectPageListSearchInput')"
+                        clearable
+                    />
                     <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
                 </div>
             </template>
@@ -33,15 +39,17 @@
     </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref ,computed} from "vue";
 import { useApi } from "src/api/apiBase";
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
-const tableHeaders = ref([
-    "项目名称(上级/当前)",
-    "样本数量",
-    "任务数量",
-    "创建人",
-    "创建时间",
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+const tableHeaders = computed(()=>[
+`${t('Project')}(${t('TaskPageProjectParent')}/${t('TaskPageProjectSelf') })`,
+    t('ProjectPageListTableSampleCount'),
+    t('ProjectPageListTableTaskCount'),
+    t('ProjectPageListTableCreater'),
+    t('ProjectPageListTableCreateTime'),
 ]);
 const tableRowFields = ref([
     "name",
