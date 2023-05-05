@@ -347,7 +347,7 @@ const raisePriority = (row, priority) => {
         const msg = priority === 1 ? '降低' : '提升'
         $q.notify({
             type: "positive",
-            message: `${msg} ${$t('Success')}`,
+            message: `${msg} ${t('Success')}`,
         })
         loadPage()
     })
