@@ -92,7 +92,7 @@
 import { ref, onMounted, toRefs, computed, watch } from 'vue'
 import RadarChartVue from './SomaticColumnCharts/RadarChart'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
-import { getCsvData } from 'src/utils/csv'
+import {getCsvData, getCsvHeader} from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
@@ -195,22 +195,29 @@ const loadRows = () => {
         match = `${row.col1}:${row.col2}-${row.col3}_${row.col4}>${row.col5}_${row.col15}`
     }
 
-    // 根据匹配列数取前n列
-    columns.value = fullColumns.splice(0, 6)
 
-    const tablefile = props.isGermline ? `Mut_germline/germline_${suffix}.evidence` : `Mut_somatic/somatic_${suffix}.evidence`
-    readTaskFile(route.params.id, tablefile).then((res) => {
+    const tableFile = props.isGermline ? `Mut_germline/germline_${suffix}.evidence` : `Mut_somatic/somatic_${suffix}.evidence`
+    readTaskFile(route.params.id, tableFile).then((res) => {
         const items = getCsvData(res)
+        const headers = getCsvHeader(res, '\t')
 
-        for (const iterator of items) {
-            if (iterator[0] === match) {
+        // 表格头（排除第一列）
+        columns.value = headers.slice(1).map(h => {
+            return { title: h, dataIndex: h, align: 'center', ellipsis: true }
+        })
+
+        // 表格数据
+        items.filter(row => row[0] === match)
+            .forEach(row => {
                 let item = {}
-                for (let index = 1; index < iterator.length; index++) {
-                    item[`k${index}`] = iterator[index]
+                for (let index = 1; index < row.length; index++) {
+                    item[headers[index]] = row[index]
                 }
                 rows.value.push(item)
-            }
-        }
+            })
+
+        console.log('===> columns', columns.value)
+        console.log('===> rows', rows.value)
     })
 }
 </script>
