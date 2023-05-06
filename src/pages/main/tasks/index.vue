@@ -60,7 +60,7 @@
                     dense
                     clearable
                     v-model="patient"
-                    :label="`${$t('Patient')} Name`"
+                    :label="`${$t('Patient')} ${$t('Name')}`"
                 />
                 <q-input
                     style="width:150px"

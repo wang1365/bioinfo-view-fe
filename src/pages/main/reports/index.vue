@@ -45,12 +45,18 @@
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
-                            <a :href="'/igv'+props.row.report_path" download v-if="props.row.status==t('Success')">
+                            <a :href="'/igv'+props.row.report_path" download v-if="props.row.status=='创建成功'">
                                 <q-btn color="primary" :label="$t('Download')" size="sm" />
                             </a>
                             <a>
                                 <q-btn @click="onDelete(props.row)" color="red" :label="$t('Delete')" size="sm" />
                             </a>
+                        </q-td>
+                    </template>
+                    <template v-slot:body-cell-status="props">
+                        <q-td :props="props" class="q-gutter-xs">
+                            <span v-if="props.row.status=='创建成功'"> {{ $t("Success") }}</span>
+                            <span v-if="props.row.status=='创建失败'"> {{ $t("Failed") }}</span>
                         </q-td>
                     </template>
                 </q-table>
@@ -151,7 +157,7 @@ const columns = computed(()=>[
         format: (val) => `${val}`,
     },
     {
-        name: 'comment',
+        name: 'status',
         required: true,
         label: t('Status'),
         align: 'left',
