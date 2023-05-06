@@ -136,9 +136,9 @@ const taskEnvs = ref([])
 const getItemStatus = (item) => {
     switch (item.status) {
         case 'PENDING':
-            return t('TaskPageListStatusRun')
-        case 'RUNNING':
             return t('TaskPageListStatusQueue')
+        case 'RUNNING':
+            return t('TaskPageListStatusRun')
         case 'FINISHED':
             return t('TaskPageListStatusFinish')
         case 'FAILURED':
