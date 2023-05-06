@@ -18,15 +18,19 @@
             :breakpoint="0"
             dense
         >
-            <q-tab name="试剂盒捕获质控信息" :label="$t('CaptureKitQcInformation')" v-if="props.viewConfig.showQCsummary" />
+            <q-tab
+                name="试剂盒捕获质控信息"
+                :label="$t('CaptureKitQcInformation')"
+                v-if="props.viewConfig.showQCsummary"
+            />
             <q-tab name="深度信息" :label="$t('DepthInformation')" v-if="props.viewConfig.showQCdepth" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="试剂盒捕获质控信息">
-                <KitCaptureVue :samples="samples" />
+                <KitCaptureVue :samples="samples" :task="props.task" />
             </q-tab-panel>
             <q-tab-panel name="深度信息">
-                <DeepInfoVue :samples="samples" />
+                <DeepInfoVue :samples="samples" :task="props.task" />
             </q-tab-panel>
         </q-tab-panels>
         <q-separator class="bg-separator" />
@@ -71,6 +75,10 @@ const props = defineProps({
         type: Array,
         required: false,
         default: () => [],
+    },
+    task: {
+        type: Object,
+        required: false,
     },
     viewConfig: {
         type: Object,

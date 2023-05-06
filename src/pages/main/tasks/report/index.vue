@@ -18,8 +18,18 @@
                 dense
             >
                 <q-tab name="qc" :label="$t('QC')" icon="border_left" v-if="tabValid('qc')" />
-                <q-tab name="mutation" :label="$t('MutationAnalysis')" icon="candlestick_chart" v-if="tabValid('mutation')" />
-                <q-tab name="fusion" :label="$t('FusionAnalysis')" icon="format_strikethrough" v-if="tabValid('fusion')" />
+                <q-tab
+                    name="mutation"
+                    :label="$t('MutationAnalysis')"
+                    icon="candlestick_chart"
+                    v-if="tabValid('mutation')"
+                />
+                <q-tab
+                    name="fusion"
+                    :label="$t('FusionAnalysis')"
+                    icon="format_strikethrough"
+                    v-if="tabValid('fusion')"
+                />
                 <q-tab
                     name="copy-number-variation"
                     :label="$t('CopyNumberVariationAnalysis')"
@@ -54,7 +64,7 @@
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
-                    <QcVue :viewConfig="module.qc" :intro="intros['qc']" :samples="samples" />
+                    <QcVue :viewConfig="module.qc" :intro="intros['qc']" :samples="samples" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
                     <MutaionVue

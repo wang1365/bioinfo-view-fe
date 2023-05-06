@@ -1,13 +1,12 @@
 <template>
     <div>
         <div class="row items-start q-gutter-sm">
-            <q-input v-model="keyword" :label="$t('InputGeneToSearch') + ':'" clearable dense  @clear="clearKeyword">
+            <q-input v-model="keyword" :label="$t('InputGeneToSearch') + ':'" clearable dense @clear="clearKeyword">
                 <template v-slot:append>
                     <q-icon name="search" />
                 </template>
             </q-input>
             <q-btn class="q-ml-sm" color="primary" :label="$t('GeneSearch')" @click="searchKeyword"></q-btn>
-
         </div>
     </div>
     <div class="q-py-md">
@@ -15,24 +14,56 @@
             <div class="col q-mr-md" v-if="props.samples.length > 1">
                 <div class="text-center text-bold text-primary text-h6" style="position:relative">
                     {{$t('ControlSample')}}
-                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
-                        @click="download(0)"></q-icon>
+                    <q-btn
+                        :href="fileUrl1"
+                        style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
+                        :label="$t('Download')"
+                        padding="sm"
+                        icon="south"
+                        color="primary"
+                        target="_blank"
+                        size="xs"
+                    />
                 </div>
                 <q-separator></q-separator>
-                <a-table class="col-5" size="small" bordered :loading="loading1" :data-source="filteredRows1"
-                    :columns="columns" :sticky="true">
+                <a-table
+                    class="col-5"
+                    size="small"
+                    bordered
+                    :loading="loading1"
+                    :data-source="filteredRows1"
+                    :columns="columns"
+                    :sticky="true"
+                >
                 </a-table>
             </div>
             <div class="col q-ml-md">
-                <div class="text-center text-bold text-purple text-h6" style="position:relative"
-                    v-if="props.samples.length > 1">
+                <div
+                    class="text-center text-bold text-purple text-h6"
+                    style="position:relative"
+                    v-if="props.samples.length > 1"
+                >
                     {{$t('TumorSample')}}
-                    <q-icon name="download" style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
-                        @click="download(1)"></q-icon>
+                    <q-btn
+                        :href="fileUrl2"
+                        style="position:absolute;right:10px;bottom: 5px;cursor:pointer"
+                        :label="$t('Download')"
+                        padding="sm"
+                        icon="south"
+                        color="primary"
+                        target="_blank"
+                        size="xs"
+                    />
                 </div>
                 <q-separator></q-separator>
-                <a-table size="small" bordered :loading="loading2" :data-source="filteredRows2" :columns="columns"
-                    :sticky="true">
+                <a-table
+                    size="small"
+                    bordered
+                    :loading="loading2"
+                    :data-source="filteredRows2"
+                    :columns="columns"
+                    :sticky="true"
+                >
                 </a-table>
             </div>
         </div>
@@ -53,6 +84,10 @@ const props = defineProps({
     intro: {
         type: String,
         required: false
+    },
+    task: {
+        type: Object,
+        required: false,
     },
     samples: {
         type: Array,
@@ -75,6 +110,8 @@ const rows2 = ref([])
 const filteredRows2 = ref([])
 const loading1 = ref(false)
 const loading2 = ref(false)
+const fileUrl1 = ref('')
+const fileUrl2 = ref('')
 
 
 const searchKeyword = () => {
@@ -117,8 +154,9 @@ const download = (idx) => {
 
 onMounted(() => {
     const fields = ['k1', 'k2', 'k3', 'k4']
-
     const { qt, qn } = getDualIdentifiers(props.samples)
+    fileUrl1.value = `/igv/${props.task.result_dir}/QC/${qt}.depth`
+    fileUrl2.value = `/igv/${props.task.result_dir}/QC/${qn}.depth`
 
     loading2.value = true
     readTaskFile(route.params.id, `QC/${qt}.depth`, {}, fields).then(res => {
