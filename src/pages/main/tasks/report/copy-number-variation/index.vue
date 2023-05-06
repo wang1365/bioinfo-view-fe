@@ -487,7 +487,7 @@ const searchFilterRows = (searchParams) => {
         param = searchParams.drugLevel
         // if (searchParams.drug === 'Yes' && param.length > 0) {
         if (param && param.length > 0) {
-            const word = langCode === 'cn' ? '用药证据等级：' : 'Drug Evidence Level:'
+            const word = langCode.value === 'cn' ? '用药证据等级：' : 'Drug Evidence Level:'
             result &= param.some(level => t.Drugs.indexOf(`${word}${level}`) >= 0)
         }
         return result
