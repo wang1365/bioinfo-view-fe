@@ -45,7 +45,7 @@
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
-                            <a :href="'/igv'+props.row.report_path" download v-if="props.row.status=='创建成功'">
+                            <a :href="getreportPath(props)" download v-if="props.row.status=='创建成功'">
                                 <q-btn color="primary" :label="$t('Download')" size="sm" />
                             </a>
                             <a>
@@ -74,6 +74,10 @@ import { useQuasar } from 'quasar'
 import { infoMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n";
 import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { globalStore } from 'src/stores/global'
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const { t } = useI18n();
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
@@ -86,6 +90,22 @@ const searchParams = ref({
     sample_meta_identifier: '',
     sample_identifier: '',
 })
+
+const getreportPath=(props)=>{
+    let suffix = langCode.value === 'en' ? 'EN' : 'CN'
+    if(props.row.report_path){
+
+        return '/igv'+props.row.report_path
+    }else{
+        if(suffix==='EN' && props.row.report_path_en){
+            return '/igv'+props.row.report_path_en
+        }
+        if(suffix==='CN' && props.row.report_path_cn){
+            return '/igv'+props.row.report_path_cn
+        }
+
+    }
+}
 
 const columns = computed(()=>[
     {
