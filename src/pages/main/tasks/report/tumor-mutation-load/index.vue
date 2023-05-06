@@ -507,7 +507,7 @@ const search = () => {
                 'European': [31, 39, 48],
                 'South Asian': [34, 40]
             }[searchParams.value.human]
-            hrColumns = hrColumns.map(h => line[h])
+            hrColumns = hrColumns.map(h => line[h-1])
             if (hrColumns.length === 2) {
                 // 如果没有第三列，认为第三列数据为.
                 hrColumns.add('.')
