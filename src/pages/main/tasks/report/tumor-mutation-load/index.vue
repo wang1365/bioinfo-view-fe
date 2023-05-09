@@ -31,8 +31,20 @@
 
     <div class="row justify-between">
         <div class="col-3 column q-gutter-xs">
-            <div class="col">
-                <q-input model-value="PASS" label="VCF Filter" clearable readonly stack-label label-color="primary" />
+            <div class="content-center items-center">
+<!--                <q-input model-value="PASS" label="VCF Filter" clearable readonly stack-label label-color="primary" />-->
+                <span class="text-primary q-mr-sm">VCF Filter:</span>
+                <q-btn-toggle
+                    v-model="searchParams.vcfFilter"
+                    size="sm"
+                    class="q-ml-sm q-mb-sm"
+                    toggle-color="primary"
+                    :options="[
+                      {label: 'PASS', value: 'PASS'},
+                      {label: 'ALL', value: 'ALL'}
+                    ]"
+                />
+                <q-separator/>
             </div>
             <div class="col">
                 <q-input
@@ -226,6 +238,7 @@ const bedRegionValue = ref(1)
 
 let initialParams = {}
 const searchParams = ref({
+    vcfFilter: null,
     tumorDepth: null,
     compareDepth: null,
     tumorRatio: null,
@@ -308,6 +321,7 @@ onMounted(() => {
             bedRegionValue.value = Number(lines[9][1])
 
             initialParams = {
+                vcfFilter: 'PASS',
                 tumorDepth: Number(lines[0][1]),
                 compareDepth: Number(lines[1][1]),
                 tumorRatio: Number(lines[2][1]),
@@ -405,12 +419,19 @@ const clickReset = () => {
 }
 
 const search = () => {
+    const vcf_filter_idx = headerNames.value.findIndex(name => name === 'VCF_FILTER')
     const ms_pass_idx = headerNames.value.findIndex(name => name === 'MS_PASS')
 
     filteredLines.value = totalLines.value.filter((line) => {
+        // VCF filter
+        let param = searchParams.value.vcfFilter
+        if (param === 'PASS' && line[vcf_filter_idx] !== 'PASS') {
+            return false
+        }
+
         // 肿瘤深度
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
-        let param = searchParams.value.tumorDepth
+        param = searchParams.value.tumorDepth
         const tumorDepth = Number(tumorColumns.value.includes(7) ? line[7] : line[11])
         if (param && !(tumorDepth >= param)) {
             return false
