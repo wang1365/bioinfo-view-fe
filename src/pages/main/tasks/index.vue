@@ -207,14 +207,24 @@
                                 @click="gotoDefineReport(item)"
                                 size="sm"
                             />
-                            <q-btn
+                            <a :href="downlaod(item)" download v-if="item.status == 'FINISHED'">
+                                <q-btn
+                                    :disable="item.status !== 'FINISHED'"
+                                    color="primary"
+                                    :label="$t('Download')"
+                                    icon="download"
+                                    @click="downlaod(item)"
+                                    size="sm"
+                                />
+                            </a>
+                            <!-- <q-btn
                                 :disable="item.status !== 'FINISHED'"
                                 color="primary"
                                 :label="$t('Download')"
                                 icon="download"
                                 @click="downlaod(item)"
                                 size="sm"
-                            />
+                            /> -->
                             <q-btn
                                 :disable="item.status !== 'FINISHED' || item.deleted_tempdir"
                                 color="red"
@@ -549,7 +559,18 @@ const deleteMiddleFiles = async (task) => {
 }
 
 const downlaod = (item) => {
-    downloadData(`/task/download/${item.id}`, null)
+    let lang = langCode.value === 'en' ? 'EN' : 'CN'
+    let path = '/igv'+item.result_path
+    if(lang==='EN'){
+        if(item.result_path_EN){
+            path= '/igv'+item.result_path_EN
+        }
+    }if(lang==='CN'){
+        if(item.result_path_CN){
+            path= '/igv'+item.result_path_CN
+        }
+    }
+    return path
 }
 const summary = async () => {
     apiGet(`/task/summary`, (res) => {
