@@ -205,7 +205,7 @@
                             :title="record[column.dataIndex]"
                             :overlay-style="{ maxWidth: '1200px' }"
                         >
-                            <div>{{ record[column.dataIndex].substring(0,10)}}</div>
+                            <div>{{ record[column.dataIndex].substring(0,10)}}......</div>
                         </a-tooltip>
                     </template>
 
