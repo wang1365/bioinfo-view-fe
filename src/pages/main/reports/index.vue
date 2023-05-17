@@ -188,12 +188,13 @@ const columns = computed(()=>[
         name: 'actions',
         label: t('Operate'),
         required: false,
+        align: 'left',
     },
 ])
 
 onMounted(() => {
     loadDataOnMount()
-    // setInterval(() => refreshPage(), 5000)
+    setInterval(() => refreshPage(), 5000)
 })
 const reset = ()=>{
     searchParams.value = {

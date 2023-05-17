@@ -197,7 +197,21 @@
                 :columns="columns"
                 :sticky="true"
                 :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"
-            ></a-table>
+            >
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.key==='Drugs'">
+                        <a-tooltip
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                            :overlay-style="{ maxWidth: '1200px' }"
+                        >
+                            <div>{{ record[column.dataIndex].substring(0,10)}}</div>
+                        </a-tooltip>
+                    </template>
+
+                    <span v-else>{{ record[column.dataIndex] }}</span>
+                </template>
+            </a-table>
         </div>
     </div>
 
