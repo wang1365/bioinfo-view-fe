@@ -369,8 +369,10 @@ import Cmp from './Comparator'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useComparator } from 'src/utils/comparator'
 import { useI18n } from 'vue-i18n'
+import { useCustomCell } from './index'
 
 const { t } = useI18n()
+const customCell = useCustomCell('col254')
 const splitterModel = ref(250)
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
@@ -547,37 +549,6 @@ const serialTitles = computed(() => {
     return crowdCols[innerSearchParams.value.human].map(idx => props.header[idx-1])
 })
 
-const customCell = (record, rowIndex, column) => {
-    return {
-        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
-        // style: {
-        //     // 字体颜色
-        //     // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
-        //     // 行背景色
-        //     'background-color': record.id === currentRow.value.id ? '#64b5f6' : 'white',
-        //     // 'border-color': record.id === currentRow.value.id ? 'red' : 'grey',
-        //     // 'border-style': 'solid',
-        //     // // 下划线
-        //     // 'text-decoration': 'underline',
-        //     // // 字体样式-斜体
-        //     // 'font-style': 'italic',
-        //     // // 字体样式-斜体
-        //     'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-        //     cursor: 'pointer',
-        // },
-        // 鼠标单击行
-        onClick: (event) => {
-            // 记录当前点击的行标识
-            currentRow.value = record
-            // clickRow(record)
-            // if (currentRow.value.id === record.id) {
-            //     currentRow.value = {}
-            // } else {
-            //     currentRow.value = record
-            // }
-        },
-    }
-}
 const currentRow = ref({})
 const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
@@ -922,6 +893,7 @@ watch(rows, (rows) => {
     loadTable()
 })
 onMounted(() => {
+    console.log('===> onMounted', props)
     loadTable()
 })
 

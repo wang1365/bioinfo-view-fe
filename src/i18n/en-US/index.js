@@ -25,6 +25,7 @@ export default {
     Welcome: 'Welcome',
     WelcomeTo: 'Welcome to',
     Version: 'Version',
+    View: 'View',
     Info: 'Info',
     Start: 'Start',
     Init: 'Init',

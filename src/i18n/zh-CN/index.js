@@ -23,6 +23,7 @@ export default {
     Welcome: '欢迎',
     WelcomeTo: '欢迎使用',
     Version: '版本',
+    View: '查看',
     Info: '信息',
     Start: '开始',
     Init: '初始化',

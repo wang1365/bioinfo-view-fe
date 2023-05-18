@@ -319,8 +319,10 @@ import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
+import { useCustomCell } from './index'
 
 const { t } = useI18n()
+const customCell = useCustomCell('col250')
 const splitterModel = ref(250)
 const emit = defineEmits(['filterChange'])
 const crowdCols = {
@@ -481,7 +483,6 @@ const currentRow = ref({})
 
 onMounted(() => {
     console.log('Headers', props.header)
-    console.log('===============', props.rows)
 })
 
 const fixedColumns = [
@@ -592,22 +593,6 @@ function clickIgv (record) {
     igvVisible.value = true
 }
 
-const customCell = (record, rowIndex, column) => {
-    return {
-        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
-        style: {
-            'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-            cursor: 'pointer',
-        },
-        // 鼠标单击行
-        onClick: (event) => {
-            // 记录当前点击的行标识
-            currentRow.value = record
-            // clickRow(record)
-        },
-    }
-}
-
 const customRow = (record, index) => {
     return {
         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
@@ -616,7 +601,7 @@ const customRow = (record, index) => {
             // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
             // 行背景色
             // 'background-color': record.col250 === 'Y'  ? '#FFFF99' : 'white',
-            'background-color': record.col250 === 'Y'  ? '#1976d2' : 'white',
+            // 'background-color': record.col250 === 'Y'  ? '#1976d2' : 'white',
             // 'border-color': 'red',
             // 'border-style': 'solid',
             // 'border-width': '5px',
@@ -629,10 +614,6 @@ const customRow = (record, index) => {
             // // 字体样式-斜体
             // 'font-weight': record.id === clickedRow.value  ? 'bolder' : 'none'
         },
-        // onMouseenter: (event) => {
-        //     console.log('====================>>>>', event, this)
-        //     event.target.bgColor = '#444444'
-        // },  // 鼠标移入行
         // 鼠标单击行
         // onClick: event => {
         //     // 记录当前点击的行标识

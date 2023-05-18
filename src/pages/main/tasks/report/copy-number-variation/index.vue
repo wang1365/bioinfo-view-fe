@@ -199,23 +199,33 @@
                 :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"
             >
                 <template #bodyCell="{ column, record }">
-                    <template v-if="column.key==='Drugs'">
-                        <a-tooltip
-                            color="#3b4146"
-                            :title="record[column.dataIndex]"
-                            :overlay-style="{ maxWidth: '1200px' }"
-                        >
-                            <div>{{ record[column.dataIndex].substring(0,10)}}......</div>
-                        </a-tooltip>
+                    <template v-if="column.key !=='Operation'">
+                        <template v-if="column.key==='Drugs' && record[column.dataIndex].length > 0">
+                            <a-tooltip
+                                color="#3b4146"
+                                :title="record[column.dataIndex]"
+                                :overlay-style="{ maxWidth: '1200px' }"
+                            >
+                                <div>{{ record[column.dataIndex].substring(0, 20)}}...</div>
+                            </a-tooltip>
+                        </template>
+                        <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
-                    <template v-if="column.key==='Operation'">
-                        <q-btn size="xs" outline color="primary" label="fig"/>
+                    <template v-else>
+                        <q-btn size="xs" outline color="primary" :label="$t('View')" @click="clickView(record)"/>
                     </template>
-                    <span v-else>{{ record[column.dataIndex] }}</span>
                 </template>
             </a-table>
         </div>
     </div>
+
+    <q-dialog v-model="showImage">
+        <q-card style="width:700px;max-width:1000px;height:550px;align-items: center">
+            <q-card-section>
+                <img :src="imageUrl" alt="" style="width:600px;height:500px;background-color:white" />
+            </q-card-section>
+        </q-card>
+    </q-dialog>
 
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
@@ -286,6 +296,9 @@ const props = defineProps({
         default: () => { }
     }
 })
+
+const showImage = ref(false)
+const imageUrl = ref('')
 const viewConfig = toRef(props, 'viewConfig')
 const stepData = toRef(props, 'stepData')
 const filteredInfo = ref()
@@ -335,11 +348,26 @@ const columns = computed(()=> [
     { key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200 },
     { key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80 },
     { key: 'Operation', title: t('Operation'), dataIndex: 'Operation', align: 'center', width: 50 },
-])
+].map(t => {
+    t.customCell = customCell
+    return t
+})
+)
+
+// 所有的列名集合
+const headers = computed(() => {
+    // 需要排除操作列
+    return [...columns.value.slice(0, columns.value.length - 1).map(t => t.key), 'Plot', 'Report']
+})
 
 
 const handleChange = (pagination, filters) => {
     filteredInfo.value = filters
+}
+
+const clickView = (record) => {
+    showImage.value = true
+    imageUrl.value = `/igv${record.Plot}`
 }
 
 watch(langCode, v => loadData())
@@ -450,14 +478,20 @@ const refreshPie = () => {
     pie.value.setOption(pieOption)
 }
 
-onMounted(() => loadData())
+watch(rows, v => {
+    selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
+})
+onMounted(() => {
+    loadData()
+    console.log('======================onMounted', rows.value)
+})
+
 const loadData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter_${suffix}.txt`
     tableFileName.value = `AnnotSV.tsv.filter_${suffix}.txt`
     readTaskFile(route.params.id, `CNV/AnnotSV.tsv.filter_${suffix}.txt`).then((res) => {
-        const columnFields = columns.value.map((t) => t.dataIndex)
-        const results = getCsvDataAndSetLineNumber(res, { fields: columnFields })
+        const results = getCsvDataAndSetLineNumber(res, { fields: headers.value })
         rows.value = results
         filteredRows.value = results
         if (stepData.value && stepData.value.pie && stepData.value.pie.searchParams) {
@@ -503,7 +537,6 @@ const loadData = () => {
 }
 
 const searchFilterRows = (searchParams) => {
-
     filteredRows.value = rows.value.filter((t) => {
         let result = true
         let param = searchParams.gene
@@ -546,6 +579,21 @@ const clickClear = () => {
         drugLevel: [], // A/B/C/D/E
     }
     clickSearch()
+}
+
+const customCell = (record, rowIndex, column) => {
+    return {
+        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+        style: {
+            // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+            // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
+            'background-color': (record.Report === 'Y' && column.key !== 'Operation') ? 'orange' : '',
+            // cursor: 'pointer',
+        },
+        // 鼠标单击行
+        onClick: (event) => {
+        },
+    }
 }
 
 const initPie = () => {

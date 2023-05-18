@@ -334,6 +334,9 @@ const loadGermlineData = () => {
             germlineData.value.searchParams = stepData.value.germline.searchParams
 
             germlineData.value.selectedRows = stepData.value.germline.selectedRows
+        } else {
+            germlineData.value.selectedRows = csvRows.filter(t => t.col250 === 'Y').map(t => t.lineNumber)
+            console.log('初始化选择行', germlineData.value.selectedRows , csvRows)
         }
     }).finally(() => {
         $q.loading.hide()
@@ -386,6 +389,9 @@ const loadSomaticData = () => {
         if (stepData.value && stepData.value.somatic) {
             somaticData.value.searchParams = stepData.value.somatic.searchParams
             somaticData.value.selectedRows = stepData.value.somatic.selectedRows
+        } else {
+            somaticData.value.selectedRows = csvRows.filter(t => t.col254 === 'Y').map(t => t.lineNumber)
+            console.log('初始化选择行', somaticData.value.selectedRows , csvRows)
         }
     })
 }
