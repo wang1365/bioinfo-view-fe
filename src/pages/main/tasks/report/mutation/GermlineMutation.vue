@@ -186,6 +186,7 @@
             <template v-slot:after>
                 <div style="position:relative">
                     <q-icon
+                        v-if="isDefineReport"
                         color="accent"
                         name="question_mark"
                         size="xs"
@@ -203,7 +204,7 @@
                         :custom-row="customRow"
                         :sticky="true"
                         rowKey="lineNumber"
-                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }"
+                        :row-selection="rowSelection"
                     >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.key === 'operation'">
@@ -485,6 +486,20 @@ onMounted(() => {
     console.log('Headers', props.header)
 })
 
+const isDefineReport = computed(() => useRoute().name === 'defineReport')
+const rowSelection = computed(() => {
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 35,
+            getCheckboxProps: getCheckboxProps
+        }
+    }
+)
+
 const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 100, fixed: 'left' }, // Start
@@ -631,13 +646,14 @@ const reset = () => {
     search()
 }
 
-const clickRow = (row) => {
-    dialogVisible.value = true
-}
 
 // 根据过滤条件筛选数据
 const searchFilterRows = (searchParams) => {
     filteredRows.value = rows.value.filter((line, i) => {
+        if (isDefineReport.value && line.col250 === 'Y') {
+            return true
+        }
+
         // 搜索基因
         // 原始表格11列，支持模糊搜索
         let param = searchParams.gene

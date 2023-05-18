@@ -65,6 +65,7 @@ const routes = [
                 component: () => import('pages/main/tasks/report/index.vue'),
             },
             {
+                name: 'defineReport',
                 path: 'tasks/:id/define-report',
                 component: () => import('pages/main/tasks/defineReport/index.vue'),
             },

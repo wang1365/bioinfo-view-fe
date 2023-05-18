@@ -179,6 +179,7 @@
 
         <div style="position:relative">
             <q-icon
+                v-if="isDefineReport"
                 color="accent"
                 name="question_mark"
                 size="xs"
@@ -196,7 +197,7 @@
                 :data-source="filteredRows"
                 :columns="columns"
                 :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"
+                :row-selection="rowSelection"
             >
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.key !=='Operation'">
@@ -385,12 +386,27 @@ const rows = ref([])
 const filteredRows = ref([])
 const loading = ref(false)
 const variantRows = ref([])
+const isDefineReport = computed(() => useRoute().name === 'defineReport')
 const searchParams = ref({
     gene: '',
     type: '', // DUP/DEL
     drug: '', // YES/NO
     drugLevel: [], // 1、2、3、4、R1、R2、Dx1、Dx2、Dx3、Px1、Px2、Px3
+    includeDefaultReport: isDefineReport.value // 是否包含默认报告数据
 })
+
+const rowSelection = computed(() => {
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 25,
+            getCheckboxProps: getCheckboxProps
+        }
+    }
+)
 
 const variants = ref([])
 const chrs = ref([])
@@ -483,7 +499,7 @@ watch(rows, v => {
 })
 onMounted(() => {
     loadData()
-    console.log('======================onMounted', rows.value)
+    console.log('======================onMounted', route)
 })
 
 const loadData = () => {
@@ -538,6 +554,10 @@ const loadData = () => {
 
 const searchFilterRows = (searchParams) => {
     filteredRows.value = rows.value.filter((t) => {
+        if (searchParams.includeDefaultReport && t.Report === 'Y') {
+            return true
+        }
+
         let result = true
         let param = searchParams.gene
         if (param.length > 0) {

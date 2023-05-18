@@ -229,8 +229,9 @@
                      <span v-else>{{record[column.dataIndex]}}</span>
                      </template>
                      </a-table> -->
-                <div style="position:relative">
+                <div style="position:relative" class="q-ml-xs">
                     <q-icon
+                        v-if="isDefineReport"
                         color="accent"
                         name="question_mark"
                         size="xs"
@@ -249,7 +250,7 @@
                         :custom-row="customRow"
                         :sticky="true"
                         rowKey="lineNumber"
-                        :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, getCheckboxProps: getCheckboxProps }"
+                        :row-selection="rowSelection"
                     >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.key === 'operation'">
@@ -601,6 +602,21 @@ const fixedColumns = [
 
 const selectedExpandColIdx = ref([])
 
+
+const isDefineReport = computed(() => useRoute().name === 'defineReport')
+const rowSelection = computed(() => {
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 35,
+            getCheckboxProps: getCheckboxProps
+        }
+    }
+)
+
 const tableFile = computed(() => {
     const ret = getDualIdentifiers(props.samples)
     return `igv${props.task.result_dir}/Mut_somatic/${ret.qn}_${ret.qt}.combined.standard-new.csv`
@@ -705,13 +721,13 @@ function clickIgv(record) {
     igvVisible.value = true
 }
 
-const clickRow = (row) => {
-    dialogVisible.value = true
-}
-
 const searchFilterRows = (searchParams) => {
-
     filteredRows.value = rows.value.filter((line, i) => {
+        // 定制报告模式下，对于Report === Y的行始终显示
+        if (isDefineReport.value && line.col254 === 'Y') {
+            return true
+        }
+
         // 搜索基因
         // 原始表格15列，支持模糊搜索
         let param = searchParams.gene
