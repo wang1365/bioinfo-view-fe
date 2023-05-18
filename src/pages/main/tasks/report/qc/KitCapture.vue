@@ -129,7 +129,7 @@ const readReportText = () => {
     getReportText(route.params.id, 'ONTARGET').then(res => {
         const vs = res.split('\n')
         onTarget.value = {
-            v1: vs[0], v2: vs[1]
+            v1: vs[1], v2: vs[0]
         }
     })
 }
