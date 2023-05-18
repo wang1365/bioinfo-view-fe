@@ -270,7 +270,7 @@ const viewConfig = toRef(props, 'viewConfig')
 const getCheckboxProps = (record) => {
     return {
         disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
-        name: record.lineNumber,
+        name: String(record.lineNumber),
     }
 }
 const emit = defineEmits(['stickDone', 'reset'])

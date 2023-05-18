@@ -208,7 +208,9 @@
                             <div>{{ record[column.dataIndex].substring(0,10)}}......</div>
                         </a-tooltip>
                     </template>
-
+                    <template v-if="column.key==='Operation'">
+                        <q-btn size="xs" outline color="primary" label="fig"/>
+                    </template>
                     <span v-else>{{ record[column.dataIndex] }}</span>
                 </template>
             </a-table>
@@ -237,7 +239,7 @@ import { toMap, partition } from 'src/utils/collection'
 import { uid } from 'quasar'
 import { amISuper } from 'src/utils/user'
 import * as echarts from 'echarts'
-import { pieOption, columns } from './index'
+import { pieOption } from './index'
 import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
@@ -249,7 +251,7 @@ const { t } = useI18n()
 const getCheckboxProps = (record) => {
     return {
         disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
-        name: record.lineNumber,
+        name: String(record.lineNumber),
     }
 }
 // hg19基因组数据，/data/bioinfo/database_dir/hg19/hg19_genome/hg19.length
@@ -314,6 +316,27 @@ const variantColumns = computed(() => {
         { key: 'ratio', title: 'ratio', dataIndex: 'ratio', align: 'center', width: 50 },
     ]
 })
+
+const columns = computed(()=> [
+    { key: 'Chr', title: 'Chr', dataIndex: 'Chr', align: 'center', width: 50 },
+    { key: 'Start', title: 'Start', dataIndex: 'Start', align: 'center', width: 80 },
+    { key: 'End', title: 'End', dataIndex: 'End', align: 'center', width: 80 },
+    { key: 'Type', title: 'Type', dataIndex: 'Type', align: 'center', width: 50 },
+    { key: 'Gene', title: 'Gene', dataIndex: 'Gene', align: 'center', width: 50 },
+    {
+        key: 'Copys',
+        title: 'Copys',
+        dataIndex: 'Copys',
+        align: 'center',
+        width: 50,
+        sorter: (r1, r2) => r1.Copys - r2.Copys,
+    },
+    { key: 'Rank', title: 'Rank', dataIndex: 'Rank', align: 'center', width: 50 },
+    { key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200 },
+    { key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80 },
+    { key: 'Operation', title: t('Operation'), dataIndex: 'Operation', align: 'center', width: 50 },
+])
+
 
 const handleChange = (pagination, filters) => {
     filteredInfo.value = filters
@@ -433,7 +456,7 @@ const loadData = () => {
     tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter_${suffix}.txt`
     tableFileName.value = `AnnotSV.tsv.filter_${suffix}.txt`
     readTaskFile(route.params.id, `CNV/AnnotSV.tsv.filter_${suffix}.txt`).then((res) => {
-        const columnFields = columns.map((t) => t.dataIndex)
+        const columnFields = columns.value.map((t) => t.dataIndex)
         const results = getCsvDataAndSetLineNumber(res, { fields: columnFields })
         rows.value = results
         filteredRows.value = results

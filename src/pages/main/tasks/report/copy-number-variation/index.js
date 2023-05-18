@@ -1,23 +1,3 @@
-export const columns = [
-    { key: 'Chr', title: 'Chr', dataIndex: 'Chr', align: 'center', width: 50 },
-    { key: 'Start', title: 'Start', dataIndex: 'Start', align: 'center', width: 80 },
-    { key: 'End', title: 'End', dataIndex: 'End', align: 'center', width: 80 },
-    { key: 'Type', title: 'Type', dataIndex: 'Type', align: 'center', width: 50 },
-    { key: 'Gene', title: 'Gene', dataIndex: 'Gene', align: 'center', width: 50 },
-    {
-        key: 'Copys',
-        title: 'Copys',
-        dataIndex: 'Copys',
-        align: 'center',
-        width: 50,
-        sorter: (r1, r2) => r1.Copys - r2.Copys,
-    },
-    { key: 'Rank', title: 'Rank', dataIndex: 'Rank', align: 'center', width: 50 },
-    { key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200 },
-    { key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80 },
-]
-
-
 
 export const pieOption = {
   tooltip: {

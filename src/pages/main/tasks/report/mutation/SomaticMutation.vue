@@ -930,7 +930,6 @@ const loadTable = () => {
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
     columns.value[columns.value.length - 1].title = computed(() => t('Operate'))
 
-    const visibleColIdx = columns.value.map((t) => t.i)
     innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)
     searchFilterRows(propSearchParams.value)
     selectedRows.value = []
@@ -959,7 +958,7 @@ const onSelectChange = (selectedRowKeys) => {
 const getCheckboxProps = (record) => {
     return {
         disabled: showSticky.value && stickDone.value, // Column configuration not to be checked
-        name: record.lineNumber,
+        name: String(record.lineNumber),
     }
 }
 onUnmounted(() => {

@@ -187,7 +187,7 @@ const onSelectChange = (selectedRowKeys) => {
 const getCheckboxProps = (record) => {
     return {
         disabled: showSticky.value && stickDone.value, // Column configuration not to be checked
-        name: record.lineNumber,
+        name: String(record.lineNumber),
     }
 }
 

@@ -259,7 +259,7 @@
         <q-separator class="q-my-lg" size="2px" color="primary" />
     </div>
 
-    <div class="q-my-sm" v-if="!showColumn">
+    <div class="q-my-sm">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
                 <PieChartVue :data="filteredRows" :titleKey="chartTitles.type" />
@@ -481,6 +481,7 @@ const currentRow = ref({})
 
 onMounted(() => {
     console.log('Headers', props.header)
+    console.log('===============', props.rows)
 })
 
 const fixedColumns = [
@@ -614,7 +615,8 @@ const customRow = (record, index) => {
             // 字体颜色
             // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
             // 行背景色
-            // 'background-color': record.id === currentRow.value.id  ? '#FFFF99' : 'white',
+            // 'background-color': record.col250 === 'Y'  ? '#FFFF99' : 'white',
+            'background-color': record.col250 === 'Y'  ? '#1976d2' : 'white',
             // 'border-color': 'red',
             // 'border-style': 'solid',
             // 'border-width': '5px',
@@ -627,6 +629,10 @@ const customRow = (record, index) => {
             // // 字体样式-斜体
             // 'font-weight': record.id === clickedRow.value  ? 'bolder' : 'none'
         },
+        // onMouseenter: (event) => {
+        //     console.log('====================>>>>', event, this)
+        //     event.target.bgColor = '#444444'
+        // },  // 鼠标移入行
         // 鼠标单击行
         // onClick: event => {
         //     // 记录当前点击的行标识
@@ -828,8 +834,6 @@ const loadTable = () => {
     actionColumn.title = actionTitle
     actionColumn.width = 105
 
-    const visibleColIdx = columns.value.map((t) => t.i)
-
     innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)
     searchFilterRows(propSearchParams.value)
     selectedRows.value = []
@@ -862,7 +866,7 @@ const onSelectChange = (selectedRowKeys) => {
 const getCheckboxProps = (record) => {
     return {
         disabled: showSticky.value && stickDone.value, // Column configuration not to be checked
-        name: record.lineNumber,
+        name: String(record.lineNumber),
     }
 }
 
