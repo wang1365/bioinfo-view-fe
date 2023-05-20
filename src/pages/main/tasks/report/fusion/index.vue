@@ -292,19 +292,22 @@ const loadSingleData = () => {
 }
 const loadNormalData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
-    const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    // const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     const { qt, qn } = getDualIdentifiers(props.samples)
     if (!qt || !qn) return
     const filePath = `fusion_somatic/${qn}_${qt}_${suffix}.somatic_fusions`
     readTaskFile(route.params.id, filePath).then((res) => {
-        const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
+        const headers = getCsvHeader(res)
+        const lines = getCsvDataAndSetLineNumber(res, { headers, hasHeaderLine: true })
 
-        normalData.value.header = getCsvHeader(res)
+        normalData.value.header = headers
         normalData.value.rows = lines
         normalData.value.url = `igv${props.task.result_dir}/${filePath}`
         if (stepData.value && stepData.value.normal) {
             normalData.value.searchParam = stepData.value.normal.searchParam
             normalData.value.selectedRows = stepData.value.normal.selectedRows
+        } else {
+            normalData.value.selectedRows = lines.filter(t => t.Report === 'Y').map(t => t.lineNumber)
         }
     })
 }

@@ -30,6 +30,7 @@
     <div class="bio-data-table q-py-sm">
         <div style="position:relative">
             <q-icon
+                v-if="isDefineReport"
                 color="accent"
                 name="question_mark"
                 size="xs"
@@ -41,12 +42,11 @@
                 style="z-index:1"
                 size="middle"
                 bordered
-                :loading="loading"
                 :data-source="filteredRows"
                 :columns="columns"
                 :sticky="true"
                 rowKey="lineNumber"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 25, getCheckboxProps: getCheckboxProps }"
+                :row-selection="rowSelection"
             >
                 <template #bodyCell="{ column, record }">
                     <q-btn
@@ -69,11 +69,13 @@
 </template>
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify';
-import { ref, onMounted, toRef, watch, onUnmounted, defineExpose } from 'vue'
+import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from "vue-i18n"
 import IGV from './Igv.vue'
-import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+
+
+const { t } = useI18n()
 const route = useRoute()
 const columns = ref([])
 
@@ -140,8 +142,12 @@ const props = defineProps({
 const searchFilterRows = (keyword) => {
     if (keyword) {
         filteredRows.value = rows.value.filter((t) => {
+            if (isDefineReport.value && t[9] === 'Y') {
+                // 自定义报告模式下，始终显示报告行
+                return true
+            }
             for (let i = 0; i < 7; i++) {
-                if (t[i].includes(keyword)) {
+                if (String(t[i]).includes(keyword)) {
                     return true
                 }
             }
@@ -177,6 +183,19 @@ const selectedRows = ref([])
 
 const showSticky = toRef(props, 'showSticky')
 const stickDone = toRef(props, 'stickDone')
+const isDefineReport = computed(() => route.name === 'defineReport')
+const rowSelection = computed(() => {
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 35,
+            getCheckboxProps: getCheckboxProps
+        }
+    }
+)
 
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
@@ -259,10 +278,7 @@ const customCell = (record, rowIndex, column) => {
     return {
         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
         style: {
-            // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-            // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
-            'background-color': (record.Report === 'Y' && column.key !== 'Operation') ? '#fff5ee' : '',
-            // cursor: 'pointer',
+            'background-color': record[9] === 'Y' ? '#fff5ee' : '',
         },
         // 鼠标单击行
         onClick: (event) => {
