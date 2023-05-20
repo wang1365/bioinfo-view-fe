@@ -86,6 +86,22 @@
                         </q-menu>
                     </q-btn>
                 </template>
+
+                <template v-if="column.key !== 'operation'">
+                    <template v-if="record[column.dataIndex] && record[column.dataIndex].length > 0">
+                        <a-tooltip
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                            :overlay-style="{ maxWidth: '1200px' }"
+                        >
+                            <div>{{ record[column.dataIndex].substring(0, 20)}}</div>
+                        </a-tooltip>
+                    </template>
+                    <span
+                        v-else
+                        >{{ typeof(column.dataIndex) === 'string' ? record[column.dataIndex] : _.get(record, column.dataIndex.join('.')) }}</span
+                    >
+                </template>
             </template>
         </a-table>
     </q-page>
@@ -98,6 +114,7 @@ import { useQuasar} from 'quasar'
 import { useRouter, useRoute } from 'vue-router'
 import PageTitle from 'components/page-title/PageTitle'
 import { useI18n }from 'vue-i18n'
+import * as _ from 'lodash'
 
 const { t } = useI18n()
 const loading = ref(false)
@@ -148,7 +165,7 @@ const columns = computed(() => [
     {key: 'nucleic_type', title: t('NucleicType'), dataIndex: 'nucleic_type', align: 'center', width: 120},
     {key: 'fastq1_path', title: t('Fastq1Path'), dataIndex: 'fastq1_path', width: 130, ellipsis: true},
     {key: 'fastq2_path', title: t('Fastq2Path'), dataIndex: 'fastq2_path', width: 130, ellipsis: true},
-    {key: 'operation', title: t('Operate'), fixed: 'right', align: 'center', width: 120},
+    {key: 'operation', title: t('Operate'), dataIndex: 'operation', fixed: 'right', align: 'center', width: 120},
 ])
 
 const pagination = ref({
