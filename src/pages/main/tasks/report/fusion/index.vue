@@ -262,10 +262,8 @@ const loadSingleData = () => {
     const qtFile = `fusion_germline/${qt}_${suffix}.fusions`
     readTaskFile(route.params.id, qtFile).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
-        let header = getCsvHeader(res)
-        header.splice(header.length - 1, 1)
-        header.push('Igv')
-        singleData.value.qt.header = header
+
+        singleData.value.qt.header = getCsvHeader(res)
         singleData.value.qt.rows = lines
         singleData.value.qt.url = `igv${props.task.result_dir}/${qtFile}`
         if (stepData.value && stepData.value.single) {
@@ -279,10 +277,8 @@ const loadSingleData = () => {
         const qnFile = `fusion_germline/${qn}_${suffix}.fusions`
         readTaskFile(route.params.id, qnFile).then((res) => {
             const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
-            let header = getCsvHeader(res)
-            header.splice(header.length - 1, 1)
-            header.push('Igv')
-            singleData.value.qn.header = header
+
+            singleData.value.qn.header = getCsvHeader(res)
             singleData.value.qn.rows = lines
             singleData.value.qn.url = `igv${props.task.result_dir}/${qnFile}`
             if (stepData.value && stepData.value.single) {
@@ -302,9 +298,7 @@ const loadNormalData = () => {
     const filePath = `fusion_somatic/${qn}_${qt}_${suffix}.somatic_fusions`
     readTaskFile(route.params.id, filePath).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
-        // let header = getCsvHeader(res)
-        // header.splice(header.length - 1, 1)
-        // header.push('Igv')
+
         normalData.value.header = getCsvHeader(res)
         normalData.value.rows = lines
         normalData.value.url = `igv${props.task.result_dir}/${filePath}`

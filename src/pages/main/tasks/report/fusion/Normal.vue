@@ -51,7 +51,7 @@
                 <template #bodyCell="{ column, record }">
                     <q-btn
                         v-if="column.title === 'IGV'"
-                        label="Igv"
+                        label="IGV"
                         color="primary"
                         size="sm"
                         @click="clickView(record)"

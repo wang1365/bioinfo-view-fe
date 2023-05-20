@@ -51,33 +51,37 @@
             >
                 <template #bodyCell="{ column, record }">
                     <q-btn
-                        v-if="column.title === 'Igv'"
+                        v-if="column.title === 'IGV'"
                         label="IGV"
                         color="primary"
                         size="sm"
                         @click="clickView(record)"
                     ></q-btn>
                     <template v-else>
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]"
-                                   :overlay-style="{ maxWidth: '1200px' }">
+                        <a-tooltip
+                            v-if="column.ellipsis"
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                            :overlay-style="{ maxWidth: '1200px' }"
+                        >
                             <div>{{ record[column.dataIndex] }}</div>
                         </a-tooltip>
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
-<!--                    <a-tooltip-->
-<!--                        v-if="(column.title === '过滤'||column.title === 'Filter' )&& record[5]"-->
-<!--                        color="white"-->
-<!--                        style="min-width:300px"-->
-<!--                    >-->
-<!--                        <template #title>-->
-<!--                            <div-->
-<!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
-<!--                            >-->
-<!--                                {{ record[5] }}-->
-<!--                            </div>-->
-<!--                        </template>-->
-<!--                        <div>{{ record[5].substring(0,5) }}......</div>-->
-<!--                    </a-tooltip>-->
+                    <!--                    <a-tooltip-->
+                    <!--                        v-if="(column.title === '过滤'||column.title === 'Filter' )&& record[5]"-->
+                    <!--                        color="white"-->
+                    <!--                        style="min-width:300px"-->
+                    <!--                    >-->
+                    <!--                        <template #title>-->
+                    <!--                            <div-->
+                    <!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
+                    <!--                            >-->
+                    <!--                                {{ record[5] }}-->
+                    <!--                            </div>-->
+                    <!--                        </template>-->
+                    <!--                        <div>{{ record[5].substring(0,5) }}......</div>-->
+                    <!--                    </a-tooltip>-->
                 </template>
             </a-table>
         </div>
@@ -135,47 +139,51 @@
             >
                 <template #bodyCell="{ column, record }">
                     <q-btn
-                        v-if="column.title === 'Igv'"
+                        v-if="column.title === 'IGV'"
                         label="IGV"
                         color="primary"
                         size="sm"
                         @click="clickView(record)"
                     ></q-btn>
                     <template v-else>
-                        <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]"
-                            :overlay-style="{ maxWidth: '1200px' }">
+                        <a-tooltip
+                            v-if="column.ellipsis"
+                            color="#3b4146"
+                            :title="record[column.dataIndex]"
+                            :overlay-style="{ maxWidth: '1200px' }"
+                        >
                             <div>{{ record[column.dataIndex] }}</div>
                         </a-tooltip>
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
-<!--                    <a-tooltip-->
-<!--                        v-if="(column.title === '证据描述'||column.title === 'Description of evidence' )&& record[7]"-->
-<!--                        color="white"-->
-<!--                        style="min-width:300px"-->
-<!--                    >-->
-<!--                        <template #title>-->
-<!--                            <div-->
-<!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
-<!--                            >-->
-<!--                                {{ record[7] }}-->
-<!--                            </div>-->
-<!--                        </template>-->
-<!--                        <div>{{ record[7].substring(0,5) }}......</div>-->
-<!--                    </a-tooltip>-->
-<!--                    <a-tooltip-->
-<!--                        v-if="(column.title === '药物及敏感性'||column.title === 'Drugs and sensitivity' )&& record[7]"-->
-<!--                        color="white"-->
-<!--                        style="min-width:300px"-->
-<!--                    >-->
-<!--                        <template #title>-->
-<!--                            <div-->
-<!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
-<!--                            >-->
-<!--                                {{ record[6] }}-->
-<!--                            </div>-->
-<!--                        </template>-->
-<!--                        <div>{{ record[6].substring(0,5) }}......</div>-->
-<!--                    </a-tooltip>-->
+                    <!--                    <a-tooltip-->
+                    <!--                        v-if="(column.title === '证据描述'||column.title === 'Description of evidence' )&& record[7]"-->
+                    <!--                        color="white"-->
+                    <!--                        style="min-width:300px"-->
+                    <!--                    >-->
+                    <!--                        <template #title>-->
+                    <!--                            <div-->
+                    <!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
+                    <!--                            >-->
+                    <!--                                {{ record[7] }}-->
+                    <!--                            </div>-->
+                    <!--                        </template>-->
+                    <!--                        <div>{{ record[7].substring(0,5) }}......</div>-->
+                    <!--                    </a-tooltip>-->
+                    <!--                    <a-tooltip-->
+                    <!--                        v-if="(column.title === '药物及敏感性'||column.title === 'Drugs and sensitivity' )&& record[7]"-->
+                    <!--                        color="white"-->
+                    <!--                        style="min-width:300px"-->
+                    <!--                    >-->
+                    <!--                        <template #title>-->
+                    <!--                            <div-->
+                    <!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
+                    <!--                            >-->
+                    <!--                                {{ record[6] }}-->
+                    <!--                            </div>-->
+                    <!--                        </template>-->
+                    <!--                        <div>{{ record[6].substring(0,5) }}......</div>-->
+                    <!--                    </a-tooltip>-->
                 </template>
             </a-table>
         </div>
@@ -403,7 +411,7 @@ const loadData = () => {
     let width = [30, 30, 75, 75, 30, 60, 60, 120, 30]
     columns1.value = []
     qtHeader.value.forEach((item, index) => {
-        if (item === 'Igv') {
+        if (item === 'IGV') {
             columns1.value.push({
                 title: item,
                 dataIndex: index,
@@ -439,7 +447,7 @@ const loadData = () => {
         columns2.value = []
         width = [30, 30, 75, 75, 30, 60, 60, 120, 30]
         qnHeader.value.forEach((item, index) => {
-            if (item === 'Igv') {
+            if (item === 'IGV') {
                 columns2.value.push({
                     title: item,
                     dataIndex: index,
