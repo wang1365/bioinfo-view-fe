@@ -212,11 +212,19 @@
                                     :label="$t('Detail')"
                                     color="primary"
                                     size="xs"
+                                    outline
                                     padding="xs"
                                     class="q-mr-xs"
                                     @click="clickDetail(record)"
                                 />
-                                <q-btn label="IGV" color="primary" size="xs" padding="xs" @click="clickIgv(record)" />
+                                <q-btn
+                                    label="IGV"
+                                    color="primary"
+                                    size="xs"
+                                    outline
+                                    padding="xs"
+                                    @click="clickIgv(record)"
+                                />
                             </template>
                             <template v-else>
                                 <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
@@ -290,7 +298,12 @@
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
-                <MutationInfo :row="currentRow" :task="props.task" :samples="props.samples" :headers="props.header"></MutationInfo>
+                <MutationInfo
+                    :row="currentRow"
+                    :task="props.task"
+                    :samples="props.samples"
+                    :headers="props.header"
+                ></MutationInfo>
             </q-card-section>
             <q-card-actions align="center" vertical>
                 <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>

@@ -53,7 +53,8 @@
                         v-if="column.title === 'IGV'"
                         label="IGV"
                         color="primary"
-                        size="sm"
+                        size="xs"
+                        outline
                         @click="clickView(record)"
                     ></q-btn>
                 </template>
