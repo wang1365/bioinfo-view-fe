@@ -50,7 +50,7 @@
             >
                 <template #bodyCell="{ column, record }">
                     <q-btn
-                        v-if="column.title === 'Igv'"
+                        v-if="column.title === 'IGV'"
                         label="Igv"
                         color="primary"
                         size="sm"
@@ -213,8 +213,10 @@ onUnmounted(() => {
 const loadData = () => {
     const width = [30, 30, 60, 60, 60, 60, 200, 50, 30]
     columns.value = []
-    header.value.forEach((item, index) => {
-        if (item === 'Igv') {
+    console.log('>>>>>>>>>>>>>>>>>>>', header.value)
+    header.value.filter(t => t !== 'Report')
+        .forEach((item, index) => {
+        if (item === 'IGV') {
             columns.value.push({
                 title: item,
                 dataIndex: index,
@@ -227,6 +229,7 @@ const loadData = () => {
                 dataIndex: index,
                 align: 'center',
                 width: width[index],
+                customCell: customCell
             })
     })
     keyword.value = propSearchParam.value
@@ -250,5 +253,21 @@ const reset = () => {
     searchFilterRows(keyword.value)
     selectedRows.value = []
 }
+
+const customCell = (record, rowIndex, column) => {
+    return {
+        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+        style: {
+            // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+            // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
+            'background-color': (record.Report === 'Y' && column.key !== 'Operation') ? '#fff5ee' : '',
+            // cursor: 'pointer',
+        },
+        // 鼠标单击行
+        onClick: (event) => {
+        },
+    }
+}
+
 defineExpose({ getChangedData, reset })
 </script>

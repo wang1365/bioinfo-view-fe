@@ -302,10 +302,10 @@ const loadNormalData = () => {
     const filePath = `fusion_somatic/${qn}_${qt}_${suffix}.somatic_fusions`
     readTaskFile(route.params.id, filePath).then((res) => {
         const lines = getCsvDataAndSetLineNumber(res, { fields, hasHeaderLine: true })
-        let header = getCsvHeader(res)
-        header.splice(header.length - 1, 1)
-        header.push('Igv')
-        normalData.value.header = header
+        // let header = getCsvHeader(res)
+        // header.splice(header.length - 1, 1)
+        // header.push('Igv')
+        normalData.value.header = getCsvHeader(res)
         normalData.value.rows = lines
         normalData.value.url = `igv${props.task.result_dir}/${filePath}`
         if (stepData.value && stepData.value.normal) {
