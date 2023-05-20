@@ -5,12 +5,11 @@ export const useCustomCell = (columnName) => {
             style: {
                 // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
                 // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
-                'background-color': (record[columnName] === 'Y' && column.key !== 'operation') ? 'orange' : '',
+                'background-color': record[columnName] === 'Y' && column.key !== 'operation' ? '#fff5ee' : '',
                 // cursor: 'pointer',
             },
             // 鼠标单击行
-            onClick: (event) => {
-            },
+            onClick: (event) => {},
         }
     }
 }

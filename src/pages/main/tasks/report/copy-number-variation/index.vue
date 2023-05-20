@@ -213,7 +213,7 @@
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
                     <template v-else>
-                        <q-btn size="xs" outline color="primary" :label="$t('View')" @click="clickView(record)"/>
+                        <q-btn size="xs" outline color="primary" :label="$t('View')" @click="clickView(record)" />
                     </template>
                 </template>
             </a-table>
@@ -348,7 +348,7 @@ const columns = computed(()=> [
     { key: 'Rank', title: 'Rank', dataIndex: 'Rank', align: 'center', width: 50 },
     { key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200 },
     { key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80 },
-    { key: 'Operation', title: t('Operation'), dataIndex: 'Operation', align: 'center', width: 50 },
+    { key: 'Operation', title: 'Plot', dataIndex: 'Operation', align: 'center', width: 50 },
 ].map(t => {
     t.customCell = customCell
     return t
@@ -607,7 +607,7 @@ const customCell = (record, rowIndex, column) => {
         style: {
             // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
             // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
-            'background-color': (record.Report === 'Y' && column.key !== 'Operation') ? 'orange' : '',
+            'background-color': (record.Report === 'Y' && column.key !== 'Operation') ? '#fff5ee' : '',
             // cursor: 'pointer',
         },
         // 鼠标单击行
