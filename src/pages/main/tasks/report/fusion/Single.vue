@@ -69,20 +69,6 @@
                         </a-tooltip>
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
-                    <!--                    <a-tooltip-->
-                    <!--                        v-if="(column.title === '过滤'||column.title === 'Filter' )&& record[5]"-->
-                    <!--                        color="white"-->
-                    <!--                        style="min-width:300px"-->
-                    <!--                    >-->
-                    <!--                        <template #title>-->
-                    <!--                            <div-->
-                    <!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
-                    <!--                            >-->
-                    <!--                                {{ record[5] }}-->
-                    <!--                            </div>-->
-                    <!--                        </template>-->
-                    <!--                        <div>{{ record[5].substring(0,5) }}......</div>-->
-                    <!--                    </a-tooltip>-->
                 </template>
             </a-table>
         </div>
@@ -158,34 +144,6 @@
                         </a-tooltip>
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
-                    <!--                    <a-tooltip-->
-                    <!--                        v-if="(column.title === '证据描述'||column.title === 'Description of evidence' )&& record[7]"-->
-                    <!--                        color="white"-->
-                    <!--                        style="min-width:300px"-->
-                    <!--                    >-->
-                    <!--                        <template #title>-->
-                    <!--                            <div-->
-                    <!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
-                    <!--                            >-->
-                    <!--                                {{ record[7] }}-->
-                    <!--                            </div>-->
-                    <!--                        </template>-->
-                    <!--                        <div>{{ record[7].substring(0,5) }}......</div>-->
-                    <!--                    </a-tooltip>-->
-                    <!--                    <a-tooltip-->
-                    <!--                        v-if="(column.title === '药物及敏感性'||column.title === 'Drugs and sensitivity' )&& record[7]"-->
-                    <!--                        color="white"-->
-                    <!--                        style="min-width:300px"-->
-                    <!--                    >-->
-                    <!--                        <template #title>-->
-                    <!--                            <div-->
-                    <!--                                style="color:black;background-color:white;max-height: 250px;max-width:300px;overflow: auto;"-->
-                    <!--                            >-->
-                    <!--                                {{ record[6] }}-->
-                    <!--                            </div>-->
-                    <!--                        </template>-->
-                    <!--                        <div>{{ record[6].substring(0,5) }}......</div>-->
-                    <!--                    </a-tooltip>-->
                 </template>
             </a-table>
         </div>

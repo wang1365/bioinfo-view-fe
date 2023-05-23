@@ -207,7 +207,7 @@
                                 :title="record[column.dataIndex]"
                                 :overlay-style="{ maxWidth: '1200px' }"
                             >
-                                <div>{{ record[column.dataIndex].substring(0, 20)}}...</div>
+                                <div>{{ record[column.dataIndex].substring(0, 20)+'...'}}</div>
                             </a-tooltip>
                         </template>
                         <span v-else>{{ record[column.dataIndex] }}</span>
