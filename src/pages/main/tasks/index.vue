@@ -118,8 +118,9 @@
                             <span class="text-secondary"> {{ item.project.name }} </span>
                         </td>
                         <td>{{ readPatient(item) }}</td>
-                        <td>{{ readSampleId(item) }}</td>
+
                         <td>{{ readDataId(item) }}</td>
+                        <td>{{ readSampleId(item) }}</td>
                         <td>{{ readLibraryNumber(item) }}</td>
                         <td>{{ item.flow.name }}</td>
 
