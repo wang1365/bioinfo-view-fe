@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-export function useQTable(rowsPerPage=15) {
+export function useQTable(rowsPerPage = 15) {
     const rows = ref([])
     const tableRef = ref({})
     const pagination = ref({

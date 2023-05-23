@@ -9,7 +9,7 @@
                         style="width:350px"
                         v-model="searchParams.search"
                         dense
-                        :label="$t('Task')+' ' +$t('Name')"
+                        :label="$t('Task') + ' ' + $t('Name')"
                         clearable
                     ></q-input>
                     <q-input
@@ -41,11 +41,11 @@
                     ref="tableRef"
                     v-model:pagination="pagination"
                     @request="onRequest"
-                    :rows-per-page-options="[5,15,35,50]"
+                    :rows-per-page-options="[5, 15, 35, 50]"
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
-                            <a :href="getreportPath(props)" download v-if="props.row.status=='创建成功'">
+                            <a :href="getreportPath(props)" download v-if="props.row.status == '创建成功'">
                                 <q-btn color="primary" :label="$t('Download')" size="sm" />
                             </a>
                             <a>
@@ -55,8 +55,8 @@
                     </template>
                     <template v-slot:body-cell-status="props">
                         <q-td :props="props" class="q-gutter-xs">
-                            <span v-if="props.row.status=='创建成功'"> {{ $t("Success") }}</span>
-                            <span v-if="props.row.status=='创建失败'"> {{ $t("Failed") }}</span>
+                            <span v-if="props.row.status == '创建成功'"> {{ $t("Success") }}</span>
+                            <span v-if="props.row.status == '创建失败'"> {{ $t("Failed") }}</span>
                         </q-td>
                     </template>
                 </q-table>
@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import { useApi } from 'src/api/apiBase'
 import { useQTable } from 'src/utils/q-table'
@@ -91,23 +91,23 @@ const searchParams = ref({
     sample_identifier: '',
 })
 
-const getreportPath=(props)=>{
+const getreportPath = (props) => {
     let suffix = langCode.value === 'en' ? 'EN' : 'CN'
-    if(props.row.report_path){
+    if (props.row.report_path) {
 
-        return '/igv'+props.row.report_path
-    }else{
-        if(suffix==='EN' && props.row.report_path_en){
-            return '/igv'+props.row.report_path_en
+        return '/igv' + props.row.report_path
+    } else {
+        if (suffix === 'EN' && props.row.report_path_en) {
+            return '/igv' + props.row.report_path_en
         }
-        if(suffix==='CN' && props.row.report_path_cn){
-            return '/igv'+props.row.report_path_cn
+        if (suffix === 'CN' && props.row.report_path_cn) {
+            return '/igv' + props.row.report_path_cn
         }
 
     }
 }
 
-const columns = computed(()=>[
+const columns = computed(() => [
     {
         name: 'id',
         required: false,
@@ -126,7 +126,7 @@ const columns = computed(()=>[
     {
         name: 'patient_id',
         required: true,
-        label:t('SampleListTableColumnPatientIdentificationNumber') ,
+        label: t('SampleListTableColumnPatientIdentificationNumber'),
         align: 'left',
         field: (row) => {
             let result = ''
@@ -191,19 +191,22 @@ const columns = computed(()=>[
         align: 'left',
     },
 ])
-
+let intId = ref("")
 onMounted(() => {
     loadDataOnMount()
-    setInterval(() => refreshPage(), 5000)
+    intId.value = setInterval(() => refreshPage(), 5000)
 })
-const reset = ()=>{
+onUnmounted(()=>{
+    clearInterval(intId.value)
+})
+const reset = () => {
     searchParams.value = {
-    search: '',
-    patient_identifier: '',
-    sample_meta_identifier: '',
-    sample_identifier: '',
-}
-refreshPage()
+        search: '',
+        patient_identifier: '',
+        sample_meta_identifier: '',
+        sample_identifier: '',
+    }
+    refreshPage()
 }
 const onRequest = (props) => {
     const { page, rowsPerPage } = props.pagination
@@ -230,7 +233,7 @@ const onRequest = (props) => {
         }
     })
 }
-const onDownload = (report) => {}
+const onDownload = (report) => { }
 const onDelete = (item) => {
     $q.dialog({
         title: t('Confirm'),
@@ -246,12 +249,12 @@ const onDelete = (item) => {
                         index = i
                     }
                 }
-                pagination.value.rowsNumber-=1
+                pagination.value.rowsNumber -= 1
                 rows.value.splice(index, 1)
             } else {
                 if (pagination.value.page > 1) {
                     pagination.value.page = pagination.value.page - 1
-                }else{
+                } else {
                     pagination.value.page = 1
                 }
                 refreshPage()
