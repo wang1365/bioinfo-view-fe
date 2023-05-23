@@ -171,7 +171,7 @@ const clearKeyword = () => {
 }
 
 const clickView = (record) => {
-    selectedFile.value = record[7]
+    selectedFile.value = record[8]
     igvVisible.value = true
 }
 const rows = toRef(props, 'rows')
