@@ -95,6 +95,7 @@
                 v-model:pagination="pagination"
                 @request="onRequest"
                 :rows-per-page-options="[5, 15, 35, 50]"
+                class="my-sticky-column-table"
             >
                 <template v-slot:body-cell-project="props">
                     <q-td :props="props" class="q-gutter-xs">
@@ -191,16 +192,30 @@
                             @click="gotoDefineReport(props.row)"
                             size="sm"
                         />
-                        <a :href="downlaod(props.row)" download v-if="props.row.status == 'FINISHED'">
-                            <q-btn
-                                :disable="props.row.status !== 'FINISHED'"
-                                color="primary"
-                                :label="$t('Download')"
-                                icon="download"
-                                @click="downlaod(props.row)"
-                                size="sm"
-                            />
-                        </a>
+                        <!-- <a
+                            style="display:inline-flex"
+                            :href="downlaod(props.row)"
+                            download
+                            v-if="props.row.status == 'FINISHED'"
+                        > -->
+                        <q-btn
+                            v-if="props.row.status == 'FINISHED'"
+                            color="primary"
+                            @click="downlaod(props.row)"
+                            size="sm"
+                        >
+                            <a style="color:white" :href="downlaod(props.row)" download>
+                                <q-icon name="download" />
+                                {{$t('Download')  }}
+                            </a>
+                        </q-btn>
+                        <q-btn v-if="props.row.status != 'FINISHED'" :disable="true" color="primary" size="sm">
+                            <a style="color:white" href="#" download>
+                                <q-icon name="download" />
+                                {{$t('Download')  }}
+                            </a>
+                        </q-btn>
+                        <!-- </a> -->
 
                         <q-btn
                             :disable="props.row.status !== 'FINISHED' || props.row.deleted_tempdir"
@@ -282,6 +297,8 @@ const columns = computed(() => [
         align: 'left',
         field: (row) => row.id,
         format: (val) => `${val}`,
+        fixed: 'left',
+        width: 100,
     },
     {
         name: 'name',
@@ -652,3 +669,22 @@ const summary = async () => {
     })
 }
 </script>
+<style lang="sass">
+.my-sticky-column-table
+  /* specifying max-width so the example can
+    highlight the sticky column on any browser window */
+  max-width: 100%
+
+  thead tr:first-child th:first-child
+    /* bg color is important for th; just specify one */
+    background-color: #00b4ff
+
+  td:first-child
+    background-color: #00b4ff
+
+  th:first-child,
+  td:first-child
+    position: sticky
+    left: 0
+    z-index: 1
+</style>
