@@ -60,6 +60,8 @@
                     :searchParams="germlineData.searchParams"
                     :drugRows="germlineData.drugRows"
                     :selectedRows="germlineData.selectedRows"
+                    :selectedDefaultRows="germlineData.selectedDefaultRows"
+                    :defaultReportRows="germlineData.defaultReportRows"
                     :showSticky="props.viewConfig.showStick"
                     :stickDone="props.viewConfig.stickDone"
                     @filterChange="filterChange('germline', $event)"
@@ -76,6 +78,8 @@
                     :searchParams="somaticData.searchParams"
                     :drugRows="somaticData.drugRows"
                     :selectedRows="somaticData.selectedRows"
+                    :selectedDefaultRows="somaticData.selectedDefaultRows"
+                    :defaultReportRows="somaticData.defaultReportRows"
                     :showSticky="props.viewConfig.showStick"
                     :stickDone="props.viewConfig.stickDone"
                     @filterChange="filterChange('somatic', $event)"
@@ -177,6 +181,8 @@ const germlineData = ref({
     },
     drugRows: [],
     selectedRows: [],
+    selectedDefaultRows: [],
+    defaultReportRows:[]
 })
 const origingermlineData = ref('')
 const originsomaticData = ref('')
@@ -205,6 +211,8 @@ const somaticData = ref({
     },
     drugRows: [],
     selectedRows: [],
+    selectedDefaultRows: [],
+    defaultReportRows:[]
 })
 
 const filterData = ref({ somatic: null, germline: null })
@@ -243,9 +251,12 @@ const filterChange = (name, data) => {
     if (name === 'germline') {
         germlineData.value.searchParams = data.searchParams
         germlineData.value.selectedRows = data.selectedRows
+        germlineData.value.defaultReportRows = data.defaultReportRows
+
     } else if (name === 'somatic') {
         somaticData.value.searchParams = data.searchParams
         somaticData.value.selectedRows = data.selectedRows
+        somaticData.value.defaultReportRows = data.defaultReportRows
     }
     console.log(name, data)
 }
@@ -330,13 +341,15 @@ const loadGermlineData = () => {
         germlineData.value.options.mutationMeaning = Array.from(meanings)
         germlineData.value.options.mutationRisk = Array.from(risks)
         origingermlineData.value = JSON.stringify(germlineData.value)
+        germlineData.value.defaultReportRows = csvRows.filter(t => t.col250 === 'Y').map(t => t.lineNumber)
         if (stepData.value && stepData.value.germline) {
             germlineData.value.searchParams = stepData.value.germline.searchParams
-
             germlineData.value.selectedRows = stepData.value.germline.selectedRows
+            germlineData.value.selectedDefaultRows = stepData.value.germline.selectedDefaultRows
         } else {
-            germlineData.value.selectedRows = csvRows.filter(t => t.col250 === 'Y').map(t => t.lineNumber)
-            console.log('初始化选择行', germlineData.value.selectedRows , csvRows)
+            germlineData.value.selectedRows = []
+            germlineData.value.selectedDefaultRows=germlineData.value.defaultReportRows
+            console.log('初始化选择行', germlineData.value.defaultReportRows , csvRows)
         }
     }).finally(() => {
         $q.loading.hide()
@@ -386,11 +399,14 @@ const loadSomaticData = () => {
         somaticData.value.options.mutationMeaning = Array.from(meanings)
         somaticData.value.options.mutationRisk = Array.from(risks)
         originsomaticData.value = JSON.stringify(somaticData.value)
+        somaticData.value.defaultReportRows = csvRows.filter(t => t.col254 === 'Y').map(t => t.lineNumber)
         if (stepData.value && stepData.value.somatic) {
             somaticData.value.searchParams = stepData.value.somatic.searchParams
             somaticData.value.selectedRows = stepData.value.somatic.selectedRows
+            somaticData.value.selectedDefaultRows = stepData.value.somatic.selectedDefaultRows
         } else {
-            somaticData.value.selectedRows = csvRows.filter(t => t.col254 === 'Y').map(t => t.lineNumber)
+            somaticData.value.selectedRows = []
+            somaticData.value.selectedDefaultRows = somaticData.value.defaultReportRows
             console.log('初始化选择行', somaticData.value.selectedRows , csvRows)
         }
     })

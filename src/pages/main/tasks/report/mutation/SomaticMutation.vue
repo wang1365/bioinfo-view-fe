@@ -473,6 +473,16 @@ const props = defineProps({
         required: false,
         default: () => [],
     },
+    selectedDefaultRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+    defaultReportRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
 })
 
 const dialogVisible = ref(false)
@@ -523,6 +533,7 @@ const loading = ref(false)
 const filteredRows = ref([])
 const { rows, drugRows, header } = toRefs(props)
 const propSelectedRows = toRef(props, 'selectedRows')
+const propSelectedDefaultRows = toRef(props, 'selectedDefaultRows')
 const showSticky = toRef(props, 'showSticky')
 const stickDone = toRef(props, 'stickDone')
 const tumorColumnIdx = computed(() => {
@@ -914,7 +925,7 @@ const search = () => {
         return false
     }
     searchFilterRows(innerSearchParams.value)
-    selectedRows.value = []
+    selectedRows.value = selectedDefaultRows.value
     if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
         infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
     }
@@ -947,8 +958,22 @@ const loadTable = () => {
             selectedRows.value.push(item.lineNumber)
         }
     }
+    for (let item of filteredRows.value) {
+        let finded = false
+        for (let lineNumber of propSelectedDefaultRows.value) {
+            if (lineNumber === item.lineNumber) {
+                finded = true
+                break
+            }
+        }
+        if (finded) {
+            selectedRows.value.push(item.lineNumber)
+            selectedDefaultRows.value.push(item.lineNumber)
+        }
+    }
 }
 const selectedRows = ref([])
+const selectedDefaultRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
@@ -956,6 +981,20 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
+    selectedDefaultRows.value=[]
+    for(let item of selectedRowKeys){
+        let finded = false
+        for (let lineNumber of propSelectedDefaultRows.value) {
+            if (lineNumber === item) {
+                finded = true
+                break
+            }
+        }
+        if (finded) {
+            selectedDefaultRows.value.push(item.lineNumber)
+        }
+    }
+    console.log(selectedDefaultRows)
 }
 const getCheckboxProps = (record) => {
     return {
