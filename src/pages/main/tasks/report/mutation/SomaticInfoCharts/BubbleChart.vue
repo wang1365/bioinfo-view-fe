@@ -225,7 +225,6 @@ const refresh = () => {
     console.log('======> refresh', props.colKeys)
     props.colKeys.forEach((key, i) => {
         const result = groupAndCount(props.colKeys[i])
-        console.log('groupAndCount', result)
         // 原始数据分布概率
         option.value.series[i].type = 'scatter'
         option.value.series[i].data = result

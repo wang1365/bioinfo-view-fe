@@ -251,12 +251,12 @@ const filterChange = (name, data) => {
     if (name === 'germline') {
         germlineData.value.searchParams = data.searchParams
         germlineData.value.selectedRows = data.selectedRows
-        germlineData.value.defaultReportRows = data.defaultReportRows
+        germlineData.value.selectedDefaultRows = data.selectedDefaultRows
 
     } else if (name === 'somatic') {
         somaticData.value.searchParams = data.searchParams
         somaticData.value.selectedRows = data.selectedRows
-        somaticData.value.defaultReportRows = data.defaultReportRows
+        somaticData.value.selectedDefaultRows = data.selectedDefaultRows
     }
     console.log(name, data)
 }
@@ -288,6 +288,7 @@ const stickFilter = () => {
             return false
         }
     }
+    console.log(filterData.value)
     emit('stickDone', filterData.value)
 }
 
@@ -295,8 +296,10 @@ const reset = () => {
     try {
         germlineData.value = JSON.parse(origingermlineData.value)
         germlineData.value.selectedRows = []
+        germlineData.value.selectedDefaultRows = germlineData.value.defaultReportRows
         somaticData.value = JSON.parse(originsomaticData.value)
         somaticData.value.selectedRows = []
+        somaticData.value.selectedDefaultRows = somaticData.value.defaultReportRows
     }
     catch(error) {
 
@@ -340,8 +343,8 @@ const loadGermlineData = () => {
         germlineData.value.options.mutationPosition = Array.from(positions)
         germlineData.value.options.mutationMeaning = Array.from(meanings)
         germlineData.value.options.mutationRisk = Array.from(risks)
-        origingermlineData.value = JSON.stringify(germlineData.value)
         germlineData.value.defaultReportRows = csvRows.filter(t => t.col250 === 'Y').map(t => t.lineNumber)
+        origingermlineData.value = JSON.stringify(germlineData.value)
         if (stepData.value && stepData.value.germline) {
             germlineData.value.searchParams = stepData.value.germline.searchParams
             germlineData.value.selectedRows = stepData.value.germline.selectedRows
@@ -398,8 +401,8 @@ const loadSomaticData = () => {
         somaticData.value.options.mutationPosition = Array.from(positions)
         somaticData.value.options.mutationMeaning = Array.from(meanings)
         somaticData.value.options.mutationRisk = Array.from(risks)
-        originsomaticData.value = JSON.stringify(somaticData.value)
         somaticData.value.defaultReportRows = csvRows.filter(t => t.col254 === 'Y').map(t => t.lineNumber)
+        originsomaticData.value = JSON.stringify(somaticData.value)
         if (stepData.value && stepData.value.somatic) {
             somaticData.value.searchParams = stepData.value.somatic.searchParams
             somaticData.value.selectedRows = stepData.value.somatic.selectedRows

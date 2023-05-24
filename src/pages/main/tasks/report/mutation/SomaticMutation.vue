@@ -926,9 +926,19 @@ const search = () => {
     }
     searchFilterRows(innerSearchParams.value)
     selectedRows.value = selectedDefaultRows.value
-    if (showSticky.value && filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
-        infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
+    console.log(selectedRows.value)
+    if(showSticky.value){
+        if(propSelectedDefaultRows.value.length>0 ){
+            if(selectedRows.value.length>0){
+                infoMessage(`${selectedRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
+            }else if(filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length){
+                infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
+            }
+        }else if(filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length){
+            infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
+        }
     }
+
 }
 watch(rows, (rows) => {
     loadTable()
@@ -946,6 +956,7 @@ const loadTable = () => {
     innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)
     searchFilterRows(propSearchParams.value)
     selectedRows.value = []
+    selectedDefaultRows.value = []
     for (let item of filteredRows.value) {
         let found = false
         for (let lineNumber of propSelectedRows.value) {
@@ -991,7 +1002,7 @@ const onSelectChange = (selectedRowKeys) => {
             }
         }
         if (finded) {
-            selectedDefaultRows.value.push(item.lineNumber)
+            selectedDefaultRows.value.push(item)
         }
     }
     console.log(selectedDefaultRows)
@@ -1017,6 +1028,7 @@ const getChangedData = () => {
     return {
         searchParams: innerSearchParams.value,
         selectedRows: selectedRows.value,
+        selectedDefaultRows: selectedDefaultRows.value,
         filtered: filtered,
         selected: selected,
     }
