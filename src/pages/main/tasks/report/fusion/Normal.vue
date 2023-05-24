@@ -45,7 +45,7 @@
                 :data-source="filteredRows"
                 :columns="columns"
                 :sticky="true"
-                rowKey="lineNumber"
+                rowKey="0"
                 :row-selection="rowSelection"
             >
                 <template #bodyCell="{ column, record }">
@@ -198,6 +198,7 @@ const rowSelection = computed(() => {
 )
 
 const onSelectChange = (selectedRowKeys) => {
+    console.log(selectedRowKeys)
     if (showSticky.value && stickDone.value) {
         errorMessage(t('DefineReportUnlockReuired'))
         return false
@@ -267,6 +268,7 @@ const loadData = () => {
             selectedRows.value.push(item.lineNumber)
         }
     }
+    console.log(filteredRows.value)
 }
 const reset = () => {
     keyword.value = ''
