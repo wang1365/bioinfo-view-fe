@@ -62,6 +62,15 @@
                     }}
                 </q-td>
             </template>
+            <template v-slot:body-cell-task="props">
+                <q-td align="center">
+                    {{
+                        (props.row.task_count || 0) +
+                        "/" +
+                        (props.row.task_limit || $t('Unlimited'))
+                    }}
+                </q-td>
+            </template>
             <template v-slot:body-cell-role="props">
                 <q-td align="center">
                     <q-chip v-if="_.get(props.row, 'role[0]') === 'super'" color="primary" text-color="white">
@@ -209,6 +218,13 @@ const columns = computed(() => [
         name: "disk",
         label: t("DiskUsage") + "(MB)",
         field: "disk",
+        sortable: false,
+        align: "center",
+    },
+    {
+        name: "task",
+        label: t("TaskLimit"),
+        field: "task",
         sortable: false,
         align: "center",
     },

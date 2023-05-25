@@ -2,7 +2,7 @@
     <q-dialog v-model="dlgVisible" transition-show="scale">
         <q-card style="width: 500px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>{{$t('EditUser')}}</q-toolbar-title>
+                <q-toolbar-title>{{ $t('EditUser') }}</q-toolbar-title>
             </q-toolbar>
             <q-card-section>
                 <q-list>
@@ -11,7 +11,7 @@
                             class="full-width"
                             readonly
                             filled
-                            stack-label
+                            stack-label label-color="primary"
                             v-model="form.username"
                             :label="$t('Username')"
                             :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
@@ -20,14 +20,19 @@
                     <q-item>
                         <q-input
                             class="full-width"
-                            stack-label
+                            stack-label label-color="primary"
                             v-model="form.nickname"
                             :label="$t('Nickname')"
                             :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <q-item>
-                        <q-input class="full-width" stack-label v-model.number="form.disk_limit" :label="$t('DiskUsageLimit') + '(MB)'" />
+                        <q-input class="full-width" stack-label label-color="primary"  v-model.number="form.disk_limit"
+                                 :label="$t('DiskUsageLimit')" type="number"/>
+                    </q-item>
+                    <q-item>
+                        <q-input class="full-width" stack-label label-color="primary" v-model.number="form.task_limit"
+                                 :label="$t('TaskLimit')" type="number"/>
                     </q-item>
                     <q-item>
                         <q-toggle
@@ -78,8 +83,8 @@
                     <!--                        />-->
                     <!--                    </q-item>-->
                     <q-card-actions align="right">
-                        <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk" />
-                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
+                        <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk"/>
+                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm"/>
                     </q-card-actions>
                 </q-list>
             </q-card-section>
@@ -91,8 +96,10 @@
 import {ref, defineProps, toRefs, watch} from 'vue'
 import {patchUser} from 'src/api/user'
 import {useQuasar} from 'quasar'
+import {useI18n} from 'vue-i18n'
 
 const $q = useQuasar()
+const {t} = useI18n()
 const dlgVisible = ref(false)
 const emit = defineEmits(['success'])
 
@@ -116,22 +123,23 @@ const props = defineProps({
     }
 })
 
-const { user } = toRefs(props)
+const {user} = toRefs(props)
 const form = ref({})
 
-watch(user,  (v) => {
+watch(user, (v) => {
     console.log('xxxxxxxx user change', user, v)
     form.value = {
         username: props.user.username,
         nickname: props.user.nickname,
         disk_limit: props.user.disk_limit,
+        task_limit: props.user.task_limit,
         is_active: props.user.is_active
     }
 })
 
 const clickOk = () => {
     patchUser(props.user.id, form.value).then(() => {
-        $q.notify({message: '修改用户成功', type: 'positive'})
+        $q.notify({message: t('UpdateSuccess'), type: 'positive'})
         emit('success')
         dlgVisible.value = false
     })
