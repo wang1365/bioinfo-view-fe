@@ -356,6 +356,7 @@ const filterChange = () => {
     emit('filterChange', getChangedData())
 }
 onUnmounted(() => {
+    console.log('signal onUnmounted')
     filterChange()
 })
 watch([qtSearchParam, qnSearchParam, qtRows, qnRows, qtSelectedRows, qnSelectedRows], () => {
@@ -363,6 +364,7 @@ watch([qtSearchParam, qnSearchParam, qtRows, qnRows, qtSelectedRows, qnSelectedR
 })
 
 onMounted(() => {
+    console.log('signal onMounted')
     loadData()
 })
 

@@ -210,7 +210,7 @@ const stickFilter = () => {
     if (viewConfig.value.showFusionSomatic && !filterData.value.normal) {
         if (normalVue.value) {
             try {
-                filterData.value.single = singleVue.value.getChangedData()
+                filterData.value.normal = normalVue.value.getChangedData()
 
             } catch (error) {
 
@@ -221,17 +221,6 @@ const stickFilter = () => {
 }
 const reset = () => {
     emit('reset', null)
-    // try {
-    //     singleVue.value.reset()
-    // } catch (error) {
-
-    // }
-    // try {
-    //     normalVue.value.reset()
-    // } catch (error) {
-
-    // }
-
     singleData.value.qt.searchParam = ''
     singleData.value.qt.selectedRows = []
     singleData.value.qn.searchParam = ''

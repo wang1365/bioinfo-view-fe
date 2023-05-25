@@ -69,7 +69,7 @@
 </template>
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify';
-import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed } from 'vue'
+import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed ,onDeactivated} from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n"
 import IGV from './Igv.vue'
@@ -204,6 +204,8 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
+    console.log(selectedRows.value)
+    filterChange()
 }
 const getCheckboxProps = (record) => {
     return {
@@ -213,6 +215,7 @@ const getCheckboxProps = (record) => {
 }
 
 const getChangedData = () => {
+    console.log(selectedRows.value)
     return {
         searchParam: keyword.value,
         selectedRows: selectedRows.value,
@@ -225,7 +228,9 @@ const filterChange = () => {
 }
 
 onMounted(() => {
+    console.log('normal onMounted')
     loadData()
+
 })
 onUnmounted(() => {
     filterChange()
@@ -234,7 +239,6 @@ onUnmounted(() => {
 const loadData = () => {
     const width = [30, 30, 60, 60, 60, 60, 200, 50, 30]
     columns.value = []
-    console.log('>>>>>>>>>>>>>>>>>>>', header.value)
     header.value.filter(t => t !== 'Report')
         .forEach((item, index) => {
         if (item === 'IGV') {
@@ -259,16 +263,15 @@ const loadData = () => {
     for (let item of filteredRows.value) {
         let finded = false
         for (let lineNumber of propSelectedRows.value) {
-            if (lineNumber === item.lineNumber) {
+            if (lineNumber === item[0]) {
                 finded = true
                 break
             }
         }
         if (finded) {
-            selectedRows.value.push(item.lineNumber)
+            selectedRows.value.push(item[0])
         }
     }
-    console.log(filteredRows.value)
 }
 const reset = () => {
     keyword.value = ''
