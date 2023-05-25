@@ -400,16 +400,16 @@ const props = defineProps({
         default() {
             return {
                 gene: null,
-                depth: null,
+                depth: { type: Number },
                 depthCmp: '>',
-                ratio: null,
+                ratio: { type: Number },
                 ratioCmp: '>',
                 mutationType: null,
                 mutationPosition: [],
                 mutationMeaning: null,
                 mutationRisk: null,
                 human: 'ALL',
-                humanRatio: null,
+                humanRatio: { type: Number },
                 sift: null,
                 drug: false,
             }
@@ -689,15 +689,15 @@ const searchFilterRows = (searchParams) => {
 
         // 深度
         // 原始表格8列，大于0的正整数，
-        param = searchParams.depth || 0
-        if (!(useComparator(searchParams.depthCmp).compare(Number(line.col8), param))) {
+        param = searchParams.depth
+        if (param !== null && !(useComparator(searchParams.depthCmp).compare(Number(line.col8), param))) {
             return false
         }
 
         // 频率
         // 原始表格，大于0的小数
-        param = searchParams.ratio || 0
-        if (!(useComparator(searchParams.ratioCmp).compare(Number(line.col9), param))) {
+        param = searchParams.ratio
+        if (param !== null && !(useComparator(searchParams.ratioCmp).compare(Number(line.col9), param))) {
             return false
         }
 
@@ -766,19 +766,21 @@ const searchFilterRows = (searchParams) => {
               就是如果ABC三个数据库都没有点的情况下，按照筛选数值筛选来
               如果A数据库里面有点，BC不是点，那A直接默认小于筛选值，BC按照与筛选值比较，可以认为 这三个数据库里的点=0
           */
-        param = searchParams.humanRatio || 0
-        // 不同地区人群使用的数据列
-        let hrColumns = crowdCols[searchParams.human]
-        hrColumns = hrColumns.map(h => line[`col${h}`])
-        if (hrColumns.length === 2) {
-            // 如果没有第三列，认为第三列数据为.
-            hrColumns.push('.')
-        }
-        const cmp = useComparator(searchParams.humanRatioCmp)
-        const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
-        const ltCount = hrColumns.map(v => ltRatio(v)).filter(v => v).length
-        if (ltCount < 2) {
-            return false
+        param = searchParams.humanRatio
+        if (param !== null) {
+            // 不同地区人群使用的数据列
+            let hrColumns = crowdCols[searchParams.human]
+            hrColumns = hrColumns.map(h => line[`col${h}`])
+            if (hrColumns.length === 2) {
+                // 如果没有第三列，认为第三列数据为.
+                hrColumns.push('.')
+            }
+            const cmp = useComparator(searchParams.humanRatioCmp)
+            const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
+            const ltCount = hrColumns.map(v => ltRatio(v)).filter(v => v).length
+            if (ltCount < 2) {
+                return false
+            }
         }
 
         // SIFT_pred

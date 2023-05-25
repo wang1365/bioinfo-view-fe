@@ -431,39 +431,46 @@ const search = () => {
 
         // 肿瘤深度
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
-        param = searchParams.value.tumorDepth || 0
+        param = searchParams.value.tumorDepth
         const tumorDepth = Number(tumorColumns.value.includes(7) ? line[7] : line[11])
-        if (!(tumorDepth >= param)) {
+        if (param !== null && !(tumorDepth >= param)) {
             return false
         }
 
         // 对照深度
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
         param = searchParams.value.compareDepth || 0
-        let columnValue = tumorColumns.value.includes(7) ? line[11] : line[7]
-        if (!(Number(columnValue) >= param)) {
-            return false
+        if (param !== null) {
+            let columnValue = tumorColumns.value.includes(7) ? line[11] : line[7]
+            if (!(Number(columnValue) >= param)) {
+                return false
+            }
         }
+
 
         // 肿瘤频率
         // 原始表格9列或者是13列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的小数
-        param = searchParams.value.tumorRatio || 0
+        param = searchParams.value.tumorRatio
         const tumorRatio = Number(tumorColumns.value.includes(8) ? line[8] : line[12])
-        if (!(tumorRatio >= param)) {
+        if (param !== null && !(tumorRatio >= param)) {
             return false
         }
+
 
         // 对照频率
         // 原始表格9列或者是13列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的小数
-        param = searchParams.value.compareRatio || 0
-        columnValue = tumorColumns.value.includes(8) ? line[12] : line[8]
-        if (!(Number(columnValue) <= param)) {
-            return false
+        param = searchParams.value.compareRatio
+        if (param !== null) {
+            const columnValue = tumorColumns.value.includes(8) ? line[12] : line[8]
+            if (!(Number(columnValue) <= param)) {
+                return false
+            }
         }
 
+
         // 肿瘤突变频数 (= 肿瘤深度 x 肿瘤频率乘积)
-        param = searchParams.value.mutationRatio || 0
-        if (!(tumorDepth * tumorRatio >= param)) {
+        param = searchParams.value.mutationRatio
+        if (param !== null && !(tumorDepth * tumorRatio >= param)) {
             return false
         }
 
@@ -511,29 +518,31 @@ const search = () => {
         /*
         原始表格第30、35、43列，大于0的小数， 30、35、43都满足筛选要求
          */
-        param = searchParams.value.humanRatio || 0
-        // 不同地区人群使用的数据列
-        let hrColumns = {
-            'ALL': [27, 35, 43],
-            'African': [28, 36, 44],
-            'American': [29, 37, 45],
-            'East Asian': [30, 38, 47],
-            'European': [31, 39, 48],
-            'South Asian': [34, 40]
-        }[searchParams.value.human]
-        hrColumns = hrColumns.map(h => line[h-1])
-        if (hrColumns.length === 2) {
-            // 如果没有第三列，认为第三列数据为.
-            hrColumns.add('.')
-        }
-        if (
-            !(
-                (hrColumns[0] === '.' || Number(hrColumns[0]) <= param) &&
-                (hrColumns[1] === '.' || Number(hrColumns[1]) <= param) &&
-                (hrColumns[2] === '.' || Number(hrColumns[2]) <= param)
-            )
-        ) {
-            return false
+        param = searchParams.value.humanRatio
+        if (param !== null) {
+            // 不同地区人群使用的数据列
+            let hrColumns = {
+                'ALL': [27, 35, 43],
+                'African': [28, 36, 44],
+                'American': [29, 37, 45],
+                'East Asian': [30, 38, 47],
+                'European': [31, 39, 48],
+                'South Asian': [34, 40]
+            }[searchParams.value.human]
+            hrColumns = hrColumns.map(h => line[h-1])
+            if (hrColumns.length === 2) {
+                // 如果没有第三列，认为第三列数据为.
+                hrColumns.add('.')
+            }
+            if (
+                !(
+                    (hrColumns[0] === '.' || Number(hrColumns[0]) <= param) &&
+                    (hrColumns[1] === '.' || Number(hrColumns[1]) <= param) &&
+                    (hrColumns[2] === '.' || Number(hrColumns[2]) <= param)
+                )
+            ) {
+                return false
+            }
         }
 
         // 是否过滤重复区假突变
