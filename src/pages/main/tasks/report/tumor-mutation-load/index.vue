@@ -431,46 +431,40 @@ const search = () => {
 
         // 肿瘤深度
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
-        param = searchParams.value.tumorDepth
+        param = searchParams.value.tumorDepth || 0
         const tumorDepth = Number(tumorColumns.value.includes(7) ? line[7] : line[11])
-        if (param && !(tumorDepth >= param)) {
+        if (!(tumorDepth >= param)) {
             return false
         }
 
         // 对照深度
         // 原始表格8列或者是12列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的正整数，
-        param = searchParams.value.compareDepth
-        if (param) {
-            const columnValue = tumorColumns.value.includes(7) ? line[11] : line[7]
-            if (!(Number(columnValue) >= param)) {
-                return false
-            }
+        param = searchParams.value.compareDepth || 0
+        let columnValue = tumorColumns.value.includes(7) ? line[11] : line[7]
+        if (!(Number(columnValue) >= param)) {
+            return false
         }
 
         // 肿瘤频率
         // 原始表格9列或者是13列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的小数
-        param = searchParams.value.tumorRatio
+        param = searchParams.value.tumorRatio || 0
         const tumorRatio = Number(tumorColumns.value.includes(8) ? line[8] : line[12])
-        if (param && !(tumorRatio >= param)) {
+        if (!(tumorRatio >= param)) {
             return false
         }
 
         // 对照频率
         // 原始表格9列或者是13列（因为表头是按照样品的名字哪个靠前哪个就在前面，所以需要同样品名check一下），大于0的小数
-        param = searchParams.value.compareRatio
-        if (param) {
-            const columnValue = tumorColumns.value.includes(8) ? line[12] : line[8]
-            if (!(Number(columnValue) <= param)) {
-                return false
-            }
+        param = searchParams.value.compareRatio || 0
+        columnValue = tumorColumns.value.includes(8) ? line[12] : line[8]
+        if (!(Number(columnValue) <= param)) {
+            return false
         }
 
         // 肿瘤突变频数 (= 肿瘤深度 x 肿瘤频率乘积)
-        param = searchParams.value.mutationRatio
-        if (param) {
-            if (!(tumorDepth * tumorRatio >= param)) {
-                return false
-            }
+        param = searchParams.value.mutationRatio || 0
+        if (!(tumorDepth * tumorRatio >= param)) {
+            return false
         }
 
         // 突变类型 All/SNP/INDEL
