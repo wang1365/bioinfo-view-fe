@@ -511,31 +511,29 @@ const search = () => {
         /*
         原始表格第30、35、43列，大于0的小数， 30、35、43都满足筛选要求
          */
-        param = searchParams.value.humanRatio
-        if (param) {
-            // 不同地区人群使用的数据列
-            let hrColumns = {
-                'ALL': [27, 35, 43],
-                'African': [28, 36, 44],
-                'American': [29, 37, 45],
-                'East Asian': [30, 38, 47],
-                'European': [31, 39, 48],
-                'South Asian': [34, 40]
-            }[searchParams.value.human]
-            hrColumns = hrColumns.map(h => line[h-1])
-            if (hrColumns.length === 2) {
-                // 如果没有第三列，认为第三列数据为.
-                hrColumns.add('.')
-            }
-            if (
-                !(
-                    (hrColumns[0] === '.' || Number(hrColumns[0]) <= param) &&
-                    (hrColumns[1] === '.' || Number(hrColumns[1]) <= param) &&
-                    (hrColumns[2] === '.' || Number(hrColumns[2]) <= param)
-                )
-            ) {
-                return false
-            }
+        param = searchParams.value.humanRatio || 0
+        // 不同地区人群使用的数据列
+        let hrColumns = {
+            'ALL': [27, 35, 43],
+            'African': [28, 36, 44],
+            'American': [29, 37, 45],
+            'East Asian': [30, 38, 47],
+            'European': [31, 39, 48],
+            'South Asian': [34, 40]
+        }[searchParams.value.human]
+        hrColumns = hrColumns.map(h => line[h-1])
+        if (hrColumns.length === 2) {
+            // 如果没有第三列，认为第三列数据为.
+            hrColumns.add('.')
+        }
+        if (
+            !(
+                (hrColumns[0] === '.' || Number(hrColumns[0]) <= param) &&
+                (hrColumns[1] === '.' || Number(hrColumns[1]) <= param) &&
+                (hrColumns[2] === '.' || Number(hrColumns[2]) <= param)
+            )
+        ) {
+            return false
         }
 
         // 是否过滤重复区假突变

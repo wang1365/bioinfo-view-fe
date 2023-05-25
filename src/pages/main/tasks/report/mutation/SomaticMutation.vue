@@ -764,42 +764,34 @@ const searchFilterRows = (searchParams) => {
 
         // 肿瘤深度
         // 原始表格8、12列，大于0的正整数，
-        param = searchParams.tumorDepth
-        if (param) {
-            const v = tumorColumnIdx.value.includes(8) ? line.col8 : line.col12
-            if (!(useComparator(searchParams.tumorDepthCmp).compare(Number(v), param))) {
-                return false
-            }
+        param = searchParams.tumorDepth || 0
+        let v = tumorColumnIdx.value.includes(8) ? line.col8 : line.col12
+        if (!(useComparator(searchParams.tumorDepthCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 对比深度
         // 原始表格8、12列，大于0的正整数，
-        param = searchParams.compareDepth
-        if (param) {
-            const v = tumorColumnIdx.value.includes(8) ? line.col12 : line.col8
-            if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
-                return false
-            }
+        param = searchParams.compareDepth || 0
+        v = tumorColumnIdx.value.includes(8) ? line.col12 : line.col8
+        if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 肿瘤频率
         // 原始表格9、13列，大于0的小数
-        param = searchParams.tumorRatio
-        if (param) {
-            const v = tumorColumnIdx.value.includes(9) ? line.col13 : line.col9
-            if (!(useComparator(searchParams.tumorRatioCmp).compare(Number(v), param))) {
-                return false
-            }
+        param = searchParams.tumorRatio || 0
+        v = tumorColumnIdx.value.includes(9) ? line.col13 : line.col9
+        if (!(useComparator(searchParams.tumorRatioCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 对比频率
         // 原始表格9、13列，大于0的小数
-        param = searchParams.compareRatio
-        if (param) {
-            const v = tumorColumnIdx.value.includes(9) ? line.col9 : line.col13
-            if (!(useComparator(searchParams.compareRatioCmp).compare(Number(v), param))) {
-                return false
-            }
+        param = searchParams.compareRatio || 0
+        v = tumorColumnIdx.value.includes(9) ? line.col9 : line.col13
+        if (!(useComparator(searchParams.compareRatioCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 突变类型 All/SNP/INDEL
@@ -864,28 +856,26 @@ const searchFilterRows = (searchParams) => {
         /*
             原始表格第30、35、43列，大于0的小数， 30、35、43列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，不管什么筛选，都展示
           */
-        param = searchParams.humanRatio
-        if (param) {
-            // 不同地区人群使用的数据列
-            let hrColumns = {
-                'ALL': [27, 35, 43],
-                'African': [28, 36, 44],
-                'American': [29, 37, 45],
-                'East Asian': [30, 38, 47],
-                'European': [31, 39, 48],
-                'South Asian': [34, 40]
-            }[searchParams.human]
-            hrColumns = hrColumns.map(h => line[`col${h}`])
-            if (hrColumns.length === 2) {
-                // 如果没有第三列，认为第三列数据为.
-                hrColumns.push('.')
-            }
-            const cmp = useComparator(searchParams.humanRatioCmp)
-            const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
-            const ltCount = hrColumns.map(v => ltRatio(v)).filter(v => v).length
-            if (ltCount < 2) {
-                return false
-            }
+        param = searchParams.humanRatio || 0
+        // 不同地区人群使用的数据列
+        let hrColumns = {
+            'ALL': [27, 35, 43],
+            'African': [28, 36, 44],
+            'American': [29, 37, 45],
+            'East Asian': [30, 38, 47],
+            'European': [31, 39, 48],
+            'South Asian': [34, 40]
+        }[searchParams.human]
+        hrColumns = hrColumns.map(h => line[`col${h}`])
+        if (hrColumns.length === 2) {
+            // 如果没有第三列，认为第三列数据为.
+            hrColumns.push('.')
+        }
+        const cmp = useComparator(searchParams.humanRatioCmp)
+        const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
+        const ltCount = hrColumns.map(v => ltRatio(v)).filter(v => v).length
+        if (ltCount < 2) {
+            return false
         }
 
         // SIFT_pred
