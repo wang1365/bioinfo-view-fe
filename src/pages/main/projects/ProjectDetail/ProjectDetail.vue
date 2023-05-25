@@ -73,22 +73,24 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, defineProps, computed} from "vue"
+import { ref, defineProps, computed } from "vue"
 import { useApi } from "src/api/apiBase"
 import FlowSelect from "./ProjectTask/FlowSelect.vue"
 import CreateTask from "./ProjectTask/CreateTask.vue"
 import { globalStore } from 'src/stores/global'
 import { errorMessage } from 'src/utils/notify'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const store = globalStore()
-const { apiGet } = useApi();
-const props = defineProps({ projectDetail: Object });
+const { apiGet } = useApi()
+const props = defineProps({ projectDetail: Object })
 const emit = defineEmits(['reloadProject'])
 
-const openFlowSelector = ref(false);
-const openCreateTask = ref(false);
-const selectedFlowId = ref(0);
-const flowDetail = ref({});
+const openFlowSelector = ref(false)
+const openCreateTask = ref(false)
+const selectedFlowId = ref(0)
+const flowDetail = ref({})
 
 const allowCreateTask = computed(() => {
     const user = store.currentUser
@@ -108,7 +110,7 @@ const taskCreated = (event) => {
 
 const clickCreateTask = () => {
     if (!allowCreateTask.value) {
-        errorMessage('已达到最大任务数量限制，请联系管理员！')
+        errorMessage(t('TaskCreateFailedForTaskLimitError'))
     } else {
         openFlowSelector.value = true
     }
