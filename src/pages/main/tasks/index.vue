@@ -676,15 +676,15 @@ const summary = async () => {
 
   thead tr:first-child th:first-child
     /* bg color is important for th; just specify one */
-    background-color: #00b4ff
+    background-color: white
 
   thead tr:nth-child(2),thead th:nth-child(2)
     /* bg color is important for th; just specify one */
-    background-color: #00b4ff
+    background-color: white
 
 
   td:first-child,td:nth-child(2)
-    background-color: #00b4ff
+    background-color: white
 
   th:first-child,
   td:first-child
@@ -697,4 +697,5 @@ const summary = async () => {
     position: sticky
     left: 56px
     z-index: 1
+    border-right: 1px solid silver
 </style>
