@@ -298,7 +298,6 @@ const columns = computed(() => [
         field: (row) => row.id,
         format: (val) => `${val}`,
         fixed: 'left',
-        width: 100,
     },
     {
         name: 'name',
@@ -679,12 +678,23 @@ const summary = async () => {
     /* bg color is important for th; just specify one */
     background-color: #00b4ff
 
-  td:first-child
+  thead tr:nth-child(2),thead th:nth-child(2)
+    /* bg color is important for th; just specify one */
+    background-color: #00b4ff
+
+
+  td:first-child,td:nth-child(2)
     background-color: #00b4ff
 
   th:first-child,
   td:first-child
     position: sticky
-    left: 0
+    left: 0px
+    z-index: 2
+
+  th:nth-child(2),
+  td:nth-child(2)
+    position: sticky
+    left: 56px
     z-index: 1
 </style>
