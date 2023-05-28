@@ -63,7 +63,7 @@
                             <td>{{ item.fastq2_path }}</td>
                             <td>{{ item.patient?.identifier }}</td>
                             <td>{{ item.patient?.name }}</td>
-                            <td>{{ item.patient?.gender }}</td>
+                            <td>{{ item.patient?.gender=='男'?$t('Male'):$t('Female')  }}</td>
                             <td>{{ item.sample_meta?.identifier }}</td>
                             <td>{{ item.sample_meta?.sample_componet }}</td>
                             <td>{{ item.sample_meta?.is_panel }}</td>
@@ -111,6 +111,8 @@ import PaginatorVue from "src/components/paginator/Paginator.vue";
 import ProjectDetailDataSelect from "./ProjectDetailDataSelect.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const emit = defineEmits(["refresh"]);
 const props = defineProps({
     projectId: { type: Number, required: true },

@@ -148,6 +148,7 @@ const loadPage = async () => {
                 for (const iterator of res.data.results) {
                     iterator.selected = false;
                     dataItems.value.push(iterator);
+                    iterator.gender= iterator.gender=='男'?t('Male'):t('Female')
                 }
     }, query)
     // let params = `?page=${currentPage.value}&size=${pageSize.value}`;
