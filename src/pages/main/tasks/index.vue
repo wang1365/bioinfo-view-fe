@@ -148,24 +148,27 @@
                     <q-td :props="props" class="q-gutter-xs">
                         <template v-if="props.row.priority === 2">
                             <span class="text-red">{{ $t('High') }}</span>
-                            <q-btn size="xs" flat icon="south" plain @click="raisePriority(props.row, 1)" />
+                            <q-btn size="xs" flat icon="south" padding="xs" @click="raisePriority(props.row, 1)" />
                         </template>
                         <template v-else>
                             <span class="text-primary">{{ $t('Normal') }}</span>
-                            <q-btn size="xs" flat icon="north" @click="raisePriority(props.row, 2)" />
+                            <q-btn size="xs" flat icon="north" padding="xs" @click="raisePriority(props.row, 2)" />
                         </template>
                     </q-td>
                 </template>
-                <template v-slot:body-cell-error="props">
+                <template v-slot:body-cell-status="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <q-icon
+                        <q-btn
                             v-if="props.row.status === 'FAILURED'"
-                            class="cursor-pointer"
                             color="red"
-                            name="find_in_page"
+                            :label="$t('Failed')"
+                            flat padding="xs"
+                            icon-right="help"
                             @click="showTaskError(props.row)"
                             size="sm"
-                    /></q-td>
+                        />
+                        <span v-else>{{$t(statusKey[props.row.status])}}</span>
+                    </q-td>
                 </template>
                 <template v-slot:body-cell-operate="props">
                     <q-td :props="props" class="q-gutter-xs">
@@ -199,7 +202,7 @@
                             v-if="props.row.status == 'FINISHED'"
                         > -->
                         <q-btn
-                            v-if="props.row.status == 'FINISHED'"
+                            v-if="props.row.status === 'FINISHED'"
                             color="primary"
                             @click="downlaod(props.row)"
                             size="sm"
@@ -209,7 +212,7 @@
                                 {{$t('Download')  }}
                             </a>
                         </q-btn>
-                        <q-btn v-if="props.row.status != 'FINISHED'" :disable="true" color="primary" size="sm">
+                        <q-btn v-if="props.row.status !== 'FINISHED'" :disable="true" color="primary" size="sm">
                             <a style="color:white" href="#" download>
                                 <q-icon name="download" />
                                 {{$t('Download')  }}
@@ -406,7 +409,7 @@ const columns = computed(() => [
         name: 'status',
         required: true,
         label: t('Status'),
-        align: 'left',
+        align: 'center',
         field: (item) => {
             switch (item.status) {
         case 'PENDING':
@@ -433,14 +436,14 @@ const columns = computed(() => [
         field: (row) => row,
         format: (val) => `${val}`,
     },
-    {
-        name: 'error',
-        required: true,
-        label: t('Error'),
-        align: 'left',
-        field: (row) => row,
-        format: (val) => `${val}`,
-    },
+    // {
+    //     name: 'error',
+    //     required: true,
+    //     label: t('Error'),
+    //     align: 'left',
+    //     field: (row) => row,
+    //     format: (val) => `${val}`,
+    // },
     {
         name: 'create_by',
         required: true,
@@ -485,6 +488,14 @@ const options = computed(() => [
     { label: t('TaskPageListStatusFinish'), value: 'FINISHED' },
     { label: t('TaskPageListStatusCancel'), value: 'CANCELED' },
 ])
+
+const statusKey = {
+    'PENDING': 'TaskPageListStatusQueue',
+    'RUNNING': 'TaskPageListStatusRun',
+    'FINISHED': 'TaskPageListStatusFinish',
+    'FAILURED': 'TaskPageListStatusFail',
+    'CANCELED': 'TaskPageListStatusCancel'
+}
 
 const status = ref('ALL')
 const showProjectSelect = ref(false)
