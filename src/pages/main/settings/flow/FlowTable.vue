@@ -7,7 +7,7 @@
             :loading="loading"
             row-key="name"
             hide-no-data
-            wrap-cells
+            wrap-cells dense flat
             v-model:pagination="pagination"
             :selection="props.selection"
             v-model:selected="selected"
@@ -70,16 +70,16 @@ const $q = useQuasar()
 
 const columns = computed(() => [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center'},
-    {name: 'code', label: t('Type'), field: 'code', align: 'center', sortable: true, },
-    {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true},
-    {name: 'flow_category', label: t('Category'), field: 'flow_category', align: 'center', },
-    {name: 'memory', label: t('Memory') +'(m)', align: 'center', field: 'memory', style: 'width:85px',},
-    {name: 'tar_path', label: t('DockerArchive'), field: 'tar_path', align: 'center' },
-    {name: 'image_name', label: t('DockerImageName'), field: 'image_name', align: 'center'},
+    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center',  style: 'width:100px'},
+    {name: 'code', label: t('Type'), field: 'code', align: 'center', sortable: true,  style: 'width:100px' },
+    {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true,  headerStyle: 'width:100px'},
+    {name: 'flow_category', label: t('Category'), field: 'flow_category', align: 'center',  headerStyle: 'width:85px'},
+    {name: 'memory', label: t('Memory') +'(m)', align: 'center', field: 'memory', headerStyle: 'width:85px',},
+    {name: 'tar_path', label: t('DockerArchive'), field: 'tar_path', align: 'left', headerStyle: 'width:100px'},
+    {name: 'image_name', label: t('DockerImageName'), field: 'image_name', align: 'center', headerStyle: 'width:110px'},
     // {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', format: v => format(v)},
-    {name: 'operation', label: t('Operate'), align: 'center'},
+    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', headerStyle: 'width:100px', format: v => format(v)},
+    {name: 'operation', label: t('Operate'), align: 'center', headerStyle: 'width:180px'},
 ])
 
 const visibleColumns = computed(() => {

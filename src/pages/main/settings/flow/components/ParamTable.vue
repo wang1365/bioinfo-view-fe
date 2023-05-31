@@ -46,7 +46,7 @@
                                     outline
                                     square
                                     removable
-                                    color="orange"
+                                    color="primary"
                                     @remove="deleteChoice(props.row, index)"
                                 />
                             </template>
