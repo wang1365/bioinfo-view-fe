@@ -261,14 +261,14 @@ const loadData = () => {
     searchFilterRows(propSearchParam.value)
     selectedRows.value = []
     for (let item of filteredRows.value) {
-        let finded = false
+        let found = false
         for (let lineNumber of propSelectedRows.value) {
             if (lineNumber === item[0]) {
-                finded = true
+                found = true
                 break
             }
         }
-        if (finded) {
+        if (found) {
             selectedRows.value.push(item[0])
         }
     }
