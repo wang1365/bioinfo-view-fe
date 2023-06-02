@@ -43,7 +43,7 @@
                 style="z-index:1"
                 size="middle"
                 bordered
-                rowKey="lineNumber"
+                rowKey="0"
                 :data-source="filteredRows1"
                 :columns="columns1"
                 :sticky="true"
@@ -122,7 +122,7 @@
                 :data-source="filteredRows2"
                 :columns="columns2"
                 :sticky="true"
-                rowKey="lineNumber"
+                rowKey="0"
                 :row-selection="rowSelection2"
             >
                 <template #bodyCell="{ column, record }">
@@ -402,9 +402,10 @@ const loadData = () => {
     searchFilterRows1(qtSearchParam.value)
     selectedRows.value = []
     for (let item of filteredRows1.value) {
+        console.log(item)
         let found = false
         for (let lineNumber of qtSelectedRows.value) {
-            if (lineNumber === item.lineNumber) {
+            if (lineNumber === item[0]) {
                 found = true
                 break
             }
@@ -440,9 +441,10 @@ const loadData = () => {
         searchFilterRows2(qnSearchParam.value)
         selectedRows2.value = []
         for (let item of filteredRows2.value) {
+            console.log(item)
             let found = false
             for (let lineNumber of qnSelectedRows.value) {
-                if (lineNumber === item.lineNumber) {
+                if (lineNumber === item[0]) {
                     found = true
                     break
                 }
@@ -468,6 +470,7 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
+    console.log(selectedRowKeys)
 }
 
 const onSelectChange2 = (selectedRowKeys) => {
@@ -476,6 +479,7 @@ const onSelectChange2 = (selectedRowKeys) => {
         return false
     }
     selectedRows2.value = selectedRowKeys
+    console.log(selectedRowKeys)
 }
 
 const reset = () => {
