@@ -127,7 +127,7 @@
     </q-page>
 </template>
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import {ref, onMounted, watch, computed, provide} from 'vue'
 import { useApi } from 'src/api/apiBase'
 import { getTask } from 'src/api/task'
 import QcVue from './qc/index.vue'
@@ -167,6 +167,36 @@ const module = ref({
     fusion: { showFusionGermline: true, showFusionSomatic: true },
     qc: { showQCsummary: true, showQCdepth: true },
 })
+
+// 解析任务中的样本信息，提取是否是单样本、肿瘤样本识别号、对比样本识别号
+const sampleInfo = computed(() => {
+    const result = {
+        isSingle: true, // 是否单样本（单样本时只有肿瘤样本）
+        controlSampleId: null,  // 对照样本识别号
+        tumorSampleId: null   // 肿瘤样本识别号
+    }
+    if (samples.value) {
+        let s = samples.value[0]
+        if (s?.sample_meta?.is_panel) {
+            result.tumorSampleId = s.identifier
+        } else {
+            result.controlSampleId = s.identifier
+        }
+        if (samples.value.length > 1) {
+            result.isSingle = false
+            s = samples.value[1]
+            if (s?.sample_meta?.is_panel) {
+                result.tumorSampleId = s.identifier
+            } else {
+                result.controlSampleId = s.identifier
+            }
+        }
+    }
+    return result
+})
+
+// 将样本解析信息注入，以便于子孙组件查询样本信息
+provide('sampleInfo', sampleInfo)
 
 onMounted(() => {
     // 查询任务
