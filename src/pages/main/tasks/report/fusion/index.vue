@@ -256,7 +256,7 @@ const loadSingleData = () => {
         const headers = getCsvHeader(res)
         const lines = getCsvDataAndSetLineNumber(res, { headers, hasHeaderLine: true })
 
-        singleData.value.qt.header = getCsvHeader(res)
+        singleData.value.qt.header = headers
         singleData.value.qt.rows = lines
         singleData.value.qt.url = `igv${props.task.result_dir}/${qtFile}`
         if (stepData.value && stepData.value.single) {

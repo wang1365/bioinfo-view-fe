@@ -384,14 +384,14 @@ const loadData = () => {
         if (item === 'IGV') {
             columns1.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
             })
         } else
             columns1.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
                 ellipsis: true,
@@ -423,14 +423,14 @@ const loadData = () => {
             if (item === 'IGV') {
                 columns2.value.push({
                     title: item,
-                    dataIndex: index,
+                    dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                     align: 'center',
                     width: width[index]
                 })
             } else
                 columns2.value.push({
                     title: item,
-                    dataIndex: index,
+                    dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                     align: 'center',
                     width: width[index],
                     ellipsis: true,

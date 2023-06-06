@@ -244,14 +244,14 @@ const loadData = () => {
         if (item === 'IGV') {
             columns.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
             })
         } else
             columns.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
                 customCell: customCell
