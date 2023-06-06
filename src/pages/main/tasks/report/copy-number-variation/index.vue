@@ -598,6 +598,7 @@ const clickClear = () => {
         type: '', // DUP/DEL
         drug: '', // YES/NO
         drugLevel: [], // A/B/C/D/E
+        includeDefaultReport:isDefineReport.value
     }
     clickSearch()
 }
@@ -656,6 +657,7 @@ const reset = () => {
         type: '', // DUP/DEL
         drug: '', // YES/NO
         drugLevel: '', // A/B/C/D/E
+        includeDefaultReport: isDefineReport.value
     }
     clickSearch()
     pieParams.value = {
