@@ -178,6 +178,7 @@
                             icon="visibility"
                             @click="gotoDetail(props.row)"
                             size="sm"
+                            padding="xs sm"
                         />
                         <q-btn
                             :disable="props.row.status !== 'FINISHED'"
@@ -186,6 +187,7 @@
                             icon="query_stats"
                             @click="gotoReport(props.row)"
                             size="sm"
+                            padding="xs sm"
                         />
                         <q-btn
                             :disable="props.row.status !== 'FINISHED'"
@@ -194,6 +196,7 @@
                             icon="query_stats"
                             @click="gotoDefineReport(props.row)"
                             size="sm"
+                            padding="xs sm"
                         />
                         <!-- <a
                             style="display:inline-flex"
@@ -206,13 +209,14 @@
                             color="primary"
                             @click="downlaod(props.row)"
                             size="sm"
+                            padding="xs sm"
                         >
                             <a style="color:white" :href="downlaod(props.row)" download>
                                 <q-icon name="download" />
                                 {{$t('Download')  }}
                             </a>
                         </q-btn>
-                        <q-btn v-if="props.row.status !== 'FINISHED'" :disable="true" color="primary" size="sm">
+                        <q-btn v-if="props.row.status !== 'FINISHED'" :disable="true" color="primary" size="sm" padding="xs sm">
                             <a style="color:white" href="#" download>
                                 <q-icon name="download" />
                                 {{$t('Download')  }}
@@ -227,6 +231,7 @@
                             icon="delete"
                             @click="deleteMiddleFiles(props.row)"
                             size="sm"
+                            padding="xs sm"
                             ><q-tooltip>{{ $t('TaskPageListTableRowBtnDeleteTmpTip') }}</q-tooltip></q-btn
                         >
                         <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
