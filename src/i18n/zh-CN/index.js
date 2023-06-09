@@ -322,7 +322,7 @@ export default {
     TumorMutationLoadAnalysis: '肿瘤突变负荷分析',
     HomologousRecombinationDefectAnalysis: '同源重组缺陷分析',
     CopyNumberVariationAnalysis: '拷贝数变异分析',
-    MicroSatelliteInstability: '微卫星不稳定',
+    MicroSatelliteInstability: '微卫星状态',
 
     // QC
     CaptureKitQcInformation: '捕获试剂盒质控信息',
