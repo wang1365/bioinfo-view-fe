@@ -324,7 +324,7 @@ export default {
     TumorMutationLoadAnalysis: 'Tumor Mutation Load Analysis',
     HomologousRecombinationDefectAnalysis: 'Homologous Recombination Defect Analysis',
     CopyNumberVariationAnalysis: 'Copy Number Variation Analysis',
-    MicroSatelliteInstability: 'Micro-satellite Instability',
+    MicroSatelliteInstability: 'Micro-satellite Status',
 
     // QC
     CaptureKitQcInformation: 'Capture Kit QC Information',
