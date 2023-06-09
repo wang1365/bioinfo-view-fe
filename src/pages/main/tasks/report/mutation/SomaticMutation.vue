@@ -765,41 +765,33 @@ const searchFilterRows = (searchParams) => {
         // 肿瘤深度
         // 原始表格8、12列，大于0的正整数，
         param = searchParams.tumorDepth
-        if (param) {
-            const v = tumorColumnIdx.value.includes(8) ? line.col8 : line.col12
-            if (!(useComparator(searchParams.tumorDepthCmp).compare(Number(v), param))) {
-                return false
-            }
+        let v = tumorColumnIdx.value.includes(8) ? line.col8 : line.col12
+        if (param !== null && !(useComparator(searchParams.tumorDepthCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 对比深度
         // 原始表格8、12列，大于0的正整数，
         param = searchParams.compareDepth
-        if (param) {
-            const v = tumorColumnIdx.value.includes(8) ? line.col12 : line.col8
-            if (!(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
-                return false
-            }
+        v = tumorColumnIdx.value.includes(8) ? line.col12 : line.col8
+        if (param !== null && !(useComparator(searchParams.compareDepthCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 肿瘤频率
         // 原始表格9、13列，大于0的小数
         param = searchParams.tumorRatio
-        if (param) {
-            const v = tumorColumnIdx.value.includes(9) ? line.col13 : line.col9
-            if (!(useComparator(searchParams.tumorRatioCmp).compare(Number(v), param))) {
-                return false
-            }
+        v = tumorColumnIdx.value.includes(9) ? line.col13 : line.col9
+        if (param !== null && !(useComparator(searchParams.tumorRatioCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 对比频率
         // 原始表格9、13列，大于0的小数
         param = searchParams.compareRatio
-        if (param) {
-            const v = tumorColumnIdx.value.includes(9) ? line.col9 : line.col13
-            if (!(useComparator(searchParams.compareRatioCmp).compare(Number(v), param))) {
-                return false
-            }
+        v = tumorColumnIdx.value.includes(9) ? line.col9 : line.col13
+        if (param !== null && !(useComparator(searchParams.compareRatioCmp).compare(Number(v), param))) {
+            return false
         }
 
         // 突变类型 All/SNP/INDEL
@@ -865,7 +857,7 @@ const searchFilterRows = (searchParams) => {
             原始表格第30、35、43列，大于0的小数， 30、35、43列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，不管什么筛选，都展示
           */
         param = searchParams.humanRatio
-        if (param) {
+        if (param != null) {
             // 不同地区人群使用的数据列
             let hrColumns = {
                 'ALL': [27, 35, 43],

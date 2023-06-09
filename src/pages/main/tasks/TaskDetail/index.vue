@@ -29,7 +29,7 @@
                                     {{ `${$t('Patient')}${$t('Name')}` }}: {{ item.sample_meta?.patient?.name }}
                                 </div>
                                 <div class="q-py-sm">
-                                    {{ `${$t('Patient')}${$t('Gender')}` }}: {{ item.sample_meta?.patient?.gender }}
+                                    {{ `${$t('Patient')}${$t('Gender')}` }}: {{ item.sample_meta?.patient?.gender=='男'?$t('Male'):$t('Female')  }}
                                 </div>
                                 <div class="q-py-sm">
                                     {{ $t('PatientNewFormPatientIdentificationNumber') }}:

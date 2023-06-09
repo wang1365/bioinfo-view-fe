@@ -148,24 +148,27 @@
                     <q-td :props="props" class="q-gutter-xs">
                         <template v-if="props.row.priority === 2">
                             <span class="text-red">{{ $t('High') }}</span>
-                            <q-btn size="xs" flat icon="south" plain @click="raisePriority(props.row, 1)" />
+                            <q-btn size="xs" flat icon="south" padding="xs" @click="raisePriority(props.row, 1)" />
                         </template>
                         <template v-else>
                             <span class="text-primary">{{ $t('Normal') }}</span>
-                            <q-btn size="xs" flat icon="north" @click="raisePriority(props.row, 2)" />
+                            <q-btn size="xs" flat icon="north" padding="xs" @click="raisePriority(props.row, 2)" />
                         </template>
                     </q-td>
                 </template>
-                <template v-slot:body-cell-error="props">
+                <template v-slot:body-cell-status="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <q-icon
+                        <q-btn
                             v-if="props.row.status === 'FAILURED'"
-                            class="cursor-pointer"
                             color="red"
-                            name="find_in_page"
+                            :label="$t('Failed')"
+                            flat padding="xs"
+                            icon-right="help"
                             @click="showTaskError(props.row)"
                             size="sm"
-                    /></q-td>
+                        />
+                        <span v-else>{{$t(statusKey[props.row.status])}}</span>
+                    </q-td>
                 </template>
                 <template v-slot:body-cell-operate="props">
                     <q-td :props="props" class="q-gutter-xs">
@@ -175,6 +178,7 @@
                             icon="visibility"
                             @click="gotoDetail(props.row)"
                             size="sm"
+                            padding="xs sm"
                         />
                         <q-btn
                             :disable="props.row.status !== 'FINISHED'"
@@ -183,6 +187,7 @@
                             icon="query_stats"
                             @click="gotoReport(props.row)"
                             size="sm"
+                            padding="xs sm"
                         />
                         <q-btn
                             :disable="props.row.status !== 'FINISHED'"
@@ -191,6 +196,7 @@
                             icon="query_stats"
                             @click="gotoDefineReport(props.row)"
                             size="sm"
+                            padding="xs sm"
                         />
                         <!-- <a
                             style="display:inline-flex"
@@ -199,17 +205,18 @@
                             v-if="props.row.status == 'FINISHED'"
                         > -->
                         <q-btn
-                            v-if="props.row.status == 'FINISHED'"
+                            v-if="props.row.status === 'FINISHED'"
                             color="primary"
                             @click="downlaod(props.row)"
                             size="sm"
+                            padding="xs sm"
                         >
                             <a style="color:white" :href="downlaod(props.row)" download>
                                 <q-icon name="download" />
                                 {{$t('Download')  }}
                             </a>
                         </q-btn>
-                        <q-btn v-if="props.row.status != 'FINISHED'" :disable="true" color="primary" size="sm">
+                        <q-btn v-if="props.row.status !== 'FINISHED'" :disable="true" color="primary" size="sm" padding="xs sm">
                             <a style="color:white" href="#" download>
                                 <q-icon name="download" />
                                 {{$t('Download')  }}
@@ -224,6 +231,7 @@
                             icon="delete"
                             @click="deleteMiddleFiles(props.row)"
                             size="sm"
+                            padding="xs sm"
                             ><q-tooltip>{{ $t('TaskPageListTableRowBtnDeleteTmpTip') }}</q-tooltip></q-btn
                         >
                         <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
@@ -406,7 +414,7 @@ const columns = computed(() => [
         name: 'status',
         required: true,
         label: t('Status'),
-        align: 'left',
+        align: 'center',
         field: (item) => {
             switch (item.status) {
         case 'PENDING':
@@ -433,14 +441,14 @@ const columns = computed(() => [
         field: (row) => row,
         format: (val) => `${val}`,
     },
-    {
-        name: 'error',
-        required: true,
-        label: t('Error'),
-        align: 'left',
-        field: (row) => row,
-        format: (val) => `${val}`,
-    },
+    // {
+    //     name: 'error',
+    //     required: true,
+    //     label: t('Error'),
+    //     align: 'left',
+    //     field: (row) => row,
+    //     format: (val) => `${val}`,
+    // },
     {
         name: 'create_by',
         required: true,
@@ -485,6 +493,14 @@ const options = computed(() => [
     { label: t('TaskPageListStatusFinish'), value: 'FINISHED' },
     { label: t('TaskPageListStatusCancel'), value: 'CANCELED' },
 ])
+
+const statusKey = {
+    'PENDING': 'TaskPageListStatusQueue',
+    'RUNNING': 'TaskPageListStatusRun',
+    'FINISHED': 'TaskPageListStatusFinish',
+    'FAILURED': 'TaskPageListStatusFail',
+    'CANCELED': 'TaskPageListStatusCancel'
+}
 
 const status = ref('ALL')
 const showProjectSelect = ref(false)
@@ -676,15 +692,15 @@ const summary = async () => {
 
   thead tr:first-child th:first-child
     /* bg color is important for th; just specify one */
-    background-color: #00b4ff
+    background-color: white
 
   thead tr:nth-child(2),thead th:nth-child(2)
     /* bg color is important for th; just specify one */
-    background-color: #00b4ff
+    background-color: white
 
 
   td:first-child,td:nth-child(2)
-    background-color: #00b4ff
+    background-color: white
 
   th:first-child,
   td:first-child
@@ -697,4 +713,5 @@ const summary = async () => {
     position: sticky
     left: 56px
     z-index: 1
+    border-right: 1px solid silver
 </style>

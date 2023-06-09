@@ -31,6 +31,7 @@
     <div class="bio-data-table q-py-sm">
         <div style="position:relative">
             <q-icon
+                v-if="isDefineReport"
                 color="accent"
                 name="question_mark"
                 size="xs"
@@ -42,12 +43,11 @@
                 style="z-index:1"
                 size="middle"
                 bordered
-                rowKey="lineNumber"
-                :loading="loading1"
+                rowKey="0"
                 :data-source="filteredRows1"
                 :columns="columns1"
                 :sticky="true"
-                :row-selection="{ selectedRowKeys: selectedRows, onChange: onSelectChange, columnWidth: 20, getCheckboxProps: getCheckboxProps }"
+                :row-selection="rowSelection1"
             >
                 <template #bodyCell="{ column, record }">
                     <q-btn
@@ -107,6 +107,7 @@
         </q-toolbar>
         <div style="position:relative">
             <q-icon
+                v-if="isDefineReport"
                 color="accent"
                 name="question_mark"
                 size="xs"
@@ -121,8 +122,8 @@
                 :data-source="filteredRows2"
                 :columns="columns2"
                 :sticky="true"
-                rowKey="lineNumber"
-                :row-selection="{ selectedRowKeys: selectedRows2, onChange: onSelectChange2, columnWidth: 20, getCheckboxProps: getCheckboxProps }"
+                rowKey="0"
+                :row-selection="rowSelection2"
             >
                 <template #bodyCell="{ column, record }">
                     <q-btn
@@ -164,7 +165,8 @@ import { readTaskFile } from 'src/api/task'
 import { getCsvData } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { errorMessage } from 'src/utils/notify'
-import { useI18n } from "vue-i18n";
+import { useI18n } from "vue-i18n"
+
 const { t } = useI18n();
 const props = defineProps({
     intro: {
@@ -264,11 +266,16 @@ const columns2 = ref([])
 const filteredRows1 = ref([])
 const filteredRows2 = ref([])
 
+const selectedRows = ref([])
+const selectedRows2 = ref([])
+
 const igvVisible = ref(false)
 const selectedFile = ref('')
 
 const showSticky = toRef(props, 'showSticky')
 const stickDone = toRef(props, 'stickDone')
+
+const isDefineReport = computed(() => route.name === 'defineReport')
 
 const searchFilterRows1 = (keyword) => {
     if (keyword) {
@@ -328,7 +335,7 @@ const clearKeyword2 = () => {
 }
 
 const clickView = (record) => {
-    selectedFile.value = record[8]
+    selectedFile.value = record[9]
     igvVisible.value = true
 }
 
@@ -356,6 +363,7 @@ const filterChange = () => {
     emit('filterChange', getChangedData())
 }
 onUnmounted(() => {
+    console.log('signal onUnmounted')
     filterChange()
 })
 watch([qtSearchParam, qnSearchParam, qtRows, qnRows, qtSelectedRows, qnSelectedRows], () => {
@@ -363,6 +371,7 @@ watch([qtSearchParam, qnSearchParam, qtRows, qnRows, qtSelectedRows, qnSelectedR
 })
 
 onMounted(() => {
+    console.log('signal onMounted')
     loadData()
 })
 
@@ -370,35 +379,38 @@ const samples = toRef(props, 'samples')
 const loadData = () => {
     let width = [30, 30, 75, 75, 30, 60, 60, 120, 30]
     columns1.value = []
-    qtHeader.value.forEach((item, index) => {
+    qtHeader.value.filter(t => t !== 'Report')
+        .forEach((item, index) => {
         if (item === 'IGV') {
             columns1.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
             })
         } else
             columns1.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
-                ellipsis: true
+                ellipsis: true,
+                customCell: customCell
             })
     })
     keyword1.value = qtSearchParam.value
     searchFilterRows1(qtSearchParam.value)
     selectedRows.value = []
     for (let item of filteredRows1.value) {
-        let finded = false
+        console.log(item)
+        let found = false
         for (let lineNumber of qtSelectedRows.value) {
-            if (lineNumber === item.lineNumber) {
-                finded = true
+            if (lineNumber === item[0]) {
+                found = true
                 break
             }
         }
-        if (finded) {
+        if (found) {
             selectedRows.value.push(item.lineNumber)
         }
     }
@@ -406,42 +418,46 @@ const loadData = () => {
     if (samples.value.length > 1) {
         columns2.value = []
         width = [30, 30, 75, 75, 30, 60, 60, 120, 30]
-        qnHeader.value.forEach((item, index) => {
+        qnHeader.value.filter(t => t !== 'Report')
+            .forEach((item, index) => {
             if (item === 'IGV') {
                 columns2.value.push({
                     title: item,
-                    dataIndex: index,
+                    dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                     align: 'center',
                     width: width[index]
                 })
             } else
                 columns2.value.push({
                     title: item,
-                    dataIndex: index,
+                    dataIndex: index + 1, // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                     align: 'center',
                     width: width[index],
-                    ellipsis: true
+                    ellipsis: true,
+                    customCell: customCell
                 })
         })
         keyword2.value = qnSearchParam.value
         searchFilterRows2(qnSearchParam.value)
         selectedRows2.value = []
         for (let item of filteredRows2.value) {
-            let finded = false
+            console.log(item)
+            let found = false
             for (let lineNumber of qnSelectedRows.value) {
-                if (lineNumber === item.lineNumber) {
-                    finded = true
+                if (lineNumber === item[0]) {
+                    found = true
                     break
                 }
             }
-            if (finded) {
+            if (found) {
                 selectedRows2.value.push(item.lineNumber)
             }
         }
     }
 }
 
-const selectedRows = ref([])
+
+
 const getCheckboxProps = (record) => {
     return {
         disabled: showSticky.value && stickDone.value, // Column configuration not to be checked
@@ -454,8 +470,8 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
+    console.log(selectedRowKeys)
 }
-const selectedRows2 = ref([])
 
 const onSelectChange2 = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
@@ -463,6 +479,7 @@ const onSelectChange2 = (selectedRowKeys) => {
         return false
     }
     selectedRows2.value = selectedRowKeys
+    console.log(selectedRowKeys)
 }
 
 const reset = () => {
@@ -473,5 +490,47 @@ const reset = () => {
     selectedRows.value = []
     selectedRows2.value = []
 }
+
 defineExpose({ getChangedData, reset })
+
+// 表格1的勾选列配置
+const rowSelection1 = computed(() => {
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 20,
+            getCheckboxProps: getCheckboxProps
+        }
+    }
+)
+
+// 表格2的勾选列配置
+const rowSelection2 = computed(() => {
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows2,
+            onChange: onSelectChange2,
+            columnWidth: 35,
+            getCheckboxProps: getCheckboxProps
+        }
+    }
+)
+
+// 用于Report = Y的列背景着色
+const customCell = (record, rowIndex, column) => {
+    return {
+        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+        style: {
+            'background-color': record[10] === 'Y' ? '#fff5ee' : '',
+        },
+        // 鼠标单击行
+        onClick: (event) => {
+        },
+    }
+}
 </script>

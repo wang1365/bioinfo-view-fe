@@ -69,7 +69,7 @@
 </template>
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify';
-import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed } from 'vue'
+import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed ,onDeactivated} from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n"
 import IGV from './Igv.vue'
@@ -204,6 +204,8 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
+    console.log(selectedRows.value)
+    filterChange()
 }
 const getCheckboxProps = (record) => {
     return {
@@ -213,6 +215,7 @@ const getCheckboxProps = (record) => {
 }
 
 const getChangedData = () => {
+    console.log(selectedRows.value)
     return {
         searchParam: keyword.value,
         selectedRows: selectedRows.value,
@@ -225,7 +228,9 @@ const filterChange = () => {
 }
 
 onMounted(() => {
+    console.log('normal onMounted')
     loadData()
+
 })
 onUnmounted(() => {
     filterChange()
@@ -234,20 +239,19 @@ onUnmounted(() => {
 const loadData = () => {
     const width = [30, 30, 60, 60, 60, 60, 200, 50, 30]
     columns.value = []
-    console.log('>>>>>>>>>>>>>>>>>>>', header.value)
     header.value.filter(t => t !== 'Report')
         .forEach((item, index) => {
         if (item === 'IGV') {
             columns.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
             })
         } else
             columns.value.push({
                 title: item,
-                dataIndex: index,
+                dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
                 align: 'center',
                 width: width[index],
                 customCell: customCell
@@ -257,18 +261,17 @@ const loadData = () => {
     searchFilterRows(propSearchParam.value)
     selectedRows.value = []
     for (let item of filteredRows.value) {
-        let finded = false
+        let found = false
         for (let lineNumber of propSelectedRows.value) {
-            if (lineNumber === item.lineNumber) {
-                finded = true
+            if (lineNumber === item[0]) {
+                found = true
                 break
             }
         }
-        if (finded) {
-            selectedRows.value.push(item.lineNumber)
+        if (found) {
+            selectedRows.value.push(item[0])
         }
     }
-    console.log(filteredRows.value)
 }
 const reset = () => {
     keyword.value = ''

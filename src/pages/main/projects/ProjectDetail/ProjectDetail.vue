@@ -13,7 +13,7 @@
                     color="primary"
                     :label="$t('ProjectDetailPageCreateTask')"
                     icon="auto_mode"
-                    @click="openFlowSelector = true"
+                    @click="clickCreateTask"
                 />
             </q-toolbar>
         </q-section>
@@ -73,28 +73,48 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, defineProps } from "vue";
-import { useApi } from "src/api/apiBase";
-import FlowSelect from "./ProjectTask/FlowSelect.vue";
-import CreateTask from "./ProjectTask/CreateTask.vue";
-const { apiGet } = useApi();
- const props = defineProps({ projectDetail: Object });
- const emit = defineEmits(['reloadProject'])
+import { ref, defineProps, computed } from "vue"
+import { useApi } from "src/api/apiBase"
+import FlowSelect from "./ProjectTask/FlowSelect.vue"
+import CreateTask from "./ProjectTask/CreateTask.vue"
+import { globalStore } from 'src/stores/global'
+import { errorMessage } from 'src/utils/notify'
+import { useI18n } from 'vue-i18n'
 
-const openFlowSelector = ref(false);
-const openCreateTask = ref(false);
-const selectedFlowId = ref(0);
-const flowDetail = ref({});
+const { t } = useI18n()
+const store = globalStore()
+const { apiGet } = useApi()
+const props = defineProps({ projectDetail: Object })
+const emit = defineEmits(['reloadProject'])
+
+const openFlowSelector = ref(false)
+const openCreateTask = ref(false)
+const selectedFlowId = ref(0)
+const flowDetail = ref({})
+
+const allowCreateTask = computed(() => {
+    const user = store.currentUser
+    return user.task_limit === null || user.task_limit > user.task_count
+})
 
 const flowSelected = (event) => {
     openFlowSelector.value = false;
     selectedFlowId.value = event.id;
     getFlowDetail(event.id);
-};
+}
+
 const taskCreated = (event) => {
      openCreateTask.value = false;
      emit('reloadProject')
-};
+}
+
+const clickCreateTask = () => {
+    if (!allowCreateTask.value) {
+        errorMessage(t('TaskCreateFailedForTaskLimitError'))
+    } else {
+        openFlowSelector.value = true
+    }
+}
 
 const getFlowDetail = (flowId) => {
     apiGet(`/flow/flows/${flowId}/`, (res) => {

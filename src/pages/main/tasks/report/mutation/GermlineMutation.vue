@@ -400,16 +400,16 @@ const props = defineProps({
         default() {
             return {
                 gene: null,
-                depth: null,
+                depth: { type: Number },
                 depthCmp: '>',
-                ratio: null,
+                ratio: { type: Number },
                 ratioCmp: '>',
                 mutationType: null,
                 mutationPosition: [],
                 mutationMeaning: null,
                 mutationRisk: null,
                 human: 'ALL',
-                humanRatio: null,
+                humanRatio: { type: Number },
                 sift: null,
                 drug: false,
             }
@@ -690,14 +690,14 @@ const searchFilterRows = (searchParams) => {
         // 深度
         // 原始表格8列，大于0的正整数，
         param = searchParams.depth
-        if (param && !(useComparator(searchParams.depthCmp).compare(Number(line.col8), param))) {
+        if (param !== null && !(useComparator(searchParams.depthCmp).compare(Number(line.col8), param))) {
             return false
         }
 
         // 频率
         // 原始表格，大于0的小数
         param = searchParams.ratio
-        if (param && !(useComparator(searchParams.ratioCmp).compare(Number(line.col9), param))) {
+        if (param !== null && !(useComparator(searchParams.ratioCmp).compare(Number(line.col9), param))) {
             return false
         }
 
@@ -767,7 +767,7 @@ const searchFilterRows = (searchParams) => {
               如果A数据库里面有点，BC不是点，那A直接默认小于筛选值，BC按照与筛选值比较，可以认为 这三个数据库里的点=0
           */
         param = searchParams.humanRatio
-        if (param) {
+        if (param !== null) {
             // 不同地区人群使用的数据列
             let hrColumns = crowdCols[searchParams.human]
             hrColumns = hrColumns.map(h => line[`col${h}`])

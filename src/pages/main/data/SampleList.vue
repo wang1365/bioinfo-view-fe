@@ -46,7 +46,7 @@
                 <td>{{ row.identifier }}</td>
                 <td>{{ row.patient?.identifier }}</td>
                 <td>{{ row.patient?.name }}</td>
-                <td>{{ row.patient?.gender }}</td>
+                <td>{{ row.patient?.gender=='男'?$t('Male'):$t('Female')  }} </td>
                 <td>{{ row.sample_type }}</td>
                 <td>{{ row.is_panel }}</td>
                 <td>{{ row.sample_date }}</td>

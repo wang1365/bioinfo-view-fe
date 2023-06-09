@@ -101,7 +101,7 @@
     </div>
 </template>
 <script setup>
-import { ref, onMounted, toRef, watch } from 'vue'
+import {ref, onMounted, toRef, watch, computed} from 'vue'
 import NormalVue from './Normal.vue'
 import Single from './Single.vue'
 import { readTaskFile } from 'src/api/task'
@@ -112,6 +112,7 @@ import { errorMessage } from 'src/utils/notify'
 import { globalStore }from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 
+
 const store = globalStore()
 const { langCode } = storeToRefs(store)
 const singleVue = ref(null)
@@ -119,6 +120,8 @@ const normalVue = ref(null)
 const route = useRoute()
 const tab = ref('单样品融合分析')
 const dlgVisible = ref(false)
+const isDefineReport = computed(() => route.name === 'defineReport')
+
 
 const props = defineProps({
     intro: {
@@ -210,7 +213,7 @@ const stickFilter = () => {
     if (viewConfig.value.showFusionSomatic && !filterData.value.normal) {
         if (normalVue.value) {
             try {
-                filterData.value.single = singleVue.value.getChangedData()
+                filterData.value.normal = normalVue.value.getChangedData()
 
             } catch (error) {
 
@@ -221,17 +224,6 @@ const stickFilter = () => {
 }
 const reset = () => {
     emit('reset', null)
-    // try {
-    //     singleVue.value.reset()
-    // } catch (error) {
-
-    // }
-    // try {
-    //     normalVue.value.reset()
-    // } catch (error) {
-
-    // }
-
     singleData.value.qt.searchParam = ''
     singleData.value.qt.selectedRows = []
     singleData.value.qn.searchParam = ''
@@ -256,27 +248,31 @@ const loadData = () => {
 const loadSingleData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
 
-    const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    // const fields = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     const { qt, qn } = getDualIdentifiers(samples.value)
     if (!qt) return
     const qtFile = `fusion_germline/${qt}_${suffix}.fusions`
     readTaskFile(route.params.id, qtFile).then((res) => {
-        const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
+        const headers = getCsvHeader(res)
+        const lines = getCsvDataAndSetLineNumber(res, { headers, hasHeaderLine: true })
 
-        singleData.value.qt.header = getCsvHeader(res)
+        singleData.value.qt.header = headers
         singleData.value.qt.rows = lines
         singleData.value.qt.url = `igv${props.task.result_dir}/${qtFile}`
         if (stepData.value && stepData.value.single) {
             if (stepData.value.single.qt) {
                 singleData.value.qt.searchParam = stepData.value.single.qt.searchParam
                 singleData.value.qt.selectedRows = stepData.value.single.qt.selectedRows
+            } else {
+                singleData.value.qt.selectedRows = lines.filter(t => t.Report === 'Y').map(t => t.lineNumber)
             }
         }
     })
     if (samples.value.length > 1) {
         const qnFile = `fusion_germline/${qn}_${suffix}.fusions`
         readTaskFile(route.params.id, qnFile).then((res) => {
-            const lines = getCsvDataAndSetLineNumber(res, { fields: fields, hasHeaderLine: true })
+            const headers = getCsvHeader(res)
+            const lines = getCsvDataAndSetLineNumber(res, { headers, hasHeaderLine: true })
 
             singleData.value.qn.header = getCsvHeader(res)
             singleData.value.qn.rows = lines
@@ -285,6 +281,8 @@ const loadSingleData = () => {
                 if (stepData.value.single.qn) {
                     singleData.value.qn.searchParam = stepData.value.single.qn.searchParam
                     singleData.value.qn.selectedRows = stepData.value.single.qn.selectedRows
+                } else {
+                    singleData.value.qn.selectedRows = lines.filter(t => t.Report === 'Y').map(t => t.lineNumber)
                 }
             }
         })

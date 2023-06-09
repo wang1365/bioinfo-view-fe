@@ -6,7 +6,7 @@
             <q-separator></q-separator>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormName') }}: {{ patient.name }}</div>
-                <div class="col q-pa-sm">{{ $t('PatientNewFormGender') }}: {{ patient.gender }}</div>
+                <div class="col q-pa-sm">{{ $t('PatientNewFormGender') }}: {{ patient.gender=='男'?$t('Male'):$t('Female')  }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientInfoPageAge') }}: {{ patient.age }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormBirthday') }}: {{ patient.birthday }}</div>
             </div>

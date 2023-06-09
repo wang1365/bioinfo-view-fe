@@ -36,6 +36,7 @@
                     :intro="intros['fusion']"
                     :samples="samples"
                     :stepData="stepData.fusion"
+                    :task="taskDetail"
                     @stickDone="stickDone('fusion', $event, 'copy_number_variation')"
                     @reset="stickDone('fusion', null, 'create')"
                 />

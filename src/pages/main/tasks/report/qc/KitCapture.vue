@@ -1,8 +1,8 @@
 <template>
     <div class="q-py-sm">
         <div class="text-bold">
-            <span>{{$t('OnTargetRateOfTumorSamples') + `：${onTarget.v1}`}}</span>
-            <span v-if="props.samples.length > 1">{{'，' + $t('OnTargetRateOfControlSamples') + `：${onTarget.v2}`}}</span>
+            <span>{{$t('OnTargetRateOfTumorSamples') + `：${onTarget.tumorTargetRate}`}}</span>
+            <span v-if="props.samples.length > 1">{{'，' + $t('OnTargetRateOfControlSamples') + `：${onTarget.controlTargetRate}`}}</span>
         </div>
     </div>
     <q-separator></q-separator>
@@ -20,7 +20,7 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, computed, watch} from "vue";
+import { ref, onMounted, computed, watch, inject } from "vue";
 import { useRoute } from 'vue-router'
 import { getReportTable, getReportText } from "src/api/report"
 import { readTaskFile } from "src/api/task"
@@ -101,7 +101,7 @@ const columns = computed(() => {
 
 const rows = ref([])
 const onTarget = ref({
-    v1: '', v2: ''
+    tumorTargetRate: '', controlTargetRate: ''
 })
 
 onMounted(() => {
@@ -125,12 +125,20 @@ const readQcInfo = () => {
     })
 }
 
+// 依赖祖父组件注入的样本信息
+const sampleInfo = inject('sampleInfo')
 const readReportText = () => {
     getReportText(route.params.id, 'ONTARGET').then(res => {
         const vs = res.split('\n')
-        onTarget.value = {
-            v1: vs[1], v2: vs[0]
-        }
+        vs.forEach(line => {
+            const items = line.split('\t')
+            // 比对任务中的样本识别号，解析对应的中靶率
+            if (items[0] === sampleInfo.value.tumorSampleId) {
+                onTarget.value.tumorTargetRate = items[1]
+            } else if (items[0] === sampleInfo.value.controlSampleId){
+                onTarget.value.controlTargetRate = items[1]
+            }
+        })
     })
 }
 

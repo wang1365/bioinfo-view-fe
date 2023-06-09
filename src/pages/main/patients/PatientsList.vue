@@ -122,7 +122,7 @@
                             <td>{{ patient.name }}</td>
                             <td>{{ patient.inspection_agency }}</td>
                             <td>{{ patient.medical_doctor }}</td>
-                            <td>{{ patient.gender }}</td>
+                            <td>{{ patient.gender=='男'?$t('Male'):$t('Female') }}</td>
                             <td>{{ patient.age }}</td>
                             <td>{{ patient.diagnosis }}</td>
                             <td>{{ patient.tumor_stage }}</td>

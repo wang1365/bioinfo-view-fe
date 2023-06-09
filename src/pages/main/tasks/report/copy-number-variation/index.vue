@@ -495,11 +495,10 @@ const refreshPie = () => {
 }
 
 watch(rows, v => {
-    selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
+    // selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
 })
 onMounted(() => {
     loadData()
-    console.log('======================onMounted', route)
 })
 
 const loadData = () => {
@@ -515,12 +514,14 @@ const loadData = () => {
             pieParams.value.missing = stepData.value.pie.searchParams.missing
         }
 
+        searchFilterRows(searchParams.value)
 
         if (stepData.value && stepData.value.table) {
             searchParams.value = stepData.value.table.searchParams
             searchFilterRows(stepData.value.table.searchParams)
             selectedRows.value = stepData.value.table.selectedRows
         }
+        console.log(selectedRows.value)
     })
 
     const genome = props.task.env.GENOME
@@ -597,6 +598,7 @@ const clickClear = () => {
         type: '', // DUP/DEL
         drug: '', // YES/NO
         drugLevel: [], // A/B/C/D/E
+        includeDefaultReport:isDefineReport.value
     }
     clickSearch()
 }
@@ -628,6 +630,7 @@ const onSelectChange = (selectedRowKeys) => {
     //     errorMessage('请先取消过滤')
     //     return false
     // }
+    console.log(selectedRowKeys)
     selectedRows.value = selectedRowKeys
 }
 const emit = defineEmits(['stickDone', 'reset'])
@@ -654,6 +657,7 @@ const reset = () => {
         type: '', // DUP/DEL
         drug: '', // YES/NO
         drugLevel: '', // A/B/C/D/E
+        includeDefaultReport: isDefineReport.value
     }
     clickSearch()
     pieParams.value = {

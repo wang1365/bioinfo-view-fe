@@ -264,6 +264,7 @@ export default {
     Enabled: 'Enabled',
     Disable: 'Disable',
     DiskUsage: 'Disk usage',
+    TaskLimit: 'Task limit',
     AddUser: 'Add User',
     EditUser: 'Edit User',
     DeleteUser: 'Delete User',
@@ -455,6 +456,7 @@ export default {
     TaskPageBtnDeleteTmpFile: 'Delete Temp Files',
     TaskPageProjectParent: 'Parent',
     TaskPageProjectSelf: 'Self',
+    TaskCreateFailedForTaskLimitError: 'The maximum number of tasks has been reached, please contact the administrator!',
 
     DefineReportUnlockMessage: 'should lock',
     DefineReportCommentReuiredMessage: 'Comment Required',

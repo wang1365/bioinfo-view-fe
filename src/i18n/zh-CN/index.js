@@ -263,6 +263,7 @@ export default {
     Enabled: '启用',
     Disable: '禁用',
     DiskUsage: '磁盘使用',
+    TaskLimit: '任务数限制',
     AddUser: '新建用户',
     EditUser: '编辑用户',
     DeleteUser: '删除用户',
@@ -455,6 +456,7 @@ export default {
     TaskPageBtnDeleteTmpFile: '删除中间文件',
     TaskPageProjectParent: '上级',
     TaskPageProjectSelf: '当前',
+    TaskCreateFailedForTaskLimitError: '已达到最大任务数量限制，请联系管理员！',
 
     DefineReportUnlockMessage: '未固定过滤',
     DefineReportCommentReuiredMessage: '请填写备注',
