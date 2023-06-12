@@ -62,7 +62,7 @@
                 <td>{{ row.fastq2_path }}</td>
                 <td>{{ row.sample_meta?.patient?.identifier }}</td>
                 <td>{{ row.sample_meta?.patient?.name }}</td>
-                <td>{{ row.sample_meta?.patient?.gender }}</td>
+                <td>{{ row.sample_meta?.patient?.gender=='男'?$t('Male'):$t('Female') }}</td>
                 <td>{{ row.sample_meta?.identifier }}</td>
                 <td>{{ row.sample_meta?.sample_componet }}</td>
                 <td>{{ row.sample_meta?.is_panel }}</td>
