@@ -501,6 +501,8 @@ onMounted(() => {
     loadData()
 })
 
+let selectedDefaultRows=ref([])
+let defaultRows=ref([])
 const loadData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter_${suffix}.txt`
@@ -513,6 +515,11 @@ const loadData = () => {
             pieParams.value.extra = stepData.value.pie.searchParams.extra
             pieParams.value.missing = stepData.value.pie.searchParams.missing
         }
+        for (const iterator of results) {
+                if(iterator.Report==='Y'){
+                    defaultRows.value.push(iterator.lineNumber)
+                }
+            }
 
         searchFilterRows(searchParams.value)
 
@@ -520,8 +527,12 @@ const loadData = () => {
             searchParams.value = stepData.value.table.searchParams
             searchFilterRows(stepData.value.table.searchParams)
             selectedRows.value = stepData.value.table.selectedRows
+            selectedDefaultRows.value=stepData.value.table.selectedDefaultRows
+        }else{
+            selectedDefaultRows.value=defaultRows.value
+            selectedRows.value=defaultRows.value
         }
-        console.log(selectedRows.value)
+        console.log(defaultRows.value)
     })
 
     const genome = props.task.env.GENOME
@@ -590,6 +601,7 @@ const clickSearch = () => {
         return false
     }
     searchFilterRows(searchParams.value)
+    selectedRows.value=selectedDefaultRows.value
 }
 
 const clickClear = () => {
@@ -632,6 +644,20 @@ const onSelectChange = (selectedRowKeys) => {
     // }
     console.log(selectedRowKeys)
     selectedRows.value = selectedRowKeys
+    selectedDefaultRows.value=[]
+    for(let item of selectedRowKeys){
+        let finded = false
+        for (let lineNumber of defaultRows.value) {
+            if (lineNumber === item) {
+                finded = true
+                break
+            }
+        }
+        if (finded) {
+            selectedDefaultRows.value.push(item)
+        }
+    }
+    console.log(selectedDefaultRows)
 }
 const emit = defineEmits(['stickDone', 'reset'])
 const stickFilter = () => {
@@ -642,6 +668,7 @@ const stickFilter = () => {
         table: {
             searchParams: searchParams.value,
             selectedRows: selectedRows.value,
+            selectedDefaultRows:selectedDefaultRows.value,
             filtered: true,
             // filtered: rows.value.length != filteredRows.value.length,
             selected: selectedRows.value.length > 0,

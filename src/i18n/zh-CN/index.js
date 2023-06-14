@@ -464,7 +464,7 @@ export default {
     DefineReportUnlockReuired: '请先取消过滤',
     DefineReportSelectAlertMessage: '条筛选结果将提交定制报告, 或自定义选择筛选结果',
     DefineReportMutationGermlineUnlock: '胚系突变分析未进行过滤',
-    DefineReportMutationSomaticUnlock: '胚系突变分析未进行过滤',
+    DefineReportMutationSomaticUnlock: '体系突变分析未进行过滤',
 
 
     // 自定义报告
