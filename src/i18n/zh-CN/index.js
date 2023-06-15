@@ -701,4 +701,11 @@ export default {
     InputResultFilePath: '输入结果文件路径',
     SelectFileFormat: '选择文件格式',
     SelectTrackType: '选择Track类型',
+
+    // HRD: 同源数据重组
+    HRDStatistics: 'HRD 统计表',
+    OnlyForResearch: '仅限研究使用，不用于临床诊断',
+    X1Comment: '横坐标：染色体，纵坐标：A(红色)和B(蓝色)等位基因的拷贝数',
+    X2Comment: '横坐标：染色体，纵坐标：总体拷贝数的变化',
+    X3Comment: '横坐标：染色体，纵坐标：B等位基因的频率和深度比',
 }

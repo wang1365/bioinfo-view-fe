@@ -121,6 +121,8 @@ const init = () => {
 }
 
 const onResize = () => {
-    chart.value.resize();
+    if (chart.value) {
+        chart.value.resize();
+    }
 };
 </script>

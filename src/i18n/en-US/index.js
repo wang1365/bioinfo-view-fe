@@ -698,4 +698,11 @@ export default {
     InputResultFilePath: 'Input result file path',
     SelectFileFormat: 'Select file format',
     SelectTrackType: 'Select track type',
+
+    // HRD: 同源数据重组
+    HRDStatistics: 'HRD Statistics',
+    OnlyForResearch: 'For research use only, not for clinical diagnosis.',
+    X1Comment: 'Abscissa: Chromosome, ordinate: A(red) and B(blue) alleles copy number',
+    X2Comment: 'Abscissa: Chromosome, ordinate: total copy number change',
+    X3Comment: 'Abscissa: Chromosome, ordinate: B allele frequency and depth ratio',
 }

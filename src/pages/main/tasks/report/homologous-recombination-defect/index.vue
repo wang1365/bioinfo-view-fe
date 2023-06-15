@@ -7,10 +7,10 @@
             color="orange"
             class="relative-position float-right q-mr-md"
             @click="dlgVisible = !dlgVisible"
-            >说明
+            >Intro.
         </q-btn>
         <div v-if="props.viewConfig.showHRDtable">
-            <div class="q-py-md text-bold text-h6 text-primary">HRD 统计表</div>
+            <div class="q-py-md text-bold text-h6 text-primary">{{$t('HRDStatistics')}}</div>
             <div class="row q-gutter-x-sm">
                 <div class="col-7 justify-end">
                     <a-table
@@ -23,7 +23,7 @@
                     >
                     </a-table>
                     <div class="q-pl-lg">
-                        <div class="text-bold text-primary">仅限研究使用，不用于临床诊断</div>
+                        <div class="text-bold text-primary">{{$t('OnlyForResearch')}}</div>
                         <div class="text-bold text-primary q-mt-sm" style="white-space: pre">{{tableTip}}</div>
                     </div>
                 </div>
@@ -36,38 +36,42 @@
         <div class="column q-gutter-sm" v-if="props.viewConfig.showHRDpicture">
             <div class="col q-mx-sm q-my-lg">
                 <q-img :src="images[0]" alt="" style="width:100%;height:300px" />
-                <div class="text-grey-7">横坐标：染色体，纵坐标：A(红色)和B(蓝色)等位基因的拷贝数</div>
+                <div class="text-grey-7">{{$t('X1Comment')}}</div>
             </div>
             <div class="col q-mx-sm q-my-lg">
                 <q-img :src="images[1]" alt="" style="width:100%;height:300px" />
-                <div class="text-grey-7">横坐标：染色体，纵坐标：总体拷贝数的变化</div>
+                <div class="text-grey-7">{{$t('X2Comment')}}</div>
             </div>
             <div class="col q-mx-sm q-my-lg">
                 <q-img :src="images[2]" alt="" style="width:100%;height:300px" />
-                <div class="text-grey-7">横坐标：染色体，纵坐标：B等位基因的频率和深度比</div>
+                <div class="text-grey-7">{{$t('X3Comment')}}</div>
             </div>
         </div>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
-                <q-bar class="bg-primary text-white">同源重组缺陷分析</q-bar>
+                <q-bar class="bg-primary text-white">{{$t('HomologousRecombinationDefectAnalysis')}}</q-bar>
                 <q-card-section>
                     <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">关闭</q-btn>
+                    <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
                 </q-card-actions>
             </q-card>
         </q-dialog>
     </div>
 </template>
 <script setup>
-import {ref, onMounted, computed} from "vue";
-import {readTaskFile} from "src/api/task";
-import {getCsvData} from "src/utils/csv";
-import GuageChartVue from "./GuageChart.vue";
-import {useRoute} from 'vue-router'
-import {getDualIdentifiers} from "src/utils/samples"
+import { ref, onMounted, watch } from "vue"
+import { readTaskFile} from "src/api/task"
+import { getCsvData} from "src/utils/csv"
+import GuageChartVue from "./GuageChart.vue"
+import { useRoute} from 'vue-router'
+import { getDualIdentifiers} from "src/utils/samples"
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const route = useRoute()
 const loading = ref(false)
 const dlgVisible = ref(false)
@@ -116,14 +120,20 @@ onMounted(() => {
         hrd.value = rows.value[0].k4
     })
 
-    readTaskFile(route.params.id, 'HRD/HRD_drug.txt').then(res => {
-        tableTip.value = res
-    })
-
     images.value = [
         `/igv${props.task.result_dir}/HRD/${qn}_${qt}.001.seqz.png`,
         `/igv${props.task.result_dir}/HRD/${qn}_${qt}.002.seqz.png`,
         `/igv${props.task.result_dir}/HRD/${qn}_${qt}.003.seqz.png`,
     ]
+
+    loadHrdDrug()
 })
+
+watch(langCode, () => loadHrdDrug())
+const loadHrdDrug = () => {
+    const suffix = langCode === 'en' ? 'EN' : 'CN'
+    readTaskFile(route.params.id, `HRD/HRD_drug_${suffix}.txt`).then(res => {
+        tableTip.value = res
+    })
+}
 </script>
