@@ -24,7 +24,7 @@
                     </a-table>
                     <div class="q-pl-lg">
                         <div class="text-bold text-primary">{{$t('OnlyForResearch')}}</div>
-                        <div class="text-bold text-primary q-mt-sm" style="white-space: pre">{{tableTip}}</div>
+                        <div class="text-bold text-primary q-mt-sm" style="white-space: pre-wrap">{{tableTip}}</div>
                     </div>
                 </div>
                 <div class="col-4">
@@ -131,7 +131,7 @@ onMounted(() => {
 
 watch(langCode, () => loadHrdDrug())
 const loadHrdDrug = () => {
-    const suffix = langCode === 'en' ? 'EN' : 'CN'
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     readTaskFile(route.params.id, `HRD/HRD_drug_${suffix}.txt`).then(res => {
         tableTip.value = res
     })
