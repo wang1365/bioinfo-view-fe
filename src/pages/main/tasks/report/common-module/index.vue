@@ -93,7 +93,7 @@
                         size="middle"
                         rowKey="lineNumber"
                         bordered
-                        :scroll="{ x: 2000, y: 600 }"
+                        :scroll="{ x: table.columns.length * 100, y: 600 }"
                         :data-source="table.filteredRows"
                         :columns="table.columns"
                         :sticky="true"
