@@ -42,6 +42,7 @@ onMounted(() => {
     loadPage();
 });
 const loadPage = () => {
+    dataItems.value=[]
     apiGet("/flow/flows/", (res) => {
         for (const item of res.data.results) {
             item.checked = false;
