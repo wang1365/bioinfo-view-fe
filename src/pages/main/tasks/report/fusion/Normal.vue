@@ -1,62 +1,23 @@
 <template>
     <q-toolbar class="text-primary">
-        <q-input
-            v-model="keyword"
-            class="q-mr-sm"
-            dense
-            :label="$t('Search') + ':'"
-            clearable
-            @clear="clearKeyword"
-            style="width:300px"
-            :disable="showSticky && stickDone"
-        />
-        <q-btn
-            size="small"
-            color="primary"
-            :label="$t('Search')"
-            @click="searchKeyword"
-            :disable="showSticky && stickDone"
-        />
-        <q-btn
-            :href="props.url"
-            :label="$t('Download')"
-            size="small"
-            icon="south"
-            color="primary"
-            target="_blank"
-            class="q-ml-sm"
-        />
+        <q-input v-model="keyword" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable @clear="clearKeyword"
+            style="width:300px" :disable="showSticky && stickDone" />
+        <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword"
+            :disable="showSticky && stickDone" />
+        <q-btn :href="props.url" :label="$t('Download')" size="small" icon="south" color="primary" target="_blank"
+            class="q-ml-sm" />
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <div style="position:relative">
-            <q-icon
-                v-if="isDefineReport"
-                color="accent"
-                name="question_mark"
-                size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px"
-            >
-                <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
+            <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs"
+                style="position:absolute;z-index:100;left:0px;top:0px">
+                <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
             </q-icon>
-            <a-table
-                style="z-index:1"
-                size="middle"
-                bordered
-                :data-source="filteredRows"
-                :columns="columns"
-                :sticky="true"
-                rowKey="0"
-                :row-selection="rowSelection"
-            >
+            <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows" :columns="columns" :sticky="true"
+                rowKey="0" :row-selection="rowSelection">
                 <template #bodyCell="{ column, record }">
-                    <q-btn
-                        v-if="column.title === 'IGV'"
-                        label="IGV"
-                        color="primary"
-                        size="xs"
-                        outline
-                        @click="clickView(record)"
-                    ></q-btn>
+                    <q-btn v-if="column.title === 'IGV'" label="IGV" color="primary" size="xs" outline
+                        @click="clickView(record)"></q-btn>
                 </template>
             </a-table>
         </div>
@@ -69,7 +30,7 @@
 </template>
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify';
-import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed ,onDeactivated} from 'vue'
+import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed, onDeactivated } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n"
 import IGV from './Igv.vue'
@@ -137,8 +98,21 @@ const props = defineProps({
         type: String,
         require: false,
         default: () => ''
-    }
+    },
+    selectedDefaultRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
+    defaultReportRows: {
+        type: Array,
+        required: false,
+        default: () => [],
+    },
 })
+const selectedDefaultRows = ref([])
+const propSelectedDefaultRows = toRef(props, 'selectedDefaultRows')
+const propDefaultReportRows = toRef(props, 'defaultReportRows')
 const searchFilterRows = (keyword) => {
     if (keyword) {
         filteredRows.value = rows.value.filter((t) => {
@@ -163,11 +137,13 @@ const searchKeyword = () => {
         return false
     }
     searchFilterRows(keyword.value)
+    selectedRows.value = selectedDefaultRows.value
 }
 
 const clearKeyword = () => {
     keyword.value = ''
     filteredRows.value = rows.value
+    selectedRows.value = selectedDefaultRows.value
 }
 
 const clickView = (record) => {
@@ -185,16 +161,16 @@ const showSticky = toRef(props, 'showSticky')
 const stickDone = toRef(props, 'stickDone')
 const isDefineReport = computed(() => route.name === 'defineReport')
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
-        return {
-            selectedRowKeys: selectedRows,
-            onChange: onSelectChange,
-            columnWidth: 35,
-            getCheckboxProps: getCheckboxProps
-        }
+    if (!isDefineReport.value) {
+        return null
     }
+    return {
+        selectedRowKeys: selectedRows,
+        onChange: onSelectChange,
+        columnWidth: 35,
+        getCheckboxProps: getCheckboxProps
+    }
+}
 )
 
 const onSelectChange = (selectedRowKeys) => {
@@ -205,6 +181,19 @@ const onSelectChange = (selectedRowKeys) => {
     }
     selectedRows.value = selectedRowKeys
     console.log(selectedRows.value)
+    selectedDefaultRows.value = []
+    for (const item of selectedRows.value) {
+        let find = false
+        for (const iterator of propDefaultReportRows.value) {
+            if (item === iterator) {
+                find = true
+                break
+            }
+        }
+        if (find) {
+            selectedDefaultRows.value.push(item)
+        }
+    }
     filterChange()
 }
 const getCheckboxProps = (record) => {
@@ -221,6 +210,7 @@ const getChangedData = () => {
         selectedRows: selectedRows.value,
         filtered: rows.value.length !== filteredRows.value.length,
         selected: selectedRows.value.length > 0,
+        selectedDefaultRows: selectedDefaultRows.value,
     }
 }
 const filterChange = () => {
@@ -241,42 +231,42 @@ const loadData = () => {
     columns.value = []
     header.value.filter(t => t !== 'Report')
         .forEach((item, index) => {
-        if (item === 'IGV') {
-            columns.value.push({
-                title: item,
-                dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
-                align: 'center',
-                width: width[index],
-            })
-        } else
-            columns.value.push({
-                title: item,
-                dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
-                align: 'center',
-                width: width[index],
-                customCell: customCell
-            })
-    })
+            if (item === 'IGV') {
+                columns.value.push({
+                    title: item,
+                    dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
+                    align: 'center',
+                    width: width[index],
+                })
+            } else
+                columns.value.push({
+                    title: item,
+                    dataIndex: index + 1,  // 解析的时候额外增加了lineNumber，所以此处索引需要+1
+                    align: 'center',
+                    width: width[index],
+                    customCell: customCell
+                })
+        })
     keyword.value = propSearchParam.value
     searchFilterRows(propSearchParam.value)
-    selectedRows.value = []
-    for (let item of filteredRows.value) {
-        let found = false
-        for (let lineNumber of propSelectedRows.value) {
-            if (lineNumber === item[0]) {
-                found = true
-                break
-            }
-        }
-        if (found) {
-            selectedRows.value.push(item[0])
-        }
-    }
+    selectedRows.value = propSelectedRows.value
+    // for (let item of filteredRows.value) {
+    //     let found = false
+    //     for (let lineNumber of propSelectedRows.value) {
+    //         if (lineNumber === item[0]) {
+    //             found = true
+    //             break
+    //         }
+    //     }
+    //     if (found) {
+    //         selectedRows.value.push(item[0])
+    //     }
+    // }
 }
 const reset = () => {
     keyword.value = ''
     searchFilterRows(keyword.value)
-    selectedRows.value = []
+    selectedRows.value = propDefaultReportRows.value
 }
 
 const customCell = (record, rowIndex, column) => {
