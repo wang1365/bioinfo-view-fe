@@ -43,16 +43,18 @@ onMounted(() => {
 });
 const loadPage = () => {
     dataItems.value=[]
-    apiGet("/flow/flows/", (res) => {
+    let params=`page=${currentPage.value}&size=${pageSize.value}`
+    apiGet(`/flow/flows/?${params}`, (res) => {
         for (const item of res.data.results) {
             item.checked = false;
-            total.value+=1
+            total.value=res.data.count
             dataItems.value.push(item);
         }
         console.log(total.value)
     });
 };
-const pageChange = async (event) => {
+const pageChange = (event) => {
+    console.log(event)
     currentPage.value = event.currentPage;
     pageSize.value = event.pageSize;
     loadPage();
