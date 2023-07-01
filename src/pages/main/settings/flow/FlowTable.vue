@@ -1,50 +1,41 @@
 <template>
-    <q-page padding>
-        <q-table
-            :rows="flows"
+    <q-page>
+        <div class="row">
+            <q-input
+                :label="$t('ModuleName')"
+                v-model="keyword"
+                clearable
+                @clear="refreshFlows"
+                @keypress.enter="refreshFlows"
+                class="col-2"
+            >
+            </q-input>
+            <div class="col">
+                <q-btn color="primary" icon="search" size="small" class="q-mx-sm" :label="$t('Search')"
+                       @click="refreshFlows"/>
+                <q-btn color="primary" icon="add" size="small" :label="$t('Add')" @click="addFlow"/>
+            </div>
+        </div>
+        <a-table
             :columns="columns"
-            :visible-columns="visibleColumns"
-            :loading="loading"
-            row-key="name"
-            hide-no-data
-            wrap-cells dense flat
-            v-model:pagination="pagination"
-            :selection="props.selection"
-            v-model:selected="selected"
-            rows-per-page-label="每页条数"
-            :rows-per-page-options="[10, 20, 50, 100]"
+            :data-source="flows"
+            size="middle"
+            style="height: 50%"
+            sticky
+            :scroll="{x:500}"
+            :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
         >
-            <template v-slot:top>
-                <q-input
-                    :label="$t('ModuleName')"
-                    v-model="keyword"
-                    clearable
-                    @clear="refreshFlows"
-                    @keypress.enter="refreshFlows"
-                >
-                </q-input>
-                <q-btn color="primary" icon="search" class="q-mx-sm" :label="$t('Search')" @click="refreshFlows" />
-                <q-btn color="primary" :label="$t('Add')" @click="addFlow" />
+            <template v-slot:bodyCell="{column, record}">
+                <template v-if="column.key === 'operation'">
+                    <q-btn :label="$t('Detail')" color="primary" size="xs" outline @click="showInfoDlg(record)"></q-btn>
+                    <q-btn :label="$t('Edit')" color="orange" size="xs" class="q-mx-xs" outline
+                           @click="showEditDlg(record)"></q-btn>
+                    <q-btn :label="$t('Delete')" color="red" size="xs" outline @click="showDeleteDlg(record)"></q-btn>
+                </template>
             </template>
-            <!--            <template v-slot:header="props">-->
-            <!--                <q-tr :props="props">-->
-            <!--                    <q-th v-for="col in columns" :key="col.name" :props="props" class="text-weight-bolder text-h6">-->
-            <!--                        {{ col.label }}-->
-            <!--                    </q-th>-->
-            <!--                </q-tr>-->
-            <!--            </template>-->
-            <template v-slot:body-cell-operation="props">
-                <q-td :props="props" align="center" class="q-gutter-xs">
-                    <q-btn :label="$t('Detail')" color="primary" size="sm" @click="showInfoDlg(props.row)"></q-btn>
-                    <q-btn :label="$t('Edit')" color="orange" size="sm" @click="showEditDlg(props.row)"></q-btn>
-                    <q-btn :label="$t('Delete')" color="red" size="sm" @click="showDeleteDlg(props.row)"></q-btn>
-                    <!--                    <q-btn label="+" color="red-10" flat size="xs" @click="showCreateTaskDlg(props.row)"></q-btn>-->
-                </q-td>
-            </template>
-        </q-table>
-
-        <flow-dialog ref="dlgFlow" :action="action" :id="currentFlowId" @success="refreshFlows" />
-        <flow-dialog ref="dlgFlowCreate" action="create" @success="refreshFlows" />
+        </a-table>
+        <flow-dialog ref="dlgFlow" :action="action" :id="currentFlowId" @success="refreshFlows"/>
+        <flow-dialog ref="dlgFlowCreate" action="create" @success="refreshFlows"/>
     </q-page>
 </template>
 
@@ -69,21 +60,33 @@ const selected = ref([])
 const $q = useQuasar()
 
 const columns = computed(() => [
-    {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center',  style: 'width:100px'},
-    {name: 'code', label: t('Type'), field: 'code', align: 'center', sortable: true,  style: 'width:100px' },
-    {name: 'panel_name', label: 'Panel', field: 'panel_name', align: 'center', sortable: true,  headerStyle: 'width:100px'},
-    {name: 'flow_category', label: t('Category'), field: 'flow_category', align: 'center',  headerStyle: 'width:85px'},
-    {name: 'memory', label: t('Memory') +'(m)', align: 'center', field: 'memory', headerStyle: 'width:85px',},
-    {name: 'tar_path', label: t('DockerArchive'), field: 'tar_path', align: 'left', headerStyle: 'width:100px'},
-    {name: 'image_name', label: t('DockerImageName'), field: 'image_name', align: 'center', headerStyle: 'width:110px'},
-    // {name: 'desp', label: '描述', field: 'desp', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', headerStyle: 'width:100px', format: v => format(v)},
-    {name: 'operation', label: t('Operate'), align: 'center', headerStyle: 'width:180px'},
+    {key: 'id', title: 'ID', dataIndex: 'id', align: 'center', width: 50, fixed: 'left' },
+    {key: 'name', title: t('Name'), dataIndex: 'name', sortable: true, align: 'left', width: 250, fixed: 'left' },
+    {key: 'code', title: t('Type'), dataIndex: 'code', align: 'left', sortable: true, width: 250 },
+    {key: 'panel_name', title: 'Panel', dataIndex: 'panel_name', align: 'left', sortable: true, width: 250 },
+    {key: 'flow_category', title: t('Category'), dataIndex: 'flow_category', align: 'left', width: 85 },
+    {key: 'memory', title: t('Memory') + '(m)', align: 'center', dataIndex: 'memory', width: 85,},
+    {key: 'tar_path', title: t('DockerArchive'), dataIndex: 'tar_path', align: 'left', width: 300, ellipsis: true },
+    {
+        key: 'image_name',
+        title: t('DockerImageName'),
+        dataIndex: 'image_name',
+        align: 'left',
+        width: 300,
+        ellipsis: true
+    },
+    {
+        key: 'create_time',
+        title: t('CreateTime'),
+        dataIndex: 'create_time',
+        align: 'center',
+        width: 200,
+        customRender: ({ text }) => format(text)
+    },
+    { key: 'operation', title: t('Operate'), align: 'center', width: 250, fixed: 'right' },
 ])
 
 const visibleColumns = computed(() => {
-    console.log('visibleColumns', props.columns)
     return props.columns || columns.value.map(t => t.name)
 })
 
@@ -132,7 +135,7 @@ onMounted(() => {
 
 const refreshFlows = () => {
     startLoading()
-    getFlows(keyword.value,1, 100)
+    getFlows(keyword.value, 1, 100)
         .then((data) => {
             flows.value = data.results
             total.value = data.count
@@ -162,7 +165,6 @@ const stopLoading = () => {
 
 
 const showInfoDlg = (row) => {
-    console.log('showInfoDlg', row.id)
     currentFlowId.value = row.id
     action.value = 'info'
     dlgFlow.value.show()
@@ -170,7 +172,6 @@ const showInfoDlg = (row) => {
 }
 
 const showEditDlg = (row) => {
-    console.log('show edit dlg', row.id)
     currentFlowId.value = row.id
     action.value = 'edit'
     dlgFlow.value.setData(row)
@@ -182,7 +183,7 @@ const showEditDlg = (row) => {
 
 const showDeleteDlg = (row) => {
     $q.dialog({
-        title:  t('ConfirmToDelete'),
+        title: t('ConfirmToDelete'),
         ok: t('Confirm'),
         cancel: t('Cancel'),
     }).onOk(() => {
