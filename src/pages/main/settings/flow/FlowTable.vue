@@ -1,13 +1,14 @@
 <template>
     <q-page>
-        <div class="row">
+        <div class="row q-mb-xs">
             <q-input
                 :label="$t('ModuleName')"
                 v-model="keyword"
-                clearable
+                clearable dense stack-label
+                label-color="primary"
                 @clear="refreshFlows"
                 @keypress.enter="refreshFlows"
-                class="col-2"
+                class="col-2 q-pb-sm"
             >
             </q-input>
             <div class="col">
@@ -20,10 +21,8 @@
             :columns="columns"
             :data-source="flows"
             size="middle"
-            style="height: 50%"
             sticky
-            :scroll="{x:500}"
-            :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+            :scroll="{ x:500 }"
         >
             <template v-slot:bodyCell="{column, record}">
                 <template v-if="column.key === 'operation'">
@@ -83,7 +82,7 @@ const columns = computed(() => [
         width: 200,
         customRender: ({ text }) => format(text)
     },
-    { key: 'operation', title: t('Operate'), align: 'center', width: 250, fixed: 'right' },
+    { key: 'operation', title: t('Operate'), align: 'center', width: 200, fixed: 'right' },
 ])
 
 const visibleColumns = computed(() => {
