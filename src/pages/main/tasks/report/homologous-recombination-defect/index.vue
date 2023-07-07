@@ -33,20 +33,23 @@
             </div>
         </div>
 
-        <div class="column q-gutter-sm" v-if="props.viewConfig.showHRDpicture">
-            <div class="col q-mx-sm q-my-lg">
-                <q-img :src="images[0]" alt="" style="width:100%;height:300px" />
-                <div class="text-grey-7">{{$t('X1Comment')}}</div>
+        <div v-if="props.viewConfig.showHRDpicture">
+            <div class="hrd-img">
+                <q-img :src="images[0]" alt="" style="width:100%;height:100%" />
+                <div class="text-grey-7 q-mb-sm">{{$t('X1Comment')}}</div>
             </div>
-            <div class="col q-mx-sm q-my-lg">
-                <q-img :src="images[1]" alt="" style="width:100%;height:300px" />
+
+            <div class="hrd-img">
+                <q-img :src="images[1]" alt="" style="width:100%;height:100%" />
                 <div class="text-grey-7">{{$t('X2Comment')}}</div>
             </div>
-            <div class="col q-mx-sm q-my-lg">
-                <q-img :src="images[2]" alt="" style="width:100%;height:300px" />
+
+            <div class="hrd-img">
+                <q-img :src="images[2]" alt="" style="width:100%;height:100%" />
                 <div class="text-grey-7">{{$t('X3Comment')}}</div>
             </div>
         </div>
+
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
                 <q-bar class="bg-primary text-white">{{$t('HomologousRecombinationDefectAnalysis')}}</q-bar>
@@ -137,3 +140,13 @@ const loadHrdDrug = () => {
     })
 }
 </script>
+
+<style>
+.hrd-img {
+    border-style: dotted;
+    border-width: 1px;
+    border-color: gainsboro;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+</style>
