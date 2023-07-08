@@ -55,9 +55,9 @@
                     v-if="tabValid('homologous-recombination-defect')"
                 />
                 <q-tab
-                    v-for="commonTab in commonTabs"
-                    :key="commonTab.title"
-                    :name="commonTab.title"
+                    v-for="(commonTab,i) in commonTabs"
+                    :key="`commonTab${i}`"
+                    :name="`commonTab${i}`"
                     :label="commonTab.title"
                     icon="web_stories"
                 />
@@ -115,9 +115,9 @@
                     />
                 </q-tab-panel>
                 <q-tab-panel
-                    v-for="commonTab in commonTabs"
-                    :key="commonTab.title"
-                    :name="commonTab.title"
+                    v-for="(commonTab, i) in commonTabs"
+                    :key="`commonTab${i}`"
+                    :name="`commonTab${i}`"
                     :viewConfig="commonTab"
                 >
                     <CommonModuleVue :viewConfig="commonTab" :task="taskDetail" />
@@ -127,7 +127,7 @@
     </q-page>
 </template>
 <script setup>
-import {ref, onMounted, watch, computed, provide} from 'vue'
+import {ref, onMounted, watch, computed, provide, nextTick} from 'vue'
 import { useApi } from 'src/api/apiBase'
 import { getTask } from 'src/api/task'
 import QcVue from './qc/index.vue'
@@ -218,7 +218,7 @@ onMounted(() => {
 })
 
 watch(langCode, lc => {
-    readResultAndModuleJson()
+    nextTick(() => readResultAndModuleJson())
 })
 
 const readResultAndModuleJson = () => {

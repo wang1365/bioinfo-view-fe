@@ -120,11 +120,15 @@
 </template>
 
 <script setup>
-import { onMounted, ref, toRef } from 'vue'
+import { onMounted, ref, toRef, watch } from 'vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { useQuasar } from "quasar"
+import { storeToRefs } from 'pinia'
+import { globalStore } from 'src/stores/global'
 
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const $q = useQuasar()
 const dlgVisible = ref(false)
 const props = defineProps({
@@ -172,11 +176,24 @@ const searchKeyword = (table) => {
     }
     if (tableData.value[table.name]) { tableData.value[table.name].selectedRows = [] }
 }
+
 onMounted(() => {
     initIntro()
     initTable()
     initImages()
 })
+
+// 这个组件内不能通过监听语言变化来重新加载数据，因为数据文件的路径是从父组件传递来的
+// 语言切换后父组件会重新读取配置文件更新配置后传递给当前组件
+// 所以本组件内可能先侦听到语言切换，此时配置还没有更新，导致加载的还是原来语言的数据
+// 所以此处直接监听配置文件来刷新数据
+watch(() => props.viewConfig,
+    () => {
+    initIntro()
+    initTable()
+    initImages()
+})
+
 
 const initIntro = () => {
     const { descriptionFile } = props.viewConfig
@@ -192,6 +209,7 @@ const initTable = () => {
         delay: 100
     })
     const { tables: tableList } = props.viewConfig || []
+    tables.value = []
     tableList.forEach((table, i) => {
         tableData.value[table.title] = {}
         readTaskFile(props.task.id, table.file).then((res) => {
