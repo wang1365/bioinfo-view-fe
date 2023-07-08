@@ -94,7 +94,7 @@ const form = ref({
     email: '',
     password: '',
     password_again: '',
-    role_list: ['normal']
+    role_list: ['admin']
 })
 const clickOk = () => {
     if (form.value.password.length < 6) {
