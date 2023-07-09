@@ -3,8 +3,7 @@
         <PageTitle :title="$t('TaskPageListTitle')" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div
-                style="height: 110px;display: flex; padding-bottom: 15px; padding-top: 15px;justify-content: space-around;justify-items: center;align-items: center; "
-            >
+                style="height: 110px;display: flex; padding-bottom: 15px; padding-top: 15px;justify-content: space-around;justify-items: center;align-items: center; ">
                 <q-btn color="white" @click="clickCard(options[0].value)">
                     <div class="text-black" style="width: 7vw">
                         <div class="text-h5 text-center text-bold">{{ total_task_count }}</div>
@@ -40,44 +39,15 @@
         </div>
         <div class="row">
             <div class="row q-gutter-sm">
-                <q-select
-                    style="width:200px"
-                    v-model="status"
-                    :options="options"
-                    stack-label
-                    emit-value
-                    map-options
-                    clearable
-                    filled
-                    @clear="clearSelect()"
-                    dense
-                    @update:model-value="refreshPage()"
-                ></q-select>
+                <q-select style="width:200px" v-model="status" :options="options" stack-label emit-value map-options
+                    clearable filled @clear="clearSelect()" dense @update:model-value="refreshPage()"></q-select>
 
-                <q-input
-                    style="width:150px"
-                    filled
-                    dense
-                    clearable
-                    v-model="patient"
-                    :label="`${$t('Patient')} ${$t('Name')}`"
-                />
-                <q-input
-                    style="width:150px"
-                    filled
-                    dense
-                    clearable
-                    v-model="libraryNumber"
-                    :label="$t('DataListTableColumnLibraryNumber')"
-                />
-                <q-input
-                    style="width:300px"
-                    readonly
-                    filled
-                    dense
-                    @click="showProjectSelect = true"
-                    :model-value="$t('Project') + ': ' + projectName"
-                >
+                <q-input style="width:150px" filled dense clearable v-model="patient"
+                    :label="`${$t('Patient')} ${$t('Name')}`" />
+                <q-input style="width:150px" filled dense clearable v-model="libraryNumber"
+                    :label="$t('DataListTableColumnLibraryNumber')" />
+                <q-input style="width:300px" readonly filled dense @click="showProjectSelect = true"
+                    :model-value="$t('Project') + ': ' + projectName">
                     <template v-slot:prepend>
                         <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                     </template>
@@ -87,61 +57,27 @@
             </div>
         </div>
         <div>
-            <q-table
-                :rows="rows"
-                :columns="columns"
-                row-key="id"
-                ref="tableRef"
-                v-model:pagination="pagination"
-                @request="onRequest"
-                :rows-per-page-options="[5, 15, 35, 50]"
-                class="my-sticky-column-table"
-            >
+            <q-table :rows="rows" :columns="columns" row-key="id" ref="tableRef" v-model:pagination="pagination"
+                @request="onRequest" :rows-per-page-options="[5, 15, 35, 50]" class="my-sticky-column-table">
                 <template v-slot:body-cell-project="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <span v-if="props.row?.project.parent" class="text-bold text-primary q-mr-xs"
-                            >{{props.row.project.parent.name}}/</span
-                        >
+                        <span v-if="props.row?.project.parent" class="text-bold text-primary q-mr-xs">{{
+                            props.row.project.parent.name }}/</span>
                         <span class="text-secondary"> {{ props.row.project.name }} </span>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-progress="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <q-linear-progress
-                            v-if="props.row.status === 'CANCELED'"
-                            color="warning"
-                            rounded
-                            size="10px"
-                            :value="props.row.progress / 100"
-                        />
-                        <q-linear-progress
-                            v-if="props.row.status === 'RUNNING'"
-                            color="primary"
-                            rounded
-                            size="10px"
-                            :value="props.row.progress / 100"
-                        />
-                        <q-linear-progress
-                            v-if="props.row.status === 'FAILURED'"
-                            color="negative"
-                            rounded
-                            size="10px"
-                            :value="props.row.progress / 100"
-                        />
-                        <q-linear-progress
-                            v-if="props.row.status === 'PENDING'"
-                            color="secondary"
-                            rounded
-                            size="10px"
-                            :value="props.row.progress / 100"
-                        />
-                        <q-linear-progress
-                            v-if="props.row.status === 'FINISHED'"
-                            color="positive"
-                            rounded
-                            size="10px"
-                            :value="props.row.progress / 100"
-                        />
+                        <q-linear-progress v-if="props.row.status === 'CANCELED'" color="warning" rounded size="10px"
+                            :value="props.row.progress / 100" />
+                        <q-linear-progress v-if="props.row.status === 'RUNNING'" color="primary" rounded size="10px"
+                            :value="props.row.progress / 100" />
+                        <q-linear-progress v-if="props.row.status === 'FAILURED'" color="negative" rounded size="10px"
+                            :value="props.row.progress / 100" />
+                        <q-linear-progress v-if="props.row.status === 'PENDING'" color="secondary" rounded size="10px"
+                            :value="props.row.progress / 100" />
+                        <q-linear-progress v-if="props.row.status === 'FINISHED'" color="positive" rounded size="10px"
+                            :value="props.row.progress / 100" />
                     </q-td>
                 </template>
                 <template v-slot:body-cell-task_priority="props">
@@ -158,83 +94,43 @@
                 </template>
                 <template v-slot:body-cell-status="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <q-btn
-                            v-if="props.row.status === 'FAILURED'"
-                            color="red"
-                            :label="$t('Failed')"
-                            flat padding="xs"
-                            icon-right="help"
-                            @click="showTaskError(props.row)"
-                            size="sm"
-                        />
-                        <span v-else>{{$t(statusKey[props.row.status])}}</span>
+                        <q-btn v-if="props.row.status === 'FAILURED'" color="red" :label="$t('Failed')" flat padding="xs"
+                            icon-right="help" @click="showTaskError(props.row)" size="sm" />
+                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-operate="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <q-btn
-                            color="secondary"
-                            :label="$t('Detail')"
-                            icon="visibility"
-                            @click="gotoDetail(props.row)"
-                            size="sm"
-                            padding="xs sm"
-                        />
-                        <q-btn
-                            :disable="props.row.status !== 'FINISHED'"
-                            color="info"
-                            :label="$t('Result')"
-                            icon="query_stats"
-                            @click="gotoReport(props.row)"
-                            size="sm"
-                            padding="xs sm"
-                        />
-                        <q-btn
-                            :disable="props.row.status !== 'FINISHED'"
-                            color="positive"
-                            :label="$t('TaskPageBtnCustomReport')"
-                            icon="query_stats"
-                            @click="gotoDefineReport(props.row)"
-                            size="sm"
-                            padding="xs sm"
-                        />
-                        <!-- <a
-                            style="display:inline-flex"
-                            :href="downlaod(props.row)"
-                            download
-                            v-if="props.row.status == 'FINISHED'"
-                        > -->
-                        <q-btn
-                            v-if="props.row.status === 'FINISHED'"
-                            color="primary"
-                            @click="downlaod(props.row)"
-                            size="sm"
-                            padding="xs sm"
-                        >
-                            <a style="color:white" :href="downlaod(props.row)" download>
-                                <q-icon name="download" />
-                                {{$t('Download')  }}
-                            </a>
-                        </q-btn>
-                        <q-btn v-if="props.row.status !== 'FINISHED'" :disable="true" color="primary" size="sm" padding="xs sm">
-                            <a style="color:white" href="#" download>
-                                <q-icon name="download" />
-                                {{$t('Download')  }}
-                            </a>
-                        </q-btn>
-                        <!-- </a> -->
+                        <span class="row q-gutter-xs" style="width: 700px;">
 
-                        <q-btn
-                            :disable="props.row.status !== 'FINISHED' || props.row.deleted_tempdir"
-                            color="red"
-                            :label="$t('TaskPageBtnDeleteTmpFile')"
-                            icon="delete"
-                            @click="deleteMiddleFiles(props.row)"
-                            size="sm"
-                            padding="xs sm"
-                            ><q-tooltip>{{ $t('TaskPageListTableRowBtnDeleteTmpTip') }}</q-tooltip></q-btn
-                        >
-                        <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
+
+                            <q-btn color="secondary" :label="$t('Detail')" icon="visibility" @click="gotoDetail(props.row)"
+                                size="sm" padding="xs sm" />
+                            <q-btn :disable="props.row.status !== 'FINISHED'" color="info" :label="$t('Result')"
+                                icon="query_stats" @click="gotoReport(props.row)" size="sm" padding="xs sm" />
+                            <q-btn :disable="props.row.status !== 'FINISHED'" color="positive"
+                                :label="$t('TaskPageBtnCustomReport')" icon="query_stats"
+                                @click="gotoDefineReport(props.row)" size="sm" padding="xs sm" />
+                            <q-btn v-if="props.row.status === 'FINISHED'" color="primary" @click="downlaod(props.row)"
+                                size="sm" padding="xs sm">
+                                <a style="color:white" :href="downlaod(props.row)" download>
+                                    <q-icon name="download" />
+                                    {{ $t('Download') }}
+                                </a>
+                            </q-btn>
+                            <q-btn v-if="props.row.status !== 'FINISHED'" :disable="true" color="primary" size="sm"
+                                padding="xs sm">
+                                <a style="color:white" href="#" download>
+                                    <q-icon name="download" />
+                                    {{ $t('Download') }}
+                                </a>
+                            </q-btn>
+                            <q-btn :disable="props.row.status !== 'FINISHED' || props.row.deleted_tempdir" color="red"
+                                :label="$t('TaskPageBtnDeleteTmpFile')" icon="delete" @click="deleteMiddleFiles(props.row)"
+                                size="sm" padding="xs sm"><q-tooltip>{{ $t('TaskPageListTableRowBtnDeleteTmpTip')
+                                }}</q-tooltip></q-btn>
+                            <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
+                        </span>
                     </q-td>
                 </template>
             </q-table>
@@ -284,7 +180,7 @@ const onRequest = (props) => {
     if (patient.value) params += `&patient=${patient.value}`
     if (libraryNumber.value) params += `&libraryNumber=${libraryNumber.value}`
     pagination.value.page = page
-        pagination.value.rowsPerPage = rowsPerPage
+    pagination.value.rowsPerPage = rowsPerPage
     backupSearch()
     apiGet(`/task${params}`, (res) => {
         pagination.value.rowsNumber = res.data.total_count
@@ -417,19 +313,19 @@ const columns = computed(() => [
         align: 'center',
         field: (item) => {
             switch (item.status) {
-        case 'PENDING':
-            return t('TaskPageListStatusQueue')
-        case 'RUNNING':
-            return t('TaskPageListStatusRun')
-        case 'FINISHED':
-            return t('TaskPageListStatusFinish')
-        case 'FAILURED':
-            return t('TaskPageListStatusFail')
-        case 'CANCELED':
-            return t('TaskPageListStatusCancel')
-        default:
-            return item.status
-    }
+                case 'PENDING':
+                    return t('TaskPageListStatusQueue')
+                case 'RUNNING':
+                    return t('TaskPageListStatusRun')
+                case 'FINISHED':
+                    return t('TaskPageListStatusFinish')
+                case 'FAILURED':
+                    return t('TaskPageListStatusFail')
+                case 'CANCELED':
+                    return t('TaskPageListStatusCancel')
+                default:
+                    return item.status
+            }
         },
         format: (val) => `${val}`,
     },
@@ -605,7 +501,7 @@ const backupSearch = () => {
         libraryNumber: libraryNumber.value
     }
     sessionStorage.setItem('task-search', JSON.stringify(data))
-    console.log("backup",data)
+    console.log("backup", data)
 }
 const loadBackup = () => {
     let dataStr = sessionStorage.getItem('task-search')
@@ -617,7 +513,7 @@ const loadBackup = () => {
         projectName.value = data.projectName
         patient.value = data.patient
         libraryNumber.value = data.libraryNumber
-    console.log("load",data)
+        console.log("load", data)
 
     }
 }

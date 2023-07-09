@@ -7,39 +7,23 @@
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
-                            <q-input
-                                :error="errors.name.error"
-                                :error-message="errors.name.message"
-                                v-model="form.name"
-                                :label="$t('PatientNewFormName')"
-                            >
+                            <q-input :error="errors.name.error" :error-message="errors.name.message" v-model="form.name"
+                                :label="$t('PatientNewFormName')">
                                 <template v-slot:prepend><span style="color:red">*</span></template>
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-select
-                                :error="errors.gender.error"
-                                :error-message="errors.gender.message"
-                                v-model="form.gender"
-                                :options="[
+                            <q-select :error="errors.gender.error" :error-message="errors.gender.message"
+                                v-model="form.gender" :options="[
                                     { label: $t('Male'), value: '男' },
                                     { label: $t('Female'), value: '女' },
-                                ]"
-                                emit-value
-                                map-options
-                                :label="$t('PatientNewFormGender')"
-                            >
+                                ]" emit-value map-options :label="$t('PatientNewFormGender')">
                                 <template v-slot:prepend><span style="color:red">*</span></template>
                             </q-select>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.birthday.error"
-                                :error-message="errors.birthday.message"
-                                :label="$t('PatientNewFormBirthday')+'(YYYY-MM-DD)'"
-                                v-model="form.birthday"
-                                readonly
-                            >
+                            <q-input :error="errors.birthday.error" :error-message="errors.birthday.message"
+                                :label="$t('PatientNewFormBirthday') + '(YYYY-MM-DD)'" v-model="form.birthday" readonly>
                                 <template v-slot:append>
                                     <q-icon color="primary" name="event" class="cursor-pointer">
                                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -57,53 +41,31 @@
                     </div>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
-                            <q-input
-                                :error="errors.id_card.error"
-                                :error-message="errors.id_card.message"
-                                v-model="form.id_card"
-                                :label="$t('PatientNewFormIDCard')"
-                            >
+                            <q-input :error="errors.id_card.error" :error-message="errors.id_card.message"
+                                v-model="form.id_card" :label="$t('PatientNewFormIDCard')">
                                 <template v-slot:prepend><span style="color:red">*</span></template>
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.location.error"
-                                :error-message="errors.location.message"
-                                v-model="form.location"
-                                :label="$t('PatientNewFormHomeAddress')"
-                            ></q-input>
+                            <q-input :error="errors.location.error" :error-message="errors.location.message"
+                                v-model="form.location" :label="$t('PatientNewFormHomeAddress')"></q-input>
                         </div>
                     </div>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
-                            <q-input
-                                :error="errors.identifier.error"
-                                :error-message="errors.identifier.message"
-                                v-model="form.identifier"
-                                :label="$t('PatientNewFormPatientIdentificationNumber')"
-                                readonly
-                            ></q-input>
+                            <q-input :error="errors.identifier.error" :error-message="errors.identifier.message"
+                                v-model="form.identifier" :label="$t('PatientNewFormPatientIdentificationNumber')"
+                                readonly></q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.inspection_agency.error"
-                                :error-message="
-                                errors.inspection_agency.message
-                            "
-                                v-model="form.inspection_agency"
-                                :label="$t('PatientNewFormSubmissionUnit')"
-                            >
+                            <q-input :error="errors.inspection_agency.error" :error-message="errors.inspection_agency.message
+                                " v-model="form.inspection_agency" :label="$t('PatientNewFormSubmissionUnit')">
                                 <template v-slot:prepend><span style="color:red">*</span></template>
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.medical_doctor.error"
-                                :error-message="errors.medical_doctor.message"
-                                v-model="form.medical_doctor"
-                                :label="$t('PatientNewFormTreatingPhysician')"
-                            >
+                            <q-input :error="errors.medical_doctor.error" :error-message="errors.medical_doctor.message"
+                                v-model="form.medical_doctor" :label="$t('PatientNewFormTreatingPhysician')">
                                 <template v-slot:prepend><span style="color:red">*</span></template>
                             </q-input>
                         </div>
@@ -112,142 +74,81 @@
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
-                            <q-input
-                                :error="errors.diagnosis.error"
-                                :error-message="errors.diagnosis.message"
-                                v-model="form.diagnosis"
-                                :label="$t('PatientNewFormClinicalDiagnosis')"
-                            >
+                            <q-input :error="errors.diagnosis.error" :error-message="errors.diagnosis.message"
+                                v-model="form.diagnosis" :label="$t('PatientNewFormClinicalDiagnosis')">
                                 <template v-slot:prepend><span style="color:red">*</span></template>
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.tumor_stage.error"
-                                :error-message="errors.tumor_stage.message"
-                                v-model="form.tumor_stage"
-                                :label="$t('PatientNewFormTumorStaging')"
-                            ></q-input>
+                            <q-input :error="errors.tumor_stage.error" :error-message="errors.tumor_stage.message"
+                                v-model="form.tumor_stage" :label="$t('PatientNewFormTumorStaging')"></q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.disease.error"
-                                :error-message="errors.disease.message"
-                                v-model="form.disease"
-                                :label="$t('PatientNewFormGeneticDisease')"
-                            ></q-input>
+                            <q-input :error="errors.disease.error" :error-message="errors.disease.message"
+                                v-model="form.disease" :label="$t('PatientNewFormGeneticDisease')"></q-input>
                         </div>
                     </div>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
-                            <q-input
-                                :error="errors.family_history.error"
-                                :error-message="errors.family_history.message"
-                                v-model="form.family_history"
-                                :label="$t('PatientNewFormFamilyHistory')"
-                            ></q-input>
+                            <q-input :error="errors.family_history.error" :error-message="errors.family_history.message"
+                                v-model="form.family_history" :label="$t('PatientNewFormFamilyHistory')"></q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.medication_history.error"
-                                :error-message="
-                                errors.medication_history.message
-                            "
-                                v-model="form.medication_history"
-                                :label="$t('PatientNewFormGrugUsingHistory')"
-                            ></q-input>
+                            <q-input :error="errors.medication_history.error" :error-message="errors.medication_history.message
+                                " v-model="form.medication_history"
+                                :label="$t('PatientNewFormGrugUsingHistory')"></q-input>
                         </div>
                     </div>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col q-pr-sm">
-                            <q-select
-                                :error="errors.smoking.error"
-                                :error-message="errors.smoking.message"
-                                v-model="form.smoking"
-                                :label="$t('PatientNewFormSmoking')"
-                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
-                                emit-value
-                                map-options
-                            />
+                            <q-select :error="errors.smoking.error" :error-message="errors.smoking.message"
+                                v-model="form.smoking" :label="$t('PatientNewFormSmoking')"
+                                :options="[{ label: $t('Yes'), value: '是' }, { label: $t('No'), value: '否' }]" emit-value
+                                map-options />
                         </div>
                         <div class="col q-pr-sm">
-                            <q-select
-                                :error="errors.drinking.error"
-                                :error-message="errors.drinking.message"
-                                v-model="form.drinking"
-                                :label="$t('PatientNewFormAlcoholDrinking')"
-                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
-                                emit-value
-                                map-options
-                                option-value="value"
-                                option-label="label"
-                            />
+                            <q-select :error="errors.drinking.error" :error-message="errors.drinking.message"
+                                v-model="form.drinking" :label="$t('PatientNewFormAlcoholDrinking')"
+                                :options="[{ label: $t('Yes'), value: '是' }, { label: $t('No'), value: '否' }]" emit-value
+                                map-options option-value="value" option-label="label" />
                         </div>
                         <div class="col q-pr-sm">
-                            <q-select
-                                :error="errors.viral_infection.error"
-                                :error-message="errors.viral_infection.message"
-                                v-model="form.viral_infection"
-                                :label="$t('PatientNewFormViralInfection')"
-                                :options="[{label:$t('Yes'),value:'是'}, {label:$t('No'),value:'否'}]"
-                                emit-value
-                                map-options
-                            />
+                            <q-select :error="errors.viral_infection.error" :error-message="errors.viral_infection.message"
+                                v-model="form.viral_infection" :label="$t('PatientNewFormViralInfection')"
+                                :options="[{ label: $t('Yes'), value: '是' }, { label: $t('No'), value: '否' }]" emit-value
+                                map-options />
                         </div>
                     </div>
-                    <div class="text-h6 text-bold">{{$t('PatientNewFormOtherInformation')}}</div>
+                    <div class="text-h6 text-bold">{{ $t('PatientNewFormOtherInformation') }}</div>
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
-                            <q-input
-                                :error="errors.treatment_history.error"
-                                :error-message="
-                                errors.treatment_history.message
-                            "
-                                v-model="form.treatment_history"
-                                :label="$t('PatientNewFormTreatmentHistory')"
-                            ></q-input>
+                            <q-input :error="errors.treatment_history.error" :error-message="errors.treatment_history.message
+                                " v-model="form.treatment_history"
+                                :label="$t('PatientNewFormTreatmentHistory')"></q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                :error="errors.prognosis.error"
-                                :error-message="
-                                errors.prognosis.message
-                            "
-                                v-model="form.prognosis"
-                                :label="$t('PatientNewFormPrognosisInformation')"
-                            ></q-input>
+                            <q-input :error="errors.prognosis.error" :error-message="errors.prognosis.message
+                                " v-model="form.prognosis" :label="$t('PatientNewFormPrognosisInformation')"></q-input>
                         </div>
                     </div>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
-                            <q-input
-                                type="number"
-                                :error="errors.prognosis_time.error"
-                                :error-message="errors.prognosis_time.message"
-                                :label="$t('PatientNewFormPrognosisTime')"
-                                v-model="form.prognosis_time"
-                            >
+                            <q-input type="number" :error="errors.prognosis_time.error"
+                                :error-message="errors.prognosis_time.message" :label="$t('PatientNewFormPrognosisTime')"
+                                v-model="form.prognosis_time">
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                type="number"
-                                :error="errors.recurrence_time.error"
-                                :error-message="errors.recurrence_time.message"
-                                :label="$t('PatientNewFormTimeToRelapse')"
-                                v-model="form.recurrence_time"
-                            >
+                            <q-input type="number" :error="errors.recurrence_time.error"
+                                :error-message="errors.recurrence_time.message" :label="$t('PatientNewFormTimeToRelapse')"
+                                v-model="form.recurrence_time">
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
-                                type="number"
-                                :error="errors.survival_time.error"
-                                :error-message="errors.survival_time.message"
-                                :label="$t('PatientNewFormSurvivalTime')"
-                                v-model="form.survival_time"
-                            >
+                            <q-input type="number" :error="errors.survival_time.error"
+                                :error-message="errors.survival_time.message" :label="$t('PatientNewFormSurvivalTime')"
+                                v-model="form.survival_time">
                             </q-input>
                         </div>
                     </div>
@@ -271,9 +172,9 @@ import { computed } from "vue";
 const { t } = useI18n();
 const { apiGet, apiPut } = useApi();
 const emit = defineEmits(["refresh"]);
-const genderOptions = computed(()=>[
-    {label:t('Male'),value:'男'},
-    {label:t('Female'),value:'女'},
+const genderOptions = computed(() => [
+    { label: t('Male'), value: '男' },
+    { label: t('Female'), value: '女' },
 ])
 const close = () => {
     emit("refresh");
@@ -399,6 +300,15 @@ const errors = ref({
         error: false,
     },
 });
+const requiredFields = [
+    "name",
+    "gender",
+    "birthday",
+    "id_card",
+    "inspection_agency",
+    "medical_doctor",
+    "diagnosis"
+]
 onMounted(() => {
     apiGet(`/patient/patients/${props.id}`, (res) => {
         console.log(res);
@@ -437,6 +347,15 @@ const save = async () => {
     //     data.gender=form.value.gender.value
     // }
     data.age = (new Date().getFullYear()) - (new Date(form.value.birthday).getFullYear())
+    let requiredError = false
+    for (const field of requiredFields) {
+        if (!data[field]) {
+            errors.value[field].error = true;
+            requiredError = true
+        }
+    }
+    if (requiredError) { return false }
+
     apiPut(
         `/patient/patients/${props.id}`,
         (_) => {
