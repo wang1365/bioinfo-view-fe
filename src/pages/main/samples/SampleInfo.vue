@@ -16,11 +16,11 @@
                 <div class="col q-pa-sm">{{$t('SampleNewFormTumorContent')}}: {{ form.panel_proportion }}</div>
                 <div class="col q-pa-sm">{{$t('SampleNewFormTumorSample')}}: {{ form.is_panel }}</div>
             </div>
-            <div class="row q-my-sm">
-                <div class="col q-pa-sm">{{$t('SampleNewFormSampleIdentificationNumber')}}: {{ form.patient_id }}</div>
-                <div class="col q-pa-sm">{{$t('SampleNewFormPatientID')}}: {{ form.patient_identifier }}</div>
-                <div class="col q-pa-sm">{{$t('SampleNewFormPatientIdentificationNumber')}}: {{ form.identifier }}</div>
-            </div>
+             <div class="row q-my-sm">
+                 <div class="col q-pa-sm">{{$t('SampleNewFormSampleIdentificationNumber')}}: {{ form.identifier }}</div>
+                 <div class="col q-pa-sm">{{$t('SampleNewFormPatientID')}}: {{ form.patient_id }}</div>
+                 <div class="col q-pa-sm">{{$t('SampleNewFormPatientIdentificationNumber')}}: {{ form.patient_identifier}}</div>
+                 </div>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
             <q-list>
