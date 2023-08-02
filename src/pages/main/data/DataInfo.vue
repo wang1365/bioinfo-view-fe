@@ -30,16 +30,16 @@
                             {{$t('DataNewFormNucleicAcidFragmentationMethod')}}: {{ form.nucleic_break_type }}
                         </div>
                         <div class="col q-pa-sm">
-                            {{$t('DataNewFormDataIdentificationNumber')}}: {{ form.sample_meta_id }}
+                            {{$t('DataNewFormDataIdentificationNumber')}}: {{ form.identifier }}
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">{{$t('DataNewFormSubmissionUnit')}}: {{ form.sample_identifier }}</div>
-                        <div class="col q-pa-sm">{{$t('DataNewFormTypeOfNucleicAcids')}}: {{ form.identifier }}</div>
+                        <div class="col q-pa-sm">{{$t('DataNewFormSubmissionUnit')}}: {{ form.company }}</div>
+                        <div class="col q-pa-sm">{{$t('DataNewFormTypeOfNucleicAcids')}}: {{ form.nucleic_type }}</div>
                         <div class="col q-pa-sm">
-                            {{$t('DataNewFormDegradationGradeOfNucleicAcids')}}: {{ form.company }}
+                            {{$t('DataNewFormDegradationGradeOfNucleicAcids')}}: {{ form.nucleic_level }}
                         </div>
                     </div>
                 </q-item>
@@ -49,9 +49,9 @@
                             {{$t('DataNewFormRiskSequencing')}}: {{ form.risk ? $t('Yes') : $t('No') }}
                         </div>
                         <div class="col q-pa-sm">
-                            {{$t('DataNewFormSampleIdentificationNumber')}}: {{ form.nucleic_type }}
+                            {{$t('DataNewFormSampleIdentificationNumber')}}: {{ form.sample_identifier }}
                         </div>
-                        <div class="col q-pa-sm">{{$t('DataNewFormSampleID')}}: {{ form.nucleic_level }}</div>
+                        <div class="col q-pa-sm">{{$t('DataNewFormSampleID')}}: {{ form.sample_meta_id }}</div>
                     </div>
                 </q-item>
                 <q-item>

@@ -145,8 +145,8 @@
                                 @click="showLinkSample = true"
                                 readonly
                                 v-model="form.sample_identifier"
-                                :error="errors.sampsample_identifier"
-                                :error-message="errors.sampsample_identifier"
+                                :error="errors.sample_identifier"
+                                :error-message="errors.sample_identifier"
                                 :label="'*'+$t('DataNewFormSampleIdentificationNumber')"
                             ></q-input>
                         </div>
