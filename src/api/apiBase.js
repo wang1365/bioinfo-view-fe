@@ -43,6 +43,7 @@ api.interceptors.request.use(
         // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
         const { lang } = globalStore()
         config.headers.Language = lang
+        config.headers.X_LANGUAGE = lang
         return config
     }
 )
@@ -232,9 +233,12 @@ export function useApi() {
             })
     }
     function downloadData(url, config = {}) {
+        if(!config){
+            config={responseType:'blob'}
+        }
+        config.responseType='blob'
         api.get(url, config)
             .then((resp) => {
-
                 let contentDiposition = resp.headers['content-disposition']
                 if (contentDiposition) {
                     let items = contentDiposition.split('; ')
@@ -246,14 +250,14 @@ export function useApi() {
                         }
                     }
                     var a = document.createElement('a')
-                    a.href = `/api${url}`
+                    a.href=window.URL.createObjectURL(resp.data)
                     a.download = filename
                     document.body.appendChild(a)
                     a.click()
                     document.body.removeChild(a)
                 } else {
                     var a = document.createElement('a')
-                    a.href = `/api${url}`
+                    a.href = window.URL.createObjectURL(resp.data)
                     a.download = 'download'
                     document.body.appendChild(a)
                     a.click()
@@ -261,6 +265,7 @@ export function useApi() {
                 }
             })
             .catch((error) => {
+                console.log(error)
                 defaultHttpErrorHandler(error, onError)
             })
     }
