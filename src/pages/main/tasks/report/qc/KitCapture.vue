@@ -2,7 +2,10 @@
     <div class="q-py-sm">
         <div class="text-bold">
             <span>{{$t('OnTargetRateOfTumorSamples') + `：${onTarget.tumorTargetRate}`}}</span>
-            <span v-if="props.samples.length > 1">{{'，' + $t('OnTargetRateOfControlSamples') + `：${onTarget.controlTargetRate}`}}</span>
+            <span
+                v-if="props.samples.length > 1"
+                >{{'，' + $t('OnTargetRateOfControlSamples') + `：${onTarget.controlTargetRate}`}}</span
+            >
         </div>
     </div>
     <q-separator></q-separator>
@@ -128,6 +131,7 @@ const readQcInfo = () => {
 // 依赖祖父组件注入的样本信息
 const sampleInfo = inject('sampleInfo')
 const readReportText = () => {
+    console.log('====> inject sampleInfo', sampleInfo)
     getReportText(route.params.id, 'ONTARGET').then(res => {
         const vs = res.split('\n')
         vs.forEach(line => {
@@ -141,7 +145,6 @@ const readReportText = () => {
         })
     })
 }
-
 </script>
 <style lang="scss">
 table {
