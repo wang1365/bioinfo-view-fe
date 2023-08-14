@@ -181,11 +181,12 @@ const sampleInfo = computed(() => {
             result.tumorSampleId = s.identifier
         } else {
             result.isSingle = false
-            s = samples.value[1]
-            if (s?.sample_meta?.is_panel) {
-                result.tumorSampleId = s.identifier
-            } else {
-                result.controlSampleId = s.identifier
+            for (let s of samples.value) {
+                if (s?.sample_meta?.is_panel) {
+                    result.tumorSampleId = s.identifier
+                } else {
+                    result.controlSampleId = s.identifier
+                }
             }
         }
     }
