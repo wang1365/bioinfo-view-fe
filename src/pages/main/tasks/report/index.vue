@@ -176,16 +176,17 @@ const sampleInfo = computed(() => {
         tumorSampleId: null   // 肿瘤样本识别号
     }
     if (samples.value) {
-        let s = samples.value[0]
         if (samples.value.length === 1) {
-            result.tumorSampleId = s.identifier
+            result.tumorSampleId = samples.value[0].identifier
         } else {
             result.isSingle = false
-            s = samples.value[1]
-            if (s?.sample_meta?.is_panel) {
-                result.tumorSampleId = s.identifier
+            const [s0, s1] = samples.value
+            if (s0?.sample_meta?.is_panel) {
+                result.tumorSampleId = s0.identifier
+                result.controlSampleId = s1.identifier
             } else {
-                result.controlSampleId = s.identifier
+                result.tumorSampleId = s1.identifier
+                result.controlSampleId = s0.identifier
             }
         }
     }
