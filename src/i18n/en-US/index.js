@@ -713,6 +713,8 @@ export default {
     ParasiteDescription: 'Parasite Description',
     SpecificPathogenDescription: 'Specific Pathogen Description',
 
+    Shu: 'Category',
+    Zhong: 'Specifies',
     ShuMing: 'Category Name',
     RelativeAbundance: 'Relative Abundance',
     ReadsCount: 'Reads Count',

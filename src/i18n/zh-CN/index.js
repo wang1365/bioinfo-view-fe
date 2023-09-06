@@ -716,6 +716,8 @@ export default {
     ParasiteDescription: '寄生虫描述',
     SpecificPathogenDescription: '特殊病原体描述',
 
+    Shu: '属',
+    Zhong: '种',
     ShuMing: '属名',
     RelativeAbundance: '相对丰度',
     ReadsCount: '序列数',

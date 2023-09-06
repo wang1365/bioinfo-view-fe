@@ -3,6 +3,7 @@
         <a-table
             :data-source="rows"
             :columns="columns"
+            bordered
         >
 
         </a-table>
@@ -76,60 +77,61 @@ const props = defineProps({
 
 const columns = computed(() => [
     {
-        name: 'categoryName',
-        title: t('ShuMing'),
-        dataIndex: 'categoryName',
-        sortable: true,
-        align: 'center',
-        sorter: (a, b) => a.categoryName.localeCompare(b.categoryName)
+        title: t('Shu'),
+        children: [{
+            name: 'categoryName',
+            title: t('ShuMing'),
+            dataIndex: 'categoryName',
+            align: 'center',
+            sorter: true
+        },
+        {
+            name: 'relativeAbundance',
+            title: t('RelativeAbundance'),
+            dataIndex: 'relativeAbundance',
+            align: 'center',
+            sorter: (a, b) => a.relativeAbundance < b.relativeAbundance
+        },
+        {
+            name: 'readsCount1',
+            title: t('ReadsCount'),
+            dataIndex: 'readsCount1',
+            align: 'center',
+            sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1)
+        }]
     },
     {
-        name: 'relativeAbundance',
-        title: t('RelativeAbundance'),
-        dataIndex: 'relativeAbundance',
-        sortable: true,
-        align: 'center',
-        sorter: (a, b) => a.relativeAbundance < b.relativeAbundance
-    },
-    {
-        name: 'readsCount1',
-        title: t('ReadsCount'),
-        dataIndex: 'readsCount1',
-        sortable: true,
-        align: 'center',
-        sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1)
-    },
-    {
-        name: 'speciesName',
-        title: t('SpeciesName'),
-        dataIndex: 'speciesName',
-        sortable: true,
-        align: 'center',
-        sorter: (a, b) => a.speciesName.localeCompare(b.speciesName)
-    },
-    {
-        name: 'proportion',
-        title: t('Proportion'),
-        dataIndex: 'proportion',
-        sortable: true,
-        align: 'center',
-        sorter: (a, b) => a.proportion < b.proportion
-    },
-    {
-        name: 'readsCount2',
-        title: t('ReadsCount'),
-        field: 'readsCount2',
-        sortable: true,
-        align: 'center',
-        sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2)
-    },
-    {
-        name: 'totalProportion',
-        title: t('TotalProportion'),
-        dataIndex: 'totalProportion',
-        sortable: true,
-        align: 'center',
-        sorter: (a, b) => a.totalProportion < b.totalProportion
+      title: t('Zhong'),
+      children: [
+          {
+              name: 'speciesName',
+              title: t('SpeciesName'),
+              dataIndex: 'speciesName',
+              align: 'center',
+              sorter: true
+          },
+          {
+              name: 'proportion',
+              title: t('Proportion'),
+              dataIndex: 'proportion',
+              align: 'center',
+              sorter: (a, b) => a.proportion < b.proportion
+          },
+          {
+              name: 'readsCount2',
+              title: t('ReadsCount'),
+              field: 'readsCount2',
+              align: 'center',
+              sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2)
+          },
+          {
+              name: 'totalProportion',
+              title: t('TotalProportion'),
+              dataIndex: 'totalProportion',
+              align: 'center',
+              sorter: (a, b) => a.totalProportion < b.totalProportion
+          },
+      ]
     },
     {name: 'report', label: t('Report'), dataIndex: 'report', align: 'center', required: true},
 ])
@@ -155,8 +157,7 @@ const loadData = () => {
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // const headNames = getCsvHeader(res, '\t', 1)
 
-        const fields = columns.value.map(c => c.dataIndex)
-        fields.splice(7, 0, 'file')
+        const fields = ['categoryName', 'relativeAbundance', 'readsCount1', 'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file']
         rows.value = getCsvData(res, {start: 2, fields})
 
         console.log('fields', fields)
