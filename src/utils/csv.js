@@ -2,6 +2,7 @@ export function getCsvData(str, options = {}) {
     const defaultOptions = {
         splitter: '\t',
         hasHeaderLine: true,
+        start: 0,
         fields: [],
         colIndex: [],
     }
@@ -14,8 +15,8 @@ export function getCsvData(str, options = {}) {
         .split('\n')
         .filter((t) => t.length > 0)
         .map((t) => t.split(finalOptions.splitter))
-    if (finalOptions.hasHeaderLine) {
-        lines = lines.splice(1)
+    if (finalOptions.hasHeaderLine || finalOptions.start > 0) {
+        lines = lines.splice(finalOptions.start || 1)
     }
 
     // 列过滤
@@ -89,7 +90,8 @@ export function getCsvDataAndSetLineNumber(str, options = {}) {
     return rows
 }
 
-export function getCsvHeader(str, splitter = '\t') {
-    let headLine = str.substring(0, str.indexOf('\n'))
-    return headLine.split(splitter)
+export function getCsvHeader(str, splitter = '\t', line=0) {
+    const lines = str.split('\n')
+    // let headLine = str.substring(0, str.indexOf('\n'))
+    return lines[line].split(splitter)
 }

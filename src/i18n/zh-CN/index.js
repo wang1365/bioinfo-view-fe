@@ -708,4 +708,19 @@ export default {
     X1Comment: '横坐标：染色体，纵坐标：A(红色)和B(蓝色)等位基因的拷贝数',
     X2Comment: '横坐标：染色体，纵坐标：总体拷贝数的变化',
     X3Comment: '横坐标：染色体，纵坐标：B等位基因的频率和深度比',
+
+    // 病原体
+    BacterialDescription: '细菌描述',
+    FungalDescription: '真菌描述',
+    VirusDescription: '病毒描述',
+    ParasiteDescription: '寄生虫描述',
+    SpecificPathogenDescription: '特殊病原体描述',
+
+    ShuMing: '属名',
+    RelativeAbundance: '相对丰度',
+    ReadsCount: '序列数',
+    SpeciesName: '种名',
+    Proportion: '占比',
+    TotalProportion: '总占比',
+    Report: '验证',
 }

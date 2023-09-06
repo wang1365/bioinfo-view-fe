@@ -705,4 +705,21 @@ export default {
     X1Comment: 'Abscissa: Chromosome, ordinate: A(red) and B(blue) alleles copy number',
     X2Comment: 'Abscissa: Chromosome, ordinate: total copy number change',
     X3Comment: 'Abscissa: Chromosome, ordinate: B allele frequency and depth ratio',
+
+    // 病原体
+    BacterialDescription: 'Bacterial Description',
+    FungalDescription: 'Fungal Description',
+    VirusDescription: 'Virus Description',
+    ParasiteDescription: 'Parasite Description',
+    SpecificPathogenDescription: 'Specific Pathogen Description',
+
+    ShuMing: 'Category Name',
+    RelativeAbundance: 'Relative Abundance',
+    ReadsCount: 'Reads Count',
+    SpeciesName: 'Species Name',
+    Proportion: 'Proportion',
+    TotalProportion: 'Total Proportion',
+    Report: 'Report',
+
+
 }

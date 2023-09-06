@@ -61,6 +61,36 @@
                     :label="commonTab.title"
                     icon="web_stories"
                 />
+                <q-tab
+                    name="bacteria"
+                    :label="$t('BacterialDescription')"
+                    icon="line_axis"
+                    v-if="tabValid('bacteria')"
+                />
+                <q-tab
+                    name="fungus"
+                    :label="$t('FungalDescription')"
+                    icon="line_axis"
+                    v-if="tabValid('fungus')"
+                />
+                <q-tab
+                    name="virus"
+                    :label="$t('VirusDescription')"
+                    icon="line_axis"
+                    v-if="tabValid('virus')"
+                />
+                <q-tab
+                    name="parasite"
+                    :label="$t('ParasiteDescription')"
+                    icon="line_axis"
+                    v-if="tabValid('parasite')"
+                />
+                <q-tab
+                    name="specificPathogen"
+                    :label="$t('SpecificPathogenDescription')"
+                    icon="line_axis"
+                    v-if="tabValid('specificPathogen')"
+                />
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
@@ -122,12 +152,58 @@
                 >
                     <CommonModuleVue :viewConfig="commonTab" :task="taskDetail" />
                 </q-tab-panel>
+                <q-tab-panel name="bacteria" v-if="tabValid('bacteria')">
+                    <Pathogen
+                        category="bacteria"
+                        :viewConfig="module.bacterial"
+                        :intro="intros['bacterial']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
+                </q-tab-panel>
+                <q-tab-panel name="fungus" v-if="tabValid('fungus')">
+                    <Pathogen
+                        category="fungus"
+                        :viewConfig="module.fungus"
+                        :intro="intros['fungus']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
+                </q-tab-panel>
+                <q-tab-panel name="virus" v-if="tabValid('virus')">
+                    <Pathogen
+                        category="virus"
+                        :viewConfig="module.virus"
+                        :intro="intros['virus']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
+                </q-tab-panel>
+                <q-tab-panel name="parasite" v-if="tabValid('parasite')">
+                    <Pathogen
+                        category="parasite"
+                        :viewConfig="module.parasite"
+                        :intro="intros['parasite']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
+                </q-tab-panel>
+                <q-tab-panel name="specificPathogen" v-if="tabValid('specificPathogen')">
+                    <Pathogen
+                        category="specificPathogen"
+                        :viewConfig="module.specificPathogen"
+                        :intro="intros['specificPathogen']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
+                </q-tab-panel>
             </q-tab-panels>
         </div>
     </q-page>
 </template>
+
 <script setup>
-import {ref, onMounted, watch, computed, provide, nextTick} from 'vue'
+import { ref, onMounted, watch, computed, provide, nextTick } from 'vue'
 import { useApi } from 'src/api/apiBase'
 import { getTask } from 'src/api/task'
 import QcVue from './qc/index.vue'
@@ -138,6 +214,7 @@ import MicrosatelliteInstabilityVue from './microsatellite-instability/index.vue
 import TumorMutationLoadVue from './tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from './homologous-recombination-defect/index.vue'
 import CommonModuleVue from './common-module/index.vue'
+import Pathogen from './pathogen/index'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 
@@ -229,7 +306,12 @@ const readResultAndModuleJson = () => {
         '微卫星不稳定分析': 'microsatellite-instability',
         '肿瘤突变负荷分析': 'tumor-mutation-load',
         '同源重组缺陷分析': 'homologous-recombination-defect',
-        'commonModules': 'commonModules' // 自定义通用模块
+        'commonModules': 'commonModules', // 自定义通用模块
+        '细菌': 'bacteria',
+        '真菌': 'fungus',
+        '病毒': 'virus',
+        '寄生虫': 'parasite',
+        '特殊病原体': 'specificPathogen',
     }
     // 读取任务的 result.json 结果文件, 他是一个 json 文件, key:value
     // key 是 页面上的 tab 名称, value 是每个 tab 的说明信息
