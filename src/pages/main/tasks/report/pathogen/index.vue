@@ -30,6 +30,8 @@ import {useI18n} from "vue-i18n"
 import {globalStore} from 'src/stores/global'
 import {storeToRefs} from 'pinia'
 
+
+
 const store = globalStore()
 const {langCode} = storeToRefs(store)
 const {t} = useI18n()
@@ -72,9 +74,6 @@ const props = defineProps({
 })
 
 
-const filterData = ref({somatic: null, germline: null})
-const stepData = toRef(props, 'stepData')
-
 const columns = computed(() => [
     {
         name: 'categoryName',
@@ -82,7 +81,7 @@ const columns = computed(() => [
         dataIndex: 'categoryName',
         sortable: true,
         align: 'center',
-        required: true
+        sorter: (a, b) => a.categoryName.localeCompare(b.categoryName)
     },
     {
         name: 'relativeAbundance',
@@ -90,7 +89,7 @@ const columns = computed(() => [
         dataIndex: 'relativeAbundance',
         sortable: true,
         align: 'center',
-        required: true
+        sorter: (a, b) => a.relativeAbundance < b.relativeAbundance
     },
     {
         name: 'readsCount1',
@@ -98,7 +97,7 @@ const columns = computed(() => [
         dataIndex: 'readsCount1',
         sortable: true,
         align: 'center',
-        required: true
+        sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1)
     },
     {
         name: 'speciesName',
@@ -106,7 +105,7 @@ const columns = computed(() => [
         dataIndex: 'speciesName',
         sortable: true,
         align: 'center',
-        required: true
+        sorter: (a, b) => a.speciesName.localeCompare(b.speciesName)
     },
     {
         name: 'proportion',
@@ -114,7 +113,7 @@ const columns = computed(() => [
         dataIndex: 'proportion',
         sortable: true,
         align: 'center',
-        required: true
+        sorter: (a, b) => a.proportion < b.proportion
     },
     {
         name: 'readsCount2',
@@ -122,7 +121,7 @@ const columns = computed(() => [
         field: 'readsCount2',
         sortable: true,
         align: 'center',
-        required: true
+        sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2)
     },
     {
         name: 'totalProportion',
@@ -130,7 +129,7 @@ const columns = computed(() => [
         dataIndex: 'totalProportion',
         sortable: true,
         align: 'center',
-        required: true
+        sorter: (a, b) => a.totalProportion < b.totalProportion
     },
     {name: 'report', label: t('Report'), dataIndex: 'report', align: 'center', required: true},
 ])
@@ -138,67 +137,22 @@ const columns = computed(() => [
 onMounted(() => loadData())
 watch(langCode, () => loadData())
 
-
-const filterChange = (name, data) => {
-    filterData.value[name] = data
-    if (name === 'germline') {
-        germlineData.value.searchParams = data.searchParams
-        germlineData.value.selectedRows = data.selectedRows
-        germlineData.value.selectedDefaultRows = data.selectedDefaultRows
-
-    } else if (name === 'somatic') {
-        somaticData.value.searchParams = data.searchParams
-        somaticData.value.selectedRows = data.selectedRows
-        somaticData.value.selectedDefaultRows = data.selectedDefaultRows
-    }
-    console.log(name, data)
-}
-// 同步子组件的过滤参数
-const onSearchParamsChange = (name, data) => {
-    if (name === 'germline') {
-        germlineData.value.searchParams = data
-    } else {
-        somaticData.value.searchParams = data
-    }
-}
-const stickFilter = () => {
-    if (!filterData.value.germline && viewConfig.value.showMutGermline) {
-        if (germlineVue.value) {
-            let data = germlineVue.value.getChangedData()
-            filterData.value.germline = data
-        } else {
-            errorMessage(t('DefineReportMutationGermlineUnlock'))
-            return false
-        }
-
-    }
-    if (!filterData.value.somatic && viewConfig.value.showMutSomatic) {
-        if (somaticVue.value) {
-            let data = somaticVue.value.getChangedData()
-            filterData.value.somatic = data
-        } else {
-            errorMessage(t('DefineReportMutationSomaticUnlock'))
-            return false
-        }
-    }
-    console.log(filterData.value)
-    emit('stickDone', filterData.value)
-}
-
-const reset = () => {
-    try {
-    } catch (error) {
-
-    }
-    emit('reset', null)
-}
-
+// 不同病原体的数据文件配置
+const dataFile = computed(() => {
+    const suffix = langCode.value === 'cn' ? 'CN' : 'EN'
+    return {
+        bacteria: `Bacteria/Bacteria_${suffix}.txt`,
+        fungus: `Fungus/Fungus_${suffix}.txt`,
+        virus: `Virus/Virus_${suffix}.txt`,
+        parasite: `Parasite/Parasite_${suffix}.txt`,
+        specificPathogen: `SpecificPathogen/SpecificPathogen_${suffix}.txt`,
+    }[props.category]
+})
 
 const loadData = () => {
     $q.loading.show({delay: 100})
-    const suffix = langCode.value === 'cn' ? 'CN' : 'EN'
 
-    readTaskFile(route.params.id, `Bacteria/Bacteria_${suffix}.txt`).then((res) => {
+    readTaskFile(route.params.id, dataFile.value).then((res) => {
         // const headNames = getCsvHeader(res, '\t', 1)
 
         const fields = columns.value.map(c => c.dataIndex)
