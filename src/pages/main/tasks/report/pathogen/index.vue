@@ -1,11 +1,18 @@
 <template>
-    <div>
+    <div class="q-pt-lg">
         <a-table
             :data-source="rows"
             :columns="columns"
-            bordered
+            :row-selection="rowSelection"
+            bordered size="middle"
         >
-
+            <template #bodyCell="{ column }">
+                <template v-if="column.dataIndex === 'report'">
+                    <q-btn flat size="sm" color="primary" label="reads"></q-btn>
+                    <span>|</span>
+                    <q-btn flat size="sm" color="primary" label="Blast"></q-btn>
+                </template>
+            </template>
         </a-table>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
@@ -26,6 +33,7 @@ import {ref, onMounted, computed, toRef, watch} from 'vue'
 import {useRoute} from 'vue-router'
 import {readTaskFile, readTaskMuFile} from 'src/api/task'
 import {getCsvHeader, getCsvData, getCsvDataAndSetLineNumber} from 'src/utils/csv'
+import {useCustomCell} from 'src/utils/customCell'
 import {useQuasar} from 'quasar'
 import {useI18n} from "vue-i18n"
 import {globalStore} from 'src/stores/global'
@@ -41,6 +49,10 @@ const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
 const viewConfig = toRef(props, 'viewConfig')
 const rows = ref([])
+const isDefineReport = computed(() => useRoute().name === 'defineReport')
+let selectedDefaultRows = ref([])
+let defaultRows = ref([])
+
 const props = defineProps({
     intro: {
         type: String,
@@ -73,6 +85,18 @@ const props = defineProps({
     }
 })
 
+const customCell = useCustomCell('report')
+
+const getSpan = (index, record) => {
+    const dataIndex = 'categoryName'
+    const cellValue = rows.value[index][dataIndex]
+
+    if (index > 0 && rows.value[index - 1][dataIndex] === cellValue) {
+        return 0
+    }
+
+    return rows.value.filter(row => row[dataIndex] === cellValue).length
+}
 // 表头定义
 const columns = computed(() => [
     {
@@ -82,21 +106,36 @@ const columns = computed(() => [
             title: t('ShuMing'),
             dataIndex: 'categoryName',
             align: 'center',
-            sorter: true
+            sorter: true,
+            customCell: (_, index, record) => {
+                return {
+                    rowSpan: getSpan(index, record)
+                }
+            }
         },
             {
                 name: 'relativeAbundance',
                 title: t('RelativeAbundance'),
                 dataIndex: 'relativeAbundance',
                 align: 'center',
-                sorter: (a, b) => a.relativeAbundance < b.relativeAbundance
+                sorter: (a, b) => a.relativeAbundance < b.relativeAbundance,
+                customCell: (_, index, record) => {
+                    return {
+                        rowSpan: getSpan(index, record)
+                    }
+                }
             },
             {
                 name: 'readsCount1',
                 title: t('ReadsCount'),
                 dataIndex: 'readsCount1',
                 align: 'center',
-                sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1)
+                sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1),
+                customCell: (_, index, record) => {
+                    return {
+                        rowSpan: getSpan(index, record)
+                    }
+                }
             }]
     },
     {
@@ -107,32 +146,36 @@ const columns = computed(() => [
                 title: t('SpeciesName'),
                 dataIndex: 'speciesName',
                 align: 'center',
-                sorter: true
+                sorter: true,
+                customCell
             },
             {
                 name: 'proportion',
                 title: t('Proportion'),
                 dataIndex: 'proportion',
                 align: 'center',
-                sorter: (a, b) => a.proportion < b.proportion
+                sorter: (a, b) => a.proportion < b.proportion,
+                customCell
             },
             {
                 name: 'readsCount2',
                 title: t('ReadsCount'),
                 field: 'readsCount2',
                 align: 'center',
-                sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2)
+                sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2),
+                customCell
             },
             {
                 name: 'totalProportion',
                 title: t('TotalProportion'),
                 dataIndex: 'totalProportion',
                 align: 'center',
-                sorter: (a, b) => a.totalProportion < b.totalProportion
+                sorter: (a, b) => a.totalProportion < b.totalProportion,
+                customCell
             },
         ]
     },
-    {name: 'report', label: t('Report'), dataIndex: 'report', align: 'center', required: true},
+    {name: 'report', title: t('Report'), dataIndex: 'report', align: 'center', required: true},
 ])
 
 onMounted(() => loadData())
@@ -158,7 +201,7 @@ const loadData = () => {
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
-            'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file']
+            'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvData(res, {start: 2, fields})
     }).finally(() => {
@@ -166,4 +209,40 @@ const loadData = () => {
     })
 }
 
+
+const rowSelection = computed(() => {
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 25,
+            getCheckboxProps: getCheckboxProps
+        }
+    }
+)
+
+const selectedRows = ref([])
+
+const onSelectChange = (selectedRowKeys) => {
+    // if (viewConfig.value.showStick && viewConfig.value.stickDone) {
+    //     errorMessage('请先取消过滤')
+    //     return false
+    // }
+    console.log(selectedRowKeys)
+    selectedRows.value = selectedRowKeys
+    selectedDefaultRows.value = []
+    for (let key of selectedRowKeys) {
+        if (defaultRows.value.some(lineNumber => lineNumber === key)) {
+            selectedDefaultRows.value.push(key)
+        }
+    }
+}
+
+
 </script>
+
+<style lang="scss" scoped>
+
+</style>
