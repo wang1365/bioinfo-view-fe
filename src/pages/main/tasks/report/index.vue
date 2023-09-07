@@ -324,6 +324,7 @@ const readResultAndModuleJson = () => {
             result[dict[k]] = raw[k]
         }
         intros.value = result
+
     })
 
     // module.json
@@ -360,6 +361,10 @@ const readResultAndModuleJson = () => {
             }
             module.value = viewConfig
             commonTabs.value = viewConfig.commonModules
+            // 病原体解读，第一个active tab不是QC，而是通用模块，所以需要特别判断和激活
+            if (Object.keys(viewConfig)[0] === 'commonModules') {
+                tab.value = 'commonTab0'
+            }
         }
     })
 }
