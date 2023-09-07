@@ -88,6 +88,7 @@ const props = defineProps({
 const customCell = useCustomCell('report')
 
 const getSpan = (index, record) => {
+    // 行单元格合并存在很多问题，尤其是在排序和默认高亮方面，所以暂不合并
     const dataIndex = 'categoryName'
     const cellValue = rows.value[index][dataIndex]
 
@@ -101,29 +102,32 @@ const getSpan = (index, record) => {
 const columns = computed(() => [
     {
         title: t('Shu'),
-        children: [{
-            name: 'categoryName',
-            title: t('ShuMing'),
-            dataIndex: 'categoryName',
-            align: 'center',
-            sorter: true,
-            customCell: (_, index, record) => {
-                return {
-                    rowSpan: getSpan(index, record)
-                }
-            }
-        },
+        children: [
+            {
+                name: 'categoryName',
+                title: t('ShuMing'),
+                dataIndex: 'categoryName',
+                align: 'center',
+                sorter: true,
+                customCell,
+                // customCell: (_, index, record) => {
+                //     return {
+                //         rowSpan: getSpan(index, record)
+                //     }
+                // }
+            },
             {
                 name: 'relativeAbundance',
                 title: t('RelativeAbundance'),
                 dataIndex: 'relativeAbundance',
                 align: 'center',
                 sorter: (a, b) => a.relativeAbundance < b.relativeAbundance,
-                customCell: (_, index, record) => {
-                    return {
-                        rowSpan: getSpan(index, record)
-                    }
-                }
+                customCell,
+                // customCell: (_, index, record) => {
+                //     return {
+                //         rowSpan: getSpan(index, record)
+                //     }
+                // }
             },
             {
                 name: 'readsCount1',
@@ -131,12 +135,14 @@ const columns = computed(() => [
                 dataIndex: 'readsCount1',
                 align: 'center',
                 sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1),
-                customCell: (_, index, record) => {
-                    return {
-                        rowSpan: getSpan(index, record)
-                    }
-                }
-            }]
+                customCell,
+                // customCell: (_, index, record) => {
+                //     return {
+                //         rowSpan: getSpan(index, record)
+                //     }
+                // }
+            }
+        ]
     },
     {
         title: t('Zhong'),
