@@ -32,7 +32,6 @@ import {globalStore} from 'src/stores/global'
 import {storeToRefs} from 'pinia'
 
 
-
 const store = globalStore()
 const {langCode} = storeToRefs(store)
 const {t} = useI18n()
@@ -74,7 +73,7 @@ const props = defineProps({
     }
 })
 
-
+// 表头定义
 const columns = computed(() => [
     {
         title: t('Shu'),
@@ -85,58 +84,60 @@ const columns = computed(() => [
             align: 'center',
             sorter: true
         },
-        {
-            name: 'relativeAbundance',
-            title: t('RelativeAbundance'),
-            dataIndex: 'relativeAbundance',
-            align: 'center',
-            sorter: (a, b) => a.relativeAbundance < b.relativeAbundance
-        },
-        {
-            name: 'readsCount1',
-            title: t('ReadsCount'),
-            dataIndex: 'readsCount1',
-            align: 'center',
-            sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1)
-        }]
+            {
+                name: 'relativeAbundance',
+                title: t('RelativeAbundance'),
+                dataIndex: 'relativeAbundance',
+                align: 'center',
+                sorter: (a, b) => a.relativeAbundance < b.relativeAbundance
+            },
+            {
+                name: 'readsCount1',
+                title: t('ReadsCount'),
+                dataIndex: 'readsCount1',
+                align: 'center',
+                sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1)
+            }]
     },
     {
-      title: t('Zhong'),
-      children: [
-          {
-              name: 'speciesName',
-              title: t('SpeciesName'),
-              dataIndex: 'speciesName',
-              align: 'center',
-              sorter: true
-          },
-          {
-              name: 'proportion',
-              title: t('Proportion'),
-              dataIndex: 'proportion',
-              align: 'center',
-              sorter: (a, b) => a.proportion < b.proportion
-          },
-          {
-              name: 'readsCount2',
-              title: t('ReadsCount'),
-              field: 'readsCount2',
-              align: 'center',
-              sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2)
-          },
-          {
-              name: 'totalProportion',
-              title: t('TotalProportion'),
-              dataIndex: 'totalProportion',
-              align: 'center',
-              sorter: (a, b) => a.totalProportion < b.totalProportion
-          },
-      ]
+        title: t('Zhong'),
+        children: [
+            {
+                name: 'speciesName',
+                title: t('SpeciesName'),
+                dataIndex: 'speciesName',
+                align: 'center',
+                sorter: true
+            },
+            {
+                name: 'proportion',
+                title: t('Proportion'),
+                dataIndex: 'proportion',
+                align: 'center',
+                sorter: (a, b) => a.proportion < b.proportion
+            },
+            {
+                name: 'readsCount2',
+                title: t('ReadsCount'),
+                field: 'readsCount2',
+                align: 'center',
+                sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2)
+            },
+            {
+                name: 'totalProportion',
+                title: t('TotalProportion'),
+                dataIndex: 'totalProportion',
+                align: 'center',
+                sorter: (a, b) => a.totalProportion < b.totalProportion
+            },
+        ]
     },
     {name: 'report', label: t('Report'), dataIndex: 'report', align: 'center', required: true},
 ])
 
 onMounted(() => loadData())
+
+// 国际化切换重新加载数据
 watch(langCode, () => loadData())
 
 // 不同病原体的数据文件配置
@@ -155,14 +156,11 @@ const loadData = () => {
     $q.loading.show({delay: 100})
 
     readTaskFile(route.params.id, dataFile.value).then((res) => {
-        // const headNames = getCsvHeader(res, '\t', 1)
-
-        const fields = ['categoryName', 'relativeAbundance', 'readsCount1', 'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file']
+        // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
+        const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
+            'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file']
+        // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvData(res, {start: 2, fields})
-
-        console.log('fields', fields)
-        console.log('rows', rows.value)
-
     }).finally(() => {
         $q.loading.hide()
     })
