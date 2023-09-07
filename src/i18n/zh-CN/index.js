@@ -725,4 +725,6 @@ export default {
     Proportion: '占比',
     TotalProportion: '总占比',
     Report: '验证',
+
+    VirusName: '病毒名'
 }

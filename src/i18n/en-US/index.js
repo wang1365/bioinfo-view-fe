@@ -723,5 +723,6 @@ export default {
     TotalProportion: 'Total Proportion',
     Report: 'Report',
 
+    VirusName: 'Virus'
 
 }

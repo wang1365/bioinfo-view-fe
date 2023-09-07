@@ -79,10 +79,6 @@ const props = defineProps({
         default: () => {
         }
     },
-    category: {
-        type: String,
-        default: 'bacteria'
-    }
 })
 
 const customCell = useCustomCell('report')
@@ -101,85 +97,28 @@ const getSpan = (index, record) => {
 // 表头定义
 const columns = computed(() => [
     {
-        title: t('Shu'),
-        children: [
-            {
-                name: 'categoryName',
-                title: t('ShuMing'),
-                dataIndex: 'categoryName',
-                align: 'center',
-                sorter: true,
-                customCell,
-                // customCell: (_, index, record) => {
-                //     return {
-                //         rowSpan: getSpan(index, record)
-                //     }
-                // }
-            },
-            {
-                name: 'relativeAbundance',
-                title: t('RelativeAbundance'),
-                dataIndex: 'relativeAbundance',
-                align: 'center',
-                sorter: (a, b) => Number(a.relativeAbundance.replace(/%/, '')) < Number(b.relativeAbundance.replace(/%/, '')) ? -1 : 1,
-                customCell,
-                // customCell: (_, index, record) => {
-                //     return {
-                //         rowSpan: getSpan(index, record)
-                //     }
-                // }
-            },
-            {
-                name: 'readsCount1',
-                title: t('ReadsCount'),
-                dataIndex: 'readsCount1',
-                align: 'center',
-                sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1) ? -1 : 1,
-                customCell,
-                // customCell: (_, index, record) => {
-                //     return {
-                //         rowSpan: getSpan(index, record)
-                //     }
-                // }
-            }
-        ]
+        name: 'virusName',
+        title: t('VirusName'),
+        dataIndex: 'virusName',
+        align: 'center',
+        sorter: true,
+        customCell
     },
     {
-        title: t('Zhong'),
-        children: [
-            {
-                name: 'speciesName',
-                title: t('SpeciesName'),
-                dataIndex: 'speciesName',
-                align: 'center',
-                sorter: true,
-                customCell
-            },
-            {
-                name: 'proportion',
-                title: t('Proportion'),
-                dataIndex: 'proportion',
-                align: 'center',
-                sorter: (a, b) => Number(a.proportion.replace(/%/, '')) < Number(b.proportion.replace(/%/, '')) ? -1 : 1,
-                customCell
-            },
-            {
-                name: 'readsCount2',
-                title: t('ReadsCount'),
-                dataIndex: 'readsCount2',
-                align: 'center',
-                sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2) ? -1 : 1,
-                customCell
-            },
-            {
-                name: 'totalProportion',
-                title: t('TotalProportion'),
-                dataIndex: 'totalProportion',
-                align: 'center',
-                sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
-                customCell
-            },
-        ]
+        name: 'readsCount',
+        title: t('ReadsCount'),
+        dataIndex: 'readsCount',
+        align: 'center',
+        sorter: (a, b) => Number(a.readsCount) < Number(b.readsCount) ? -1 : 1,
+        customCell
+    },
+    {
+        name: 'totalProportion',
+        title: t('TotalProportion'),
+        dataIndex: 'totalProportion',
+        align: 'center',
+        sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
+        customCell
     },
     {name: 'report', title: t('Report'), dataIndex: 'report', align: 'center', required: true},
 ])
@@ -192,13 +131,7 @@ watch(langCode, () => loadData())
 // 不同病原体的数据文件配置
 const dataFile = computed(() => {
     const suffix = langCode.value === 'cn' ? 'CN' : 'EN'
-    return {
-        bacteria: `Bacteria/Bacteria_${suffix}.txt`,
-        fungus: `Fungus/Fungus_${suffix}.txt`,
-        virus: `Virus/Virus_${suffix}.txt`,
-        parasite: `Parasite/Parasite_${suffix}.txt`,
-        specificPathogen: `SpecificPathogen/SpecificPathogen_${suffix}.txt`,
-    }[props.category]
+    return `Virus/Virus_${suffix}.txt`
 })
 
 const loadData = () => {
@@ -206,10 +139,10 @@ const loadData = () => {
 
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
-        const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
-            'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
+        const fields = ['virusName', 'readsCount', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
-        rows.value = getCsvData(res, {start: 2, fields})
+        rows.value = getCsvData(res, {fields})
+        console.log('======================rows', rows.value)
     }).finally(() => {
         $q.loading.hide()
     })

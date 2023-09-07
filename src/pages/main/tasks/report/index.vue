@@ -171,8 +171,7 @@
                     />
                 </q-tab-panel>
                 <q-tab-panel name="virus" v-if="tabValid('virus')">
-                    <Pathogen
-                        category="virus"
+                    <PathogenVirus
                         :viewConfig="module.virus"
                         :intro="intros['virus']"
                         :task="taskDetail"
@@ -215,6 +214,7 @@ import TumorMutationLoadVue from './tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from './homologous-recombination-defect/index.vue'
 import CommonModuleVue from './common-module/index.vue'
 import Pathogen from './pathogen/index'
+import PathogenVirus from './pathogen-virus/index'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 
