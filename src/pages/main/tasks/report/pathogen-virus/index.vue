@@ -101,7 +101,8 @@ const columns = computed(() => [
         title: t('VirusName'),
         dataIndex: 'virusName',
         align: 'center',
-        sorter: true,
+        // sorter: true,
+        onFilter: (value, record) => value.includes(record.virusName),
         customCell
     },
     {
@@ -146,6 +147,13 @@ const loadData = () => {
         rows.value.forEach(r => r.file = `igv${r.file}`)
         // 下载的文件名
         rows.value.forEach(r => r.fileName = r.file.substring(r.file.lastIndexOf('/')+1))
+
+        const virusCol = columns.value[columns.value.findIndex(c => c.dataIndex === 'virusName')]
+        // 种名增加筛选功能
+        let options = [...new Set(rows.value.map(r => r['virusName']))]
+        virusCol.filters = options.map(opt => {
+            return {text: opt, value: opt}
+        })
     }).finally(() => {
         $q.loading.hide()
     })

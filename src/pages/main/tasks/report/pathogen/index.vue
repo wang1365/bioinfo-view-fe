@@ -8,9 +8,10 @@
         >
             <template #bodyCell="{ record, column,  }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file" :download="record.fileName" />
+                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
+                           :download="record.fileName"/>
                     <span>|</span>
-                    <q-btn flat size="sm" color="primary" label="Blast" />
+                    <q-btn flat size="sm" color="primary" label="Blast"/>
                 </template>
             </template>
         </a-table>
@@ -107,8 +108,9 @@ const columns = computed(() => [
                 name: 'categoryName',
                 title: t('ShuMing'),
                 dataIndex: 'categoryName',
-                align: 'center',
-                sorter: true,
+                // align: 'center',
+                // sorter: true,
+                onFilter: (value, record) => value.includes(record.categoryName),
                 customCell,
                 // customCell: (_, index, record) => {
                 //     return {
@@ -151,8 +153,9 @@ const columns = computed(() => [
                 name: 'speciesName',
                 title: t('SpeciesName'),
                 dataIndex: 'speciesName',
-                align: 'center',
-                sorter: true,
+                // align: 'center',
+                // sorter: true,
+                onFilter: (value, record) => value.includes(record.speciesName),
                 customCell
             },
             {
@@ -213,7 +216,22 @@ const loadData = () => {
         // 文件下载路径
         rows.value.forEach(r => r.file = `igv${r.file}`)
         // 下载的文件名
-        rows.value.forEach(r => r.fileName = r.file.substring(r.file.lastIndexOf('/')+1))
+        rows.value.forEach(r => r.fileName = r.file.substring(r.file.lastIndexOf('/') + 1))
+
+        columns.value.forEach(column => {
+            if (column.children) {
+                // 属名和种名增加筛选功能
+                column.children.forEach(c => {
+                    if (['categoryName', 'speciesName'].includes(c.dataIndex)) {
+                        let options = [...new Set(rows.value.map(r => r[c.dataIndex]))]
+                        options = options.map(opt => {
+                            return {text: opt, value: opt}
+                        })
+                        c.filters = options
+                    }
+                })
+            }
+        })
     }).finally(() => {
         $q.loading.hide()
     })
