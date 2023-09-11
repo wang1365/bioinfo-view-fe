@@ -6,11 +6,11 @@
             :row-selection="rowSelection"
             bordered size="middle"
         >
-            <template #bodyCell="{ column }">
+            <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn flat size="sm" color="primary" label="reads"></q-btn>
+                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file" :download="record.fileName" />
                     <span>|</span>
-                    <q-btn flat size="sm" color="primary" label="Blast"></q-btn>
+                    <q-btn flat size="sm" color="primary" label="Blast" />
                 </template>
             </template>
         </a-table>
@@ -142,7 +142,10 @@ const loadData = () => {
         const fields = ['virusName', 'readsCount', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvData(res, {fields})
-        console.log('======================rows', rows.value)
+        // 文件下载路径
+        rows.value.forEach(r => r.file = `igv${r.file}`)
+        // 下载的文件名
+        rows.value.forEach(r => r.fileName = r.file.substring(r.file.lastIndexOf('/')+1))
     }).finally(() => {
         $q.loading.hide()
     })
