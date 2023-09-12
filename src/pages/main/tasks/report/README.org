@@ -1,0 +1,14 @@
+#+title: 报告 tab 说明
+
+* tab 对应关系
+
+- qc: 质检
+- mutation: 突变分析
+- fusion: 融合分析
+- copy-number-variation: 拷贝数变异分析
+- microsatellite-instability: 微卫星状态
+- tumor-mutation-load: 肿瘤突变负荷分析
+- common-module: 通用 tab
+- homologous-recombination-defect: 同源重组缺陷分析结果
+- pathogen:
+- pathogen-virus:
