@@ -1,200 +1,85 @@
 <template>
     <q-page padding style="overflow-x: hidden; padding-top: 10px">
         <div class="row items-center">
-            <h6>{{$t('TaskResult')}}</h6>
+            <h6>{{ $t('TaskResult') }}</h6>
             <q-space />
             <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <div class="q-pt-xs">
-            <q-tabs
-                v-model="tab"
-                active-color="primary"
-                active-bg-color="grey-5"
-                align="justify"
-                class="bg-grey-2 shadow-2"
-                indicator-color="primary"
-                inline-label
-                :breakpoint="0"
-                dense
-            >
+            <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-5" align="justify" class="bg-grey-2 shadow-2"
+                indicator-color="primary" inline-label :breakpoint="0" dense>
                 <q-tab name="qc" :label="$t('QC')" icon="border_left" v-if="tabValid('qc')" />
-                <q-tab
-                    name="mutation"
-                    :label="$t('MutationAnalysis')"
-                    icon="candlestick_chart"
-                    v-if="tabValid('mutation')"
-                />
-                <q-tab
-                    name="fusion"
-                    :label="$t('FusionAnalysis')"
-                    icon="format_strikethrough"
-                    v-if="tabValid('fusion')"
-                />
-                <q-tab
-                    name="copy-number-variation"
-                    :label="$t('CopyNumberVariationAnalysis')"
-                    icon="polyline"
-                    v-if="tabValid('copy-number-variation')"
-                />
-                <q-tab
-                    name="microsatellite-instability"
-                    :label="$t('MicroSatelliteInstability')"
-                    icon="shape_line"
-                    v-if="tabValid('microsatellite-instability')"
-                />
-                <q-tab
-                    name="tumor-mutation-load"
-                    :label="$t('TumorMutationLoadAnalysis')"
-                    icon="bubble_chart"
-                    v-if="tabValid('tumor-mutation-load')"
-                />
-                <q-tab
-                    name="homologous-recombination-defect"
-                    :label="$t('HomologousRecombinationDefectAnalysis')"
-                    icon="line_axis"
-                    v-if="tabValid('homologous-recombination-defect')"
-                />
-                <q-tab
-                    v-for="(commonTab,i) in commonTabs"
-                    :key="`commonTab${i}`"
-                    :name="`commonTab${i}`"
-                    :label="commonTab.title"
-                    icon="web_stories"
-                />
-                <q-tab
-                    name="bacteria"
-                    :label="$t('BacterialDescription')"
-                    icon="line_axis"
-                    v-if="tabValid('bacteria')"
-                />
-                <q-tab
-                    name="fungus"
-                    :label="$t('FungalDescription')"
-                    icon="line_axis"
-                    v-if="tabValid('fungus')"
-                />
-                <q-tab
-                    name="virus"
-                    :label="$t('VirusDescription')"
-                    icon="line_axis"
-                    v-if="tabValid('virus')"
-                />
-                <q-tab
-                    name="parasite"
-                    :label="$t('ParasiteDescription')"
-                    icon="line_axis"
-                    v-if="tabValid('parasite')"
-                />
-                <q-tab
-                    name="specificPathogen"
-                    :label="$t('SpecificPathogenDescription')"
-                    icon="line_axis"
-                    v-if="tabValid('specificPathogen')"
-                />
+                <q-tab name="mutation" :label="$t('MutationAnalysis')" icon="candlestick_chart"
+                    v-if="tabValid('mutation')" />
+                <q-tab name="fusion" :label="$t('FusionAnalysis')" icon="format_strikethrough" v-if="tabValid('fusion')" />
+                <q-tab name="copy-number-variation" :label="$t('CopyNumberVariationAnalysis')" icon="polyline"
+                    v-if="tabValid('copy-number-variation')" />
+                <q-tab name="microsatellite-instability" :label="$t('MicroSatelliteInstability')" icon="shape_line"
+                    v-if="tabValid('microsatellite-instability')" />
+                <q-tab name="tumor-mutation-load" :label="$t('TumorMutationLoadAnalysis')" icon="bubble_chart"
+                    v-if="tabValid('tumor-mutation-load')" />
+                <q-tab name="homologous-recombination-defect" :label="$t('HomologousRecombinationDefectAnalysis')"
+                    icon="line_axis" v-if="tabValid('homologous-recombination-defect')" />
+                <q-tab v-for="(commonTab, i) in commonTabs" :key="`commonTab${i}`" :name="`commonTab${i}`"
+                    :label="commonTab.title" icon="web_stories" />
+                <q-tab name="bacteria" :label="$t('BacterialDescription')" icon="line_axis" v-if="tabValid('bacteria')" />
+                <q-tab name="fungus" :label="$t('FungalDescription')" icon="line_axis" v-if="tabValid('fungus')" />
+                <q-tab name="virus" :label="$t('VirusDescription')" icon="line_axis" v-if="tabValid('virus')" />
+                <q-tab name="parasite" :label="$t('ParasiteDescription')" icon="line_axis" v-if="tabValid('parasite')" />
+                <q-tab name="specificPathogen" :label="$t('SpecificPathogenDescription')" icon="line_axis"
+                    v-if="tabValid('specificPathogen')" />
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
                     <QcVue :viewConfig="module.qc" :intro="intros['qc']" :samples="samples" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="mutation" v-if="tabValid('mutation')">
-                    <MutaionVue
-                        :viewConfig="module.mutation"
-                        :intro="intros['mutation']"
-                        :samples="samples"
-                        :task="taskDetail"
-                    />
+                    <MutaionVue :viewConfig="module.mutation" :intro="intros['mutation']" :samples="samples"
+                        :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="fusion" v-if="tabValid('fusion')">
-                    <FusionVue
-                        :viewConfig="module.fusion"
-                        :intro="intros['fusion']"
-                        :samples="samples"
-                        :task="taskDetail"
-                    />
+                    <FusionVue :viewConfig="module.fusion" :intro="intros['fusion']" :samples="samples"
+                        :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
-                    <CopyNumberVariationVue
-                        :viewConfig="module.copy_number_variation"
-                        :intro="intros['copy-number-variation']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <CopyNumberVariationVue :viewConfig="module.copy_number_variation"
+                        :intro="intros['copy-number-variation']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="microsatellite-instability" v-if="tabValid('microsatellite-instability')">
-                    <MicrosatelliteInstabilityVue
-                        :viewConfig="module.microsatellite_instability"
-                        :intro="intros['microsatellite-instability']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <MicrosatelliteInstabilityVue :viewConfig="module.microsatellite_instability"
+                        :intro="intros['microsatellite-instability']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="tumor-mutation-load" v-if="tabValid('tumor-mutation-load')">
-                    <TumorMutationLoadVue
-                        :viewConfig="module.tumor_mutation_load"
-                        :intro="intros['tumor-mutation-load']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <TumorMutationLoadVue :viewConfig="module.tumor_mutation_load" :intro="intros['tumor-mutation-load']"
+                        :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="homologous-recombination-defect" v-if="tabValid('homologous-recombination-defect')">
-                    <HomologousRecombinationDefectVue
-                        :viewConfig="module.homologous_recombination_defect"
-                        :intro="intros['homologous-recombination-defect']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <HomologousRecombinationDefectVue :viewConfig="module.homologous_recombination_defect"
+                        :intro="intros['homologous-recombination-defect']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
-                <q-tab-panel
-                    v-for="(commonTab, i) in commonTabs"
-                    :key="`commonTab${i}`"
-                    :name="`commonTab${i}`"
-                    :viewConfig="commonTab"
-                >
+                <q-tab-panel v-for="(commonTab, i) in commonTabs" :key="`commonTab${i}`" :name="`commonTab${i}`"
+                    :viewConfig="commonTab">
                     <CommonModuleVue :viewConfig="commonTab" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="bacteria" v-if="tabValid('bacteria')">
-                    <Pathogen
-                        category="bacteria"
-                        :viewConfig="module.bacterial"
-                        :intro="intros['bacterial']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <Pathogen category="bacteria" :viewConfig="module.bacterial" :intro="intros['bacterial']"
+                        :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="fungus" v-if="tabValid('fungus')">
-                    <Pathogen
-                        category="fungus"
-                        :viewConfig="module.fungus"
-                        :intro="intros['fungus']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <Pathogen category="fungus" :viewConfig="module.fungus" :intro="intros['fungus']" :task="taskDetail"
+                        :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="virus" v-if="tabValid('virus')">
-                    <PathogenVirus
-                        :viewConfig="module.virus"
-                        :intro="intros['virus']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <PathogenVirus :viewConfig="module.virus" :intro="intros['virus']" :task="taskDetail"
+                        :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="parasite" v-if="tabValid('parasite')">
-                    <Pathogen
-                        category="parasite"
-                        :viewConfig="module.parasite"
-                        :intro="intros['parasite']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <Pathogen category="parasite" :viewConfig="module.parasite" :intro="intros['parasite']"
+                        :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="specificPathogen" v-if="tabValid('specificPathogen')">
-                    <Pathogen
-                        category="specificPathogen"
-                        :viewConfig="module.specificPathogen"
-                        :intro="intros['specificPathogen']"
-                        :task="taskDetail"
-                        :samples="samples"
-                    />
+                    <Pathogen category="specificPathogen" :viewConfig="module.specificPathogen"
+                        :intro="intros['specificPathogen']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
             </q-tab-panels>
         </div>
@@ -342,7 +227,13 @@ const readResultAndModuleJson = () => {
             '微卫星不稳定分析': 'microsatellite_instability',
             '肿瘤突变负荷分析': 'tumor_mutation_load',
             '同源重组缺陷分析': 'homologous_recombination_defect',
-            'commonModules': 'commonModules' // 自定义通用模块
+            'commonModules': 'commonModules', // 自定义通用模块
+            '细菌': 'bacteria',
+            '真菌': 'fungus',
+            '病毒': 'virus',
+            '寄生虫': 'parasite',
+            '特殊病原体': 'specificPathogen',
+
         }
         try {
             data = JSON.parse(res)

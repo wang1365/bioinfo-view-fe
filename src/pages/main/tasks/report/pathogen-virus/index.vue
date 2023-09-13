@@ -1,14 +1,38 @@
 <template>
+    <div>
+        <q-btn
+            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            color="primary"
+            class="relative-position float-right q-mr-md"
+            :label="$t('ReportStickDone')"
+            @click="reset()"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            outline
+            color="primary"
+            class="relative-position float-right q-mr-md"
+            @click="stickFilter()"
+            :label="$t('ReportStickData')"
+        />
+    </div>
     <div class="q-pt-lg">
-        <a-table
-            :data-source="rows"
-            :columns="columns"
-            :row-selection="rowSelection"
-            bordered size="middle"
-        >
+        <a-table :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered size="middle">
             <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file" :download="record.fileName" />
+                    <q-btn
+                        flat
+                        size="sm"
+                        color="primary"
+                        label="reads"
+                        target="_blank"
+                        :href="record.file"
+                        :download="record.fileName"
+                    />
                     <span>|</span>
                     <q-btn flat size="sm" color="primary" label="Blast" />
                 </template>
@@ -189,10 +213,6 @@ const onSelectChange = (selectedRowKeys) => {
         }
     }
 }
-
-
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
