@@ -10,5 +10,8 @@
 - tumor-mutation-load: 肿瘤突变负荷分析
 - common-module: 通用 tab
 - homologous-recombination-defect: 同源重组缺陷分析结果
-- pathogen:
-- pathogen-virus:
+- pathogen: 特殊病原体
+- pathogen-virus: 病毒
+- pathogenesis-bacterial: 细菌
+- pathogenesis-fungal: 真菌
+- pathogenesis-parasite:寄生虫
