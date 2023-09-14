@@ -1,38 +1,18 @@
 <template>
     <div class="q-py-md">
-        <q-btn
-            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
-            icon="bookmarks"
-            size="small"
-            color="primary"
-            class="relative-position float-right q-mr-md"
-            :label="$t('ReportStickDone')"
-            @click="reset()"
-        />
-        <q-btn
-            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
-            icon="bookmarks"
-            size="small"
-            outline
-            color="primary"
-            class="relative-position float-right q-mr-md"
-            @click="stickFilter()"
-            :label="$t('ReportStickData')"
-        />
+        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
+            class="relative-position float-right q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
+        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
+            color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()"
+            :label="$t('ReportStickData')" />
     </div>
     <div class="q-pt-lg">
-        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered size="middle">
+        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
+            size="middle">
             <template #bodyCell="{ record, column, }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn
-                        flat
-                        size="sm"
-                        color="primary"
-                        label="reads"
-                        target="_blank"
-                        :href="record.file"
-                        :download="record.fileName"
-                    />
+                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
+                        :download="record.fileName" />
                     <span>|</span>
                     <q-btn flat size="sm" color="primary" label="Blast" />
                 </template>
@@ -230,7 +210,7 @@ const dataFile = computed(() => {
 
 const loadData = () => {
     $q.loading.show({ delay: 100 })
-    console.log("stepData",stepData.value)
+    console.log("stepData", stepData.value)
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
@@ -257,11 +237,13 @@ const loadData = () => {
             }
         })
         console.log(rows)
-        for (const row of rows.value) {
-            for (const item of stepData.value.tables) {
-                if(item===row.lineNumber){
-                    selectedRows.value.push(item)
-                    break
+        if (stepData.value) {
+            for (const row of rows.value) {
+                for (const item of stepData.value.tables) {
+                    if (item === row.lineNumber) {
+                        selectedRows.value.push(item)
+                        break
+                    }
                 }
             }
         }

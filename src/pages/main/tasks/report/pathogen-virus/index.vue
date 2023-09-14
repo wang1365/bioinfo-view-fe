@@ -1,38 +1,18 @@
 <template>
     <div class="q-py-md">
-        <q-btn
-            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
-            icon="bookmarks"
-            size="small"
-            color="primary"
-            class="relative-position float-right q-mr-md"
-            :label="$t('ReportStickDone')"
-            @click="reset()"
-        />
-        <q-btn
-            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
-            icon="bookmarks"
-            size="small"
-            outline
-            color="primary"
-            class="relative-position float-right q-mr-md"
-            @click="stickFilter()"
-            :label="$t('ReportStickData')"
-        />
+        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
+            class="relative-position float-right q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
+        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
+            color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()"
+            :label="$t('ReportStickData')" />
     </div>
     <div class="q-pt-lg">
-        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered size="middle">
+        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
+            size="middle">
             <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn
-                        flat
-                        size="sm"
-                        color="primary"
-                        label="reads"
-                        target="_blank"
-                        :href="record.file"
-                        :download="record.fileName"
-                    />
+                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
+                        :download="record.fileName" />
                     <span>|</span>
                     <q-btn flat size="sm" color="primary" label="Blast" />
                 </template>
@@ -52,21 +32,21 @@
     </div>
 </template>
 <script setup>
-import {errorMessage, infoMessage} from 'src/utils/notify'
-import {ref, onMounted, computed, toRef, watch} from 'vue'
-import {useRoute} from 'vue-router'
-import {readTaskFile, readTaskMuFile} from 'src/api/task'
-import {getCsvHeader, getCsvData, getCsvDataAndSetLineNumber} from 'src/utils/csv'
-import {useCustomCell} from 'src/utils/customCell'
-import {useQuasar} from 'quasar'
-import {useI18n} from "vue-i18n"
-import {globalStore} from 'src/stores/global'
-import {storeToRefs} from 'pinia'
+import { errorMessage, infoMessage } from 'src/utils/notify'
+import { ref, onMounted, computed, toRef, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { readTaskFile, readTaskMuFile } from 'src/api/task'
+import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
+import { useCustomCell } from 'src/utils/customCell'
+import { useQuasar } from 'quasar'
+import { useI18n } from "vue-i18n"
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 
 
 const store = globalStore()
-const {langCode} = storeToRefs(store)
-const {t} = useI18n()
+const { langCode } = storeToRefs(store)
+const { t } = useI18n()
 const $q = useQuasar()
 const route = useRoute()
 const dlgVisible = ref(false)
@@ -146,7 +126,7 @@ const columns = computed(() => [
         sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
         customCell
     },
-    {name: 'report', title: t('Report'), dataIndex: 'report', align: 'center', required: true},
+    { name: 'report', title: t('Report'), dataIndex: 'report', align: 'center', required: true },
 ])
 
 onMounted(() => loadData())
@@ -161,30 +141,34 @@ const dataFile = computed(() => {
 })
 
 const loadData = () => {
-    $q.loading.show({delay: 100})
-    console.log("stepData",stepData.value)
+    $q.loading.show({ delay: 100 })
+    console.log("stepData", stepData.value)
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['virusName', 'readsCount', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
-        rows.value = getCsvDataAndSetLineNumber(res, {fields})
+        rows.value = getCsvDataAndSetLineNumber(res, { fields })
         // 文件下载路径
         rows.value.forEach(r => r.file = `igv${r.file}`)
         // 下载的文件名
-        rows.value.forEach(r => r.fileName = r.file.substring(r.file.lastIndexOf('/')+1))
+        rows.value.forEach(r => r.fileName = r.file.substring(r.file.lastIndexOf('/') + 1))
 
         const virusCol = columns.value[columns.value.findIndex(c => c.dataIndex === 'virusName')]
         // 种名增加筛选功能
         let options = [...new Set(rows.value.map(r => r['virusName']))]
         virusCol.filters = options.map(opt => {
-            return {text: opt, value: opt}
+            return { text: opt, value: opt }
         })
         console.log(rows)
-        for (const row of rows.value) {
-            for (const item of stepData.value.tables) {
-                if(item===row.lineNumber){
-                    selectedRows.value.push(item)
-                    break
+        if (stepData.value) {
+
+
+            for (const row of rows.value) {
+                for (const item of stepData.value.tables) {
+                    if (item === row.lineNumber) {
+                        selectedRows.value.push(item)
+                        break
+                    }
                 }
             }
         }
@@ -200,16 +184,16 @@ const getCheckboxProps = (record) => {
     }
 }
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
-        return {
-            selectedRowKeys: selectedRows,
-            onChange: onSelectChange,
-            columnWidth: 25,
-            getCheckboxProps: getCheckboxProps
-        }
+    if (!isDefineReport.value) {
+        return null
     }
+    return {
+        selectedRowKeys: selectedRows,
+        onChange: onSelectChange,
+        columnWidth: 25,
+        getCheckboxProps: getCheckboxProps
+    }
+}
 )
 
 const selectedRows = ref([])
