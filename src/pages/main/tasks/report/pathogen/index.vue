@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="q-py-md">
         <q-btn
             v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
             icon="bookmarks"
@@ -21,7 +21,7 @@
         />
     </div>
     <div class="q-pt-lg">
-        <a-table :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered size="middle">
+        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered size="middle">
             <template #bodyCell="{ record, column, }">
                 <template v-if="column.dataIndex === 'report'">
                     <q-btn
@@ -71,7 +71,6 @@ const $q = useQuasar()
 const route = useRoute()
 const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
-const viewConfig = toRef(props, 'viewConfig')
 const rows = ref([])
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 let selectedDefaultRows = ref([])
@@ -108,6 +107,8 @@ const props = defineProps({
         default: 'bacteria'
     }
 })
+const viewConfig = toRef(props, 'viewConfig')
+const stepData = toRef(props, 'stepData')
 
 const customCell = useCustomCell('report')
 
@@ -229,13 +230,13 @@ const dataFile = computed(() => {
 
 const loadData = () => {
     $q.loading.show({ delay: 100 })
-
+    console.log("stepData",stepData.value)
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
             'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
-        rows.value = getCsvData(res, { start: 2, fields })
+        rows.value = getCsvDataAndSetLineNumber(res, { start: 2, fields })
         // 文件下载路径
         rows.value.forEach(r => r.file = `igv${r.file}`)
         // 下载的文件名
@@ -255,11 +256,26 @@ const loadData = () => {
                 })
             }
         })
+        console.log(rows)
+        for (const row of rows.value) {
+            for (const item of stepData.value.tables) {
+                if(item===row.lineNumber){
+                    selectedRows.value.push(item)
+                    break
+                }
+            }
+        }
     }).finally(() => {
         $q.loading.hide()
     })
 }
 
+const getCheckboxProps = (record) => {
+    return {
+        disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
+        name: String(record.lineNumber),
+    }
+}
 
 const rowSelection = computed(() => {
     if (!isDefineReport.value) {
@@ -289,6 +305,14 @@ const onSelectChange = (selectedRowKeys) => {
             selectedDefaultRows.value.push(key)
         }
     }
+}
+const stickFilter = () => {
+    var results = []
+    emit('stickDone', { tables: selectedRows.value })
+}
+const reset = () => {
+    emit('reset', null)
+    selectedRows.value = []
 }
 </script>
 

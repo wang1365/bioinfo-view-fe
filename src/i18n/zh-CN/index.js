@@ -709,7 +709,14 @@ export default {
     X2Comment: '横坐标：染色体，纵坐标：总体拷贝数的变化',
     X3Comment: '横坐标：染色体，纵坐标：B等位基因的频率和深度比',
 
+
     // 病原体
+    Bacterial: '细菌',
+    Fungal: '真菌',
+    Virus: '病毒',
+    Parasite: '寄生虫',
+    SpecificPathogen: '特殊病原体',
+
     BacterialDescription: '细菌描述',
     FungalDescription: '真菌描述',
     VirusDescription: '病毒描述',

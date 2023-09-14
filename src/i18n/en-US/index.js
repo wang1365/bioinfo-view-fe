@@ -707,6 +707,12 @@ export default {
     X3Comment: 'Abscissa: Chromosome, ordinate: B allele frequency and depth ratio',
 
     // 病原体
+    Bacterial: 'Bacterial',
+    Fungal: 'Fungal',
+    Virus: 'Virus',
+    Parasite: 'Parasite',
+    SpecificPathogen: 'Specific Pathogen',
+
     BacterialDescription: 'Bacterial Description',
     FungalDescription: 'Fungal Description',
     VirusDescription: 'Virus Description',

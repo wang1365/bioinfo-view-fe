@@ -78,6 +78,95 @@
                 />
             </q-step>
             <q-step
+                v-if="tabValid('bacteria')"
+                :done="isStepDone('bacteria')"
+                name="bacteria"
+                :title="$t('Bacterial')"
+                icon="bubble_chart"
+            >
+                <Pathogen
+                    :viewConfig="viewConfig.bacteria"
+                    :intro="intros['bacteria']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    :stepData="stepData.bacteria"
+                    category="bacteria"
+                    @stickDone="stickDone('bacteria', $event, 'create')"
+                    @reset="stickDone('bacteria', null, 'create')"
+                />
+            </q-step>
+            <q-step
+                v-if="tabValid('fungus')"
+                :done="isStepDone('fungus')"
+                name="fungus"
+                :title="$t('Fungal')"
+                icon="bubble_chart"
+            >
+                <Pathogen
+                    :viewConfig="viewConfig.fungus"
+                    :intro="intros['fungus']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    :stepData="stepData.fungus"
+                    category="fungus"
+                    @stickDone="stickDone('fungus', $event, 'create')"
+                    @reset="stickDone('fungus', null, 'create')"
+                />
+            </q-step>
+            <q-step
+                v-if="tabValid('virus')"
+                :done="isStepDone('virus')"
+                name="virus"
+                :title="$t('Virus')"
+                icon="bubble_chart"
+            >
+                <PathogenVirus
+                    :viewConfig="viewConfig.virus"
+                    :intro="intros['virus']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    :stepData="stepData.virus"
+                    @stickDone="stickDone('virus', $event, 'create')"
+                    @reset="stickDone('virus', null, 'create')"
+                />
+            </q-step>
+            <q-step
+                v-if="tabValid('parasite')"
+                :done="isStepDone('parasite')"
+                name="parasite"
+                :title="$t('Parasite')"
+                icon="bubble_chart"
+            >
+                <Pathogen
+                    :viewConfig="viewConfig.parasite"
+                    :intro="intros['parasite']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    :stepData="stepData.parasite"
+                    category="parasite"
+                    @stickDone="stickDone('parasite', $event, 'create')"
+                    @reset="stickDone('parasite', null, 'create')"
+                />
+            </q-step>
+            <q-step
+                v-if="tabValid('specificPathogen')"
+                :done="isStepDone('specificPathogen')"
+                name="specificPathogen"
+                :title="$t('SpecificPathogen')"
+                icon="bubble_chart"
+            >
+                <Pathogen
+                    :viewConfig="viewConfig.specificPathogen"
+                    :intro="intros['specificPathogen']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    :stepData="stepData.specificPathogen"
+                    category="specificPathogen"
+                    @stickDone="stickDone('specificPathogen', $event, 'create')"
+                    @reset="stickDone('specificPathogen', null, 'create')"
+                />
+            </q-step>
+            <q-step
                 v-for="commonTab in commonTabs"
                 :key="commonTab.title"
                 :title="commonTab.title"
@@ -211,12 +300,38 @@
                             >
                         </q-chip>
                     </div>
-                    <div v-if="isStepDone('tumor_mutation_load')">
-                        <span class="text-bold">{{ $t('TumorMutationLoadAnalysis') }}</span>
+                    <div v-if="isStepDone('bacteria')">
+                        <span class="text-bold">{{ $t('Bacterial') }}</span>
                         <q-chip color="primary" text-color="white">
-                            <span>{{ $t('ReportDefineSearched') }}</span>
+                            <span>{{ $t('ReportDefineSelected') }}</span>
                         </q-chip>
                     </div>
+                    <div v-if="isStepDone('fungus')">
+                        <span class="text-bold">{{ $t('Fungal') }}</span>
+                        <q-chip color="primary" text-color="white">
+                            <span>{{ $t('ReportDefineSelected') }}</span>
+                        </q-chip>
+                    </div>
+                    <div v-if="isStepDone('virus')">
+                        <span class="text-bold">{{ $t('Virus') }}</span>
+                        <q-chip color="primary" text-color="white">
+                            <span>{{ $t('ReportDefineSelected') }}</span>
+                        </q-chip>
+                    </div>
+                    <div v-if="isStepDone('parasite')">
+                        <span class="text-bold">{{ $t('Parasite') }}</span>
+                        <q-chip color="primary" text-color="white">
+                            <span>{{ $t('ReportDefineSelected') }}</span>
+                        </q-chip>
+                    </div>
+                    <div v-if="isStepDone('specificPathogen')">
+                        <span class="text-bold">{{ $t('SpecificPathogen') }}</span>
+                        <q-chip color="primary" text-color="white">
+                            <span>{{ $t('ReportDefineSelected') }}</span>
+                        </q-chip>
+                    </div>
+
+
                     <div v-for="commonTab in commonTabs" :key="commonTab.title">
                         <div v-if="isStepDone(commonTab.title)">
                             <span class="text-bold">{{ commonTab.title }}</span
@@ -272,6 +387,8 @@ import { useI18n } from "vue-i18n";
 import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'
+import Pathogen from '../report/pathogen/index'
+import PathogenVirus from '../report/pathogen-virus/index'
 const { t } = useI18n();
 const store = globalStore()
 const { langCode } = storeToRefs(store)
@@ -332,6 +449,11 @@ const tabMap = {
     fusion: '融合分析',
     copy_number_variation: '拷贝数变异分析',
     tumor_mutation_load: '肿瘤突变负荷分析',
+    bacteria:"细菌",
+    fungus:"真菌",
+    virus:"病毒",
+    parasite:"寄生虫",
+    specificPathogen:"特殊病原体",
 }
 const createReport = () => {
     console.log(stepData.value)
@@ -340,6 +462,11 @@ const createReport = () => {
         融合分析: 'FusionAnalysis',
         拷贝数变异分析: 'CopyNumberVariationAnalysis',
         肿瘤突变负荷分析: 'TumorMutationLoadAnalysis',
+        细菌:"Bacterial",
+        真菌:"Fungal",
+        病毒:"Virus",
+        寄生虫:"Parasite",
+        特殊病原体:"SpecificPathogen",
     }
 
     for (let key in tabMap) {
@@ -432,11 +559,15 @@ const loadIntros = () => {
     readTaskFile(route.params.id, `result_${suffix}.json`).then((res) => {
         const raw = JSON.parse(res)
         const result = {}
+        let steps=[]
         for (let k in raw) {
             result[dict[k]] = raw[k]
             stepData[dict[k]] = ''
+            steps.push(dict[k])
         }
         intros.value = result
+        console.log("intros",intros.value)
+        step.value=steps[0]
     })
 }
 watch(langCode, lc => {
@@ -494,6 +625,7 @@ const loadViewConfig = () => {
             viewConfig.value = config
             viewConfigLoaded.value = true
         }
+        console.log('viewConfig',viewConfig.value)
     })
 }
 const getCommonConfig = (title) => {
