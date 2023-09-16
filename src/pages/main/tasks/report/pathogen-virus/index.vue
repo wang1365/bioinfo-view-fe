@@ -146,6 +146,7 @@ const columns = computed(() => [
         title: t('VirusName'),
         dataIndex: 'virusName',
         align: 'center',
+        width: 100,
         // sorter: true,
         customFilterDropdown: true,
         onFilter: (value, record) => record.virusName.includes(value),
@@ -157,6 +158,7 @@ const columns = computed(() => [
         title: t('ReadsCount'),
         dataIndex: 'readsCount',
         align: 'center',
+        width: 50,
         sorter: (a, b) => Number(a.readsCount) < Number(b.readsCount) ? -1 : 1,
         customCell
     },
@@ -165,10 +167,11 @@ const columns = computed(() => [
         title: t('TotalProportion'),
         dataIndex: 'totalProportion',
         align: 'center',
+        width: 50,
         sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
         customCell
     },
-    { name: 'report', title: t('Report'), dataIndex: 'report', align: 'center', required: true },
+    { name: 'report', width: 20, title: t('Report'), dataIndex: 'report', align: 'center', required: true },
 ])
 
 onMounted(() => loadData())

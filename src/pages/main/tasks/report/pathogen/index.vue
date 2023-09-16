@@ -155,6 +155,7 @@ const columns = computed(() => [
                 title: t('ShuMing'),
                 dataIndex: 'categoryName',
                 customFilterDropdown: true,
+                width: 100,
                 // align: 'center',
                 // sorter: true,
                 // onFilter: (value, record) => value.includes(record.categoryName),
@@ -171,6 +172,7 @@ const columns = computed(() => [
                 title: t('RelativeAbundance'),
                 dataIndex: 'relativeAbundance',
                 align: 'center',
+                width: 50,
                 sorter: (a, b) => Number(a.relativeAbundance.replace(/%/, '')) < Number(b.relativeAbundance.replace(/%/, '')) ? -1 : 1,
                 customCell,
                 // customCell: (_, index, record) => {
@@ -184,6 +186,7 @@ const columns = computed(() => [
                 title: t('ReadsCount'),
                 dataIndex: 'readsCount1',
                 align: 'center',
+                width: 50,
                 sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1) ? -1 : 1,
                 customCell,
                 // customCell: (_, index, record) => {
@@ -201,6 +204,7 @@ const columns = computed(() => [
                 name: 'speciesName',
                 title: t('SpeciesName'),
                 dataIndex: 'speciesName',
+                width: 150,
                 // align: 'center',
                 // sorter: true,
                 customFilterDropdown: true,
@@ -213,6 +217,7 @@ const columns = computed(() => [
                 title: t('Proportion'),
                 dataIndex: 'proportion',
                 align: 'center',
+                width: 50,
                 sorter: (a, b) => Number(a.proportion.replace(/%/, '')) < Number(b.proportion.replace(/%/, '')) ? -1 : 1,
                 customCell
             },
@@ -221,6 +226,7 @@ const columns = computed(() => [
                 title: t('ReadsCount'),
                 dataIndex: 'readsCount2',
                 align: 'center',
+                width: 50,
                 sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2) ? -1 : 1,
                 customCell
             },
@@ -229,12 +235,13 @@ const columns = computed(() => [
                 title: t('TotalProportion'),
                 dataIndex: 'totalProportion',
                 align: 'center',
+                width: 50,
                 sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
                 customCell
             },
         ]
     },
-    {name: 'report', title: t('Report'), dataIndex: 'report', align: 'center', required: true},
+    {name: 'report', width: 100, title: t('Report'), dataIndex: 'report', align: 'center', required: true},
 ])
 
 onMounted(() => loadData())
