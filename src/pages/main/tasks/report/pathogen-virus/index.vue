@@ -59,7 +59,7 @@
         </a-table>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
-                <q-bar class="bg-primary text-white">{{ $t('MutationAnalysis') }}</q-bar>
+                <q-bar class="bg-primary text-white">{{ $t('Virus') }}</q-bar>
                 <q-card-section>
                     <div style="white-space:pre-wrap; line-height: 35px">{{ props.intro }}</div>
                 </q-card-section>
