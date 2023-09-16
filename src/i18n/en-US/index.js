@@ -543,6 +543,8 @@ export default {
     PatientNewFormSmoking: 'Smoking',
     PatientNewFormAlcoholDrinking: 'Alcohol Drinking ',
     PatientNewFormViralInfection: 'Viral Infection',
+    PatientNewFormViralResult: '病原培养鉴定结果',
+    PatientNewFormViralFocus: '重点关注病原',
     PatientNewFormOtherInformation: 'Other Information',
     PatientNewFormTreatmentHistory: 'Treatment History',
     PatientNewFormPrognosisInformation: 'Prognosis Information',

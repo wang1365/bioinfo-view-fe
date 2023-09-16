@@ -119,6 +119,16 @@
                                 map-options />
                         </div>
                     </div>
+                    <div class="row q-my-sm q-gutter-xs" v-if="form.viral_infection === '是'">
+                        <div class="col">
+                            <q-input :error="errors.viral_result.error" :error-message="errors.viral_result.message
+                                " v-model="form.viral_result" :label="$t('PatientNewFormViralResult')"></q-input>
+                        </div>
+                        <div class="col">
+                            <q-input :error="errors.viral_focus.error" :error-message="errors.viral_focus.message
+                                " v-model="form.viral_focus" :label="$t('PatientNewFormViralFocus')"></q-input>
+                        </div>
+                    </div>
                     <div class="text-h6 text-bold">{{ $t('PatientNewFormOtherInformation') }}</div>
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
@@ -204,6 +214,8 @@ const form = ref({
     smoking: '否',
     drinking: '否',
     viral_infection: '否',
+    viral_result: '',
+    viral_focus: '',
     prognosis: "",
     prognosis_time: "",
     recurrence_time: "",
@@ -283,6 +295,14 @@ const errors = ref({
         message: t('Required'),
         error: false,
     },
+    viral_result: {
+        message: t('Required'),
+        error: false,
+    },
+    viral_focus: {
+        message: t('Required'),
+        error: false,
+    },
     prognosis: {
         message: t('Required'),
         error: false,
@@ -338,6 +358,9 @@ const save = async () => {
         smoking: form.value.smoking,
         drinking: form.value.drinking,
         viral_infection: form.value.viral_infection,
+        viral_infection: form.value.viral_infection,
+        viral_result: form.value.viral_result,
+        viral_focus: form.value.viral_focus,
         prognosis: form.value.prognosis,
         prognosis_time: form.value.prognosis_time,
         recurrence_time: form.value.recurrence_time,

@@ -6,7 +6,9 @@
             <q-separator></q-separator>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormName') }}: {{ patient.name }}</div>
-                <div class="col q-pa-sm">{{ $t('PatientNewFormGender') }}: {{ patient.gender=='男'?$t('Male'):$t('Female')  }}</div>
+                <div class="col q-pa-sm">{{ $t('PatientNewFormGender') }}: {{ patient.gender == '男' ? $t('Male') :
+                    $t('Female') }}
+                </div>
                 <div class="col q-pa-sm">{{ $t('PatientInfoPageAge') }}: {{ patient.age }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormBirthday') }}: {{ patient.birthday }}</div>
             </div>
@@ -39,6 +41,14 @@
                 <div class="col q-pa-sm">{{ $t('PatientNewFormAlcoholDrinking') }}: {{ patient.drinking }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormViralInfection') }}: {{ patient.viral_infection }}</div>
             </div>
+            <div class="row q-my-sm q-gutter-xs" v-if="patient.viral_infection === '是'">
+                <div class="col q-pa-sm">
+                    {{ $t('PatientNewFormViralResult') }}: {{ patient.viral_result }}
+                </div>
+                <div class="col q-pa-sm">{{ $t('PatientNewFormViralFocus') }}: {{ patient.viral_focus }}
+                </div>
+
+            </div>
             <div class="text-subtitle1 text-bold">{{ $t('PatientNewFormOtherInformation') }}</div>
             <q-separator></q-separator>
             <div class="row q-my-sm">
@@ -61,14 +71,14 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>{{$t('SampleNewFormSamplingDate')}}</td>
-                            <td>{{$t('SampleNewFormSubmissionDate')}}</td>
-                            <td>{{$t('SampleNewFormSamplingSite')}}</td>
-                            <td>{{$t('SampleNewFormSampleType')}}</td>
-                            <td>{{$t('SampleNewFormTumorContent')}}</td>
-                            <td>{{$t('SampleNewFormTumorSample')}}</td>
-                            <td>{{$t('SampleNewFormSampleIdentificationNumber')}}</td>
-                            <td>{{$t('Operate')}}</td>
+                            <td>{{ $t('SampleNewFormSamplingDate') }}</td>
+                            <td>{{ $t('SampleNewFormSubmissionDate') }}</td>
+                            <td>{{ $t('SampleNewFormSamplingSite') }}</td>
+                            <td>{{ $t('SampleNewFormSampleType') }}</td>
+                            <td>{{ $t('SampleNewFormTumorContent') }}</td>
+                            <td>{{ $t('SampleNewFormTumorSample') }}</td>
+                            <td>{{ $t('SampleNewFormSampleIdentificationNumber') }}</td>
+                            <td>{{ $t('Operate') }}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -107,7 +117,7 @@
 import { useApi } from "src/api/apiBase";
 import { onMounted, ref } from "vue";
 
-const { apiGet,apiGetById } = useApi();
+const { apiGet, apiGetById } = useApi();
 
 const props = defineProps({
     id: {
@@ -136,7 +146,7 @@ const patient = ref({
     survival_time: "",
 });
 onMounted(() => {
-    apiGetById('patient',props.id,(res)=>{
+    apiGetById('patient', props.id, (res) => {
         patient.value = res.data.results[0];
     })
     // apiGet(`/patient/patients/${props.id}`, (res) => {
