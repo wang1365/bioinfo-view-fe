@@ -26,6 +26,36 @@
                     <q-btn flat size="sm" color="primary" label="Blast" />
                 </template>
             </template>
+            <template
+                #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
+            >
+                <div style="padding: 8px">
+                    <a-input
+                        ref="searchInput"
+                        :value="selectedKeys[0]"
+                        style="width: 250px; margin-bottom: 8px; display: block"
+                        @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                    />
+                    <div class="row justify-around">
+                        <a-button
+                            type="primary"
+                            size="small"
+                            style="width: 70px; margin-right: 28px"
+                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                        >
+                            <template #icon><SearchOutlined /></template>
+                            {{$t('Search')}}
+                        </a-button>
+                        <a-button size="small" style="width: 70px" @click="handleReset(clearFilters)">
+                            {{$t('Reset')}}
+                        </a-button>
+                    </div>
+                </div>
+            </template>
+            <template #customFilterIcon="{ filtered }">
+                <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
+            </template>
         </a-table>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
@@ -42,8 +72,9 @@
 </template>
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify'
-import { ref, onMounted, computed, toRef, watch } from 'vue'
+import {ref, onMounted, computed, toRef, watch, reactive} from 'vue'
 import { useRoute } from 'vue-router'
+import { SearchOutlined } from '@ant-design/icons-vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { useCustomCell } from 'src/utils/customCell'
@@ -116,7 +147,9 @@ const columns = computed(() => [
         dataIndex: 'virusName',
         align: 'center',
         // sorter: true,
-        onFilter: (value, record) => value.includes(record.virusName),
+        customFilterDropdown: true,
+        onFilter: (value, record) => record.virusName.includes(value),
+        // onFilter: (value, record) => value.includes(record.virusName),
         customCell
     },
     {
@@ -230,6 +263,23 @@ const reset = () => {
     emit('reset', null)
     selectedRows.value = []
 }
+
+const state = reactive({
+    searchText: '',
+    searchedColumn: '',
+});
+
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    state.searchText = selectedKeys[0]
+    state.searchedColumn = dataIndex
+};
+const handleReset = (clearFilters) => {
+    clearFilters({
+        confirm: true,
+    });
+    state.searchText = ''
+};
 </script>
 
 <style lang="scss" scoped></style>
