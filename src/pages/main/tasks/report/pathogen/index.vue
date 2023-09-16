@@ -354,7 +354,6 @@ const onSelectChange = (selectedRowKeys) => {
     }
 }
 const stickFilter = () => {
-    var results = []
     emit('stickDone', {tables: selectedRows.value})
 }
 const reset = () => {
@@ -362,20 +361,24 @@ const reset = () => {
     selectedRows.value = []
 }
 
+// 自定义列检索-属
 const state1 = reactive({
     searchText: '',
     searchedColumn: '',
 });
+// 自定义列检索-种
 const state2 = reactive({
     searchText: '',
     searchedColumn: '',
 });
+// 自定义列检索-检索执行
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     const state = dataIndex === 'categoryName' ? state1 : state2
     state.searchText = selectedKeys[0]
     state.searchedColumn = dataIndex
 };
+// 自定义列检索-重置
 const handleReset = (clearFilters, dataIndex) => {
     clearFilters({
         confirm: true,

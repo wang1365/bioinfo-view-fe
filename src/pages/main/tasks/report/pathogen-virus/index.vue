@@ -267,16 +267,18 @@ const reset = () => {
     selectedRows.value = []
 }
 
+// 自定义列检索数据-种
 const state = reactive({
     searchText: '',
     searchedColumn: '',
 });
-
+// 自定义列检索-检索执行
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     state.searchText = selectedKeys[0]
     state.searchedColumn = dataIndex
 };
+// 自定义列检索-检索重置
 const handleReset = (clearFilters) => {
     clearFilters({
         confirm: true,
