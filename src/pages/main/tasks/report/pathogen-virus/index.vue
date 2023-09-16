@@ -1,19 +1,12 @@
 <template>
-    <q-btn
-        icon="help_outline"
-        size="small"
-        outline
-        color="orange"
-        class="relative-position float-right q-mr-md"
-        @click="dlgVisible = !dlgVisible"
-        :label="$t('Intro')"
-    />
-    <div class="q-py-md">
+    <div class="q-py-sm align-right" style="text-align: right;">
+        <q-btn icon="help_outline" size="small" outline color="orange" class=" q-mr-md" @click="dlgVisible = !dlgVisible"
+            :label="$t('Intro')" />
         <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-            class="relative-position float-right q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
+            class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
         <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-            color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()"
-            :label="$t('ReportStickData')" />
+            color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
+
     </div>
     <div class="q-pt-sm">
         <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
@@ -26,29 +19,22 @@
                     <q-btn flat size="sm" color="primary" label="Blast" />
                 </template>
             </template>
-            <template
-                #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
-            >
+            <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
                 <div style="padding: 8px">
-                    <a-input
-                        ref="searchInput"
-                        :value="selectedKeys[0]"
+                    <a-input ref="searchInput" :value="selectedKeys[0]"
                         style="width: 250px; margin-bottom: 8px; display: block"
                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
-                    />
+                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
                     <div class="row justify-around">
-                        <a-button
-                            type="primary"
-                            size="small"
-                            style="width: 70px; margin-right: 28px"
-                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
-                        >
-                            <template #icon><SearchOutlined /></template>
-                            {{$t('Search')}}
+                        <a-button type="primary" size="small" style="width: 70px; margin-right: 28px"
+                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+                            <template #icon>
+                                <SearchOutlined />
+                            </template>
+                            {{ $t('Search') }}
                         </a-button>
                         <a-button size="small" style="width: 70px" @click="handleReset(clearFilters)">
-                            {{$t('Reset')}}
+                            {{ $t('Reset') }}
                         </a-button>
                     </div>
                 </div>
@@ -72,7 +58,7 @@
 </template>
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify'
-import {ref, onMounted, computed, toRef, watch, reactive} from 'vue'
+import { ref, onMounted, computed, toRef, watch, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { SearchOutlined } from '@ant-design/icons-vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'

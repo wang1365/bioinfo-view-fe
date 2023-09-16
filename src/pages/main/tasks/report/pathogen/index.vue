@@ -1,55 +1,40 @@
 <template>
-    <q-btn
-        icon="help_outline"
-        size="small"
-        outline
-        color="orange"
-        class="relative-position float-right q-mr-md"
-        @click="dlgVisible = !dlgVisible"
-        :label="$t('Intro')"
-    />
-    <div class="q-py-md">
-        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small"
-               color="primary"
-               class="relative-position float-right q-mr-md" :label="$t('ReportStickDone')" @click="reset()"/>
+    <div class="q-py-sm align-right" style="text-align: right;">
+        <q-btn icon="help_outline" size="small" outline color="orange" class=" q-mr-md" @click="dlgVisible = !dlgVisible"
+            :label="$t('Intro')" />
+        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
+            class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
         <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-               color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()"
-               :label="$t('ReportStickData')"/>
+            color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
+
     </div>
     <div class="q-pt-sm">
         <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
-                 size="middle">
+            size="middle">
             <template #bodyCell="{ record, column, }">
                 <template v-if="column.dataIndex === 'report'">
                     <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
-                           :download="record.fileName"/>
+                        :download="record.fileName" />
                     <span>|</span>
-                    <q-btn flat size="sm" color="primary" label="Blast"/>
+                    <q-btn flat size="sm" color="primary" label="Blast" />
                 </template>
             </template>
-            <template
-                #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }"
-            >
+            <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
                 <div style="padding: 8px">
-                    <a-input
-                        ref="searchInput"
-                        :value="selectedKeys[0]"
+                    <a-input ref="searchInput" :value="selectedKeys[0]"
                         style="width: 250px; margin-bottom: 8px; display: block"
                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
-                    />
+                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
                     <div class="row justify-around">
-                        <a-button
-                            type="primary"
-                            size="small"
-                            style="width: 70px; margin-right: 28px"
-                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
-                        >
-                            <template #icon><SearchOutlined /></template>
-                            {{$t('Search')}}
+                        <a-button type="primary" size="small" style="width: 70px; margin-right: 28px"
+                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+                            <template #icon>
+                                <SearchOutlined />
+                            </template>
+                            {{ $t('Search') }}
                         </a-button>
                         <a-button size="small" style="width: 70px" @click="handleReset(clearFilters, column.dataIndex)">
-                            {{$t('Reset')}}
+                            {{ $t('Reset') }}
                         </a-button>
                     </div>
                 </div>
@@ -72,22 +57,22 @@
     </div>
 </template>
 <script setup>
-import {errorMessage, infoMessage} from 'src/utils/notify'
-import {ref, onMounted, computed, toRef, watch, reactive} from 'vue'
+import { errorMessage, infoMessage } from 'src/utils/notify'
+import { ref, onMounted, computed, toRef, watch, reactive } from 'vue'
 import { SearchOutlined } from '@ant-design/icons-vue'
-import {useRoute} from 'vue-router'
-import {readTaskFile, readTaskMuFile} from 'src/api/task'
-import {getCsvHeader, getCsvData, getCsvDataAndSetLineNumber} from 'src/utils/csv'
-import {useCustomCell} from 'src/utils/customCell'
-import {useQuasar} from 'quasar'
-import {useI18n} from "vue-i18n"
-import {globalStore} from 'src/stores/global'
-import {storeToRefs} from 'pinia'
+import { useRoute } from 'vue-router'
+import { readTaskFile, readTaskMuFile } from 'src/api/task'
+import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
+import { useCustomCell } from 'src/utils/customCell'
+import { useQuasar } from 'quasar'
+import { useI18n } from "vue-i18n"
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 
 
 const store = globalStore()
-const {langCode} = storeToRefs(store)
-const {t} = useI18n()
+const { langCode } = storeToRefs(store)
+const { t } = useI18n()
 const $q = useQuasar()
 const route = useRoute()
 const dlgVisible = ref(false)
@@ -241,7 +226,7 @@ const columns = computed(() => [
             },
         ]
     },
-    {name: 'report', width: 100, title: t('Report'), dataIndex: 'report', align: 'center', required: true},
+    { name: 'report', width: 100, title: t('Report'), dataIndex: 'report', align: 'center', required: true },
 ])
 
 onMounted(() => loadData())
@@ -273,14 +258,14 @@ const dataFile = computed(() => {
 })
 
 const loadData = () => {
-    $q.loading.show({delay: 100})
+    $q.loading.show({ delay: 100 })
     console.log("stepData", stepData.value)
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
             'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
-        rows.value = getCsvDataAndSetLineNumber(res, {start: 2, fields})
+        rows.value = getCsvDataAndSetLineNumber(res, { start: 2, fields })
         // 文件下载路径
         rows.value.forEach(r => r.file = `igv${r.file}`)
         // 下载的文件名
@@ -293,7 +278,7 @@ const loadData = () => {
                     if (['categoryName', 'speciesName'].includes(c.dataIndex)) {
                         let options = [...new Set(rows.value.map(r => r[c.dataIndex]))]
                         options = options.map(opt => {
-                            return {text: opt, value: opt}
+                            return { text: opt, value: opt }
                         })
                         c.filters = options
                     }
@@ -325,16 +310,16 @@ const getCheckboxProps = (record) => {
 }
 
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
-        return {
-            selectedRowKeys: selectedRows,
-            onChange: onSelectChange,
-            columnWidth: 25,
-            getCheckboxProps: getCheckboxProps
-        }
+    if (!isDefineReport.value) {
+        return null
     }
+    return {
+        selectedRowKeys: selectedRows,
+        onChange: onSelectChange,
+        columnWidth: 25,
+        getCheckboxProps: getCheckboxProps
+    }
+}
 )
 
 const selectedRows = ref([])
@@ -354,7 +339,7 @@ const onSelectChange = (selectedRowKeys) => {
     }
 }
 const stickFilter = () => {
-    emit('stickDone', {tables: selectedRows.value})
+    emit('stickDone', { tables: selectedRows.value })
 }
 const reset = () => {
     emit('reset', null)
