@@ -1,4 +1,13 @@
 <template>
+    <q-btn
+        icon="help_outline"
+        size="small"
+        outline
+        color="orange"
+        class="relative-position float-right q-mr-md"
+        @click="dlgVisible = !dlgVisible"
+        :label="$t('Intro')"
+    />
     <div class="q-py-md">
         <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
             class="relative-position float-right q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
@@ -6,7 +15,7 @@
             color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()"
             :label="$t('ReportStickData')" />
     </div>
-    <div class="q-pt-lg">
+    <div class="q-pt-sm">
         <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
             size="middle">
             <template #bodyCell="{ column, record }">

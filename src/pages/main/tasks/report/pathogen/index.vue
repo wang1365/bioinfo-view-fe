@@ -1,4 +1,13 @@
 <template>
+    <q-btn
+        icon="help_outline"
+        size="small"
+        outline
+        color="orange"
+        class="relative-position float-right q-mr-md"
+        @click="dlgVisible = !dlgVisible"
+        :label="$t('Intro')"
+    />
     <div class="q-py-md">
         <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
             class="relative-position float-right q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
@@ -6,7 +15,7 @@
             color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()"
             :label="$t('ReportStickData')" />
     </div>
-    <div class="q-pt-lg">
+    <div class="q-pt-sm">
         <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
             size="middle">
             <template #bodyCell="{ record, column, }">
@@ -20,7 +29,7 @@
         </a-table>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
-                <q-bar class="bg-primary text-white">{{ $t('MutationAnalysis') }}</q-bar>
+                <q-bar class="bg-primary text-white">{{ introTitle }}</q-bar>
                 <q-card-section>
                     <div style="white-space:pre-wrap; line-height: 35px">{{ props.intro }}</div>
                 </q-card-section>
@@ -195,6 +204,17 @@ onMounted(() => loadData())
 
 // 国际化切换重新加载数据
 watch(langCode, () => loadData())
+
+const introTitle = computed(() => {
+    const i18nKey =  {
+        bacteria: 'Bacterial',
+        fungus: 'Fungal',
+        virus: `Virus`,
+        parasite: `Parasite`,
+        specificPathogen: `SpecificPathogen`,
+    }[props.category]
+    return t(i18nKey)
+})
 
 // 不同病原体的数据文件配置
 const dataFile = computed(() => {

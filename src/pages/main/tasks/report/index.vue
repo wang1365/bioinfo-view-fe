@@ -62,7 +62,7 @@
                     <CommonModuleVue :viewConfig="commonTab" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="bacteria" v-if="tabValid('bacteria')">
-                    <Pathogen category="bacteria" :viewConfig="module.bacterial" :intro="intros['bacterial']"
+                    <Pathogen category="bacteria" :viewConfig="module.bacterial" :intro="intros['bacteria']"
                         :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="fungus" v-if="tabValid('fungus')">
