@@ -717,11 +717,11 @@ export default {
     Parasite: '寄生虫',
     SpecificPathogen: '特殊病原体',
 
-    BacterialDescription: '细菌描述',
-    FungalDescription: '真菌描述',
-    VirusDescription: '病毒描述',
-    ParasiteDescription: '寄生虫描述',
-    SpecificPathogenDescription: '特殊病原体描述',
+    BacterialDescription: '细菌',
+    FungalDescription: '真菌',
+    VirusDescription: '病毒',
+    ParasiteDescription: '寄生虫',
+    SpecificPathogenDescription: '特殊病原体',
 
     Shu: '属',
     Zhong: '种',

@@ -713,11 +713,11 @@ export default {
     Parasite: 'Parasite',
     SpecificPathogen: 'Specific Pathogen',
 
-    BacterialDescription: 'Bacterial Description',
-    FungalDescription: 'Fungal Description',
-    VirusDescription: 'Virus Description',
-    ParasiteDescription: 'Parasite Description',
-    SpecificPathogenDescription: 'Specific Pathogen Description',
+    BacterialDescription: 'Bacterial',
+    FungalDescription: 'Fungal',
+    VirusDescription: 'Virus',
+    ParasiteDescription: 'Parasite',
+    SpecificPathogenDescription: 'Specific Pathogen',
 
     Shu: 'Category',
     Zhong: 'Specifies',
