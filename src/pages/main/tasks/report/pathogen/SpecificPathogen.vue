@@ -1,11 +1,11 @@
 <template>
     <div class="q-py-sm align-right" style="text-align: right;">
         <q-btn icon="help_outline" size="small" outline color="orange" class=" q-mr-md" @click="dlgVisible = !dlgVisible"
-               :label="$t('Intro')" />
+            :label="$t('Intro')" />
         <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-               class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
+            class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
         <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-               color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
+            color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
     </div>
     <div class="q-pt-sm">
         <q-tabs v-model="tab" align="left" active-color="primary" dense>
@@ -14,7 +14,7 @@
         </q-tabs>
         <q-tab-panels v-model="tab">
             <q-tab-panel v-for="category in categories" :key="category.code" :name="category.code">
-                <PathogenTable :data="category" :view-config="viewConfig"/>
+                <PathogenTable :data="category" :view-config="viewConfig" />
             </q-tab-panel>
         </q-tab-panels>
 
@@ -32,11 +32,11 @@
     </div>
 </template>
 <script setup>
-import {computed, ref, toRef} from 'vue'
-import {useRoute} from 'vue-router'
-import {useI18n} from "vue-i18n"
-import {globalStore} from 'src/stores/global'
-import {storeToRefs} from 'pinia'
+import { computed, ref, toRef } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from "vue-i18n"
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 import PathogenTable from './PathogenTable.vue'
 
 
@@ -91,11 +91,11 @@ const categories = computed(() => {
             code: 'mycobacterium',
             title: t('Mycobacterium'),
             file: `SpecificPathogen/SpecificPathogen-mycobacterium_${suffix}.txt`
-        },{
+        }, {
             code: 'nomycobacterium',
             title: t('Nomycobacterium'),
             file: `SpecificPathogen/SpecificPathogen-nomycobacterium_${suffix}.txt`
-        },{
+        }, {
             code: 'mycoplasma',
             title: t('Mycoplasma'),
             file: `SpecificPathogen/SpecificPathogen-mycoplasma_${suffix}.txt`
