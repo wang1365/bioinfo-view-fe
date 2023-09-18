@@ -1,63 +1,62 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
+    <q-page class="q-px-sm q-pt-sm" style="overflow-x: hidden">
         <PageTitle :title="$t('TaskPageListTitle')" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div
-                style="height: 110px;display: flex; padding-bottom: 15px; padding-top: 15px;justify-content: space-around;justify-items: center;align-items: center; ">
+                style="height: 80px;display: flex; padding-bottom: 5px; padding-top: 5px;justify-content: space-around;justify-items: center;align-items: center; ">
                 <q-btn color="white" @click="clickCard(options[0].value)">
                     <div class="text-black" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ total_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">{{ total_task_count }}</div>
                         <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusAll') }}</div>
                     </div>
                 </q-btn>
 
                 <q-btn color="primary" @click="clickCard(options[1].value)">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-white text-h5 text-center text-bold">{{ taskSummary.running_task_count }}</div>
+                        <div class="text-white text-h6 text-center text-bold">{{ taskSummary.running_task_count }}</div>
                         <div class="text-white text-h6 text-center text-bold">{{ $t('TaskPageListStatusRun') }}</div>
                     </div>
                 </q-btn>
                 <q-btn color="negative" @click="clickCard(options[3].value)">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ taskSummary.failured_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">{{ taskSummary.failured_task_count }}</div>
                         <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusFail') }}</div>
                     </div>
                 </q-btn>
                 <q-btn color="secondary" @click="clickCard(options[2].value)">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ taskSummary.pending_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">{{ taskSummary.pending_task_count }}</div>
                         <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusQueue') }}</div>
                     </div>
                 </q-btn>
                 <q-btn color="positive" @click="clickCard(options[4].value)">
                     <div class="text-white" style="width: 7vw">
-                        <div class="text-h5 text-center text-bold">{{ taskSummary.finished_task_count }}</div>
+                        <div class="text-h6 text-center text-bold">{{ taskSummary.finished_task_count }}</div>
                         <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusFinish') }}</div>
                     </div>
                 </q-btn>
             </div>
         </div>
-        <div class="row">
-            <div class="row q-gutter-sm">
-                <q-select style="width:200px" v-model="status" :options="options" stack-label emit-value map-options
-                    clearable filled @clear="clearSelect()" dense @update:model-value="refreshPage()"></q-select>
+        <div class="row q-gutter-sm q-py-xs">
+            <q-select style="width:200px" v-model="status" :options="options" stack-label emit-value map-options
+                clearable filled @clear="clearSelect()" dense @update:model-value="refreshPage()" />
 
-                <q-input style="width:150px" filled dense clearable v-model="patient"
-                    :label="`${$t('Patient')} ${$t('Name')}`" />
-                <q-input style="width:150px" filled dense clearable v-model="libraryNumber"
-                    :label="$t('DataListTableColumnLibraryNumber')" />
-                <q-input style="width:300px" readonly filled dense @click="showProjectSelect = true"
-                    :model-value="$t('Project') + ': ' + projectName">
-                    <template v-slot:prepend>
-                        <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
-                    </template>
-                </q-input>
-                <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
-                <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
-            </div>
+            <q-input style="width:150px" filled dense clearable v-model="patient"
+                :label="`${$t('Patient')} ${$t('Name')}`" />
+            <q-input style="width:150px" filled dense clearable v-model="libraryNumber"
+                :label="$t('DataListTableColumnLibraryNumber')" />
+            <q-input style="width:300px" readonly filled dense @click="showProjectSelect = true"
+                :model-value="$t('Project') + ': ' + projectName">
+                <template v-slot:prepend>
+                    <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
+                </template>
+            </q-input>
+            <q-btn color="primary" size="sm" :label="$t('Search')" icon="search" @click="refreshPage()" />
+            <q-btn color="primary" size="sm" :label="$t('Reset')" icon="clear" @click="reset()" />
         </div>
         <div>
             <q-table :rows="rows" :columns="columns" row-key="id" ref="tableRef" v-model:pagination="pagination"
+                     style="max-height: 600px"
                 @request="onRequest" :rows-per-page-options="[5, 15, 35, 50]" class="my-sticky-column-table">
                 <template v-slot:body-cell-project="props">
                     <q-td :props="props" class="q-gutter-xs">

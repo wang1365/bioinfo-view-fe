@@ -1,5 +1,5 @@
 <template>
-    <p class="text-h5">{{ props.title }}</p>
+    <div class="text-h5 q-py-xs">{{ props.title }}</div>
     <q-separator />
 </template>
 
