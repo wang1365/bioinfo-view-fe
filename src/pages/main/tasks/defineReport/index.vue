@@ -6,181 +6,73 @@
             <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <q-stepper v-if="viewConfigLoaded" v-model="step" ref="stepper" header-nav color="primary" animated>
-            <q-step
-                v-if="tabValid('mutation')"
-                :done="isStepDone('mutation')"
-                name="mutation"
-                :title="$t('MutationAnalysis')"
-                icon="candlestick_chart"
-            >
-                <MutaionVue
-                    :viewConfig="viewConfig.mutation"
-                    :intro="intros['mutation']"
-                    :samples="samples"
-                    :task="taskDetail"
-                    :stepData="stepData.mutation"
-                    @stickDone="stickDone('mutation', $event, 'fusion')"
-                    @reset="stickDone('mutation', null, 'create')"
-                />
+            <q-step v-if="tabValid('mutation')" :done="isStepDone('mutation')" name="mutation"
+                :title="$t('MutationAnalysis')" icon="candlestick_chart">
+                <MutaionVue :viewConfig="viewConfig.mutation" :intro="intros['mutation']" :samples="samples"
+                    :task="taskDetail" :stepData="stepData.mutation" @stickDone="stickDone('mutation', $event, 'fusion')"
+                    @reset="stickDone('mutation', null, 'create')" />
             </q-step>
 
-            <q-step
-                v-if="tabValid('fusion')"
-                :done="isStepDone('fusion')"
-                name="fusion"
-                :title="$t('FusionAnalysis')"
-                icon="format_strikethrough"
-            >
-                <FusionVue
-                    :viewConfig="viewConfig.fusion"
-                    :intro="intros['fusion']"
-                    :samples="samples"
-                    :stepData="stepData.fusion"
-                    :task="taskDetail"
+            <q-step v-if="tabValid('fusion')" :done="isStepDone('fusion')" name="fusion" :title="$t('FusionAnalysis')"
+                icon="format_strikethrough">
+                <FusionVue :viewConfig="viewConfig.fusion" :intro="intros['fusion']" :samples="samples"
+                    :stepData="stepData.fusion" :task="taskDetail"
                     @stickDone="stickDone('fusion', $event, 'copy_number_variation')"
-                    @reset="stickDone('fusion', null, 'create')"
-                />
+                    @reset="stickDone('fusion', null, 'create')" />
             </q-step>
 
-            <q-step
-                v-if="tabValid('copy_number_variation')"
-                :done="isStepDone('copy_number_variation')"
-                name="copy_number_variation"
-                :title="$t('CopyNumberVariationAnalysis')"
-                icon="polyline"
-            >
-                <CopyNumberVariationVue
-                    :viewConfig="viewConfig.copy_number_variation"
-                    :intro="intros['copy_number_variation']"
-                    :task="taskDetail"
-                    :samples="samples"
+            <q-step v-if="tabValid('copy_number_variation')" :done="isStepDone('copy_number_variation')"
+                name="copy_number_variation" :title="$t('CopyNumberVariationAnalysis')" icon="polyline">
+                <CopyNumberVariationVue :viewConfig="viewConfig.copy_number_variation"
+                    :intro="intros['copy_number_variation']" :task="taskDetail" :samples="samples"
                     :stepData="stepData.copy_number_variation"
                     @stickDone="stickDone('copy_number_variation', $event, 'tumor_mutation_load')"
-                    @reset="stickDone('copy_number_variation', null, 'create')"
-                />
+                    @reset="stickDone('copy_number_variation', null, 'create')" />
             </q-step>
 
-            <q-step
-                v-if="tabValid('tumor_mutation_load')"
-                :done="isStepDone('tumor_mutation_load')"
-                name="tumor_mutation_load"
-                :title="$t('TumorMutationLoadAnalysis')"
-                icon="bubble_chart"
-            >
-                <TumorMutationLoadVue
-                    :viewConfig="viewConfig.tumor_mutation_load"
-                    :intro="intros['tumor_mutation_load']"
-                    :task="taskDetail"
-                    :samples="samples"
-                    :stepData="stepData.tumor_mutation_load"
+            <q-step v-if="tabValid('tumor_mutation_load')" :done="isStepDone('tumor_mutation_load')"
+                name="tumor_mutation_load" :title="$t('TumorMutationLoadAnalysis')" icon="bubble_chart">
+                <TumorMutationLoadVue :viewConfig="viewConfig.tumor_mutation_load" :intro="intros['tumor_mutation_load']"
+                    :task="taskDetail" :samples="samples" :stepData="stepData.tumor_mutation_load"
                     @stickDone="stickDone('tumor_mutation_load', $event, 'create')"
-                    @reset="stickDone('tumor_mutation_load', null, 'create')"
-                />
+                    @reset="stickDone('tumor_mutation_load', null, 'create')" />
             </q-step>
-            <q-step
-                v-if="tabValid('bacteria')"
-                :done="isStepDone('bacteria')"
-                name="bacteria"
-                :title="$t('Bacterial')"
-                icon="bubble_chart"
-            >
-                <Pathogen
-                    :viewConfig="viewConfig.bacteria"
-                    :intro="intros['bacteria']"
-                    :task="taskDetail"
-                    :samples="samples"
-                    :stepData="stepData.bacteria"
-                    category="bacteria"
-                    @stickDone="stickDone('bacteria', $event, 'create')"
-                    @reset="stickDone('bacteria', null, 'create')"
-                />
+            <q-step v-if="tabValid('bacteria')" :done="isStepDone('bacteria')" name="bacteria" :title="$t('Bacterial')"
+                icon="bubble_chart">
+                <Pathogen :viewConfig="viewConfig.bacteria" :intro="intros['bacteria']" :task="taskDetail"
+                    :samples="samples" :stepData="stepData.bacteria" category="bacteria"
+                    @stickDone="stickDone('bacteria', $event, 'create')" @reset="stickDone('bacteria', null, 'create')" />
             </q-step>
-            <q-step
-                v-if="tabValid('fungus')"
-                :done="isStepDone('fungus')"
-                name="fungus"
-                :title="$t('Fungal')"
-                icon="bubble_chart"
-            >
-                <Pathogen
-                    :viewConfig="viewConfig.fungus"
-                    :intro="intros['fungus']"
-                    :task="taskDetail"
-                    :samples="samples"
-                    :stepData="stepData.fungus"
-                    category="fungus"
-                    @stickDone="stickDone('fungus', $event, 'create')"
-                    @reset="stickDone('fungus', null, 'create')"
-                />
+            <q-step v-if="tabValid('fungus')" :done="isStepDone('fungus')" name="fungus" :title="$t('Fungal')"
+                icon="bubble_chart">
+                <Pathogen :viewConfig="viewConfig.fungus" :intro="intros['fungus']" :task="taskDetail" :samples="samples"
+                    :stepData="stepData.fungus" category="fungus" @stickDone="stickDone('fungus', $event, 'create')"
+                    @reset="stickDone('fungus', null, 'create')" />
             </q-step>
-            <q-step
-                v-if="tabValid('virus')"
-                :done="isStepDone('virus')"
-                name="virus"
-                :title="$t('Virus')"
-                icon="bubble_chart"
-            >
-                <PathogenVirus
-                    :viewConfig="viewConfig.virus"
-                    :intro="intros['virus']"
-                    :task="taskDetail"
-                    :samples="samples"
-                    :stepData="stepData.virus"
-                    @stickDone="stickDone('virus', $event, 'create')"
-                    @reset="stickDone('virus', null, 'create')"
-                />
+            <q-step v-if="tabValid('virus')" :done="isStepDone('virus')" name="virus" :title="$t('Virus')"
+                icon="bubble_chart">
+                <PathogenVirus :viewConfig="viewConfig.virus" :intro="intros['virus']" :task="taskDetail" :samples="samples"
+                    :stepData="stepData.virus" @stickDone="stickDone('virus', $event, 'create')"
+                    @reset="stickDone('virus', null, 'create')" />
             </q-step>
-            <q-step
-                v-if="tabValid('parasite')"
-                :done="isStepDone('parasite')"
-                name="parasite"
-                :title="$t('Parasite')"
-                icon="bubble_chart"
-            >
-                <Pathogen
-                    :viewConfig="viewConfig.parasite"
-                    :intro="intros['parasite']"
-                    :task="taskDetail"
-                    :samples="samples"
-                    :stepData="stepData.parasite"
-                    category="parasite"
-                    @stickDone="stickDone('parasite', $event, 'create')"
-                    @reset="stickDone('parasite', null, 'create')"
-                />
+            <q-step v-if="tabValid('parasite')" :done="isStepDone('parasite')" name="parasite" :title="$t('Parasite')"
+                icon="bubble_chart">
+                <Pathogen :viewConfig="viewConfig.parasite" :intro="intros['parasite']" :task="taskDetail"
+                    :samples="samples" :stepData="stepData.parasite" category="parasite"
+                    @stickDone="stickDone('parasite', $event, 'create')" @reset="stickDone('parasite', null, 'create')" />
             </q-step>
-            <q-step
-                v-if="tabValid('specificPathogen')"
-                :done="isStepDone('specificPathogen')"
-                name="specificPathogen"
-                :title="$t('SpecificPathogen')"
-                icon="bubble_chart"
-            >
-                <Pathogen
-                    :viewConfig="viewConfig.specificPathogen"
-                    :intro="intros['specificPathogen']"
-                    :task="taskDetail"
-                    :samples="samples"
-                    :stepData="stepData.specificPathogen"
-                    category="specificPathogen"
+            <q-step v-if="tabValid('specificPathogen')" :done="isStepDone('specificPathogen')" name="specificPathogen"
+                :title="$t('SpecificPathogen')" icon="bubble_chart">
+                <SpecificPathogen :viewConfig="viewConfig.specificPathogen" :intro="intros['specificPathogen']"
+                    :task="taskDetail" :samples="samples" :stepData="stepData.specificPathogen" category="specificPathogen"
                     @stickDone="stickDone('specificPathogen', $event, 'create')"
-                    @reset="stickDone('specificPathogen', null, 'create')"
-                />
+                    @reset="stickDone('specificPathogen', null, 'create')" />
             </q-step>
-            <q-step
-                v-for="commonTab in commonTabs"
-                :key="commonTab.title"
-                :title="commonTab.title"
-                :name="commonTab.title"
-                :done="isStepDone(commonTab.title)"
-            >
-                <CommonModuleVue
-                    v-if="commonTab.title"
-                    :viewConfig="getCommonConfig(commonTab.title)"
-                    :task="taskDetail"
-                    :stepData="getCommonStepData(commonTab.title)"
-                    @stickDone="stickDone(commonTab.title, $event, 'create')"
-                    @reset="stickDone(commonTab.title, null, 'create')"
-                />
+            <q-step v-for="commonTab in commonTabs" :key="commonTab.title" :title="commonTab.title" :name="commonTab.title"
+                :done="isStepDone(commonTab.title)">
+                <CommonModuleVue v-if="commonTab.title" :viewConfig="getCommonConfig(commonTab.title)" :task="taskDetail"
+                    :stepData="getCommonStepData(commonTab.title)" @stickDone="stickDone(commonTab.title, $event, 'create')"
+                    @reset="stickDone(commonTab.title, null, 'create')" />
             </q-step>
 
             <q-step name="create" :title="$t('ReportDefineEnsureTab')" icon="receipt_long">
@@ -191,113 +83,75 @@
                             <span class="text-bold">{{ $t('MutationAnalysis') }}</span>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutGermline">
                                 {{ $t('GermlineMutationAnalysis') }}:
+                                <span v-if="stepData.mutation?.germline.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
-                                    v-if="stepData.mutation?.germline.selected"
-                                    >{{ $t('ReportDefineSelected') }}</span
-                                >
+                                    v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered">{{
+                                        $t('ReportDefineSearched') }}</span>
                                 <span
-                                    v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span
-                                >
-                                <span
-                                    v-if="!stepData.mutation?.germline.selected && !stepData.mutation?.germline.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span
-                                >
+                                    v-if="!stepData.mutation?.germline.selected && !stepData.mutation?.germline.filtered">{{
+                                        $t('ReportDefineNoData') }}</span>
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutSomatic">
                                 {{ $t('SomaticMutationAnalysis') }}:
                                 <span v-if="stepData.mutation?.somatic.selected">{{ $t('ReportDefineSelected') }}</span>
-                                <span
-                                    v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span
-                                >
-                                <span
-                                    v-if="!stepData.mutation?.somatic.selected && !stepData.mutation?.somatic.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span
-                                >
+                                <span v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered">{{
+                                    $t('ReportDefineSearched') }}</span>
+                                <span v-if="!stepData.mutation?.somatic.selected && !stepData.mutation?.somatic.filtered">{{
+                                    $t('ReportDefineNoData') }}</span>
                             </q-chip>
                         </div>
                     </div>
                     <div v-if="isStepDone('fusion')">
                         <div>
                             <span class="text-bold">{{ $t('FusionAnalysis') }}</span>
-                            <q-chip
-                                color="primary"
-                                text-color="white"
-                                v-if="viewConfig.fusion.showFusionGermline && samples.length <= 1"
-                            >
+                            <q-chip color="primary" text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length <= 1">
                                 {{ $t('SingleSampleFusionAnalysis') }}:
                                 <span v-if="stepData.fusion?.single.qt.selected">{{ $t('ReportDefineSelected') }}</span>
-                                <span
-                                    v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span
-                                >
-                                <span
-                                    v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span
-                                >
+                                <span v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered">{{
+                                    $t('ReportDefineSearched') }}</span>
+                                <span v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered">{{
+                                    $t('ReportDefineNoData') }}</span>
                             </q-chip>
-                            <q-chip
-                                color="primary"
-                                text-color="white"
-                                v-if="viewConfig.fusion.showFusionGermline && samples.length > 1"
-                            >
+                            <q-chip color="primary" text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length > 1">
                                 {{ $t('TumorSingleSampleFusion') }}:
                                 <span v-if="stepData.fusion?.single.qt.selected">{{ $t('ReportDefineSelected') }}</span>
-                                <span
-                                    v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span
-                                >
-                                <span
-                                    v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span
-                                >
+                                <span v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered">{{
+                                    $t('ReportDefineSearched') }}</span>
+                                <span v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered">{{
+                                    $t('ReportDefineNoData') }}</span>
                             </q-chip>
-                            <q-chip
-                                color="primary"
-                                text-color="white"
-                                v-if="viewConfig.fusion.showFusionGermline && samples.length > 1"
-                            >
+                            <q-chip color="primary" text-color="white"
+                                v-if="viewConfig.fusion.showFusionGermline && samples.length > 1">
                                 {{ $t('ControlSingleSampleFusion') }}:
                                 <span v-if="stepData.fusion?.single.qn.selected">{{ $t('ReportDefineSelected') }}</span>
-                                <span
-                                    v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span
-                                >
-                                <span
-                                    v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span
-                                >
+                                <span v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered">{{
+                                    $t('ReportDefineSearched') }}</span>
+                                <span v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered">{{
+                                    $t('ReportDefineNoData') }}</span>
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionSomatic">
                                 {{ $t('SomaticCellFusionAnalysis') }}:
                                 <span v-if="stepData.fusion?.normal?.selected">{{ $t('ReportDefineSelected') }}</span>
-                                <span
-                                    v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span
-                                >
-                                <span
-                                    v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span
-                                >
+                                <span v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered">{{
+                                    $t('ReportDefineSearched') }}</span>
+                                <span v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered">{{
+                                    $t('ReportDefineNoData') }}</span>
                             </q-chip>
                         </div>
                     </div>
                     <div v-if="isStepDone('copy_number_variation')">
                         <span class="text-bold">{{ $t('CopyNumberVariationAnalysis') }}</span>
                         <q-chip color="primary" text-color="white">
+                            <span v-if="stepData.copy_number_variation?.table.selected">{{ $t('ReportDefineSelected')
+                            }}</span>
                             <span
-                                v-if="stepData.copy_number_variation?.table.selected"
-                                >{{ $t('ReportDefineSelected') }}</span
-                            >
+                                v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered">{{
+                                    $t('ReportDefineSearched') }}</span>
                             <span
-                                v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered"
-                                >{{ $t('ReportDefineSearched') }}</span
-                            >
-                            <span
-                                v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered"
-                                >{{ $t('ReportDefineNoData') }}</span
-                            >
+                                v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered">{{
+                                    $t('ReportDefineNoData') }}</span>
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('bacteria')">
@@ -334,20 +188,13 @@
 
                     <div v-for="commonTab in commonTabs" :key="commonTab.title">
                         <div v-if="isStepDone(commonTab.title)">
-                            <span class="text-bold">{{ commonTab.title }}</span
-                            >:&nbsp;&nbsp;
+                            <span class="text-bold">{{ commonTab.title }}</span>:&nbsp;&nbsp;
                             <span v-for="table in getCommonStepData(commonTab.title).tables" :key="table.name">
                                 {{ table.name }}
                                 <q-chip color="primary" text-color="white">
                                     <span v-if="table.selected">{{ $t('ReportDefineSelected') }}</span>
-                                    <span
-                                        v-if="!table.selected && table.filtered"
-                                        >{{ $t('ReportDefineSearched') }}</span
-                                    >
-                                    <span
-                                        v-if="!table.selected && !table.filtered"
-                                        >{{ $t('ReportDefineNoData') }}</span
-                                    >
+                                    <span v-if="!table.selected && table.filtered">{{ $t('ReportDefineSearched') }}</span>
+                                    <span v-if="!table.selected && !table.filtered">{{ $t('ReportDefineNoData') }}</span>
                                 </q-chip>
                             </span>
                         </div>
@@ -388,6 +235,7 @@ import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'
 import Pathogen from '../report/pathogen/index'
+import SpecificPathogen from '../report/pathogen/SpecificPathogen.vue'
 import PathogenVirus from '../report/pathogen-virus/index'
 const { t } = useI18n();
 const store = globalStore()
@@ -412,11 +260,11 @@ const viewConfig = ref({
     tumor_mutation_load: { showTMB: true, showStick: true, stickDone: false },
     fusion: { showFusionGermline: true, showFusionSomatic: true, showStick: true, stickDone: false },
     qc: { showQCsummary: true, showQCdepth: true, showStick: true, stickDone: false },
-    bacteria: {  showStick: true, stickDone: false },
-    fungus: {  showStick: true, stickDone: false },
+    bacteria: { showStick: true, stickDone: false },
+    fungus: { showStick: true, stickDone: false },
     virus: { showStick: true, stickDone: false },
-    parasite: {  showStick: true, stickDone: false },
-    specificPathogen: {  showStick: true, stickDone: false },
+    parasite: { showStick: true, stickDone: false },
+    specificPathogen: { showStick: true, stickDone: false },
 })
 const commonTabs = ref([])
 
@@ -449,11 +297,11 @@ const tabMap = {
     fusion: '融合分析',
     copy_number_variation: '拷贝数变异分析',
     tumor_mutation_load: '肿瘤突变负荷分析',
-    bacteria:"细菌",
-    fungus:"真菌",
-    virus:"病毒",
-    parasite:"寄生虫",
-    specificPathogen:"特殊病原体",
+    bacteria: "细菌",
+    fungus: "真菌",
+    virus: "病毒",
+    parasite: "寄生虫",
+    specificPathogen: "特殊病原体",
 }
 const createReport = () => {
     console.log(stepData.value)
@@ -462,11 +310,11 @@ const createReport = () => {
         融合分析: 'FusionAnalysis',
         拷贝数变异分析: 'CopyNumberVariationAnalysis',
         肿瘤突变负荷分析: 'TumorMutationLoadAnalysis',
-        细菌:"Bacterial",
-        真菌:"Fungal",
-        病毒:"Virus",
-        寄生虫:"Parasite",
-        特殊病原体:"SpecificPathogen",
+        细菌: "Bacterial",
+        真菌: "Fungal",
+        病毒: "Virus",
+        寄生虫: "Parasite",
+        特殊病原体: "SpecificPathogen",
     }
 
     for (let key in tabMap) {
@@ -559,15 +407,15 @@ const loadIntros = () => {
     readTaskFile(route.params.id, `result_${suffix}.json`).then((res) => {
         const raw = JSON.parse(res)
         const result = {}
-        let steps=[]
+        let steps = []
         for (let k in raw) {
             result[dict[k]] = raw[k]
             stepData[dict[k]] = ''
             steps.push(dict[k])
         }
         intros.value = result
-        console.log("intros",intros.value)
-        step.value=steps[0]
+        console.log("intros", intros.value)
+        step.value = steps[0]
     })
 }
 watch(langCode, lc => {
@@ -625,7 +473,7 @@ const loadViewConfig = () => {
             viewConfig.value = config
             viewConfigLoaded.value = true
         }
-        console.log('viewConfig',viewConfig.value)
+        console.log('viewConfig', viewConfig.value)
     })
 }
 const getCommonConfig = (title) => {
