@@ -6,11 +6,10 @@
             class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
         <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
             color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
-
     </div>
     <div class="q-pt-sm">
         <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
-            size="middle">
+            size="middle" @change="tableChange">
             <template #bodyCell="{ record, column, }">
                 <template v-if="column.dataIndex === 'report'">
                     <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
@@ -39,7 +38,8 @@
                     </div>
                 </div>
             </template>
-            <template #customFilterIcon="{ filtered }">
+            <template #customFilterIcon="{ filtered }"
+                v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
                 <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
             </template>
         </a-table>
@@ -259,7 +259,6 @@ const dataFile = computed(() => {
 
 const loadData = () => {
     $q.loading.show({ delay: 100 })
-    console.log("stepData", stepData.value)
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
@@ -285,10 +284,11 @@ const loadData = () => {
                 })
             }
         })
+        console.log(rows.value.length)
         console.log(rows)
         if (stepData.value) {
             for (const row of rows.value) {
-                for (const item of stepData.value.tables) {
+                for (const item of stepData.value.table.selectedRows) {
                     if (item === row.lineNumber) {
                         selectedRows.value.push(item)
                         break
@@ -339,7 +339,14 @@ const onSelectChange = (selectedRowKeys) => {
     }
 }
 const stickFilter = () => {
-    emit('stickDone', { tables: selectedRows.value })
+    emit('stickDone', {
+        table: {
+            searchParams: tableSearchParams.value,
+            selectedRows: selectedRows.value,
+            filtered: rows.value.length != filteredRows.value.length,
+            selected: selectedRows.value.length > 0,
+        }
+    })
 }
 const reset = () => {
     emit('reset', null)
@@ -358,10 +365,14 @@ const state2 = reactive({
 });
 // 自定义列检索-检索执行
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    console.log(selectedKeys)
+    console.log(confirm,)
+    console.log(dataIndex)
     confirm();
     const state = dataIndex === 'categoryName' ? state1 : state2
     state.searchText = selectedKeys[0]
     state.searchedColumn = dataIndex
+    console.log(rows.value.length)
 };
 // 自定义列检索-重置
 const handleReset = (clearFilters, dataIndex) => {
@@ -371,6 +382,19 @@ const handleReset = (clearFilters, dataIndex) => {
     const state = dataIndex === 'categoryName' ? state1 : state2
     state.searchText = ''
 };
+const tableSearchParams = ref({
+    categoryName: "",
+    speciesName: ""
+})
+const filteredRows = ref([])
+const tableChange = (page, filters, sorter, currentDataSource) => {
+    tableSearchParams.value = filters
+    filteredRows.value = currentDataSource.currentDataSource
+    console.log(page)
+    console.log(filters)
+    console.log(sorter)
+    console.log(currentDataSource)
+}
 </script>
 
 <style lang="scss" scoped></style>

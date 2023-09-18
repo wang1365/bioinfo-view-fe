@@ -6,11 +6,10 @@
             class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
         <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
             color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
-
     </div>
     <div class="q-pt-sm">
         <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
-            size="middle">
+            size="middle" @change="tableChange">
             <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'report'">
                     <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
@@ -39,7 +38,8 @@
                     </div>
                 </div>
             </template>
-            <template #customFilterIcon="{ filtered }">
+            <template #customFilterIcon="{ filtered }"
+                v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
                 <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
             </template>
         </a-table>
@@ -195,7 +195,7 @@ const loadData = () => {
 
 
             for (const row of rows.value) {
-                for (const item of stepData.value.tables) {
+                for (const item of stepData.value.table.selectedRows) {
                     if (item === row.lineNumber) {
                         selectedRows.value.push(item)
                         break
@@ -246,7 +246,14 @@ const onSelectChange = (selectedRowKeys) => {
 
 const stickFilter = () => {
     var results = []
-    emit('stickDone', { tables: selectedRows.value })
+    emit('stickDone', {
+        table: {
+            searchParams: tableSearchParams.value,
+            selectedRows: selectedRows.value,
+            filtered: rows.value.length != filteredRows.value.length,
+            selected: selectedRows.value.length > 0,
+        }
+    })
 }
 const reset = () => {
     emit('reset', null)
@@ -271,6 +278,20 @@ const handleReset = (clearFilters) => {
     });
     state.searchText = ''
 };
+
+const tableSearchParams = ref({
+    categoryName: "",
+    speciesName: ""
+})
+const filteredRows = ref([])
+const tableChange = (page, filters, sorter, currentDataSource) => {
+    tableSearchParams.value = filters
+    filteredRows.value = currentDataSource.currentDataSource
+    console.log(page)
+    console.log(filters)
+    console.log(sorter)
+    console.log(currentDataSource)
+}
 </script>
 
 <style lang="scss" scoped></style>

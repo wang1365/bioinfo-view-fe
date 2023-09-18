@@ -6,7 +6,9 @@
             <q-separator></q-separator>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormName') }}: {{ patient.name }}</div>
-                <div class="col q-pa-sm">{{ $t('PatientNewFormGender') }}: {{ patient.gender == '男' ? $t('Male') :
+                <div class="col q-pa-sm">
+                    {{ $t('PatientNewFormGender') }}:
+                    {{ patient.gender == '男' ? $t('Male') :
                     $t('Female') }}
                 </div>
                 <div class="col q-pa-sm">{{ $t('PatientInfoPageAge') }}: {{ patient.age }}</div>
@@ -41,14 +43,14 @@
                 <div class="col q-pa-sm">{{ $t('PatientNewFormAlcoholDrinking') }}: {{ patient.drinking }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormViralInfection') }}: {{ patient.viral_infection }}</div>
             </div>
-            <div class="row q-my-sm q-gutter-xs" v-if="patient.viral_infection === '是'">
+            <!-- <div class="row q-my-sm q-gutter-xs" v-if="patient.viral_infection === '是'">
                 <div class="col q-pa-sm">
                     {{ $t('PatientNewFormViralResult') }}: {{ patient.viral_result }}
                 </div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormViralFocus') }}: {{ patient.viral_focus }}
                 </div>
 
-            </div>
+            </div> -->
             <div class="text-subtitle1 text-bold">{{ $t('PatientNewFormOtherInformation') }}</div>
             <q-separator></q-separator>
             <div class="row q-my-sm">
