@@ -731,6 +731,11 @@ export default {
     TotalProportion: 'Total Proportion',
     Report: 'Report',
 
-    VirusName: 'Virus'
+    VirusName: 'Virus',
+
+    Mycobacterium: 'Mycobacterium',
+    Nomycobacterium: 'Nomycobacterium',
+    Mycoplasma: 'Mycoplasma',
+
 
 }

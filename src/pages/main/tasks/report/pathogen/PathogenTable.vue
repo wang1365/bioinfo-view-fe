@@ -1,61 +1,41 @@
 <template>
-    <div class="q-py-sm align-right" style="text-align: right;">
-        <q-btn icon="help_outline" size="small" outline color="orange" class=" q-mr-md" @click="dlgVisible = !dlgVisible"
-            :label="$t('Intro')" />
-        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-            class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
-        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-            color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
-    </div>
-    <div class="q-pt-sm">
-        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
-            size="middle" @change="tableChange">
-            <template #bodyCell="{ record, column, }">
-                <template v-if="column.dataIndex === 'report'">
-                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
-                        :download="record.fileName" />
-                    <span>|</span>
-                    <q-btn flat size="sm" color="primary" label="Blast" />
-                </template>
+    <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
+             size="middle" @change="tableChange">
+        <template #bodyCell="{ record, column, }">
+            <template v-if="column.dataIndex === 'report'">
+                <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
+                       :download="record.fileName"/>
+                <span>|</span>
+                <q-btn flat size="sm" color="primary" label="Blast"/>
             </template>
-            <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
-                <div style="padding: 8px"
-                    v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
-                    <a-input ref="searchInput" :value="selectedKeys[0]"
-                        style="width: 250px; margin-bottom: 8px; display: block"
-                        @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
-                    <div class="row justify-around">
-                        <a-button type="primary" size="small" style="width: 70px; margin-right: 28px"
-                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
-                            <template #icon>
-                                <SearchOutlined />
-                            </template>
-                            {{ $t('Search') }}
-                        </a-button>
-                        <a-button size="small" style="width: 70px" @click="handleReset(clearFilters, column.dataIndex)">
-                            {{ $t('Reset') }}
-                        </a-button>
-                    </div>
+        </template>
+        <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
+            <div style="padding: 8px"
+                 v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
+                <a-input ref="searchInput" :value="selectedKeys[0]"
+                         style="width: 250px; margin-bottom: 8px; display: block"
+                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+                         @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"/>
+                <div class="row justify-around">
+                    <a-button type="primary" size="small" style="width: 70px; margin-right: 28px"
+                              @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+                        <template #icon>
+                            <SearchOutlined/>
+                        </template>
+                        {{ $t('Search') }}
+                    </a-button>
+                    <a-button size="small" style="width: 70px" @click="handleReset(clearFilters, column.dataIndex)">
+                        {{ $t('Reset') }}
+                    </a-button>
                 </div>
-            </template>
-            <template #customFilterIcon="{ filtered }">
-                <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
-            </template>
-        </a-table>
-        <q-dialog v-model="dlgVisible">
-            <q-card style="width: 75%; max-width: 2000px">
-                <q-bar class="bg-primary text-white">{{ introTitle }}</q-bar>
-                <q-card-section>
-                    <div style="white-space:pre-wrap; line-height: 35px">{{ props.intro }}</div>
-                </q-card-section>
-                <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">{{ $t('Close') }}</q-btn>
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
-    </div>
+            </div>
+        </template>
+        <template #customFilterIcon="{ filtered }">
+            <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }"/>
+        </template>
+    </a-table>
 </template>
+
 <script setup>
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef, watch, reactive } from 'vue'
@@ -84,21 +64,10 @@ let selectedDefaultRows = ref([])
 let defaultRows = ref([])
 
 const props = defineProps({
-    intro: {
-        type: String,
-        required: false,
-    },
     samples: {
         type: Array,
         required: false,
         default: () => [],
-    },
-    viewConfig: {
-        type: Object,
-        required: false,
-        default() {
-            return {}
-        },
     },
     task: {
         type: Object,
@@ -109,9 +78,13 @@ const props = defineProps({
         default: () => {
         }
     },
-    category: {
-        type: String,
-        default: 'bacteria'
+    viewConfig: {
+        type: Object,
+        default: () => {}
+    },
+    data: {
+        type: Object,
+        default: () => {}
     }
 })
 const viewConfig = toRef(props, 'viewConfig')
@@ -119,17 +92,6 @@ const stepData = toRef(props, 'stepData')
 
 const customCell = useCustomCell('report')
 
-const getSpan = (index, record) => {
-    // 行单元格合并存在很多问题，尤其是在排序和默认高亮方面，所以暂不合并
-    const dataIndex = 'categoryName'
-    const cellValue = rows.value[index][dataIndex]
-
-    if (index > 0 && rows.value[index - 1][dataIndex] === cellValue) {
-        return 0
-    }
-
-    return rows.value.filter(row => row[dataIndex] === cellValue).length
-}
 // 表头定义
 const columns = computed(() => [
     {
@@ -234,32 +196,10 @@ onMounted(() => loadData())
 // 国际化切换重新加载数据
 watch(langCode, () => loadData())
 
-const introTitle = computed(() => {
-    const i18nKey = {
-        bacteria: 'Bacterial',
-        fungus: 'Fungal',
-        virus: `Virus`,
-        parasite: `Parasite`,
-        specificPathogen: `SpecificPathogen`,
-    }[props.category]
-    return t(i18nKey)
-})
-
-// 不同病原体的数据文件配置
-const dataFile = computed(() => {
-    const suffix = langCode.value === 'cn' ? 'CN' : 'EN'
-    return {
-        bacteria: `Bacteria/Bacteria_${suffix}.txt`,
-        fungus: `Fungus/Fungus_${suffix}.txt`,
-        virus: `Virus/Virus_${suffix}.txt`,
-        parasite: `Parasite/Parasite_${suffix}.txt`,
-        // specificPathogen: `SpecificPathogen/SpecificPathogen_${suffix}.txt`,
-    }[props.category]
-})
 
 const loadData = () => {
     $q.loading.show({ delay: 100 })
-    readTaskFile(route.params.id, dataFile.value).then((res) => {
+    readTaskFile(route.params.id, props.data.file).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
             'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
@@ -310,16 +250,16 @@ const getCheckboxProps = (record) => {
 }
 
 const rowSelection = computed(() => {
-    if (!isDefineReport.value) {
-        return null
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 25,
+            getCheckboxProps: getCheckboxProps
+        }
     }
-    return {
-        selectedRowKeys: selectedRows,
-        onChange: onSelectChange,
-        columnWidth: 25,
-        getCheckboxProps: getCheckboxProps
-    }
-}
 )
 
 const selectedRows = ref([])
@@ -343,7 +283,7 @@ const stickFilter = () => {
         table: {
             searchParams: tableSearchParams.value,
             selectedRows: selectedRows.value,
-            filtered: rows.value.length != filteredRows.value.length,
+            filtered: rows.value.length !== filteredRows.value.length,
             selected: selectedRows.value.length > 0,
         }
     })
@@ -397,4 +337,6 @@ const tableChange = (page, filters, sorter, currentDataSource) => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+
+</style>

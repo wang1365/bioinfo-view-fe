@@ -78,7 +78,7 @@
                         :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="specificPathogen" v-if="tabValid('specificPathogen')">
-                    <Pathogen category="specificPathogen" :viewConfig="module.specificPathogen"
+                    <SpecificPathogen category="specificPathogen" :viewConfig="module.specificPathogen"
                         :intro="intros['specificPathogen']" :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
             </q-tab-panels>
@@ -99,6 +99,7 @@ import TumorMutationLoadVue from './tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from './homologous-recombination-defect/index.vue'
 import CommonModuleVue from './common-module/index.vue'
 import Pathogen from './pathogen/index'
+import SpecificPathogen from './pathogen/SpecificPathogen.vue'
 import PathogenVirus from './pathogen-virus/index'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
