@@ -100,9 +100,7 @@
                 </template>
                 <template v-slot:body-cell-operate="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <span class="row q-gutter-xs" style="width: 700px;">
-
-
+                        <span class="row q-gutter-xs" style="width: 600px;">
                             <q-btn color="secondary" :label="$t('Detail')" icon="visibility" @click="gotoDetail(props.row)"
                                 size="sm" padding="xs sm" />
                             <q-btn :disable="props.row.status !== 'FINISHED'" color="info" :label="$t('Result')"
@@ -128,7 +126,7 @@
                                 :label="$t('TaskPageBtnDeleteTmpFile')" icon="delete" @click="deleteMiddleFiles(props.row)"
                                 size="sm" padding="xs sm"><q-tooltip>{{ $t('TaskPageListTableRowBtnDeleteTmpTip')
                                 }}</q-tooltip></q-btn>
-                            <q-btn color="red" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
+                            <q-btn color="red" padding="xs sm" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
                         </span>
                     </q-td>
                 </template>
