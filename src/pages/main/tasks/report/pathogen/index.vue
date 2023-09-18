@@ -19,7 +19,8 @@
                 </template>
             </template>
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
-                <div style="padding: 8px">
+                <div style="padding: 8px"
+                    v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
                     <a-input ref="searchInput" :value="selectedKeys[0]"
                         style="width: 250px; margin-bottom: 8px; display: block"
                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
@@ -38,8 +39,7 @@
                     </div>
                 </div>
             </template>
-            <template #customFilterIcon="{ filtered }"
-                v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
+            <template #customFilterIcon="{ filtered }">
                 <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
             </template>
         </a-table>
