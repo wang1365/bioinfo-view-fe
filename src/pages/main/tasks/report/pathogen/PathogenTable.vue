@@ -1,26 +1,25 @@
 <template>
-    <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
-             size="middle" @change="tableChange">
+    <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered size="middle"
+        @change="tableChange">
         <template #bodyCell="{ record, column, }">
             <template v-if="column.dataIndex === 'report'">
                 <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
-                       :download="record.fileName"/>
+                    :download="record.fileName" />
                 <span>|</span>
-                <q-btn flat size="sm" color="primary" label="Blast"/>
+                <q-btn flat size="sm" color="primary" label="Blast" />
             </template>
         </template>
         <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
             <div style="padding: 8px"
-                 v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
-                <a-input ref="searchInput" :value="selectedKeys[0]"
-                         style="width: 250px; margin-bottom: 8px; display: block"
-                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                         @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"/>
+                v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
+                <a-input ref="searchInput" :value="selectedKeys[0]" style="width: 250px; margin-bottom: 8px; display: block"
+                    @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+                    @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
                 <div class="row justify-around">
                     <a-button type="primary" size="small" style="width: 70px; margin-right: 28px"
-                              @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+                        @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
                         <template #icon>
-                            <SearchOutlined/>
+                            <SearchOutlined />
                         </template>
                         {{ $t('Search') }}
                     </a-button>
@@ -31,7 +30,7 @@
             </div>
         </template>
         <template #customFilterIcon="{ filtered }">
-            <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }"/>
+            <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
         </template>
     </a-table>
 </template>
@@ -56,7 +55,7 @@ const { t } = useI18n()
 const $q = useQuasar()
 const route = useRoute()
 const dlgVisible = ref(false)
-const emit = defineEmits(['stickDone', 'reset'])
+const emit = defineEmits(['stickDone', 'reset', 'tableStickChange'])
 const rows = ref([])
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
@@ -80,11 +79,11 @@ const props = defineProps({
     },
     viewConfig: {
         type: Object,
-        default: () => {}
+        default: () => { }
     },
     data: {
         type: Object,
-        default: () => {}
+        default: () => { }
     }
 })
 const viewConfig = toRef(props, 'viewConfig')
@@ -198,6 +197,8 @@ watch(langCode, () => loadData())
 
 
 const loadData = () => {
+    console.log("table mount")
+    console.log(stepData.value)
     $q.loading.show({ delay: 100 })
     readTaskFile(route.params.id, props.data.file).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
@@ -224,11 +225,9 @@ const loadData = () => {
                 })
             }
         })
-        console.log(rows.value.length)
-        console.log(rows)
         if (stepData.value) {
             for (const row of rows.value) {
-                for (const item of stepData.value.table.selectedRows) {
+                for (const item of stepData.value.selectedRows) {
                     if (item === row.lineNumber) {
                         selectedRows.value.push(item)
                         break
@@ -250,16 +249,16 @@ const getCheckboxProps = (record) => {
 }
 
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
-        return {
-            selectedRowKeys: selectedRows,
-            onChange: onSelectChange,
-            columnWidth: 25,
-            getCheckboxProps: getCheckboxProps
-        }
+    if (!isDefineReport.value) {
+        return null
     }
+    return {
+        selectedRowKeys: selectedRows,
+        onChange: onSelectChange,
+        columnWidth: 25,
+        getCheckboxProps: getCheckboxProps
+    }
+}
 )
 
 const selectedRows = ref([])
@@ -277,21 +276,16 @@ const onSelectChange = (selectedRowKeys) => {
             selectedDefaultRows.value.push(key)
         }
     }
-}
-const stickFilter = () => {
-    emit('stickDone', {
-        table: {
-            searchParams: tableSearchParams.value,
-            selectedRows: selectedRows.value,
-            filtered: rows.value.length !== filteredRows.value.length,
-            selected: selectedRows.value.length > 0,
-        }
+    emit('tableStickChange', {
+
+        searchParams: tableSearchParams.value,
+        selectedRows: selectedRows.value,
+        filtered: rows.value.length !== filteredRows.value.length,
+        selected: selectedRows.value.length > 0,
+
     })
 }
-const reset = () => {
-    emit('reset', null)
-    selectedRows.value = []
-}
+
 
 // 自定义列检索-属
 const state1 = reactive({
@@ -334,9 +328,15 @@ const tableChange = (page, filters, sorter, currentDataSource) => {
     console.log(filters)
     console.log(sorter)
     console.log(currentDataSource)
+    emit('tableStickChange', {
+
+        searchParams: tableSearchParams.value,
+        selectedRows: selectedRows.value,
+        filtered: rows.value.length !== filteredRows.value.length,
+        selected: selectedRows.value.length > 0,
+
+    })
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

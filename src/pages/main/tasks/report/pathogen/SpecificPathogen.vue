@@ -14,7 +14,8 @@
         </q-tabs>
         <q-tab-panels v-model="tab">
             <q-tab-panel v-for="category in categories" :key="category.code" :name="category.code">
-                <PathogenTable :data="category" :view-config="viewConfig" />
+                <PathogenTable :data="category" :view-config="viewConfig"
+                    @tableStickChange="tableStickChange(category.code, $event)" :stepData="tabsStickData[category.code]" />
             </q-tab-panel>
         </q-tab-panels>
 
@@ -32,12 +33,13 @@
     </div>
 </template>
 <script setup>
-import { computed, ref, toRef } from 'vue'
+import { computed, ref, toRef, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import PathogenTable from './PathogenTable.vue'
+import { errorMessage } from "src/utils/notify"
 
 
 const store = globalStore()
@@ -48,7 +50,6 @@ const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
 const rows = ref([])
 
-let selectedDefaultRows = ref([])
 
 const props = defineProps({
     intro: {
@@ -82,7 +83,7 @@ const props = defineProps({
     }
 })
 const viewConfig = toRef(props, 'viewConfig')
-
+const stepData = toRef(props, 'stepData')
 const tab = ref('mycobacterium')
 const categories = computed(() => {
     const suffix = langCode.value === 'cn' ? 'CN' : 'EN'
@@ -113,28 +114,75 @@ const introTitle = computed(() => {
     }[props.category]
     return t(i18nKey)
 })
-
-const selectedRows = ref([])
+const tabsStickDataOrigin = {
+    mycobacterium: {
+        searchParams: "",
+        selectedRows: [],
+        filtered: false,
+        selected: false,
+    },
+    nomycobacterium: {
+        searchParams: "",
+        selectedRows: [],
+        filtered: false,
+        selected: false,
+    },
+    mycoplasma: {
+        searchParams: "",
+        selectedRows: [],
+        filtered: false,
+        selected: false,
+    }
+}
+const tabsStickData = ref({
+    mycobacterium: {
+        searchParams: "",
+        selectedRows: [],
+        filtered: false,
+        selected: false,
+    },
+    nomycobacterium: {
+        searchParams: "",
+        selectedRows: [],
+        filtered: false,
+        selected: false,
+    },
+    mycoplasma: {
+        searchParams: "",
+        selectedRows: [],
+        filtered: false,
+        selected: false,
+    }
+})
+onMounted(() => {
+    if (stepData.value) {
+        tabsStickData.value = stepData.value
+    }
+})
+const tableStickChange = (category, data) => {
+    console.log(category)
+    console.log(data)
+    tabsStickData.value[category] = data
+}
 const stickFilter = () => {
-    emit('stickDone', {
-        table: {
-            searchParams: tableSearchParams.value,
-            selectedRows: selectedRows.value,
-            filtered: rows.value.length !== filteredRows.value.length,
-            selected: selectedRows.value.length > 0,
-        }
-    })
+    if (!tabsStickData.value.mycobacterium.searchParams.categoryName && !!tabsStickData.value.mycobacterium.searchParams.speciesName && tabsStickData.value.mycobacterium.selectedRows.length === 0) {
+        errorMessage(t('Mycobacterium') + ": " + t('DefineReportUnlockMessage'))
+        return null
+    }
+    if (!tabsStickData.value.nomycobacterium.searchParams.categoryName && !!tabsStickData.value.nomycobacterium.searchParams.speciesName && tabsStickData.value.nomycobacterium.selectedRows.length === 0) {
+        errorMessage(t('Nomycobacterium') + ": " + t('DefineReportUnlockMessage'))
+        return null
+    }
+    if (!tabsStickData.value.nomycobacterium.searchParams.categoryName && !!tabsStickData.value.nomycobacterium.searchParams.speciesName && tabsStickData.value.mycoplasma.selectedRows.length === 0) {
+        errorMessage(t('Mycoplasma') + ": " + t('DefineReportUnlockMessage'))
+        return null
+    }
+    emit('stickDone', tabsStickData.value)
 }
 const reset = () => {
     emit('reset', null)
-    selectedRows.value = []
+    tabsStickData.value = tabsStickDataOrigin
 }
-
-const tableSearchParams = ref({
-    categoryName: "",
-    speciesName: ""
-})
-const filteredRows = ref([])
 
 </script>
 
