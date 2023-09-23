@@ -51,3 +51,12 @@ export function readSystemFile(path) {
         params: { path },
     })
 }
+
+// 根据任务查询查询项目下的关联任务
+export function getRelatedTasks(task_id) {
+    return api({
+        url: `/report/pathogen/read`,
+        method: 'get',
+        params: { task_id }
+    })
+}

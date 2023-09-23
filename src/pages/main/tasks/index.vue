@@ -56,7 +56,7 @@
         </div>
         <div>
             <q-table :rows="rows" :columns="columns" row-key="id" ref="tableRef" v-model:pagination="pagination"
-                     style="max-height: 600px"
+                     style="max-height: 700px"
                 @request="onRequest" :rows-per-page-options="[5, 15, 35, 50]" class="my-sticky-column-table">
                 <template v-slot:body-cell-project="props">
                     <q-td :props="props" class="q-gutter-xs">

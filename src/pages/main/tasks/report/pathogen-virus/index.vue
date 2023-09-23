@@ -16,6 +16,8 @@
                         :download="record.fileName" />
                     <span>|</span>
                     <q-btn flat size="sm" color="primary" label="Blast" />
+                    <span>|</span>
+                    <q-btn flat size="sm" color="primary" label="Compare" @click="showCompareDialog(record)" />
                 </template>
             </template>
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
@@ -54,6 +56,7 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
+        <CompareDialog v-model="dlgCmpVisible" :task="props.task" category="virus" :record="cmpRecord"/>
     </div>
 </template>
 <script setup>
@@ -68,6 +71,7 @@ import { useQuasar } from 'quasar'
 import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
+import CompareDialog from '../pathogen/components/CompareDialog.vue'
 
 
 const store = globalStore()
@@ -79,6 +83,9 @@ const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
 const viewConfig = toRef(props, 'viewConfig')
 const rows = ref([])
+const dlgCmpVisible = ref(false)
+const cmpRecord = ref()
+
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 let selectedDefaultRows = ref([])
 let defaultRows = ref([])
@@ -291,6 +298,12 @@ const tableChange = (page, filters, sorter, currentDataSource) => {
     console.log(filters)
     console.log(sorter)
     console.log(currentDataSource)
+}
+
+const showCompareDialog = (record) => {
+    cmpRecord.value = record
+    dlgCmpVisible.value = true
+    // 当前样本id
 }
 </script>
 

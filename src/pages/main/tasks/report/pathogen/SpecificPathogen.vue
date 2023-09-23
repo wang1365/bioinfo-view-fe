@@ -14,8 +14,9 @@
         </q-tabs>
         <q-tab-panels v-model="tab">
             <q-tab-panel v-for="category in categories" :key="category.code" :name="category.code">
-                <PathogenTable :data="category" :view-config="viewConfig"
-                    @tableStickChange="tableStickChange(category.code, $event)" :stepData="tabsStickData[category.code]" />
+                <PathogenTable :data="category" :view-config="viewConfig" :task="props.task" :category="props.category"
+                    :subCategory="tab" @tableStickChange="tableStickChange(category.code, $event)"
+                               :stepData="tabsStickData[category.code]" />
             </q-tab-panel>
         </q-tab-panels>
 
@@ -38,7 +39,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
-import PathogenTable from './PathogenTable.vue'
+import PathogenTable from './components/PathogenTable.vue'
 import { errorMessage } from "src/utils/notify"
 
 

@@ -7,6 +7,8 @@
                     :download="record.fileName" />
                 <span>|</span>
                 <q-btn flat size="sm" color="primary" label="Blast" />
+                <span>|</span>
+                <q-btn flat size="sm" color="primary" label="Compare" @click="showCompareDialog(record)" />
             </template>
         </template>
         <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
@@ -33,6 +35,8 @@
             <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
         </template>
     </a-table>
+    <CompareDialog v-model="dlgCmpVisible" :task="props.task" :category="props.category"
+                   :subCategory="props.subCategory" :record="cmpRecord"/>
 </template>
 
 <script setup>
@@ -45,8 +49,9 @@ import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/
 import { useCustomCell } from 'src/utils/customCell'
 import { useQuasar } from 'quasar'
 import { useI18n } from "vue-i18n"
-import { globalStore } from 'src/stores/global'
+import { globalStore } from 'stores/global'
 import { storeToRefs } from 'pinia'
+import CompareDialog from './CompareDialog.vue'
 
 
 const store = globalStore()
@@ -57,6 +62,8 @@ const route = useRoute()
 const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset', 'tableStickChange'])
 const rows = ref([])
+const dlgCmpVisible = ref(false)
+const cmpRecord = ref()
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 let selectedDefaultRows = ref([])
@@ -80,6 +87,14 @@ const props = defineProps({
     viewConfig: {
         type: Object,
         default: () => { }
+    },
+    category: {
+        type: String,
+        default: ''
+    },
+    subCategory: {
+        type: String,
+        default: ''
     },
     data: {
         type: Object,
@@ -336,6 +351,12 @@ const tableChange = (page, filters, sorter, currentDataSource) => {
         selected: selectedRows.value.length > 0,
 
     })
+}
+
+const showCompareDialog = (record) => {
+    cmpRecord.value = record
+    dlgCmpVisible.value = true
+    // 当前样本id
 }
 </script>
 

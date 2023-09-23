@@ -16,6 +16,8 @@
                         :download="record.fileName" />
                     <span>|</span>
                     <q-btn flat size="sm" color="primary" label="Blast" />
+                    <span>|</span>
+                    <q-btn flat size="sm" color="primary" label="Compare" @click="showCompareDialog(record)" />
                 </template>
             </template>
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
@@ -54,6 +56,7 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
+        <CompareDialog v-model="dlgCmpVisible" :task="props.task" :category="props.category" :record="cmpRecord"/>
     </div>
 </template>
 <script setup>
@@ -62,12 +65,14 @@ import { ref, onMounted, computed, toRef, watch, reactive } from 'vue'
 import { SearchOutlined } from '@ant-design/icons-vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
+import { getRelatedTasks } from 'src/api/report'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { useCustomCell } from 'src/utils/customCell'
 import { useQuasar } from 'quasar'
 import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
+import CompareDialog from './components/CompareDialog.vue'
 
 
 const store = globalStore()
@@ -76,8 +81,10 @@ const { t } = useI18n()
 const $q = useQuasar()
 const route = useRoute()
 const dlgVisible = ref(false)
+const dlgCmpVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
 const rows = ref([])
+const cmpRecord = ref()
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 let selectedDefaultRows = ref([])
@@ -394,6 +401,12 @@ const tableChange = (page, filters, sorter, currentDataSource) => {
     console.log(filters)
     console.log(sorter)
     console.log(currentDataSource)
+}
+
+const showCompareDialog = (record) => {
+    cmpRecord.value = record
+    dlgCmpVisible.value = true
+    // 当前样本id
 }
 </script>
 
