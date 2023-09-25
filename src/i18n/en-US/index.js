@@ -709,27 +709,27 @@ export default {
     X3Comment: 'Abscissa: Chromosome, ordinate: B allele frequency and depth ratio',
 
     // 病原体
-    Bacterial: 'Bacterial',
-    Fungal: 'Fungal',
+    Bacteria: 'Bacteria',
+    Fungus: 'Fungus',
     Virus: 'Virus',
     Parasite: 'Parasite',
     SpecificPathogen: 'Specific Pathogen',
 
-    BacterialDescription: 'Bacterial',
-    FungalDescription: 'Fungal',
+    BacteriaDescription: 'Bacteria',
+    FungusDescription: 'Fungus',
     VirusDescription: 'Virus',
     ParasiteDescription: 'Parasite',
-    SpecificPathogenDescription: 'Specific Pathogen',
+    SpecificPathogenDescription: 'Special Pathogen',
 
-    Shu: 'Category',
-    Zhong: 'Specifies',
-    ShuMing: 'Category Name',
+    Genus: 'Genus',
+    Zhong: 'Species',
+    GenusName: 'Genus Name',
     RelativeAbundance: 'Relative Abundance',
     ReadsCount: 'Reads Count',
     SpeciesName: 'Species Name',
     Proportion: 'Proportion',
     TotalProportion: 'Total Proportion',
-    Report: 'Report',
+    Verification: 'Verification',
 
     VirusName: 'Virus',
 

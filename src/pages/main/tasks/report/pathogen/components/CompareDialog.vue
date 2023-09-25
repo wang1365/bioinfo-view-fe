@@ -96,7 +96,7 @@ const loadData = () => {
         // res.filter(task => task.samples.some(sample => ))
         res.forEach(task => {
             // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
-            let fields = ['categoryName', 'relativeAbundance', 'readsCount1',
+            let fields = ['genusName', 'relativeAbundance', 'readsCount1',
                 'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
             if (props.category === 'virus') {
                 fields = ['virusName', 'readsCount2', 'proportion', 'file', 'report']

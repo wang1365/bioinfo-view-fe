@@ -37,13 +37,13 @@
                     @stickDone="stickDone('tumor_mutation_load', $event, 'create')"
                     @reset="stickDone('tumor_mutation_load', null, 'create')" />
             </q-step>
-            <q-step v-if="tabValid('bacteria')" :done="isStepDone('bacteria')" name="bacteria" :title="$t('Bacterial')"
+            <q-step v-if="tabValid('bacteria')" :done="isStepDone('bacteria')" name="bacteria" :title="$t('Bacteria')"
                 icon="bubble_chart">
                 <Pathogen :viewConfig="viewConfig.bacteria" :intro="intros['bacteria']" :task="taskDetail"
                     :samples="samples" :stepData="stepData.bacteria" category="bacteria"
                     @stickDone="stickDone('bacteria', $event, 'create')" @reset="stickDone('bacteria', null, 'create')" />
             </q-step>
-            <q-step v-if="tabValid('fungus')" :done="isStepDone('fungus')" name="fungus" :title="$t('Fungal')"
+            <q-step v-if="tabValid('fungus')" :done="isStepDone('fungus')" name="fungus" :title="$t('Fungus')"
                 icon="bubble_chart">
                 <Pathogen :viewConfig="viewConfig.fungus" :intro="intros['fungus']" :task="taskDetail" :samples="samples"
                     :stepData="stepData.fungus" category="fungus" @stickDone="stickDone('fungus', $event, 'create')"
@@ -155,13 +155,13 @@
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('bacteria')">
-                        <span class="text-bold">{{ $t('Bacterial') }}</span>
+                        <span class="text-bold">{{ $t('Bacteria') }}</span>
                         <q-chip color="primary" text-color="white">
                             <span>{{ $t('ReportDefineSelected') }}</span>
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('fungus')">
-                        <span class="text-bold">{{ $t('Fungal') }}</span>
+                        <span class="text-bold">{{ $t('Fungus') }}</span>
                         <q-chip color="primary" text-color="white">
                             <span>{{ $t('ReportDefineSelected') }}</span>
                         </q-chip>
@@ -310,8 +310,8 @@ const createReport = () => {
         融合分析: 'FusionAnalysis',
         拷贝数变异分析: 'CopyNumberVariationAnalysis',
         肿瘤突变负荷分析: 'TumorMutationLoadAnalysis',
-        细菌: "Bacterial",
-        真菌: "Fungal",
+        细菌: "Bacteria",
+        真菌: "Fungus",
         病毒: "Virus",
         寄生虫: "Parasite",
         特殊病原体: "SpecificPathogen",

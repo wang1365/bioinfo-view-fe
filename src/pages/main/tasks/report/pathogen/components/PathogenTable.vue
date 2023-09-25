@@ -18,7 +18,7 @@
                     @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
                     @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
                 <div class="row justify-around">
-                    <a-button type="primary" size="small" style="width: 70px; margin-right: 28px"
+                    <a-button type="primary" size="small" style="width: 80px; margin-right: 28px"
                         @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
                         <template #icon>
                             <SearchOutlined />
@@ -109,18 +109,18 @@ const customCell = useCustomCell('report')
 // 表头定义
 const columns = computed(() => [
     {
-        title: t('Shu'),
+        title: t('Genus'),
         children: [
             {
-                name: 'categoryName',
-                title: t('ShuMing'),
-                dataIndex: 'categoryName',
+                name: 'genusName',
+                title: t('GenusName'),
+                dataIndex: 'genusName',
                 customFilterDropdown: true,
                 width: 100,
                 // align: 'center',
                 // sorter: true,
-                // onFilter: (value, record) => value.includes(record.categoryName),
-                onFilter: (value, record) => record.categoryName.includes(value),
+                // onFilter: (value, record) => value.includes(record.genusName),
+                onFilter: (value, record) => record.genusName.includes(value),
                 customCell,
                 // customCell: (_, index, record) => {
                 //     return {
@@ -202,7 +202,7 @@ const columns = computed(() => [
             },
         ]
     },
-    { name: 'report', width: 100, title: t('Report'), dataIndex: 'report', align: 'center', required: true },
+    { name: 'report', width: 100, title: t('Verification'), dataIndex: 'report', align: 'center', required: true },
 ])
 
 onMounted(() => loadData())
@@ -217,7 +217,7 @@ const loadData = () => {
     $q.loading.show({ delay: 100 })
     readTaskFile(route.params.id, props.data.file).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
-        const fields = ['categoryName', 'relativeAbundance', 'readsCount1',
+        const fields = ['genusName', 'relativeAbundance', 'readsCount1',
             'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvDataAndSetLineNumber(res, { start: 2, fields })
@@ -230,7 +230,7 @@ const loadData = () => {
             if (column.children) {
                 // 属名和种名增加筛选功能
                 column.children.forEach(c => {
-                    if (['categoryName', 'speciesName'].includes(c.dataIndex)) {
+                    if (['genusName', 'speciesName'].includes(c.dataIndex)) {
                         let options = [...new Set(rows.value.map(r => r[c.dataIndex]))]
                         options = options.map(opt => {
                             return { text: opt, value: opt }
@@ -318,7 +318,7 @@ const handleSearch = (selectedKeys, confirm, dataIndex) => {
     console.log(confirm,)
     console.log(dataIndex)
     confirm();
-    const state = dataIndex === 'categoryName' ? state1 : state2
+    const state = dataIndex === 'genusName' ? state1 : state2
     state.searchText = selectedKeys[0]
     state.searchedColumn = dataIndex
     console.log(rows.value.length)
@@ -328,11 +328,11 @@ const handleReset = (clearFilters, dataIndex) => {
     clearFilters({
         confirm: true,
     });
-    const state = dataIndex === 'categoryName' ? state1 : state2
+    const state = dataIndex === 'genusName' ? state1 : state2
     state.searchText = ''
 };
 const tableSearchParams = ref({
-    categoryName: "",
+    genusName: "",
     speciesName: ""
 })
 const filteredRows = ref([])

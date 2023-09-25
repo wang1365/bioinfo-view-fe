@@ -107,8 +107,8 @@ const categories = computed(() => {
 
 const introTitle = computed(() => {
     const i18nKey = {
-        bacteria: 'Bacterial',
-        fungus: 'Fungal',
+        bacteria: 'Bacteria',
+        fungus: 'Fungus',
         virus: `Virus`,
         parasite: `Parasite`,
         specificPathogen: `SpecificPathogen`,
@@ -166,15 +166,15 @@ const tableStickChange = (category, data) => {
     tabsStickData.value[category] = data
 }
 const stickFilter = () => {
-    if (!tabsStickData.value.mycobacterium.searchParams.categoryName && !!tabsStickData.value.mycobacterium.searchParams.speciesName && tabsStickData.value.mycobacterium.selectedRows.length === 0) {
+    if (!tabsStickData.value.mycobacterium.searchParams.genusName && !!tabsStickData.value.mycobacterium.searchParams.speciesName && tabsStickData.value.mycobacterium.selectedRows.length === 0) {
         errorMessage(t('Mycobacterium') + ": " + t('DefineReportUnlockMessage'))
         return null
     }
-    if (!tabsStickData.value.nomycobacterium.searchParams.categoryName && !!tabsStickData.value.nomycobacterium.searchParams.speciesName && tabsStickData.value.nomycobacterium.selectedRows.length === 0) {
+    if (!tabsStickData.value.nomycobacterium.searchParams.genusName && !!tabsStickData.value.nomycobacterium.searchParams.speciesName && tabsStickData.value.nomycobacterium.selectedRows.length === 0) {
         errorMessage(t('Nomycobacterium') + ": " + t('DefineReportUnlockMessage'))
         return null
     }
-    if (!tabsStickData.value.nomycobacterium.searchParams.categoryName && !!tabsStickData.value.nomycobacterium.searchParams.speciesName && tabsStickData.value.mycoplasma.selectedRows.length === 0) {
+    if (!tabsStickData.value.nomycobacterium.searchParams.genusName && !!tabsStickData.value.nomycobacterium.searchParams.speciesName && tabsStickData.value.mycoplasma.selectedRows.length === 0) {
         errorMessage(t('Mycoplasma') + ": " + t('DefineReportUnlockMessage'))
         return null
     }

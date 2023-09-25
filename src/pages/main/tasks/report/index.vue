@@ -22,8 +22,8 @@
                     icon="line_axis" v-if="tabValid('homologous-recombination-defect')" />
                 <q-tab v-for="(commonTab, i) in commonTabs" :key="`commonTab${i}`" :name="`commonTab${i}`"
                     :label="commonTab.title" icon="web_stories" />
-                <q-tab name="bacteria" :label="$t('BacterialDescription')" icon="line_axis" v-if="tabValid('bacteria')" />
-                <q-tab name="fungus" :label="$t('FungalDescription')" icon="line_axis" v-if="tabValid('fungus')" />
+                <q-tab name="bacteria" :label="$t('BacteriaDescription')" icon="line_axis" v-if="tabValid('bacteria')" />
+                <q-tab name="fungus" :label="$t('FungusDescription')" icon="line_axis" v-if="tabValid('fungus')" />
                 <q-tab name="virus" :label="$t('VirusDescription')" icon="line_axis" v-if="tabValid('virus')" />
                 <q-tab name="parasite" :label="$t('ParasiteDescription')" icon="line_axis" v-if="tabValid('parasite')" />
                 <q-tab name="specificPathogen" :label="$t('SpecificPathogenDescription')" icon="line_axis"
@@ -62,7 +62,7 @@
                     <CommonModuleVue :viewConfig="commonTab" :task="taskDetail" />
                 </q-tab-panel>
                 <q-tab-panel name="bacteria" v-if="tabValid('bacteria')">
-                    <Pathogen category="bacteria" :viewConfig="module.bacterial" :intro="intros['bacteria']"
+                    <Pathogen category="bacteria" :viewConfig="module.bacteria" :intro="intros['bacteria']"
                         :task="taskDetail" :samples="samples" />
                 </q-tab-panel>
                 <q-tab-panel name="fungus" v-if="tabValid('fungus')">

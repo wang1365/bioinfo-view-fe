@@ -713,27 +713,27 @@ export default {
 
 
     // 病原体
-    Bacterial: '细菌',
-    Fungal: '真菌',
+    Bacteria: '细菌',
+    Fungus: '真菌',
     Virus: '病毒',
     Parasite: '寄生虫',
     SpecificPathogen: '特殊病原体',
 
-    BacterialDescription: '细菌',
-    FungalDescription: '真菌',
+    BacteriaDescription: '细菌',
+    FungusDescription: '真菌',
     VirusDescription: '病毒',
     ParasiteDescription: '寄生虫',
     SpecificPathogenDescription: '特殊病原体',
 
-    Shu: '属',
+    Genus: '属',
     Zhong: '种',
-    ShuMing: '属名',
+    GenusName: '属名',
     RelativeAbundance: '相对丰度',
     ReadsCount: '序列数',
     SpeciesName: '种名',
     Proportion: '占比',
     TotalProportion: '总占比',
-    Report: '验证',
+    Verification: '验证',
 
     VirusName: '病毒名',
 

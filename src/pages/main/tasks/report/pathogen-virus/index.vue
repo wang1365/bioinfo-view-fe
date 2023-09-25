@@ -28,7 +28,7 @@
                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
                         @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
                     <div class="row justify-around">
-                        <a-button type="primary" size="small" style="width: 70px; margin-right: 28px"
+                        <a-button type="primary" size="small" style="width: 80px; margin-right: 28px"
                             @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
                             <template #icon>
                                 <SearchOutlined />
@@ -164,7 +164,7 @@ const columns = computed(() => [
         sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
         customCell
     },
-    { name: 'report', width: 20, title: t('Report'), dataIndex: 'report', align: 'center', required: true },
+    { name: 'report', width: 20, title: t('Verification'), dataIndex: 'report', align: 'center', required: true },
 ])
 
 onMounted(() => loadData())
@@ -257,7 +257,7 @@ const stickFilter = () => {
         table: {
             searchParams: tableSearchParams.value,
             selectedRows: selectedRows.value,
-            filtered: rows.value.length != filteredRows.value.length,
+            filtered: rows.value.length !== filteredRows.value.length,
             selected: selectedRows.value.length > 0,
         }
     })
