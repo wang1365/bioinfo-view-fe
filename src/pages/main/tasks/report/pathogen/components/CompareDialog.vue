@@ -60,7 +60,8 @@ const rows = ref([])
 const columns = computed(() =>
     [
         { name: 'sample', title: t('Sample'), dataIndex: 'sample'},
-        { name: 'proportion', title: t('Proportion'), dataIndex: 'proportion'},
+        { name: 'speciesName', title: t('Zhong'), dataIndex: 'speciesName'},
+        { name: 'totalProportion', title: t('TotalProportion'), dataIndex: 'totalProportion'},
         { name: 'readsCount', title: t('ReadsCount'), dataIndex: 'readsCount'},
     ]
 )
@@ -99,7 +100,7 @@ const loadData = () => {
             let fields = ['genusName', 'relativeAbundance', 'readsCount1',
                 'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
             if (props.category === 'virus') {
-                fields = ['virusName', 'readsCount2', 'proportion', 'file', 'report']
+                fields = ['speciesName', 'readsCount2', 'totalProportion', 'file', 'report']
             }
             // 解析数据（开始2行为表头，需要排除）
             console.log("................>", task.id, dataFile.value, props)
@@ -109,7 +110,8 @@ const loadData = () => {
                 const target = lines.filter(line => line.speciesName === props.record.speciesName)[0]
                 rows.value.push({
                     sample: task.samples[0].identifier,
-                    proportion: target.proportion,
+                    speciesName: target.speciesName,
+                    totalProportion: target.totalProportion,
                     readsCount: target.readsCount2,
                 })
             })

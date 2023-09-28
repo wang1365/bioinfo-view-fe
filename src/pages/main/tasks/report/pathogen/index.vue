@@ -15,7 +15,8 @@
                     <q-btn flat size="sm" padding="xs" color="primary" label="reads" target="_blank" :href="record.file"
                         :download="record.fileName" />
                     <span>|</span>
-                    <q-btn flat size="sm" padding="xs" color="primary" label="Blast" />
+                    <q-btn flat size="sm" padding="xs" color="primary" label="Blast" target="_blank"
+                           href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"/>
                     <span>|</span>
                     <q-btn flat size="sm" padding="xs" color="primary" label="Compare" @click="showCompareDialog(record)" />
                 </template>
