@@ -735,7 +735,7 @@ export default {
 
     Mycobacterium: 'Mycobacterium',
     Nomycobacterium: 'Nomycobacterium',
-    Mycoplasma: 'Mycoplasma',
+    Mycoplasma: 'Intracellular parasites',
 
 
 }

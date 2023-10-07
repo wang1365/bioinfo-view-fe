@@ -739,5 +739,5 @@ export default {
 
     Mycobacterium: '结核分支杆菌复合群',
     Nomycobacterium: '非结核分支杆菌',
-    Mycoplasma: '支原体/衣原体',
+    Mycoplasma: '胞内寄生',
 }
