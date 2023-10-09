@@ -20,14 +20,17 @@
                     v-if="tabValid('tumor-mutation-load')" />
                 <q-tab name="homologous-recombination-defect" :label="$t('HomologousRecombinationDefectAnalysis')"
                     icon="line_axis" v-if="tabValid('homologous-recombination-defect')" />
-                <q-tab v-for="(commonTab, i) in commonTabs" :key="`commonTab${i}`" :name="`commonTab${i}`"
-                    :label="commonTab.title" icon="web_stories" />
-                <q-tab name="bacteria" :label="$t('BacteriaDescription')" icon="line_axis" v-if="tabValid('bacteria')" />
-                <q-tab name="fungus" :label="$t('FungusDescription')" icon="line_axis" v-if="tabValid('fungus')" />
-                <q-tab name="virus" :label="$t('VirusDescription')" icon="line_axis" v-if="tabValid('virus')" />
-                <q-tab name="parasite" :label="$t('ParasiteDescription')" icon="line_axis" v-if="tabValid('parasite')" />
-                <q-tab name="specificPathogen" :label="$t('SpecificPathogenDescription')" icon="line_axis"
-                    v-if="tabValid('specificPathogen')" />
+<!--                <q-tab v-for="(commonTab, i) in commonTabs" :key="`commonTab${i}`" :name="`commonTab${i}`"-->
+<!--                    :label="commonTab.title" icon="web_stories" />-->
+<!--                <q-tab name="bacteria" :label="$t('BacteriaDescription')" icon="line_axis" v-if="tabValid('bacteria')" />-->
+<!--                <q-tab name="fungus" :label="$t('FungusDescription')" icon="line_axis" v-if="tabValid('fungus')" />-->
+<!--                <q-tab name="virus" :label="$t('VirusDescription')" icon="line_axis" v-if="tabValid('virus')" />-->
+<!--                <q-tab name="parasite" :label="$t('ParasiteDescription')" icon="line_axis" v-if="tabValid('parasite')" />-->
+<!--                <q-tab name="specificPathogen" :label="$t('SpecificPathogenDescription')" icon="line_axis"-->
+<!--                    v-if="tabValid('specificPathogen')" />-->
+
+                <q-tab v-for="tab in tabs" :key="tab.key" :name="tab.key"
+                       :label="tab.title" :icon="tab.key.startsWith('common') ? 'web_stories' : 'line_axis'" />
             </q-tabs>
             <q-tab-panels v-model="tab" animated v-if="samples.length > 0">
                 <q-tab-panel name="qc" v-if="tabValid('qc')">
@@ -103,6 +106,7 @@ import SpecificPathogen from './pathogen/SpecificPathogen.vue'
 import PathogenVirus from './pathogen-virus/index'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
+import { useI18n } from 'vue-i18n'
 
 import { useRoute, useRouter } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
@@ -114,10 +118,12 @@ const store = globalStore()
 const route = useRoute()
 const router = useRouter()
 const { apiPost } = useApi()
+const { t } = useI18n()
 const intros = ref({})
 
 const { langCode } = storeToRefs(store)
 const tab = ref('qc')
+const tabs = ref([])
 const taskDetail = ref({})
 const samples = ref([])
 const commonTabs = ref([])
@@ -221,21 +227,21 @@ const readResultAndModuleJson = () => {
     readTaskFile(route.params.id, `module_${suffix}.json`).then((res) => {
         let data = null
         const dict = {
-            '质控': 'qc',
-            '突变分析': 'mutation',
-            '融合分析': 'fusion',
-            '拷贝数变异分析': 'copy_number_variation',
-            '微卫星不稳定分析': 'microsatellite_instability',
-            '肿瘤突变负荷分析': 'tumor_mutation_load',
-            '同源重组缺陷分析': 'homologous_recombination_defect',
-            'commonModules': 'commonModules', // 自定义通用模块
-            '细菌': 'bacteria',
-            '真菌': 'fungus',
-            '病毒': 'virus',
-            '寄生虫': 'parasite',
-            '特殊病原体': 'specificPathogen',
-
+            '质控': {key: 'qc', i18nKey: ''},
+            '突变分析': {key: 'mutation', i18nKey: ''},
+            '融合分析': {key: 'fusion', i18nKey: ''},
+            '拷贝数变异分析': {key: 'copy_number_variation', i18nKey: ''},
+            '微卫星不稳定分析': {key: 'microsatellite_instability', i18nKey: ''},
+            '肿瘤突变负荷分析': {key: 'tumor_mutation_load', i18nKey: ''},
+            '同源重组缺陷分析': {key: 'homologous_recombination_defect', i18nKey: ''},
+            'commonModules': {key: 'commonModules', i18nKey: ''}, // 自定义通用模块
+            '细菌': {key: 'bacteria', i18nKey: 'BacteriaDescription'},
+            '真菌': {key: 'fungus', i18nKey: 'FungusDescription'},
+            '病毒': {key: 'virus', i18nKey: 'VirusDescription'},
+            '寄生虫': {key: 'parasite', i18nKey: 'ParasiteDescription'},
+            '特殊病原体': {key: 'specificPathogen', i18nKey: 'SpecificPathogenDescription'},
         }
+        const pathogenKeys = ['commonModules', 'bacteria', 'fungus', 'virus', 'parasite', 'specificPathogen']
         try {
             data = JSON.parse(res)
         } catch (error) {
@@ -246,17 +252,27 @@ const readResultAndModuleJson = () => {
                 errorMessage(`module.json 文件内容非正确 json 格式`)
             }
         }
-        if (data) {
-            let viewConfig = {}
-            for (let k in data) {
-                viewConfig[dict[k]] = data[k]
+        if (!data) {
+            return
+        }
+        tabs.value = []
+        let viewConfig = {}
+        for (let k in data) {
+            const { key, i18nKey } = dict[k]
+            viewConfig[key] = data[k]
+            if (pathogenKeys.includes(key)) {
+                if (key !== 'commonModules') {
+                    tabs.value.push({ key, title: t(i18nKey) })
+                } else {
+                    data[k].forEach((item, i) => tabs.value.push({ key: `commonTab${i}`, title: item['title'] }))
+                }
             }
-            module.value = viewConfig
-            commonTabs.value = viewConfig.commonModules
-            // 病原体解读，第一个active tab不是QC，而是通用模块，所以需要特别判断和激活
-            if (Object.keys(viewConfig)[0] === 'commonModules') {
-                tab.value = 'commonTab0'
-            }
+        }
+        module.value = viewConfig
+        commonTabs.value = viewConfig.commonModules
+        // 病原体解读，第一个active tab不是QC，而是通用模块，所以需要特别判断和激活
+        if (tabs.value.length > 0) {
+            tab.value = tabs.value[0].key
         }
     })
 }
