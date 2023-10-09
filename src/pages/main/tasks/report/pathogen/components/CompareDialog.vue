@@ -104,7 +104,7 @@ const loadData = () => {
             }
             // 解析数据（开始2行为表头，需要排除）
             console.log("................>", task.id, dataFile.value, props)
-            readTaskFile(task.id, dataFile.value).then(fileData => {
+            readTaskFile(task.id, dataFile.value, true).then(fileData => {
                 const lines = getCsvDataAndSetLineNumber(fileData, { start: 2, fields })
                 // 找到种名相同的病原体数据
                 const target = lines.filter(line => line.speciesName === props.record.speciesName)[0]

@@ -8,12 +8,13 @@ export function getTask(id) {
     })
 }
 
-export function readTaskFile(id, path) {
+export function readTaskFile(id, path, ignore_not_existed) {
     return api({
         url: `/task/${id}/file/`,
         method: 'get',
         params: {
             path,
+            ignore_not_existed: ignore_not_existed || false
         },
     })
 }
