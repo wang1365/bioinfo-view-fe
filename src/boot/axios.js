@@ -68,9 +68,13 @@ export default boot(({ app, router, store }) => {
                 // 业务处理成功，只返回数据
                 return responseData.data
             } else {
+                let message = `Server Error:${responseData.msg}`
+                if (responseData.data) {
+                    message += ', ' + JSON.stringify(responseData.data)
+                }
                 Notify.create({
                     type: 'negative',
-                    message: `Server Error:${responseData.msg}`,
+                    message,
                 })
             }
         },

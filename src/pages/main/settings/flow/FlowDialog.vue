@@ -29,7 +29,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
+                            :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-input
                             class="col-3"
@@ -40,7 +40,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
+                            :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-select
                             class="col-3"
@@ -64,7 +64,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
+                            :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-input
                             class="col-3"
@@ -77,7 +77,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
+                            :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
 
                         <q-input
@@ -89,7 +89,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
+                            :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <q-input
                             class="col-3"
@@ -100,7 +100,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
+                            :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
 
                         <q-input
@@ -112,7 +112,7 @@
                             filled
                             clearable
                             :readonly="isInfoMode"
-                            :rules="[(val) => (val !== null && val !== '') || $t('NotAllowEmpty')]"
+                            :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
                         <div class="col-12 row q-gutter-sm justify-around">
                             <q-expansion-item
