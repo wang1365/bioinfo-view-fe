@@ -76,7 +76,7 @@
                         :disable="props.viewConfig.showStick && props.viewConfig.stickDone"
                     ></q-btn>
                     <q-space />
-                    <q-btn :href="table.url" :label="$t('Download')" icon="south" size="sm" flat />
+                    <q-btn :href="table.url" :download='table.fileName' :label="$t('Download')" icon="south" size="sm" flat />
                 </q-toolbar>
                 <div style="position:relative">
                     <q-icon
@@ -237,6 +237,7 @@ const initTable = () => {
                 columns,                    // 表格表头
                 filteredRows: rows,         // 表格过滤后数据
                 url: '/igv' + table.file,   // 下载链接
+                fileName: table.file.substring(table.file.lastIndexOf('/') + 1),
                 keyword: ''                 // 检索关键字
             }
             tables.value.push(data)
