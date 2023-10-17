@@ -411,10 +411,13 @@ const loadIntros = () => {
         for (let k in raw) {
             result[dict[k]] = raw[k]
             stepData[dict[k]] = ''
-            steps.push(dict[k])
+            if (dict[k] != 'qc') {
+                steps.push(dict[k])
+            }
         }
         intros.value = result
         console.log("intros", intros.value)
+
         step.value = steps[0]
     })
 }
