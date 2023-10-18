@@ -242,7 +242,7 @@ const columns = computed(() => [
         field: (item) => {
             let data = new Set()
             for (const sample of item.sample_data) {
-                data.add(sample.sample_identifier)
+                data.add(sample.sample_data_identifier)
             }
             let result = ''
             for (const sample of data) {
@@ -260,7 +260,7 @@ const columns = computed(() => [
         field: (item) => {
             let data = new Set()
             for (const sample of item.sample_data) {
-                data.add(sample.sample_data_identifier)
+                data.add(sample.sample_identifier)
             }
             let result = ''
             for (const sample of data) {
