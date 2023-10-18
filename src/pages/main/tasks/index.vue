@@ -38,8 +38,8 @@
             </div>
         </div>
         <div class="row q-gutter-sm q-py-xs">
-            <q-select style="width:200px" v-model="status" :options="options" stack-label emit-value map-options
-                clearable filled @clear="clearSelect()" dense @update:model-value="refreshPage()" />
+            <q-select style="width:200px" v-model="status" :options="options" stack-label emit-value map-options clearable
+                filled @clear="clearSelect()" dense @update:model-value="refreshPage()" />
 
             <q-input style="width:150px" filled dense clearable v-model="patient"
                 :label="`${$t('Patient')} ${$t('Name')}`" />
@@ -56,8 +56,8 @@
         </div>
         <div>
             <q-table :rows="rows" :columns="columns" row-key="id" ref="tableRef" v-model:pagination="pagination"
-                     style="max-height: 700px"
-                @request="onRequest" :rows-per-page-options="[5, 15, 35, 50]" class="my-sticky-column-table">
+                style="max-height: 700px" @request="onRequest" :rows-per-page-options="[5, 15, 35, 50]"
+                class="my-sticky-column-table">
                 <template v-slot:body-cell-project="props">
                     <q-td :props="props" class="q-gutter-xs">
                         <span v-if="props.row?.project.parent" class="text-bold text-primary q-mr-xs">{{
@@ -126,7 +126,8 @@
                                 :label="$t('TaskPageBtnDeleteTmpFile')" icon="delete" @click="deleteMiddleFiles(props.row)"
                                 size="sm" padding="xs sm"><q-tooltip>{{ $t('TaskPageListTableRowBtnDeleteTmpTip')
                                 }}</q-tooltip></q-btn>
-                            <q-btn color="red" padding="xs sm" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
+                            <q-btn color="red" padding="xs sm" :label="$t('Delete')" icon="delete" size="sm"
+                                @click="confirm(props.row)" />
                         </span>
                     </q-td>
                 </template>
@@ -241,7 +242,7 @@ const columns = computed(() => [
         field: (item) => {
             let data = new Set()
             for (const sample of item.sample_data) {
-                data.add(sample.sample_data_id)
+                data.add(sample.sample_identifier)
             }
             let result = ''
             for (const sample of data) {
@@ -259,7 +260,7 @@ const columns = computed(() => [
         field: (item) => {
             let data = new Set()
             for (const sample of item.sample_data) {
-                data.add(sample.sample_id)
+                data.add(sample.sample_data_identifier)
             }
             let result = ''
             for (const sample of data) {
