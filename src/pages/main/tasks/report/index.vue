@@ -260,10 +260,8 @@ const readResultAndModuleJson = () => {
         }
         module.value = viewConfig
         commonTabs.value = viewConfig.commonModules
-        // 病原体解读，第一个active tab不是QC，而是通用模块，所以需要特别判断和激活
-        if (tabs.value.length > 0) {
-            tab.value = tabs.value[0].key
-        }
+        // 设置初始的Active Tab（从module_XX.json中解析配置的第一个key并转为标准key值）
+        tab.value = dict[Object.keys(data)[0]].key
     })
 }
 
