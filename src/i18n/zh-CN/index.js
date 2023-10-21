@@ -328,9 +328,11 @@ export default {
     // QC
     CaptureKitQcInformation: '捕获试剂盒质控信息',
     DepthInformation: '深度信息',
+    OnTargetRateOfSamples: '样本的中靶率',
     OnTargetRateOfTumorSamples: '肿瘤样本的中靶率',
     OnTargetRateOfControlSamples: '对照样本中靶率',
     QualityParameters: '质量参数',
+    Value: '数值',
     TumorValue: '肿瘤数值',
     ControlValue: '对照数值',
     QcStandards: '质量标准',

@@ -329,9 +329,11 @@ export default {
     // QC
     CaptureKitQcInformation: 'Capture Kit QC Information',
     DepthInformation: 'Depth Information',
+    OnTargetRateOfSamples: 'On-Target Rate of Samples',
     OnTargetRateOfTumorSamples: 'On-Target Rate of Tumor Samples',
     OnTargetRateOfControlSamples: 'On-Target Rate of Control Samples',
     QualityParameters: 'Quality Parameters',
+    Value: 'Value',
     TumorValue: 'Tumor Value',
     ControlValue: 'Control Value',
     QcStandards: 'Qc Standards',
