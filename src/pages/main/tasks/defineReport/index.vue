@@ -459,10 +459,13 @@ const loadViewConfig = () => {
         }
         if (data) {
             let config = {}
+            let keys = []
             for (let k in data) {
+                if (k === '质控') continue;
                 config[dict[k]] = data[k]
                 config[dict[k]].showStick = true
                 config[dict[k]].stickDone = false
+                keys.push(k)
             }
             if (data.commonModules) {
                 console.log(data.commonModules)
@@ -475,6 +478,10 @@ const loadViewConfig = () => {
             }
             viewConfig.value = config
             viewConfigLoaded.value = true
+            if (keys.length === 1 && keys[0] === 'commonModules') {
+                step.value = data.commonModules[0].title
+            }
+            console.log(keys)
         }
         console.log('viewConfig', viewConfig.value)
     })
