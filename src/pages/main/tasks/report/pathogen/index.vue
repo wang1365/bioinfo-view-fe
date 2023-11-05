@@ -1,36 +1,96 @@
 <template>
     <div class="q-py-sm align-right" style="text-align: right;">
-        <q-btn icon="help_outline" size="small" outline color="orange" class=" q-mr-md" @click="dlgVisible = !dlgVisible"
-            :label="$t('Intro')" />
-        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-            class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
-        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-            color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
+        <q-btn
+            icon="help_outline"
+            size="small"
+            outline
+            color="orange"
+            class=" q-mr-md"
+            @click="dlgVisible = !dlgVisible"
+            :label="$t('Intro')"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            color="primary"
+            class=" q-mr-md"
+            :label="$t('ReportStickDone')"
+            @click="reset()"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            outline
+            color="primary"
+            class=" q-mr-md"
+            @click="stickFilter()"
+            :label="$t('ReportStickData')"
+        />
     </div>
     <div class="q-pt-sm">
-        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
-            size="middle" @change="tableChange">
+        <a-table
+            rowKey="lineNumber"
+            :data-source="rows"
+            :columns="columns"
+            :row-selection="rowSelection"
+            bordered
+            size="middle"
+            @change="tableChange"
+        >
             <template #bodyCell="{ record, column, }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn flat size="sm" padding="xs" color="primary" label="reads" target="_blank" :href="record.file"
-                        :download="record.fileName" />
+                    <q-btn
+                        flat
+                        size="sm"
+                        padding="xs"
+                        color="primary"
+                        label="reads"
+                        target="_blank"
+                        :href="record.file"
+                        :download="record.fileName"
+                    />
                     <span>|</span>
-                    <q-btn flat size="sm" padding="xs" color="primary" label="Blast" target="_blank"
-                           href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"/>
+                    <q-btn
+                        flat
+                        size="sm"
+                        padding="xs"
+                        color="primary"
+                        label="Blast"
+                        target="_blank"
+                        href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+                    />
                     <span>|</span>
-                    <q-btn flat size="sm" padding="xs" color="primary" label="Compare" @click="showCompareDialog(record)" />
+                    <q-btn
+                        flat
+                        size="sm"
+                        padding="xs"
+                        color="primary"
+                        :label="`Compare(${record.compareResult.length})`"
+                        @click="showCompareDialog(record)"
+                    />
                 </template>
             </template>
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
-                <div style="padding: 8px"
-                    v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
-                    <a-input ref="searchInput" :value="selectedKeys[0]"
+                <div
+                    style="padding: 8px"
+                    v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)"
+                >
+                    <a-input
+                        ref="searchInput"
+                        :value="selectedKeys[0]"
                         style="width: 250px; margin-bottom: 8px; display: block"
                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
+                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                    />
                     <div class="row justify-around">
-                        <a-button type="primary" size="small" style="width: 80px; margin-right: 25px"
-                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+                        <a-button
+                            type="primary"
+                            size="small"
+                            style="width: 80px; margin-right: 25px"
+                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                        >
                             <template #icon>
                                 <SearchOutlined />
                             </template>
@@ -57,7 +117,7 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <CompareDialog v-model="dlgCmpVisible" :task="props.task" :category="props.category" :record="cmpRecord"/>
+        <CompareDialog v-model="dlgCmpVisible" :task="props.task" :category="props.category" :record="cmpRecord" />
     </div>
 </template>
 <script setup>
@@ -74,6 +134,8 @@ import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import CompareDialog from './components/CompareDialog.vue'
+import PathogenTable from 'pages/main/tasks/report/pathogen/components/PathogenTable.vue';
+import { fillCompareData } from 'pages/main/tasks/report/pathogen/components/compare';
 
 
 const store = globalStore()
@@ -304,6 +366,9 @@ const loadData = () => {
                 }
             }
         }
+
+        // 补充对比数据
+        fillCompareData(fields, props.task.id, dataFile.value, rows.value)
     }).finally(() => {
         $q.loading.hide()
     })

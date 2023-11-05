@@ -1,11 +1,33 @@
 <template>
     <div class="q-py-sm align-right" style="text-align: right;">
-        <q-btn icon="help_outline" size="small" outline color="orange" class=" q-mr-md" @click="dlgVisible = !dlgVisible"
-            :label="$t('Intro')" />
-        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-            class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
-        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-            color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
+        <q-btn
+            icon="help_outline"
+            size="small"
+            outline
+            color="orange"
+            class=" q-mr-md"
+            @click="dlgVisible = !dlgVisible"
+            :label="$t('Intro')"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            color="primary"
+            class=" q-mr-md"
+            :label="$t('ReportStickDone')"
+            @click="reset()"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            outline
+            color="primary"
+            class=" q-mr-md"
+            @click="stickFilter()"
+            :label="$t('ReportStickData')"
+        />
     </div>
     <div class="q-pt-sm">
         <q-tabs v-model="tab" align="left" active-color="primary" dense>
@@ -14,9 +36,15 @@
         </q-tabs>
         <q-tab-panels v-model="tab">
             <q-tab-panel v-for="category in categories" :key="category.code" :name="category.code">
-                <PathogenTable :data="category" :view-config="viewConfig" :task="props.task" :category="props.category"
-                    :subCategory="tab" @tableStickChange="tableStickChange(category.code, $event)"
-                               :stepData="tabsStickData[category.code]" />
+                <PathogenTable
+                    :data="category"
+                    :view-config="viewConfig"
+                    :task="props.task"
+                    :category="props.category"
+                    :subCategory="tab"
+                    @tableStickChange="tableStickChange(category.code, $event)"
+                    :stepData="tabsStickData[category.code]"
+                />
             </q-tab-panel>
         </q-tab-panels>
 
@@ -184,7 +212,6 @@ const reset = () => {
     emit('reset', null)
     tabsStickData.value = tabsStickDataOrigin
 }
-
 </script>
 
 <style lang="scss" scoped></style>

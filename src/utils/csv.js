@@ -7,7 +7,7 @@ export function getCsvData(str, options = {}) {
         colIndex: [],
     }
 
-    const finalOptions = {...defaultOptions}
+    const finalOptions = { ...defaultOptions }
     Object.assign(finalOptions, options)
 
     // 文本分割多行，每行转多列，形成二维数组
@@ -43,13 +43,17 @@ export function getCsvData(str, options = {}) {
 }
 
 export function getCsvDataAndSetLineNumber(str, options = {}) {
+    if (!str) {
+        console.log('getCsvDataAndSetLineNumber: No data')
+        return []
+    }
     const defaultOptions = {
         splitter: '\t',
         hasHeaderLine: true,
         fields: [],
-        colIndex: []
+        colIndex: [],
     }
-    const finalOptions = {...defaultOptions}
+    const finalOptions = { ...defaultOptions }
     Object.assign(finalOptions, options)
     let lines = str.split('\n')
     let start = 0
@@ -66,7 +70,6 @@ export function getCsvDataAndSetLineNumber(str, options = {}) {
                 finalOptions.colIndex.forEach((i) => row.push(originRow[i - 1]))
             } else {
                 row = originRow
-
             }
 
             if (finalOptions.fields.length > 0) {
@@ -90,7 +93,7 @@ export function getCsvDataAndSetLineNumber(str, options = {}) {
     return rows
 }
 
-export function getCsvHeader(str, splitter = '\t', line=0) {
+export function getCsvHeader(str, splitter = '\t', line = 0) {
     const lines = str.split('\n')
     // let headLine = str.substring(0, str.indexOf('\n'))
     return lines[line].split(splitter)

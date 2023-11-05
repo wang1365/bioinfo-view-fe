@@ -1,26 +1,62 @@
 <template>
-    <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered size="middle"
-        @change="tableChange">
+    <a-table
+        rowKey="lineNumber"
+        :data-source="rows"
+        :columns="columns"
+        :row-selection="rowSelection"
+        bordered
+        size="middle"
+        @change="tableChange"
+    >
         <template #bodyCell="{ record, column, }">
             <template v-if="column.dataIndex === 'report'">
-                <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
-                    :download="record.fileName" />
+                <q-btn
+                    flat
+                    size="sm"
+                    color="primary"
+                    label="reads"
+                    target="_blank"
+                    :href="record.file"
+                    :download="record.fileName"
+                />
                 <span>|</span>
-                <q-btn flat size="sm" color="primary" label="Blast" target="_blank"
-                       href="https://blast.ncbi.nlm.nih.gov/Blast.cgi" />
+                <q-btn
+                    flat
+                    size="sm"
+                    color="primary"
+                    label="Blast"
+                    target="_blank"
+                    href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+                />
                 <span>|</span>
-                <q-btn flat size="sm" color="primary" label="Compare" @click="showCompareDialog(record)" />
+                <q-btn
+                    flat
+                    size="sm"
+                    color="primary"
+                    :label="`Compare(${record.compareResult.length})`"
+                    @click="showCompareDialog(record)"
+                />
             </template>
         </template>
         <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
-            <div style="padding: 8px"
-                v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
-                <a-input ref="searchInput" :value="selectedKeys[0]" style="width: 250px; margin-bottom: 8px; display: block"
+            <div
+                style="padding: 8px"
+                v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)"
+            >
+                <a-input
+                    ref="searchInput"
+                    :value="selectedKeys[0]"
+                    style="width: 250px; margin-bottom: 8px; display: block"
                     @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                    @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
+                    @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                />
                 <div class="row justify-around">
-                    <a-button type="primary" size="small" style="width: 80px; margin-right: 28px"
-                        @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+                    <a-button
+                        type="primary"
+                        size="small"
+                        style="width: 80px; margin-right: 28px"
+                        @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                    >
                         <template #icon>
                             <SearchOutlined />
                         </template>
@@ -36,8 +72,13 @@
             <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
         </template>
     </a-table>
-    <CompareDialog v-model="dlgCmpVisible" :task="props.task" :category="props.category"
-                   :subCategory="props.subCategory" :record="cmpRecord"/>
+    <CompareDialog
+        v-model="dlgCmpVisible"
+        :task="props.task"
+        :category="props.category"
+        :subCategory="props.subCategory"
+        :record="cmpRecord"
+    />
 </template>
 
 <script setup>
@@ -53,6 +94,7 @@ import { useI18n } from "vue-i18n"
 import { globalStore } from 'stores/global'
 import { storeToRefs } from 'pinia'
 import CompareDialog from './CompareDialog.vue'
+import { fillCompareData } from 'pages/main/tasks/report/pathogen/components/compare';
 
 
 const store = globalStore()
@@ -213,19 +255,21 @@ watch(langCode, () => loadData())
 
 
 const loadData = () => {
-    console.log("table mount")
-    console.log(stepData.value)
+    console.log(">>>>> table mount", stepData.value)
     $q.loading.show({ delay: 100 })
+    // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
+    const fields = ['genusName', 'relativeAbundance', 'readsCount1',
+        'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
+
     readTaskFile(route.params.id, props.data.file).then((res) => {
-        // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
-        const fields = ['genusName', 'relativeAbundance', 'readsCount1',
-            'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvDataAndSetLineNumber(res, { start: 2, fields })
         // 文件下载路径
         rows.value.forEach(r => r.file = `igv${r.file}`)
         // 下载的文件名
         rows.value.forEach(r => r.fileName = r.file.substring(r.file.lastIndexOf('/') + 1))
+        // 初始化对比结果
+        rows.value.forEach(r => r.compareResult = [])
 
         columns.value.forEach(column => {
             if (column.children) {
@@ -251,6 +295,9 @@ const loadData = () => {
                 }
             }
         }
+
+        // 同项目下数据对比
+        fillCompareData(fields, props.task.id, props.data.file, rows.value, props.category === 'virus')
     }).finally(() => {
         $q.loading.hide()
     })
