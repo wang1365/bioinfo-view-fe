@@ -16,8 +16,10 @@
             <q-tab-panel name="突变信息">
                 <div class="row q-gutter-xs">
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
-                        <div >{{'VCF filter: '}}</div>
-                        <div class="text-purple" style="word-break: break-all">{{isGermline ? props.row.col248 : props.row.col252}}</div>
+                        <div>{{'VCF filter: '}}</div>
+                        <div class="text-purple" style="word-break: break-all">
+                            {{isGermline ? props.row.col248 : props.row.col252}}
+                        </div>
                     </div>
                     <div class="col" style="border-right:solid 1px black; padding-left: 5px">
                         <div>
@@ -51,8 +53,12 @@
                             <a :href="'https://www.ncbi.nlm.nih.gov/snp/' + rs" target="_blank">{{rs}}</a>
                         </div>
                         <div>
-                            {{`ClinVar Allele ID: `}}
-                            <span class="text-purple">{{clinVar}}</span>
+                            <span>{{`ClinVar Allele ID: `}}</span>
+                            <a
+                                :href="`https://www.ncbi.nlm.nih.gov/clinvar?term=${clinVar}%5BAlleleID%5D`"
+                                target="_blank"
+                                >{{clinVar}}</a
+                            >
                         </div>
                         <div>
                             <span>{{'OMIM: '}}</span>
