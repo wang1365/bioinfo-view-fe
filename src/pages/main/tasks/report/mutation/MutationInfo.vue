@@ -56,6 +56,7 @@
                             <span>{{`ClinVar Allele ID: `}}</span>
                             <a
                                 :href="`https://www.ncbi.nlm.nih.gov/clinvar?term=${clinVar}%5BAlleleID%5D`"
+                                :title="`https://www.ncbi.nlm.nih.gov/clinvar?term=${clinVar}%5BAlleleID%5D`"
                                 target="_blank"
                                 >{{clinVar}}</a
                             >
