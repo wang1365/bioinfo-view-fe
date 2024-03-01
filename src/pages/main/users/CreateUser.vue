@@ -81,6 +81,7 @@ import { ref } from 'vue'
 import { createUser } from 'src/api/user'
 import { useQuasar } from 'quasar'
 import { useApi }from 'src/api/apiBase'
+import { amISuper } from 'src/utils/user'
 
 const $q = useQuasar()
 const { apiPost } = useApi()
@@ -94,8 +95,9 @@ const form = ref({
     email: '',
     password: '',
     password_again: '',
-    role_list: ['admin']
+    role_list: [ amISuper() ? 'super' : 'admin' ]
 })
+
 const clickOk = () => {
     if (form.value.password.length < 6) {
         $q.notify({message: '至少输入6位', type: 'negative'})

@@ -27,7 +27,7 @@
             </div>
             <div class="col-1">
                 <q-btn
-                    v-if="amISuper()"
+                    v-if="amISuper() || amIAdmin()"
                     class="on-plus"
                     size="md"
                     color="primary"
@@ -173,7 +173,7 @@ import { useQuasar } from "quasar"
 import {computed, nextTick, onMounted, ref} from "vue"
 import _ from "lodash";
 import { listUser, batchDeleteUser } from "src/api/user"
-import { isSuper, isAdmin, isNormal, amISuper } from "src/utils/user"
+import { isSuper, isAdmin, isNormal, amISuper, amIAdmin } from "src/utils/user"
 import PageTitle from "components/page-title/PageTitle.vue"
 import CreateUser from "./CreateUser"
 import EditUser from "pages/main/users/EditUser"
