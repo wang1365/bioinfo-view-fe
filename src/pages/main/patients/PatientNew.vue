@@ -107,7 +107,7 @@
                             </q-input>
                         </div>
                     </div>
-                    <div class="text-h6 text-bold">{{ $t('PatientNewFormClinicalInformatiaon') }}</div>
+                    <div class="text-h6 text-bold">{{ $t('PatientNewFormClinicalInformation') }}</div>
                     <q-separator></q-separator>
                     <div class="row q-my-sm q-gutter-xs">
                         <div class="col">
@@ -152,7 +152,7 @@
                                 :error-message="errors.medication_history.message
                                 "
                                 v-model="form.medication_history"
-                                :label="$t('PatientNewFormGrugUsingHistory')"
+                                :label="$t('PatientNewFormDrugUsingHistory')"
                             ></q-input>
                         </div>
                     </div>

@@ -25,7 +25,7 @@
                 <div class="col q-pa-sm">{{ $t('PatientNewFormSubmissionUnit') }}: {{ patient.inspection_agency }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormTreatingPhysician') }}: {{ patient.medical_doctor }}</div>
             </div>
-            <div class="text-subtitle1 text-bold">{{ $t('PatientNewFormClinicalInformatiaon') }}</div>
+            <div class="text-subtitle1 text-bold">{{ $t('PatientNewFormClinicalInformation') }}</div>
             <q-separator></q-separator>
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormClinicalDiagnosis') }}: {{ patient.diagnosis }}</div>
@@ -35,7 +35,7 @@
             <div class="row q-my-sm">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormFamilyHistory') }}: {{ patient.family_history }}</div>
                 <div class="col q-pa-sm">
-                    {{ $t('PatientNewFormGrugUsingHistory') }}: {{ patient.medication_history }}
+                    {{ $t('PatientNewFormDrugUsingHistory') }}: {{ patient.medication_history }}
                 </div>
             </div>
             <div class="row q-my-sm">
