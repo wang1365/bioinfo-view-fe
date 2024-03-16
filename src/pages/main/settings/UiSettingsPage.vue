@@ -3,24 +3,48 @@
         <PageTitle :title="$t('SystemUiConfig')"></PageTitle>
         <q-card class="width:600px">
             <q-card-section>
-                <div class="text-h6">{{$t('SystemTitle') + ':'}}</div>
-                <q-input v-model="form.title" outlined>
-                    <template v-slot:before>
-                        <q-icon name="flight_takeoff" />
-                    </template>
-                </q-input>
+                <!--                <div class="text-h6">{{$t('SystemTitle') + ':'}}</div>-->
+                <div class="col">
+                    <div class="row items-center">
+                        <div class="col-2">
+                            <span class="text-bold">{{ $t('SystemTitle') + ':'}}</span>
+                        </div>
+                        <q-input class="col-6" v-model="form.title" outlined dense />
+                    </div>
+                    <div v-if="amISuper()" class="row items-center">
+                        <div class="col-2"><span class="text-bold">多语言切换:</span></div>
+                        <q-checkbox class="col-1" v-model="langConfig.data.langSwitch" />
+                    </div>
+                    <div v-if="amISuper()" class="row items-center">
+                        <div class="col-2"><span class="text-bold">默认语言:</span></div>
+                        <q-option-group
+                            inline
+                            v-model="langConfig.data.defaultLang"
+                            :options="[{label: '中文', value:'cn'},{label: 'English', value:'en'}]"
+                            color="primary"
+                        />
+                    </div>
+                </div>
             </q-card-section>
             <q-separator />
             <q-card class="width:300px ">
                 <q-list>
+                    <q-item class="col-2">
+                        <span class="text-bold">{{$t('SystemIcon') + ':'}}</span>
+                    </q-item>
                     <q-item>
-                        <q-img :src="form.image" spinner-color="white" style="height: 200px; max-width: 200px">
-                            <div class="absolute-top text-center">{{$t('SystemIcon')}}</div>
+                        <q-img
+                            :src="form.image"
+                            class="rounded-borders"
+                            spinner-color="white"
+                            style="height: 200px; max-width: 200px; border-style: dashed; border-width: 1px"
+                        >
                         </q-img>
                     </q-item>
                     <q-item>
                         <q-file
                             filled
+                            dense
                             bottom-slots
                             v-model="imageFile"
                             :label="$t('SelectImage')"
@@ -46,16 +70,25 @@
 </template>
 
 <script setup>
-import {ref, watch, onMounted, toRefs} from 'vue'
+import { ref, watch, onMounted, toRefs } from 'vue'
 import PageTitle from "components/page-title/PageTitle"
-import {useQuasar} from 'quasar'
+import { useQuasar } from 'quasar'
 import { QSpinnerGears } from 'quasar'
-import {listUiConfig, createUiConfig, updateUiConfig, refreshSystemUi} from 'src/api/ui'
+import { listUiConfig, createUiConfig, updateUiConfig, refreshSystemUi } from 'src/api/ui'
+import { amISuper }from 'src/utils/user'
+import { listConfig, updateConfig, createConfig }from 'src/api/config'
 
 const $q = useQuasar()
 
 const imageFile = ref(null)
 const form = ref({})
+const langConfig = ref({
+    name: 'langConfig',
+    data: {
+        langSwitch: true,
+        defaultLang: navigator.language === 'en-US' ? 'en' : 'cn'
+    }
+})
 
 const upload = () => {
     clearTimeout(this.uploading)
@@ -122,8 +155,26 @@ const refreshUiConfig = () => {
             }
         }
     }).finally(() => $q.loading.hide())
+
+
+    listConfig().then(res => {
+        for (let item of res?.results) {
+            if (item.name === 'langConfig') {
+                langConfig.value = {...item}
+                langConfig.value.data = JSON.parse(item.data)
+            }
+        }
+        console.log("===> langConfig", langConfig.value);
+    })
 }
 const clickSet = () => {
+    const data = {...langConfig.value, data: JSON.stringify(langConfig.value.data)}
+    if (data.id) {
+        updateConfig(data)
+    } else {
+        createConfig(data)
+    }
+
     if (!form.value.id) {
         // 新增配置
         createUiConfig(form.value).then(res => {

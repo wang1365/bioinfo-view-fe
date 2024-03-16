@@ -9,11 +9,12 @@
             <div class="text-h5 text-center text-primary">
                 {{ "" }}
             </div>
-            <div class="text-h7 text-center text-primary q-mt-md q-mb-xs">{{$t('WelcomeBack')}}</div>
+            <!--            <div class="text-h7 text-center text-primary q-mt-md q-mb-xs">{{$t('WelcomeBack')}}</div>-->
             <q-form @submit="onSubmit" class="q-mt-lg gqa-form">
                 <q-input
                     :disable="loading"
-                    dense outlined
+                    dense
+                    outlined
                     no-error-icon
                     v-model.trim="form.username"
                     :placeholder="$t('Username')"
@@ -70,24 +71,25 @@
                         :disable="loading"
                         v-model="rememberMe"
                         :label="$t('RememberMe')"
-                        dense class="col"
+                        dense
+                        class="col"
                         @update:model-value="changeRememberMe"
                     />
-<!--                    <q-select dense v-model:model-value="lang" class="col-4" :options="langOptions" options-dense>-->
-<!--                        <template v-slot:before>-->
-<!--                            <q-btn flat dense color="primary" :label="lang === 'cn' ? '语言' : 'Language'"/>-->
-<!--                        </template>-->
-<!--                    </q-select>-->
-                    <div class="col-4">
+                    <!--                    <q-select dense v-model:model-value="lang" class="col-4" :options="langOptions" options-dense>-->
+                    <!--                        <template v-slot:before>-->
+                    <!--                            <q-btn flat dense color="primary" :label="lang === 'cn' ? '语言' : 'Language'"/>-->
+                    <!--                        </template>-->
+                    <!--                    </q-select>-->
+                    <div v-if="langConfig.langSwitch" class="col-4">
                         <SelectLanguage />
                     </div>
                 </div>
                 <div class="items-center justify-around q-mt-md row">
                     <q-btn :label="$t('Login')" type="submit" color="primary" :loading="loading" style="width: 100%" />
                 </div>
-<!--                <div class="items-center justify-around q-mt-md row">-->
-<!--                    <q-btn :label="$t('BackToHome')" type="button" color="default" :loading="loading" style="width: 100%" />-->
-<!--                </div>-->
+                <!--                <div class="items-center justify-around q-mt-md row">-->
+                <!--                    <q-btn :label="$t('BackToHome')" type="button" color="default" :loading="loading" style="width: 100%" />-->
+                <!--                </div>-->
             </q-form>
             <q-inner-loading :showing="loading" style="background-color: rgba(0, 0, 0, 0)">
                 <q-spinner-hourglass color="primary" size="3em" />
@@ -103,13 +105,15 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-// import { useI18n } from "vue-i18n";
+const { locale } = useI18n({ useScope: 'global' })
 import { useRouter, useRoute } from "vue-router";
 import { globalStore } from "src/stores/global";
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
 import { refreshSystemUi } from "src/api/ui";
 import SelectLanguage from 'src/components/SelectLanguage.vue'
+import { listConfig } from 'src/api/config'
+import { useI18n } from 'vue-i18n';
 
 const $q = useQuasar();
 // const { t } = useI18n();
@@ -127,11 +131,8 @@ const route = useRoute();
 const rememberMe = ref(true);
 const captchaImage = ref("");
 const loading = ref(false);
-const langOptions = [
-    { label: 'English', value:'en' },
-    { label: '简体中文', value:'cn' },
-]
 const lang = ref('cn')
+const langConfig = ref({ lang_switch: false })
 
 
 const getCaptcha = () => {
@@ -149,6 +150,23 @@ const changeRememberMe = (value) => {
 
 onMounted(() => {
     getCaptcha();
+
+    listConfig().then(res => {
+        for (let item of res.results) {
+            if (item.name === 'langConfig') {
+                langConfig.value = JSON.parse(item.data)
+
+                store.langConfig.langSwitch = langConfig.value.langSwitch
+                store.langConfig.defaultLang = langConfig.value.defaultLang
+                console.log('---------->', langConfig.value)
+                // 如果没有开启语言切换，则使用语言配置中的默认语言
+                if (!langConfig.value.lang_switch) {
+                    locale.value = langConfig.value.defaultLang === 'en' ? 'en-US' : 'zh-CN'
+                    store.langConfig.lang =  langConfig.value.defaultLang
+                }
+            }
+        }
+    })
 });
 
 const onSubmit = async () => {
@@ -190,5 +208,4 @@ input:-webkit-autofill:focus,
 input:-webkit-autofill:active{
     -webkit-box-shadow: 0 0 0 30px #4cb494 inset !important;
 }
-
 </style>
