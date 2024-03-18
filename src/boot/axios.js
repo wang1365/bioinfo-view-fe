@@ -46,14 +46,13 @@ export default boot(({ app, router, store }) => {
     // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
     //       so you can easily perform requests against your app's API
 
-    api.interceptors.request.use(
-        (config) => {
-            // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
-            const { lang } = globalStore()
-            config.headers.Language = lang
-            return config
-        }
-    )
+    api.interceptors.request.use((config) => {
+        // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
+        const { langConfig } = globalStore()
+        console.log('===> add header:', langConfig)
+        config.headers.Language = langConfig.lang
+        return config
+    })
 
     // 响应拦截
     api.interceptors.response.use(
