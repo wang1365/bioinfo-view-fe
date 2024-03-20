@@ -9,7 +9,7 @@
                 <div class="col q-pa-sm">
                     {{ $t('PatientNewFormGender') }}:
                     {{ patient.gender == '男' ? $t('Male') :
-                    $t('Female') }}
+                $t('Female') }}
                 </div>
                 <div class="col q-pa-sm">{{ $t('PatientInfoPageAge') }}: {{ patient.age }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormBirthday') }}: {{ patient.birthday }}</div>
@@ -39,9 +39,13 @@
                 </div>
             </div>
             <div class="row q-my-sm">
-                <div class="col q-pa-sm">{{ $t('PatientNewFormSmoking') }}: {{ patient.smoking }}</div>
-                <div class="col q-pa-sm">{{ $t('PatientNewFormAlcoholDrinking') }}: {{ patient.drinking }}</div>
-                <div class="col q-pa-sm">{{ $t('PatientNewFormViralInfection') }}: {{ patient.viral_infection }}</div>
+                <div class="col q-pa-sm">{{ $t('PatientNewFormSmoking') }}: {{ patient.smoking == '是' ? $t('Yes') :
+                $t('No')
+                    }}</div>
+                <div class="col q-pa-sm">{{ $t('PatientNewFormAlcoholDrinking') }}: {{
+                patient.drinking == '是' ? $t('Yes') : $t('No') }}</div>
+                <div class="col q-pa-sm">{{ $t('PatientNewFormViralInfection') }}: {{
+                patient.viral_infection == '是' ? $t('Yes') : $t('No') }}</div>
             </div>
             <!-- <div class="row q-my-sm q-gutter-xs" v-if="patient.viral_infection === '是'">
                 <div class="col q-pa-sm">
