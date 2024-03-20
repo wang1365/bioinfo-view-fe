@@ -149,11 +149,11 @@ export default {
     Result: '结果',
     Male: '男',
     Female: '女',
-    ServerError: "服务器错误",
-    NotAuthenticated: "未登录",
-    PermissionDenied: "无权限",
-    RouteNotFound: "路由不存在",
-    ParamsError: "请求参数错误",
+    ServerError: '服务器错误',
+    NotAuthenticated: '未登录',
+    PermissionDenied: '无权限',
+    RouteNotFound: '路由不存在',
+    ParamsError: '请求参数错误',
     Template: '模板',
 
     // 词组
@@ -224,7 +224,6 @@ export default {
     OnlySelectAllThisPageFilterResult: '仅全选本页筛选结果',
     NotAllowEmpty: '必填字段，不能为空',
     InvalidValue: '无效的数值',
-
 
     Intro: '说明',
     Tips: '说明',
@@ -468,7 +467,6 @@ export default {
     DefineReportMutationGermlineUnlock: '胚系突变分析未进行过滤',
     DefineReportMutationSomaticUnlock: '体系突变分析未进行过滤',
 
-
     // 自定义报告
     ReportPageTitle: '自定义报告',
     ReportDefineEnsureTab: '报告确认',
@@ -538,12 +536,12 @@ export default {
     PatientNewFormPatientIdentificationNumber: '患者识别号',
     PatientNewFormSubmissionUnit: '送检机构',
     PatientNewFormTreatingPhysician: '诊疗医生',
-    PatientNewFormClinicalInformatiaon: '临床信息',
+    PatientNewFormClinicalInformation: '临床信息',
     PatientNewFormClinicalDiagnosis: '临床诊断',
     PatientNewFormTumorStaging: '肿瘤分期',
     PatientNewFormGeneticDisease: '遗传病',
     PatientNewFormFamilyHistory: '家族史',
-    PatientNewFormGrugUsingHistory: '用药史',
+    PatientNewFormDrugUsingHistory: '用药史',
     PatientNewFormSmoking: '吸烟',
     PatientNewFormAlcoholDrinking: '饮酒',
     PatientNewFormViralInfection: '病原感染',
@@ -712,7 +710,6 @@ export default {
     X1Comment: '横坐标：染色体，纵坐标：A(红色)和B(蓝色)等位基因的拷贝数',
     X2Comment: '横坐标：染色体，纵坐标：总体拷贝数的变化',
     X3Comment: '横坐标：染色体，纵坐标：B等位基因的频率和深度比',
-
 
     // 病原体
     Bacteria: '细菌',

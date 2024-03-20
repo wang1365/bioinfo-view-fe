@@ -38,17 +38,14 @@ const api = axios.create({
     //     console.log("<-----", progressEvent);
     // },
 })
-api.interceptors.request.use(
-    (config) => {
-        // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
-        const { lang } = globalStore()
-        config.headers.Language = lang
-        config.headers.X_LANGUAGE = lang
-        return config
-    }
-)
+api.interceptors.request.use((config) => {
+    // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
+    const { langConfig } = globalStore()
+    config.headers.Language = langConfig.lang
+    config.headers.X_LANGUAGE = langConfig.lang
+    return config
+})
 export function defaultErrorHandler(data) {
-
     Notify.create({
         type: 'negative',
         message: `Sever Error::${data.msg}`,
@@ -233,10 +230,10 @@ export function useApi() {
             })
     }
     function downloadData(url, config = {}) {
-        if(!config){
-            config={responseType:'blob'}
+        if (!config) {
+            config = { responseType: 'blob' }
         }
-        config.responseType='blob'
+        config.responseType = 'blob'
         api.get(url, config)
             .then((resp) => {
                 let contentDiposition = resp.headers['content-disposition']
@@ -250,7 +247,7 @@ export function useApi() {
                         }
                     }
                     var a = document.createElement('a')
-                    a.href=window.URL.createObjectURL(resp.data)
+                    a.href = window.URL.createObjectURL(resp.data)
                     a.download = filename
                     document.body.appendChild(a)
                     a.click()

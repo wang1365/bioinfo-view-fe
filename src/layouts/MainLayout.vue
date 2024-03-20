@@ -13,11 +13,11 @@
                 </q-toolbar-title>
                 <q-space />
                 <div class="q-gutter-sm row items-center no-wrap">
-                    <SelectLanguage dark />
+                    <SelectLanguage dark v-if="store.langConfig.langSwitch" />
                     <Fullscreen />
                     <q-btn dense flat>
                         <q-icon name="person_pin" />
-                        &nbsp;&nbsp;&nbsp;&nbsp;{{store.currentUser.nickname}}
+                        &nbsp;&nbsp;&nbsp;&nbsp;{{store.currentUser?.nickname}}
                         <q-menu class="row items-center justify-around q-pa-md">
                             <div class="column">
                                 <div class="text-h6">{{$t('UserDetail')}}</div>
