@@ -1,8 +1,8 @@
 {
     "name": "bio-frontend-quasar",
     "version": "0.0.1",
-    "description": "11纳昂达可视化解读",
-    "productName": "",
+    "description": "纳昂达可视化解读",
+    "productName": "Bioinformatics Analysis Cloud Center",
     "author": "mering <canhuayin@gmail.com>",
     "private": true,
     "scripts": {
