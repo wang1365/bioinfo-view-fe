@@ -101,6 +101,9 @@
                         <span v-if="props.row?.project.parent" class="text-bold text-primary q-mr-xs"
                             >{{
                             props.row.project.parent.name
+
+
+
                             }}/</span
                         >
                         <span class="text-secondary"> {{ props.row.project.name }} </span>
@@ -149,11 +152,25 @@
                     <q-td :props="props" class="q-gutter-xs">
                         <template v-if="props.row.priority === 2">
                             <span class="text-red">{{ $t('High') }}</span>
-                            <q-btn size="xs" flat icon="south" padding="xs" @click="raisePriority(props.row, 1)" />
+                            <q-btn
+                                v-if="amISuper() || amIAdmin()"
+                                size="xs"
+                                flat
+                                icon="south"
+                                padding="xs"
+                                @click="raisePriority(props.row, 1)"
+                            />
                         </template>
                         <template v-else>
                             <span class="text-primary">{{ $t('Normal') }}</span>
-                            <q-btn size="xs" flat icon="north" padding="xs" @click="raisePriority(props.row, 2)" />
+                            <q-btn
+                                v-if="amISuper() || amIAdmin()"
+                                size="xs"
+                                flat
+                                icon="north"
+                                padding="xs"
+                                @click="raisePriority(props.row, 2)"
+                            />
                         </template>
                     </q-td>
                 </template>
@@ -204,11 +221,11 @@
                             <q-btn
                                 v-if="props.row.status === 'FINISHED'"
                                 color="primary"
-                                @click="downlaod(props.row)"
+                                @click="download(props.row)"
                                 size="sm"
                                 padding="xs sm"
                             >
-                                <a style="color:white" :href="downlaod(props.row)" download>
+                                <a style="color:white" :href="download(props.row)" download>
                                     <q-icon name="download" />
                                     {{ $t('Download') }}
                                 </a>
@@ -629,7 +646,6 @@ const loadBackup = () => {
         patient.value = data.patient
         libraryNumber.value = data.libraryNumber
         console.log("load", data)
-
     }
 }
 
@@ -675,7 +691,7 @@ const deleteMiddleFiles = async (task) => {
     })
 }
 
-const downlaod = (item) => {
+const download = (item) => {
     let lang = langCode.value === 'en' ? 'EN' : 'CN'
     let path = '/igv' + item.result_path
     if (lang === 'EN') {
