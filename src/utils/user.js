@@ -39,7 +39,7 @@ export const isNormal = (user) => {
 }
 
 const isRole = (user, roleName) => {
-    const roles = user.role || user.role_list || []
+    const roles = user?.role || user?.role_list || []
     if (!roles) {
         return false
     }
