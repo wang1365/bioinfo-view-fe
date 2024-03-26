@@ -27,7 +27,7 @@
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
                                         <q-item-section>
-                                            {{ $t('Username') + ": " + store.currentUser.username }}
+                                            {{ $t('Username') + ": " + store.currentUser?.username }}
                                         </q-item-section>
                                     </q-item>
                                     <q-item clickable>
@@ -35,7 +35,7 @@
                                             <q-icon size="lg" name="star" class="text-warning" />
                                         </q-item-section>
                                         <q-item-section
-                                            >{{ $t('Nickname')  + ": " + store.currentUser.nickname  }}</q-item-section
+                                            >{{ $t('Nickname')  + ": " + store.currentUser?.nickname  }}</q-item-section
                                         >
                                     </q-item>
                                     <q-item clickable>
@@ -157,7 +157,7 @@ function logout() {
 }
 
 const getRole = () => {
-    const roles = store.currentUser.role_list
+    const roles = store.currentUser?.role_list || []
     if (roles.includes('super')) {
         return t('SuperAdmin')
     }
