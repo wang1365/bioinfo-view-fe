@@ -1,6 +1,7 @@
 export default {
     // 登录页面
     LoginSubtitle: '一站式解决基因文库分析结果.',
+    IncorrectUsernameOrPassword: '用户名或密码不正确',
     // 帮助
     InitDbHelp1: '确保已经安装并启动了Mysql',
     InitDbHelp2: '我们会根据右侧配置为你自动创建数据库并导入初始数据',

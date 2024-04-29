@@ -1,6 +1,7 @@
 export default {
     // 登录页面
     LoginSubtitle: 'One-stop solution to gene library analysis results',
+    IncorrectUsernameOrPassword: 'Incorrect Username or Password',
 
     // Help
     InitDbHelp1: 'Make sure MySQL is installed and started',

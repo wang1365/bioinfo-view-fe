@@ -105,7 +105,9 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { errorMessage } from 'src/utils/notify'
 const { locale } = useI18n({ useScope: 'global' })
+const { t } = useI18n()
 import { useRouter, useRoute } from "vue-router";
 import { globalStore } from "src/stores/global";
 import { api } from "src/boot/axios";
@@ -194,7 +196,8 @@ const onSubmit = async () => {
                 });
         })
         .catch((e) => {
-            alert(e.response.data.msg);
+            console.log(e.response.data.msg);
+            errorMessage(t('IncorrectUsernameOrPassword'))
             loading.value = false;
         });
 };

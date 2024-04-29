@@ -79,10 +79,10 @@ export default boot(({ app, router, store }) => {
         },
         (error) => {
             if (error.response.status === 401) {
-                Notify.create({
-                    type: 'negative',
-                    message: '未登录',
-                })
+                // Notify.create({
+                //     type: 'negative',
+                //     message: '未登录',
+                // })
                 Cookies.remove('token')
                 router.push('/login')
             }
