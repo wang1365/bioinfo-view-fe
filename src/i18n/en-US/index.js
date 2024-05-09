@@ -311,6 +311,7 @@ export default {
     ParallelTaskLimit: 'Parallel Task Limit(>1)',
     MemoryUsageLimit: 'Memory Usage Limit(0-1)',
     DiskUsageLimit: 'Disk Usage Limit(MB)',
+    NoLimitFor_1: 'No limitation for -1',
     AllowedRunningTime: 'Allowed running duration(Days)',
     AlreadyRun: 'Already run',
     Days: 'Day(s)',

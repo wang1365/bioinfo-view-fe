@@ -309,6 +309,7 @@ export default {
     ParallelTaskLimit: '并行任务限制(>1)',
     MemoryUsageLimit: '内存使用率限制(0-1)',
     DiskUsageLimit: '磁盘使用限制(MB)',
+    NoLimitFor_1: '-1表示没有限制',
     AllowedRunningTime: '允许运行时间(天)',
     AlreadyRun: '已运行',
     Days: '天',

@@ -11,7 +11,8 @@
                             class="full-width"
                             readonly
                             filled
-                            stack-label label-color="primary"
+                            stack-label
+                            label-color="primary"
                             v-model="form.username"
                             :label="$t('Username')"
                             :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
@@ -20,19 +21,40 @@
                     <q-item>
                         <q-input
                             class="full-width"
-                            stack-label label-color="primary"
+                            stack-label
+                            label-color="primary"
                             v-model="form.nickname"
                             :label="$t('Nickname')"
                             :rules="[ val => val && val.length > 0 || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <q-item>
-                        <q-input class="full-width" stack-label label-color="primary"  v-model.number="form.disk_limit"
-                                 :label="$t('DiskUsageLimit')" type="number"/>
+                        <q-input
+                            class="full-width"
+                            stack-label
+                            clearable
+                            label-color="primary"
+                            v-model.number="form.disk_limit"
+                            :label="$t('DiskUsageLimit')"
+                            type="number"
+                            :hint="$t('NoLimitFor_1')"
+                            @clear="() => form.disk_limit = -1"
+                            :rules="[ val => val || $t('NotAllowEmpty')]"
+                        />
                     </q-item>
                     <q-item>
-                        <q-input class="full-width" stack-label label-color="primary" v-model.number="form.task_limit"
-                                 :label="$t('TaskLimit')" type="number"/>
+                        <q-input
+                            class="full-width"
+                            stack-label
+                            clearable
+                            label-color="primary"
+                            v-model.number="form.task_limit"
+                            :hint="$t('NoLimitFor_1')"
+                            :label="$t('TaskLimit')"
+                            type="number"
+                            @clear="() => form.task_limit = -1"
+                            :rules="[ val => val || $t('NotAllowEmpty')]"
+                        />
                     </q-item>
                     <q-item>
                         <q-toggle
@@ -83,8 +105,8 @@
                     <!--                        />-->
                     <!--                    </q-item>-->
                     <q-card-actions align="right">
-                        <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk"/>
-                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm"/>
+                        <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk" />
+                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>
             </q-card-section>
