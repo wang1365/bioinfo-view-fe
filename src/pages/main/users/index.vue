@@ -47,7 +47,7 @@
             row-key="name"
             color="primary"
             dense
-            wrap-cells
+            table-style="height: 600px"
             v-model:pagination="pagination"
             :rows-per-page-label="$t('-')"
             :rows-per-page-options="[10, 20, 50, 100]"
@@ -92,7 +92,7 @@
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn
                             v-if="allowReset(props.row)"
-                            size="xs"
+                            size="sm"
                             color="primary"
                             :label="$t('Setting')"
                             @click="clickEdit(props.row)"
@@ -107,7 +107,7 @@
                         <!--                        ></q-btn>-->
                         <q-btn
                             v-if="allowReset(props.row)"
-                            size="xs"
+                            size="sm"
                             color="orange"
                             :label="$t('ResetPassword')"
                             @click="clickReset(props.row)"
@@ -115,7 +115,7 @@
 
                         <q-btn
                             v-if="allowDelete(props.row)"
-                            size="xs"
+                            size="sm"
                             color="red"
                             :label="$t('Delete')"
                             @click="clickDelete(props.row)"
@@ -177,17 +177,14 @@ import { isSuper, isAdmin, isNormal, amISuper, amIAdmin } from "src/utils/user"
 import PageTitle from "components/page-title/PageTitle.vue"
 import CreateUser from "./CreateUser"
 import EditUser from "pages/main/users/EditUser"
-import { deleteFlow } from "src/api/flow"
 import { useI18n } from 'vue-i18n'
 import ResetPassword from "pages/main/users/ResetPassword"
-import { storeToRefs } from "pinia"
 import { globalStore } from "src/stores/global"
 
 const { t } = useI18n()
 const createUserDlg = ref(null)
 const editUserDlg = ref(null)
 const resetPasswordDlg = ref(null)
-const resetResourceLimitDlg = ref(false)
 const user = ref(null);
 const $q = useQuasar();
 const store = globalStore();
@@ -373,52 +370,4 @@ const allowDelete = (row) => {
 }
 </script>
 
-<style lang="sass">
-.my-sticky-header-column-table
-    /* height or max-height is important */
-    //height: 310px
-    //height: 800px
-    //padding: 20px
-
-    /* specifying max-width so the example can
-      highlight the sticky column on any browser window */
-    //max-width: 600px
-
-    td:first-child
-        /* bg color is important for td; just specify one */
-        background-color: #c1f4cd !important
-
-    tr th
-        position: sticky
-        /* higher than z-index for td below */
-        z-index: 2
-        /* bg color is important; just specify one */
-        background: #fff
-
-    /* this will be the loading indicator */
-
-
-
-
-
-    thead tr:last-child th
-        /* height of all previous header rows */
-        top: 48px
-        /* highest z-index */
-        z-index: 3
-
-    thead tr:first-child th
-        top: 0
-        z-index: 1
-
-    tr:first-child th:first-child
-        /* highest z-index */
-        z-index: 3
-
-    td:first-child
-        z-index: 1
-
-    td:first-child, th:first-child
-        position: sticky
-        left: 0
-</style>
+<style lang="sass"></style>
