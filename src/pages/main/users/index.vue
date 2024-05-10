@@ -67,7 +67,7 @@
                     {{
                         (props.row.task_count || 0) +
                         "/" +
-                        ((props.row.task_limit === null || props.row.task_limit === -1)  ? $t('Unlimited') : props.row.task_limit)
+                        (props.row.task_limit === null  ? $t('Unlimited') : props.row.task_limit)
                     }}
                 </q-td>
             </template>

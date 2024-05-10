@@ -37,9 +37,6 @@
                             v-model.number="form.disk_limit"
                             :label="$t('DiskUsageLimit')"
                             type="number"
-                            :hint="$t('NoLimitFor_1')"
-                            @clear="() => form.disk_limit = -1"
-                            :rules="[ val => val || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <q-item>
@@ -49,11 +46,8 @@
                             clearable
                             label-color="primary"
                             v-model.number="form.task_limit"
-                            :hint="$t('NoLimitFor_1')"
                             :label="$t('TaskLimit')"
                             type="number"
-                            @clear="() => form.task_limit = -1"
-                            :rules="[ val => val || $t('NotAllowEmpty')]"
                         />
                     </q-item>
                     <q-item>
@@ -160,7 +154,14 @@ watch(user, (v) => {
 })
 
 const clickOk = () => {
-    patchUser(props.user.id, form.value).then(() => {
+    const data = {...form.value}
+    if (data.disk_limit === '') {
+        data.disk_limit = null
+    }
+    if (data.task_limit === '') {
+        data.task_limit = null
+    }
+    patchUser(props.user.id, data).then(() => {
         $q.notify({message: t('UpdateSuccess'), type: 'positive'})
         emit('success')
         dlgVisible.value = false
