@@ -365,7 +365,8 @@ const columns = computed(() => [
         label: t('CreatedAt'),
         align: 'left',
         field: (row) => {
-            return new Date(item.create_time_timestamp * 1000)
+            let date = new Date(row.create_time_timestamp * 1000)
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
         },
         format: (val) => `${val}`,
     },
