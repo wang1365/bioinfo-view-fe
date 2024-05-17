@@ -6,15 +6,11 @@
                 <q-toolbar-title class="text-h6">
                     {{ props.projectDetail.name }}-
                     <span class="text-subtitle1">{{
-                        props.projectDetail.create_time
+                        toLocalString(props.projectDetail.create_time)
                     }}</span>
                 </q-toolbar-title>
-                <q-btn
-                    color="primary"
-                    :label="$t('ProjectDetailPageCreateTask')"
-                    icon="auto_mode"
-                    @click="clickCreateTask"
-                />
+                <q-btn color="primary" :label="$t('ProjectDetailPageCreateTask')" icon="auto_mode"
+                    @click="clickCreateTask" />
             </q-toolbar>
         </q-section>
 
@@ -80,6 +76,7 @@ import CreateTask from "./ProjectTask/CreateTask.vue"
 import { globalStore } from 'src/stores/global'
 import { errorMessage } from 'src/utils/notify'
 import { useI18n } from 'vue-i18n'
+import { toLocalString } from "src/utils/time"
 
 const { t } = useI18n()
 const store = globalStore()
@@ -104,8 +101,8 @@ const flowSelected = (event) => {
 }
 
 const taskCreated = (event) => {
-     openCreateTask.value = false;
-     emit('reloadProject')
+    openCreateTask.value = false;
+    emit('reloadProject')
 }
 
 const clickCreateTask = () => {

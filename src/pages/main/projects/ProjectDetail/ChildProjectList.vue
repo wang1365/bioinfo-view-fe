@@ -4,12 +4,8 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6"> {{ $t('ProjectDetailPageChildTitle') }} </q-toolbar-title>
-                <q-btn
-                    color="primary"
-                    :label="$t('ProjectDetailPageCreateChildProject')"
-                    icon="folder"
-                    @click="openNewProject = true"
-                />
+                <q-btn color="primary" :label="$t('ProjectDetailPageCreateChildProject')" icon="folder"
+                    @click="openNewProject = true" />
             </q-toolbar>
         </q-section>
         <q-section>
@@ -17,12 +13,12 @@
                 <table>
                     <thead>
                         <tr>
-                            <td>{{$t('ProjectPageListTableName')}}</td>
-                            <td>{{$t('ProjectPageListTableCreater')}}</td>
-                            <td>{{$t('ProjectPageListTableCreateTime')}}</td>
-                            <td>{{$t('ProjectPageListTableSampleCount')}}</td>
-                            <td>{{$t('ProjectPageListTableTaskCount')}}</td>
-                            <td>{{$t('Action')}}</td>
+                            <td>{{ $t('ProjectPageListTableName') }}</td>
+                            <td>{{ $t('ProjectPageListTableCreater') }}</td>
+                            <td>{{ $t('ProjectPageListTableCreateTime') }}</td>
+                            <td>{{ $t('ProjectPageListTableSampleCount') }}</td>
+                            <td>{{ $t('ProjectPageListTableTaskCount') }}</td>
+                            <td>{{ $t('Action') }}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,35 +27,19 @@
                                 {{ item.name }}
                             </td>
                             <td>{{ item.owner }}</td>
-                            <td>{{ item.create_time }}</td>
+                            <td>{{ toLocalString(item.create_time) }}</td>
                             <td>{{ item.samples.length }}</td>
                             <td>{{ item.task_count }}</td>
                             <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="info"
-                                    :label="$t('Detail')"
-                                    icon="arrow_outward"
-                                    @click="gotoChild(item)"
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="primary"
-                                    :label="$t('Edit')"
-                                    icon="edit"
-                                    @click="
-                                        updateProjectName = item.name;
-                                        currentProject = item;
-                                        openEditProject = true;
-                                    "
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="red"
-                                    :label="$t('Delete')"
-                                    icon="delete"
-                                    @click="confirm(item)"
-                                    size="sm"
-                                />
+                                <q-btn color="info" :label="$t('Detail')" icon="arrow_outward" @click="gotoChild(item)"
+                                    size="sm" />
+                                <q-btn color="primary" :label="$t('Edit')" icon="edit" @click="
+                    updateProjectName = item.name;
+                currentProject = item;
+                openEditProject = true;
+                " size="sm" />
+                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)"
+                                    size="sm" />
                             </td>
                         </tr>
                     </tbody>
@@ -146,6 +126,7 @@ import { useApi } from "src/api/apiBase";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
+import { toLocalString } from "src/utils/time";
 const { t } = useI18n();
 const props = defineProps({ projectDetail: Object });
 
@@ -186,7 +167,7 @@ const gotoChild = (item) => {
 const createProject = () => {
     newProjectName.value = newProjectName.value.trim();
     if (!newProjectName.value) {
-        newProjectNameError.value = t('ProjectPageListTableName')+t('Required');
+        newProjectNameError.value = t('ProjectPageListTableName') + t('Required');
         return;
     }
     api.post("/project", {
@@ -201,7 +182,7 @@ const createProject = () => {
 const updateProject = () => {
     updateProjectName.value = updateProjectName.value.trim();
     if (!updateProjectName.value) {
-        updateProjectNameError.value = t('ProjectPageListTableName')+t('Required');
+        updateProjectNameError.value = t('ProjectPageListTableName') + t('Required');
         return;
     }
     api.put(`/project/${currentProject.value.id}`, {

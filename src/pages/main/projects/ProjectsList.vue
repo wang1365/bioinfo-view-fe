@@ -4,23 +4,13 @@
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6">
-                    {{$t("ProjectPageListSearchTitle")}}
+                    {{ $t("ProjectPageListSearchTitle") }}
                 </q-toolbar-title>
-                <q-input
-                    style="width: 250px"
-                    dense
-                    v-model="search"
-                    :label="$t('ProjectPageListSearchInput')"
-                    clearable
-                    @clear="refreshPage()"
-                />
+                <q-input style="width: 250px" dense v-model="search" :label="$t('ProjectPageListSearchInput')" clearable
+                    @clear="refreshPage()" />
                 <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
-                <q-btn
-                    color="primary"
-                    :label="$t('ProjectPageListSearchNewBtn')"
-                    icon="folder"
-                    @click="openNewProject = true"
-                />
+                <q-btn color="primary" :label="$t('ProjectPageListSearchNewBtn')" icon="folder"
+                    @click="openNewProject = true" />
             </q-toolbar>
         </q-section>
         <q-section>
@@ -29,12 +19,12 @@
                     <thead>
                         <tr>
                             <td>ID</td>
-                            <td>{{$t('ProjectPageListTableName')}}</td>
-                            <td>{{$t('ProjectPageListTableCreater')}}</td>
-                            <td>{{$t('ProjectPageListTableCreateTime')}}</td>
-                            <td>{{$t('ProjectPageListTableSampleCount')}}</td>
-                            <td>{{$t('ProjectPageListTableTaskCount')}}</td>
-                            <td>{{$t('ProjectPageListTableOperate')}}</td>
+                            <td>{{ $t('ProjectPageListTableName') }}</td>
+                            <td>{{ $t('ProjectPageListTableCreater') }}</td>
+                            <td>{{ $t('ProjectPageListTableCreateTime') }}</td>
+                            <td>{{ $t('ProjectPageListTableSampleCount') }}</td>
+                            <td>{{ $t('ProjectPageListTableTaskCount') }}</td>
+                            <td>{{ $t('ProjectPageListTableOperate') }}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -46,32 +36,16 @@
                                 {{ item.name }}
                             </td>
                             <td>{{ item.owner }}</td>
-                            <td>{{ item.create_time }}</td>
+                            <td>{{ toLocalString(item.create_time) }}</td>
                             <td>{{ item.samples.length }}</td>
                             <td>{{ item.task_count }}</td>
                             <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="info"
-                                    :label="$t('Detail')"
-                                    icon="arrow_outward"
-                                    @click="gotoChild(item)"
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="primary"
-                                    :label="$t('Edit')"
-                                    icon="edit"
-                                    @click=" updateProjectName =
-                                item.name; currentProject = item; openEditProject = true; "
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="red"
-                                    :label="$t('Delete')"
-                                    icon="delete"
-                                    @click="confirm(item)"
-                                    size="sm"
-                                />
+                                <q-btn color="info" :label="$t('Detail')" icon="arrow_outward" @click="gotoChild(item)"
+                                    size="sm" />
+                                <q-btn color="primary" :label="$t('Edit')" icon="edit" @click=" updateProjectName =
+                        item.name; currentProject = item; openEditProject = true;" size="sm" />
+                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)"
+                                    size="sm" />
                             </td>
                         </tr>
                     </tbody>
@@ -87,7 +61,7 @@
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>{{$t('ProjectPageListSearchNewBtn')}}</q-toolbar-title>
+                <q-toolbar-title>{{ $t('ProjectPageListSearchNewBtn') }}</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-separator></q-separator>
@@ -95,8 +69,7 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="newProjectName" :label="$t('ProjectPageListSearchInput')"
-                        /></q-section>
+                            <q-input v-model="newProjectName" :label="$t('ProjectPageListSearchInput')" /></q-section>
                     </q-item>
                     <q-item>
                         <q-section v-if="newProjectNameError" class="full-width text-red">
@@ -120,15 +93,15 @@
     <q-dialog v-model="openEditProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
             <q-toolbar>
-                <q-toolbar-title>{{$t('ProjectPageListEditProject')}}</q-toolbar-title>
+                <q-toolbar-title>{{ $t('ProjectPageListEditProject') }}</q-toolbar-title>
                 <q-btn flat round dense icon="close" v-close-popup />
             </q-toolbar>
             <q-card-section>
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="updateProjectName" :label="$t('ProjectPageListSearchInput')"
-                        /></q-section>
+                            <q-input v-model="updateProjectName"
+                                :label="$t('ProjectPageListSearchInput')" /></q-section>
                     </q-item>
                     <q-item>
                         <q-section v-if="updateProjectNameError" class="full-width text-red">
@@ -158,10 +131,11 @@ import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import { useI18n } from "vue-i18n";
+import { toLocalString } from "src/utils/time";
 const { t } = useI18n();
 const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 
-const search=ref("")
+const search = ref("")
 const openNewProject = ref(false);
 
 const openEditProject = ref(false);
@@ -233,9 +207,9 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
-    let params=`?page=${currentPage.value}&size=${pageSize.value}`
-    if(search.value){
-        params+=`&name=${search.value}`
+    let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    if (search.value) {
+        params += `&name=${search.value}`
     }
     backupSearch()
     if (currentPage.value) {
@@ -251,28 +225,28 @@ const loadPage = async () => {
         );
     }
 };
-const backupSearch = ()=>{
-    let data ={
-        page:currentPage.value,
-        size:pageSize.value,
-        name:search.value
+const backupSearch = () => {
+    let data = {
+        page: currentPage.value,
+        size: pageSize.value,
+        name: search.value
     }
-    sessionStorage.setItem('project-search',JSON.stringify(data))
+    sessionStorage.setItem('project-search', JSON.stringify(data))
 }
-const loadBackup = ()=>{
+const loadBackup = () => {
     let dataStr = sessionStorage.getItem('project-search')
-    if(dataStr){
+    if (dataStr) {
         let data = JSON.parse(dataStr)
         // currentPage.value=data.page
-        pageSize.value=data.size
-        search.value=data.name
+        pageSize.value = data.size
+        search.value = data.name
     }
 }
 
 const confirm = (item) => {
     $q.dialog({
         title: t('ProjectPageListEditProjectDeleteTitle'),
-        message:t('ProjectPageListEditProjectDeleteDesc'),
+        message: t('ProjectPageListEditProjectDeleteDesc'),
         cancel: true,
         persistent: true,
     }).onOk(() => {
@@ -285,12 +259,12 @@ const confirm = (item) => {
                         index = i
                     }
                 }
-                total.value-=1
+                total.value -= 1
                 dataItems.value.splice(index, 1)
             } else {
                 if (currentPage.value > 1) {
                     currentPage.value = currentPage.value - 1
-                }else{
+                } else {
                     currentPage.value = 1
                 }
                 refreshPage()
