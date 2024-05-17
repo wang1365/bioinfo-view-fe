@@ -1,25 +1,12 @@
 <template>
     <div style="max-width: 100%">
-        <PopupSingleSelector
-            :title="$t('Project')"
-            :dataItems="dataItems"
-            :total="total"
-            :tableHeaders="tableHeaders"
-            :tableRowFields="tableRowFields"
-            :currentPage="currentPage"
-            selectedShowField="name"
-            @pageChange="pageChange($event)"
-            @ensureSelect="ensureSelect($event)"
-        >
+        <PopupSingleSelector :title="$t('Project')" :dataItems="dataItems" :total="total" :tableHeaders="tableHeaders"
+            :tableRowFields="tableRowFields" :currentPage="currentPage" selectedShowField="name"
+            @pageChange="pageChange($event)" @ensureSelect="ensureSelect($event)">
             <template v-slot:tableFilter>
                 <div class="row q-px-md q-gutter-sm">
-                    <q-input
-                        style="width: 250px"
-                        dense
-                        v-model="projectName"
-                        :label="$t('ProjectPageListSearchInput')"
-                        clearable
-                    />
+                    <q-input style="width: 250px" dense v-model="projectName" :label="$t('ProjectPageListSearchInput')"
+                        clearable />
                     <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
                 </div>
             </template>
@@ -33,20 +20,21 @@
                 <td>{{ row.samples.length }}</td>
                 <td>{{ row.task_count }}</td>
                 <td>{{ row.owner }}</td>
-                <td>{{ row.create_time }}</td>
+                <td>{{ toLocalString(row.create_time) }}</td>
             </template>
         </PopupSingleSelector>
     </div>
 </template>
 <script setup>
-import { onMounted, ref ,computed, watch } from "vue"
+import { onMounted, ref, computed, watch } from "vue"
 import { useApi } from "src/api/apiBase"
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue"
 import { useI18n } from "vue-i18n"
+import { toLocalString } from "src/utils/time"
 
 const { t } = useI18n()
-const tableHeaders = computed(()=>[
-    `${t('Project')}(${t('TaskPageProjectParent')}/${t('TaskPageProjectSelf') })`,
+const tableHeaders = computed(() => [
+    `${t('Project')}(${t('TaskPageProjectParent')}/${t('TaskPageProjectSelf')})`,
     t('ProjectPageListTableSampleCount'),
     t('ProjectPageListTableTaskCount'),
     t('ProjectPageListTableCreater'),
