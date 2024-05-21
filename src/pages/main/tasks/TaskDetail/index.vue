@@ -100,7 +100,7 @@
                             v-for="(item, key) of logs"
                             :key="key"
                             :title="item.stage + ':' + item.title"
-                            :subtitle="item.status + ':' + item.time"
+                            :subtitle="item.status + ':' + toLocalString(item.time)"
                             :body="item.detail"
                         />
                     </q-timeline>
@@ -118,7 +118,7 @@ import { useRoute, useRouter } from "vue-router";
 import { globalStore } from 'src/stores/global'
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from 'pinia'
-
+import {toLocalString} from "src/utils/time"
 const store = globalStore()
 const { langCode } = storeToRefs(store)
 
