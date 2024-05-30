@@ -22,76 +22,37 @@
         </q-section>
         <q-section>
             <div class="q-pa-md bio-data-table">
-                <table style="min-width: 1000px;">
-                    <thead>
-                        <tr>
-                            <td>{{$t('DataNewFormDataDetails')}}</td>
-                            <td>{{$t('DataNewFormLibraryNumber')}}</td>
-                            <td>{{$t('DataNewFormDataIdentificationNumber')}}</td>
-                            <td>{{$t('DataNewFormSubmissionUnit')}}</td>
-                            <td>{{$t('DataNewFormTypeOfNucleicAcids')}}</td>
-                            <td>{{$t('DataNewFormDataNameOfR1')}}</td>
-                            <td>{{$t('DataNewFormDataNameOfR2')}}</td>
-                            <td>{{$t('PatientNewFormPatientIdentificationNumber')}}</td>
-                            <td>{{$t('PatientName')}}</td>
-                            <td>{{$t('PatientPageListTableColumnGender')}}</td>
-                            <td>{{$t('SampleListTableColumnSampleIdentificationNumber')}}</td>
-                            <td>{{$t('SampleListTableColumnSamplingSite')}}</td>
-                            <td>{{$t('SampleListTableColumnTumorSample')}}</td>
-                            <td>{{$t('Action')}}</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                            class="hover"
-                            v-for="item in dataItems"
-                            v-bind:key="item.name"
-                            :class="{
-                                'bg-yellow-11': fromParent(item),
-                            }"
-                        >
-                            <td>
-                                {{ item.project_index }}
-                            </td>
-                            <td>
-                                {{ item.library_number }}
-                            </td>
-                            <td>{{ item.identifier }}</td>
-                            <td>{{ item.company }}</td>
-                            <td>{{ item.nucleic_type }}</td>
-                            <td>{{ item.fastq1_path }}</td>
-                            <td>{{ item.fastq2_path }}</td>
-                            <td>{{ item.patient?.identifier }}</td>
-                            <td>{{ item.patient?.name }}</td>
-                            <td>{{ item.patient?.gender=='男'?$t('Male'):$t('Female')  }}</td>
-                            <td>{{ item.sample_meta?.identifier }}</td>
-                            <td>{{ item.sample_meta?.sample_componet }}</td>
-                            <td>{{ item.sample_meta?.is_panel }}</td>
-
-                            <td class="q-gutter-x-sm">
-                                <q-btn
-                                    color="secondary"
-                                    :label="$t('Detail')"
-                                    icon="visibility"
-                                    @click="info(item)"
-                                    size="sm"
-                                />
-                                <q-btn
-                                    color="red"
-                                    :label="$t('Delete')"
-                                    icon="delete"
-                                    @click="confirm(item)"
-                                    size="sm"
-                                    v-if="!fromParent(item)"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="row q-mt-md">
-                    <q-space></q-space>
-                    <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
-                </div>
+                <a-table
+                    :columns="columns"
+                    :data-source="dataItems"
+                    :scroll="{ x: 2000, y: 1000 }"
+                    size="small"
+                    :pagination="pagination"
+                    @change="handleTableChange"
+                >
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.dataIndex === 'operation'">
+                            <q-btn
+                                color="secondary"
+                                :label="$t('Detail')"
+                                icon="visibility"
+                                @click="info(record)"
+                                padding="5px 10px"
+                                size="sm"
+                            />
+                            <q-btn
+                                color="red"
+                                :label="$t('Delete')"
+                                icon="delete"
+                                @click="confirm(record)"
+                                size="sm"
+                                class="q-ml-xs"
+                                padding="5px 10px"
+                                v-if="!fromParent(record)"
+                            />
+                        </template>
+                    </template>
+                </a-table>
             </div>
         </q-section>
     </q-card>
@@ -106,7 +67,7 @@
 <script setup>
 import { useQuasar } from "quasar";
 import DataInfo from "../../../data/DataInfo.vue";
-import { ref, onMounted, defineProps, watch, onUpdated } from "vue";
+import { ref, onMounted, defineProps, watch, onUpdated, computed } from 'vue';
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import ProjectDetailDataSelect from "./ProjectDetailDataSelect.vue";
 import { useApi } from "src/api/apiBase";
@@ -123,17 +84,46 @@ const { apiPut, apiPost } = useApi();
 const showDataInfo = ref(false);
 const openDataSelector = ref(false);
 const infoId = ref(0);
-
-const currentPage = ref(1);
-const pageSize = ref(10);
-const total = ref(0);
 const dataItems = ref([]);
 
 const $q = useQuasar();
 
+const pagination = ref({
+    total: 0,
+    current: 1,
+    pageSize: 10,
+    showSizeChanger: true,
+    showTotal: total => `${t('TotalCount')}: ${total}`,
+    pageSizeOptions: [10, 20, 50, 100]
+})
+
+const columns = computed(() => [
+    { title: t('DataNewFormDataDetails'), dataIndex: 'project_index',align: 'left', width: 50},
+    { title: t('DataNewFormLibraryNumber'), dataIndex: 'library_number', align: 'left', width: 70},
+    { title: t('DataNewFormDataIdentificationNumber'), dataIndex: 'identifier', align: 'left', width: 70},
+    { title: t('DataNewFormSubmissionUnit'), dataIndex: 'company', align: 'left', width: 40},
+    { title: t('DataNewFormTypeOfNucleicAcids'), dataIndex: 'nucleic_type', align: 'left', width: 50},
+    { title: t('DataNewFormDataNameOfR1'), dataIndex: 'fastq1_path',  align: 'left', width: 100},
+    { title: t('DataNewFormDataNameOfR2'), dataIndex: 'fastq2_path',  align: 'left', width: 100},
+    { title: t('PatientNewFormPatientIdentificationNumber'), dataIndex: ['patient', 'identifier'], align: 'left', width: 70},
+    { title: t('PatientName'), dataIndex: ['patient', 'name'],  align: 'center', width: 50},
+    { title: t('PatientPageListTableColumnGender'), dataIndex: ['patient', 'gender'],  align: 'left', width: 65,
+        customRender: ({text}) => text === '男' ? t('Male') : t('Female') },
+    { title: t('SampleListTableColumnSampleIdentificationNumber'), dataIndex: ['sample_meta', 'identifier'], align: 'left', width: 70},
+    { title: t('SampleListTableColumnSamplingSite'), dataIndex: ['sample_meta', 'sample_componet'],  align: 'left', width: 60},
+    { title: t('SampleListTableColumnTumorSample'), dataIndex: 'sample_meta',  align: 'left', width: 60,
+        customRender: ({text, record}) => `${JSON.stringify(record?.sample_meta?.is_panel)}` },
+    { title: t('Operation'), dataIndex: 'operation', fixed: 'right', align: 'center', width: 90},
+])
+
 const info = async (item) => {
     infoId.value = item.id;
     showDataInfo.value = true;
+};
+
+const handleTableChange = (pag, filters, sorter) => {
+    pagination.value = {...pagination.value, ...pag}
+    loadPage()
 };
 
 const dataSelected = () => {
@@ -156,13 +146,10 @@ onUpdated(() => {
     refreshPage();
 });
 const pageChange = async (event) => {
-    currentPage.value = event.currentPage;
-    pageSize.value = event.pageSize;
     loadPage();
 };
 
 const refreshPage = async () => {
-    currentPage.value = 1;
     loadPage();
 };
 const loadPage = async () => {
@@ -171,9 +158,9 @@ const loadPage = async () => {
         projectIds.push(props.projectDetail.parent.id);
     }
     apiPost(
-        `/sample/samples/query?page=${currentPage.value}&size=${pageSize.value}`,
+        `/sample/samples/query?page=${pagination.value.current}&size=${pagination.value.pageSize}`,
         (res) => {
-            total.value = res.data.count;
+            pagination.value.total = res.data.count;
             dataItems.value = [];
             for (const iterator of res.data.results) {
                 dataItems.value.push(iterator);
@@ -194,7 +181,7 @@ const confirm = (item) => {
     }).onOk(() => {
         let sampleIds = [];
         for (const iterator of props.projectDetail.samples) {
-            if (iterator.id != item.id) sampleIds.push(iterator.id);
+            if (iterator.id !== item.id) sampleIds.push(iterator.id);
         }
         apiPut(
             `/project/${props.projectDetail.id}`,

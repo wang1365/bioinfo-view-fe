@@ -9,8 +9,12 @@
                         toLocalString(props.projectDetail.create_time)
                     }}</span>
                 </q-toolbar-title>
-                <q-btn color="primary" :label="$t('ProjectDetailPageCreateTask')" icon="auto_mode"
-                    @click="clickCreateTask" />
+                <q-btn
+                    color="primary"
+                    :label="$t('ProjectDetailPageCreateTask')"
+                    icon="auto_mode"
+                    @click="clickCreateTask"
+                />
             </q-toolbar>
         </q-section>
 
@@ -120,3 +124,18 @@ const getFlowDetail = (flowId) => {
     });
 };
 </script>
+
+<style lang="scss" scoped>
+.my-card {
+    text-align: center;
+
+    .title {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .desc {
+        color: gray;
+    }
+}
+</style>
