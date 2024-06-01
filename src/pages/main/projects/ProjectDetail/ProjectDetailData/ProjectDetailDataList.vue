@@ -113,7 +113,7 @@ const columns = computed(() => [
     { title: t('SampleListTableColumnSamplingSite'), dataIndex: ['sample_meta', 'sample_componet'],  align: 'left', width: 60},
     { title: t('SampleListTableColumnTumorSample'), dataIndex: 'sample_meta',  align: 'left', width: 40,
         customRender: ({text, record}) => `${JSON.stringify(record?.sample_meta?.is_panel)}` },
-    { title: t('Operation'), dataIndex: 'operation', fixed: 'right', align: 'center', width: 90},
+    { title: t('Operation'), dataIndex: 'operation', fixed: 'right', align: 'center', width: 70},
 ])
 
 const info = async (item) => {
