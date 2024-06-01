@@ -43,6 +43,7 @@ api.interceptors.request.use((config) => {
     const { langConfig } = globalStore()
     config.headers.Language = langConfig.lang
     config.headers.X_LANGUAGE = langConfig.lang
+    Cookies.set('django_language', langConfig.lang)
     return config
 })
 export function defaultErrorHandler(data) {

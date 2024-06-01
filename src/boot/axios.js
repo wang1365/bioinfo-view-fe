@@ -51,6 +51,7 @@ export default boot(({ app, router, store }) => {
         const { langConfig } = globalStore()
         console.log('===> add header:', langConfig)
         config.headers.Language = langConfig.lang
+        Cookies.set('django_language', langConfig.lang)
         return config
     })
 
