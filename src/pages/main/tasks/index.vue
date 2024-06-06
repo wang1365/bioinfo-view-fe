@@ -210,7 +210,8 @@
                                 :label="$t('Download')+' bam'"
                                 icon="delete"
                                 size="sm"
-                                :href="props.row.result_path"
+                                :href="`/igv${props.row.result_dir}/bam/${props.row.id}-bam.zip`"
+                                target="_blank"
                             />
                         </span>
                     </q-td>
