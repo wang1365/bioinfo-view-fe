@@ -208,7 +208,7 @@
                                 padding="xs sm"
                                 :disable="props.row.status !== 'FINISHED'"
                                 :label="$t('Download')+' bam'"
-                                icon="delete"
+                                icon="download"
                                 size="sm"
                                 :href="`/igv${props.row.result_dir}/bam/${props.row.id}-bam.zip`"
                                 target="_blank"
