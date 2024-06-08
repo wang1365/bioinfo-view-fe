@@ -1,6 +1,6 @@
 module.exports = {
     // 1.一行代码的最大字符数，默认是80(printWidth: <int>)
-    printWidth: 120,
+    printWidth: 150,
     // 2.tab宽度为2空格(tabWidth: <int>)
     tabWidth: 4,
     // 3.是否使用tab来缩进，我们使用空格(useTabs: <bool>)
@@ -30,4 +30,6 @@ module.exports = {
     endOfLine: 'lf',
     // 20.embeddedLanguageFormatting: "off",默认是auto,控制被引号包裹的代码是否进行格式化
     embeddedLanguageFormatting: 'off',
+    // 用于控制文本是否应该被换行以及如何进行换行
+    proseWrap: 'preserve',
 }

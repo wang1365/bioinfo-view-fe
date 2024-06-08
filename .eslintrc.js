@@ -63,5 +63,7 @@ module.exports = {
         'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
         'vue/multi-word-component-names': 0,
         'vue/no-v-text-v-html-on-component': 'off',
+        "vue/html-closing-bracket-newline": "off", // 在标签的右括号之前要求或禁止换行
+        "vue/max-attributes-per-line": "off", // 强制每行的最大属性数
     },
 }
