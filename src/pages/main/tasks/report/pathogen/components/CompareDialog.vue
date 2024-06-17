@@ -51,6 +51,10 @@ const props = defineProps({
     record: {
         type: Object,
         required: false,
+    },
+    isVirus: {
+        type: Boolean,
+        required: false,
     }
 })
 
@@ -61,7 +65,7 @@ const rows = ref([])
 const columns = computed(() =>
     [
         { name: 'sample', title: t('Sample'), dataIndex: 'sample'},
-        { name: 'speciesName', title: t('Zhong'), dataIndex: 'speciesName'},
+        { name: 'speciesName', title: props.isVirus ? t('Virus') : t('Zhong'), dataIndex: 'speciesName'},
         { name: 'totalProportion', title: t('TotalProportion'), dataIndex: 'totalProportion'},
         { name: 'readsCount', title: t('ReadsCount'), dataIndex: 'readsCount'},
     ]

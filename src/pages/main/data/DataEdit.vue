@@ -9,90 +9,88 @@
             <q-list>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-input
                                 v-model="form.project_index"
-                                :error="errors.project_index.error"
-                                :error-message="errors.project_index.message"
+                                stack-label
+                                filled
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormDataDetails')"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-input
                                 v-model="form.library_number"
-                                :error="errors.library_number.error"
-                                :error-message="errors.library_number.message"
+                                stack-label
+                                filled
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormLibraryNumber')"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <panel-list
                                 :label="'*'+$t('DataNewFormCaptureKit')"
                                 v-model="form.reagent_box"
-                                :error="errors.reagent_box.error"
-                                :error-message="errors.reagent_box.message"
+                                filled
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                             />
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-input
                                 type="number"
+                                stack-label
+                                filled
                                 v-model="form.library_input"
-                                :error="errors.library_input.error"
-                                :error-message="errors.library_input.message"
+                                :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormLibraryConstructionInput')"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col q-pf-sm">
-                            <q-input
-                                v-model="form.index_type"
-                                :error="errors.index_type.error"
-                                :error-message="errors.index_type.message"
-                                :label="$t('DataNewFormIndexType')"
-                            ></q-input>
+                        <div class="col q-mx-sm">
+                            <q-input v-model="form.index_type" stack-label filled :label="$t('DataNewFormIndexType')" />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mr-sm">
                             <q-input
                                 v-model="form.index_number"
-                                :error="errors.index_number.error"
-                                :error-message="errors.index_number.message"
+                                stack-label
+                                filled
                                 :label="$t('DataNewFormIndexNumber')"
-                            ></q-input>
+                            />
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
+                        <div class="col q-mr-sm">
                             <q-input
                                 type="number"
+                                stack-label
+                                filled
                                 v-model="form.hybrid_input"
-                                :error="errors.hybrid_input.error"
-                                :error-message="errors.hybrid_input.message"
                                 :label="$t('DataNewFormHybridInput')"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mr-sm">
                             <q-input
                                 v-model="form.nucleic_break_type"
-                                :error="errors.nucleic_break_type.error"
-                                :error-message="
-                                    errors.nucleic_break_type.message
-                                "
+                                stack-label
+                                filled
+                                ::rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormNucleicAcidFragmentationMethod')"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-input
                                 v-model="form.identifier"
-                                :error="errors.identifier.error"
-                                :error-message="errors.identifier.message"
+                                stack-label
+                                filled
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormDataIdentificationNumber')"
                                 :readonly="true"
-                            ></q-input>
+                            />
                         </div>
                     </div>
                 </q-item>
@@ -101,25 +99,28 @@
                         <div class="col q-pf-sm">
                             <q-input
                                 v-model="form.company"
-                                :error="errors.company.error"
-                                :error-message="errors.company.message"
+                                stack-label
+                                filled
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSubmissionUnit')"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-select
-                                :error="errors.nucleic_type.error"
-                                :error-message="errors.nucleic_type.message"
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 v-model="form.nucleic_type"
+                                stack-label
+                                filled
                                 :options="nucleic_type_options"
                                 :label="$t('DataNewFormTypeOfNucleicAcids')"
                             />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-select
-                                :error="errors.nucleic_level.error"
-                                :error-message="errors.nucleic_level.message"
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 v-model="form.nucleic_level"
+                                stack-label
+                                filled
                                 :options="nucleic_level_options"
                                 :label="$t('DataNewFormDegradationGradeOfNucleicAcids')"
                             />
@@ -128,11 +129,12 @@
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-checkbox
-                                :error="errors.risk.error"
-                                :error-message="errors.risk.message"
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 v-model="form.risk"
+                                stack-label
+                                filled
                                 :label="$t('DataNewFormRiskSequencing')"
                                 color="primary"
                                 left-label
@@ -140,45 +142,49 @@
                             />
                         </div>
 
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-input
                                 @click="showLinkSample = true"
                                 readonly
+                                stack-label
+                                filled
                                 v-model="form.sample_identifier"
-                                :error="errors.sampsample_identifier"
-                                :error-message="errors.sampsample_identifier"
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSampleIdentificationNumber')"
-                            ></q-input>
+                            />
                         </div>
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-input
                                 @click="showLinkSample = true"
                                 readonly
+                                stack-label
+                                filled
                                 v-model="form.sample_meta_id"
-                                :error="errors.sample_meta_id.error"
-                                :error-message="errors.sample_meta_id.message"
+                                :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSampleID')"
-                            ></q-input>
+                            />
                         </div>
                     </div>
                 </q-item>
                 <q-item>
                     <div class="row full-width justify-between">
-                        <div class="col q-pr-sm">
+                        <div class="col q-mx-sm">
                             <q-input
                                 v-model="form.fastq1_path"
-                                :error="errors.fastq1_path.error"
-                                :error-message="errors.fastq1_path.message"
+                                stack-label
+                                filled
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormDataNameOfR1')"
-                            ></q-input>
+                            />
                         </div>
                         <div class="col q-pf-sm">
                             <q-input
                                 v-model="form.fastq2_path"
-                                :error="errors.fastq2_path.error"
-                                :error-message="errors.fastq2_path.message"
+                                stack-label
+                                filled
+                                :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormDataNameOfR2')"
-                            ></q-input>
+                            />
                         </div>
                     </div>
                 </q-item>
@@ -196,12 +202,7 @@
             </q-list>
         </q-card-actions>
         <q-dialog persistent v-model="showLinkSample">
-            <SampleList
-                :linkId="0"
-                @itemSelected="
-        linkSample($event);
-            "
-            />
+            <SampleList :linkId="0" @itemSelected="linkSample($event)" />
         </q-dialog>
     </q-card>
 </template>
@@ -244,93 +245,7 @@ const props = defineProps({
 const defaultInputMessage=computed(()=>{
     return t('Required')
 })
-const errors = ref({
-    project_index: {
-        //项目编码
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    library_number: {
-        //文库编号
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    reagent_box: {
-        //捕获试剂盒
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    nucleic_break_type: {
-        // 核酸打断方式
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    library_input: {
-        //建库input
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    index_type: {
-        //index类型
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    index_number: {
-        // index编号
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    hybrid_input: {
-        // 杂交input
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    risk: {
-        // 风险上机
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    nucleic_level: {
-        // 核酸降解等级
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    sample_meta_id: {
-        // 样本元信息ID
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    sample_identifier: {
-        // 样本识别号
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    identifier: {
-        // 数据识别号
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    company: {
-        // 送检机构
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    nucleic_type: {
-        // 核酸类型
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    fastq1_path: {
-        // R1数据名称
-        message: defaultInputMessage.value,
-        error: false,
-    },
-    fastq2_path: {
-        // R2数据名称
-        message: defaultInputMessage.value,
-        error: false,
-    }
-});
+
 
 const form = ref({
     project_index: "",
@@ -358,10 +273,6 @@ onMounted(() => {
     });
 });
 const save = async () => {
-    for (const key in errors.value) {
-        errors.value[key].error = false;
-        errors.value[key].message = t('Required');
-    }
     const data = {
         project_index: form.value.project_index,
         library_number: form.value.library_number,
@@ -393,8 +304,7 @@ const save = async () => {
         (res) => {
             const errorDetail = res.data;
             for (const key in errorDetail) {
-                errors.value[key].error = true;
-                errors.value[key].message = errorDetail[key][0];
+                console.log(errorDetail[key][0])
             }
         }
     );
