@@ -13,7 +13,7 @@
         "test": "echo \"No test specified\" && exit 0"
     },
     "dependencies": {
-        "@quasar/cli": "^2.10.1",
+        "@quasar/cli": "^2.3.0",
         "@quasar/extras": "^1.16.7",
         "ant-design-vue": "^3.2.13",
         "axios": "^1.6.0",
