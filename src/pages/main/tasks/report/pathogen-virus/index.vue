@@ -1,36 +1,93 @@
 <template>
     <div class="q-py-sm align-right" style="text-align: right;">
-        <q-btn icon="help_outline" size="small" outline color="orange" class=" q-mr-md" @click="dlgVisible = !dlgVisible"
-            :label="$t('Intro')" />
-        <q-btn v-if="props.viewConfig.showStick && props.viewConfig.stickDone" icon="bookmarks" size="small" color="primary"
-            class=" q-mr-md" :label="$t('ReportStickDone')" @click="reset()" />
-        <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
-            color="primary" class=" q-mr-md" @click="stickFilter()" :label="$t('ReportStickData')" />
+        <q-btn
+            icon="help_outline"
+            size="small"
+            outline
+            color="orange"
+            class=" q-mr-md"
+            @click="dlgVisible = !dlgVisible"
+            :label="$t('Intro')"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            color="primary"
+            class=" q-mr-md"
+            :label="$t('ReportStickDone')"
+            @click="reset()"
+        />
+        <q-btn
+            v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+            icon="bookmarks"
+            size="small"
+            outline
+            color="primary"
+            class=" q-mr-md"
+            @click="stickFilter()"
+            :label="$t('ReportStickData')"
+        />
     </div>
     <div class="q-pt-sm">
-        <a-table rowKey="lineNumber" :data-source="rows" :columns="columns" :row-selection="rowSelection" bordered
-            size="middle" @change="tableChange">
+        <a-table
+            rowKey="lineNumber"
+            :data-source="rows"
+            :columns="columns"
+            :row-selection="rowSelection"
+            bordered
+            size="middle"
+            @change="tableChange"
+        >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn flat size="sm" color="primary" label="reads" target="_blank" :href="record.file"
-                        :download="record.fileName" />
+                    <q-btn
+                        flat
+                        size="sm"
+                        color="primary"
+                        label="reads"
+                        target="_blank"
+                        :href="record.file"
+                        :download="record.fileName"
+                    />
                     <span>|</span>
-                    <q-btn flat size="sm" color="primary" label="Blast" target="_blank"
-                           href="https://blast.ncbi.nlm.nih.gov/Blast.cgi" />
+                    <q-btn
+                        flat
+                        size="sm"
+                        color="primary"
+                        label="Blast"
+                        target="_blank"
+                        href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+                    />
                     <span>|</span>
-                    <q-btn flat size="sm" color="primary" label="Compare" @click="showCompareDialog(record)" />
+                    <q-btn
+                        flat
+                        size="sm"
+                        color="primary"
+                        :label="`Compare(${record.compareResult.length})`"
+                        @click="showCompareDialog(record)"
+                    />
                 </template>
             </template>
             <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
-                <div style="padding: 8px"
-                    v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)">
-                    <a-input ref="searchInput" :value="selectedKeys[0]"
+                <div
+                    style="padding: 8px"
+                    v-if="!props.viewConfig.showStick || (props.viewConfig.showStick && !props.viewConfig.stickDone)"
+                >
+                    <a-input
+                        ref="searchInput"
+                        :value="selectedKeys[0]"
                         style="width: 250px; margin-bottom: 8px; display: block"
                         @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
-                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)" />
+                        @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                    />
                     <div class="row justify-around">
-                        <a-button type="primary" size="small" style="width: 80px; margin-right: 28px"
-                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)">
+                        <a-button
+                            type="primary"
+                            size="small"
+                            style="width: 80px; margin-right: 28px"
+                            @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                        >
                             <template #icon>
                                 <SearchOutlined />
                             </template>
@@ -57,7 +114,13 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <CompareDialog v-model="dlgCmpVisible" :task="props.task" category="virus" :record="cmpRecord"/>
+        <CompareDialog
+            v-model="dlgCmpVisible"
+            :task="props.task"
+            :is-virus="true"
+            category="virus"
+            :record="cmpRecord"
+        />
     </div>
 </template>
 <script setup>
@@ -73,6 +136,7 @@ import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import CompareDialog from '../pathogen/components/CompareDialog.vue'
+import { fillCompareData } from '../pathogen/components/compare'
 
 
 const store = globalStore()
@@ -198,10 +262,8 @@ const loadData = () => {
         virusCol.filters = options.map(opt => {
             return { text: opt, value: opt }
         })
-        console.log(rows)
+
         if (stepData.value) {
-
-
             for (const row of rows.value) {
                 for (const item of stepData.value.table.selectedRows) {
                     if (item === row.lineNumber) {
@@ -211,6 +273,9 @@ const loadData = () => {
                 }
             }
         }
+
+        // 补充对比数据
+        fillCompareData(fields, props.task.id, dataFile.value, rows.value, true)
     }).finally(() => {
         $q.loading.hide()
     })
@@ -223,16 +288,16 @@ const getCheckboxProps = (record) => {
     }
 }
 const rowSelection = computed(() => {
-    if (!isDefineReport.value) {
-        return null
+        if (!isDefineReport.value) {
+            return null
+        }
+        return {
+            selectedRowKeys: selectedRows,
+            onChange: onSelectChange,
+            columnWidth: 25,
+            getCheckboxProps: getCheckboxProps,
+        }
     }
-    return {
-        selectedRowKeys: selectedRows,
-        onChange: onSelectChange,
-        columnWidth: 25,
-        getCheckboxProps: getCheckboxProps
-    }
-}
 )
 
 const selectedRows = ref([])

@@ -6,10 +6,10 @@ export function fillCompareData(fields, taskId, file, rows, isVirus = false) {
     if (isVirus) {
         fields = ['speciesName', 'readsCount2', 'totalProportion', 'file', 'report']
     }
-    compare(fields, taskId, file, rows, false)
+    compare(fields, taskId, file, rows, isVirus)
 }
 
-function compare(fields, taskId, file, rows) {
+function compare(fields, taskId, file, rows, isVirus) {
     rows.forEach((row) => (row.compareResult = []))
 
     getRelatedTasks(taskId).then((res) => {
@@ -25,11 +25,14 @@ function compare(fields, taskId, file, rows) {
                 }
                 // 找到种名相同的病原体数据
                 rows.forEach((row) => {
-                    const target = lines.filter((line) => line.speciesName === row.speciesName)[0]
-                    // console.log('=============>target', target, lines, row.speciesName)
+                    const target = isVirus
+                        ? lines.filter((line) => line.speciesName === row.virusName)[0]
+                        : lines.filter((line) => line.speciesName === row.speciesName)[0]
+
                     if (!target) {
                         return
                     }
+
                     row.compareResult.push({
                         sample: task.samples[0].identifier,
                         speciesName: target.speciesName,

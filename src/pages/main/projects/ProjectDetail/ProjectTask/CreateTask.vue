@@ -27,7 +27,7 @@
                         <div class="col">{{ $t('FlowDetail') }}: {{ props.flowDetail.desc }}</div>
                     </div>
                     <div class="row">
-                        <div class="col">{{ $t('Note') }}: {{ props.flowDetail.details }}</div>
+                        <div class="col">{{ $t('Detail') }}: {{ props.flowDetail.details }}</div>
                     </div>
                 </div>
                 <q-separator />
@@ -66,7 +66,7 @@
                                                     v-model="item.params[param.key]" :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                    }}</q-tooltip>
+                                                        }}</q-tooltip>
                                                 </q-file>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'string'">
@@ -74,7 +74,7 @@
                                                     v-model="item.params[param.key]" :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                    }}</q-tooltip>
+                                                        }}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'number'">
@@ -82,7 +82,7 @@
                                                     type="number" v-model="item.params[param.key]" :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                    }}</q-tooltip>
+                                                        }}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'select'">
@@ -91,7 +91,7 @@
                                                     :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                    }}</q-tooltip>
+                                                        }}</q-tooltip>
                                                 </q-select>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'multiSelect'">
@@ -100,7 +100,7 @@
                                                     :label="param.key" multiple use-chips>
                                                     <q-tooltip>{{
                                                         param.description
-                                                    }}</q-tooltip>
+                                                        }}</q-tooltip>
                                                 </q-select>
                                             </div>
                                         </template>
@@ -233,6 +233,12 @@
                 <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()" />
             </template>
         </PopupContentScroll>
+        <!-- <q-dialog persistent v-model="openDataSelectorSingle">
+            <TaskDataSelect :multi-select="false" :projectDetail="props.projectDetail" @select="onSelect($event)" />
+        </q-dialog>
+        <q-dialog persistent v-model="openDataSelectorMulti">
+            <TaskDataSelect :multi-select="true" :projectDetail="props.projectDetail" @select="onSelectMulti($event)" />
+        </q-dialog> -->
         <q-dialog persistent v-model="openDataSelectorSingle">
             <TaskDataSelectSingle :projectDetail="props.projectDetail" @refresh="singleSelected($event)" />
         </q-dialog>
@@ -274,12 +280,12 @@ const sampleFirstError = ref(false);
 const sampleSecondError = ref(false);
 const samplesError = ref(false);
 
-const emit = defineEmits(["taskCreated"]);
+const emit = defineEmits(["taskCreated"])
 const props = defineProps({
     flowDetail: { type: Object, required: true },
     projectDetail: { type: Object, required: true },
-});
-const { flowId } = toRefs(props);
+})
+const { flowId } = toRefs(props)
 
 onMounted(() => {
     let flowParams = JSON.parse(props.flowDetail.parameter_schema);
@@ -395,8 +401,7 @@ const singleSelected = (event) => {
         paramTabs.value[activeParamTab.value].files[activeParamFileIndex.value].sampleSecond = event
         sampleSecond.value = event;
     }
-    console.log(event);
-};
+}
 
 const multiSelected = (event) => {
     openDataSelectorMulti.value = false;
@@ -412,21 +417,21 @@ const multiSelected = (event) => {
 };
 
 const confirmTaskCreated = () => {
-    let paramsError = false;
+    let paramsError = false
 
     if (!newTaskName.value) {
-        newTaskNameError.value = true;
-        paramsError = true;
+        newTaskNameError.value = true
+        paramsError = true
     } else {
-        newTaskNameError.value = false;
+        newTaskNameError.value = false
     }
     let data = new FormData();
     let taskParameter = [];
     for (let param of paramsDefine.value) {
 
         if (!params.value[param.key] && param.required) {
-            param.isError = true;
-            paramsError = true;
+            param.isError = true
+            paramsError = true
         } else {
             if (param.type === 'file') {
                 data.append(param.key, params.value[param.key])
@@ -437,81 +442,81 @@ const confirmTaskCreated = () => {
                     value: params.value[param.key],
                 });
             }
-            param.isError = false;
+            param.isError = false
         }
     }
 
-    let taskSamples = [];
+    let taskSamples = []
     switch (props.flowDetail.sample_type) {
         case "single": {
             if (!sampleFirst.value.id) {
-                sampleFirstError.value = true;
-                paramsError = true;
+                sampleFirstError.value = true
+                paramsError = true
             } else {
-                sampleFirstError.value = false;
-                taskSamples.push(sampleFirst.value.id);
+                sampleFirstError.value = false
+                taskSamples.push(sampleFirst.value.id)
             }
-            break;
+            break
         }
         case "double": {
             if (!sampleFirst.value.id) {
-                sampleFirstError.value = true;
-                paramsError = true;
+                sampleFirstError.value = true
+                paramsError = true
             } else {
-                taskSamples.push(sampleFirst.value.id);
-                sampleFirstError.value = false;
+                taskSamples.push(sampleFirst.value.id)
+                sampleFirstError.value = false
             }
             if (!sampleSecond.value.id) {
-                sampleSecondError.value = true;
-                paramsError = true;
+                sampleSecondError.value = true
+                paramsError = true
             } else {
-                taskSamples.push(sampleSecond.value.id);
-                sampleSecondError.value = false;
+                taskSamples.push(sampleSecond.value.id)
+                sampleSecondError.value = false
             }
-            break;
+            break
         }
         case "multiple": {
-            if (samples.value.length == 0) {
-                samplesError.value = true;
-                paramsError = true;
+            if (samples.value.length === 0) {
+                samplesError.value = true
+                paramsError = true
             } else {
                 for (const item of samples.value) {
-                    taskSamples.push(item.id);
+                    taskSamples.push(item.id)
                 }
-                samplesError.value = false;
+                samplesError.value = false
             }
-            break;
+            break
         }
     }
     if (paramsError) {
-        errorMessage("Fix Error");
-        return;
+        errorMessage("Fix Error")
+        return
     }
 
 
-    data.append("flow_id", props.flowDetail.id);
-    data.append("project_id", props.projectDetail.id);
-    data.append("samples", taskSamples.join(","));
-    data.append("parameter", JSON.stringify(taskParameter));
-    data.append("name", newTaskName.value);
+    data.append("flow_id", props.flowDetail.id)
+    data.append("project_id", props.projectDetail.id)
+    data.append("samples", taskSamples.join(","))
+    data.append("parameter", JSON.stringify(taskParameter))
+    data.append("name", newTaskName.value)
 
     apiPost(
         "/task",
         (res) => {
             infoMessage("Success")
-            emit("taskCreated");
+            emit("taskCreated")
         },
         data
-    );
-};
+    )
+}
 const sampleTypetrans = (flow) => {
     switch (flow.sample_type) {
         case "single":
-            return t('SingleSample');
+            return t('SingleSample')
         case "double":
-            return t('PairSample');
+            return t('PairSample')
         case "multiple":
-            return t('MultipleSample');
+            return t('MultipleSample')
     }
-};
+}
 </script>

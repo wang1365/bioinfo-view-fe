@@ -30,4 +30,6 @@ module.exports = {
     endOfLine: 'lf',
     // 20.embeddedLanguageFormatting: "off",默认是auto,控制被引号包裹的代码是否进行格式化
     embeddedLanguageFormatting: 'off',
+    // 用于控制文本是否应该被换行以及如何进行换行
+    proseWrap: 'preserve',
 }
