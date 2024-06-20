@@ -8,7 +8,7 @@
                 </q-toolbar>
             </div>
             <slot name="tableFilter"></slot>
-            <div class="bio-data-table popup-content-table-container">
+            <div class="bio-data-table popup-content-table-container" style="overflow: auto;">
                 <table>
                     <thead class="popup-content-table-head">
                         <tr>
@@ -19,12 +19,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="dataItems.length===0">
+                        <tr v-if="dataItems.length === 0">
                             <td colspan="10" class="text-center">{{ $t('PopupSelectNoData') }}</td>
                         </tr>
-                        <tr class="cursor-pointer" v-for="item of dataItems" :key="item" @click="selectedItem=item">
+                        <tr class="cursor-pointer" v-for="item of dataItems" :key="item" @click="selectedItem = item">
                             <td>
-                                <q-radio v-model="selectedItem" :val="item" @click="selectedItem=item" />
+                                <q-radio v-model="selectedItem" :val="item" @click="selectedItem = item" />
                             </td>
                             <slot :row="item" name="itemRow">
                                 <td v-for="field of tableRowFields" :key="field">
@@ -49,24 +49,15 @@
             <q-separator></q-separator>
             <div>
                 <q-toolbar>
-                    <q-toolbar-title
-                        >{{ $t('PopupSelectCurrrentSelected') }}:
+                    <q-toolbar-title>{{ $t('PopupSelectCurrrentSelected') }}:
                         {{
                             selectedItem[props.selectedShowField]
-                        }}</q-toolbar-title
-                    >
-                    <PaginatorVue
-                        :total="props.total"
-                        :currentPage="props.currentPage"
-                        @pageChange="pageChange($event)"
-                    />
+                        }}</q-toolbar-title>
+                    <PaginatorVue :total="props.total" :currentPage="props.currentPage"
+                        @pageChange="pageChange($event)" />
                     <q-btn class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
-                    <q-btn
-                        v-if="selectedItem[props.selectedShowField]"
-                        color="primary"
-                        :label="$t('PopupSelectEnsure')"
-                        @click="ensureSelect()"
-                    />
+                    <q-btn v-if="selectedItem[props.selectedShowField]" color="primary" :label="$t('PopupSelectEnsure')"
+                        @click="ensureSelect()" />
                 </q-toolbar>
             </div>
         </div>
