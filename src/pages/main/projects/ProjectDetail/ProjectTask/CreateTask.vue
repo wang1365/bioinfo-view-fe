@@ -38,11 +38,14 @@
                             <q-list bordered separator>
                                 <q-item v-ripple v-for="item, index in paramTabs" :key="index" :name="item.name"
                                     :class="{ 'bg-primary': index == activeParamTab, 'text-white': index == activeParamTab }">
-                                    <span class="cursor-pointer" @click="activeParamTab = index">{{ $t('Param')
+                                    <span class="cursor-pointer" @click="activeParamTab = index">{{ $t('Task')
                                         }}&nbsp;{{ index + 1
                                         }} </span>
                                     <q-icon name="delete" color="red" class="q-ml-md cursor-pointer"
                                         @click="deleteParamTab(index)"></q-icon>
+                                    <q-icon name="error" color="red" style="float:right;top:0px;right:-10px"
+                                        v-if="item.isError"></q-icon>
+
                                 </q-item>
                                 <q-item clickable class="center" @click="addParamTab()">
                                     <q-btn icon="add" color="primary" outline></q-btn>
@@ -55,49 +58,52 @@
                                 <div class="q-pa-md" v-if="activeParamTab === index">
                                     <div class="text-h6">{{ $t('CustomParameters') }}:</div>
                                     <div>
-                                        <q-input v-model="item.name" :label="$t('Task')" :error="newTaskNameError"
+                                        <q-input v-model="item.name" :label="$t('Task')" :error="item.nameError"
                                             :error-message="$t('Required')">
                                         </q-input>
                                     </div>
                                     <div class="row">
                                         <template v-for="param of paramsDefine" :key="param.key">
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'file'">
-                                                <q-file :error="param.isError" :error-message="param.error"
-                                                    v-model="item.params[param.key]" :label="param.key">
+                                                <q-file :error="item.params[param.key].isError"
+                                                    :error-message="param.error" v-model="item.params[param.key].value"
+                                                    :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
                                                         }}</q-tooltip>
                                                 </q-file>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'string'">
-                                                <q-input :error="param.isError" :error-message="param.error"
-                                                    v-model="item.params[param.key]" :label="param.key">
+                                                <q-input :error="item.params[param.key].isError"
+                                                    :error-message="param.error" v-model="item.params[param.key].value"
+                                                    :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
                                                         }}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'number'">
-                                                <q-input :error="param.isError" :error-message="param.error"
-                                                    type="number" v-model="item.params[param.key]" :label="param.key">
+                                                <q-input :error="item.params[param.key].isError"
+                                                    :error-message="param.error" type="number"
+                                                    v-model="item.params[param.key].value" :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
                                                         }}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'select'">
-                                                <q-select :error="param.isError" :error-message="param.error"
-                                                    v-model="item.params[param.key]" :options="param.choices"
-                                                    :label="param.key">
+                                                <q-select :error="item.params[param.key].isError"
+                                                    :error-message="param.error" v-model="item.params[param.key].value"
+                                                    :options="param.choices" :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
                                                         }}</q-tooltip>
                                                 </q-select>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'multiSelect'">
-                                                <q-select :error="param.isError" :error-message="param.error"
-                                                    v-model="item.params[param.key]" :options="param.choices"
-                                                    :label="param.key" multiple use-chips>
+                                                <q-select :error="item.params[param.key].isError"
+                                                    :error-message="param.error" v-model="item.params[param.key].value"
+                                                    :options="param.choices" :label="param.key" multiple use-chips>
                                                     <q-tooltip>{{
                                                         param.description
                                                         }}</q-tooltip>
@@ -300,12 +306,13 @@ onMounted(() => {
             error: t('Required'),
             isError: false,
         });
-        params[param.key] = null;
+        params[param.key] = { value: null, isError: false }
     }
+    console.log(paramsDefine)
 
     let file = []
     switch (props.flowDetail.sample_type) {
-        case 'single': { file = { sampleFirst: {} }; break; };
+        case 'single': { file = { sampleFirst: {}, sampleFirstError: false }; break; };
         case 'double': {
             file = {
                 sampleFirst: {},
@@ -333,7 +340,7 @@ onMounted(() => {
 
     }
     newTabParamFiles.value = file
-    newTabParams.value = { params: params, files: [file], };
+    newTabParams.value = { params: params, files: [file], name: "", isError: false };
     paramTabs.value.push(
         JSON.parse(JSON.stringify(newTabParams.value))
     )
@@ -347,7 +354,7 @@ const addParamTab = () => {
 }
 const deleteParamTab = (index) => {
     if (paramTabs.value.length > 1)
-        paramTabs.value.shift(index, 1)
+        paramTabs.value.splice(index, 1)
     activeParamTab.value = 0
 }
 
@@ -359,7 +366,7 @@ const addParamTabFiles = (index) => {
 }
 const deleteParamTabFiles = (index, file_index) => {
     if (paramTabs.value[index].files.length > 1)
-        paramTabs.value[index].files.shift(file_index, 1)
+        paramTabs.value[index].files.splice(file_index, 1)
 }
 const selectSingle = (index) => {
     activeParamFileIndex.value = index
@@ -417,6 +424,161 @@ const multiSelected = (event) => {
 };
 
 const confirmTaskCreated = () => {
+    let hasError = false;
+    let datas = []
+    for (let taskParam of paramTabs.value) {
+        let taskParameter = [];
+        let taskHasError = false
+        if (!taskParam.name) {
+            taskParam.nameError = true;
+            hasError = true
+            taskHasError = true
+        } else {
+            taskParam.nameError = false;
+        }
+        let uploadFiles = []
+        for (let param of paramsDefine.value) {
+            if (!taskParam.params[param.key].value && param.required) {
+                taskParam.params[param.key].isError = true
+                hasError = true
+                taskHasError = true
+            } else {
+                if (param.type === 'file') {
+                    uploadFiles.push([param.key, taskParam.params[param.key].value])
+                }
+                else {
+                    taskParameter.push({
+                        key: param.key,
+                        value: taskParam.params[param.key].value,
+                    });
+                }
+                taskParam.params[param.key].isError = false
+            }
+        }
+
+        for (let file of taskParam.files) {
+
+            let taskSamples = ""
+            switch (props.flowDetail.sample_type) {
+                case "single": {
+                    let samples = []
+                    if (!file.sampleFirst.id) {
+                        file.sampleFirstError = true
+                        taskHasError = true
+                        hasError = true
+                    } else {
+                        file.sampleFirstError = false
+                        samples.push(file.sampleFirst.id)
+                    }
+                    taskSamples = samples.join(",")
+
+                    break
+                }
+                case "double": {
+                    let samples = []
+                    if (!file.sampleFirst.id) {
+                        file.sampleFirstError = true
+                        taskHasError = true
+                        hasError = true
+                    } else {
+                        samples.push(file.sampleFirst.id)
+                        file.sampleFirstError = false
+                    }
+                    if (!file.sampleSecond.id) {
+                        file.sampleSecondError = true
+                        taskHasError = true
+                        hasError = true
+                    } else {
+                        samples.push(file.sampleSecond.id)
+                        file.sampleSecondError = false
+                    }
+                    taskSamples = samples.join(",")
+                    break
+                }
+                case "multiple": {
+                    let samples = []
+                    if (file.samples.length === 0) {
+                        file.samplesError = true
+                        taskHasError = true
+                        hasError = true
+                    } else {
+                        for (const item of file.samples) {
+                            samples.push(item.id)
+                        }
+                        file.samplesError = false
+                    }
+                    taskSamples = samples.join(",")
+                    break
+                }
+                case "double_multiple": {
+                    let samples = {
+                        first: [],
+                        second: []
+                    }
+                    if (file.samplesFirst.length === 0) {
+                        file.samplesFirstError = true
+                        taskHasError = true
+                        hasError = true
+                    } else {
+                        for (const item of file.samplesFirst) {
+                            samples.first.push(item.id)
+                        }
+                        file.samplesFirstError = false
+                    }
+                    if (file.samplesSecond.length === 0) {
+                        file.samplesSecondError = true
+                        taskHasError = true
+                        hasError = true
+                    } else {
+                        for (const item of file.samplesSecond) {
+                            samples.second.push(item.id)
+                        }
+                        file.samplesSecondError = false
+                    }
+                    taskSamples = JSON.stringify(samples)
+                    break
+                }
+            }
+            let data = {}
+            data.uploadFiles = uploadFiles
+            data.name = taskParam.name
+            data.parameter = JSON.stringify(taskParameter)
+            data.samples = taskSamples
+            datas.push(data)
+            console.log(data)
+        }
+        taskParam.isError = taskHasError
+    }
+    console.log(datas)
+    if (hasError) {
+        errorMessage("Fix Error")
+        return
+    }
+    // TODO 判断资源是否足够
+    for (const item of datas) {
+        let data = new FormData()
+        data.append("flow_id", props.flowDetail.id)
+        data.append("project_id", props.projectDetail.id)
+        data.append("samples", item.samples)
+        data.append("parameter", item.parameter)
+        data.append("name", item.name)
+        for (const file of item.uploadFiles) {
+            data.append(file[0], file[1])
+        }
+        console.log(data)
+        // TODO 创建任务
+        // apiPost(
+        //     "/task",
+        //     (res) => {
+        //         infoMessage("Success")
+        //         emit("taskCreated")
+        //     },
+        //     data
+        // )
+
+    }
+
+    return
     let paramsError = false
 
     if (!newTaskName.value) {
