@@ -70,7 +70,7 @@
                                                     :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                        }}</q-tooltip>
+                                                    }}</q-tooltip>
                                                 </q-file>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'string'">
@@ -79,7 +79,7 @@
                                                     :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                        }}</q-tooltip>
+                                                    }}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'number'">
@@ -88,7 +88,7 @@
                                                     v-model="item.params[param.key].value" :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                        }}</q-tooltip>
+                                                    }}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'select'">
@@ -97,7 +97,7 @@
                                                     :options="param.choices" :label="param.key">
                                                     <q-tooltip>{{
                                                         param.description
-                                                        }}</q-tooltip>
+                                                    }}</q-tooltip>
                                                 </q-select>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type == 'multiSelect'">
@@ -106,7 +106,7 @@
                                                     :options="param.choices" :label="param.key" multiple use-chips>
                                                     <q-tooltip>{{
                                                         param.description
-                                                        }}</q-tooltip>
+                                                    }}</q-tooltip>
                                                 </q-select>
                                             </div>
                                         </template>
@@ -189,33 +189,37 @@
                                     <div v-if="props.flowDetail.sample_type == 'double_multiple'">
                                         <div class="row q-my-md q-pa-sm shadow-1" v-for="file, file_index in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
-                                            <div class="col-6">
+                                            <div class="col-5">
                                                 <q-btn :label="$t('Select') + $t('Data')" color="primary"
                                                     style="width: 100%" @click="selectFirstMulti(file_index)"></q-btn>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-5">
                                                 <q-btn :label="$t('Select') + $t('Data')" color="secondary"
                                                     style="width: 100%" @click="selectSecondMulti(file_index)"></q-btn>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-2">
+                                                <q-btn icon="delete" color="red"
+                                                    @click="deleteParamTabFiles(index, file_index)"></q-btn>
+                                            </div>
+                                            <div class="col-5">
                                                 <span v-if="file.samplesFirstError" class="text-red text-bold">{{
                                                     `${$t('Data')}
                                                     ${$t('Required')}` }}</span>
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-5">
                                                 <span v-if="file.samplesSecondError" class="text-red text-bold">{{
                                                     `${$t('Data')}
                                                     ${$t('Required')}` }}</span>
                                             </div>
-                                            <div class="col-12">
+                                            <div class="col-5">
                                                 <q-chip v-for="sample of file.samplesFirst" :key="sample.id"
                                                     class="glossy" color="primary" text-color="white">
                                                     {{ sample.identifier }}
                                                 </q-chip>
                                             </div>
-                                            <div class="col-12">
+                                            <div class="col-5">
                                                 <q-chip v-for="sample of file.samplesSecond" :key="sample.id"
-                                                    class="glossy" color="primary" text-color="white">
+                                                    class="glossy" color="secondary" text-color="white">
                                                     {{ sample.identifier }}
                                                 </q-chip>
                                             </div>
