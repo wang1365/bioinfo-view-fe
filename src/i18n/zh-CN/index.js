@@ -680,6 +680,7 @@ export default {
     SingleSample: '单样本',
     PairSample: '配对样本',
     MultipleSample: '多样本',
+    PairMultipleSample: '配对多样本',
     SupportNonStandardSample: '支持非标准样本',
 
     // 样本数据

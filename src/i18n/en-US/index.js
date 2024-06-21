@@ -685,6 +685,7 @@ export default {
     SingleSample: 'Single Sample',
     PairSample: 'Pair Sample',
     MultipleSample: 'Multiple Sample',
+    PairMultipleSample: 'Pair Multiple Sample',
     SupportNonStandardSample: 'Support Non Standard Sample',
 
     // 样本数据
