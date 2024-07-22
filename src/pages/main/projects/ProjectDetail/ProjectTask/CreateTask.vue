@@ -98,6 +98,10 @@
 
 
 
+
+
+
+
                                         }}&nbsp;{{ index + 1
                                         }}
                                     </span>
@@ -730,13 +734,15 @@ const confirmTaskCreated = () => {
         (res) => {
             infoMessage("Creating Tasks")
             let created = 0;
+            let nameIndex = 0
             for (const item of datas) {
+                nameIndex += 1
                 let data = new FormData()
                 data.append("flow_id", props.flowDetail.id)
                 data.append("project_id", props.projectDetail.id)
                 data.append("samples", item.samples)
                 data.append("parameter", item.parameter)
-                data.append("name", `${item.name}-${created+1}`)
+                data.append("name", `${item.name}-${nameIndex}`)
                 for (const file of item.uploadFiles) {
                     data.append(file[0], file[1])
                 }
