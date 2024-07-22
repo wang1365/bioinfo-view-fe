@@ -53,9 +53,31 @@
                 @update:model-value="refreshPage()"
             />
 
-            <q-input style="width:150px" filled dense clearable v-model="patient" :label="`${$t('Patient')} ${$t('Name')}`" />
-            <q-input style="width:150px" filled dense clearable v-model="libraryNumber" :label="$t('DataListTableColumnLibraryNumber')" />
-            <q-input style="width:300px" readonly filled dense @click="showProjectSelect = true" :model-value="$t('Project') + ': ' + projectName">
+            <q-input
+                style="width:150px"
+                filled
+                dense
+                clearable
+                v-model="patient"
+                :label="`${$t('Patient')} ${$t('Name')}`"
+            />
+            <q-input
+                style="width:150px"
+                filled
+                dense
+                clearable
+                v-model="libraryNumber"
+                :label="$t('DataListTableColumnLibraryNumber')"
+            />
+            <q-input style="width:150px" filled dense clearable v-model="taskName" :label="$t('Task') + $t('Name')" />
+            <q-input
+                style="width:300px"
+                readonly
+                filled
+                dense
+                @click="showProjectSelect = true"
+                :model-value="$t('Project') + ': ' + projectName"
+            >
                 <template v-slot:prepend>
                     <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                 </template>
@@ -78,7 +100,7 @@
                 <template v-slot:body-cell-project="props">
                     <q-td :props="props" class="q-gutter-xs">
                         <span v-if="props.row?.project.parent" class="text-bold text-primary q-mr-xs">
-                            {{props.row.project.parent.name}}
+                            {{ props.row.project.parent.name }}
                         </span>
                         <span class="text-secondary"> {{ props.row.project.name }} </span>
                     </q-td>
@@ -126,11 +148,25 @@
                     <q-td :props="props" class="q-gutter-xs">
                         <template v-if="props.row.priority === 2">
                             <span class="text-red">{{ $t('High') }}</span>
-                            <q-btn v-if="amISuper() || amIAdmin()" size="xs" flat icon="south" padding="xs" @click="raisePriority(props.row, 1)" />
+                            <q-btn
+                                v-if="amISuper() || amIAdmin()"
+                                size="xs"
+                                flat
+                                icon="south"
+                                padding="xs"
+                                @click="raisePriority(props.row, 1)"
+                            />
                         </template>
                         <template v-else>
                             <span class="text-primary">{{ $t('Normal') }}</span>
-                            <q-btn v-if="amISuper() || amIAdmin()" size="xs" flat icon="north" padding="xs" @click="raisePriority(props.row, 2)" />
+                            <q-btn
+                                v-if="amISuper() || amIAdmin()"
+                                size="xs"
+                                flat
+                                icon="north"
+                                padding="xs"
+                                @click="raisePriority(props.row, 2)"
+                            />
                         </template>
                     </q-td>
                 </template>
@@ -178,13 +214,25 @@
                                 size="sm"
                                 padding="xs sm"
                             />
-                            <q-btn v-if="props.row.status === 'FINISHED'" color="primary" @click="download(props.row)" size="sm" padding="xs sm">
+                            <q-btn
+                                v-if="props.row.status === 'FINISHED'"
+                                color="primary"
+                                @click="download(props.row)"
+                                size="sm"
+                                padding="xs sm"
+                            >
                                 <a style="color:white" :href="download(props.row)" download>
                                     <q-icon name="download" />
                                     {{ $t('Download') }}
                                 </a>
                             </q-btn>
-                            <q-btn v-if="props.row.status !== 'FINISHED'" :disable="true" color="primary" size="sm" padding="xs sm">
+                            <q-btn
+                                v-if="props.row.status !== 'FINISHED'"
+                                :disable="true"
+                                color="primary"
+                                size="sm"
+                                padding="xs sm"
+                            >
                                 <a style="color:white" href="#" download>
                                     <q-icon name="download" />
                                     {{ $t('Download') }}
@@ -199,15 +247,22 @@
                                 size="sm"
                                 padding="xs sm"
                                 ><q-tooltip>{{
-            $t('TaskPageListTableRowBtnDeleteTmpTip')
+                                    $t('TaskPageListTableRowBtnDeleteTmpTip')
                                 }}</q-tooltip></q-btn
                             >
-                            <q-btn color="red" padding="xs sm" :label="$t('Delete')" icon="delete" size="sm" @click="confirm(props.row)" />
+                            <q-btn
+                                color="red"
+                                padding="xs sm"
+                                :label="$t('Delete')"
+                                icon="delete"
+                                size="sm"
+                                @click="confirm(props.row)"
+                            />
                             <q-btn
                                 color="primary"
                                 padding="xs sm"
                                 :disable="props.row.status !== 'FINISHED'"
-                                :label="$t('Download')+' bam'"
+                                :label="$t('Download') + ' bam'"
                                 icon="download"
                                 size="sm"
                                 :href="`/igv${props.row.result_dir}/bam/${props.row.id}-bam.zip`"
@@ -263,6 +318,7 @@ const onRequest = (props) => {
     if (projectId.value) params += `&project_id=${projectId.value}`
     if (patient.value) params += `&patient=${patient.value}`
     if (libraryNumber.value) params += `&libraryNumber=${libraryNumber.value}`
+    if (taskName.value) params += `&task_name=${taskName.value}`
     pagination.value.page = page
     pagination.value.rowsPerPage = rowsPerPage
     backupSearch()
@@ -491,6 +547,7 @@ const projectId = ref(0)
 const projectName = ref('')
 const patient = ref('')
 const libraryNumber = ref('')
+const taskName = ref('')
 const { apiGet, downloadData, apiDelete } = useApi()
 const router = useRouter()
 const taskSummary = ref({
@@ -556,7 +613,9 @@ const gotoDefineReport = (item) => {
 onMounted(() => {
     loadBackup()
     loadDataOnMount()
-    intId.value = setInterval(() => refreshPage(), 60000)
+    intId.value = setInterval(() => {
+        loadBackup(); console.log(pagination.value); refreshPage()
+    }, 60000)
     summary()
 })
 onUnmounted(() => {
@@ -593,6 +652,7 @@ const loadBackup = () => {
     if (dataStr) {
         let data = JSON.parse(dataStr)
         pagination.value.rowsPerPage = data.size
+        pagination.value.page = data.page
         status.value = data.status
         projectId.value = data.projectId
         projectName.value = data.projectName
