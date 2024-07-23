@@ -102,6 +102,22 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                         }}&nbsp;{{ index + 1
                                         }}
                                     </span>
@@ -633,6 +649,8 @@ const confirmTaskCreated = () => {
         for (let file of taskParam.files) {
 
             let taskSamples = ""
+            let taskSamplesFirst = ""
+            let taskSamplesSecond = ""
             switch (props.flowDetail.sample_type) {
                 case "single": {
                     let samples = []
@@ -709,7 +727,10 @@ const confirmTaskCreated = () => {
                         }
                         file.samplesSecondError = false
                     }
-                    taskSamples = JSON.stringify(samples)
+                    taskSamples = samples.first.join(',') + ',' + samples.second.join(',')
+                    taskSamplesFirst = samples.first.join(',')
+                    taskSamplesSecond = samples.second.join(',')
+
                     break
                 }
             }
@@ -718,6 +739,13 @@ const confirmTaskCreated = () => {
             data.name = taskParam.name
             data.parameter = JSON.stringify(taskParameter)
             data.samples = taskSamples
+            if (taskSamplesFirst != "") {
+                data.taskSamplesFirst = taskSamplesFirst
+            }
+            if (taskSamplesSecond != "") {
+                data.taskSamplesSecond = taskSamplesSecond
+            }
+
             datas.push(data)
             console.log(data)
         }
@@ -743,6 +771,13 @@ const confirmTaskCreated = () => {
                 data.append("samples", item.samples)
                 data.append("parameter", item.parameter)
                 data.append("name", `${item.name}-${nameIndex}`)
+                if (item.taskSamplesFirst != "") {
+                    data.append("task_samples_first", item.taskSamplesFirst)
+                }
+                if (item.taskSamplesSecond != "") {
+                    data.append("task_samples_second", item.taskSamplesSecond)
+                }
+
                 for (const file of item.uploadFiles) {
                     data.append(file[0], file[1])
                 }
