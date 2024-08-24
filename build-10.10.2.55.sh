@@ -33,6 +33,6 @@ fi
 
 start="docker run --name ${CONTAINER_NAME} -dit --restart=always -p 9090:80 \
   -v /data/bioinfo:/data/bioinfo \
-  -e API=10.10.2.50:8080 ${DOCKER_IMAGE}:${TAG}"
+  -e API=10.10.2.55:8080 ${DOCKER_IMAGE}:${TAG}"
 echo $start
 eval $start
