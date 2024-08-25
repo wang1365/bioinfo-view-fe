@@ -324,6 +324,7 @@ export default {
     TumorMutationLoadAnalysis: '肿瘤突变负荷分析',
     HomologousRecombinationDefectAnalysis: '同源重组缺陷分析',
     CopyNumberVariationAnalysis: '拷贝数变异分析',
+    CopyNumberVariationGeneAnalysis: '拷贝数变异基因分析',
     MicroSatelliteInstability: '微卫星状态',
 
     // QC

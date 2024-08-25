@@ -176,6 +176,33 @@
                     </q-item>
                     <q-item>
                         <div class="row full-width justify-between">
+                            <q-checkbox v-model="form.fastq_merge_required" />
+                        </div>
+                    </q-item>
+                    <q-item>
+                        <div class="row full-width justify-between">
+                            <div class="col q-mx-sm">
+                                <q-input
+                                    v-model="form.fastq1_path"
+                                    :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
+                                    :label="'*'+$t('DataNewFormDataNameOfR1')"
+                                    stack-label
+                                    filled
+                                ></q-input>
+                            </div>
+                            <div class="col q-mx-sm">
+                                <q-input
+                                    v-model="form.fastq2_path"
+                                    :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
+                                    :label="'*'+$t('DataNewFormDataNameOfR2')"
+                                    stack-label
+                                    filled
+                                ></q-input>
+                            </div>
+                        </div>
+                    </q-item>
+                    <q-item>
+                        <div class="row full-width justify-between">
                             <div class="col q-mx-sm">
                                 <q-input
                                     v-model="form.fastq1_path"
@@ -269,8 +296,11 @@ const form = ref({
     identifier: '',
     company: '',
     nucleic_type: 'gDNA',
-    fastq1_path: '',
-    fastq2_path: '',
+    fastq_merge_required: false, // 是否需要进行fastq文件合并
+    fastq1_path_list: '', // 合并前的fastq1文件列表，逗号分割
+    fastq2_path_list: '', // 合并前的fastq2文件列表，逗号分割
+    fastq1_path: '',      // 无需合并时，为手动输入的fastq1文件；需要合并时，自动生成合并后的文件名
+    fastq2_path: '',      // 无需合并时，为手动输入的fastq2文件；需要合并时，自动生成合并后的文件名
 });
 const save = async () => {
     const data = {
