@@ -8,7 +8,27 @@
         @click="dlgVisible = !dlgVisible"
         >{{ $t('Intro') }}
     </q-btn>
-    <a-table :columns="columns" :data-source="rows" bordered size="small" />
+    <a-table :columns="columns" :data-source="rows" bordered size="small">
+        <template #bodyCell="{record, column}">
+            <!--        <template #bodyCell="{ column}">-->
+            <template v-if="column.key === 'Chromesome'  || column.key === '染色体'">
+                <q-btn
+                    size="small"
+                    :outline="highlightLineNumber !== record.lineNumber"
+                    color="primary"
+                    :label="record.chrs[0]"
+                    @click="highlightLineNumber = record.lineNumber"
+                />
+                <q-btn
+                    size="small"
+                    outline
+                    v-if="record.chrs.length>1"
+                    :label="record.chrs[1]"
+                    @click="highlightLineNumber = record.lineNumber"
+                />
+            </template>
+        </template>
+    </a-table>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
             <q-bar class="bg-primary text-white">{{ $t('CopyNumberVariationGeneAnalysis') }}</q-bar>
@@ -87,22 +107,22 @@ const columns = computed(() => {
         let h_define = {
             key: h, title: h, dataIndex: h, align: 'center',
         };
-        h_define.customCell = (record, rowIndex, column) => {
-            return {
-                // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
-                style: {
-                    // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-                    // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
-                    'background-color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : '',
-                    'font-weight': highlightLineNumber.value === record.lineNumber ? 'bold' : '',
-                    cursor: 'pointer',
-                },
-                // 鼠标单击行
-                onClick: (event) => {
-                    highlightLineNumber.value = record.lineNumber;
-                },
-            };
-        };
+        // h_define.customCell = (record, rowIndex, column) => {
+        //     return {
+        //         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+        //         style: {
+        //             // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+        //             // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
+        //             'background-color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : '',
+        //             'font-weight': highlightLineNumber.value === record.lineNumber ? 'bold' : '',
+        //             cursor: 'pointer',
+        //         },
+        //         // 鼠标单击行
+        //         onClick: (event) => {
+        //             highlightLineNumber.value = record.lineNumber;
+        //         },
+        //     }
+        // }
         if (values.length > 0) {
             h_define = {
                 ...h_define,
@@ -146,10 +166,17 @@ const loadData = () => {
     tableFileUrl.value = `igv${filePath}`;
     tableFileName.value = `gene_${suffix}.txt`;
     // 加载表格数据
+    // 表头：Gene | Transcript | Chromosome | Inheritance | Exon |
     readTaskFile(route.params.id, filePath).then((res) => {
         headers.value = getCsvHeader(res);
         const results = getCsvDataAndSetLineNumber(res, { fields: headers.value });
         rows.value = results;
+        rows.value.map(dr => {
+            const chr_value = dr[headers.value[2]];
+            dr.chrs = chr_value.split(',');
+            return dr;
+        });
+
         filteredRows.value = results;
         console.log(defaultRows.value);
     });
