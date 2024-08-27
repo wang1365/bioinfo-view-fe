@@ -17,14 +17,14 @@
                     :outline="highlightLineNumber !== record.lineNumber"
                     color="primary"
                     :label="record.chrs[0]"
-                    @click="highlightLineNumber = record.lineNumber"
+                    @click="highlightLineNumber = record.lineNumber; highlightChr = record.chrs[0]"
                 />
                 <q-btn
                     size="small"
                     outline
                     v-if="record.chrs.length>1"
                     :label="record.chrs[1]"
-                    @click="highlightLineNumber = record.lineNumber"
+                    @click="highlightLineNumber = record.lineNumber; highlightChr = record.chrs[1]"
                 />
             </template>
         </template>
@@ -98,6 +98,7 @@ const stepData = toRef(props, 'stepData');
 // 表头名称集合
 const headers = ref([]);
 const highlightLineNumber = ref(1);
+const highlightChr = ref('');
 // 表头定义集合
 const columns = computed(() => {
     const result = headers.value.map(h => {
