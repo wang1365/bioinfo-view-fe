@@ -117,7 +117,7 @@ const columns = computed(() => {
                     // 'background-color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : '',
                     'font-weight': highlightLineNumber.value === record.lineNumber ? 'bold' : '',
                     'color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : 'black',
-                    cursor: 'pointer',
+                    // cursor: 'pointer',
                 },
                 // 鼠标单击行
                 // onClick: (event) => {
