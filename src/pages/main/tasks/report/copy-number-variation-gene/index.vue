@@ -163,6 +163,9 @@ const current_kpi = ref()
 const chart = ref()
 const chartDiv = ref(uid())
 
+const option = ref({
+})
+
 watch(langCode, v => loadData())
 watch(rows, v => {
     // selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
@@ -213,21 +216,43 @@ const loadData = () => {
 const initChart = () => {
     const div = document.getElementById(chartDiv.value)
     chart.value = echarts.init(div)
-    var dataAxis = ['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'];
-    var data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220];
-    var yMax = 500;
-    var dataShadow = [];
+    refreshChart()
+}
 
-    for (var i = 0; i < data.length; i++) {
+const x_data = computed(() => {
+    return detail_rows.value.filter(r => {
+        const highlightRow = rows.value[highlightLineNumber]
+        const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene']
+        const charMatch = r['Chromosome'] === highlightChr.value
+        return geneMatch && charMatch
+    }).map(r => r['Exon'])
+})
+
+const y_data = computed(() => {
+    return detail_rows.value.filter(r => {
+        const highlightRow = rows.value[highlightLineNumber]
+        const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene']
+        const charMatch = r['Chromosome'] === highlightChr.value
+        return geneMatch && charMatch
+    }).map(r => r[current_kpi])
+})
+
+const refreshChart = () => {
+    const dataShadow = []
+    const yMax = Math.max(y_data.value)
+
+    for (let i = 0; i < y_data.value.length; i++) {
         dataShadow.push(yMax)
     }
-    const option = {
+
+    chart.value.setOption(option.value)
+    option.value = {
         title: {
             text: '特性示例：渐变色 阴影 点击缩放',
             subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
         },
         xAxis: {
-            data: dataAxis,
+            data: x_data.value,
             axisLabel: {
                 inside: true,
                 textStyle: {
@@ -295,31 +320,29 @@ const initChart = () => {
                         ),
                     },
                 },
-                data: data,
+                data: y_data.value,
             },
         ],
-    };
-
-    chart.value.setOption(option)
-};
+    }
+}
 
 const searchFilterRows = (searchParams) => {
     filteredRows.value = rows.value.filter((t) => {
         if (searchParams.includeDefaultReport && t.Report === 'Y') {
-            return true;
+            return true
         }
 
-        return [];
+        return []
     })
-};
+}
 const clickSearch = () => {
     if (viewConfig.value.showStick && viewConfig.value.stickDone) {
         errorMessage(t('DefineReportUnlockReuired'))
         return false;
     }
     searchFilterRows(searchParams.value)
-    selectedRows.value = selectedDefaultRows.value;
-};
+    selectedRows.value = selectedDefaultRows.value
+}
 
 
 
@@ -331,14 +354,14 @@ const onSelectChange = (selectedRowKeys) => {
     //     return false
     // }
     console.log(selectedRowKeys)
-    selectedRows.value = selectedRowKeys;
-    selectedDefaultRows.value = [];
+    selectedRows.value = selectedRowKeys
+    selectedDefaultRows.value = []
     for (let item of selectedRowKeys) {
         let finded = false;
         for (let lineNumber of defaultRows.value) {
             if (lineNumber === item) {
-                finded = true;
-                break;
+                finded = true
+                break
             }
         }
         if (finded) {
@@ -346,7 +369,7 @@ const onSelectChange = (selectedRowKeys) => {
         }
     }
     console.log(selectedDefaultRows)
-};
+}
 
 
 const reset = () => {
