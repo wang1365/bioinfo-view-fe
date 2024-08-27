@@ -108,22 +108,23 @@ const columns = computed(() => {
         let h_define = {
             key: h, title: h, dataIndex: h, align: 'center',
         };
-        // h_define.customCell = (record, rowIndex, column) => {
-        //     return {
-        //         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
-        //         style: {
-        //             // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-        //             // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
-        //             'background-color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : '',
-        //             'font-weight': highlightLineNumber.value === record.lineNumber ? 'bold' : '',
-        //             cursor: 'pointer',
-        //         },
-        //         // 鼠标单击行
-        //         onClick: (event) => {
-        //             highlightLineNumber.value = record.lineNumber;
-        //         },
-        //     }
-        // }
+        h_define.customCell = (record, rowIndex, column) => {
+            return {
+                // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
+                style: {
+                    // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
+                    // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
+                    // 'background-color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : '',
+                    'font-weight': highlightLineNumber.value === record.lineNumber ? 'bold' : '',
+                    'color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : 'black',
+                    cursor: 'pointer',
+                },
+                // 鼠标单击行
+                // onClick: (event) => {
+                //     highlightLineNumber.value = record.lineNumber;
+                // },
+            }
+        }
         if (values.length > 0) {
             h_define = {
                 ...h_define,
