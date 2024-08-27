@@ -62,9 +62,9 @@ import { useI18n } from 'vue-i18n';
 import { globalStore } from 'src/stores/global';
 import { storeToRefs } from 'pinia';
 
-const store = globalStore();
-const { langCode } = storeToRefs(store);
-const { t } = useI18n();
+const store = globalStore()
+const { langCode } = storeToRefs(store)
+const { t } = useI18n()
 
 const props = defineProps({
     intro: {
@@ -96,15 +96,15 @@ const props = defineProps({
         default: () => {
         },
     },
-});
+})
 
-const emit = defineEmits(['stickDone', 'reset']);
-const viewConfig = toRef(props, 'viewConfig');
-const stepData = toRef(props, 'stepData');
+const emit = defineEmits(['stickDone', 'reset'])
+const viewConfig = toRef(props, 'viewConfig')
+const stepData = toRef(props, 'stepData')
 // 表头名称集合
-const headers = ref([]);
-const highlightLineNumber = ref(1);
-const highlightChr = ref('');
+const headers = ref([])
+const highlightLineNumber = ref(1)
+const highlightChr = ref('')
 // 表头定义集合
 const columns = computed(() => {
     const result = headers.value.map(h => {
@@ -141,15 +141,15 @@ const columns = computed(() => {
             };
         }
         return h_define;
-    });
+    })
     // 添加操作列
     // result.push({ title: t('Operate'), dataIndex: 'Operate', align: 'center' })
     return result;
-});
+})
 
 // 统计数据，数据来自cnvkit_gene.txt，用于选择表格一列后，从该数据进行筛选统计
-const detail_rows = ref([]);
-const route = useRoute();
+const detail_rows = ref([])
+const route = useRoute()
 const dlgVisible = ref(false)
 const rows = ref([])
 const filteredRows = ref([])
@@ -163,18 +163,18 @@ const current_kpi = ref()
 const chart = ref()
 const chartDiv = ref(uid())
 
-watch(langCode, v => loadData());
+watch(langCode, v => loadData())
 watch(rows, v => {
     // selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
-});
+})
 
 onMounted(() => {
-    loadData();
-    initChart();
-});
+    loadData()
+    initChart()
+})
 
-let selectedDefaultRows = ref([]);
-let defaultRows = ref([]);
+let selectedDefaultRows = ref([])
+let defaultRows = ref([])
 const loadData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN';
     const filePath = `${props.task.result_dir}/CNV_gene/gene_${suffix}.txt`;
@@ -183,43 +183,43 @@ const loadData = () => {
     // 加载表格数据
     // 表头：Gene | Transcript | Chromosome | Inheritance | Exon |
     readTaskFile(route.params.id, filePath).then((res) => {
-        headers.value = getCsvHeader(res);
-        const results = getCsvDataAndSetLineNumber(res, { fields: headers.value });
+        headers.value = getCsvHeader(res)
+        const results = getCsvDataAndSetLineNumber(res, { fields: headers.value })
         rows.value = results;
         rows.value.map(dr => {
             const chr_value = dr[headers.value[2]];
-            dr.chrs = chr_value.split(',');
+            dr.chrs = chr_value.split(',')
             return dr;
-        });
+        })
 
         filteredRows.value = results;
-        console.log(defaultRows.value);
-    });
+        console.log(defaultRows.value)
+    })
 
     // 加载详细数据，用于表格点击后从该数据查找统计
     // 表头：Gene | Chromosome | Exon | Depth | Unfilter copys | Filter copys
     readTaskFile(route.params.id, `${props.task.result_dir}/CNV_gene/cnvkit_gene.txt`).then((res) => {
-        const detail_headers = getCsvHeader(res);
+        const detail_headers = getCsvHeader(res)
         // 第4列以及之后的列作为指标列，需要在chart中统计展示
         kpi_headers.value = detail_headers.slice(3).map(kpi => {
             return { label: kpi, value: kpi };
-        });
+        })
         current_kpi.value = kpi_headers.value[0].value;
         // 详细数据
-        detail_rows.value = getCsvData(res, { fields: detail_headers });
-    });
+        detail_rows.value = getCsvData(res, { fields: detail_headers })
+    })
 };
 
 const initChart = () => {
-    const div = document.getElementById(chartDiv.value);
-    chart.value = echarts.init(div);
+    const div = document.getElementById(chartDiv.value)
+    chart.value = echarts.init(div)
     var dataAxis = ['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'];
     var data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220];
     var yMax = 500;
     var dataShadow = [];
 
     for (var i = 0; i < data.length; i++) {
-        dataShadow.push(yMax);
+        dataShadow.push(yMax)
     }
     const option = {
         title: {
@@ -300,7 +300,7 @@ const initChart = () => {
         ],
     };
 
-    chart.value.setOption(option);
+    chart.value.setOption(option)
 };
 
 const searchFilterRows = (searchParams) => {
@@ -310,41 +310,27 @@ const searchFilterRows = (searchParams) => {
         }
 
         return [];
-    });
+    })
 };
 const clickSearch = () => {
     if (viewConfig.value.showStick && viewConfig.value.stickDone) {
-        errorMessage(t('DefineReportUnlockReuired'));
+        errorMessage(t('DefineReportUnlockReuired'))
         return false;
     }
-    searchFilterRows(searchParams.value);
+    searchFilterRows(searchParams.value)
     selectedRows.value = selectedDefaultRows.value;
 };
 
 
-const customCell = (record, rowIndex, column) => {
-    return {
-        // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
-        style: {
-            // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-            // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
-            'background-color': (record.Report === 'Y' && column.key !== 'Operation') ? '#fff5ee' : '',
-            // cursor: 'pointer',
-        },
-        // 鼠标单击行
-        onClick: (event) => {
-        },
-    };
-};
 
-const selectedRows = ref([]);
+const selectedRows = ref([])
 
 const onSelectChange = (selectedRowKeys) => {
     // if (viewConfig.value.showStick && viewConfig.value.stickDone) {
     //     errorMessage('请先取消过滤')
     //     return false
     // }
-    console.log(selectedRowKeys);
+    console.log(selectedRowKeys)
     selectedRows.value = selectedRowKeys;
     selectedDefaultRows.value = [];
     for (let item of selectedRowKeys) {
@@ -356,16 +342,16 @@ const onSelectChange = (selectedRowKeys) => {
             }
         }
         if (finded) {
-            selectedDefaultRows.value.push(item);
+            selectedDefaultRows.value.push(item)
         }
     }
-    console.log(selectedDefaultRows);
+    console.log(selectedDefaultRows)
 };
 
 
 const reset = () => {
-    emit('reset', null);
-    selectedRows.value = [];
-    clickSearch();
-};
+    emit('reset', null)
+    selectedRows.value = []
+    clickSearch()
+}
 </script>
