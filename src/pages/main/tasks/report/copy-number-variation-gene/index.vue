@@ -163,8 +163,6 @@ const current_kpi = ref()
 const chart = ref()
 const chartDiv = ref(uid())
 
-const option = ref({
-})
 
 watch(langCode, v => loadData())
 watch(rows, v => {
@@ -183,8 +181,9 @@ const loadData = () => {
     const filePath = `${props.task.result_dir}/CNV_gene/gene_${suffix}.txt`;
     tableFileUrl.value = `igv${filePath}`;
     tableFileName.value = `gene_${suffix}.txt`;
-    // 加载表格数据
-    // 表头：Gene | Transcript | Chromosome | Inheritance | Exon |
+    // 加载表格数据 - /CNV_gene/gene_CN.txt
+    // 表头英文：Gene | Transcript | Chromosome | Inheritance | Exon |
+    // 表头中文：基因	转录本	染色体	遗传特征	外显子数
     readTaskFile(route.params.id, filePath).then((res) => {
         headers.value = getCsvHeader(res)
         const results = getCsvDataAndSetLineNumber(res, { fields: headers.value })
@@ -195,11 +194,12 @@ const loadData = () => {
             return dr;
         })
 
+        highlightChr.value = results[0]['染色体'] || results[0]['Chromosome']
         filteredRows.value = results;
-        console.log(defaultRows.value)
+        console.log('///////////////////////', highlightChr.value)
     })
 
-    // 加载详细数据，用于表格点击后从该数据查找统计
+    // 加载详细数据，用于表格点击后从该数据查找统计 - /CNV_gene/cnvkit_gene.txt
     // 表头：Gene | Chromosome | Exon | Depth | Unfilter copys | Filter copys
     readTaskFile(route.params.id, `${props.task.result_dir}/CNV_gene/cnvkit_gene.txt`).then((res) => {
         const detail_headers = getCsvHeader(res)
@@ -221,7 +221,7 @@ const initChart = () => {
 
 const x_data = computed(() => {
     return detail_rows.value.filter(r => {
-        const highlightRow = rows.value[highlightLineNumber]
+        const highlightRow = rows.value[highlightLineNumber.value]
         const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene']
         const charMatch = r['Chromosome'] === highlightChr.value
         return geneMatch && charMatch
@@ -230,12 +230,82 @@ const x_data = computed(() => {
 
 const y_data = computed(() => {
     return detail_rows.value.filter(r => {
-        const highlightRow = rows.value[highlightLineNumber]
+        const highlightRow = rows.value[highlightLineNumber.value]
         const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene']
         const charMatch = r['Chromosome'] === highlightChr.value
         return geneMatch && charMatch
-    }).map(r => r[current_kpi])
+    }).map(r => r[current_kpi.value])
 })
+
+const option = ref( {
+    title: {
+        text: '特性示例：渐变色 阴影 点击缩放',
+        subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
+    },
+    xAxis: {
+        data: x_data.value,
+        axisLabel: {
+            inside: true,
+            textStyle: {
+                color: '#fff',
+            },
+        },
+        axisTick: {
+            show: false,
+        },
+        axisLine: {
+            show: false,
+        },
+        z: 10,
+    },
+    yAxis: {
+        axisLine: {
+            show: false,
+        },
+        axisTick: {
+            show: false,
+        },
+        axisLabel: {
+            textStyle: {
+                color: '#999',
+            },
+        },
+    },
+    dataZoom: [
+        {
+            type: 'inside',
+        },
+    ],
+    series: [
+        {
+            type: 'bar',
+            itemStyle: {
+                color: new echarts.graphic.LinearGradient(
+                    0, 0, 0, 1,
+                    [
+                        { offset: 0, color: '#83bff6' },
+                        { offset: 0.5, color: '#188df0' },
+                        { offset: 1, color: '#188df0' },
+                    ],
+                ),
+            },
+            emphasis: {
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            { offset: 0, color: '#2378f7' },
+                            { offset: 0.7, color: '#2378f7' },
+                            { offset: 1, color: '#83bff6' },
+                        ],
+                    ),
+                },
+            },
+            data: y_data.value,
+        },
+    ],
+})
+
 
 const refreshChart = () => {
     const dataShadow = []
@@ -245,8 +315,11 @@ const refreshChart = () => {
         dataShadow.push(yMax)
     }
 
+    console.log('OOOOOOOOOOOOOOOOOOOOOO highlightRow', highlightChr.value, highlightLineNumber.value)
+    console.log('OOOOOOOOOOOOOOOOOOOOOO', x_data.value, y_data.value)
+
     chart.value.setOption(option.value)
-    option.value = {
+    const ss = {
         title: {
             text: '特性示例：渐变色 阴影 点击缩放',
             subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
