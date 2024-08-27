@@ -8,6 +8,12 @@
         @click="dlgVisible = !dlgVisible"
         >{{ $t('Intro') }}
     </q-btn>
+    <q-option-group v-model="current_kpi" :options="kpi_headers" color="primary" inline class="q-my-sm" />
+    <div
+        :id="chartDiv"
+        class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
+        style="min-width: 600px;max-width:1000px; height: 600px"
+    />
     <a-table :columns="columns" :data-source="rows" bordered size="small">
         <template #bodyCell="{record, column}">
             <!--        <template #bodyCell="{ column}">-->
@@ -123,8 +129,8 @@ const columns = computed(() => {
                 // onClick: (event) => {
                 //     highlightLineNumber.value = record.lineNumber;
                 // },
-            }
-        }
+            };
+        };
         if (values.length > 0) {
             h_define = {
                 ...h_define,
@@ -150,6 +156,10 @@ const filteredRows = ref([]);
 const loading = ref(false);
 const tableFileUrl = ref('');
 const tableFileName = ref('');
+const kpi_headers = ref([]);
+const current_kpi = ref();
+const chart = ref();
+const chartDiv = ref(uid());
 
 watch(langCode, v => loadData());
 watch(rows, v => {
@@ -158,6 +168,7 @@ watch(rows, v => {
 
 onMounted(() => {
     loadData();
+    initChart();
 });
 
 let selectedDefaultRows = ref([]);
@@ -187,8 +198,107 @@ const loadData = () => {
     // 表头：Gene | Chromosome | Exon | Depth | Unfilter copys | Filter copys
     readTaskFile(route.params.id, `${props.task.result_dir}/CNV_gene/cnvkit_gene.txt`).then((res) => {
         const detail_headers = getCsvHeader(res);
+        // 第4列以及之后的列作为指标列，需要在chart中统计展示
+        kpi_headers.value = detail_headers.slice(3).map(kpi => {
+            return { label: kpi, value: kpi };
+        });
+        current_kpi.value = kpi_headers.value[0].value;
+        // 详细数据
         detail_rows.value = getCsvData(res, { fields: detail_headers });
     });
+};
+
+const initChart = () => {
+    const div = document.getElementById(chartDiv.value);
+    chart.value = echarts.init(div);
+    var dataAxis = ['点', '击', '柱', '子', '或', '者', '两', '指', '在', '触', '屏', '上', '滑', '动', '能', '够', '自', '动', '缩', '放'];
+    var data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220];
+    var yMax = 500;
+    var dataShadow = [];
+
+    for (var i = 0; i < data.length; i++) {
+        dataShadow.push(yMax);
+    }
+    const option = {
+        title: {
+            text: '特性示例：渐变色 阴影 点击缩放',
+            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
+        },
+        xAxis: {
+            data: dataAxis,
+            axisLabel: {
+                inside: true,
+                textStyle: {
+                    color: '#fff',
+                },
+            },
+            axisTick: {
+                show: false,
+            },
+            axisLine: {
+                show: false,
+            },
+            z: 10,
+        },
+        yAxis: {
+            axisLine: {
+                show: false,
+            },
+            axisTick: {
+                show: false,
+            },
+            axisLabel: {
+                textStyle: {
+                    color: '#999',
+                },
+            },
+        },
+        dataZoom: [
+            {
+                type: 'inside',
+            },
+        ],
+        series: [
+            { // For shadow
+                type: 'bar',
+                itemStyle: {
+                    color: 'rgba(0,0,0,0.05)',
+                },
+                barGap: '-100%',
+                barCategoryGap: '40%',
+                data: dataShadow,
+                animation: false,
+            },
+            {
+                type: 'bar',
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            { offset: 0, color: '#83bff6' },
+                            { offset: 0.5, color: '#188df0' },
+                            { offset: 1, color: '#188df0' },
+                        ],
+                    ),
+                },
+                emphasis: {
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(
+                            0, 0, 0, 1,
+                            [
+                                { offset: 0, color: '#2378f7' },
+                                { offset: 0.7, color: '#2378f7' },
+                                { offset: 1, color: '#83bff6' },
+                            ],
+                        ),
+                    },
+                },
+                data: data,
+            },
+        ],
+    };
+
+    chart.value.setOption(option);
 };
 
 const searchFilterRows = (searchParams) => {
