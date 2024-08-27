@@ -150,16 +150,18 @@ const columns = computed(() => {
 // 统计数据，数据来自cnvkit_gene.txt，用于选择表格一列后，从该数据进行筛选统计
 const detail_rows = ref([]);
 const route = useRoute();
-const dlgVisible = ref(false);
-const rows = ref([]);
-const filteredRows = ref([]);
-const loading = ref(false);
-const tableFileUrl = ref('');
-const tableFileName = ref('');
-const kpi_headers = ref([]);
-const current_kpi = ref();
-const chart = ref();
-const chartDiv = ref(uid());
+const dlgVisible = ref(false)
+const rows = ref([])
+const filteredRows = ref([])
+const loading = ref(false)
+const tableFileUrl = ref('')
+const tableFileName = ref('')
+// 需要统计的指标选项清单
+const kpi_headers = ref([])
+// 当前KPI
+const current_kpi = ref()
+const chart = ref()
+const chartDiv = ref(uid())
 
 watch(langCode, v => loadData());
 watch(rows, v => {
