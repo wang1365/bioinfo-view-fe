@@ -9,11 +9,9 @@
         >{{ $t('Intro') }}
     </q-btn>
     <q-option-group v-model="current_kpi" :options="kpi_headers" color="primary" inline class="q-my-sm" />
-    <div
-        :id="chartDiv"
-        class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
-        style="min-width: 600px;max-width:1000px; height: 600px"
-    />
+    <div class="flex flex-center" style="width:100%;">
+        <div :id="chartDiv" style="min-width: 95%;max-width:100%; height: 500px" />
+    </div>
     <a-table :columns="columns" :data-source="rows" bordered size="small">
         <template #bodyCell="{record, column}">
             <!--        <template #bodyCell="{ column}">-->
@@ -23,14 +21,14 @@
                     :outline="highlightLineNumber !== record.lineNumber"
                     color="primary"
                     :label="record.chrs[0]"
-                    @click="highlightLineNumber = record.lineNumber; highlightChr = record.chrs[0]"
+                    @click="highlightLineNumber = record.lineNumber; highlightChr = record.chrs[0]; refreshChartData()"
                 />
                 <q-btn
                     size="small"
                     outline
                     v-if="record.chrs.length>1"
                     :label="record.chrs[1]"
-                    @click="highlightLineNumber = record.lineNumber; highlightChr = record.chrs[1]"
+                    @click="highlightLineNumber = record.lineNumber; highlightChr = record.chrs[1]; refreshChartData()"
                 />
             </template>
         </template>
@@ -49,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, toRef } from 'vue';
+import { ref, onMounted, computed, watch, toRef, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 import { readTaskFile } from 'src/api/task';
 import { getCsvData, getCsvDataAndSetLineNumber, getCsvHeader } from 'src/utils/csv';
@@ -61,24 +59,25 @@ import { errorMessage } from 'src/utils/notify';
 import { useI18n } from 'vue-i18n';
 import { globalStore } from 'src/stores/global';
 import { storeToRefs } from 'pinia';
+import _ from 'lodash';
 
-const store = globalStore()
-const { langCode } = storeToRefs(store)
-const { t } = useI18n()
+const store = globalStore();
+const { langCode } = storeToRefs(store);
+const { t } = useI18n();
 
 const props = defineProps({
     intro: {
         type: String,
-        required: false,
+        required: false
     },
     task: {
         type: Object,
-        required: true,
+        required: true
     },
     samples: {
         type: Array,
         required: false,
-        default: () => [],
+        default: () => []
     },
     viewConfig: {
         type: Object,
@@ -87,24 +86,24 @@ const props = defineProps({
             return {
                 showCNVcircos: true,
                 showCNVtable: true,
-                showSticky: false,
+                showSticky: false
             };
-        },
+        }
     },
     stepData: {
         type: Object,
         default: () => {
-        },
-    },
-})
+        }
+    }
+});
 
-const emit = defineEmits(['stickDone', 'reset'])
-const viewConfig = toRef(props, 'viewConfig')
-const stepData = toRef(props, 'stepData')
+const emit = defineEmits(['stickDone', 'reset']);
+const viewConfig = toRef(props, 'viewConfig');
+const stepData = toRef(props, 'stepData');
 // 表头名称集合
-const headers = ref([])
-const highlightLineNumber = ref(1)
-const highlightChr = ref('')
+const headers = ref([]);
+const highlightLineNumber = ref(1);
+const highlightChr = ref('');
 // 表头定义集合
 const columns = computed(() => {
     const result = headers.value.map(h => {
@@ -112,19 +111,16 @@ const columns = computed(() => {
         // 选项太多，说明数据十分散列，无需筛选
         values = values.length > 100 ? [] : values;
         let h_define = {
-            key: h, title: h, dataIndex: h, align: 'center',
+            key: h, title: h, dataIndex: h, align: 'center'
         };
         h_define.customCell = (record, rowIndex, column) => {
             return {
                 // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
                 style: {
-                    // 'font-weight': record.id === currentRow.value.id ? 'bolder' : 'normal',
-                    // 'background-color': record[columnName] === 'Y' ? '#1976d2' : '',
-                    // 'background-color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : '',
                     'font-weight': highlightLineNumber.value === record.lineNumber ? 'bold' : '',
-                    'color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : 'black',
+                    'color': highlightLineNumber.value === record.lineNumber ? '#1976d2' : 'black'
                     // cursor: 'pointer',
-                },
+                }
                 // 鼠标单击行
                 // onClick: (event) => {
                 //     highlightLineNumber.value = record.lineNumber;
@@ -137,45 +133,45 @@ const columns = computed(() => {
                 filters: values.map((v) => {
                     return { text: v, value: v };
                 }),
-                onFilter: (value, record) => record[h].indexOf(value) === 0,
+                onFilter: (value, record) => record[h].indexOf(value) === 0
             };
         }
         return h_define;
-    })
+    });
     // 添加操作列
     // result.push({ title: t('Operate'), dataIndex: 'Operate', align: 'center' })
     return result;
-})
+});
 
 // 统计数据，数据来自cnvkit_gene.txt，用于选择表格一列后，从该数据进行筛选统计
-const detail_rows = ref([])
-const route = useRoute()
-const dlgVisible = ref(false)
-const rows = ref([])
-const filteredRows = ref([])
-const loading = ref(false)
-const tableFileUrl = ref('')
-const tableFileName = ref('')
+const detail_rows = ref([]);
+const route = useRoute();
+const dlgVisible = ref(false);
+const rows = ref([]);
+const filteredRows = ref([]);
+const loading = ref(false);
+const tableFileUrl = ref('');
+const tableFileName = ref('');
 // 需要统计的指标选项清单
-const kpi_headers = ref([])
+const kpi_headers = ref([]);
 // 当前KPI
-const current_kpi = ref()
-const chart = ref()
-const chartDiv = ref(uid())
+const current_kpi = ref();
+const chart = shallowRef();
+const chartDiv = ref(uid());
 
 
-watch(langCode, v => loadData())
+watch(langCode, v => loadData());
 watch(rows, v => {
     // selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
-})
+});
 
 onMounted(() => {
-    loadData()
-    initChart()
-})
+    initChart();
+    loadData();
+});
 
-let selectedDefaultRows = ref([])
-let defaultRows = ref([])
+let selectedDefaultRows = ref([]);
+let defaultRows = ref([]);
 const loadData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN';
     const filePath = `${props.task.result_dir}/CNV_gene/gene_${suffix}.txt`;
@@ -185,189 +181,226 @@ const loadData = () => {
     // 表头英文：Gene | Transcript | Chromosome | Inheritance | Exon |
     // 表头中文：基因	转录本	染色体	遗传特征	外显子数
     readTaskFile(route.params.id, filePath).then((res) => {
-        headers.value = getCsvHeader(res)
-        const results = getCsvDataAndSetLineNumber(res, { fields: headers.value })
+        headers.value = getCsvHeader(res);
+        const results = getCsvDataAndSetLineNumber(res, { fields: headers.value });
         rows.value = results;
         rows.value.map(dr => {
             const chr_value = dr[headers.value[2]];
-            dr.chrs = chr_value.split(',')
+            dr.chrs = chr_value.split(',');
             return dr;
-        })
+        });
 
-        highlightChr.value = results[0]['染色体'] || results[0]['Chromosome']
+        highlightChr.value = results[0]['染色体'] || results[0]['Chromosome'];
         filteredRows.value = results;
-        console.log('///////////////////////', highlightChr.value)
-    })
+        console.log('///////////////////////', highlightChr.value);
+    });
 
     // 加载详细数据，用于表格点击后从该数据查找统计 - /CNV_gene/cnvkit_gene.txt
     // 表头：Gene | Chromosome | Exon | Depth | Unfilter copys | Filter copys
     readTaskFile(route.params.id, `${props.task.result_dir}/CNV_gene/cnvkit_gene.txt`).then((res) => {
-        const detail_headers = getCsvHeader(res)
+        const detail_headers = getCsvHeader(res);
         // 第4列以及之后的列作为指标列，需要在chart中统计展示
         kpi_headers.value = detail_headers.slice(3).map(kpi => {
             return { label: kpi, value: kpi };
-        })
+        });
         current_kpi.value = kpi_headers.value[0].value;
         // 详细数据
-        detail_rows.value = getCsvData(res, { fields: detail_headers })
-    })
+        detail_rows.value = getCsvData(res, { fields: detail_headers });
+        console.log('readTaskFile and convert to detail_rows', detail_rows.value);
+
+        refreshChartData();
+    });
 };
 
 const initChart = () => {
-    const div = document.getElementById(chartDiv.value)
-    chart.value = echarts.init(div)
-    refreshChart()
-}
+    const div = document.getElementById(chartDiv.value);
+    chart.value = echarts.init(div);
+    chart.value.setOption(option);
+};
 
-const x_data = computed(() => {
-    return detail_rows.value.filter(r => {
-        const highlightRow = rows.value[highlightLineNumber.value]
-        const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene']
-        const charMatch = r['Chromosome'] === highlightChr.value
-        return geneMatch && charMatch
-    }).map(r => r['Exon'])
-})
+const refreshChartData = () => {
+    const x_data = detail_rows.value.filter(r => {
+        const highlightRow = rows.value[highlightLineNumber.value - 1];
+        const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene'];
+        const charMatch = r['Chromosome'] === highlightChr.value;
 
-const y_data = computed(() => {
-    return detail_rows.value.filter(r => {
-        const highlightRow = rows.value[highlightLineNumber.value]
-        const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene']
-        const charMatch = r['Chromosome'] === highlightChr.value
-        return geneMatch && charMatch
-    }).map(r => r[current_kpi.value])
-})
+        return geneMatch && charMatch;
+    }).map(r => {
+        return { value: r['Exon'] };
+    });
 
-const option = ref( {
-    title: {
-        text: '特性示例：渐变色 阴影 点击缩放',
-        subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
+    const y_data = detail_rows.value.filter(r => {
+        const highlightRow = rows.value[highlightLineNumber.value - 1];
+        const geneMatch = r['Gene'] === highlightRow['基因'] || r['Gene'] === highlightRow['Gene'];
+        const charMatch = r['Chromosome'] === highlightChr.value;
+        return geneMatch && charMatch;
+    })
+        .map(r => r[current_kpi.value])
+        .map(v => {
+            const r = _.toNumber(v);
+            // 每个元素2个值，0为数字，1为原始数据（可能为GC fail、Probe uncovered等）
+            return { value: _.isNumber(r) ? r : null, raw: v };
+        });
+
+
+    for (let i = 0; i < y_data.length; i++) {
+        if (_.isNaN(y_data[i].value)) {
+            x_data[i].textStyle = { color: 'red' };
+        }
+    }
+    console.log('OOOOOOOOOOOOOOOOOOOO - x & Y', x_data, y_data);
+
+    option.xAxis.data = x_data;
+    option.series[0].data = y_data;
+    chart.value.setOption(option);
+};
+
+
+const option = {
+    tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'shadow'
+        },
+        formatter: function (params) {
+            return `${params[0].axisValue}<br/>${params[0].data.raw}`
+        }
     },
     xAxis: {
-        data: x_data.value,
+        data: [],
+        // type: 'category',
         axisLabel: {
-            inside: true,
-            textStyle: {
-                color: '#fff',
-            },
+            inside: false,
+            // textStyle: {
+            //     color: function(data, index) {
+            //         console.log('xxxxxxxxxxxxxxxxxxx', data, index)
+            //         return _.isNumber(data.value) ? 'black' : 'red';
+            //     }
+            // }
         },
         axisTick: {
-            show: false,
+            show: true,
+            alignWithLabel: true
         },
         axisLine: {
-            show: false,
-        },
-        z: 10,
+            show: true
+        }
     },
     yAxis: {
         axisLine: {
-            show: false,
+            show: true
         },
         axisTick: {
-            show: false,
+            show: true
         },
         axisLabel: {
             textStyle: {
-                color: '#999',
-            },
-        },
+                color: '#999'
+            }
+        }
     },
     dataZoom: [
         {
-            type: 'inside',
-        },
+            type: 'inside'
+        }
     ],
     series: [
         {
             type: 'bar',
+            barWidth: '90%',
+            barMaxWidth: 40,
             itemStyle: {
                 color: new echarts.graphic.LinearGradient(
                     0, 0, 0, 1,
                     [
                         { offset: 0, color: '#83bff6' },
                         { offset: 0.5, color: '#188df0' },
-                        { offset: 1, color: '#188df0' },
-                    ],
-                ),
+                        { offset: 1, color: '#188df0' }
+                    ]
+                )
             },
-            emphasis: {
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1,
-                        [
-                            { offset: 0, color: '#2378f7' },
-                            { offset: 0.7, color: '#2378f7' },
-                            { offset: 1, color: '#83bff6' },
-                        ],
-                    ),
-                },
+            label: {
+                show: true,
+                position: 'top',
+                formatter: (param) => _.isNumber(param.data.value) ? param.data.value : param.data.name
             },
-            data: y_data.value,
-        },
-    ],
-})
+            // emphasis: {
+            //     itemStyle: {
+            //         color: new echarts.graphic.LinearGradient(
+            //             0, 0, 0, 1,
+            //             [
+            //                 { offset: 0, color: '#2378f7' },
+            //                 { offset: 0.7, color: '#2378f7' },
+            //                 { offset: 1, color: '#83bff6' }
+            //             ]
+            //         )
+            //     }
+            // },
+            // tooltip: {
+            //     show: true,
+            //     trigger: 'axis',
+            //     formatter: (param) => 'param.data.value'
+            // },
+            data: []
+        }
+    ]
+};
 
 
 const refreshChart = () => {
-    const dataShadow = []
-    const yMax = Math.max(y_data.value)
+    const dataShadow = [];
 
-    for (let i = 0; i < y_data.value.length; i++) {
-        dataShadow.push(yMax)
-    }
 
-    console.log('OOOOOOOOOOOOOOOOOOOOOO highlightRow', highlightChr.value, highlightLineNumber.value)
-    console.log('OOOOOOOOOOOOOOOOOOOOOO', x_data.value, y_data.value)
-
-    chart.value.setOption(option.value)
+    chart.value.setOption(option.value);
     const ss = {
         title: {
             text: '特性示例：渐变色 阴影 点击缩放',
-            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom',
+            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
         },
         xAxis: {
             data: x_data.value,
             axisLabel: {
                 inside: true,
                 textStyle: {
-                    color: '#fff',
-                },
+                    color: '#fff'
+                }
             },
             axisTick: {
-                show: false,
+                show: false
             },
             axisLine: {
-                show: false,
+                show: false
             },
-            z: 10,
+            z: 10
         },
         yAxis: {
             axisLine: {
-                show: false,
+                show: false
             },
             axisTick: {
-                show: false,
+                show: false
             },
             axisLabel: {
                 textStyle: {
-                    color: '#999',
-                },
-            },
+                    color: '#999'
+                }
+            }
         },
         dataZoom: [
             {
-                type: 'inside',
-            },
+                type: 'inside'
+            }
         ],
         series: [
             { // For shadow
                 type: 'bar',
                 itemStyle: {
-                    color: 'rgba(0,0,0,0.05)',
+                    color: 'rgba(0,0,0,0.05)'
                 },
                 barGap: '-100%',
                 barCategoryGap: '40%',
                 data: dataShadow,
-                animation: false,
+                animation: false
             },
             {
                 type: 'bar',
@@ -377,9 +410,9 @@ const refreshChart = () => {
                         [
                             { offset: 0, color: '#83bff6' },
                             { offset: 0.5, color: '#188df0' },
-                            { offset: 1, color: '#188df0' },
-                        ],
-                    ),
+                            { offset: 1, color: '#188df0' }
+                        ]
+                    )
                 },
                 emphasis: {
                     itemStyle: {
@@ -388,66 +421,65 @@ const refreshChart = () => {
                             [
                                 { offset: 0, color: '#2378f7' },
                                 { offset: 0.7, color: '#2378f7' },
-                                { offset: 1, color: '#83bff6' },
-                            ],
-                        ),
-                    },
+                                { offset: 1, color: '#83bff6' }
+                            ]
+                        )
+                    }
                 },
-                data: y_data.value,
-            },
-        ],
-    }
-}
+                data: y_data.value
+            }
+        ]
+    };
+};
 
 const searchFilterRows = (searchParams) => {
     filteredRows.value = rows.value.filter((t) => {
         if (searchParams.includeDefaultReport && t.Report === 'Y') {
-            return true
+            return true;
         }
 
-        return []
-    })
-}
+        return [];
+    });
+};
 const clickSearch = () => {
     if (viewConfig.value.showStick && viewConfig.value.stickDone) {
-        errorMessage(t('DefineReportUnlockReuired'))
+        errorMessage(t('DefineReportUnlockReuired'));
         return false;
     }
-    searchFilterRows(searchParams.value)
-    selectedRows.value = selectedDefaultRows.value
-}
+    searchFilterRows(searchParams.value);
+    selectedRows.value = selectedDefaultRows.value;
+};
 
 
-
-const selectedRows = ref([])
+const selectedRows = ref([]);
 
 const onSelectChange = (selectedRowKeys) => {
     // if (viewConfig.value.showStick && viewConfig.value.stickDone) {
     //     errorMessage('请先取消过滤')
     //     return false
     // }
-    console.log(selectedRowKeys)
-    selectedRows.value = selectedRowKeys
-    selectedDefaultRows.value = []
+    console.log(selectedRowKeys);
+    selectedRows.value = selectedRowKeys;
+    selectedDefaultRows.value = [];
     for (let item of selectedRowKeys) {
         let finded = false;
         for (let lineNumber of defaultRows.value) {
             if (lineNumber === item) {
-                finded = true
-                break
+                finded = true;
+                break;
             }
         }
         if (finded) {
-            selectedDefaultRows.value.push(item)
+            selectedDefaultRows.value.push(item);
         }
     }
-    console.log(selectedDefaultRows)
-}
+    console.log(selectedDefaultRows);
+};
 
 
 const reset = () => {
-    emit('reset', null)
-    selectedRows.value = []
-    clickSearch()
-}
+    emit('reset', null);
+    selectedRows.value = [];
+    clickSearch();
+};
 </script>
