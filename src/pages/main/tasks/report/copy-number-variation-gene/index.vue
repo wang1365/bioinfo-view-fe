@@ -299,11 +299,6 @@ const option = {
             }
         }
     },
-    dataZoom: [
-        {
-            type: 'inside'
-        }
-    ],
     series: [
         {
             type: 'bar',
