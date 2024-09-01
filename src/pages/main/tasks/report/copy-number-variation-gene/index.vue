@@ -47,11 +47,13 @@
                     style="width: 90px; margin-right: 8px"
                     @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
                 >
-                    <template #icon><SearchOutlined /></template>
-                    {{t('Search')}}
+                    <template #icon>
+                        <SearchOutlined />
+                    </template>
+                    {{ t('Search') }}
                 </a-button>
                 <a-button size="small" style="width: 90px" @click="handleReset(clearFilters)">
-                    {{t('Reset')}}
+                    {{ t('Reset') }}
                 </a-button>
             </div>
         </template>
@@ -77,9 +79,7 @@ import { ref, onMounted, computed, watch, toRef, shallowRef, reactive } from 'vu
 import { useRoute } from 'vue-router';
 import { readTaskFile } from 'src/api/task';
 import { getCsvData, getCsvDataAndSetLineNumber, getCsvHeader } from 'src/utils/csv';
-import { SearchOutlined } from '@ant-design/icons-vue'
-import { readSystemFile } from 'src/api/report';
-import { toMap, partition } from 'src/utils/collection';
+import { SearchOutlined } from '@ant-design/icons-vue';
 import { uid } from 'quasar';
 import * as echarts from 'echarts';
 import { errorMessage } from 'src/utils/notify';
@@ -140,17 +140,17 @@ const columns = computed(() => {
 
         // 前3列支持筛选
         if (i < 3) {
-            h_define.customFilterDropdown = true
+            h_define.customFilterDropdown = true;
             h_define.onFilter = (value, record) => {
-                return record[h_define.key].toLowerCase().includes(value.toLowerCase())
-            }
+                return record[h_define.key].toLowerCase().includes(value.toLowerCase());
+            };
             h_define.onFilterDropdownOpenChange = visible => {
                 if (visible) {
                     setTimeout(() => {
                         searchInput.value.focus();
                     }, 100);
                 }
-            }
+            };
         }
         h_define.customCell = (record, rowIndex, column) => {
             return {
@@ -185,9 +185,11 @@ const tableFileUrl = ref('');
 const tableFileName = ref('');
 // 需要统计的指标选项清单
 const kpi_headers = ref([]);
-// 当前KPI
+// 当前KPI，单选按钮
 const current_kpi = ref();
+// Echarts柱状图
 const chart = shallowRef();
+// Echarts柱状图所在的div的id
 const chartDiv = ref(uid());
 
 
@@ -195,7 +197,8 @@ watch(langCode, v => loadData());
 watch(rows, v => {
     // selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
 });
-watch(current_kpi, () => refreshChartData())
+// KPI单选切换，刷新柱状图数据
+watch(current_kpi, () => refreshChartData());
 
 onMounted(() => {
     initChart();
@@ -204,11 +207,13 @@ onMounted(() => {
 
 let selectedDefaultRows = ref([]);
 let defaultRows = ref([]);
+// 表格头的条件筛选条件结果变量
 const state = reactive({
     searchText: '',
-    searchedColumn: '',
-})
-const searchInput = ref()
+    searchedColumn: ''
+});
+// 表格头的条件筛选输入文本
+const searchInput = ref();
 
 const loadData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN';
@@ -230,7 +235,6 @@ const loadData = () => {
 
         highlightChr.value = results[0]['染色体'] || results[0]['Chromosome'];
         filteredRows.value = results;
-        console.log('///////////////////////', highlightChr.value, highlightLineNumber);
     });
 
     // 加载详细数据，用于表格点击后从该数据查找统计 - /CNV_gene/cnvkit_gene.txt
@@ -239,7 +243,7 @@ const loadData = () => {
         const detail_headers = getCsvHeader(res);
         // 第4列以及之后的列作为指标列，需要在chart中统计展示
         kpi_headers.value = detail_headers.slice(3).map(kpi => {
-            return { label: kpi, value: kpi};
+            return { label: kpi, value: kpi };
         });
         current_kpi.value = kpi_headers.value[0].value;
         // 详细数据
@@ -298,15 +302,15 @@ const option = {
         axisPointer: {
             type: 'shadow'
         },
-        formatter: function (params) {
-            return `${params[0].axisValue}<br/>${params[0].data.raw}`
+        formatter: function(params) {
+            return `${params[0].axisValue}<br/>${params[0].data.raw}`;
         }
     },
     xAxis: {
         data: [],
         // type: 'category',
         axisLabel: {
-            inside: false,
+            inside: false
         },
         axisTick: {
             show: true,
@@ -352,19 +356,19 @@ const option = {
             data: []
         }
     ]
-}
+};
 
 // 表格表头检索
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     state.searchText = selectedKeys[0];
     state.searchedColumn = dataIndex;
-}
+};
 
 // 表格表头检索条件重置
 const handleReset = clearFilters => {
     clearFilters({
-        confirm: true,
+        confirm: true
     });
     state.searchText = '';
 };
