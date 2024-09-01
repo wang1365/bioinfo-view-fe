@@ -14,7 +14,7 @@
     </div>
     <a-table :columns="columns" :data-source="rows" bordered size="small">
         <template #bodyCell="{record, column}">
-            <template v-if="column.key === 'Chromesome'  || column.key === '染色体'">
+            <template v-if="column.key === 'Chromosome'  || column.key === '染色体'">
                 <q-btn
                     size="small"
                     :outline="highlightLineNumber !== record.lineNumber"
@@ -195,6 +195,7 @@ watch(langCode, v => loadData());
 watch(rows, v => {
     // selectedRows.value = rows.value.filter(t => t.Report === 'Y').map(t => t.lineNumber)
 });
+watch(current_kpi, () => refreshChartData())
 
 onMounted(() => {
     initChart();
@@ -229,7 +230,7 @@ const loadData = () => {
 
         highlightChr.value = results[0]['染色体'] || results[0]['Chromosome'];
         filteredRows.value = results;
-        console.log('///////////////////////', highlightChr.value);
+        console.log('///////////////////////', highlightChr.value, highlightLineNumber);
     });
 
     // 加载详细数据，用于表格点击后从该数据查找统计 - /CNV_gene/cnvkit_gene.txt
@@ -243,7 +244,6 @@ const loadData = () => {
         current_kpi.value = kpi_headers.value[0].value;
         // 详细数据
         detail_rows.value = getCsvData(res, { fields: detail_headers });
-        console.log('readTaskFile and convert to detail_rows', detail_rows.value);
 
         refreshChartData();
     });
@@ -285,7 +285,6 @@ const refreshChartData = () => {
             x_data[i].textStyle = { color: 'red' };
         }
     }
-    console.log('OOOOOOOOOOOOOOOOOOOO - x & Y', x_data, y_data);
 
     option.xAxis.data = x_data;
     option.series[0].data = y_data;
@@ -308,12 +307,6 @@ const option = {
         // type: 'category',
         axisLabel: {
             inside: false,
-            // textStyle: {
-            //     color: function(data, index) {
-            //         console.log('xxxxxxxxxxxxxxxxxxx', data, index)
-            //         return _.isNumber(data.value) ? 'black' : 'red';
-            //     }
-            // }
         },
         axisTick: {
             show: true,
@@ -356,35 +349,19 @@ const option = {
                 position: 'top',
                 formatter: (param) => _.isNumber(param.data.value) ? param.data.value : param.data.name
             },
-            // emphasis: {
-            //     itemStyle: {
-            //         color: new echarts.graphic.LinearGradient(
-            //             0, 0, 0, 1,
-            //             [
-            //                 { offset: 0, color: '#2378f7' },
-            //                 { offset: 0.7, color: '#2378f7' },
-            //                 { offset: 1, color: '#83bff6' }
-            //             ]
-            //         )
-            //     }
-            // },
-            // tooltip: {
-            //     show: true,
-            //     trigger: 'axis',
-            //     formatter: (param) => 'param.data.value'
-            // },
             data: []
         }
     ]
 }
 
-
+// 表格表头检索
 const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     state.searchText = selectedKeys[0];
     state.searchedColumn = dataIndex;
 }
 
+// 表格表头检索条件重置
 const handleReset = clearFilters => {
     clearFilters({
         confirm: true,
@@ -418,7 +395,6 @@ const onSelectChange = (selectedRowKeys) => {
     //     errorMessage('请先取消过滤')
     //     return false
     // }
-    console.log(selectedRowKeys);
     selectedRows.value = selectedRowKeys;
     selectedDefaultRows.value = [];
     for (let item of selectedRowKeys) {
@@ -433,7 +409,6 @@ const onSelectChange = (selectedRowKeys) => {
             selectedDefaultRows.value.push(item);
         }
     }
-    console.log(selectedDefaultRows);
 };
 
 
