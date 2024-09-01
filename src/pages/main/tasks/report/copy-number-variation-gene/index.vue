@@ -14,7 +14,6 @@
     </div>
     <a-table :columns="columns" :data-source="rows" bordered size="small">
         <template #bodyCell="{record, column}">
-            <!--        <template #bodyCell="{ column}">-->
             <template v-if="column.key === 'Chromesome'  || column.key === '染色体'">
                 <q-btn
                     size="small"
@@ -32,6 +31,33 @@
                 />
             </template>
         </template>
+        <template #customFilterDropdown="{ setSelectedKeys, selectedKeys, confirm, clearFilters, column }">
+            <div style="padding: 8px">
+                <a-input
+                    ref="searchInput"
+                    :placeholder="`${t('Search')} ${column.dataIndex}`"
+                    :value="selectedKeys[0]"
+                    style="width: 188px; margin-bottom: 8px; display: block"
+                    @change="e => setSelectedKeys(e.target.value ? [e.target.value] : [])"
+                    @pressEnter="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                />
+                <a-button
+                    type="primary"
+                    size="small"
+                    style="width: 90px; margin-right: 8px"
+                    @click="handleSearch(selectedKeys, confirm, column.dataIndex)"
+                >
+                    <template #icon><SearchOutlined /></template>
+                    {{t('Search')}}
+                </a-button>
+                <a-button size="small" style="width: 90px" @click="handleReset(clearFilters)">
+                    {{t('Reset')}}
+                </a-button>
+            </div>
+        </template>
+        <template #customFilterIcon="{ filtered }">
+            <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
+        </template>
     </a-table>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
@@ -47,10 +73,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch, toRef, shallowRef } from 'vue';
+import { ref, onMounted, computed, watch, toRef, shallowRef, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { readTaskFile } from 'src/api/task';
 import { getCsvData, getCsvDataAndSetLineNumber, getCsvHeader } from 'src/utils/csv';
+import { SearchOutlined } from '@ant-design/icons-vue'
 import { readSystemFile } from 'src/api/report';
 import { toMap, partition } from 'src/utils/collection';
 import { uid } from 'quasar';
@@ -106,13 +133,25 @@ const highlightLineNumber = ref(1);
 const highlightChr = ref('');
 // 表头定义集合
 const columns = computed(() => {
-    const result = headers.value.map(h => {
-        let values = [...new Set(rows.value.map((t) => t[h]))];
-        // 选项太多，说明数据十分散列，无需筛选
-        values = values.length > 100 ? [] : values;
+    const result = headers.value.map((h, i) => {
         let h_define = {
             key: h, title: h, dataIndex: h, align: 'center'
         };
+
+        // 前3列支持筛选
+        if (i < 3) {
+            h_define.customFilterDropdown = true
+            h_define.onFilter = (value, record) => {
+                return record[h_define.key].toLowerCase().includes(value.toLowerCase())
+            }
+            h_define.onFilterDropdownOpenChange = visible => {
+                if (visible) {
+                    setTimeout(() => {
+                        searchInput.value.focus();
+                    }, 100);
+                }
+            }
+        }
         h_define.customCell = (record, rowIndex, column) => {
             return {
                 // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
@@ -127,15 +166,7 @@ const columns = computed(() => {
                 // },
             };
         };
-        if (values.length > 0) {
-            h_define = {
-                ...h_define,
-                filters: values.map((v) => {
-                    return { text: v, value: v };
-                }),
-                onFilter: (value, record) => record[h].indexOf(value) === 0
-            };
-        }
+
         return h_define;
     });
     // 添加操作列
@@ -172,6 +203,12 @@ onMounted(() => {
 
 let selectedDefaultRows = ref([]);
 let defaultRows = ref([]);
+const state = reactive({
+    searchText: '',
+    searchedColumn: '',
+})
+const searchInput = ref()
+
 const loadData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN';
     const filePath = `${props.task.result_dir}/CNV_gene/gene_${suffix}.txt`;
@@ -201,7 +238,7 @@ const loadData = () => {
         const detail_headers = getCsvHeader(res);
         // 第4列以及之后的列作为指标列，需要在chart中统计展示
         kpi_headers.value = detail_headers.slice(3).map(kpi => {
-            return { label: kpi, value: kpi };
+            return { label: kpi, value: kpi};
         });
         current_kpi.value = kpi_headers.value[0].value;
         // 详细数据
@@ -339,92 +376,20 @@ const option = {
             data: []
         }
     ]
-};
+}
 
 
-const refreshChart = () => {
-    const dataShadow = [];
+const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    state.searchText = selectedKeys[0];
+    state.searchedColumn = dataIndex;
+}
 
-
-    chart.value.setOption(option.value);
-    const ss = {
-        title: {
-            text: '特性示例：渐变色 阴影 点击缩放',
-            subtext: 'Feature Sample: Gradient Color, Shadow, Click Zoom'
-        },
-        xAxis: {
-            data: x_data.value,
-            axisLabel: {
-                inside: true,
-                textStyle: {
-                    color: '#fff'
-                }
-            },
-            axisTick: {
-                show: false
-            },
-            axisLine: {
-                show: false
-            },
-            z: 10
-        },
-        yAxis: {
-            axisLine: {
-                show: false
-            },
-            axisTick: {
-                show: false
-            },
-            axisLabel: {
-                textStyle: {
-                    color: '#999'
-                }
-            }
-        },
-        dataZoom: [
-            {
-                type: 'inside'
-            }
-        ],
-        series: [
-            { // For shadow
-                type: 'bar',
-                itemStyle: {
-                    color: 'rgba(0,0,0,0.05)'
-                },
-                barGap: '-100%',
-                barCategoryGap: '40%',
-                data: dataShadow,
-                animation: false
-            },
-            {
-                type: 'bar',
-                itemStyle: {
-                    color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1,
-                        [
-                            { offset: 0, color: '#83bff6' },
-                            { offset: 0.5, color: '#188df0' },
-                            { offset: 1, color: '#188df0' }
-                        ]
-                    )
-                },
-                emphasis: {
-                    itemStyle: {
-                        color: new echarts.graphic.LinearGradient(
-                            0, 0, 0, 1,
-                            [
-                                { offset: 0, color: '#2378f7' },
-                                { offset: 0.7, color: '#2378f7' },
-                                { offset: 1, color: '#83bff6' }
-                            ]
-                        )
-                    }
-                },
-                data: y_data.value
-            }
-        ]
-    };
+const handleReset = clearFilters => {
+    clearFilters({
+        confirm: true,
+    });
+    state.searchText = '';
 };
 
 const searchFilterRows = (searchParams) => {
