@@ -11,6 +11,7 @@
 const ESLintPlugin = require('eslint-webpack-plugin')
 
 const { configure } = require('quasar/wrappers')
+const { SocksProxyAgent } = require('socks-proxy-agent')
 
 console.log('ENV:', process.env)
 module.exports = configure(function (ctx) {
@@ -89,11 +90,13 @@ module.exports = configure(function (ctx) {
                     pathRewrite: {
                         '^/api': '', // base path替换
                     },
+                //    agent: new SocksProxyAgent("socks5://192.168.31.102:1080")
                 },
                 '/igv': {
                     changeOrigin: true,
                     target: process.env.igv || 'http://10.10.0.208',
                     // target: process.env.igv || 'http://10.10.2.55', // v4.0 测试环境
+                    agent: new SocksProxyAgent("socks5://192.168.31.102:1080")
                 },
             },
         },
