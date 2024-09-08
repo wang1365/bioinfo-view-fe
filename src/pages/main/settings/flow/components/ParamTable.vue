@@ -2,22 +2,11 @@
     <!--  <div class="param-item-main param-item">-->
     <div>
         <div style="padding-left: 40px; padding-right: 40px">
-            <q-table
-                ref="paramTable"
-                :title="$t('CustomParameters')"
-                :rows="params"
-                :columns="columns"
-                row-key="name"
-                color="primary"
-                separator="cell"
-                :pagination="{rowsPerPage: 0}"
-                dense
-                hide-pagination
-                hide-no-data
-                wrap-cells
-            >
+            <q-table ref="paramTable" :title="$t('CustomParameters')" :rows="params" :columns="columns" row-key="name"
+                color="primary" separator="cell" :pagination="{ rowsPerPage: 0 }" dense hide-pagination hide-no-data
+                wrap-cells>
                 <template v-slot:top>
-                    <div class="text-primary text-h7">{{$t('CustomParameters')}}</div>
+                    <div class="text-primary text-h7">{{ $t('CustomParameters') }}</div>
                     <q-space />
                     <q-btn v-if="!readonly" color="primary" size="sm" :label="$t('Add')" @click="addParameter" />
                 </template>
@@ -28,50 +17,32 @@
                             <q-input v-model="props.row.key" :disable="readonly" dense />
                         </q-td>
                         <q-td align="center">
-                            <q-select
-                                stack-label
-                                dense
-                                v-model="props.row.type"
-                                :options="['string','number','file','select','multiSelect']"
-                            />
+                            <q-select stack-label dense v-model="props.row.type"
+                                :options="['string', 'number', 'file', 'select', 'multiSelect']" />
                         </q-td>
                         <q-td align="center">
                             <q-checkbox v-model="props.row.required" color="teal" :disable="readonly" dense />
                         </q-td>
                         <q-td align="center">
                             <template v-for="(item, index) in props.row.choices" :key="item">
-                                <q-chip
-                                    :label="item"
-                                    size="sm"
-                                    outline
-                                    square
-                                    removable
-                                    color="primary"
-                                    @remove="deleteChoice(props.row, index)"
-                                />
+                                <q-chip v-if="!item.enLabel" :label="item" size="sm" outline square removable
+                                    color="primary" @remove="deleteChoice(props.row, index)" />
+                                <q-chip v-if="item.enLabel && langConfig.lang === 'en'" :label="item.enLabel" size="sm"
+                                    outline square removable color="primary" @remove="deleteChoice(props.row, index)" />
+                                <q-chip v-if="item.cnLabel && langConfig.lang === 'cn'" :label="item.cnLabel" size="sm"
+                                    outline square removable color="primary" @remove="deleteChoice(props.row, index)" />
                             </template>
 
-                            <q-btn
-                                v-if="!readonly"
-                                size="xs"
-                                label="+"
-                                color="purple"
-                                @click="clickAddChoice(props.row)"
-                            >
+                            <q-btn v-if="!readonly" size="xs" label="+" color="purple"
+                                @click="clickAddChoice(props.row)">
                             </q-btn>
                         </q-td>
                         <q-td>
                             <q-input v-model="props.row.description" :readonly="readonly" dense />
                         </q-td>
                         <q-td v-if="!readonly" align="center">
-                            <q-btn
-                                v-if="!readonly"
-                                :label="$t('Delete')"
-                                size="xs"
-                                color="red"
-                                glossy
-                                @click="clickDeleteRow(props.row, props.rowIndex)"
-                            />
+                            <q-btn v-if="!readonly" :label="$t('Delete')" size="xs" color="red" glossy
+                                @click="clickDeleteRow(props.row, props.rowIndex)" />
                         </q-td>
                     </q-tr>
                 </template>
@@ -80,6 +51,8 @@
                 <q-card>
                     <q-card-section>
                         <q-input v-model="choice" :label="$t('ValueRange')" clearable :readonly="readonly" />
+                        <q-input v-model="enLabel" :label="$t('EnLabel')" clearable :readonly="readonly" />
+                        <q-input v-model="cnLabel" :label="$t('CnLabel')" clearable :readonly="readonly" />
                     </q-card-section>
                     <q-card-actions align="center">
                         <q-btn :label="$t('Confirm')" size="sm" color="primary" @click="confirmAddChoice" />
@@ -92,9 +65,10 @@
 </template>
 
 <script setup>
-import {defineProps, computed, defineExpose, ref, toRefs, onMounted, onBeforeMount} from "vue"
+import { defineProps, computed, defineExpose, ref, toRefs, onMounted, onBeforeMount } from "vue"
 import { useI18n } from 'vue-i18n'
-
+import { globalStore } from 'src/stores/global'
+const { langConfig } = globalStore()
 const props = defineProps({
     data: {
         type: Array,
@@ -142,6 +116,9 @@ const valueTypes = ["string", "file"]
 const params = ref(props.data)
 const currentRow = ref(null)
 const choice = ref('')
+const enLabel = ref('')
+const cnLabel = ref('')
+
 const choiceDlgVisible = ref(false)
 const choiceDlg = ref(null)
 
@@ -157,7 +134,7 @@ const getData = () => {
     return params.value
 }
 
-defineExpose({setData, getData})
+defineExpose({ setData, getData })
 const addParameter = () => {
     // this.$set(params, params.value.length, { choices: [] });
     params.value.push({
@@ -178,11 +155,21 @@ const clickAddChoice = (row) => {
 }
 const confirmAddChoice = (value, initValue) => {
     // const value = this._.get(row, "newChoice", "");
+    let item = { value: choice.value, cnLabel: cnLabel.value, enLabel: enLabel.value }
     if (choice.value !== "") {
         if (currentRow.value.choices === undefined) {
             currentRow.value.choices = [];
         }
-        currentRow.value.choices.push(choice.value);
+        if (!enLabel.value) {
+            item.enLabel = choice.value
+        }
+        if (!cnLabel.value) {
+            item.cnLabel = choice.value
+        }
+        if (!cnLabel.value && !enLabel.value) {
+            item = choice.value
+        }
+        currentRow.value.choices.push(item);
     }
     choiceDlgVisible.value = false
     // this.$set(row, "add", false);
@@ -203,5 +190,4 @@ const joinChoices = (choices) => {
 //span {
 //  margin-left: 20px;
 //  margin-right: 5px;
-//}
-</style>
+//}</style>

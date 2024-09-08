@@ -1,4 +1,6 @@
 export default {
+    CnLabel: 'Chinese Label',
+    EnLabel: 'English Label',
     // 登录页面
     LoginSubtitle: 'One-stop solution to gene library analysis results',
     IncorrectUsernameOrPassword: 'Incorrect Username or Password',

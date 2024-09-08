@@ -1,5 +1,7 @@
 export default {
     // 登录页面
+    CnLabel: '中文标签',
+    EnLabel: '英文标签',
     LoginSubtitle: '一站式解决基因文库分析结果.',
     IncorrectUsernameOrPassword: '用户名或密码不正确',
     // 帮助
