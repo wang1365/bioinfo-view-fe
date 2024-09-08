@@ -159,7 +159,7 @@ export function useApi() {
         size: '5px',
         position: 'top',
     })
-    function apiGet(url, onSuccess, config = {}, onError = null, onHttpError = null) {
+    function apiGet(url, onSuccess, config = {}, onError = null, onHttpError = null, onFinal = null) {
         $q.loadingBar.start()
         api.get(url, config)
             .then((resp) => {
@@ -174,9 +174,15 @@ export function useApi() {
                     defaultHttpErrorHandler(error, onError, router)
                 }
             })
+            .finally((onFinal) => {
+                if (onFinal) {
+                    onFinal()
+                }
+            })
     }
-    function apiPost(url, onSuccess, data = {}, config = {}, onError = null, onHttpError = null) {
-        api.post(url, data, config)
+    function apiPost(url, onSuccess, data = {}, config = {}, onError = null, onHttpError = null, onFinal = null) {
+        return api
+            .post(url, data, config)
             .then((resp) => {
                 defaultHandler(router, resp, onSuccess, onError)
             })
@@ -186,6 +192,9 @@ export function useApi() {
                 } else {
                     defaultHttpErrorHandler(error, onError, router)
                 }
+            })
+            .finally(() => {
+                if (onFinal) onFinal()
             })
     }
     function apiPut(url, onSuccess, data = {}, config = {}, onError = null, onHttpError = null) {

@@ -664,8 +664,11 @@ export default {
     DataNewFormRiskSequencing: 'Risk Sequencing',
     DataNewFormSampleIdentificationNumber: 'Sample ID',
     DataNewFormSampleID: 'Sample ID',
+    DataNewFormDataMergeRequired: 'Merge Files?',
     DataNewFormDataNameOfR1: 'Data Name Of R1',
     DataNewFormDataNameOfR2: 'Data Name Of R2',
+    DataNewFormDataNameListOfR1: 'R1 List to be merged (Split with comma)',
+    DataNewFormDataNameListOfR2: 'R2 List to be merged (Split with comma)',
     DataNewFormClose: 'Close',
     DataNewFormSave: 'Save',
     // 修改数据表单

@@ -60,6 +60,26 @@
                         <div class="col q-pa-sm">{{$t('DataNewFormDataNameOfR2')}}: {{ form.fastq2_path }}</div>
                     </div>
                 </q-item>
+                <q-item v-if="form.fastq_merge_required === true">
+                    <div class="row full-width justify-between">
+                        <div class="col q-pa-sm">
+                            <q-input
+                                class="primary"
+                                :label="$t('DataNewFormDataNameListOfR1') + ' :'"
+                                label-color="primary"
+                                :model-value="form.fastq1_path_list"
+                            />
+                        </div>
+                        <div class="col q-pa-sm">
+                            <q-input
+                                class="primary"
+                                :label="$t('DataNewFormDataNameListOfR2') + ' :'"
+                                label-color="primary"
+                                :model-value="form.fastq1_path_list"
+                            />
+                        </div>
+                    </div>
+                </q-item>
             </q-list>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
@@ -103,8 +123,11 @@ const form = ref({
     identifier: "identifier",
     company: "company",
     nucleic_type: "gDNA",
+    fastq_merge_required: false,
     fastq1_path: "fastq1_path",
     fastq2_path: "fastq2_path",
+    fastq1_path_list: "fastq1_path",
+    fastq2_path_list: "fastq2_path",
 });
 onMounted(() => {
     apiGet(`/sample/samples/${props.id}/`, (res) => {

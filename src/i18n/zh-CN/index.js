@@ -659,8 +659,11 @@ export default {
     DataNewFormRiskSequencing: '风险上机',
     DataNewFormSampleIdentificationNumber: '样本识别号',
     DataNewFormSampleID: '样本元信息ID',
+    DataNewFormDataMergeRequired: '是否合并文件',
     DataNewFormDataNameOfR1: 'R1文件',
     DataNewFormDataNameOfR2: 'R2文件',
+    DataNewFormDataNameListOfR1: '合并前R1文件列表 (多个文件之间使用英文逗号分割)',
+    DataNewFormDataNameListOfR2: '合并前R2文件列表 (多个文件之间使用英文逗号分割)',
     DataNewFormClose: '关闭',
     DataNewFormSave: '保存',
     // 修改数据表单
