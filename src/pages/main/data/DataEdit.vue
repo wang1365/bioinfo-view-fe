@@ -14,6 +14,7 @@
                                 v-model="form.project_index"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormDataDetails')"
                             />
@@ -23,6 +24,7 @@
                                 v-model="form.library_number"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormLibraryNumber')"
                             />
@@ -32,6 +34,7 @@
                                 :label="'*'+$t('DataNewFormCaptureKit')"
                                 v-model="form.reagent_box"
                                 filled
+                                label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                             />
                         </div>
@@ -44,19 +47,27 @@
                                 type="number"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 v-model="form.library_input"
                                 :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormLibraryConstructionInput')"
                             />
                         </div>
                         <div class="col q-mx-sm">
-                            <q-input v-model="form.index_type" stack-label filled :label="$t('DataNewFormIndexType')" />
+                            <q-input
+                                v-model="form.index_type"
+                                stack-label
+                                label-color="primary"
+                                filled
+                                :label="$t('DataNewFormIndexType')"
+                            />
                         </div>
                         <div class="col q-mr-sm">
                             <q-input
                                 v-model="form.index_number"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :label="$t('DataNewFormIndexNumber')"
                             />
                         </div>
@@ -69,6 +80,7 @@
                                 type="number"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 v-model="form.hybrid_input"
                                 :label="$t('DataNewFormHybridInput')"
                             />
@@ -78,6 +90,7 @@
                                 v-model="form.nucleic_break_type"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 ::rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormNucleicAcidFragmentationMethod')"
                             />
@@ -87,6 +100,7 @@
                                 v-model="form.identifier"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormDataIdentificationNumber')"
                                 :readonly="true"
@@ -101,6 +115,7 @@
                                 v-model="form.company"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSubmissionUnit')"
                             />
@@ -111,6 +126,7 @@
                                 v-model="form.nucleic_type"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :options="nucleic_type_options"
                                 :label="$t('DataNewFormTypeOfNucleicAcids')"
                             />
@@ -121,6 +137,7 @@
                                 v-model="form.nucleic_level"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :options="nucleic_level_options"
                                 :label="$t('DataNewFormDegradationGradeOfNucleicAcids')"
                             />
@@ -135,6 +152,7 @@
                                 v-model="form.risk"
                                 stack-label
                                 filled
+                                label-color="primary"
                                 :label="$t('DataNewFormRiskSequencing')"
                                 color="primary"
                                 left-label
@@ -148,6 +166,7 @@
                                 readonly
                                 stack-label
                                 filled
+                                label-color="primary"
                                 v-model="form.sample_identifier"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSampleIdentificationNumber')"
@@ -159,6 +178,7 @@
                                 readonly
                                 stack-label
                                 filled
+                                label-color="primary"
                                 v-model="form.sample_meta_id"
                                 :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSampleID')"
@@ -173,6 +193,8 @@
                                 v-model="form.fastq1_path"
                                 stack-label
                                 filled
+                                label-color="primary"
+                                :readonly="form.fastq_merge_required === true"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormDataNameOfR1')"
                             />
@@ -182,8 +204,32 @@
                                 v-model="form.fastq2_path"
                                 stack-label
                                 filled
+                                label-color="primary"
+                                :readonly="form.fastq_merge_required === true"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormDataNameOfR2')"
+                            />
+                        </div>
+                    </div>
+                </q-item>
+                <q-item v-if="form.fastq_merge_required === true">
+                    <div class="row full-width justify-between">
+                        <div class="col q-pa-sm">
+                            <q-input
+                                class="primary"
+                                readonly
+                                :label="$t('DataNewFormDataNameListOfR1') + ' :'"
+                                label-color="primary"
+                                :model-value="form.fastq1_path_list"
+                            />
+                        </div>
+                        <div class="col q-pa-sm">
+                            <q-input
+                                class="primary"
+                                readonly
+                                :label="$t('DataNewFormDataNameListOfR2') + ' :'"
+                                label-color="primary"
+                                :model-value="form.fastq2_path_list"
                             />
                         </div>
                     </div>
@@ -265,6 +311,9 @@ const form = ref({
     nucleic_type: "gDNA",
     fastq1_path: "",
     fastq2_path: "",
+    fastq_merge_required: false, // 是否需要进行fastq文件合并
+    fastq1_path_list: '', // 合并前的fastq1文件列表，逗号分割
+    fastq2_path_list: '', // 合并前的fastq2文件列表，逗号分割
 });
 onMounted(() => {
     apiGet(`/sample/samples/${props.id}/`, (res) => {

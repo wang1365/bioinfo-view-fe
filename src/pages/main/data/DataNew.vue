@@ -2,7 +2,7 @@
     <q-card style="width: 70vw; max-width: 80vw">
         <q-toolbar>
             <q-toolbar-title>{{ $t('DataNewFormTitle') }}</q-toolbar-title>
-            <q-btn flat round dense icon="close" v-close-popup />
+            <q-btn flat round icon="close" v-close-popup />
         </q-toolbar>
         <q-separator></q-separator>
         <q-form @submit="save">
@@ -15,7 +15,6 @@
                                     v-model="form.project_index"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormDataDetails')"
@@ -26,7 +25,6 @@
                                     v-model="form.library_number"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormLibraryNumber')"
@@ -36,7 +34,6 @@
                                 <panel-list
                                     :label="'*'+$t('DataNewFormCaptureKit')"
                                     filled
-                                    dense
                                     label-color="primary"
                                     v-model="form.reagent_box"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
@@ -51,7 +48,6 @@
                                     type="number"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     v-model="form.library_input"
                                     :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
@@ -63,7 +59,6 @@
                                     v-model="form.index_type"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormIndexType')"
@@ -74,7 +69,6 @@
                                     v-model="form.index_number"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormIndexNumber')"
@@ -89,7 +83,6 @@
                                     type="number"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     v-model="form.hybrid_input"
                                     :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
@@ -101,7 +94,6 @@
                                     v-model="form.nucleic_break_type"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="'*'+$t('DataNewFormNucleicAcidFragmentationMethod')"
@@ -113,7 +105,6 @@
                                     v-model="form.identifier"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormDataIdentificationNumber')"
@@ -129,7 +120,6 @@
                                     v-model="form.company"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="'*'+$t('DataNewFormSubmissionUnit')"
@@ -141,7 +131,6 @@
                                     v-model="form.nucleic_type"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :options="nucleic_type_options"
                                     :label="$t('DataNewFormTypeOfNucleicAcids')"
@@ -153,7 +142,6 @@
                                     v-model="form.nucleic_level"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     :options="nucleic_level_options"
                                     :label="$t('DataNewFormDegradationGradeOfNucleicAcids')"
@@ -170,7 +158,6 @@
                                     :label="$t('DataNewFormRiskSequencing')"
                                     color="primary"
                                     filled
-                                    dense
                                     stack-label
                                     label-color="primary"
                                 />
@@ -181,7 +168,6 @@
                                     readonly
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     v-model="form.sample_identifier"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
@@ -194,7 +180,6 @@
                                     readonly
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                     v-model="form.sample_meta_id"
                                     :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
@@ -220,7 +205,6 @@
                                     :label="'*'+$t('DataNewFormDataNameOfR1')"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                 ></q-input>
                             </div>
@@ -231,7 +215,6 @@
                                     :label="'*'+$t('DataNewFormDataNameOfR2')"
                                     stack-label
                                     filled
-                                    dense
                                     label-color="primary"
                                 ></q-input>
                             </div>
@@ -288,10 +271,10 @@ import SampleList from './SampleList.vue';
 import PanelList from 'src/pages/main/settings/flow/components/PanelList';
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
-import { useQuasar } from 'quasar'
+import { useQuasar } from 'quasar';
 
 const { t } = useI18n();
-const $q = useQuasar()
+const $q = useQuasar();
 
 const nucleic_level_options = ref(['A', 'B', 'C', 'D']);
 const nucleic_type_options = ref(['gDNA', 'cfDNA', 'RNA']);
@@ -320,7 +303,31 @@ const defaultInputMessage = computed(() => {
     return t('Required');
 });
 
-const form = ref(
+const test_data = {
+    'project_index': '111',
+    'library_number': '222',
+    'reagent_box': 'NanOnco Plus Panel v3.0',
+    'nucleic_break_type': '水电费',
+    'library_input': '111',
+    'index_type': '111',
+    'index_number': '13232',
+    'hybrid_input': '1',
+    'risk': true,
+    'nucleic_level': 'A',
+    'sample_meta_id': 215,
+    'sample_identifier': 'S00000215',
+    'identifier': '',
+    'company': '胜多负少',
+    'nucleic_type': 'gDNA',
+    'fastq1_path': '',
+    'fastq2_path': '',
+    'fastq_merge_required': true
+    , 'fastq1_path_list': '12.gz,11.gz',
+    'fastq2_path_list': '21.gz,22.gz'
+}
+// 切换测试数据
+const use_test_data = false
+const form = ref(use_test_data ? test_data :
     {
     project_index: '',
     library_number: '',
@@ -343,28 +350,7 @@ const form = ref(
     fastq1_path: '',      // 无需合并时，为手动输入的fastq1文件；需要合并时，自动生成合并后的文件名
     fastq2_path: '',      // 无需合并时，为手动输入的fastq2文件；需要合并时，自动生成合并后的文件名
 })
-//
-// const form = ref({"project_index":"111",
-//     "library_number":"222",
-//     "reagent_box":"NanOnco Plus Panel v3.0",
-//     "nucleic_break_type":"水电费",
-//     "library_input":"111",
-//     "index_type":"111",
-//     "index_number":"13232",
-//     "hybrid_input":"1",
-//     "risk":true,
-//     "nucleic_level":"A",
-//     "sample_meta_id":215,
-//     "sample_identifier":"S00000215",
-//     "identifier":"",
-//     "company":"胜多负少",
-//     "nucleic_type":"gDNA",
-//     "fastq1_path":"",
-//     "fastq2_path":"",
-//     "fastq_merge_required":true
-//     ,"fastq1_path_list":"12.gz,11.gz",
-//     "fastq2_path_list":"21.gz,22.gz"}
-// );
+
 const save = async () => {
     const data = {
         project_index: form.value.project_index,
@@ -386,18 +372,18 @@ const save = async () => {
         fastq2_path: form.value.fastq2_path,
         fastq_merge_required: form.value.fastq_merge_required, // 是否需要进行fastq文件合并
         fastq1_path_list: form.value.fastq1_path_list, // 合并前的fastq1文件列表，逗号分割
-        fastq2_path_list: form.value.fastq2_path_list, // 合并前的fastq2文件列表，逗号分割
+        fastq2_path_list: form.value.fastq2_path_list // 合并前的fastq2文件列表，逗号分割
     };
 
     if (data.fastq_merge_required) {
-        data.fastq1_path = ''
-        data.fastq2_path = ''
+        data.fastq1_path = '';
+        data.fastq2_path = '';
     } else {
-        data.fastq1_path_list = ''
-        data.fastq2_path_list = ''
+        data.fastq1_path_list = '';
+        data.fastq2_path_list = '';
     }
 
-    $q.loading.show()
+    $q.loading.show();
     apiPost(
         '/sample/samples/',
         (_) => {
@@ -405,20 +391,20 @@ const save = async () => {
             emit('refresh');
         },
         data,
-        null,
+        null
         // (res) => {
         //     const errorDetail = res.data;
         //     for (const key in errorDetail) {
         //         console.log(errorDetail[key][0])
         //     }
         // },
-    ).finally(() => $q.loading.hide())
+    ).finally(() => $q.loading.hide());
 
 
 };
 
 const fastqListRule = (val) => {
-    const r1 = !form.value.fastq_merge_required || val.length > 0 || t('NotAllowEmpty')
-    return [r1]
-}
+    const r1 = !form.value.fastq_merge_required || val.length > 0 || t('NotAllowEmpty');
+    return [r1];
+};
 </script>
