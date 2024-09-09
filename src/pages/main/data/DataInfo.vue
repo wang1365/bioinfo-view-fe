@@ -75,7 +75,7 @@
                                 class="primary"
                                 :label="$t('DataNewFormDataNameListOfR2') + ' :'"
                                 label-color="primary"
-                                :model-value="form.fastq1_path_list"
+                                :model-value="form.fastq2_path_list"
                             />
                         </div>
                     </div>
