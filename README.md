@@ -1,8 +1,42 @@
-# Quasar App (bio-frontend-quasar)
+# Bioinfomatics Analysis System
 
-A Quasar Project
+## A Bioinfomatics Analysis Project for bio sample genome analysis
+## Architecture
+- [Vue3](https://cn.vuejs.org/)
+- [Quasar](https://quasar.dev/) : The enterprise-ready cross-platform VueJs framework
+- [Ant Design Vue](https://www.antdv.com/)
+- [igv](https://github.com/igvteam/igv.js) : Integrative Genomics Viewer
+- [Echarts](https://echarts.apache.org/en/index.html) : An Open Source JavaScript Visualization Library
 
-## Install the dependencies
+## Features
+- Platform Overview
+- Project Management
+- Task Management
+  - Quality Control
+  - Fusion
+  - Copy Number Variation
+  - Homologous Recombination Defect
+  - Micro-satellite Instability
+  - Mutation
+  - Pathogen
+  - Tumor Mutation Load
+  - Common Analysis Module
+- Custom Report
+- Patient Management
+- Sample Management
+- Data Management
+- Panel Flow Intra
+- Genome Browser
+
+## Demo snapshots
+![](./static/Snipaste_2024-09-16_02-19-16.png)
+![](./static/Snipaste_2024-09-16_02-20-33.png)
+![](./static/Snipaste_2024-09-16_02-21-48.png)
+![](./static/Snipaste_2024-09-16_02-22-22.png)
+![](./static/Snipaste_2024-09-16_02-22-38.png)
+
+
+## Development Guide
 
 ```bash
 yarn
