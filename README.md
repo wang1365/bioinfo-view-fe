@@ -1,6 +1,6 @@
 # Bioinfomatics Analysis System
+A comprehensive analysis tool for genomics analysis and reporting.
 
-## A Bioinfomatics Analysis Project for bio sample genome analysis
 ## Architecture
 - [Vue3](https://cn.vuejs.org/)
 - [Quasar](https://quasar.dev/) : The enterprise-ready cross-platform VueJs framework
