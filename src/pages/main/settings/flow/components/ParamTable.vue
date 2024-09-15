@@ -9,6 +9,7 @@
                     <div class="text-primary text-h7">{{ $t('CustomParameters') }}</div>
                     <q-space />
                     <q-btn v-if="!readonly" color="primary" size="sm" :label="$t('Add')" @click="addParameter" />
+
                 </template>
 
                 <template v-slot:body="props">
@@ -24,18 +25,44 @@
                             <q-checkbox v-model="props.row.required" color="teal" :disable="readonly" dense />
                         </q-td>
                         <q-td align="center">
-                            <template v-for="(item, index) in props.row.choices" :key="item">
-                                <q-chip v-if="!item.enLabel" :label="item" size="sm" outline square removable
-                                    color="primary" @remove="deleteChoice(props.row, index)" />
-                                <q-chip v-if="item.enLabel && langConfig.lang === 'en'" :label="item.enLabel" size="sm"
-                                    outline square removable color="primary" @remove="deleteChoice(props.row, index)" />
-                                <q-chip v-if="item.cnLabel && langConfig.lang === 'cn'" :label="item.cnLabel" size="sm"
-                                    outline square removable color="primary" @remove="deleteChoice(props.row, index)" />
+                            <template v-if="props.row.choices && props.row.choices.length < 8">
+                                <template v-for="(item, index) in props.row.choices" :key="item">
+                                    <q-chip v-if="!item.enLabel" :label="item" size="sm" outline square removable
+                                        color="primary" @remove="deleteChoice(props.row, index)" />
+                                    <q-chip v-if="item.enLabel && langConfig.lang === 'en'" :label="item.enLabel"
+                                        size="sm" outline square removable color="primary"
+                                        @remove="deleteChoice(props.row, index)" />
+                                    <q-chip v-if="item.cnLabel && langConfig.lang === 'cn'" :label="item.cnLabel"
+                                        size="sm" outline square removable color="primary"
+                                        @remove="deleteChoice(props.row, index)" />
+                                </template>
+                            </template>
+
+                            <template v-if="props.row.choices && props.row.choices.length >= 7">
+                                <template v-for="(item, index) in props.row.choices.slice(0, 4)" :key="item">
+                                    <q-chip v-if="!item.enLabel" :label="item" size="sm" outline square removable
+                                        color="primary" @remove="deleteChoice(props.row, index)" />
+                                    <q-chip v-if="item.enLabel && langConfig.lang === 'en'" :label="item.enLabel"
+                                        size="sm" outline square removable color="primary"
+                                        @remove="deleteChoice(props.row, index)" />
+                                    <q-chip v-if="item.cnLabel && langConfig.lang === 'cn'" :label="item.cnLabel"
+                                        size="sm" outline square removable color="primary"
+                                        @remove="deleteChoice(props.row, index)" />
+                                </template>
+                                <q-btn :label="'全部' + props.row.choices.length + '个...'" size="sm" square dense
+                                    class="q-ma-sm" color="secondary"
+                                    @click="basic = true; currentDialogRow = props.row" />
+
                             </template>
 
                             <q-btn v-if="!readonly" size="xs" label="+" color="purple"
                                 @click="clickAddChoice(props.row)">
                             </q-btn>
+                            <q-file ref="fileInput" v-model="file" accept=".xlsx, .xls"
+                                @update:model-value="uploadFile($event)" style="display: none;" :id="props.rowIndex" />
+
+                            <q-btn class="q-ml-sm" @click="triggerFileSelect(props.row)" size="sm" outline="" dense
+                                icon="attach_file" label="批量上传" />
                         </q-td>
                         <q-td>
                             <q-input v-model="props.row.description" :readonly="readonly" dense />
@@ -60,6 +87,34 @@
                     </q-card-actions>
                 </q-card>
             </q-dialog>
+            <q-dialog v-model="basic" transition-show="rotate" transition-hide="rotate">
+                <q-card>
+                    <q-card-section class="row items-center q-pb-none">
+                        <div class="text-h6">全部内容</div>
+                        <q-space />
+                        <q-btn label="清空" color="accent" dense @click="currentDialogRow.choices = []" v-close-popup
+                            class="q-ma-md q-pa-sm" />
+                        <q-btn icon="close" flat dense v-close-popup />
+                    </q-card-section>
+                    <q-card-section>
+                        <template v-for="(item, index) in currentDialogRow.choices" :key="item">
+                            <q-chip v-if="!item.enLabel" :label="item" size="sm" outline square removable
+                                color="primary" @remove="deleteChoice(currentDialogRow, index)" />
+                            <q-chip v-if="item.enLabel && langConfig.lang === 'en'" :label="item.enLabel" size="sm"
+                                outline square removable color="primary"
+                                @remove="deleteChoice(currentDialogRow, index)" />
+                            <q-chip v-if="item.cnLabel && langConfig.lang === 'cn'" :label="item.cnLabel" size="sm"
+                                outline square removable color="primary"
+                                @remove="deleteChoice(currentDialogRow, index)" />
+                        </template>
+
+                    </q-card-section>
+
+                    <q-card-actions align="right">
+                        <q-btn flat label="Close" color="primary" v-close-popup />
+                    </q-card-actions>
+                </q-card>
+            </q-dialog>
         </div>
     </div>
 </template>
@@ -68,6 +123,54 @@
 import { defineProps, computed, defineExpose, ref, toRefs, onMounted, onBeforeMount } from "vue"
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
+import { api } from "src/boot/axios";
+
+const currentUploadRow = ref(null)
+const currentDialogRow = ref(null)
+const basic = ref(false)
+const file = ref(null)
+const fileInput = ref(null)
+const triggerFileSelect = (row) => {
+    currentUploadRow.value = row
+    fileInput.value.pickFiles();
+};
+const uploadFile = (event) => {
+    console.log(event)
+    console.log(currentUploadRow.value)
+    if (!file.value) {
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file.value);
+    api({ url: '/flow/upload-excel', method: 'POST', data: formData }).then((res) => {
+        let choices = []
+        for (let item of res) {
+            choices.push({
+                value: item.hpo_id,
+                cnLabel: item['中文译名'],
+                enLabel: item['名称(英文)']
+            })
+        }
+        currentUploadRow.value.choices = choices
+    })
+    file.value = null
+
+    // try {
+    //     const response = await axios.post('http://localhost:8000/upload-excel/', formData, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data',
+    //         },
+    //     });
+    //     result.value = response.data;
+    // } catch (error) {
+    //     console.error('Error uploading file:', error);
+    //     this.$q.notify({
+    //         type: 'negative',
+    //         message: 'Error uploading file.',
+    //     });
+    // }
+};
 const { langConfig } = globalStore()
 const props = defineProps({
     data: {

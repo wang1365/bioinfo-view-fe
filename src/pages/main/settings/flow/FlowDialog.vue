@@ -249,7 +249,7 @@ const onSubmit = () => {
     if (isCreateMode.value) {
         // this.$refs.form.validate((valid) => {
         //     if (valid) {
-        form.value.parameters = paramsTable.value.getData()
+        form.value.parameters = JSON.stringify(paramsTable.value.getData())
         createFlow(form.value).then(() => {
             $q.notify({ message: '流程创建成功' })
             emit('success')
