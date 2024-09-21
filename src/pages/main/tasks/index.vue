@@ -206,7 +206,7 @@
                                 padding="xs sm"
                             />
                             <q-btn
-                                :disable="props.row.status !== 'FINISHED'"
+                                :disable="props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report"
                                 color="positive"
                                 :label="$t('TaskPageBtnCustomReport')"
                                 icon="query_stats"

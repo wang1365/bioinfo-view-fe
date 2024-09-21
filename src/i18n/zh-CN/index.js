@@ -688,6 +688,7 @@ export default {
     MultipleSample: '多样本',
     PairMultipleSample: '配对多样本',
     SupportNonStandardSample: '支持非标准样本',
+    SupportDefineReport: '支持定制报告',
 
     // 样本数据
     SampleDataSearch: '样本数据检索',

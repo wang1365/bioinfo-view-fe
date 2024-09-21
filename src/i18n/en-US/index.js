@@ -693,6 +693,7 @@ export default {
     MultipleSample: 'Multiple Sample',
     PairMultipleSample: 'Pair Multiple Sample',
     SupportNonStandardSample: 'Support Non Standard Sample',
+    SupportDefineReport: 'Support Custome Report',
 
     // 样本数据
     SampleDataSearch: 'Sample Data Search',
