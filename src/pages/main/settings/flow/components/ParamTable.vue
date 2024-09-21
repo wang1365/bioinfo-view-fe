@@ -136,7 +136,7 @@
                             />
 
                             <q-btn
-                                v-if="props.row.type==='select' ||props.row.type==='multiSelect' "
+                                v-if="(props.row.type==='select' || props.row.type==='multiSelect') && !readonly"
                                 class="q-ml-sm"
                                 @click="triggerFileSelect(props.row)"
                                 size="sm"
