@@ -311,6 +311,8 @@ export default {
     // 系统配置
     ServerResourceSetting: 'Server Resource Setting',
     ParallelTaskLimit: 'Parallel Task Limit(>1)',
+    ParallelManagerUser: 'Max Manager Account(>1)',
+    ParallelNormalUser: 'Max Normal Account(>1)',
     MemoryUsageLimit: 'Memory Usage Limit(0-1)',
     DiskUsageLimit: 'Disk Usage Limit(MB)',
     NoLimitFor_1: 'No limitation for -1',
