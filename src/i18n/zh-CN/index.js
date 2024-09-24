@@ -309,6 +309,8 @@ export default {
     // 系统配置
     ServerResourceSetting: '服务器资源设置',
     ParallelTaskLimit: '并行任务限制(>1)',
+    ParallelManagerUser: '最大管理员用户数量',
+    ParallelNormalUser: '最大普通用户数量',
     MemoryUsageLimit: '内存使用率限制(0-1)',
     DiskUsageLimit: '磁盘使用限制(MB)',
     NoLimitFor_1: '-1表示没有限制',
@@ -688,6 +690,7 @@ export default {
     MultipleSample: '多样本',
     PairMultipleSample: '配对多样本',
     SupportNonStandardSample: '支持非标准样本',
+    SupportDefineReport: '支持定制报告',
 
     // 样本数据
     SampleDataSearch: '样本数据检索',
