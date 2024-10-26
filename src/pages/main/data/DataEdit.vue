@@ -17,6 +17,8 @@
                                 label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormDataDetails')"
+                                 :error="errors.project_index.error"
+                                :error-message="errors.project_index.message"
                             />
                         </div>
                         <div class="col q-mx-sm">
@@ -27,6 +29,8 @@
                                 label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormLibraryNumber')"
+                                 :error="errors.library_number.error"
+                                :error-message="errors.library_number.message"
                             />
                         </div>
                         <div class="col q-mx-sm">
@@ -36,6 +40,8 @@
                                 filled
                                 label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
+                                :error="errors.reagent_box.error"
+                                :error-message="errors.reagent_box.message"
                             />
                         </div>
                     </div>
@@ -51,6 +57,9 @@
                                 v-model="form.library_input"
                                 :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormLibraryConstructionInput')"
+                                 :error="errors.library_input.error"
+                                :error-message="errors.library_input.message"
+
                             />
                         </div>
                         <div class="col q-mx-sm">
@@ -60,6 +69,8 @@
                                 label-color="primary"
                                 filled
                                 :label="$t('DataNewFormIndexType')"
+                                 :error="errors.index_type.error"
+                                :error-message="errors.index_type.message"
                             />
                         </div>
                         <div class="col q-mr-sm">
@@ -69,6 +80,8 @@
                                 filled
                                 label-color="primary"
                                 :label="$t('DataNewFormIndexNumber')"
+                                :error="errors.index_number.error"
+                                :error-message="errors.index_number.message"
                             />
                         </div>
                     </div>
@@ -83,6 +96,8 @@
                                 label-color="primary"
                                 v-model="form.hybrid_input"
                                 :label="$t('DataNewFormHybridInput')"
+                                 :error="errors.hybrid_input.error"
+                                :error-message="errors.hybrid_input.message"
                             />
                         </div>
                         <div class="col q-mr-sm">
@@ -93,6 +108,8 @@
                                 label-color="primary"
                                 ::rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormNucleicAcidFragmentationMethod')"
+                                    :error="errors.nucleic_break_type.error"
+                                :error-message="errors.nucleic_break_type.message"
                             />
                         </div>
                         <div class="col q-mx-sm">
@@ -104,6 +121,8 @@
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="$t('DataNewFormDataIdentificationNumber')"
                                 :readonly="true"
+                                 :error="errors.identifier.error"
+                                :error-message="errors.identifier.message"
                             />
                         </div>
                     </div>
@@ -118,6 +137,8 @@
                                 label-color="primary"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSubmissionUnit')"
+                                 :error="errors.company.error"
+                                :error-message="errors.company.message"
                             />
                         </div>
                         <div class="col q-mx-sm">
@@ -129,6 +150,8 @@
                                 label-color="primary"
                                 :options="nucleic_type_options"
                                 :label="$t('DataNewFormTypeOfNucleicAcids')"
+                                 :error="errors.nucleic_type.error"
+                                :error-message="errors.nucleic_type.message"
                             />
                         </div>
                         <div class="col q-mx-sm">
@@ -140,6 +163,8 @@
                                 label-color="primary"
                                 :options="nucleic_level_options"
                                 :label="$t('DataNewFormDegradationGradeOfNucleicAcids')"
+                                 :error="errors.nucleic_level.error"
+                                :error-message="errors.nucleic_level.message"
                             />
                         </div>
                     </div>
@@ -157,6 +182,8 @@
                                 color="primary"
                                 left-label
                                 size="lg"
+                                  :error="errors.risk.error"
+                                :error-message="errors.risk.message"
                             />
                         </div>
 
@@ -170,6 +197,8 @@
                                 v-model="form.sample_identifier"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSampleIdentificationNumber')"
+                                :error="errors.sample_identifier.error"
+                                :error-message="errors.sample_identifier.message"
                             />
                         </div>
                         <div class="col q-mx-sm">
@@ -182,6 +211,8 @@
                                 v-model="form.sample_meta_id"
                                 :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormSampleID')"
+                                :error="errors.sample_meta_id.error"
+                                :error-message="errors.sample_meta_id.message"
                             />
                         </div>
                     </div>
@@ -197,6 +228,8 @@
                                 :readonly="form.fastq_merge_required === true"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormDataNameOfR1')"
+                                :error="errors.fastq1_path.error"
+                                :error-message="errors.fastq1_path.message"
                             />
                         </div>
                         <div class="col q-pf-sm">
@@ -208,6 +241,8 @@
                                 :readonly="form.fastq_merge_required === true"
                                 :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                 :label="'*'+$t('DataNewFormDataNameOfR2')"
+                                 :error="errors.fastq2_path.error"
+                                :error-message="errors.fastq2_path.message"
                             />
                         </div>
                     </div>
@@ -353,9 +388,95 @@ const save = async () => {
         (res) => {
             const errorDetail = res.data;
             for (const key in errorDetail) {
+             errors.value[key].error=true
                 console.log(errorDetail[key][0])
             }
         }
     );
 };
+
+const errors = ref({
+    project_index: {
+        message: t('Required'),
+        error: false,
+    },
+    library_number: {
+        message: t('Required'),
+        error: false,
+    },
+    reagent_box: {
+        message: t('Required'),
+        error: false,
+    },
+    nucleic_break_type: {
+        message: t('Required'),
+        error: false,
+    },
+    library_input: {
+        message: t('Required'),
+        error: false,
+    },
+    index_type: {
+        message: t('Required'),
+        error: false,
+    },
+    index_number: {
+        message: t('Required'),
+        error: false,
+    },
+    hybrid_input: {
+        message: t('Required'),
+        error: false,
+    },
+    risk: {
+        message: t('Required'),
+        error: false,
+    },
+    nucleic_level: {
+        message: t('Required'),
+        error: false,
+    },
+    sample_meta_id: {
+        message: t('Required'),
+        error: false,
+    },
+    sample_identifier: {
+        message: t('Required'),
+        error: false,
+    },
+    identifier: {
+        message: t('Required'),
+        error: false,
+    },
+    company: {
+        message: t('Required'),
+        error: false,
+    },
+    nucleic_type: {
+        message: t('Required'),
+        error: false,
+    },
+    fastq_merge_required: {
+        message: t('Required'),
+        error: false,
+    },
+    fastq1_path_list: {
+        message: t('Required'),
+        error: false,
+    },
+    fastq2_path_list: {
+        message: t('Required'),
+        error: false,
+    },
+    fastq1_path: {
+        message: t('Required'),
+        error: false,
+    },
+    fastq2_path: {
+        message: t('Required'),
+        error: false,
+    }
+});
+
+
 </script>
