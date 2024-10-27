@@ -11,7 +11,8 @@
                 header-class="bg-primary text-white"
                 expand-icon-class="text-white"
             >
-                <q-input v-model="detail.desp" type="textarea" readonly> </q-input>
+                <q-input v-model="detail.desp" type="textarea" readonly v-if="detail.desp"> </q-input>
+                <q-input v-model="detail.flows[0].desp" type="textarea" readonly v-if="!detail.desp && detail.flows"> </q-input>
             </q-expansion-item>
             <q-expansion-item
                 :label="$t('FlowAnalysisModule')"
@@ -50,7 +51,8 @@
                 expand-icon-class="text-white"
             >
                 <q-card>
-                    <q-card-section v-html="detail.detail" />
+                    <q-card-section v-html="detail.detail" v-if="detail.detail" />
+                    <q-card-section v-html="detail.flows[0].details" v-if="!detail.detail && detail.flows" />
                 </q-card>
             </q-expansion-item>
         </q-list>
@@ -96,4 +98,5 @@ const showFlowDlg = (row) => {
     currentFlowId.value = row.id
     dlgFlow.value.show()
 }
+
 </script>
