@@ -16,7 +16,6 @@
                                     stack-label
                                     filled
                                     label-color="primary"
-                                    :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormDataDetails')"
                                      :error="errors.project_index.error"
                                 :error-message="errors.project_index.message"
@@ -29,7 +28,6 @@
                                     stack-label
                                     filled
                                     label-color="primary"
-                                    :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormLibraryNumber')"
                                      :error="errors.library_number.error"
                                 :error-message="errors.library_number.message"
@@ -70,7 +68,6 @@
                                     stack-label
                                     filled
                                     label-color="primary"
-                                    :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormIndexType')"
                                      :error="errors.index_type.error"
                                 :error-message="errors.index_type.message"
@@ -82,7 +79,6 @@
                                     stack-label
                                     filled
                                     label-color="primary"
-                                    :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormIndexNumber')"
                                      :error="errors.index_number.error"
                                 :error-message="errors.index_number.message"
@@ -100,7 +96,6 @@
                                     filled
                                     label-color="primary"
                                     v-model="form.hybrid_input"
-                                    :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormHybridInput')"
                                      :error="errors.hybrid_input.error"
                                 :error-message="errors.hybrid_input.message"
