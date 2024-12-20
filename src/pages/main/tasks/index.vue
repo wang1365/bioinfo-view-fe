@@ -99,10 +99,10 @@
             >
                 <template v-slot:body-cell-project="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <span v-if="props.row?.project.parent" class="text-bold text-primary q-mr-xs">
+                        <div v-if="props.row?.project.parent" class="text-bold text-purple q-mr-xs">
                             {{ props.row.project.parent.name }}
-                        </span>
-                        <span class="text-secondary"> {{ props.row.project.name }} </span>
+                        </div>
+                        <div class="text-primary">{{ props.row.project.name }}</div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-progress="props">
