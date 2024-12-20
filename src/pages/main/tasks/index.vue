@@ -144,6 +144,34 @@
                         />
                     </q-td>
                 </template>
+                <template v-slot:body-cell-patient="props">
+                    <q-td :props="props">
+                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                            {{sd.patient_name}}
+                        </div>
+                    </q-td>
+                </template>
+                <template v-slot:body-cell-sample="props">
+                    <q-td :props="props">
+                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                            {{sd.sample_data_identifier}}
+                        </div>
+                    </q-td>
+                </template>
+                <template v-slot:body-cell-data="props">
+                    <q-td :props="props">
+                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                            {{sd.sample_identifier}}
+                        </div>
+                    </q-td>
+                </template>
+                <template v-slot:body-cell-library_number="props">
+                    <q-td :props="props">
+                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                            {{sd.library_number}}
+                        </div>
+                    </q-td>
+                </template>
                 <template v-slot:body-cell-task_priority="props">
                     <q-td :props="props" class="q-gutter-xs">
                         <template v-if="props.row.priority === 2">
@@ -388,9 +416,9 @@ const columns = computed(() => [
             }
             let result = ''
             for (const sample of data) {
-                result += `${sample} , `
+                result += `${sample} \n `
             }
-            return result.replace(/, $/, '')
+            return result.replace(/, $/, '\n')
         },
         format: (val) => `${val}`,
     },
@@ -406,7 +434,7 @@ const columns = computed(() => [
             }
             let result = ''
             for (const sample of data) {
-                result += `${sample} , `
+                result += `${sample} \n `
             }
             return result.replace(/, $/, '')
         },
