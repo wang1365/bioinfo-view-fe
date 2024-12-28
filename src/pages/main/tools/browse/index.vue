@@ -122,10 +122,10 @@ const router = useRouter()
 const route = useRoute()
 
 const columns = computed(() => [
-    {key: 'id', title: 'ID', dataIndex: 'id', fixed: true, align: 'center', width: 50},
+    {key: 'id', title: 'ID', dataIndex: 'id', fixed: true, align: 'center', width: 60},
 
     // 患者
-    {key: 'patient_key', title: t('Patient'), dataIndex: ["patient", "name"], fixed: true, width: 80},
+    {key: 'patient_key', title: t('Patient'), dataIndex: ["patient", "name"], fixed: true, width: 90},
     {key: 'patient_age', title: t('Age'), dataIndex: ["patient", "age"], fixed: true, align: 'center', width: 60},
 
     // 样本
@@ -221,7 +221,7 @@ watch(
 )
 
 const filterTasks = (tasks, status) => {
-    return tasks.filter(t => status === t.status)
+    return tasks.filter(t => status === t.status && t.exist_igv)
 }
 
 const clickReset = () => {
