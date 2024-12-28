@@ -109,8 +109,8 @@
                 <q-img
                     class="q-mt-lg text-primary"
                     :src="image.url"
-                    style="max-height: 500px"
                     fit="contain"
+                    style="max-width: 85%"
                     position="0 20px"
                 />
                 <div class="text-primary">{{ image.description }}</div>
