@@ -205,13 +205,14 @@ const initIntro = () => {
 }
 const tableData = ref({})
 const initTable = () => {
-    $q.loading.show({
-        delay: 100
-    })
-    const { tables: tableList } = props.viewConfig || []
+    const tableList = props.viewConfig.tables || []
+    if (tableList.length > 0) {
+      $q.loading.show({ delay: 100 })
+    }
     tables.value = []
     tableList.forEach((table, i) => {
         tableData.value[table.title] = {}
+
         readTaskFile(props.task.id, table.file).then((res) => {
             const colNames = getCsvHeader(res)
             const rows = getCsvDataAndSetLineNumber(res, { fields: colNames })
