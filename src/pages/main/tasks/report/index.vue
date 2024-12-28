@@ -369,8 +369,14 @@ const readResultAndModuleJson = () => {
         }
         module.value = viewConfig
         commonTabs.value = viewConfig.commonModules
+        console.log("===>>>>>>>>>> module.value ", module.value, commonTabs.value, data)
+        console.log("===>>>>>>>>> module.value2222 ", Object.keys(data))
         // 设置初始的Active Tab（从module_XX.json中解析配置的第一个key并转为标准key值）
         tab.value = dict[Object.keys(data)[0]].key
+        // 通用模块因为有多个，并不是直接使用的key作为name，取commonTab{i}的第一个，即commonTab0
+        if (tab.value === 'commonModules') {
+            tab.value = 'commonTab0'
+        }
     })
 }
 
