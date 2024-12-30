@@ -30,47 +30,11 @@
             <q-card-section>
                 <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{ $t('Sample') + ": "}}</span></div>
                 <div class="text-body q-pa-xs">
-                    <div v-for="item of taskSamples" :key="item.id">
-                        <div class="row bg-grey-3 q-px-sm">
-                            <div class="col-4">
-                                <div class="q-py-sm">
-                                    {{ `${$t('Patient')}${$t('Name')}` }}: {{ item.sample_meta?.patient?.name }}
-                                </div>
-                                <div class="q-py-sm">
-                                    {{ `${$t('Patient')}${$t('Gender')}` }}: {{ item.sample_meta?.patient?.gender=='男'?$t('Male'):$t('Female')  }}
-                                </div>
-                                <div class="q-py-sm">
-                                    {{ $t('PatientNewFormPatientIdentificationNumber') }}:
-                                    {{ item.sample_meta?.patient?.identifier }}
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="q-py-sm">
-                                    {{ $t('SampleListTableColumnSampleIdentificationNumber') }}:
-                                    {{ item.sample_meta?.identifier }}
-                                </div>
-                                <div class="q-py-sm">
-                                    {{ $t('SampleListTableColumnSamplingSite') }}:
-                                    {{ item.sample_meta?.sample_componet }}
-                                </div>
-                                <div class="q-py-sm">
-                                    {{ $t('SampleListTableColumnTumorSample') }}: {{ item.sample_meta?.is_panel }}
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="q-py-sm">
-                                    {{ $t('DataListTableColumnDataIdentificationNumber') }}: {{ item.identifier }}
-                                </div>
-                                <div class="q-py-sm">
-                                    {{ $t('DataListTableColumnDataNameOfR1') }}: {{ item.fastq1_path }}
-                                </div>
-                                <div class="q-py-sm">
-                                    {{ $t('DataListTableColumnDataNameOfR2') }}: {{ item.fastq2_path }}
-                                </div>
-                            </div>
-                        </div>
-                        <q-separator color="primary"></q-separator>
-                    </div>
+                    <a-table
+                        :columns="columns"
+                        :data-source="taskSamples"
+                    >
+                    </a-table>
                 </div>
             </q-card-section>
             <q-separator></q-separator>
@@ -121,7 +85,7 @@
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
 import { useApi } from "src/api/apiBase";
-import { onMounted, ref, watch } from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { globalStore } from 'src/stores/global'
 import { useI18n } from "vue-i18n";
@@ -141,6 +105,34 @@ const logs = ref([])
 const lastStage = ref("")
 const lastStageIndex = ref(0)
 const taskEnvs = ref([])
+
+const columns = computed(() => {
+    return [
+        {title: `No.`, dataIndex:'index', align: 'center', customRender: ({index}) => index + 1}, //item.sample_meta?.patient?.name
+        {title: `${t('Patient')}${t('Name')}`, dataIndex: ['sample_meta','patient','name'], align: 'center'}, //item.sample_meta?.patient?.name
+        {
+            title: `${t('Patient')}${t('Gender')}`,
+            dataIndex: 'k1',
+            align: 'center',
+                customRender: ({text, record, index, column}) => {
+                    return record.sample_meta?.patient?.gender == '男' ? t('Male') : t('Female')
+                }
+        },
+        {title: t('PatientNewFormPatientIdentificationNumber'), dataIndex: ['sample_meta','patient','identifier'], align: 'center'},
+        {title: t('SampleListTableColumnSampleIdentificationNumber'), dataIndex: ['sample_meta','identifier'], align: 'center'},
+        {title: t('SampleListTableColumnSamplingSite'), dataIndex: ['sample_meta','sample_componet'], align: 'center'},
+        {title: t('SampleListTableColumnTumorSample'), dataIndex: ['sample_meta','is_panel'], align: 'center',
+            customRender: ({text, record, index, column}) => {
+                return record.sample_meta?.is_panel ? 'true' : 'false'
+            }
+        },
+        {title: t('DataListTableColumnDataIdentificationNumber'), dataIndex: 'identifier', align: 'center'},
+        {title: t('DataListTableColumnDataNameOfR1'), dataIndex: 'fastq1_path', align: 'center'},
+        {title: t('DataListTableColumnDataNameOfR2'), dataIndex: 'fastq2_path', align: 'center'},
+    ]
+})
+
+
 const getItemStatus = (item) => {
     switch (item.status) {
         case 'PENDING':
