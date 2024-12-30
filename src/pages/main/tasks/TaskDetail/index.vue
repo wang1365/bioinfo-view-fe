@@ -8,10 +8,12 @@
         <q-card>
             <q-card-section>
                 <div class="row">
-                    <div class="text-h6  q-px-md q-py-sm col-3">{{ $t('Project') }}: {{ taskDetail.project?.name }}</div>
-                    <div class="text-h6  q-px-md q-py-sm col-3">{{ `${$t('Task')}${$t('Name')}` }}: {{ taskDetail.name }}</div>
-                    <div class="text-h6 q-px-md q-py-sm col-3">
-                        {{ `${$t('Task')}${$t('Status')}` }}:
+                    <div class="text-h6 q-pa-xs col-3"><span class="text-primary text-weight-bolder">{{ $t('Project')  + ": "}}</span>
+                        {{ taskDetail.project?.name }}</div>
+                    <div class="text-h6 q-pa-xs col-3"><span class="text-primary text-weight-bolder">{{ `${$t('Task')}${$t('Name')}` + ": " }}</span>
+                        {{ taskDetail.name }}</div>
+                    <div class="text-h6 q-pa-xs col-3">
+                        <span class="text-primary text-weight-bolder">{{ `${$t('Task')}${$t('Status')}` + ": "}}</span>
                         <span
                             class="q-px-md brand-color text-center row inline flex-center text-white rounded-borders"
                             :class="getItemStatusColor(taskDetail)"
@@ -22,8 +24,8 @@
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-px-md q-py-sm">{{ $t('Sample') }}:</div>
-                <div class="text-body q-px-md q-py-sm">
+                <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{ $t('Sample') + ": "}}</span></div>
+                <div class="text-body q-pa-xs   ">
                     <div v-for="item of taskSamples" :key="item.id">
                         <div class="row bg-grey-3 q-px-sm">
                             <div class="col-4">
@@ -69,14 +71,14 @@
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-pa-md">{{ $t('ShellEnvs') }}:</div>
+                <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{ $t('ShellEnvs') + ": " }}</span></div>
                 <div class="text-body q-px-md q-py-xs" v-for="item of taskEnvs" :key="item.key">
                     <span class="text-bold">{{ item.key }} : </span> {{ item.value }}
                 </div>
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-pa-md">{{ $t('Progress') }}:</div>
+                <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{ $t('Progress') + ": " }}</span></div>
                 <div id="task-step" class="text-body q-px-md q-py-md">
                     <q-stepper v-model="lastStageIndex" color="primary">
                         <q-step
@@ -95,7 +97,7 @@
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-pa-md">{{ $t('Log') }}:</div>
+                <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{ $t('Log') + ": " }}</span></div>
                 <div class="text-body q-px-md q-py-xs">
                     <q-timeline color="secondary">
                         <q-timeline-entry
