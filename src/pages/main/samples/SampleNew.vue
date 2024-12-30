@@ -13,11 +13,12 @@
                             <div class="col q-pr-sm">
                                 <q-input
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
-                                    :label="'*' + $t('SampleNewFormSamplingDate') + '(YYYY-MM-DD)'"
+                                    :label="$t('SampleNewFormSamplingDate') + '(YYYY-MM-DD)'"
                                     v-model="form.sample_date"
-                                    readonly
+                                    readonly outlined label-color="primary"
                                     stack-label
                                 >
+                                    <template v-slot:prepend><span class="text-red">*</span></template>
                                     <template v-slot:append>
                                         <q-icon
                                             color="primary"
@@ -39,11 +40,12 @@
                             <div class="col q-pr-sm">
                                 <q-input
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
-                                    :label="'*' + $t('SampleNewFormSubmissionDate') + '(YYYY-MM-DD)'"
+                                    :label="$t('SampleNewFormSubmissionDate') + '(YYYY-MM-DD)'"
                                     v-model="form.test_date"
-                                    readonly
+                                    readonly outlined label-color="primary"
                                     stack-label
                                 >
+                                    <template v-slot:prepend><span class="text-red">*</span></template>
                                     <template v-slot:append>
                                         <q-icon color="primary" id="test_date" name="event" class="cursor-pointer">
                                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -61,9 +63,9 @@
                                 <q-input
                                     v-model="form.sample_componet"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
-                                    :label="'*' + $t('SampleNewFormSamplingSite')"
-                                    stack-label
-                                ></q-input>
+                                    :label="$t('SampleNewFormSamplingSite')"
+                                    stack-label outlined label-color="primary"
+                                ><template v-slot:prepend><span class="text-red">*</span></template></q-input>
                             </div>
                         </div>
                     </q-item>
@@ -73,16 +75,16 @@
                                 <q-select
                                     v-model="form.sample_type"
                                     use-input
-                                    stack-label
+                                    stack-label outlined label-color="primary"
                                     input-debounce="0"
                                     @new-value="createValue"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :options="sampleTypeOptions"
-                                    :label="'*' + $t('SampleNewFormSampleType')"
-                                />
+                                    :label="$t('SampleNewFormSampleType')"
+                                ><template v-slot:prepend><span class="text-red">*</span></template></q-select>
                             </div>
                             <div class="col q-pf-sm">
-                                <q-input
+                                <q-input outlined label-color="primary"
                                     type="number"
                                     v-model="form.panel_proportion"
                                     :rules="[ val => val !== null || $t('NotAllowEmpty') ]"
@@ -90,11 +92,12 @@
                                     stack-label
                                 />
                             </div>
-                            <div class="col q-pr-sm">
+                            <div class="col q-px-md">
                                 <q-checkbox
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     v-model="form.is_panel"
                                     :label="$t('SampleNewFormTumorSample')"
+                                    class="text-primary"
                                     color="primary"
                                     left-label
                                     stack-label
@@ -108,7 +111,7 @@
                             <div class="col q-pr-sm">
                                 <q-input
                                     v-model="form.identifier"
-                                    stack-label
+                                    stack-label outlined label-color="primary"
                                     :label="$t('SampleNewFormSampleIdentificationNumber')"
                                     :readonly="true"
                                 ></q-input>
@@ -116,21 +119,39 @@
                             <div class="col q-pr-sm cursor-pointer">
                                 <q-input
                                     @click="showLinkPatient = true"
-                                    readonly
+                                    readonly outlined label-color="primary"
                                     stack-label
                                     v-model="form.patient_id"
                                     :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
-                                    :label="'*' + $t('SampleNewFormPatientID')"
-                                ></q-input>
+                                    :label="$t('SampleNewFormPatientID')"
+                                ><template v-slot:prepend><span class="text-red">*</span></template></q-input>
                             </div>
                             <div class="col q-pr-sm">
-                                <q-input
+                                <q-input outlined label-color="primary"
                                     @click="showLinkPatient = true"
                                     readonly
                                     stack-label
                                     v-model="form.patient_identifier"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('SampleNewFormPatientIdentificationNumber')"
+                                ></q-input>
+                            </div>
+                        </div>
+                    </q-item>
+                    <q-item>
+                        <div class="row full-width justify-start">
+                            <div class="col-4 q-pr-sm">
+                                <q-input outlined label-color="primary"
+                                    v-model="form.sampling_tube_brand"
+                                    stack-label
+                                    :label="$t('SamplingTubeBrand')"
+                                ></q-input>
+                            </div>
+                            <div class="col-4 q-pr-sm">
+                                <q-input outlined label-color="primary"
+                                    stack-label
+                                    v-model="form.specimen_type"
+                                    :label="$t('SpecimenType')"
                                 ></q-input>
                             </div>
                         </div>
@@ -142,11 +163,11 @@
             <q-card-actions align="right" class="bg-white text-teal">
                 <q-list>
                     <q-item>
-                        <q-section class="q-gutter-x-sm">
+                        <q-card-section class="q-gutter-x-sm">
                             <q-btn :label="$t('SampleNewFormClose')" @click="close()" />
                             <!--                            <q-btn color="primary" :label="$t('SampleNewFormSave')" @click="save()" />-->
                             <q-btn color="primary" type="submit" :label="$t('SampleNewFormSave')" />
-                        </q-section>
+                        </q-card-section>
                     </q-item>
                 </q-list>
             </q-card-actions>
@@ -201,6 +222,8 @@ const form = ref({
     patient_id: '',
     patient_identifier: '',
     identifier: '',
+    sampling_tube_brand: '',
+    specimen_type: ''
 });
 
 const save = async () => {
@@ -214,6 +237,8 @@ const save = async () => {
         patient_id: Number.parseInt(form.value.patient_id),
         patient_identifier: form.value.patient_identifier,
         identifier: form.value.identifier,
+        sampling_tube_brand: form.value.sampling_tube_brand,
+        specimen_type: form.value.specimen_type
     };
 
     apiPost(

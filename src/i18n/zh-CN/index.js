@@ -617,6 +617,8 @@ export default {
     SampleNewFormSampleIdentificationNumber: '样本识别号',
     SampleNewFormPatientID: '患者ID',
     SampleNewFormPatientIdentificationNumber: '患者识别号',
+    SamplingTubeBrand: '样本试管品牌',
+    SpecimenType: '标本类型',
     SampleNewFormClose: '关闭',
     SampleNewFormSave: '保存',
     // 修改样本表单

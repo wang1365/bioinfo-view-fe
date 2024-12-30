@@ -20,7 +20,11 @@
                  <div class="col q-pa-sm">{{$t('SampleNewFormSampleIdentificationNumber')}}: {{ form.identifier }}</div>
                  <div class="col q-pa-sm">{{$t('SampleNewFormPatientID')}}: {{ form.patient_id }}</div>
                  <div class="col q-pa-sm">{{$t('SampleNewFormPatientIdentificationNumber')}}: {{ form.patient_identifier}}</div>
-                 </div>
+             </div>
+            <div class="row q-my-sm">
+                <div class="col-4 q-pa-sm">{{$t('SamplingTubeBrand')}}: {{ form.sampling_tube_brand }}</div>
+                <div class="col-4 q-pa-sm">{{$t('SpecimenType')}}: {{ form.specimen_type }}</div>
+            </div>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
             <q-list>
@@ -57,6 +61,8 @@ const form = ref({
     patient_id: "patient_id",
     patient_identifier: "patient_identifier",
     identifier: "identifier",
+    sampling_tube_brand: '',
+    specimen_type: ''
 });
 onMounted(() => {
     apiGet(`/sample/sampledatas/${props.id}/`, (res) => {

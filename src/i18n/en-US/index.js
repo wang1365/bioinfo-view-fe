@@ -624,6 +624,8 @@ export default {
     SampleNewFormSampleIdentificationNumber: 'Sample ID',
     SampleNewFormPatientID: 'Patient ID',
     SampleNewFormPatientIdentificationNumber: 'Patient ID',
+    SamplingTubeBrand: 'Sampling Tube Brand',
+    SpecimenType: 'Specimen Type',
     SampleNewFormClose: 'Close',
     SampleNewFormSave: 'Save',
     // 修改样本表单
