@@ -8,10 +8,14 @@
         <q-card>
             <q-card-section>
                 <div class="row">
-                    <div class="text-h6 q-pa-xs col-3"><span class="text-primary text-weight-bolder">{{ $t('Project')  + ": "}}</span>
-                        {{ taskDetail.project?.name }}</div>
-                    <div class="text-h6 q-pa-xs col-3"><span class="text-primary text-weight-bolder">{{ `${$t('Task')}${$t('Name')}` + ": " }}</span>
-                        {{ taskDetail.name }}</div>
+                    <div class="text-h6 q-pa-xs col-3">
+                        <span class="text-primary text-weight-bolder">{{ $t('Project')  + ": "}}</span>
+                        <span class="text-h6 bg-grey-3 q-pa-sm">{{ taskDetail.project?.name }}</span>
+                    </div>
+                    <div class="text-h6 q-pa-xs col-3">
+                        <span class="text-primary text-weight-bolder">{{ `${$t('Task')}${$t('Name')}` + ": " }}</span>
+                        <span class="text-h6 bg-grey-3 q-pa-sm">{{ taskDetail.name }}</span>
+                    </div>
                     <div class="text-h6 q-pa-xs col-3">
                         <span class="text-primary text-weight-bolder">{{ `${$t('Task')}${$t('Status')}` + ": "}}</span>
                         <span
@@ -25,7 +29,7 @@
             <q-separator></q-separator>
             <q-card-section>
                 <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{ $t('Sample') + ": "}}</span></div>
-                <div class="text-body q-pa-xs   ">
+                <div class="text-body q-pa-xs">
                     <div v-for="item of taskSamples" :key="item.id">
                         <div class="row bg-grey-3 q-px-sm">
                             <div class="col-4">
