@@ -1,10 +1,9 @@
 <template>
     <q-card>
-        <q-separator></q-separator>
         <q-card-section>
             <div class="text-subtitle1 text-bold">{{ $t('PatientInfoPageTitle') }}</div>
-            <q-separator></q-separator>
-            <div class="row q-my-sm">
+            <q-separator size="2px" class="bg-primary"/>
+            <div class="row">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormName') }}: {{ patient.name }}</div>
                 <div class="col q-pa-sm">
                     {{ $t('PatientNewFormGender') }}:
@@ -14,11 +13,11 @@
                 <div class="col q-pa-sm">{{ $t('PatientInfoPageAge') }}: {{ patient.age }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormBirthday') }}: {{ patient.birthday }}</div>
             </div>
-            <div class="row q-my-sm">
+            <div class="row">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormIDCard') }}: {{ patient.id_card }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormHomeAddress') }}: {{ patient.location }}</div>
             </div>
-            <div class="row q-my-sm">
+            <div class="row">
                 <div class="col q-pa-sm">
                     {{ $t('PatientNewFormPatientIdentificationNumber') }}: {{ patient.identifier }}
                 </div>
@@ -26,19 +25,23 @@
                 <div class="col q-pa-sm">{{ $t('PatientNewFormTreatingPhysician') }}: {{ patient.medical_doctor }}</div>
             </div>
             <div class="text-subtitle1 text-bold">{{ $t('PatientNewFormClinicalInformation') }}</div>
-            <q-separator></q-separator>
-            <div class="row q-my-sm">
+            <q-separator size="2px" class="bg-primary"/>
+            <div class="row">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormClinicalDiagnosis') }}: {{ patient.diagnosis }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormTumorStaging') }}: {{ patient.tumor_stage }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormGeneticDisease') }}: {{ patient.disease }}</div>
             </div>
-            <div class="row q-my-sm">
+            <div class="row">
+                <div class="col q-pa-sm">{{ $t('Gestation')}}: {{ patient.gestation ? patient.gestation + $t('Week') : ''}}</div>
+                <div class="col q-pa-sm">{{ $t('PregnancyStatus') }}: {{ patient.pregnancy_status }}</div>
+            </div>
+            <div class="row">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormFamilyHistory') }}: {{ patient.family_history }}</div>
                 <div class="col q-pa-sm">
                     {{ $t('PatientNewFormDrugUsingHistory') }}: {{ patient.medication_history }}
                 </div>
             </div>
-            <div class="row q-my-sm">
+            <div class="row">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormSmoking') }}: {{ patient.smoking == '是' ? $t('Yes') :
                 $t('No')
                     }}</div>
@@ -47,7 +50,7 @@
                 <div class="col q-pa-sm">{{ $t('PatientNewFormViralInfection') }}: {{
                 patient.viral_infection == '是' ? $t('Yes') : $t('No') }}</div>
             </div>
-            <!-- <div class="row q-my-sm q-gutter-xs" v-if="patient.viral_infection === '是'">
+            <!-- <div class="row q-gutter-xs" v-if="patient.viral_infection === '是'">
                 <div class="col q-pa-sm">
                     {{ $t('PatientNewFormViralResult') }}: {{ patient.viral_result }}
                 </div>
@@ -56,14 +59,14 @@
 
             </div> -->
             <div class="text-subtitle1 text-bold">{{ $t('PatientNewFormOtherInformation') }}</div>
-            <q-separator></q-separator>
-            <div class="row q-my-sm">
+            <q-separator size="2px" class="bg-primary"/>
+            <div class="row">
                 <div class="col q-pa-sm">
                     {{ $t('PatientNewFormTreatmentHistory') }}: {{ patient.treatment_history }}
                 </div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormPrognosisInformation') }}: {{ patient.prognosis }}</div>
             </div>
-            <div class="row q-my-sm">
+            <div class="row">
                 <div class="col q-pa-sm">{{ $t('PatientNewFormPrognosisTime') }}: {{ patient.prognosis_time }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormTimeToRelapse') }}: {{ patient.recurrence_time }}</div>
                 <div class="col q-pa-sm">{{ $t('PatientNewFormSurvivalTime') }}: {{ patient.survival_time }}</div>
@@ -71,7 +74,7 @@
         </q-card-section>
         <q-card-section>
             <div class="text-subtitle1 text-bold">{{ $t('PatientInfoPageSamplesTitle') }}</div>
-            <q-separator></q-separator>
+            <q-separator size="2px" class="bg-primary"/>
             <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
@@ -144,6 +147,8 @@ const patient = ref({
     diagnosis: "",
     tumor_stage: "",
     disease: "",
+    gestation: "",
+    pregnancy_status: "",
     family_history: "",
     medication_history: "",
     treatment_history: "",

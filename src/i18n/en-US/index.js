@@ -160,6 +160,7 @@ export default {
     RouteNotFound: 'Not Found',
     ParamsError: 'Params Error',
     Template: 'Template',
+    Week: 'Week',
 
     // phrase
     Disk: 'Disk',
@@ -553,6 +554,8 @@ export default {
     PatientNewFormClinicalDiagnosis: 'Clinical Diagnosis',
     PatientNewFormTumorStaging: 'Tumor Staging',
     PatientNewFormGeneticDisease: 'Genetic Disease',
+    Gestation: 'Gestation',
+    PregnancyStatus: 'Pregnancy Status',
     PatientNewFormFamilyHistory: 'Family History',
     PatientNewFormDrugUsingHistory: 'Drug Using History',
     PatientNewFormSmoking: 'Smoking',

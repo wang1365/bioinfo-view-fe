@@ -158,6 +158,7 @@ export default {
     RouteNotFound: '路由不存在',
     ParamsError: '请求参数错误',
     Template: '模板',
+    Week: '周',
 
     // 词组
     Disk: '磁盘',
@@ -547,6 +548,8 @@ export default {
     PatientNewFormClinicalDiagnosis: '临床诊断',
     PatientNewFormTumorStaging: '肿瘤分期',
     PatientNewFormGeneticDisease: '遗传病',
+    Gestation: '妊娠期',
+    PregnancyStatus: '怀孕状态',
     PatientNewFormFamilyHistory: '家族史',
     PatientNewFormDrugUsingHistory: '用药史',
     PatientNewFormSmoking: '吸烟',

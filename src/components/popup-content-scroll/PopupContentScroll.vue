@@ -17,12 +17,12 @@
                 <q-card-actions align="right" class="bg-white text-teal">
                     <q-list>
                         <q-item>
-                            <q-section class="q-gutter-x-sm">
+                            <q-card-section class="q-gutter-x-sm">
                                 <slot name="contentFooter">
                                     <q-btn class="q-mr-md" label="取消" v-close-popup />
                                     <q-btn color="primary" label="确认" />
                                 </slot>
-                            </q-section>
+                            </q-card-section>
                         </q-item>
                     </q-list>
                 </q-card-actions>

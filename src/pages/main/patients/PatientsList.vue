@@ -1,11 +1,11 @@
 <template>
     <q-card class="q-mt-md">
-        <q-section>
-            <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
+        <q-card-section>
+            <div class=" q-gutter-md row items-start bio-data-table">
                 <q-input
                     style="width:350px"
                     v-model="searchParams.search"
-                    dense
+                    stack-label label-color="primary"
                     :label="$t('PatientPageListSearchKeyWord')"
                     clearable
                 >
@@ -13,7 +13,7 @@
                 <q-input
                     type="number"
                     v-model="searchParams.age_start"
-                    dense
+                    stack-label label-color="primary"
                     :label="$t('PatientPageListSearchAgeStart')"
                     clearable
                 >
@@ -21,14 +21,14 @@
                 <q-input
                     type="number"
                     v-model="searchParams.age_end"
-                    dense
+                    stack-label label-color="primary"
                     :label="$t('PatientPageListSearchAgeEnd')"
                     clearable
                 >
                 </q-input>
                 <q-input
                     clearable
-                    dense
+                    stack-label label-color="primary"
                     :label="$t('PatientPageListSearchEntryStart')"
                     v-model="searchParams.ctime_start"
                 >
@@ -44,7 +44,8 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-input clearable dense :label="$t('PatientPageListSearchEntryEnd')" v-model="searchParams.ctime_end">
+                <q-input clearable stack-label label-color="primary"
+                         :label="$t('PatientPageListSearchEntryEnd')" v-model="searchParams.ctime_end">
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -66,8 +67,8 @@
                 />
                 <q-btn color="primary" :label="$t('PatientPageListSearchReset')" icon="clear" @click="reset()" />
             </div>
-        </q-section>
-        <q-section>
+        </q-card-section>
+        <q-card-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="groups_2" />
                 <q-toolbar-title class="text-h6"> {{$t('PatientPageListTableTitle')}} </q-toolbar-title>
@@ -96,8 +97,8 @@
                     <q-tooltip>{{ $t('PageListTableTemplate') }} </q-tooltip>
                 </q-btn>
             </q-toolbar>
-        </q-section>
-        <q-section>
+        </q-card-section>
+        <q-card-section>
             <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
@@ -162,13 +163,13 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="row q-mt-md">
+                <div class="row q-mt-xs">
                     <q-space></q-space>
                     <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
-        </q-section>
-        <q-section class="q-pd-md"> </q-section>
+        </q-card-section>
+        <q-card-section class="q-pd-md"> </q-card-section>
     </q-card>
     <q-dialog v-model="showPatientNew" persistent>
         <PatientNew

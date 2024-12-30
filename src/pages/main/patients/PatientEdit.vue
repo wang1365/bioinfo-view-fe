@@ -4,10 +4,10 @@
             <template v-slot:contentBody>
                 <q-card-section>
                     <div class="text-h6 text-bold">{{ $t('PatientNewFormPatientInfo') }}</div>
-                    <q-separator></q-separator>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <q-separator size="2px" class="bg-primary q-mb-xs"/>
+                    <div class="row q-gutter-xs">
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.name.error"
                                 :error-message="errors.name.message"
                                 v-model="form.name"
@@ -17,7 +17,7 @@
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-select
+                            <q-select stack-label label-color="primary" outlined
                                 :error="errors.gender.error"
                                 :error-message="errors.gender.message"
                                 v-model="form.gender"
@@ -33,7 +33,7 @@
                             </q-select>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.birthday.error"
                                 :error-message="errors.birthday.message"
                                 :label="$t('PatientNewFormBirthday') + '(YYYY-MM-DD)'"
@@ -55,9 +55,9 @@
                             </q-input>
                         </div>
                     </div>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <div class="row q-gutter-xs">
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.id_card.error"
                                 :error-message="errors.id_card.message"
                                 v-model="form.id_card"
@@ -67,7 +67,7 @@
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.location.error"
                                 :error-message="errors.location.message"
                                 v-model="form.location"
@@ -75,9 +75,9 @@
                             ></q-input>
                         </div>
                     </div>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <div class="row q-gutter-xs">
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.identifier.error"
                                 :error-message="errors.identifier.message"
                                 v-model="form.identifier"
@@ -86,7 +86,7 @@
                             ></q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.inspection_agency.error"
                                 :error-message="errors.inspection_agency.message
                                 "
@@ -97,7 +97,7 @@
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.medical_doctor.error"
                                 :error-message="errors.medical_doctor.message"
                                 v-model="form.medical_doctor"
@@ -108,10 +108,10 @@
                         </div>
                     </div>
                     <div class="text-h6 text-bold">{{ $t('PatientNewFormClinicalInformation') }}</div>
-                    <q-separator></q-separator>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <q-separator size="2px" class="bg-primary q-mb-xs"/>
+                    <div class="row q-gutter-xs">
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.diagnosis.error"
                                 :error-message="errors.diagnosis.message"
                                 v-model="form.diagnosis"
@@ -121,7 +121,7 @@
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.tumor_stage.error"
                                 :error-message="errors.tumor_stage.message"
                                 v-model="form.tumor_stage"
@@ -129,7 +129,7 @@
                             ></q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.disease.error"
                                 :error-message="errors.disease.message"
                                 v-model="form.disease"
@@ -137,9 +137,28 @@
                             ></q-input>
                         </div>
                     </div>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <div class="row q-gutter-md">
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
+                                 :error="errors.gestation.error"
+                                 :error-message="errors.gestation.message"
+                                 v-model="form.gestation"
+                                 :label="$t('Gestation')"
+                                 :suffix="$t('Week')"
+                            />
+                        </div>
+                        <div class="col">
+                            <q-input stack-label label-color="primary" outlined
+                                 :error="errors.pregnancy_status.error"
+                                 :error-message="errors.pregnancy_status.message"
+                                 v-model="form.pregnancy_status"
+                                 :label="$t('PregnancyStatus')"
+                            />
+                        </div>
+                    </div>
+                    <div class="row q-gutter-xs">
+                        <div class="col">
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.family_history.error"
                                 :error-message="errors.family_history.message"
                                 v-model="form.family_history"
@@ -147,7 +166,7 @@
                             ></q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.medication_history.error"
                                 :error-message="errors.medication_history.message
                                 "
@@ -156,9 +175,9 @@
                             ></q-input>
                         </div>
                     </div>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <div class="row q-gutter-xs">
                         <div class="col q-pr-sm">
-                            <q-select
+                            <q-select stack-label label-color="primary" outlined
                                 :error="errors.smoking.error"
                                 :error-message="errors.smoking.message"
                                 v-model="form.smoking"
@@ -169,7 +188,7 @@
                             />
                         </div>
                         <div class="col q-pr-sm">
-                            <q-select
+                            <q-select stack-label label-color="primary" outlined
                                 :error="errors.drinking.error"
                                 :error-message="errors.drinking.message"
                                 v-model="form.drinking"
@@ -182,7 +201,7 @@
                             />
                         </div>
                         <div class="col q-pr-sm">
-                            <q-select
+                            <q-select stack-label label-color="primary" outlined
                                 :error="errors.viral_infection.error"
                                 :error-message="errors.viral_infection.message"
                                 v-model="form.viral_infection"
@@ -193,7 +212,7 @@
                             />
                         </div>
                     </div>
-                    <!-- <div class="row q-my-sm q-gutter-xs" v-if="form.viral_infection === '是'">
+                    <!-- <div class="row q-gutter-xs" v-if="form.viral_infection === '是'">
                         <div class="col">
                             <q-input :error="errors.viral_result.error" :error-message="errors.viral_result.message
                                 " v-model="form.viral_result" :label="$t('PatientNewFormViralResult')"></q-input>
@@ -204,10 +223,10 @@
                         </div>
                     </div> -->
                     <div class="text-h6 text-bold">{{ $t('PatientNewFormOtherInformation') }}</div>
-                    <q-separator></q-separator>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <q-separator size="2px" class="bg-primary q-mb-xs"/>
+                    <div class="row q-gutter-xs">
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.treatment_history.error"
                                 :error-message="errors.treatment_history.message
                                 "
@@ -216,7 +235,7 @@
                             ></q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 :error="errors.prognosis.error"
                                 :error-message="errors.prognosis.message
                                 "
@@ -225,9 +244,9 @@
                             ></q-input>
                         </div>
                     </div>
-                    <div class="row q-my-sm q-gutter-xs">
+                    <div class="row q-gutter-xs">
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 type="number"
                                 :error="errors.prognosis_time.error"
                                 :error-message="errors.prognosis_time.message"
@@ -237,7 +256,7 @@
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 type="number"
                                 :error="errors.recurrence_time.error"
                                 :error-message="errors.recurrence_time.message"
@@ -247,7 +266,7 @@
                             </q-input>
                         </div>
                         <div class="col">
-                            <q-input
+                            <q-input stack-label label-color="primary" outlined
                                 type="number"
                                 :error="errors.survival_time.error"
                                 :error-message="errors.survival_time.message"
@@ -303,6 +322,8 @@ const form = ref({
     diagnosis: "",
     tumor_stage: "",
     disease: "",
+    gestation: "",
+    pregnancy_status: "",
     family_history: "",
     medication_history: "",
     treatment_history: "",
@@ -318,102 +339,32 @@ const form = ref({
 });
 
 const errors = ref({
-    name: {
-        message: t('Required'),
-        error: false,
-    },
-    gender: {
-        message: t('Required'),
-        error: false,
-    },
-    age: {
-        message: t('Required'),
-        error: false,
-    },
-    birthday: {
-        message: t('Required'),
-        error: false,
-    },
-    id_card: {
-        message: t('Required'),
-        error: false,
-    },
-    location: {
-        message: t('Required'),
-        error: false,
-    },
-    identifier: {
-        message: t('Required'),
-        error: false,
-    },
-    inspection_agency: {
-        message: t('Required'),
-        error: false,
-    },
-    medical_doctor: {
-        message: t('Required'),
-        error: false,
-    },
-    diagnosis: {
-        message: t('Required'),
-        error: false,
-    },
-    tumor_stage: {
-        message: t('Required'),
-        error: false,
-    },
-    disease: {
-        message: t('Required'),
-        error: false,
-    },
-    family_history: {
-        message: t('Required'),
-        error: false,
-    },
-    medication_history: {
-        message: t('Required'),
-        error: false,
-    },
-    treatment_history: {
-        message: t('Required'),
-        error: false,
-    },
-    smoking: {
-        message: t('Required'),
-        error: false,
-    },
-    drinking: {
-        message: t('Required'),
-        error: false,
-    },
-    viral_infection: {
-        message: t('Required'),
-        error: false,
-    },
-    viral_result: {
-        message: t('Required'),
-        error: false,
-    },
-    viral_focus: {
-        message: t('Required'),
-        error: false,
-    },
-    prognosis: {
-        message: t('Required'),
-        error: false,
-    },
-    prognosis_time: {
-        message: t('Required'),
-        error: false,
-    },
-    recurrence_time: {
-        message: t('Required'),
-        error: false,
-    },
-    survival_time: {
-        message: t('Required'),
-        error: false,
-    },
+    name: { message: t('Required'), error: false },
+    gender: { message: t('Required'), error: false },
+    age: { message: t('Required'), error: false },
+    birthday: { message: t('Required'), error: false },
+    id_card: { message: t('Required'), error: false },
+    location: { message: t('Required'), error: false },
+    identifier: { message: t('Required'), error: false },
+    inspection_agency: { message: t('Required'), error: false },
+    medical_doctor: { message: t('Required'), error: false },
+    diagnosis: { message: t('Required'), error: false },
+    tumor_stage: { message: t('Required'), error: false },
+    disease: { message: t('Required'), error: false },
+    gestation: { message: t('Required'), error: false },
+    pregnancy_status: { message: t('Required'), error: false },
+    family_history: { message: t('Required'), error: false },
+    medication_history: { message: t('Required'), error: false },
+    treatment_history: { message: t('Required'), error: false },
+    smoking: { message: t('Required'), error: false },
+    drinking: { message: t('Required'), error: false },
+    viral_infection: { message: t('Required'), error: false },
+    viral_result: { message: t('Required'), error: false },
+    viral_focus: { message: t('Required'), error: false },
+    prognosis: { message: t('Required'), error: false },
+    prognosis_time: { message: t('Required'), error: false },
+    recurrence_time: { message: t('Required'), error: false },
+    survival_time: { message: t('Required'), error: false },
 });
 const requiredFields = [
     "name",
@@ -447,6 +398,8 @@ const save = async () => {
         diagnosis: form.value.diagnosis,
         tumor_stage: form.value.tumor_stage,
         disease: form.value.disease,
+        gestation: form.value.gestation,
+        pregnancy_status: form.value.pregnancy_status,
         family_history: form.value.family_history,
         medication_history: form.value.medication_history,
         treatment_history: form.value.treatment_history,
