@@ -1,25 +1,27 @@
 <template>
     <q-page padding>
         <div class="row items-center q-py-sm">
-            <h6>{{ `${$t('Task')} ${$t('Info')}` }}</h6>
+            <h6>{{ `${$t('Task')}${$t('Info')}` }}</h6>
             <q-space />
             <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <q-card>
-            <q-section>
-                <div class="text-h6  q-px-md q-py-sm ">{{ $t('Project') }}: {{ taskDetail.project?.name }}</div>
-                <div class="text-h6  q-px-md q-py-sm">{{ `${$t('Task')}${$t('Name')}` }}: {{ taskDetail.name }}</div>
-                <div class="text-h6 q-px-md q-py-sm">
-                    {{ `${$t('Task')}${$t('Status')}` }}:
-                    <span
-                        class="q-px-md brand-color text-center row inline flex-center text-white rounded-borders"
-                        :class="getItemStatusColor(taskDetail)"
-                        >{{ getItemStatus(taskDetail) }}</span
-                    >
+            <q-card-section>
+                <div class="row">
+                    <div class="text-h6  q-px-md q-py-sm col-3">{{ $t('Project') }}: {{ taskDetail.project?.name }}</div>
+                    <div class="text-h6  q-px-md q-py-sm col-3">{{ `${$t('Task')}${$t('Name')}` }}: {{ taskDetail.name }}</div>
+                    <div class="text-h6 q-px-md q-py-sm col-3">
+                        {{ `${$t('Task')}${$t('Status')}` }}:
+                        <span
+                            class="q-px-md brand-color text-center row inline flex-center text-white rounded-borders"
+                            :class="getItemStatusColor(taskDetail)"
+                            >{{ getItemStatus(taskDetail) }}</span
+                        >
+                    </div>
                 </div>
-            </q-section>
+            </q-card-section>
             <q-separator></q-separator>
-            <q-section>
+            <q-card-section>
                 <div class="text-h6 q-px-md q-py-sm">{{ $t('Sample') }}:</div>
                 <div class="text-body q-px-md q-py-sm">
                     <div v-for="item of taskSamples" :key="item.id">
@@ -64,16 +66,16 @@
                         <q-separator color="primary"></q-separator>
                     </div>
                 </div>
-            </q-section>
+            </q-card-section>
             <q-separator></q-separator>
-            <q-section>
+            <q-card-section>
                 <div class="text-h6 q-pa-md">{{ $t('ShellEnvs') }}:</div>
                 <div class="text-body q-px-md q-py-xs" v-for="item of taskEnvs" :key="item.key">
                     <span class="text-bold">{{ item.key }} : </span> {{ item.value }}
                 </div>
-            </q-section>
+            </q-card-section>
             <q-separator></q-separator>
-            <q-section>
+            <q-card-section>
                 <div class="text-h6 q-pa-md">{{ $t('Progress') }}:</div>
                 <div id="task-step" class="text-body q-px-md q-py-md">
                     <q-stepper v-model="lastStageIndex" color="primary">
@@ -90,9 +92,9 @@
                         </q-step>
                     </q-stepper>
                 </div>
-            </q-section>
+            </q-card-section>
             <q-separator></q-separator>
-            <q-section>
+            <q-card-section>
                 <div class="text-h6 q-pa-md">{{ $t('Log') }}:</div>
                 <div class="text-body q-px-md q-py-xs">
                     <q-timeline color="secondary">
@@ -105,7 +107,7 @@
                         />
                     </q-timeline>
                 </div>
-            </q-section>
+            </q-card-section>
         </q-card>
     </q-page>
 </template>
