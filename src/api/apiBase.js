@@ -292,7 +292,11 @@ export function useApi() {
     }
     function apiGetByIds(model, modelIds, onSuccess, config = {}, onError = null, onHttpError = null) {
         let query = buildModelQuery([], { id__in: modelIds })
-        api.post(`/model_query/${model}`, query, config)
+        let newConfig = config ? { ...config, params: {} } : { params: {} }
+        // 用1页返回所有数据
+        newConfig.params.size = modelIds.length
+        newConfig.params.page = 1
+        api.post(`/model_query/${model}`, query, newConfig)
             .then((resp) => {
                 defaultHandler(router, resp, onSuccess, onError)
             })
