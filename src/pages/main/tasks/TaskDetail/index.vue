@@ -2,8 +2,8 @@
     <q-page padding>
         <div class="row items-center q-py-sm">
             <h6>{{ `${$t('Task')}${$t('Info')}` }}</h6>
-            <q-space/>
-            <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()"/>
+            <q-space />
+            <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
         </div>
         <q-card>
             <q-card-section>
@@ -21,35 +21,36 @@
                         <span
                             class="q-px-md brand-color text-center row inline flex-center text-white rounded-borders"
                             :class="getItemStatusColor(taskDetail)"
-                        >{{ getItemStatus(taskDetail) }}</span
+                            >{{ getItemStatus(taskDetail) }}</span
                         >
                     </div>
                 </div>
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-pa-xs"><span
-                    class="text-primary text-weight-bolder">{{ $t('Sample') + ": " }}</span>
+                <div class="text-h6 q-pa-xs">
+                    <span class="text-primary text-weight-bolder">{{ $t('Sample') + ": " }}</span>
                 </div>
-                <a-table
-                    :columns="columns"
-                    :data-source="taskSamples"
-                />
+                <a-table :columns="columns" :data-source="taskSamples" size="small" :pagination="false" />
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{
+                <div class="text-h6 q-pa-xs">
+                    <span class="text-primary text-weight-bolder">{{
                         $t('ShellEnvs') + ": "
-                    }}</span></div>
+                    }}</span>
+                </div>
                 <div class="text-body q-px-md q-py-xs" v-for="item of taskEnvs" :key="item.key">
                     <span class="text-bold">{{ item.key }} : </span> {{ item.value }}
                 </div>
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{
+                <div class="text-h6 q-pa-xs">
+                    <span class="text-primary text-weight-bolder">{{
                         $t('Progress') + ": "
-                    }}</span></div>
+                    }}</span>
+                </div>
                 <div id="task-step" class="text-body q-px-md q-py-md">
                     <q-stepper v-model="lastStageIndex" color="primary">
                         <q-step
@@ -68,7 +69,8 @@
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
-                <div class="text-h6 q-pa-xs"><span class="text-primary text-weight-bolder">{{ $t('Log') + ": " }}</span>
+                <div class="text-h6 q-pa-xs">
+                    <span class="text-primary text-weight-bolder">{{ $t('Log') + ": " }}</span>
                 </div>
                 <div class="text-body q-px-md q-py-xs">
                     <q-timeline color="secondary">
