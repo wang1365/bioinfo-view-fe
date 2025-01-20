@@ -146,29 +146,41 @@
                 </template>
                 <template v-slot:body-cell-patient="props">
                     <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{sd.patient_name}}
+                        </div>
+                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
+                            ... ({{props.row.sample_data.length}})
                         </div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-sample="props">
                     <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{sd.sample_data_identifier}}
+                        </div>
+                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
+                            ... ({{props.row.sample_data.length}})
                         </div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-data="props">
                     <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{sd.sample_identifier}}
+                        </div>
+                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
+                            ... ({{props.row.sample_data.length}})
                         </div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-library_number="props">
                     <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data" :key="sd.sample_data_identifier">
+                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{sd.library_number}}
+                        </div>
+                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
+                            ... ({{props.row.sample_data.length}})
                         </div>
                     </q-td>
                 </template>
