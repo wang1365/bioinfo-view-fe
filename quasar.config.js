@@ -86,6 +86,7 @@ module.exports = configure(function (ctx) {
                     target: process.env.host || 'http://10.10.0.208:8080', // v3.0 测试环境
                     // target: process.env.host || 'http://10.10.2.55:8080', // v4.0 测试环境
                     // target: process.env.host || 'http://10.10.2.196:8080',
+                    // target: process.env.host || 'http://192.168.100.97:8080', // 王晓川开发用
                     // target: process.env.host || 'http://localhost:8000',
                     pathRewrite: {
                         '^/api': '', // base path替换
