@@ -31,7 +31,7 @@
                 <div class="text-h6 q-pa-xs">
                     <span class="text-primary text-weight-bolder">{{ $t('Sample') + ": " }}</span>
                 </div>
-                <a-table :columns="columns" :data-source="taskSamples" size="small" :pagination="false" />
+                <a-table :columns="columns" :data-source="taskSamples" size="small" />
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
