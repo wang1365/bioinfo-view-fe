@@ -105,8 +105,19 @@
                         <div class="text-primary">{{ props.row.project.name }}</div>
                     </q-td>
                 </template>
-                <template v-slot:body-cell-progress="props">
+                <template v-slot:body-cell-status="props">
                     <q-td :props="props" class="q-gutter-xs">
+                        <q-btn
+                            v-if="props.row.status === 'FAILURED'"
+                            color="red"
+                            :label="$t('Failed')"
+                            flat
+                            padding="xs"
+                            icon-right="help"
+                            @click="showTaskError(props.row)"
+                            size="sm"
+                        />
+                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>
                         <q-linear-progress
                             v-if="props.row.status === 'CANCELED'"
                             color="warning"
@@ -210,21 +221,21 @@
                         </template>
                     </q-td>
                 </template>
-                <template v-slot:body-cell-status="props" v-if="amISuper() || amIAdmin()">
-                    <q-td :props="props" class="q-gutter-xs">
-                        <q-btn
-                            v-if="props.row.status === 'FAILURED'"
-                            color="red"
-                            :label="$t('Failed')"
-                            flat
-                            padding="xs"
-                            icon-right="help"
-                            @click="showTaskError(props.row)"
-                            size="sm"
-                        />
-                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>
-                    </q-td>
-                </template>
+<!--                <template v-slot:body-cell-status="props" v-if="amISuper() || amIAdmin()">-->
+<!--                    <q-td :props="props" class="q-gutter-xs">-->
+<!--                        <q-btn-->
+<!--                            v-if="props.row.status === 'FAILURED'"-->
+<!--                            color="red"-->
+<!--                            :label="$t('Failed')"-->
+<!--                            flat-->
+<!--                            padding="xs"-->
+<!--                            icon-right="help"-->
+<!--                            @click="showTaskError(props.row)"-->
+<!--                            size="sm"-->
+<!--                        />-->
+<!--                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>-->
+<!--                    </q-td>-->
+<!--                </template>-->
                 <template v-slot:body-cell-operate="props">
                     <q-td :props="props" class="q-gutter-xs">
                         <span class="row q-gutter-xs" style="width: 600px;">
@@ -478,14 +489,14 @@ const columns = computed(() => [
         field: (row) => row.flow.name,
         format: (val) => `${val}`,
     },
-    {
-        name: 'progress',
-        required: true,
-        label: t('Progress'),
-        align: 'left',
-        field: (row) => row.status,
-        format: (val) => `${val}`,
-    },
+    // {
+    //     name: 'progress',
+    //     required: true,
+    //     label: t('Progress'),
+    //     align: 'left',
+    //     field: (row) => row.status,
+    //     format: (val) => `${val}`,
+    // },
     {
         name: 'status',
         required: true,
@@ -766,32 +777,50 @@ const summary = async () => {
 </script>
 <style lang="sass">
 .my-sticky-column-table
-  /* specifying max-width so the example can
-    highlight the sticky column on any browser window */
-  max-width: 100%
+    /* height or max-height is important */
+    height: 100%
 
-  thead tr:first-child th:first-child
-    /* bg color is important for th; just specify one */
-    background-color: white
+    /* specifying max-width so the example can
+      highlight the sticky column on any browser window */
+    max-width: 100%
 
-  thead tr:nth-child(2),thead th:nth-child(2)
-    /* bg color is important for th; just specify one */
-    background-color: white
+    td:first-child, td:nth-child(2)
+        /* bg color is important for td; just specify one */
+        background-color: #ffffff !important
 
+    tr th
+        position: sticky
+        /* higher than z-index for td below */
+        z-index: 2
+        /* bg color is important; just specify one */
+        background: #fff
 
-  td:first-child,td:nth-child(2)
-    background-color: white
+    /* this will be the loading indicator */
+    thead tr:last-child th
+        /* height of all previous header rows */
+        top: 48px
+        /* highest z-index */
+        z-index: 1
+    thead tr:first-child th, thead tr:nth-child(2) th
+        top: 0
+        z-index: 3
+    tr:first-child th:first-child
+        /* highest z-index */
+        z-index: 4
+    tr:first-child th:nth-child(2)
+        /* highest z-index */
+        z-index: 4
 
-  th:first-child,
-  td:first-child
-    position: sticky
-    left: 0px
-    z-index: 2
+    td:first-child
+        z-index: 1
 
-  th:nth-child(2),
-  td:nth-child(2)
-    position: sticky
-    left: 56px
-    z-index: 1
-    border-right: 1px solid silver
+    td:first-child, th:first-child
+        position: sticky
+        left: 0
+    td:nth-child(2), th:nth-child(2)
+        position: sticky
+        left: 60px
+        z-index: 3
+        border-right-color: silver
+        border-right-width: 1px
 </style>
