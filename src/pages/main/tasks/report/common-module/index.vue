@@ -76,7 +76,14 @@
                         :disable="props.viewConfig.showStick && props.viewConfig.stickDone"
                     ></q-btn>
                     <q-space />
-                    <q-btn :href="table.url" :download='table.fileName' :label="$t('Download')" icon="south" size="sm" flat />
+                    <q-btn
+                        :href="table.url"
+                        :download="table.fileName"
+                        :label="$t('Download')"
+                        icon="south"
+                        size="sm"
+                        flat
+                    />
                 </q-toolbar>
                 <div style="position:relative">
                     <q-icon
@@ -98,10 +105,45 @@
                         :columns="table.columns"
                         :sticky="true"
                         :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }"
-                    />
+                    >
+                        <template #bodyCell="{ column, record }">
+                            <template
+                                v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
+                            >
+                                <q-btn
+                                    size="xs"
+                                    outline
+                                    color="primary"
+                                    :label="$t('View')"
+                                    @click="clickView(record,column.title)"
+                                />
+                            </template>
+                            <template v-else>
+                                <template
+                                    v-if="record[column.dataIndex].endsWith('.png') || record[column.dataIndex].endsWith('.jpeg')"
+                                >
+                                    <q-img
+                                        class="q-mt-lg text-primary"
+                                        :src="'/igv'+ record[column.dataIndex]"
+                                        style="max-height: 30px; padding: 0; margin: 0;"
+                                        fit="contain"
+                                        position="top"
+                                    />
+                                </template>
+                            </template>
+                        </template>
+                    </a-table>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
+        <q-dialog v-model="showImage">
+            <q-card style="width:80%;max-width:1000px;height:550px;align-items: center">
+                <q-card-section>
+                    <img :src="imageUrl" alt="" style="height:500px;background-color:white" />
+                </q-card-section>
+            </q-card>
+        </q-dialog>
+
         <!-- <a-table :columns="columns" :data-source="rows" @change="onChange" /> -->
         <q-separator color="primary" />
         <div>
@@ -193,6 +235,15 @@ watch(() => props.viewConfig,
     initTable()
     initImages()
 })
+
+// ctr
+const showImage = ref(false)
+const imageUrl = ref('')
+const clickView = (record,title) => {
+    showImage.value = true
+    imageUrl.value = `/igv${record[title]}`
+}
+// ctr
 
 
 const initIntro = () => {

@@ -16,7 +16,7 @@
         "@quasar/cli": "^2.3.0",
         "@quasar/extras": "^1.16.7",
         "ant-design-vue": "^3.2.13",
-        "axios": "^1.6.0",
+        "axios": "^1.7.4",
         "ajv": "^8.12.0",
         "core-js": "^3.6.5",
         "echarts": "^5.3.2",
@@ -38,7 +38,8 @@
         "eslint-config-prettier": "^8.1.0",
         "eslint-plugin-vue": "^9.0.0",
         "eslint-webpack-plugin": "^3.1.1",
-        "prettier": "^2.5.1"
+        "prettier": "^2.5.1",
+        "socks-proxy-agent": "^8.0.3"
     },
     "browserslist": [
         "last 10 Chrome versions",
