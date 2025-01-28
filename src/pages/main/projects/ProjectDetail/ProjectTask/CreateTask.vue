@@ -37,79 +37,8 @@
                             <q-list bordered separator>
                                 <q-item v-ripple v-for="item, index in paramTabs" :key="index" :name="item.name"
                                     :class="{ 'bg-primary': index == activeParamTab, 'text-white': index == activeParamTab }">
-                                    <span class="cursor-pointer" @click="activeParamTab = index">{{ $t('Task')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                    <span class="cursor-pointer" @click="activeParamTab = index">{{
+                                            $t('Task')
 
 
                                         }}&nbsp;{{ index + 1
