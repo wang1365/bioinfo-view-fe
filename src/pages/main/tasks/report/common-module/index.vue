@@ -162,7 +162,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, toRef, watch } from 'vue'
+import {computed, onMounted, ref, toRef, watch} from 'vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { useQuasar } from "quasar"
@@ -195,9 +195,18 @@ const props = defineProps({
 
 const tab = ref('')
 const stepData = toRef(props, 'stepData')
-const tables = ref([])
+const unsortedTables = ref([])
 const intro = ref('')
 const images = ref([])
+
+const tables = computed( () => {
+    const sortedTables = [...unsortedTables.value];
+    sortedTables.sort((a, b) => {
+        return a.i - b.i
+    })
+    return sortedTables.map(t => t.data)
+})
+
 const clearKeyword = (table) => {
     table.filteredRows = table.rows
     table.keyword = ''
@@ -260,7 +269,8 @@ const initTable = () => {
     if (tableList.length > 0) {
       $q.loading.show({ delay: 100 })
     }
-    tables.value = []
+    unsortedTables.value = []
+    // const tmpTables = []
     tableList.forEach((table, i) => {
         tableData.value[table.title] = {}
 
@@ -292,7 +302,8 @@ const initTable = () => {
                 fileName: table.file.substring(table.file.lastIndexOf('/') + 1),
                 keyword: ''                 // 检索关键字
             }
-            tables.value.push(data)
+            // tables.value[i] = data
+            unsortedTables.value.push({data, i})
 
             if (i === 0) {
                 tab.value = table.name
