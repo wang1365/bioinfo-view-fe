@@ -754,6 +754,7 @@ export default {
     SpeciesName: 'Species Name',
     Proportion: 'Proportion',
     TotalProportion: 'Total Proportion',
+    UniqReads: 'Uniq reads',
     Verification: 'Verification',
 
     VirusName: 'Virus',

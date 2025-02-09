@@ -200,6 +200,13 @@ const getSpan = (index, record) => {
 
     return rows.value.filter(row => row[dataIndex] === cellValue).length
 }
+
+const showTotalProportion = computed(() => {
+    console.log('============>>>>>', viewConfig.value)
+    const v = viewConfig.value?.showUniqueReads
+    return v === undefined ? true : v
+})
+
 // 表头定义
 const columns = computed(() => [
     {
@@ -286,18 +293,32 @@ const columns = computed(() => [
                 customCell
             },
             {
-                name: 'totalProportion',
-                title: t('TotalProportion'),
-                dataIndex: 'totalProportion',
-                align: 'center',
-                width: 50,
-                sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
-                customCell
-            },
+                ...getTotalProportionOrUniqReadsColumnDefinition()
+            }
         ]
     },
     { name: 'report', width: 100, title: t('Verification'), dataIndex: 'report', align: 'center', required: true },
 ])
+
+function getTotalProportionOrUniqReadsColumnDefinition() {
+    return showTotalProportion.value ? {
+        name: 'totalProportion',
+        title: t('TotalProportion'),
+        dataIndex: 'totalProportion',
+        align: 'center',
+        width: 50,
+        sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
+        customCell
+    } : {
+        name: 'uniqReads',
+        title: t('UniqReads'),
+        dataIndex: 'uniqReads',
+        align: 'center',
+        width: 50,
+        sorter: (a, b) => Number(a.uniqReads) < Number(b.uniqReads) ? -1 : 1,
+        customCell
+    }
+}
 
 onMounted(() => loadData())
 
@@ -332,7 +353,7 @@ const loadData = () => {
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
         const fields = ['genusName', 'relativeAbundance', 'readsCount1',
-            'speciesName', 'proportion', 'readsCount2', 'totalProportion', 'file', 'report']
+            'speciesName', 'proportion', 'readsCount2', getTotalProportionOrUniqReadsColumnDefinition().dataIndex, 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvDataAndSetLineNumber(res, { start: 2, fields })
         // 文件下载路径

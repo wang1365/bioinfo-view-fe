@@ -749,6 +749,7 @@ export default {
     SpeciesName: '种名',
     Proportion: '占比',
     TotalProportion: '总占比',
+    UniqReads: '去重后序列数',
     Verification: '验证',
 
     VirusName: '病毒名',
