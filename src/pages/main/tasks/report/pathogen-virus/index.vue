@@ -197,6 +197,33 @@ const getSpan = (index, record) => {
 
     return rows.value.filter(row => row[dataIndex] === cellValue).length
 }
+
+const showTotalProportion = computed(() => {
+    const v = viewConfig.value?.showColumnUniqReads
+    return v === undefined ? true : v
+})
+
+function getTotalProportionOrUniqReadsColumnDefinition() {
+    return showTotalProportion.value ? {
+        name: 'totalProportion',
+        title: t('TotalProportion'),
+        dataIndex: 'totalProportion',
+        align: 'center',
+        width: 50,
+        sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
+        customCell
+    } : {
+        name: 'uniqReads',
+        title: t('UniqReads'),
+        dataIndex: 'uniqReads',
+        align: 'center',
+        width: 50,
+        sorter: (a, b) => Number(a.uniqReads) < Number(b.uniqReads) ? -1 : 1,
+        customCell
+    }
+}
+
+
 // 表头定义
 const columns = computed(() => [
     {
@@ -220,15 +247,7 @@ const columns = computed(() => [
         sorter: (a, b) => Number(a.readsCount) < Number(b.readsCount) ? -1 : 1,
         customCell
     },
-    {
-        name: 'totalProportion',
-        title: t('TotalProportion'),
-        dataIndex: 'totalProportion',
-        align: 'center',
-        width: 50,
-        sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
-        customCell
-    },
+    {...getTotalProportionOrUniqReadsColumnDefinition()},
     { name: 'report', width: 20, title: t('Verification'), dataIndex: 'report', align: 'center', required: true },
 ])
 
@@ -248,7 +267,7 @@ const loadData = () => {
     console.log("stepData", stepData.value)
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
-        const fields = ['virusName', 'readsCount', 'totalProportion', 'file', 'report']
+        const fields = ['virusName', 'readsCount', getTotalProportionOrUniqReadsColumnDefinition().dataIndex, 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvDataAndSetLineNumber(res, { fields })
         // 文件下载路径

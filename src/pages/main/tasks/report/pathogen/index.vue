@@ -202,7 +202,6 @@ const getSpan = (index, record) => {
 }
 
 const showTotalProportion = computed(() => {
-    console.log('============>>>>>', viewConfig.value)
     const v = viewConfig.value?.showColumnUniqReads
     return v === undefined ? true : v
 })
