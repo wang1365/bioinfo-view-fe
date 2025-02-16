@@ -334,6 +334,7 @@ onMounted(() => {
         parameters: [],
         builtin_parameters: [],
         sample_type: 'multiple',
+        config: { taskLimit: -1 }
     }
 
     getPanels().then(res => {

@@ -65,6 +65,14 @@ export function updateFlow(id, data) {
     })
 }
 
+export function updateFlowTaskConfig(id, config) {
+    return api({
+        url: `/flow/flows/${id}/`,
+        method: 'patch',
+        data: { config },
+    })
+}
+
 export function deleteFlow(id) {
     return api({
         url: `/flow/flows/${id}/`,

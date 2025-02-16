@@ -1,8 +1,17 @@
 <template>
     <div style="width: 80vw; max-width: 80vw; max-height: 90vh">
-        <PopupSingleSelector :title="t('ProjectSelectFlowTitle')" :dataItems="dataItems" :total="total"
-            :tableHeaders="tableHeaders" :tableRowFields="tableRowFields" :currentPage="currentPage"
-            selectedShowField="name" @pageChange="pageChange($event)" @ensureSelect="ensureSelect($event)" />
+        <PopupSingleSelector
+            :title="t('ProjectSelectFlowTitle')"
+            :dataItems="dataItems"
+            :total="total"
+            :tableHeaders="tableHeaders"
+            :tableRowFields="tableRowFields"
+            :table-row-selectable="tableRowSelectable"
+            :currentPage="currentPage"
+            selectedShowField="name"
+            @pageChange="pageChange($event)"
+            @ensureSelect="ensureSelect($event)"
+        />
     </div>
 </template>
 <script setup>
@@ -18,14 +27,20 @@ const tableHeaders = computed(() => [
     t('FlowName'),
     t('Category'),
     t('FlowDetail'),
-    t('SampleType')
+    t('SampleType'),
+    t('TaskCount'),
 ]);
 const tableRowFields = ref([
     "name",
     "flow_category",
     "desp",
-    "sample_type"
+    "sample_type",
+    "task_count"
 ]);
+
+const tableRowSelectable = (row) => {
+    return row.task_count < row.config.taskLimit
+};
 
 const currentPage = ref(1);
 const pageSize = ref(10);

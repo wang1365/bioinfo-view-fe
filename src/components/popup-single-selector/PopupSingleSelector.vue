@@ -22,13 +22,26 @@
                         <tr v-if="dataItems.length === 0">
                             <td colspan="10" class="text-center">{{ $t('PopupSelectNoData') }}</td>
                         </tr>
-                        <tr class="cursor-pointer" v-for="item of dataItems" :key="item" @click="selectedItem = item">
+                        <tr
+                            class="cursor-pointer"
+                            v-for="item of dataItems"
+                            :key="item"
+                            @click="tableRowSelectable(item) ? selectedItem = item: ''"
+                        >
                             <td>
-                                <q-radio v-model="selectedItem" :val="item" @click="selectedItem = item" />
+                                <q-radio
+                                    v-model="selectedItem"
+                                    :val="item"
+                                    @click="selectedItem = item"
+                                    v-if="tableRowSelectable(item)"
+                                    keep-color
+                                />
                             </td>
                             <slot :row="item" name="itemRow">
                                 <td v-for="field of tableRowFields" :key="field">
-                                    {{ item[field] }}
+                                    <span :class='tableRowSelectable(item) ? "black" : "text-grey-5"'
+                                        >{{ item[field] }}
+                                    </span>
                                 </td>
                             </slot>
                         </tr>
@@ -49,15 +62,24 @@
             <q-separator></q-separator>
             <div>
                 <q-toolbar>
-                    <q-toolbar-title>{{ $t('PopupSelectCurrrentSelected') }}:
+                    <q-toolbar-title
+                        >{{ $t('PopupSelectCurrrentSelected') }}:
                         {{
                             selectedItem[props.selectedShowField]
-                        }}</q-toolbar-title>
-                    <PaginatorVue :total="props.total" :currentPage="props.currentPage"
-                        @pageChange="pageChange($event)" />
+                        }}</q-toolbar-title
+                    >
+                    <PaginatorVue
+                        :total="props.total"
+                        :currentPage="props.currentPage"
+                        @pageChange="pageChange($event)"
+                    />
                     <q-btn class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
-                    <q-btn v-if="selectedItem[props.selectedShowField]" color="primary" :label="$t('PopupSelectEnsure')"
-                        @click="ensureSelect()" />
+                    <q-btn
+                        v-if="selectedItem[props.selectedShowField]"
+                        color="primary"
+                        :label="$t('PopupSelectEnsure')"
+                        @click="ensureSelect()"
+                    />
                 </q-toolbar>
             </div>
         </div>
@@ -76,10 +98,12 @@ const props = defineProps({
     title: { require: true, type: String },
     tableHeaders: { require: true, type: Array },
     tableRowFields: { require: true, type: Array },
+    tableRowSelectable: { require: true, type: Function, default: (data) => true },
     dataItems: { require: true, type: Array },
     selectedShowField: { require: true, type: String },
     total: { require: true, type: Number },
     currentPage: { require: true, type: Number },
+
 });
 const emit = defineEmits("pageChange", "ensureSelect");
 const pageChange = (event) => {

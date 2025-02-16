@@ -269,6 +269,7 @@ export default {
     Disable: 'Disable',
     DiskUsage: 'Disk usage',
     TaskLimit: 'Task limit',
+    TaskCount: 'Running Task Count',
     AddUser: 'Add User',
     EditUser: 'Edit User',
     DeleteUser: 'Delete User',

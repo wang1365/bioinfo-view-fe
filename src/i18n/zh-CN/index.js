@@ -267,6 +267,7 @@ export default {
     Disable: '禁用',
     DiskUsage: '磁盘使用',
     TaskLimit: '任务数限制',
+    TaskCount: '已运行任务数',
     AddUser: '新建用户',
     EditUser: '编辑用户',
     DeleteUser: '删除用户',

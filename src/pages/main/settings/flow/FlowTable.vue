@@ -4,7 +4,9 @@
             <q-input
                 :label="$t('ModuleName')"
                 v-model="keyword"
-                clearable dense stack-label
+                clearable
+                dense
+                stack-label
                 label-color="primary"
                 @clear="refreshFlows"
                 @keypress.enter="refreshFlows"
@@ -12,34 +14,73 @@
             >
             </q-input>
             <div class="col">
-                <q-btn color="primary" icon="search" size="small" class="q-mx-sm" :label="$t('Search')"
-                       @click="refreshFlows"/>
-                <q-btn color="primary" icon="add" size="small" :label="$t('Add')" @click="addFlow"/>
+                <q-btn
+                    color="primary"
+                    icon="search"
+                    size="small"
+                    class="q-mx-sm"
+                    :label="$t('Search')"
+                    @click="refreshFlows"
+                />
+                <q-btn color="primary" icon="add" size="small" :label="$t('Add')" @click="addFlow" />
             </div>
         </div>
-        <a-table
-            :columns="columns"
-            :data-source="flows"
-            size="middle"
-            sticky
-            :scroll="{ x:500 }"
-        >
+        <a-table :columns="columns" :data-source="flows" size="middle" sticky :scroll="{ x:500 }">
             <template v-slot:bodyCell="{column, record}">
+                <template v-if="column.key === 'task_count'">
+                    <span v-if="record.task_count >= record?.config?.taskLimit" class="text-red text-weight-bolder">
+                        {{ record?.task_count }}</span
+                    >
+                    <span v-else>{{ record?.task_count }}</span>
+                </template>
+                <template v-if="column.key === 'config'">
+                    <span class="q-mr-xs">{{ record?.config?.taskLimit }}</span>
+                    <q-icon
+                        :label="$t('Setting')"
+                        color="primary"
+                        class="cursor-pointer"
+                        name="edit"
+                        @click="showTaskLimitDlg(record)"
+                    ></q-icon>
+                </template>
                 <template v-if="column.key === 'operation'">
                     <q-btn :label="$t('Detail')" color="primary" size="xs" outline @click="showInfoDlg(record)"></q-btn>
-                    <q-btn :label="$t('Edit')" color="orange" size="xs" class="q-mx-xs" outline
-                           @click="showEditDlg(record)"></q-btn>
+                    <q-btn
+                        :label="$t('Edit')"
+                        color="orange"
+                        size="xs"
+                        class="q-mx-xs"
+                        outline
+                        @click="showEditDlg(record)"
+                    ></q-btn>
                     <q-btn :label="$t('Delete')" color="red" size="xs" outline @click="showDeleteDlg(record)"></q-btn>
                 </template>
             </template>
         </a-table>
-        <flow-dialog ref="dlgFlow" :action="action" :id="currentFlowId" @success="refreshFlows"/>
-        <flow-dialog ref="dlgFlowCreate" action="create" @success="refreshFlows"/>
+        <flow-dialog ref="dlgFlow" :action="action" :id="currentFlow?.id" @success="refreshFlows" />
+        <flow-dialog ref="dlgFlowCreate" action="create" @success="refreshFlows" />
+        <q-dialog v-model="taskLimitDlgVisible">
+            <q-card>
+                <q-card-section>
+                    <div class="text-h6">{{t('TaskLimit')}}</div>
+                </q-card-section>
+                <q-form @submit="onUpdateTaskLimit">
+                    <q-item>
+                        <q-input v-model.number="currentFlow.config.taskLimit" />
+                    </q-item>
+
+                    <q-card-actions align="right">
+                        <q-btn flat :label="t('Cancel')" color="primary" v-close-popup />
+                        <q-btn flat :label="t('Confirm')" color="primary" type="submit" v-close-popup />
+                    </q-card-actions>
+                </q-form>
+            </q-card>
+        </q-dialog>
     </q-page>
 </template>
 
 <script setup>
-import { getFlows, deleteFlow } from 'src/api/flow'
+import { getFlows, deleteFlow, updateFlowTaskLimit, updateFlowTaskConfig } from 'src/api/flow';
 import { ref, onMounted, computed, nextTick } from 'vue'
 import { useQuasar } from 'quasar'
 import { format } from 'src/utils/time'
@@ -50,9 +91,11 @@ import FlowDialog from './FlowDialog'
 const { t } = useI18n()
 const loading = ref(false)
 const dlgFlow = ref(null)
+const dlgTaskLimit = ref(null)
+const taskLimitDlgVisible = ref(false)
 const dlgFlowCreate = ref(null)
 const dlgCreateTask = ref(null)
-const currentFlowId = ref(null)
+const currentFlow = ref({ config: { taskLimit: 0 }})
 const keyword = ref('')
 const action = ref('info')
 const selected = ref([])
@@ -62,10 +105,25 @@ const columns = computed(() => [
     {key: 'id', title: 'ID', dataIndex: 'id', align: 'center', width: 50, fixed: 'left' },
     {key: 'name', title: t('Name'), dataIndex: 'name', sortable: true, align: 'left', width: 250, fixed: 'left' },
     {key: 'code', title: t('Type'), dataIndex: 'code', align: 'left', sortable: true, width: 250 },
-    {key: 'panel_name', title: 'Panel', dataIndex: 'panel_name', align: 'left', sortable: true, width: 250 },
-    {key: 'flow_category', title: t('Category'), dataIndex: 'flow_category', align: 'left', width: 85 },
+    {key: 'panel_name', title: 'Panel', dataIndex: 'panel_name', align: 'left', sortable: true, width: 200 },
+    {key: 'flow_category', title: t('Category'), dataIndex: 'flow_category', align: 'left', width: 70 },
     {key: 'memory', title: t('Memory') + '(m)', align: 'center', dataIndex: 'memory', width: 85,},
-    {key: 'tar_path', title: t('DockerArchive'), dataIndex: 'tar_path', align: 'left', width: 300, ellipsis: true },
+    {
+        key: 'task_count',
+        title: t('TaskCount'),
+        dataIndex: 'task_count',
+        align: 'center',
+        width: 80
+    },
+    {
+        key: 'config',
+        title: t('TaskLimit'),
+        dataIndex: 'config',
+        align: 'center',
+        width: 100,
+        customRender: ({ text }) => text?.taskLimit
+    },
+    {key: 'tar_path', title: t('DockerArchive'), dataIndex: 'tar_path', align: 'left', width: 200, ellipsis: true},
     {
         key: 'image_name',
         title: t('DockerImageName'),
@@ -82,6 +140,7 @@ const columns = computed(() => [
         width: 200,
         customRender: ({ text }) => format(text)
     },
+
     { key: 'operation', title: t('Operate'), align: 'center', width: 200, fixed: 'right' },
 ])
 
@@ -162,16 +221,30 @@ const stopLoading = () => {
     loading.value = false
 }
 
+const showTaskLimitDlg = (row) => {
+    currentFlow.value = row
+    taskLimitDlgVisible.value = true
+}
+
+const onUpdateTaskLimit = () => {
+    startLoading()
+    updateFlowTaskConfig(currentFlow.value.id, currentFlow.value.config)
+        .then(() => {
+            $q.notify({type: 'positive', message: t('UpdateSuccess')})
+            refreshFlows()
+        })
+        .finally(stopLoading)
+}
 
 const showInfoDlg = (row) => {
-    currentFlowId.value = row.id
+    currentFlow.value = row
     action.value = 'info'
     dlgFlow.value.show()
     dlgFlow.value.setData(row)
 }
 
 const showEditDlg = (row) => {
-    currentFlowId.value = row.id
+    currentFlow.value = row
     action.value = 'edit'
     dlgFlow.value.setData(row)
     nextTick(() => {
