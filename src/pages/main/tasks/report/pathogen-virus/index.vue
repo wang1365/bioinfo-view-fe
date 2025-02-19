@@ -199,8 +199,8 @@ const getSpan = (index, record) => {
 
 // 当前流程是否非RP panel
 const isRpPanel = computed(() => {
-    return true
-    // return viewConfig.value?.PanelNotRP === true
+    // return true
+    return viewConfig.value?.PanelNotRP === true
 })
 
 function getRpPanelColumnDefinition() {
