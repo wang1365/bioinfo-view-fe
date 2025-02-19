@@ -124,7 +124,6 @@
     </div>
 </template>
 <script setup>
-import { errorMessage, infoMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef, watch, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { SearchOutlined } from '@ant-design/icons-vue'
@@ -198,13 +197,14 @@ const getSpan = (index, record) => {
     return rows.value.filter(row => row[dataIndex] === cellValue).length
 }
 
-const showTotalProportion = computed(() => {
-    const v = viewConfig.value?.showColumnUniqReads
-    return v === undefined ? true : v
+// 当前流程是否非RP panel
+const isRpPanel = computed(() => {
+    return true
+    // return viewConfig.value?.PanelNotRP === true
 })
 
-function getTotalProportionOrUniqReadsColumnDefinition() {
-    return showTotalProportion.value ? {
+function getRpPanelColumnDefinition() {
+    return !isRpPanel.value ? {
         name: 'totalProportion',
         title: t('TotalProportion'),
         dataIndex: 'totalProportion',
@@ -225,7 +225,7 @@ function getTotalProportionOrUniqReadsColumnDefinition() {
 
 
 // 表头定义
-const columns = computed(() => [
+const columns = !isRpPanel.value ? computed(() => [
     {
         name: 'virusName',
         title: t('VirusName'),
@@ -247,9 +247,114 @@ const columns = computed(() => [
         sorter: (a, b) => Number(a.readsCount) < Number(b.readsCount) ? -1 : 1,
         customCell
     },
-    {...getTotalProportionOrUniqReadsColumnDefinition()},
+    {
+        name: 'totalProportion',
+        title: t('TotalProportion'),
+        dataIndex: 'totalProportion',
+        align: 'center',
+        width: 50,
+        sorter: (a, b) => Number(a.totalProportion.replace(/%/, '')) < Number(b.totalProportion.replace(/%/, '')) ? -1 : 1,
+        customCell
+    },
     { name: 'report', width: 20, title: t('Verification'), dataIndex: 'report', align: 'center', required: true },
+]) :  computed(() => [
+    {
+        title: t('Genus'),
+        children: [
+            {
+                name: 'genusName',
+                title: t('GenusName'),
+                dataIndex: 'genusName',
+                customFilterDropdown: true,
+                width: 100,
+                // align: 'center',
+                // sorter: true,
+                // onFilter: (value, record) => value.includes(record.genusName),
+                onFilter: (value, record) => record.genusName.includes(value),
+                customCell,
+                // customCell: (_, index, record) => {
+                //     return {
+                //         rowSpan: getSpan(index, record)
+                //     }
+                // }
+            },
+            {
+                name: 'relativeAbundance',
+                title: t('RelativeAbundance'),
+                dataIndex: 'relativeAbundance',
+                align: 'center',
+                width: 50,
+                sorter: (a, b) => Number(a.relativeAbundance.replace(/%/, '')) < Number(b.relativeAbundance.replace(/%/, '')) ? -1 : 1,
+                customCell,
+                // customCell: (_, index, record) => {
+                //     return {
+                //         rowSpan: getSpan(index, record)
+                //     }
+                // }
+            },
+            {
+                name: 'readsCount1',
+                title: t('ReadsCount'),
+                dataIndex: 'readsCount1',
+                align: 'center',
+                width: 50,
+                sorter: (a, b) => Number(a.readsCount1) < Number(b.readsCount1) ? -1 : 1,
+                customCell,
+                // customCell: (_, index, record) => {
+                //     return {
+                //         rowSpan: getSpan(index, record)
+                //     }
+                // }
+            }
+        ]
+    },
+    {
+        title: t('Zhong'),
+        children: [
+            {
+                name: 'speciesName',
+                title: t('SpeciesName'),
+                dataIndex: 'speciesName',
+                width: 150,
+                // align: 'center',
+                // sorter: true,
+                customFilterDropdown: true,
+                // onFilter: (value, record) => value.includes(record.speciesName),
+                onFilter: (value, record) => record.speciesName.includes(value),
+                customCell
+            },
+            {
+                name: 'proportion',
+                title: t('Proportion'),
+                dataIndex: 'proportion',
+                align: 'center',
+                width: 50,
+                sorter: (a, b) => Number(a.proportion.replace(/%/, '')) < Number(b.proportion.replace(/%/, '')) ? -1 : 1,
+                customCell
+            },
+            {
+                name: 'readsCount2',
+                title: t('ReadsCount'),
+                dataIndex: 'readsCount2',
+                align: 'center',
+                width: 50,
+                sorter: (a, b) => Number(a.readsCount2) < Number(b.readsCount2) ? -1 : 1,
+                customCell
+            },
+            {
+                name: 'uniqReads',
+                title: t('UniqReads'),
+                dataIndex: 'uniqReads',
+                align: 'center',
+                width: 50,
+                sorter: (a, b) => Number(a.uniqReads) < Number(b.uniqReads) ? -1 : 1,
+                customCell
+            }
+        ]
+    },
+    { name: 'report', width: 100, title: t('Verification'), dataIndex: 'report', align: 'center', required: true },
 ])
+
 
 onMounted(() => loadData())
 
@@ -267,7 +372,9 @@ const loadData = () => {
     console.log("stepData", stepData.value)
     readTaskFile(route.params.id, dataFile.value).then((res) => {
         // 数据key（基于表头的dataIndex，额外增加行的数据文件列file）
-        const fields = ['virusName', 'readsCount', getTotalProportionOrUniqReadsColumnDefinition().dataIndex, 'file', 'report']
+        const fields = !isRpPanel.value
+            ? ['virusName', 'readsCount', 'totalProportion', 'file', 'report']
+            : ['genusName', 'relativeAbundance', 'readsCount1', 'speciesName', 'proportion', 'readsCount2', 'uniqReads', 'file', 'report']
         // 解析数据（开始2行为表头，需要排除）
         rows.value = getCsvDataAndSetLineNumber(res, { fields })
         // 文件下载路径
@@ -277,10 +384,13 @@ const loadData = () => {
 
         const virusCol = columns.value[columns.value.findIndex(c => c.dataIndex === 'virusName')]
         // 种名增加筛选功能
-        let options = [...new Set(rows.value.map(r => r['virusName']))]
-        virusCol.filters = options.map(opt => {
-            return { text: opt, value: opt }
-        })
+        if (!isRpPanel.value) {
+            let options = [...new Set(rows.value.map(r => r['virusName']))]
+            virusCol.filters = options.map(opt => {
+                return { text: opt, value: opt }
+            })
+        }
+
 
         if (stepData.value) {
             for (const row of rows.value) {
