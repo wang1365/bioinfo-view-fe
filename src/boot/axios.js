@@ -20,6 +20,7 @@ export function getTokenCookie() {
     }
     return null
 }
+
 const api = axios.create({
     baseURL: '/api',
     // headers: {

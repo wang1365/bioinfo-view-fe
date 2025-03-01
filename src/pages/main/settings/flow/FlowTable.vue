@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { getFlows, deleteFlow, updateFlowTaskLimit, updateFlowTaskConfig } from 'src/api/flow';
+import { getFlows, deleteFlow, updateFlowTaskConfig } from 'src/api/flow';
 import { ref, onMounted, computed, nextTick } from 'vue'
 import { useQuasar } from 'quasar'
 import { format } from 'src/utils/time'
