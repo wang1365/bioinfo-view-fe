@@ -1,19 +1,30 @@
 <template>
     <q-card>
-        <q-section>
+        <q-card-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6">
-                    {{ $t("ProjectPageListSearchTitle") }}
+                    {{ $t('ProjectPageListSearchTitle') }}
                 </q-toolbar-title>
-                <q-input style="width: 250px" dense v-model="search" :label="$t('ProjectPageListSearchInput')" clearable
-                    @clear="refreshPage()" />
+                <q-input
+                    style="width: 250px"
+                    dense
+                    v-model="search"
+                    :label="$t('ProjectPageListSearchInput')"
+                    clearable
+                    @clear="refreshPage()"
+                />
                 <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
-                <q-btn color="primary" :label="$t('ProjectPageListSearchNewBtn')" icon="folder"
-                    @click="openNewProject = true" />
+                <q-btn
+                    v-permission="'createProject'"
+                    color="primary"
+                    :label="$t('ProjectPageListSearchNewBtn')"
+                    icon="folder"
+                    @click="openNewProject = true"
+                />
             </q-toolbar>
-        </q-section>
-        <q-section>
+        </q-card-section>
+        <q-card-section>
             <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
@@ -40,12 +51,28 @@
                             <td>{{ item.samples.length }}</td>
                             <td>{{ item.task_count }}</td>
                             <td class="q-gutter-x-sm">
-                                <q-btn color="info" :label="$t('Detail')" icon="arrow_outward" @click="gotoChild(item)"
-                                    size="sm" />
-                                <q-btn color="primary" :label="$t('Edit')" icon="edit" @click=" updateProjectName =
-                        item.name; currentProject = item; openEditProject = true;" size="sm" />
-                                <q-btn color="red" :label="$t('Delete')" icon="delete" @click="confirm(item)"
-                                    size="sm" />
+                                <q-btn
+                                    color="info"
+                                    :label="$t('Detail')"
+                                    icon="arrow_outward"
+                                    @click="gotoChild(item)"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    color="primary"
+                                    :label="$t('Edit')"
+                                    icon="edit"
+                                    @click="updateProjectName = item.name; currentProject = item; openEditProject = true;"
+                                    size="sm"
+                                />
+                                <q-btn
+                                    v-permission="'deleteProject'"
+                                    color="red"
+                                    :label="$t('Delete')"
+                                    icon="delete"
+                                    @click="confirm(item)"
+                                    size="sm"
+                                />
                             </td>
                         </tr>
                     </tbody>
@@ -55,8 +82,8 @@
                     <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
-        </q-section>
-        <q-section class="q-pd-md"> </q-section>
+        </q-card-section>
+        <q-card-section class="q-pd-md"></q-card-section>
     </q-card>
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
@@ -69,7 +96,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="newProjectName" :label="$t('ProjectPageListSearchInput')" /></q-section>
+                            <q-input v-model="newProjectName" :label="$t('ProjectPageListSearchInput')" />
+                        </q-section>
                     </q-item>
                     <q-item>
                         <q-section v-if="newProjectNameError" class="full-width text-red">
@@ -100,8 +128,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="full-width">
-                            <q-input v-model="updateProjectName"
-                                :label="$t('ProjectPageListSearchInput')" /></q-section>
+                            <q-input v-model="updateProjectName" :label="$t('ProjectPageListSearchInput')" />
+                        </q-section>
                     </q-item>
                     <q-item>
                         <q-section v-if="updateProjectNameError" class="full-width text-red">
@@ -124,26 +152,27 @@
     </q-dialog>
 </template>
 <script setup>
-import { useQuasar } from "quasar";
-import { onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
-import { useApi } from "src/api/apiBase";
-import { infoMessage } from "src/utils/notify";
-import PaginatorVue from "src/components/paginator/Paginator.vue";
-import { useI18n } from "vue-i18n";
-import { toLocalString } from "src/utils/time";
+import { useQuasar } from 'quasar';
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useApi } from 'src/api/apiBase';
+import { infoMessage } from 'src/utils/notify';
+import PaginatorVue from 'src/components/paginator/Paginator.vue';
+import { useI18n } from 'vue-i18n';
+import { toLocalString } from 'src/utils/time';
+
 const { t } = useI18n();
 const { apiGet, apiPut, apiPost, apiDelete } = useApi();
 
-const search = ref("")
+const search = ref('');
 const openNewProject = ref(false);
 
 const openEditProject = ref(false);
-const newProjectName = ref("");
+const newProjectName = ref('');
 const currentProject = ref({});
-const newProjectNameError = ref("");
-const updateProjectName = ref("");
-const updateProjectNameError = ref("");
+const newProjectNameError = ref('');
+const updateProjectName = ref('');
+const updateProjectNameError = ref('');
 
 const router = useRouter();
 const $q = useQuasar();
@@ -153,7 +182,7 @@ const total = ref(0);
 const dataItems = ref([]);
 
 onMounted(() => {
-    loadBackup()
+    loadBackup();
     loadPage();
 });
 const pageChange = async (event) => {
@@ -171,10 +200,10 @@ const createProject = () => {
         return;
     }
     apiPost(
-        "/project",
+        '/project',
         (_) => {
-            newProjectNameError.value = "";
-            newProjectName.value = "";
+            newProjectNameError.value = '';
+            newProjectName.value = '';
             openNewProject.value = false;
             infoMessage(t('Success'));
             refreshPage();
@@ -192,12 +221,12 @@ const updateProject = () => {
         `/project/${currentProject.value.id}`,
         (_) => {
             openEditProject.value = false;
-            updateProjectNameError.value = "";
+            updateProjectNameError.value = '';
             infoMessage(t('Success'));
             refreshPage();
         },
         {
-            name: updateProjectName.value,
+            name: updateProjectName.value
         }
     );
 };
@@ -207,11 +236,11 @@ const refreshPage = async () => {
     loadPage();
 };
 const loadPage = async () => {
-    let params = `?page=${currentPage.value}&size=${pageSize.value}`
+    let params = `?page=${currentPage.value}&size=${pageSize.value}`;
     if (search.value) {
-        params += `&name=${search.value}`
+        params += `&name=${search.value}`;
     }
-    backupSearch()
+    backupSearch();
     if (currentPage.value) {
         apiGet(
             `/project${params}`,
@@ -230,44 +259,44 @@ const backupSearch = () => {
         page: currentPage.value,
         size: pageSize.value,
         name: search.value
-    }
-    sessionStorage.setItem('project-search', JSON.stringify(data))
-}
+    };
+    sessionStorage.setItem('project-search', JSON.stringify(data));
+};
 const loadBackup = () => {
-    let dataStr = sessionStorage.getItem('project-search')
+    let dataStr = sessionStorage.getItem('project-search');
     if (dataStr) {
-        let data = JSON.parse(dataStr)
+        let data = JSON.parse(dataStr);
         // currentPage.value=data.page
-        pageSize.value = data.size
-        search.value = data.name
+        pageSize.value = data.size;
+        search.value = data.name;
     }
-}
+};
 
 const confirm = (item) => {
     $q.dialog({
         title: t('ProjectPageListEditProjectDeleteTitle'),
         message: t('ProjectPageListEditProjectDeleteDesc'),
         cancel: true,
-        persistent: true,
+        persistent: true
     }).onOk(() => {
         apiDelete(`/project/${item.id}`, (_) => {
-            infoMessage(t('Success'))
+            infoMessage(t('Success'));
             if (dataItems.value.length > 1) {
-                let index = 0
+                let index = 0;
                 for (let i = 0; i < dataItems.value.length; i++) {
                     if (dataItems.value[i].id === item.id) {
-                        index = i
+                        index = i;
                     }
                 }
-                total.value -= 1
-                dataItems.value.splice(index, 1)
+                total.value -= 1;
+                dataItems.value.splice(index, 1);
             } else {
                 if (currentPage.value > 1) {
-                    currentPage.value = currentPage.value - 1
+                    currentPage.value = currentPage.value - 1;
                 } else {
-                    currentPage.value = 1
+                    currentPage.value = 1;
                 }
-                refreshPage()
+                refreshPage();
             }
         });
     });

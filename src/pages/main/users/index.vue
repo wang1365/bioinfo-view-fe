@@ -27,7 +27,7 @@
             </div>
             <div class="col-1">
                 <q-btn
-                    v-if="amISuper() || amIAdmin()"
+                    v-permission="'createUser'"
                     class="on-plus"
                     size="md"
                     color="primary"
@@ -40,13 +40,13 @@
         <q-separator />
         <q-table
             :rows="rows"
+            dense
             :columns="columns"
             :loading="loading"
             loading-label="正在查询数据..."
             no-data-label="暂无数据"
             row-key="name"
             color="primary"
-            dense
             table-style="height: 600px"
             v-model:pagination="pagination"
             :rows-per-page-label="$t('-')"
@@ -92,7 +92,8 @@
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn
                             v-if="allowReset(props.row)"
-                            size="sm"
+                            outline
+                            dense
                             color="primary"
                             :label="$t('Setting')"
                             @click="clickEdit(props.row)"
@@ -107,19 +108,30 @@
                         <!--                        ></q-btn>-->
                         <q-btn
                             v-if="allowReset(props.row)"
-                            size="sm"
+                            dense
+                            outline
                             color="orange"
                             :label="$t('ResetPassword')"
                             @click="clickReset(props.row)"
                         ></q-btn>
 
                         <q-btn
+                            v-permission="'deleteUser'"
                             v-if="allowDelete(props.row)"
-                            size="sm"
+                            dense
+                            outline
                             color="red"
                             :label="$t('Delete')"
                             @click="clickDelete(props.row)"
                         ></q-btn>
+                        <q-btn
+                            v-if="amISuper() && !isSuper(props.row)"
+                            dense
+                            outline
+                            color="primary"
+                            :label="$t('Permission')"
+                            @click="clickSetPermission(props.row)"
+                        />
                     </div>
                 </q-td>
             </template>
@@ -165,6 +177,7 @@
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
         <EditUser ref="editUserDlg" :user="user" @success="refreshUsers"></EditUser>
         <ResetPassword ref="resetPasswordDlg" :user="user"></ResetPassword>
+        <set-permissions-dialog v-model="isPermissionDlgVisible" :user="user" />
     </q-page>
 </template>
 
@@ -180,6 +193,7 @@ import EditUser from "pages/main/users/EditUser"
 import { useI18n } from 'vue-i18n'
 import ResetPassword from "pages/main/users/ResetPassword"
 import { globalStore } from "src/stores/global"
+import SetPermissionsDialog from 'pages/main/users/SetPermissionsDialog.vue';
 
 const { t } = useI18n()
 const createUserDlg = ref(null)
@@ -247,10 +261,10 @@ const columns = computed(() => [
 const loading = ref(false);
 let rows = ref([]);
 onMounted(() => {
-    console.log('quasar===', this, $q)
     refreshUsers();
 });
 const searchKeyword = ref("");
+const isPermissionDlgVisible = ref(false)
 
 const roleMap =  {
     super: computed(() => t('SuperAdmin')),
@@ -296,6 +310,11 @@ const clickEdit = (row) => {
     editUserDlg.value.show();
 };
 
+const clickSetPermission = (row) => {
+    isPermissionDlgVisible.value = true
+    user.value = row;
+};
+
 const clickReset = (row) => {
     // $q.dialog({
     //     title: `是否重置用户${row.username}的密码”?`,
@@ -331,6 +350,10 @@ const clickDelete = (row) => {
         .onCancel(() => {
             // console.log('>>>> Cancel')
         });
+};
+
+const clickPermission = (row) => {
+
 };
 
 function refreshUsersForEvent(props) {

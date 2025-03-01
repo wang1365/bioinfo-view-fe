@@ -1,6 +1,6 @@
 <template>
     <q-card class="q-mt-md">
-        <q-section>
+        <q-card-section>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
                 <q-input
                     style="width:350px"
@@ -96,19 +96,20 @@
                 <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
             </div>
-        </q-section>
-        <q-section>
+        </q-card-section>
+        <q-card-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6"> {{$t('SampleListTableTitle')}} </q-toolbar-title>
                 <q-btn
+                    v-permission="'createSample'"
                     color="primary"
                     :label="$t('SampleListTableBtnNew')"
                     icon="description"
                     @click="showSampleNew = true"
                 />
                 <q-btn color="info" :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
-                <q-btn color="positive">
+                <q-btn color="positive" v-permission="'createSample'">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         {{ $t('PageListTableUpload') }}
@@ -125,8 +126,8 @@
                 >
                 </q-btn>
             </q-toolbar>
-        </q-section>
-        <q-section>
+        </q-card-section>
+        <q-card-section>
             <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
@@ -188,6 +189,7 @@
                                 />
 
                                 <q-btn
+                                    v-permission="'deleteSample'"
                                     color="red"
                                     :label="$t('SampleListTableColumnBtnDelete')"
                                     icon="delete"
@@ -203,7 +205,7 @@
                     <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
-        </q-section>
+        </q-card-section>
     </q-card>
     <q-dialog persistent v-model="showSampleNew">
         <SampleNew

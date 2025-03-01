@@ -276,6 +276,8 @@ export default {
     UserDetail: 'User Detail',
     ConfirmToDeleteUser: 'Confirm to delete user',
     ChangePasswordSuccess: 'Success to change password',
+    PermissionSettings: 'Permission Settings',
+    DeleteTask: 'Delete Task',
 
     // 流程管理
     Flow: 'Flow',
@@ -582,6 +584,7 @@ export default {
 
     // 样本
     Sample: 'Sample',
+    Report: 'Report',
     // 样本列表页面
     SampleListPageTitle: 'Sample Management',
     // 样本列表页面

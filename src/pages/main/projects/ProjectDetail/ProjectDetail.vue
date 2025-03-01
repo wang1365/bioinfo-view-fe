@@ -1,6 +1,6 @@
 <template>
     <q-card>
-        <q-section>
+        <q-card-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="auto_mode" />
                 <q-toolbar-title class="text-h6">
@@ -10,15 +10,16 @@
                     }}</span>
                 </q-toolbar-title>
                 <q-btn
+                    v-permission="'createTask'"
                     color="primary"
                     :label="$t('ProjectDetailPageCreateTask')"
                     icon="auto_mode"
                     @click="clickCreateTask"
                 />
             </q-toolbar>
-        </q-section>
+        </q-card-section>
 
-        <q-section>
+        <q-card-section>
             <div class="q-pa-md row items-start q-gutter-md" style="justify-content: space-around">
                 <q-card class="my-card">
                     <q-card-section class="text-primary text-center text-h5 text-bold">
@@ -63,7 +64,7 @@
                     <q-card-section class="desc"> {{ $t('TaskPageListStatusAll') }} </q-card-section>
                 </q-card>
             </div>
-        </q-section>
+        </q-card-section>
     </q-card>
     <q-dialog persistent v-model="openFlowSelector">
         <FlowSelect @flowSelected="flowSelected($event)" />

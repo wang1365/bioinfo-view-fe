@@ -274,6 +274,8 @@ export default {
     UserDetail: '用户详情',
     ConfirmToDeleteUser: '是否确认删除用户',
     ChangePasswordSuccess: '修改密码用户成功',
+    PermissionSettings: '权限设置',
+    DeleteTask: '删除任务',
 
     // 流程管理
     Flow: '分析流程',
@@ -576,6 +578,7 @@ export default {
 
     // 样本
     Sample: '样本',
+    Report: '报告',
     // 样本列表页面
     SampleListPageTitle: '样本管理',
     SampleListPageSearchInput: '关键词: 采样部位, 样本类型, 患者识别号, 样本识别号',

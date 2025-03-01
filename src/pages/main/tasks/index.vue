@@ -221,21 +221,21 @@
                         </template>
                     </q-td>
                 </template>
-<!--                <template v-slot:body-cell-status="props" v-if="amISuper() || amIAdmin()">-->
-<!--                    <q-td :props="props" class="q-gutter-xs">-->
-<!--                        <q-btn-->
-<!--                            v-if="props.row.status === 'FAILURED'"-->
-<!--                            color="red"-->
-<!--                            :label="$t('Failed')"-->
-<!--                            flat-->
-<!--                            padding="xs"-->
-<!--                            icon-right="help"-->
-<!--                            @click="showTaskError(props.row)"-->
-<!--                            size="sm"-->
-<!--                        />-->
-<!--                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>-->
-<!--                    </q-td>-->
-<!--                </template>-->
+                <!--                <template v-slot:body-cell-status="props" v-if="amISuper() || amIAdmin()">-->
+                <!--                    <q-td :props="props" class="q-gutter-xs">-->
+                <!--                        <q-btn-->
+                <!--                            v-if="props.row.status === 'FAILURED'"-->
+                <!--                            color="red"-->
+                <!--                            :label="$t('Failed')"-->
+                <!--                            flat-->
+                <!--                            padding="xs"-->
+                <!--                            icon-right="help"-->
+                <!--                            @click="showTaskError(props.row)"-->
+                <!--                            size="sm"-->
+                <!--                        />-->
+                <!--                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
                 <template v-slot:body-cell-operate="props">
                     <q-td :props="props" class="q-gutter-xs">
                         <span class="row q-gutter-xs" style="width: 600px;">
@@ -257,6 +257,7 @@
                                 padding="xs sm"
                             />
                             <q-btn
+                                v-permission="'createReport'"
                                 :disable="props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report"
                                 color="positive"
                                 :label="$t('TaskPageBtnCustomReport')"
@@ -302,6 +303,7 @@
                                 }}</q-tooltip></q-btn
                             >
                             <q-btn
+                                v-permission="'deleteTask'"
                                 color="red"
                                 padding="xs sm"
                                 :label="$t('Delete')"

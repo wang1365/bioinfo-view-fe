@@ -25,7 +25,7 @@ module.exports = configure(function (ctx) {
         // app boot file (/src/boot)
         // --> boot files are part of "main.js"
         // https://v2.quasar.dev/quasar-cli-webpack/boot-files
-        boot: ['i18n', 'axios', 'antDesign'],
+        boot: ['i18n', 'axios', 'antDesign', 'directive'],
 
         // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
         css: ['app.scss', 'antDesign.scss'],
@@ -83,21 +83,21 @@ module.exports = configure(function (ctx) {
             proxy: {
                 '/api': {
                     changeOrigin: true,
-                    target: process.env.host || 'http://10.10.0.208:8080', // v3.0 测试环境
+                    // target: process.env.host || 'http://10.10.0.208:8080', // v3.0 测试环境
                     // target: process.env.host || 'http://10.10.2.55:8080', // v4.0 测试环境
                     // target: process.env.host || 'http://10.10.2.196:8080',
                     // target: process.env.host || 'http://192.168.100.97:8080', // 王晓川开发用
-                    // target: process.env.host || 'http://localhost:8000',
+                    target: process.env.host || 'http://localhost:8000',
                     pathRewrite: {
                         '^/api': '', // base path替换
                     },
-                //    agent: new SocksProxyAgent("socks5://192.168.31.102:1080")
+                    //    agent: new SocksProxyAgent("socks5://192.168.31.102:1080")
                 },
                 '/igv': {
                     changeOrigin: true,
                     target: process.env.igv || 'http://10.10.0.208',
                     // target: process.env.igv || 'http://10.10.2.55', // v4.0 测试环境
-                    agent: new SocksProxyAgent("socks5://192.168.31.102:1080")
+                    agent: new SocksProxyAgent('socks5://192.168.31.102:1080'),
                 },
             },
         },

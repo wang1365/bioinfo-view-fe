@@ -3,7 +3,7 @@
         <PageTitle :title="$t('ReportPageTitle')" />
         <q-separator />
         <q-card class="q-mt-md">
-            <q-section>
+            <q-card-section>
                 <div class="q-gutter-md row items-start q-pa-md">
                     <q-input
                         style="width:350px"
@@ -49,7 +49,13 @@
                                 <q-btn color="primary" :label="$t('Download')" size="sm" />
                             </a>
                             <a>
-                                <q-btn @click="onDelete(props.row)" color="red" :label="$t('Delete')" size="sm" />
+                                <q-btn
+                                    v-permission="'deleteReport'"
+                                    @click="onDelete(props.row)"
+                                    color="red"
+                                    :label="$t('Delete')"
+                                    size="sm"
+                                />
                             </a>
                         </q-td>
                     </template>
@@ -60,7 +66,7 @@
                         </q-td>
                     </template>
                 </q-table>
-            </q-section>
+            </q-card-section>
         </q-card>
     </q-page>
 </template>

@@ -5,7 +5,8 @@
                 <q-input
                     style="width:350px"
                     v-model="searchParams.search"
-                    stack-label label-color="primary"
+                    stack-label
+                    label-color="primary"
                     :label="$t('PatientPageListSearchKeyWord')"
                     clearable
                 >
@@ -13,7 +14,8 @@
                 <q-input
                     type="number"
                     v-model="searchParams.age_start"
-                    stack-label label-color="primary"
+                    stack-label
+                    label-color="primary"
                     :label="$t('PatientPageListSearchAgeStart')"
                     clearable
                 >
@@ -21,14 +23,16 @@
                 <q-input
                     type="number"
                     v-model="searchParams.age_end"
-                    stack-label label-color="primary"
+                    stack-label
+                    label-color="primary"
                     :label="$t('PatientPageListSearchAgeEnd')"
                     clearable
                 >
                 </q-input>
                 <q-input
                     clearable
-                    stack-label label-color="primary"
+                    stack-label
+                    label-color="primary"
                     :label="$t('PatientPageListSearchEntryStart')"
                     v-model="searchParams.ctime_start"
                 >
@@ -44,8 +48,13 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-input clearable stack-label label-color="primary"
-                         :label="$t('PatientPageListSearchEntryEnd')" v-model="searchParams.ctime_end">
+                <q-input
+                    clearable
+                    stack-label
+                    label-color="primary"
+                    :label="$t('PatientPageListSearchEntryEnd')"
+                    v-model="searchParams.ctime_end"
+                >
                     <template v-slot:append>
                         <q-icon color="primary" name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -73,13 +82,14 @@
                 <q-icon size="md" color="primary" name="groups_2" />
                 <q-toolbar-title class="text-h6"> {{$t('PatientPageListTableTitle')}} </q-toolbar-title>
                 <q-btn
+                    v-permission="'createPatient'"
                     color="primary"
                     :label="$t('PatientPageListTableCreate')"
                     icon="groups_2"
                     @click="showPatientNew = true"
                 />
                 <q-btn color="info" :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
-                <q-btn color="positive">
+                <q-btn color="positive" v-permission="'createPatient'">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         {{ $t('PageListTableUpload') }}
@@ -153,6 +163,7 @@
                                     size="sm"
                                 />
                                 <q-btn
+                                    v-permission="'deletePatient'"
                                     color="red"
                                     :label="$t('PatientPageListTableRowBtnDelete')"
                                     icon="delete"

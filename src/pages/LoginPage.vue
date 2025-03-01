@@ -6,9 +6,4 @@
     </q-page>
 </template>
 
-<script setup>
-import BarChart from "./charts/BarChart";
-import PieChart from "./charts/PieChart.vue";
-import PieChart2 from "./charts/PieChart2.vue";
-import LineChart from "./charts/LineChart.vue";
-</script>
+<script setup></script>
