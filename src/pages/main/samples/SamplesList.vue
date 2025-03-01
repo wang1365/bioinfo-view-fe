@@ -167,25 +167,31 @@
                             <td>{{ item.identifier }}</td>
                             <td class="q-gutter-xs">
                                 <q-btn
-                                    color="info"
+                                    color="primary"
                                     :label="$t('SampleListTableColumnBtnDetail')"
                                     icon="visibility"
                                     @click="info(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     color="primary"
                                     :label="$t('SampleListTableColumnBtnEdit')"
                                     icon="edit"
                                     @click="edit(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     color="secondary"
                                     :label="$t('SampleListTableColumnBtnAssociatewithPatient')"
                                     icon="link"
                                     @click="link(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
 
                                 <q-btn
@@ -194,7 +200,9 @@
                                     :label="$t('SampleListTableColumnBtnDelete')"
                                     icon="delete"
                                     @click="confirm(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                             </td>
                         </tr>

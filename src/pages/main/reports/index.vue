@@ -46,15 +46,18 @@
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
                             <a :href="getreportPath(props)" download v-if="props.row.status == '创建成功'">
-                                <q-btn color="primary" :label="$t('Download')" size="sm" />
+                                <q-btn color="primary" :label="$t('Download')" size="md" icon="download" dense flat />
                             </a>
                             <a>
                                 <q-btn
                                     v-permission="'deleteReport'"
                                     @click="onDelete(props.row)"
                                     color="red"
+                                    icon="delete"
                                     :label="$t('Delete')"
-                                    size="sm"
+                                    size="md"
+                                    dense
+                                    flat
                                 />
                             </a>
                         </q-td>

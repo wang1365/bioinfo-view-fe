@@ -92,8 +92,9 @@
                     <div class="q-pa-md q-gutter-sm">
                         <q-btn
                             v-if="allowReset(props.row)"
-                            outline
+                            flat
                             dense
+                            icon="settings"
                             color="primary"
                             :label="$t('Setting')"
                             @click="clickEdit(props.row)"
@@ -107,10 +108,12 @@
                         <!--                            @click="clickFlowAuth(props.row)"-->
                         <!--                        ></q-btn>-->
                         <q-btn
+                            v-permission="'resetPassword'"
                             v-if="allowReset(props.row)"
                             dense
-                            outline
-                            color="orange"
+                            flat
+                            icon="refresh"
+                            color="red"
                             :label="$t('ResetPassword')"
                             @click="clickReset(props.row)"
                         ></q-btn>
@@ -119,7 +122,8 @@
                             v-permission="'deleteUser'"
                             v-if="allowDelete(props.row)"
                             dense
-                            outline
+                            flat
+                            icon="delete"
                             color="red"
                             :label="$t('Delete')"
                             @click="clickDelete(props.row)"
@@ -127,7 +131,8 @@
                         <q-btn
                             v-if="amISuper() && !isSuper(props.row)"
                             dense
-                            outline
+                            flat
+                            icon="grading"
                             color="primary"
                             :label="$t('Permission')"
                             @click="clickSetPermission(props.row)"

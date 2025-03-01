@@ -116,25 +116,31 @@
                             <td>{{ item.fastq2_path }}</td>
                             <td class="q-gutter-xs">
                                 <q-btn
-                                    color="info"
+                                    color="primary"
                                     :label="$t('DataListTableColumnBtnDetail')"
                                     icon="visibility"
                                     @click="info(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     color="primary"
                                     :label="$t('DataListTableColumnBtnEdit')"
                                     icon="edit"
                                     @click="edit(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     color="secondary"
                                     :label="$t('DataListTableColumnBtnAssociatewithSample')"
                                     icon="link"
                                     @click="link(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     v-permission="'deleteData'"
@@ -142,7 +148,9 @@
                                     :label="$t('DataListTableColumnBtnDelete')"
                                     icon="delete"
                                     @click="confirm(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                             </td>
                         </tr>

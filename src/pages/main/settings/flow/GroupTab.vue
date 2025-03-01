@@ -36,8 +36,22 @@
             <template v-slot:body-cell-operation="props">
                 <q-td :props="props" align="center" class="q-gutter-xs">
                     <!--                    <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>-->
-                    <q-btn :label="$t('Edit')" color="orange" size="sm" @click="showEditDlg(props.row)"></q-btn>
-                    <q-btn :label="$t('Delete')" color="red" size="sm" @click="showDeleteDlg(props.row)"></q-btn>
+                    <q-btn
+                        :label="$t('Edit')"
+                        color="orange"
+                        size="md"
+                        flat
+                        dense
+                        @click="showEditDlg(props.row)"
+                    ></q-btn>
+                    <q-btn
+                        :label="$t('Delete')"
+                        color="red"
+                        size="md"
+                        flat
+                        dense
+                        @click="showDeleteDlg(props.row)"
+                    ></q-btn>
                 </q-td>
             </template>
         </q-table>

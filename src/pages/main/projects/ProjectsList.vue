@@ -52,18 +52,22 @@
                             <td>{{ item.task_count }}</td>
                             <td class="q-gutter-x-sm">
                                 <q-btn
-                                    color="info"
+                                    color="primary"
                                     :label="$t('Detail')"
                                     icon="arrow_outward"
                                     @click="gotoChild(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     color="primary"
                                     :label="$t('Edit')"
                                     icon="edit"
                                     @click="updateProjectName = item.name; currentProject = item; openEditProject = true;"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     v-permission="'deleteProject'"
@@ -71,7 +75,9 @@
                                     :label="$t('Delete')"
                                     icon="delete"
                                     @click="confirm(item)"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                             </td>
                         </tr>

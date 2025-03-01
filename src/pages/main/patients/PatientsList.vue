@@ -145,29 +145,37 @@
                                     color="primary"
                                     :label="$t('PatientPageListTableRowBtnEdit')"
                                     icon="edit"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                     @click="edit(patient)"
+                                />
+                                <q-btn
+                                    color="primary"
+                                    :label="$t('PatientPageListTableRowBtnPatientInformation')"
+                                    icon="visibility"
+                                    @click="info(patient)"
+                                    size="md"
+                                    flat
+                                    dense
                                 />
                                 <q-btn
                                     color="secondary"
                                     :label="$t('PatientPageListTableRowBtnAssociateWithSamples')"
                                     icon="link"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                     @click="link(patient)"
-                                />
-                                <q-btn
-                                    color="info"
-                                    :label="$t('PatientPageListTableRowBtnPatientInformation')"
-                                    icon="visibility"
-                                    @click="info(patient)"
-                                    size="sm"
                                 />
                                 <q-btn
                                     v-permission="'deletePatient'"
                                     color="red"
                                     :label="$t('PatientPageListTableRowBtnDelete')"
                                     icon="delete"
-                                    size="sm"
+                                    size="md"
+                                    flat
+                                    dense
                                     @click="confirm(patient)"
                                 />
                             </td>

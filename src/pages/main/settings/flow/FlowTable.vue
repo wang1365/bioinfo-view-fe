@@ -22,7 +22,7 @@
                     :label="$t('Search')"
                     @click="refreshFlows"
                 />
-                <q-btn color="primary" icon="add" size="small" :label="$t('Add')" @click="addFlow" />
+                <q-btn color="primary" icon="add" size="md" :label="$t('Add')" @click="addFlow" />
             </div>
         </div>
         <a-table :columns="columns" :data-source="flows" size="middle" sticky :scroll="{ x:500 }">
@@ -44,16 +44,17 @@
                     ></q-icon>
                 </template>
                 <template v-if="column.key === 'operation'">
-                    <q-btn :label="$t('Detail')" color="primary" size="xs" outline @click="showInfoDlg(record)"></q-btn>
+                    <q-btn :label="$t('Detail')" color="primary" size="md" flat dense @click="showInfoDlg(record)" />
                     <q-btn
                         :label="$t('Edit')"
                         color="orange"
-                        size="xs"
+                        size="md"
                         class="q-mx-xs"
-                        outline
+                        flat
+                        dense
                         @click="showEditDlg(record)"
-                    ></q-btn>
-                    <q-btn :label="$t('Delete')" color="red" size="xs" outline @click="showDeleteDlg(record)"></q-btn>
+                    />
+                    <q-btn :label="$t('Delete')" color="red" size="md" flat dense @click="showDeleteDlg(record)" />
                 </template>
             </template>
         </a-table>
