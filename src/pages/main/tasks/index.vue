@@ -3,7 +3,7 @@
         <PageTitle :title="$t('TaskPageListTitle')" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div
-                style="height: 80px;display: flex; padding-bottom: 5px; padding-top: 5px;justify-content: space-around;justify-items: center;align-items: center; "
+                style="height: 70px;display: flex; padding-bottom: 5px; padding-top: 15px;justify-content: space-around;justify-items: center;align-items: center; "
             >
                 <q-btn color="white" @click="clickCard(options[0].value)">
                     <div class="text-black" style="width: 7vw">
@@ -38,7 +38,7 @@
                 </q-btn>
             </div>
         </div>
-        <div class="row q-gutter-sm q-py-xs">
+        <div class="row q-gutter-sm q-my-sm">
             <q-select
                 style="width:200px"
                 v-model="status"
@@ -92,19 +92,32 @@
                 row-key="id"
                 ref="tableRef"
                 v-model:pagination="pagination"
-                style="max-height: 700px"
+                style="max-height: 660px"
                 @request="onRequest"
                 :rows-per-page-options="[5, 15, 35, 50]"
                 class="my-sticky-column-table"
             >
-                <template v-slot:body-cell-project="props">
+                <template v-slot:body-cell-name="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <div v-if="props.row?.project.parent" class="text-bold text-purple q-mr-xs">
-                            {{ props.row.project.parent.name }}
+                        <a @click="gotoReport(props.row)" class="text-weight-bolder" style="font-size: 14px">
+                            {{props.row.name}}
+                        </a>
+                        <div style="font-size: 12px">
+                            <div class="text-grey">{{ props.row.project.name }}</div>
+                            <div v-if="props.row?.project.parent" class="text-bold text-purple q-mr-xs">
+                                {{ props.row.project.parent.name }}
+                            </div>
                         </div>
-                        <div class="text-primary">{{ props.row.project.name }}</div>
                     </q-td>
                 </template>
+                <!--                <template v-slot:body-cell-project="props">-->
+                <!--                    <q-td :props="props" class="q-gutter-xs">-->
+                <!--                        <div v-if="props.row?.project.parent" class="text-bold text-purple q-mr-xs">-->
+                <!--                            {{ props.row.project.parent.name }}-->
+                <!--                        </div>-->
+                <!--                        <div class="text-primary">{{ props.row.project.name }}</div>-->
+                <!--                    </q-td>-->
+                <!--                </template>-->
                 <template v-slot:body-cell-status="props">
                     <q-td :props="props" class="q-gutter-xs">
                         <q-btn
@@ -158,40 +171,40 @@
                 <template v-slot:body-cell-patient="props">
                     <q-td :props="props">
                         <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
-                            {{sd.patient_name}}
+                            {{ sd.patient_name }}
                         </div>
                         <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{props.row.sample_data.length}})
+                            ... ({{ props.row.sample_data.length }})
                         </div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-sample="props">
                     <q-td :props="props">
                         <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
-                            {{sd.sample_data_identifier}}
+                            {{ sd.sample_data_identifier }}
                         </div>
                         <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{props.row.sample_data.length}})
+                            ... ({{ props.row.sample_data.length }})
                         </div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-data="props">
                     <q-td :props="props">
                         <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
-                            {{sd.sample_identifier}}
+                            {{ sd.sample_identifier }}
                         </div>
                         <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{props.row.sample_data.length}})
+                            ... ({{ props.row.sample_data.length }})
                         </div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-library_number="props">
                     <q-td :props="props">
                         <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
-                            {{sd.library_number}}
+                            {{ sd.library_number }}
                         </div>
                         <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{props.row.sample_data.length}})
+                            ... ({{ props.row.sample_data.length }})
                         </div>
                     </q-td>
                 </template>
@@ -238,15 +251,15 @@
                 <!--                </template>-->
                 <template v-slot:body-cell-create_by="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <div>{{props.row.creator.username}}</div>
+                        <div>{{ props.row.creator.username }}</div>
                         <div class="text-grey">
-                            {{date.formatDate(new Date(props.row.create_time), 'YYYY-MM-DD HH:mm:ss')}}
+                            {{ date.formatDate(new Date(props.row.create_time), 'YYYY-MM-DD HH:mm:ss') }}
                         </div>
                     </q-td>
                 </template>
                 <template v-slot:body-cell-operate="props">
                     <q-td :props="props" class="q-gutter-xs">
-                        <span class="row q-gutter-xs" style="width: 800px;">
+                        <div class="row q-gutter-xs" style="width: 800px;">
                             <q-separator vertical />
                             <q-btn
                                 color="primary"
@@ -271,19 +284,20 @@
                                 padding="xs sm"
                             />
                             <q-separator vertical />
-                            <q-btn
-                                v-permission="'createReport'"
-                                :disable="props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report"
-                                :color="(props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report) ? 'grey': 'primary'"
-                                :label="$t('TaskPageBtnCustomReport')"
-                                icon="query_stats"
-                                @click="gotoDefineReport(props.row)"
-                                size="md"
-                                dense
-                                flat
-                                padding="xs sm"
-                            />
-                            <q-separator vertical />
+                            <div v-permission="'createReport'">
+                                <q-btn
+                                    :disable="props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report"
+                                    :color="(props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report) ? 'grey': 'primary'"
+                                    :label="$t('TaskPageBtnCustomReport')"
+                                    icon="query_stats"
+                                    @click="gotoDefineReport(props.row)"
+                                    size="md"
+                                    dense
+                                    flat
+                                    padding="xs sm"
+                                />
+                                <q-separator vertical />
+                            </div>
                             <q-btn
                                 v-if="props.row.status === 'FINISHED'"
                                 color="primary"
@@ -313,34 +327,41 @@
                                 </a>
                             </q-btn>
                             <q-separator vertical />
-                            <q-btn
-                                v-permission="'deleteTaskTmpFile'"
-                                :disable="props.row.status !== 'FINISHED' || props.row.deleted_tempdir"
-                                color="red"
-                                :label="$t('TaskPageBtnDeleteTmpFile')"
-                                icon="delete"
-                                @click="deleteMiddleFiles(props.row)"
-                                size="md"
-                                dense
-                                flat
-                                padding="xs sm"
-                                ><q-tooltip>{{
-                                    $t('TaskPageListTableRowBtnDeleteTmpTip')
-                                }}</q-tooltip></q-btn
-                            >
-                            <q-separator vertical />
-                            <q-btn
-                                v-permission="'deleteTask'"
-                                color="red"
-                                padding="xs sm"
-                                :label="$t('Delete')"
-                                icon="delete"
-                                size="md"
-                                dense
-                                flat
-                                @click="confirm(props.row)"
-                            />
-                            <q-separator vertical />
+                            <div v-permission="'deleteTaskTmpFile'">
+                                <q-btn
+                                    v-permission="'deleteTaskTmpFile'"
+                                    :disable="props.row.status !== 'FINISHED' || props.row.deleted_tempdir"
+                                    color="red"
+                                    :label="$t('TaskPageBtnDeleteTmpFile')"
+                                    icon="delete"
+                                    @click="deleteMiddleFiles(props.row)"
+                                    size="md"
+                                    dense
+                                    flat
+                                    padding="xs sm"
+                                >
+                                    <q-tooltip
+                                        >{{
+                                            $t('TaskPageListTableRowBtnDeleteTmpTip')
+                                        }}
+                                    </q-tooltip>
+                                </q-btn>
+                                <q-separator vertical />
+                            </div>
+                            <div v-permission="'deleteTask'">
+                                <q-btn
+                                    v-permission="'deleteTask'"
+                                    color="red"
+                                    padding="xs sm"
+                                    :label="$t('Delete')"
+                                    icon="delete"
+                                    size="md"
+                                    dense
+                                    flat
+                                    @click="confirm(props.row)"
+                                />
+                                <q-separator vertical />
+                            </div>
                             <q-btn
                                 color="primary"
                                 padding="xs sm"
@@ -353,7 +374,7 @@
                                 :href="`/igv${props.row.result_dir}/bam/${props.row.id}-bam.zip`"
                                 target="_blank"
                             />
-                        </span>
+                        </div>
                     </q-td>
                 </template>
             </q-table>
@@ -371,52 +392,28 @@
                         </q-toolbar>
                     </div>
                 </div>
-                <p class="q-pa-sm">{{ currentTaskError || "None" }}</p>
+                <p class="q-pa-sm">{{ currentTaskError || 'None' }}</p>
             </q-card>
         </q-dialog>
     </q-page>
 </template>
 
 <script setup>
-import { ref, onMounted, computed, onUnmounted } from 'vue'
-import { useApi } from 'src/api/apiBase'
-import PageTitle from 'components/page-title/PageTitle.vue'
-import ProjectListVue from './components/ProjectList.vue'
-import { useRouter } from 'vue-router'
-import { format } from 'src/utils/time'
-import { updateTask } from 'src/api/task'
-import { infoMessage } from 'src/utils/notify'
-import { useQuasar, date } from 'quasar'
-import { useI18n } from "vue-i18n";
-import { globalStore } from 'src/stores/global'
-import { storeToRefs } from 'pinia'
-import { useQTable } from 'src/utils/q-table'
+import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { useApi } from 'src/api/apiBase';
+import PageTitle from 'components/page-title/PageTitle.vue';
+import ProjectListVue from './components/ProjectList.vue';
+import { useRouter } from 'vue-router';
+import { updateTask } from 'src/api/task';
+import { infoMessage } from 'src/utils/notify';
+import { useQuasar, date } from 'quasar';
+import { useI18n } from 'vue-i18n';
+import { globalStore } from 'src/stores/global';
+import { storeToRefs } from 'pinia';
+import { useQTable } from 'src/utils/q-table';
 import { amIAdmin, amISuper } from 'src/utils/user';
 
-
-const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
-const onRequest = (props) => {
-    const { page, rowsPerPage } = props.pagination
-    let params = `?page=${page}&size=${rowsPerPage}`
-
-    if (status.value !== 'ALL') params += `&status=${status.value}`
-    if (projectId.value) params += `&project_id=${projectId.value}`
-    if (patient.value) params += `&patient=${patient.value}`
-    if (libraryNumber.value) params += `&libraryNumber=${libraryNumber.value}`
-    if (taskName.value) params += `&task_name=${taskName.value}`
-    pagination.value.page = page
-    pagination.value.rowsPerPage = rowsPerPage
-    backupSearch()
-    apiGet(`/task${params}`, (res) => {
-        pagination.value.rowsNumber = res.data.total_count
-        pagination.value.page = page
-        pagination.value.rowsPerPage = rowsPerPage
-        rows.value = res.data.item_list
-        for (let item of rows.value) {
-            item.actions = true
-        }
-    })
-}
+const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable();
 
 const columns = computed(() => [
     {
@@ -426,40 +423,42 @@ const columns = computed(() => [
         align: 'left',
         field: (row) => row.id,
         format: (val) => `${val}`,
-        fixed: 'left',
+        fixed: 'left'
     },
     {
         name: 'name',
         label: t('Name'),
         align: 'left',
         field: (row) => row.name,
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
-    {
-        name: 'project',
-        required: true,
-        label: t('Project') + t('TaskPageProjectParent') + '/' + t('TaskPageProjectSelf'),
-        align: 'left',
-        field: (row) => { row },
-        format: (val) => `${val}`,
-    },
+    // {
+    //     name: 'project',
+    //     required: true,
+    //     label: t('Project') + t('TaskPageProjectParent') + '/' + t('TaskPageProjectSelf'),
+    //     align: 'left',
+    //     field: (row) => {
+    //         row;
+    //     },
+    //     format: (val) => `${val}`
+    // },
     {
         name: 'patient',
         required: true,
         label: t('Patient') + t('Name'),
         align: 'left',
         field: (item) => {
-            let data = new Set()
+            let data = new Set();
             for (const sample of item.sample_data) {
-                data.add(sample.patient_name)
+                data.add(sample.patient_name);
             }
-            let result = ''
+            let result = '';
             for (const sample of data) {
-                result += `${sample} , `
+                result += `${sample} , `;
             }
-            return result.replace(/, $/, '')
+            return result.replace(/, $/, '');
         },
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     {
         name: 'sample',
@@ -467,17 +466,17 @@ const columns = computed(() => [
         label: t('Sample'),
         align: 'left',
         field: (item) => {
-            let data = new Set()
+            let data = new Set();
             for (const sample of item.sample_data) {
-                data.add(sample.sample_data_identifier)
+                data.add(sample.sample_data_identifier);
             }
-            let result = ''
+            let result = '';
             for (const sample of data) {
-                result += `${sample} \n `
+                result += `${sample} \n `;
             }
-            return result.replace(/, $/, '\n')
+            return result.replace(/, $/, '\n');
         },
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     {
         name: 'data',
@@ -485,17 +484,17 @@ const columns = computed(() => [
         label: t('Data'),
         align: 'left',
         field: (item) => {
-            let data = new Set()
+            let data = new Set();
             for (const sample of item.sample_data) {
-                data.add(sample.sample_identifier)
+                data.add(sample.sample_identifier);
             }
-            let result = ''
+            let result = '';
             for (const sample of data) {
-                result += `${sample} \n `
+                result += `${sample} \n `;
             }
-            return result.replace(/, $/, '')
+            return result.replace(/, $/, '');
         },
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     {
         name: 'library_number',
@@ -503,17 +502,17 @@ const columns = computed(() => [
         label: t('DataListTableColumnLibraryNumber'),
         align: 'left',
         field: (item) => {
-            let data = new Set()
+            let data = new Set();
             for (const sample of item.sample_data) {
-                data.add(sample.library_number)
+                data.add(sample.library_number);
             }
-            let result = ''
+            let result = '';
             for (const sample of data) {
-                result += `${sample} , `
+                result += `${sample} , `;
             }
-            return result.replace(/, $/, '')
+            return result.replace(/, $/, '');
         },
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     {
         name: 'flow',
@@ -521,7 +520,7 @@ const columns = computed(() => [
         label: t('Flow'),
         align: 'left',
         field: (row) => row.flow.name,
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     // {
     //     name: 'progress',
@@ -539,20 +538,20 @@ const columns = computed(() => [
         field: (item) => {
             switch (item.status) {
                 case 'PENDING':
-                    return t('TaskPageListStatusQueue')
+                    return t('TaskPageListStatusQueue');
                 case 'RUNNING':
-                    return t('TaskPageListStatusRun')
+                    return t('TaskPageListStatusRun');
                 case 'FINISHED':
-                    return t('TaskPageListStatusFinish')
+                    return t('TaskPageListStatusFinish');
                 case 'FAILURED':
-                    return t('TaskPageListStatusFail')
+                    return t('TaskPageListStatusFail');
                 case 'CANCELED':
-                    return t('TaskPageListStatusCancel')
+                    return t('TaskPageListStatusCancel');
                 default:
-                    return item.status
+                    return item.status;
             }
         },
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     {
         name: 'task_priority',
@@ -560,7 +559,7 @@ const columns = computed(() => [
         label: t('TaskPriority'),
         align: 'left',
         field: (row) => row,
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     // {
     //     name: 'error',
@@ -576,7 +575,7 @@ const columns = computed(() => [
         label: t('CreatedBy'),
         align: 'left',
         field: (item) => item.creator.username,
-        format: (val) => `${val}`,
+        format: (val) => `${val}`
     },
     // {
     //     name: 'create_at',
@@ -595,26 +594,26 @@ const columns = computed(() => [
         label: t('TaskPageListTableColumnOperate'),
         align: 'left',
         field: (row) => row.status,
-        format: (val) => `${val}`,
-    },
+        format: (val) => `${val}`
+    }
 
-])
+]);
 
 
-const store = globalStore()
-const { langCode } = storeToRefs(store)
+const store = globalStore();
+const { langCode } = storeToRefs(store);
 const { t } = useI18n();
 
-const intId = ref(null)
-const $q = useQuasar()
+const intId = ref(null);
+const $q = useQuasar();
 const options = computed(() => [
     { label: t('TaskPageListStatusAll'), value: 'ALL' },
     { label: t('TaskPageListStatusRun'), value: 'RUNNING' },
     { label: t('TaskPageListStatusQueue'), value: 'PENDING' },
     { label: t('TaskPageListStatusFail'), value: 'FAILURED' },
     { label: t('TaskPageListStatusFinish'), value: 'FINISHED' },
-    { label: t('TaskPageListStatusCancel'), value: 'CANCELED' },
-])
+    { label: t('TaskPageListStatusCancel'), value: 'CANCELED' }
+]);
 
 const statusKey = {
     'PENDING': 'TaskPageListStatusQueue',
@@ -622,101 +621,133 @@ const statusKey = {
     'FINISHED': 'TaskPageListStatusFinish',
     'FAILURED': 'TaskPageListStatusFail',
     'CANCELED': 'TaskPageListStatusCancel'
-}
+};
 
-const status = ref('ALL')
-const showProjectSelect = ref(false)
-const showError = ref(false)
-const currentTaskError = ref('')
-const projectId = ref(0)
-const projectName = ref('')
-const patient = ref('')
-const libraryNumber = ref('')
-const taskName = ref('')
-const { apiGet, downloadData, apiDelete } = useApi()
-const router = useRouter()
+const status = ref('ALL');
+const showProjectSelect = ref(false);
+const showError = ref(false);
+const currentTaskError = ref('');
+const projectId = ref(0);
+const projectName = ref('');
+const patient = ref('');
+const libraryNumber = ref('');
+const taskName = ref('');
+const { apiGet, downloadData, apiDelete } = useApi();
+const router = useRouter();
 const taskSummary = ref({
     canceled_task_count: 0,
     failured_task_count: 0,
     finished_task_count: 0,
     pending_task_count: 0,
-    running_task_count: 0,
-})
+    running_task_count: 0
+});
 
 const total_task_count = computed(() => {
-    const ts = taskSummary.value
+    const ts = taskSummary.value;
     return (
         ts.canceled_task_count +
         ts.failured_task_count +
         ts.finished_task_count +
         ts.pending_task_count +
         ts.running_task_count
-    )
-})
+    );
+});
+
+const onRequest = (props) => {
+    $q.loading.show();
+    console.log('==============> show')
+
+    const { page, rowsPerPage } = props.pagination;
+    let params = `?page=${page}&size=${rowsPerPage}`;
+
+    if (status.value !== 'ALL') params += `&status=${status.value}`;
+    if (projectId.value) params += `&project_id=${projectId.value}`;
+    if (patient.value) params += `&patient=${patient.value}`;
+    if (libraryNumber.value) params += `&libraryNumber=${libraryNumber.value}`;
+    if (taskName.value) params += `&task_name=${taskName.value}`;
+    pagination.value.page = page;
+    pagination.value.rowsPerPage = rowsPerPage;
+    backupSearch();
+    apiGet(`/task${params}`, (res) => {
+            pagination.value.rowsNumber = res.data.total_count;
+            pagination.value.page = page;
+            pagination.value.rowsPerPage = rowsPerPage;
+            rows.value = res.data.item_list;
+            for (let item of rows.value) {
+                item.actions = true;
+            }
+        }, {}, null, null, () => {
+            $q.loading.hide();
+        }
+    );
+};
+
 const showTaskError = (item) => {
-    showError.value = true
-    currentTaskError.value = langCode.value === 'en' ? item.error_message_EN : item.error_message_CN
-}
+    showError.value = true;
+    currentTaskError.value = langCode.value === 'en' ? item.error_message_EN : item.error_message_CN;
+};
 
 const clickCard = (v) => {
-    status.value = v
-    refreshPage()
-}
+    status.value = v;
+    refreshPage();
+};
 
 const raisePriority = (row, priority) => {
     updateTask(row.id, { priority }).then((res) => {
-        const msg = priority === 1 ? '降低' : '提升'
+        const msg = priority === 1 ? '降低' : '提升';
         $q.notify({
-            type: "positive",
-            message: `${msg} ${t('Success')}`,
-        })
-        refreshPage()
-    })
-}
+            type: 'positive',
+            message: `${msg} ${t('Success')}`
+        });
+        refreshPage();
+    });
+};
 
 const clearSelect = () => {
-    status.value = 'ALL'
-    refreshPage()
-}
+    status.value = 'ALL';
+    refreshPage();
+};
 const projectSelected = (event) => {
-    console.log(event)
-    projectName.value = event.name
-    projectId.value = event.id
-    showProjectSelect.value = false
-    console.log(projectId.value)
-    refreshPage()
-}
+    console.log(event);
+    projectName.value = event.name;
+    projectId.value = event.id;
+    showProjectSelect.value = false;
+    console.log(projectId.value);
+    refreshPage();
+};
 const gotoDetail = (item) => {
-    router.push(`/main/tasks/${item.id}`)
-}
+    router.push(`/main/tasks/${item.id}`);
+};
 const gotoReport = (item) => {
-    router.push(`/main/tasks/${item.id}/report`)
-}
+    router.push(`/main/tasks/${item.id}/report`);
+};
 const gotoDefineReport = (item) => {
-    router.push(`/main/tasks/${item.id}/define-report`)
-}
+    router.push(`/main/tasks/${item.id}/define-report`);
+};
 onMounted(() => {
-    loadBackup()
-    loadDataOnMount()
+    loadBackup();
+    loadDataOnMount();
     intId.value = setInterval(() => {
-        loadBackup(); console.log(pagination.value); refreshPage()
-    }, 60000)
-    summary()
-})
+        loadBackup();
+        console.log(pagination.value);
+        refreshPage();
+    }, 60000);
+    summary();
+});
 onUnmounted(() => {
     if (intId.value) {
-        clearInterval(intId.value)
+        clearInterval(intId.value);
     }
-})
+});
 
 const reset = () => {
-    projectName.value = ''
-    projectId.value = ''
-    patient.value = ''
-    libraryNumber.value = ''
-    status.value = 'ALL'
-    refreshPage()
-}
+    projectName.value = '';
+    projectId.value = '';
+    patient.value = '';
+    libraryNumber.value = '';
+    status.value = 'ALL';
+    refreshPage();
+};
 
 const backupSearch = () => {
     // const { page, rowsPerPage } = props.pagination
@@ -728,86 +759,88 @@ const backupSearch = () => {
         projectName: projectName.value,
         patient: patient.value,
         libraryNumber: libraryNumber.value
-    }
-    sessionStorage.setItem('task-search', JSON.stringify(data))
-    console.log("backup", data)
-}
+    };
+    sessionStorage.setItem('task-search', JSON.stringify(data));
+    console.log('backup', data);
+};
+
 const loadBackup = () => {
-    let dataStr = sessionStorage.getItem('task-search')
+    let dataStr = sessionStorage.getItem('task-search');
     if (dataStr) {
-        let data = JSON.parse(dataStr)
-        pagination.value.rowsPerPage = data.size
-        pagination.value.page = data.page
-        status.value = data.status
-        projectId.value = data.projectId
-        projectName.value = data.projectName
-        patient.value = data.patient
-        libraryNumber.value = data.libraryNumber
-        console.log("load", data)
+        let data = JSON.parse(dataStr);
+        pagination.value.rowsPerPage = data.size;
+        pagination.value.page = data.page;
+        status.value = data.status;
+        projectId.value = data.projectId;
+        projectName.value = data.projectName;
+        patient.value = data.patient;
+        libraryNumber.value = data.libraryNumber;
+        console.log('load', data);
     }
-}
+};
 
 const confirm = async (item) => {
     $q.dialog({
         title: t('ConfirmToDelete'),
         cancel: true,
-        persistent: true,
+        persistent: true
     }).onOk(() => {
         apiDelete(`/task/${item.id}`, (_) => {
-            infoMessage(t('DeleteSuccess'))
+            infoMessage(t('DeleteSuccess'));
             if (rows.value.length > 1) {
-                let index = 0
+                let index = 0;
                 for (let i = 0; i < rows.value.length; i++) {
                     if (rows.value[i].id === item.id) {
-                        index = i
+                        index = i;
                     }
                 }
-                rows.value.splice(index, 1)
+                rows.value.splice(index, 1);
             } else {
                 if (pagination.value.page > 1) {
-                    pagination.value.page = pagination.value.page - 1
+                    pagination.value.page = pagination.value.page - 1;
                 } else {
-                    pagination.value.page = 1
+                    pagination.value.page = 1;
                 }
-                refreshPage()
+                refreshPage();
             }
-        })
-    })
-}
+        });
+    });
+};
 
 const deleteMiddleFiles = async (task) => {
     $q.dialog({
         title: t('TaskPageListTableRowBtnDeleteTmpTitle'),
         message: t('TaskPageListTableRowBtnDeleteTmpComment'),
         cancel: true,
-        persistent: true,
+        persistent: true
     }).onOk(() => {
         apiDelete(`/task/${task.id}/remove_temp/`, (res) => {
-            console.log(res)
-            infoMessage(t('DeleteSuccess'))
-        })
-    })
-}
+            console.log(res);
+            infoMessage(t('DeleteSuccess'));
+        });
+    });
+};
 
 const download = (item) => {
-    let lang = langCode.value === 'en' ? 'EN' : 'CN'
-    let path = '/igv' + item.result_path
+    let lang = langCode.value === 'en' ? 'EN' : 'CN';
+    let path = '/igv' + item.result_path;
     if (lang === 'EN') {
         if (item.result_path_EN) {
-            path = '/igv' + item.result_path_EN
-        }
-    } if (lang === 'CN') {
-        if (item.result_path_CN) {
-            path = '/igv' + item.result_path_CN
+            path = '/igv' + item.result_path_EN;
         }
     }
-    return path
-}
+    if (lang === 'CN') {
+        if (item.result_path_CN) {
+            path = '/igv' + item.result_path_CN;
+        }
+    }
+    return path;
+};
 const summary = async () => {
     apiGet(`/task/summary`, (res) => {
-        taskSummary.value = res.data
-    })
-}
+        taskSummary.value = res.data;
+    });
+};
 </script>
 <style lang="sass">
 .my-sticky-column-table
@@ -830,17 +863,21 @@ const summary = async () => {
         background: #fff
 
     /* this will be the loading indicator */
+
     thead tr:last-child th
         /* height of all previous header rows */
         top: 48px
         /* highest z-index */
         z-index: 1
+
     thead tr:first-child th, thead tr:nth-child(2) th
         top: 0
         z-index: 3
+
     tr:first-child th:first-child
         /* highest z-index */
         z-index: 4
+
     tr:first-child th:nth-child(2)
         /* highest z-index */
         z-index: 4
@@ -851,6 +888,7 @@ const summary = async () => {
     td:first-child, th:first-child
         position: sticky
         left: 0
+
     td:nth-child(2), th:nth-child(2)
         position: sticky
         left: 60px

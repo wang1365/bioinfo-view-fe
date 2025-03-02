@@ -163,18 +163,17 @@ export function useApi() {
         $q.loadingBar.start()
         api.get(url, config)
             .then((resp) => {
-                $q.loadingBar.stop()
                 defaultHandler(router, resp, onSuccess, onError)
             })
             .catch((error) => {
-                $q.loadingBar.stop()
                 if (onHttpError) {
                     onHttpError(error)
                 } else {
                     defaultHttpErrorHandler(error, onError, router)
                 }
             })
-            .finally((onFinal) => {
+            .finally(() => {
+                $q.loadingBar.stop()
                 if (onFinal) {
                     onFinal()
                 }
