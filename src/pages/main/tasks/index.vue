@@ -654,10 +654,16 @@ const total_task_count = computed(() => {
 });
 
 const onRequest = (props) => {
-    $q.loading.show();
-    console.log('==============> show')
+    doRequest(props.pagination)
+}
 
-    const { page, rowsPerPage } = props.pagination;
+const doRequest = (pg, showLoading = true) => {
+    if (showLoading) {
+        $q.loading.show();
+    }
+    console.log('==============> show', pg)
+
+    const { page, rowsPerPage } = {...pg};
     let params = `?page=${page}&size=${rowsPerPage}`;
 
     if (status.value !== 'ALL') params += `&status=${status.value}`;
@@ -677,7 +683,9 @@ const onRequest = (props) => {
                 item.actions = true;
             }
         }, {}, null, null, () => {
-            $q.loading.hide();
+            if (showLoading) {
+                $q.loading.hide();
+            }
         }
     );
 };
@@ -730,7 +738,8 @@ onMounted(() => {
     intId.value = setInterval(() => {
         loadBackup();
         console.log(pagination.value);
-        refreshPage();
+        // refreshPage();
+        doRequest(pagination.value, false);
     }, 60000);
     summary();
 });
