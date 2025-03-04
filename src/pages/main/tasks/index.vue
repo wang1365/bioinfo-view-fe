@@ -85,132 +85,110 @@
             <q-btn color="primary" size="md" :label="$t('Search')" icon="search" @click="refreshPage()" />
             <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
         </div>
-        <div>
-            <q-table
-                :rows="rows"
-                :columns="columns"
-                row-key="id"
-                ref="tableRef"
-                v-model:pagination="pagination"
-                style="max-height: 660px"
-                @request="onRequest"
-                :rows-per-page-options="[5, 15, 35, 50]"
-                class="my-sticky-column-table"
-            >
-                <template v-slot:body-cell-name="props">
-                    <q-td :props="props" class="q-gutter-xs">
-                        <a @click="gotoReport(props.row)" class="text-weight-bolder" style="font-size: 14px">
-                            {{props.row.name}}
+        <div class="q-px-sm">
+            <a-table :columns="columns" :data-source="rows" :pagination="pagination" :scroll="{ x: 1800, y: 550 }">
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.dataIndex ==='name'">
+                        <span class="text-weight-bolder" style="font-size: 14px" v-if="record.status !== 'FINISHED'">
+                            {{ record.name }}
+                        </span>
+                        <a v-else @click="gotoReport(record)" class="text-weight-bolder" style="font-size: 14px">
+                            {{ record.name }}
                         </a>
+
                         <div style="font-size: 12px">
-                            <div class="text-grey">{{ props.row.project.name }}</div>
-                            <div v-if="props.row?.project.parent" class="text-bold text-purple q-mr-xs">
-                                {{ props.row.project.parent.name }}
+                            <div class="text-grey">{{ record.project.name }}</div>
+                            <div v-if="record.project.parent" class="text-bold text-purple q-mr-xs">
+                                {{ record.project.parent.name }}
                             </div>
                         </div>
-                    </q-td>
-                </template>
-                <!--                <template v-slot:body-cell-project="props">-->
-                <!--                    <q-td :props="props" class="q-gutter-xs">-->
-                <!--                        <div v-if="props.row?.project.parent" class="text-bold text-purple q-mr-xs">-->
-                <!--                            {{ props.row.project.parent.name }}-->
-                <!--                        </div>-->
-                <!--                        <div class="text-primary">{{ props.row.project.name }}</div>-->
-                <!--                    </q-td>-->
-                <!--                </template>-->
-                <template v-slot:body-cell-status="props">
-                    <q-td :props="props" class="q-gutter-xs">
+                    </template>
+
+                    <template v-if="column.dataIndex ==='status'">
                         <q-btn
-                            v-if="props.row.status === 'FAILURED'"
+                            v-if="record.status === 'FAILURED'"
                             color="red"
                             :label="$t('Failed')"
                             flat
                             padding="xs"
                             icon-right="help"
-                            @click="showTaskError(props.row)"
+                            @click="showTaskError(record)"
                             size="sm"
                         />
-                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>
+                        <span v-else>{{ $t(statusKey[record.status]) }}</span>
                         <q-linear-progress
-                            v-if="props.row.status === 'CANCELED'"
+                            v-if="record.status === 'CANCELED'"
                             color="warning"
                             rounded
                             size="10px"
-                            :value="props.row.progress / 100"
+                            :value="record.progress / 100"
                         />
                         <q-linear-progress
-                            v-if="props.row.status === 'RUNNING'"
+                            v-if="record.status === 'RUNNING'"
                             color="primary"
                             rounded
                             size="10px"
-                            :value="props.row.progress / 100"
+                            :value="record.progress / 100"
                         />
                         <q-linear-progress
-                            v-if="props.row.status === 'FAILURED'"
+                            v-if="record.status === 'FAILURED'"
                             color="negative"
                             rounded
                             size="10px"
-                            :value="props.row.progress / 100"
+                            :value="record.progress / 100"
                         />
                         <q-linear-progress
-                            v-if="props.row.status === 'PENDING'"
+                            v-if="record.status === 'PENDING'"
                             color="secondary"
                             rounded
                             size="10px"
-                            :value="props.row.progress / 100"
+                            :value="record.progress / 100"
                         />
                         <q-linear-progress
-                            v-if="props.row.status === 'FINISHED'"
+                            v-if="record.status === 'FINISHED'"
                             color="positive"
                             rounded
                             size="10px"
-                            :value="props.row.progress / 100"
+                            :value="record.progress / 100"
                         />
-                    </q-td>
-                </template>
-                <template v-slot:body-cell-patient="props">
-                    <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                    </template>
+
+                    <template v-if="column.dataIndex ==='patient'">
+                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{ sd.patient_name }}
                         </div>
-                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{ props.row.sample_data.length }})
+                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                            ... ({{ record.sample_data.length }})
                         </div>
-                    </q-td>
-                </template>
-                <template v-slot:body-cell-sample="props">
-                    <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                    </template>
+
+                    <template v-if="column.dataIndex ==='sample'">
+                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{ sd.sample_data_identifier }}
                         </div>
-                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{ props.row.sample_data.length }})
+                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                            ... ({{ record.sample_data.length }})
                         </div>
-                    </q-td>
-                </template>
-                <template v-slot:body-cell-data="props">
-                    <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                    </template>
+                    <template v-if="column.dataIndex ==='data'">
+                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{ sd.sample_identifier }}
                         </div>
-                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{ props.row.sample_data.length }})
+                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                            ... ({{ record.sample_data.length }})
                         </div>
-                    </q-td>
-                </template>
-                <template v-slot:body-cell-library_number="props">
-                    <q-td :props="props">
-                        <div v-for="sd in props.row.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                    </template>
+                    <template v-if="column.dataIndex ==='library_number'">
+                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
                             {{ sd.library_number }}
                         </div>
-                        <div v-if="props.row.sample_data.length > 3" class="text-grey">
-                            ... ({{ props.row.sample_data.length }})
+                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                            ... ({{ record.sample_data.length }})
                         </div>
-                    </q-td>
-                </template>
-                <template v-slot:body-cell-task_priority="props">
-                    <q-td :props="props" class="q-gutter-xs">
-                        <template v-if="props.row.priority === 2">
+                    </template>
+
+                    <template v-if="column.dataIndex === 'task_priority'">
+                        <template v-if="record.priority === 2">
                             <span class="text-red">{{ $t('High') }}</span>
                             <q-btn
                                 v-if="amISuper() || amIAdmin()"
@@ -218,7 +196,7 @@
                                 flat
                                 icon="south"
                                 padding="xs"
-                                @click="raisePriority(props.row, 1)"
+                                @click="raisePriority(record, 1)"
                             />
                         </template>
                         <template v-else>
@@ -229,155 +207,141 @@
                                 flat
                                 icon="north"
                                 padding="xs"
-                                @click="raisePriority(props.row, 2)"
+                                @click="raisePriority(record, 2)"
                             />
                         </template>
-                    </q-td>
-                </template>
-                <!--                <template v-slot:body-cell-status="props" v-if="amISuper() || amIAdmin()">-->
-                <!--                    <q-td :props="props" class="q-gutter-xs">-->
-                <!--                        <q-btn-->
-                <!--                            v-if="props.row.status === 'FAILURED'"-->
-                <!--                            color="red"-->
-                <!--                            :label="$t('Failed')"-->
-                <!--                            flat-->
-                <!--                            padding="xs"-->
-                <!--                            icon-right="help"-->
-                <!--                            @click="showTaskError(props.row)"-->
-                <!--                            size="sm"-->
-                <!--                        />-->
-                <!--                        <span v-else>{{ $t(statusKey[props.row.status]) }}</span>-->
-                <!--                    </q-td>-->return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-                <!--                </template>-->
-                <template v-slot:body-cell-create_by="props">
-                    <q-td :props="props" class="q-gutter-xs">
-                        <div>{{ props.row.creator.username }}</div>
+                    </template>
+
+                    <template v-if="column.dataIndex === 'creator' ">
+                        <div>{{ record.creator.username }}</div>
                         <div class="text-grey">
-                            {{ date.formatDate(new Date(props.row.create_time), 'YYYY-MM-DD HH:mm:ss') }}
+                            {{ date.formatDate(new Date(record.create_time), 'YYYY-MM-DD HH:mm:ss') }}
                         </div>
-                    </q-td>
-                </template>
-                <template v-slot:body-cell-operate="props">
-                    <q-td :props="props" class="q-gutter-xs">
-                        <div class="row q-gutter-xs" style="width: 800px;">
-                            <q-separator vertical />
+                    </template>
+
+                    <template v-if="column.dataIndex === 'operate'">
+                        <div class="row q-gutter-xs">
                             <q-btn
                                 color="primary"
                                 :label="$t('Detail')"
                                 icon="visibility"
-                                @click="gotoDetail(props.row)"
+                                @click="gotoDetail(record)"
                                 size="md"
                                 dense
                                 flat
-                                padding="xs sm"
+                                padding="0"
                             />
                             <q-separator vertical />
                             <q-btn
-                                :disable="props.row.status !== 'FINISHED'"
-                                color="primary"
+                                :disable="record.status !== 'FINISHED'"
+                                :color="record.status !== 'FINISHED' ? 'grey' : 'primary'"
                                 :label="$t('Result')"
                                 icon="query_stats"
-                                @click="gotoReport(props.row)"
+                                @click="gotoReport(record)"
                                 size="md"
                                 dense
                                 flat
-                                padding="xs sm"
+                                padding="0"
                             />
                             <q-separator vertical />
                             <div v-permission="'createReport'">
                                 <q-btn
-                                    :disable="props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report"
-                                    :color="(props.row.status !== 'FINISHED' || !props.row.flow.allow_define_report) ? 'grey': 'primary'"
+                                    :disable="record.status !== 'FINISHED' || !record.flow.allow_define_report"
+                                    :color="(record.status !== 'FINISHED' || !record.flow.allow_define_report) ? 'grey': 'primary'"
                                     :label="$t('TaskPageBtnCustomReport')"
                                     icon="query_stats"
-                                    @click="gotoDefineReport(props.row)"
+                                    @click="gotoDefineReport(record)"
                                     size="md"
                                     dense
                                     flat
-                                    padding="xs sm"
+                                    padding="0"
                                 />
                                 <q-separator vertical />
                             </div>
-                            <q-btn
-                                v-if="props.row.status === 'FINISHED'"
-                                color="primary"
-                                @click="download(props.row)"
-                                size="md"
-                                dense
-                                flat
-                                padding="xs sm"
-                            >
-                                <a :href="download(props.row)" download>
-                                    <q-icon name="download" />
-                                    {{ $t('Download') }}
-                                </a>
+
+                            <q-btn label="" color="primary" size="md" padding="0" dense outline flat icon="more_horiz">
+                                <q-menu>
+                                    <q-list style="min-width: 100px" dense>
+                                        <q-item clickable>
+                                            <q-item-section>
+                                                <q-btn
+                                                    :disable="record.status !== 'FINISHED'"
+                                                    color="primary"
+                                                    size="md"
+                                                    dense
+                                                    align="left"
+                                                    icon="download"
+                                                    flat
+                                                    padding="xs sm"
+                                                    :href="download(record)"
+                                                    :label="$t('Download')"
+                                                />
+                                            </q-item-section>
+                                        </q-item>
+                                        <q-item>
+                                            <q-item-section>
+                                                <q-btn
+                                                    color="primary"
+                                                    padding="xs sm"
+                                                    :disable="record.status !== 'FINISHED'"
+                                                    :label="$t('Download') + ' bam'"
+                                                    icon="download"
+                                                    size="md"
+                                                    align="left"
+                                                    dense
+                                                    flat
+                                                    :href="`/igv${record.result_dir}/bam/${record.id}-bam.zip`"
+                                                    target="_blank"
+                                                />
+                                            </q-item-section>
+                                        </q-item>
+                                        <q-separator />
+                                        <q-item clickable>
+                                            <q-item-section>
+                                                <q-btn
+                                                    v-permission="'deleteTaskTmpFile'"
+                                                    :disable="record.status !== 'FINISHED' || record.deleted_tempdir"
+                                                    color="red"
+                                                    :label="$t('TaskPageBtnDeleteTmpFile')"
+                                                    icon="delete"
+                                                    @click="deleteMiddleFiles(record)"
+                                                    size="md"
+                                                    dense
+                                                    align="left"
+                                                    flat
+                                                    padding="xs sm"
+                                                >
+                                                    <q-tooltip
+                                                        >{{
+                                                            $t('TaskPageListTableRowBtnDeleteTmpTip')
+                                                        }}
+                                                    </q-tooltip>
+                                                </q-btn>
+                                            </q-item-section>
+                                        </q-item>
+                                        <q-item clickable>
+                                            <q-item-section>
+                                                <q-btn
+                                                    v-permission="'deleteTask'"
+                                                    color="red"
+                                                    padding="xs sm"
+                                                    :label="$t('Delete')"
+                                                    icon="delete"
+                                                    size="md"
+                                                    dense
+                                                    align="left"
+                                                    flat
+                                                    @click="confirm(record)"
+                                                />
+                                            </q-item-section>
+                                        </q-item>
+                                    </q-list>
+                                </q-menu>
                             </q-btn>
-                            <q-btn
-                                v-if="props.row.status !== 'FINISHED'"
-                                :disable="true"
-                                color="primary"
-                                size="md"
-                                dense
-                                flat
-                                padding="xs sm"
-                            >
-                                <a style="color:white" href="#" download>
-                                    <q-icon name="download" />
-                                    {{ $t('Download') }}
-                                </a>
-                            </q-btn>
-                            <q-separator vertical />
-                            <div v-permission="'deleteTaskTmpFile'">
-                                <q-btn
-                                    v-permission="'deleteTaskTmpFile'"
-                                    :disable="props.row.status !== 'FINISHED' || props.row.deleted_tempdir"
-                                    color="red"
-                                    :label="$t('TaskPageBtnDeleteTmpFile')"
-                                    icon="delete"
-                                    @click="deleteMiddleFiles(props.row)"
-                                    size="md"
-                                    dense
-                                    flat
-                                    padding="xs sm"
-                                >
-                                    <q-tooltip
-                                        >{{
-                                            $t('TaskPageListTableRowBtnDeleteTmpTip')
-                                        }}
-                                    </q-tooltip>
-                                </q-btn>
-                                <q-separator vertical />
-                            </div>
-                            <div v-permission="'deleteTask'">
-                                <q-btn
-                                    v-permission="'deleteTask'"
-                                    color="red"
-                                    padding="xs sm"
-                                    :label="$t('Delete')"
-                                    icon="delete"
-                                    size="md"
-                                    dense
-                                    flat
-                                    @click="confirm(props.row)"
-                                />
-                                <q-separator vertical />
-                            </div>
-                            <q-btn
-                                color="primary"
-                                padding="xs sm"
-                                :disable="props.row.status !== 'FINISHED'"
-                                :label="$t('Download') + ' bam'"
-                                icon="download"
-                                size="md"
-                                dense
-                                flat
-                                :href="`/igv${props.row.result_dir}/bam/${props.row.id}-bam.zip`"
-                                target="_blank"
-                            />
                         </div>
-                    </q-td>
+                    </template>
                 </template>
-            </q-table>
+            </a-table>
         </div>
         <q-dialog v-model="showProjectSelect">
             <ProjectListVue @itemSelected="projectSelected($event)" />
@@ -413,199 +377,57 @@ import { storeToRefs } from 'pinia';
 import { useQTable } from 'src/utils/q-table';
 import { amIAdmin, amISuper } from 'src/utils/user';
 
-const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable();
-
-const columns = computed(() => [
-    {
-        name: 'id',
-        required: false,
-        label: 'ID',
-        align: 'left',
-        field: (row) => row.id,
-        format: (val) => `${val}`,
-        fixed: 'left'
-    },
-    {
-        name: 'name',
-        label: t('Name'),
-        align: 'left',
-        field: (row) => row.name,
-        format: (val) => `${val}`
-    },
-    // {
-    //     name: 'project',
-    //     required: true,
-    //     label: t('Project') + t('TaskPageProjectParent') + '/' + t('TaskPageProjectSelf'),
-    //     align: 'left',
-    //     field: (row) => {
-    //         row;
-    //     },
-    //     format: (val) => `${val}`
-    // },
-    {
-        name: 'patient',
-        required: true,
-        label: t('Patient') + t('Name'),
-        align: 'left',
-        field: (item) => {
-            let data = new Set();
-            for (const sample of item.sample_data) {
-                data.add(sample.patient_name);
-            }
-            let result = '';
-            for (const sample of data) {
-                result += `${sample} , `;
-            }
-            return result.replace(/, $/, '');
-        },
-        format: (val) => `${val}`
-    },
-    {
-        name: 'sample',
-        required: true,
-        label: t('Sample'),
-        align: 'left',
-        field: (item) => {
-            let data = new Set();
-            for (const sample of item.sample_data) {
-                data.add(sample.sample_data_identifier);
-            }
-            let result = '';
-            for (const sample of data) {
-                result += `${sample} \n `;
-            }
-            return result.replace(/, $/, '\n');
-        },
-        format: (val) => `${val}`
-    },
-    {
-        name: 'data',
-        required: true,
-        label: t('Data'),
-        align: 'left',
-        field: (item) => {
-            let data = new Set();
-            for (const sample of item.sample_data) {
-                data.add(sample.sample_identifier);
-            }
-            let result = '';
-            for (const sample of data) {
-                result += `${sample} \n `;
-            }
-            return result.replace(/, $/, '');
-        },
-        format: (val) => `${val}`
-    },
-    {
-        name: 'library_number',
-        required: true,
-        label: t('DataListTableColumnLibraryNumber'),
-        align: 'left',
-        field: (item) => {
-            let data = new Set();
-            for (const sample of item.sample_data) {
-                data.add(sample.library_number);
-            }
-            let result = '';
-            for (const sample of data) {
-                result += `${sample} , `;
-            }
-            return result.replace(/, $/, '');
-        },
-        format: (val) => `${val}`
-    },
-    {
-        name: 'flow',
-        required: true,
-        label: t('Flow'),
-        align: 'left',
-        field: (row) => row.flow.name,
-        format: (val) => `${val}`
-    },
-    // {
-    //     name: 'progress',
-    //     required: true,
-    //     label: t('Progress'),
-    //     align: 'left',
-    //     field: (row) => row.status,
-    //     format: (val) => `${val}`,
-    // },
-    {
-        name: 'status',
-        required: true,
-        label: t('Status'),
-        align: 'center',
-        field: (item) => {
-            switch (item.status) {
-                case 'PENDING':
-                    return t('TaskPageListStatusQueue');
-                case 'RUNNING':
-                    return t('TaskPageListStatusRun');
-                case 'FINISHED':
-                    return t('TaskPageListStatusFinish');
-                case 'FAILURED':
-                    return t('TaskPageListStatusFail');
-                case 'CANCELED':
-                    return t('TaskPageListStatusCancel');
-                default:
-                    return item.status;
-            }
-        },
-        format: (val) => `${val}`
-    },
-    {
-        name: 'task_priority',
-        required: true,
-        label: t('TaskPriority'),
-        align: 'left',
-        field: (row) => row,
-        format: (val) => `${val}`
-    },
-    // {
-    //     name: 'error',
-    //     required: true,
-    //     label: t('Error'),
-    //     align: 'left',
-    //     field: (row) => row,
-    //     format: (val) => `${val}`,
-    // },
-    {
-        name: 'create_by',
-        required: true,
-        label: t('CreatedBy'),
-        align: 'left',
-        field: (item) => item.creator.username,
-        format: (val) => `${val}`
-    },
-    // {
-    //     name: 'create_at',
-    //     required: true,
-    //     label: t('CreatedAt'),
-    //     align: 'left',
-    //     field: (row) => {
-    //         let date = new Date(row.create_time)
-    //         return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    //     },
-    //     format: (val) => `${val}`,
-    // },
-    {
-        name: 'operate',
-        required: true,
-        label: t('TaskPageListTableColumnOperate'),
-        align: 'left',
-        field: (row) => row.status,
-        format: (val) => `${val}`
-    }
-
-]);
-
-
 const store = globalStore();
 const { langCode } = storeToRefs(store);
 const { t } = useI18n();
 
 const intId = ref(null);
 const $q = useQuasar();
+
+// const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable();
+const pagination = ref({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+    pageSizeOptions: ['10', '20', '50', '100'],
+    showSizeChanger: true,
+    showTotal: (total, range) => `${t('TotalCount')} ${total} `,
+    onChange: (page, pageSize) => {
+        pagination.value.current = page;
+        pagination.value.pageSize = pageSize;
+        doRequest();
+    }
+});
+
+const columns = computed(() => [
+    { dataIndex: 'id', title: 'ID', align: 'left', width: 60 , fixed: 'left'},
+    { dataIndex: 'name',  title: t('Name'), align: 'left', width: 180 , fixed: 'left'},
+    { dataIndex: 'patient', title: t('Patient') + t('Name'), align: 'left', width: 100 },
+    { dataIndex: 'sample', title: t('Sample'), align: 'left', width: 120 },
+    { dataIndex: 'data', title: t('Data'), align: 'left', width: 120 },
+    { dataIndex: 'library_number', title: t('LibraryNumber'), align: 'left', width: 220},
+    { dataIndex: ['flow', 'name'], title: t('Flow'), align: 'left', width: 200, },
+    { dataIndex: 'status', title: t('Status'), align: 'center', width: 100 },
+    { dataIndex: 'task_priority', title: t('TaskPriority'), align: 'left', width: 100, },
+    { dataIndex: 'creator', title: t('CreatedBy'), align: 'left', width: 160, },
+    { dataIndex: 'operate', title: t('Operate'), align: 'center', fixed: 'right', width: langCode.value === 'en' ? 320 : 270}
+]);
+
+// const columns = computed(() => [
+//     { dataIndex: 'id', key: '1', title: 'ID', width: 80, fixed: 'left' },
+//     { dataIndex: 'name',  key: '2', title: t('Name'), width: 180, fixed: 'left' },
+//     { dataIndex: 'patient', key: '3', title: t('Patient') + t('Name'), align: 'left' },
+//     { dataIndex: 'sample', key: '4', title: t('Sample'),  },
+//     { dataIndex: 'data', key: '5', title: t('Data'),  },
+//     { dataIndex: 'library_number', key: '6', title: t('LibraryNumber'), },
+//     { dataIndex: ['flow', 'name'], key: '7', title: t('Flow'), },
+//     { dataIndex: 'status', key: '8', title: t('Status'), align: 'center',  },
+//     { dataIndex: 'task_priority', key: '9', title: t('TaskPriority'), },
+//     { dataIndex: 'creator', key: '10', title: t('CreatedBy'), },
+//     { dataIndex: 'operate', key: '11', title: t('Operate'),  }
+// ]);
+
+
 const options = computed(() => [
     { label: t('TaskPageListStatusAll'), value: 'ALL' },
     { label: t('TaskPageListStatusRun'), value: 'RUNNING' },
@@ -634,6 +456,8 @@ const libraryNumber = ref('');
 const taskName = ref('');
 const { apiGet, downloadData, apiDelete } = useApi();
 const router = useRouter();
+const rows = ref([]);
+
 const taskSummary = ref({
     canceled_task_count: 0,
     failured_task_count: 0,
@@ -654,30 +478,28 @@ const total_task_count = computed(() => {
 });
 
 const onRequest = (props) => {
-    doRequest(props.pagination)
-}
+    doRequest(props.pagination);
+};
 
-const doRequest = (pg, showLoading = true) => {
+const doRequest = (showLoading = true) => {
     if (showLoading) {
         $q.loading.show();
     }
-    console.log('==============> show', pg)
+    console.log('==============> show', pagination.value);
 
-    const { page, rowsPerPage } = {...pg};
-    let params = `?page=${page}&size=${rowsPerPage}`;
+    const current = pagination.value.current;
+    const pageSize = pagination.value.pageSize;
+    let params = `?page=${current}&size=${pageSize}`;
 
     if (status.value !== 'ALL') params += `&status=${status.value}`;
     if (projectId.value) params += `&project_id=${projectId.value}`;
     if (patient.value) params += `&patient=${patient.value}`;
     if (libraryNumber.value) params += `&libraryNumber=${libraryNumber.value}`;
     if (taskName.value) params += `&task_name=${taskName.value}`;
-    pagination.value.page = page;
-    pagination.value.rowsPerPage = rowsPerPage;
+
     backupSearch();
     apiGet(`/task${params}`, (res) => {
-            pagination.value.rowsNumber = res.data.total_count;
-            pagination.value.page = page;
-            pagination.value.rowsPerPage = rowsPerPage;
+            pagination.value.total = res.data.total_count;
             rows.value = res.data.item_list;
             for (let item of rows.value) {
                 item.actions = true;
@@ -697,7 +519,7 @@ const showTaskError = (item) => {
 
 const clickCard = (v) => {
     status.value = v;
-    refreshPage();
+    doRequest();
 };
 
 const raisePriority = (row, priority) => {
@@ -707,13 +529,13 @@ const raisePriority = (row, priority) => {
             type: 'positive',
             message: `${msg} ${t('Success')}`
         });
-        refreshPage();
+        doRequest();
     });
 };
 
 const clearSelect = () => {
     status.value = 'ALL';
-    refreshPage();
+    doRequest();
 };
 const projectSelected = (event) => {
     console.log(event);
@@ -721,7 +543,7 @@ const projectSelected = (event) => {
     projectId.value = event.id;
     showProjectSelect.value = false;
     console.log(projectId.value);
-    refreshPage();
+    doRequest();
 };
 const gotoDetail = (item) => {
     router.push(`/main/tasks/${item.id}`);
@@ -734,12 +556,13 @@ const gotoDefineReport = (item) => {
 };
 onMounted(() => {
     loadBackup();
-    loadDataOnMount();
+    // loadDataOnMount();
+    doRequest(false);
     intId.value = setInterval(() => {
         loadBackup();
         console.log(pagination.value);
         // refreshPage();
-        doRequest(pagination.value, false);
+        doRequest(false);
     }, 60000);
     summary();
 });
@@ -755,14 +578,14 @@ const reset = () => {
     patient.value = '';
     libraryNumber.value = '';
     status.value = 'ALL';
-    refreshPage();
+    doRequest();
 };
 
 const backupSearch = () => {
     // const { page, rowsPerPage } = props.pagination
     let data = {
-        page: pagination.value.page,
-        size: pagination.value.rowsPerPage,
+        page: pagination.value.current,
+        size: pagination.value.pageSize,
         status: status.value,
         projectId: projectId.value,
         projectName: projectName.value,
@@ -774,12 +597,12 @@ const backupSearch = () => {
 };
 
 const loadBackup = () => {
-    let dataStr = sessionStorage.getItem('task-search');
+    let dataStr = sessionStorage.getItem('task-search-v2');
     if (dataStr) {
         let data = JSON.parse(dataStr);
-        pagination.value.rowsPerPage = data.size;
-        pagination.value.page = data.page;
-        status.value = data.status;
+        pagination.value.pageSize = data.size;
+        pagination.value.current = data.page;
+        status.value = data?.status;
         projectId.value = data.projectId;
         projectName.value = data.projectName;
         patient.value = data.patient;
@@ -805,11 +628,8 @@ const confirm = async (item) => {
                 }
                 rows.value.splice(index, 1);
             } else {
-                if (pagination.value.page > 1) {
-                    pagination.value.page = pagination.value.page - 1;
-                } else {
-                    pagination.value.page = 1;
-                }
+                const current = pagination.value.current;
+                pagination.value.current = current > 1 ? current - 1 : 1;
                 refreshPage();
             }
         });
@@ -851,57 +671,4 @@ const summary = async () => {
     });
 };
 </script>
-<style lang="sass">
-.my-sticky-column-table
-    /* height or max-height is important */
-    height: 100%
-
-    /* specifying max-width so the example can
-      highlight the sticky column on any browser window */
-    max-width: 100%
-
-    td:first-child, td:nth-child(2)
-        /* bg color is important for td; just specify one */
-        background-color: #ffffff !important
-
-    tr th
-        position: sticky
-        /* higher than z-index for td below */
-        z-index: 2
-        /* bg color is important; just specify one */
-        background: #fff
-
-    /* this will be the loading indicator */
-
-    thead tr:last-child th
-        /* height of all previous header rows */
-        top: 48px
-        /* highest z-index */
-        z-index: 1
-
-    thead tr:first-child th, thead tr:nth-child(2) th
-        top: 0
-        z-index: 3
-
-    tr:first-child th:first-child
-        /* highest z-index */
-        z-index: 4
-
-    tr:first-child th:nth-child(2)
-        /* highest z-index */
-        z-index: 4
-
-    td:first-child
-        z-index: 1
-
-    td:first-child, th:first-child
-        position: sticky
-        left: 0
-
-    td:nth-child(2), th:nth-child(2)
-        position: sticky
-        left: 60px
-        z-index: 3
-        border-right-color: silver
-        border-right-width: 1px
-</style>
+<style lang="sass"></style>

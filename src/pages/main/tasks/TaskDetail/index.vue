@@ -73,13 +73,15 @@
                     <span class="text-primary text-weight-bolder">{{ $t('Log') + ": " }}</span>
                 </div>
                 <div class="text-body q-px-md q-py-xs">
-                    <q-timeline color="secondary">
+                    <q-timeline color="primary">
                         <q-timeline-entry
-                            v-for="(item, key) of logs"
-                            :key="key"
-                            :title="item.stage + ':' + item.title"
-                            :subtitle="item.status + ':' + toLocalString(item.time)"
+                            v-for="(item, i) of logs"
+                            :key="i"
+                            :title="item.stage + ': ' + item.title"
+                            :subtitle="item.status + ': ' + toLocalString(item.time)"
                             :body="item.detail"
+                            :icon="i === 0 ? '' : 'arrow_downward'"
+                            style="color: #0569c9"
                         />
                     </q-timeline>
                 </div>
