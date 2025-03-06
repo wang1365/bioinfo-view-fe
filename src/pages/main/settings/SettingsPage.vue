@@ -45,7 +45,7 @@
                             <div class="row">
                                 <div class="col-5">
                                     <q-form ref="form" @submit="submit">
-                                        <q-form-item>
+                                        <q-item>
                                             <q-input
                                                 type="number"
                                                 v-model.number="max_task.value"
@@ -62,8 +62,8 @@
                                                     </q-icon>
                                                 </template>
                                             </q-input>
-                                        </q-form-item>
-                                        <q-form-item>
+                                        </q-item>
+                                        <q-item>
                                             <q-input
                                                 type="number"
                                                 v-model.number="memory_rate.value"
@@ -80,8 +80,8 @@
                                                     </q-icon>
                                                 </template>
                                             </q-input>
-                                        </q-form-item>
-                                        <q-form-item>
+                                        </q-item>
+                                        <q-item>
                                             <q-input
                                                 type="number"
                                                 v-model.number="disk.value"
@@ -98,8 +98,8 @@
                                                     </q-icon>
                                                 </template>
                                             </q-input>
-                                        </q-form-item>
-                                        <q-form-item v-if="amISuper()">
+                                        </q-item>
+                                        <q-item v-if="amISuper()">
                                             <div class="row">
                                                 <q-input
                                                     type="number"
@@ -120,8 +120,8 @@
                                                     </template>
                                                 </q-input>
                                             </div>
-                                        </q-form-item>
-                                        <q-form-item>
+                                        </q-item>
+                                        <q-item v-if="amISuper()">
                                             <q-input
                                                 type="number"
                                                 v-model.number="max_manager_user.value"
@@ -133,8 +133,8 @@
                                                     >
                                                 </template>
                                             </q-input>
-                                        </q-form-item>
-                                        <q-form-item>
+                                        </q-item>
+                                        <q-item v-if="amISuper()">
                                             <q-input
                                                 type="number"
                                                 v-model.number="max_normal_user.value"
@@ -146,7 +146,7 @@
                                                     >
                                                 </template>
                                             </q-input>
-                                        </q-form-item>
+                                        </q-item>
                                     </q-form>
                                 </div>
                             </div>
