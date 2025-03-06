@@ -46,7 +46,8 @@
                         color="red"
                         size="md"
                         flat
-                        dense@click="showDeleteDlg(props.row)"
+                        dense
+                        @click="showDeleteDlg(props.row)"
                     ></q-btn>
                 </q-td>
             </template>
