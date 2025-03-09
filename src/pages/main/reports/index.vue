@@ -1,9 +1,9 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
+    <q-page padding style="overflow-x: hidden; display: flex; flex-direction: column">
         <PageTitle :title="$t('ReportPageTitle')" />
         <q-separator />
-        <q-card class="q-mt-md">
-            <q-card-section>
+        <q-card class="q-mt-xs">
+            <q-card-section >
                 <div class="q-gutter-md row items-start q-pa-md">
                     <q-input
                         style="width:350px"
@@ -33,7 +33,6 @@
                     <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                     <q-btn color="primary" :label="$t('Reset')" icon="close" @click="reset()" />
                 </div>
-
                 <q-table
                     :rows="rows"
                     :columns="columns"
@@ -42,6 +41,8 @@
                     v-model:pagination="pagination"
                     @request="onRequest"
                     :rows-per-page-options="[5, 15, 35, 50]"
+                    style="flex: 1;max-height: 650px"
+                    virtual-scroll
                 >
                     <template v-slot:body-cell-actions="props">
                         <q-td :props="props" class="q-gutter-xs">
