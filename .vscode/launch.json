@@ -7,7 +7,10 @@
             "request": "launch",
             "url": "http://localhost:8080",
             "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "npm: dev"  // 添加这行，确保先启动开发服务器
+            "preLaunchTask": "npm: dev",
+            "sourceMaps": true,
+            "userDataDir": "${workspaceFolder}/.vscode/chrome-debug", // 添加这行
+            "runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" // 确保路径正确
         },
         {
             "name": "Debug Tests",

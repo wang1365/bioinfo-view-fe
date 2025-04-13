@@ -6,7 +6,17 @@
             "type": "npm",
             "script": "dev",
             "isBackground": true,
-            "problemMatcher": []
+            "problemMatcher": {
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",  // 匹配任何输出作为任务开始的信号
+                    "endsPattern": ".*"     // 匹配任何输出作为任务结束的信号
+                },
+                "pattern": {
+                    "regexp": "^(.*)$",     // 匹配所有输出
+                    "message": 1
+                }
+            }
         }
     ]
 }
