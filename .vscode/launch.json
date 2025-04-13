@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Application",
+            "type": "pwa-chrome",
+            "request": "launch",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "npm: dev"  // 添加这行，确保先启动开发服务器
+        },
+        {
+            "name": "Debug Tests",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "test"],
+            "port": 9229,
+            "console": "externalTerminal",
+            "terminalOptions": {
+                "shellPath": "cmd.exe"
+            }
+        }
+    ]
+}
