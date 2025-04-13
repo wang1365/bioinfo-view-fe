@@ -566,6 +566,13 @@ export default {
     PatientNewFormPrognosisTime: '预后时间(天)',
     PatientNewFormTimeToRelapse: '复发时间(天)',
     PatientNewFormSurvivalTime: '存活时间(天)',
+    PatientNewFormGeneralPathologyNumber: '常规病理编号',
+    PatientNewFormMolecularPathologyNumber: '分子病理编号',
+    PatientNewFormSubmittingDepartment: '送检科室',
+    PatientNewFormPatientPhoneNumber: '患者电话',
+    PatientNewFormOutpatientInpatientNumber: '门诊/住院号',
+    PatientNewFormBedNumber: '床号',
+
     PatientNewFormClose: '关闭',
     PatientNewFormSave: '保存',
     // 修改患者表单

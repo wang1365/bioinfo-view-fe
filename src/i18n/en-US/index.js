@@ -572,6 +572,13 @@ export default {
     PatientNewFormPrognosisTime: 'Prognosis Time(day)',
     PatientNewFormTimeToRelapse: 'Time to Relapse(day)',
     PatientNewFormSurvivalTime: 'Survival Time(day)',
+    PatientNewFormGeneralPathologyNumber: 'General Pathology Number',
+    PatientNewFormMolecularPathologyNumber: 'Molecular Pathology Number',
+    PatientNewFormSubmittingDepartment: 'Submitting Department',
+    PatientNewFormPatientPhoneNumber: 'Patient Phone Number',
+    PatientNewFormOutpatientInpatientNumber: 'Outpatient/Inpatient Number',
+    PatientNewFormBedNumber: 'Bed Number',
+
     PatientNewFormClose: 'Close',
     PatientNewFormSave: 'Save',
     // 修改患者表单
