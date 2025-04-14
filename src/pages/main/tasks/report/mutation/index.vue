@@ -47,6 +47,11 @@
                 :label="$t('SomaticMutationAnalysis')"
                 v-if="props.viewConfig.showMutSomatic"
             />
+            <q-tab
+                name="WES突变分析"
+                :label="$t('SomaticMutationAnalysis')"
+                v-if="props.viewConfig.showMutWES || true"
+            />
         </q-tabs>
         <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">
@@ -85,6 +90,24 @@
                     @filterChange="filterChange('somatic', $event)"
                 />
             </q-tab-panel>
+            <q-tab-panel name="WES突变分析">
+                <MutationWES
+                    :samples="props.samples"
+                    :task="props.task"
+                    ref="wesVue"
+                    :rows="wesData.rows"
+                    :header="wesData.header"
+                    :options="wesData.options"
+                    :searchParams="wesData.searchParams"
+                    :drugRows="wesData.drugRows"
+                    :selectedRows="wesData.selectedRows"
+                    :selectedDefaultRows="wesData.selectedDefaultRows"
+                    :defaultReportRows="wesData.defaultReportRows"
+                    :showSticky="props.viewConfig.showStick"
+                    :stickDone="props.viewConfig.stickDone"
+                    @filterChange="filterChange('wes', $event)"
+                />
+            </q-tab-panel>
         </q-tab-panels>
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
@@ -105,8 +128,9 @@ import { ref, onMounted, computed, toRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
-import GermlineMutationVue from './GermlineMutation.vue'
-import SomaticMutationVue from './SomaticMutation.vue'
+import GermlineMutationVue from './MutationGermline.vue'
+import SomaticMutationVue from './MutationSomatic.vue'
+import MutationWES from './MutationWES.vue'
 import { useQuasar } from 'quasar'
 import igv from "igv"
 import { useI18n } from "vue-i18n"
@@ -217,7 +241,39 @@ const somaticData = ref({
     defaultReportRows:[]
 })
 
-const filterData = ref({ somatic: null, germline: null })
+
+const originWesData = ref('')
+const wesData = ref({
+    rows: [],
+    header: [],
+    options: {
+        mutationType: ['SNP', 'INDEL'],
+        mutationPosition: [],
+        mutationMeaning: [],
+        mutationRisk: [],
+    },
+    searchParams: {
+        gene: null,
+        tumorDepth: null,
+        compareDepth: null,
+        tumorRatio: null,
+        compareRatio: null,
+        mutationType: null,
+        mutationPosition: [],
+        mutationMeaning: null,
+        mutationRisk: null,
+        humanRatio: null,
+        human: 'ALL',
+        sift: null,
+        drug: false,
+    },
+    drugRows: [],
+    selectedRows: [],
+    selectedDefaultRows: [],
+    defaultReportRows:[]
+})
+
+const filterData = ref({ somatic: null, germline: null, wes: null })
 const stepData = toRef(props, 'stepData')
 
 onMounted(() => {
@@ -230,6 +286,11 @@ onMounted(() => {
         loadSomaticData()
         loadSomaticEvidenceData()
     }
+
+    // if (viewConfig.value.showWes) {
+        loadWesData()
+        loadWesEvidenceData()
+    // }
     loaded.value = true
 })
 
@@ -425,5 +486,64 @@ const loadSomaticEvidenceData = () => {
         somaticData.value.drugRows = items
         originsomaticData.value = JSON.stringify(somaticData.value)
     })
+}
+
+const loadWesData = () => {
+    readTaskMuFile(route.params.id, 'Mut_somatic').then((res) => {
+        const headNames = getCsvHeader(res, '\t')
+        const colKeys = _.range(1, headNames.length + 1, 1).map((i) => 'col' + i)
+        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: colKeys })
+        csvRows.forEach((row, i) => (row.id = i))
+
+        // 提取options
+        let positions = new Set()
+        let meanings = new Set()
+        let risks = new Set()
+        for (let columns of csvRows) {
+            const items = columns.col14.split(';')
+            items.forEach((item) => positions.add(item))
+
+            if (columns.col17 !== '.') {
+                meanings.add(columns.col17)
+            } else {
+                meanings.add('●')
+            }
+
+            if (columns.col25 !== '.') {
+                risks.add(columns.col25)
+            } else {
+                risks.add('●')
+            }
+        }
+        somaticData.value.rows = csvRows
+        somaticData.value.header = headNames
+        somaticData.value.options.mutationPosition = Array.from(positions)
+        somaticData.value.options.mutationMeaning = Array.from(meanings)
+        somaticData.value.options.mutationRisk = Array.from(risks)
+        somaticData.value.defaultReportRows = csvRows.filter(t => t.col254 === 'Y').map(t => t.lineNumber)
+        originsomaticData.value = JSON.stringify(somaticData.value)
+        if (stepData.value && stepData.value.somatic) {
+            somaticData.value.searchParams = stepData.value.somatic.searchParams
+            somaticData.value.selectedRows = stepData.value.somatic.selectedRows
+            somaticData.value.selectedDefaultRows = stepData.value.somatic.selectedDefaultRows
+        } else {
+            somaticData.value.selectedRows = []
+            somaticData.value.selectedDefaultRows = somaticData.value.defaultReportRows
+            console.log('初始化选择行', somaticData.value.selectedRows , csvRows)
+        }
+    })
+}
+
+const loadWesEvidenceData = () => {
+    // const suffix = langCode.value === "en" ? "EN" : "CN"
+    // const tablefile = `Mut_somatic/somatic_${suffix}.evidence`
+    // readTaskFile(route.params.id, tablefile).then((res) => {
+    //     const items = getCsvData(res)
+    //     somaticData.value.drugRows = items
+    //     originsomaticData.value = JSON.stringify(somaticData.value)
+    // })
+
+    somaticData.value.drugRows = []
+    originsomaticData.value = []
 }
 </script>
