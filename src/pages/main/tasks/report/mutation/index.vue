@@ -489,7 +489,7 @@ const loadSomaticEvidenceData = () => {
 }
 
 const loadWesData = () => {
-    readTaskMuFile(route.params.id, 'Mut_somatic').then((res) => {
+    readTaskMuFile(route.params.id, 'Mut_wes').then((res) => {
         const headNames = getCsvHeader(res, '\t')
         const colKeys = _.range(1, headNames.length + 1, 1).map((i) => 'col' + i)
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: colKeys })
@@ -547,3 +547,9 @@ const loadWesEvidenceData = () => {
     originsomaticData.value = []
 }
 </script>
+
+<style lang="scss" scoped>
+.q-tab-panel {
+    padding: 0 !important;
+}
+</style>

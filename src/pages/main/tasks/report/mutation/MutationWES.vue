@@ -1,144 +1,336 @@
 <template>
     <div>
-        <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
+        <q-splitter v-model="splitterModel" unit="px" style="height: 780px" before-class="">
             <template v-slot:before>
-                <div class="column" style="width:90%">
-                    <q-input
-                        v-model="innerSearchParams.gene"
-                        :label="$t('Gene')"
-                        clearable
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-
-                    <q-input
-                        v-model="innerSearchParams.depth"
-                        :label="$t('Depth') + ' ' + innerSearchParams.depthCmp"
-                        clearable
-                        type="number"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    >
-                        <template v-slot:after>
-                            <Cmp v-model="innerSearchParams.depthCmp" />
-                        </template>
-                    </q-input>
-
-                    <q-input
-                        v-model="innerSearchParams.ratio"
-                        :label="$t('TumorFrequency') + ' ' + innerSearchParams.ratioCmp"
-                        clearable
-                        type="number"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    >
-                        <template v-slot:after>
-                            <Cmp v-model="innerSearchParams.ratioCmp" />
-                        </template>
-                    </q-input>
-                    <q-select
-                        v-model="innerSearchParams.mutationType"
-                        clearable
-                        multiple
-                        hide-dropdown-icon
-                        :options="props.options.mutationType"
-                        :label="$t('MutationType')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-
-                    <q-select
-                        v-model="innerSearchParams.mutationPosition"
-                        clearable
-                        multiple
-                        :options="props.options.mutationPosition"
-                        :label="$t('MutationPosition')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-
-                    <q-select
-                        clearable
-                        hide-dropdown-icon
-                        v-model="innerSearchParams.mutationMeaning"
-                        stack-label
-                        multiple
-                        label-color="primary"
-                        :options="props.options.mutationMeaning"
-                        :label="$t('MutationMeaning')"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-                    <q-select
-                        clearable
-                        hide-dropdown-icon
-                        v-model="innerSearchParams.mutationRisk"
-                        stack-label
-                        multiple
-                        label-color="primary"
-                        :options="props.options.mutationRisk"
-                        :label="$t('MutationRisk')"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-                    <q-select
-                        hide-dropdown-icon
-                        v-model="innerSearchParams.human"
-                        stack-label
-                        label-color="primary"
-                        :options="['ALL', 'African', 'American', 'East Asian', 'European', 'South Asian']"
-                        :label="$t('Population')"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-                    <q-input
-                        v-model="innerSearchParams.humanRatio"
-                        :label="$t('CrowdFrequency') + ' ' + innerSearchParams.humanRatioCmp"
-                        clearable
-                        hide-dropdown-icon
-                        type="number"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    >
-                        <template v-slot:after>
-                            <Cmp v-model="innerSearchParams.humanRatioCmp" />
-                        </template>
-                    </q-input>
-
-                    <q-select
-                        clearable
-                        hide-dropdown-icon
-                        v-model="innerSearchParams.sift"
-                        stack-label
-                        multiple
-                        label-color="primary"
-                        :options="['T', 'D', '.']"
-                        label="SIFT_pred"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-
-                    <div class="row items-center">
-                        <q-checkbox
-                            left-label
-                            v-model="innerSearchParams.drug"
-                            :label="$t('RelatedToDrugs')"
+                <div class="column q-gutter-y-xs" style="width:90%">
+                    <div style="border-bottom: 1px solid lightgrey" class="q-p-xs">
+                        <q-option-group
+                            v-model="innerSearchParams.diseaseCategories"
+                            type="checkbox"
+                            dense
                             color="primary"
+                            class="text-primary"
+                            :options="[{label: 'A (Disease Related: IA,IIA,IIIA)', value: 'A'},{label: 'B (Disease Related: IB,IIB,IIIB)', value: 'B'},{label: 'C (Others: IV,V)', value: 'C'}]"
+                        />
+                    </div>
+
+                    <q-select
+                        v-model="innerSearchParams.phenoType"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.phenoType"
+                        :label="$t('PhenoType')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+
+                    <q-select
+                        v-model="innerSearchParams.diseases"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.diseases"
+                        :label="$t('Disease')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+
+                    <q-select
+                        v-model="innerSearchParams.diseaseInheritanceModes"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.diseaseInheritanceModes"
+                        :label="$t('diseaseInheritanceModes')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+                    <q-input
+                        v-model="innerSearchParams.geneSet"
+                        :label="$t('GeneSet')"
+                        clearable
+                        dense
+                        outlined
+                        stack-label
+                        class="full-width"
+                        label-color="primary"
+                        :disable="showSticky && stickDone"
+                    >
+                        <template v-slot:append>
+                            <q-btn padding="xs" size="sm" icon="add" />
+                            <q-btn padding="xs" size="sm" icon="menu" />
+                        </template>
+                    </q-input>
+                    <q-checkbox v-model="innerSearchParams.excludeGensets" keep-color dense size="sm" color="primary">
+                        <template v-slot:default>
+                            <span class="text-primary">Exclude selected Gensets</span>
+                        </template>
+                    </q-checkbox>
+
+                    <q-select
+                        v-model="innerSearchParams.genes"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.genes"
+                        :label="$t('genes')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+
+                    <q-select
+                        v-model="innerSearchParams.prioritizationTier"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.prioritizationTier"
+                        :label="$t('prioritizationTier')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+
+                    <q-select
+                        v-model="innerSearchParams.acmgPathogenicity"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.acmgPathogenicity"
+                        :label="$t('acmgPathogenicity')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+
+                    <q-select
+                        v-model="innerSearchParams.clinvarPathogenicity"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.clinvarPathogenicity"
+                        :label="$t('clinvarPathogenicity')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+
+                    <div class="row">
+                        <q-select
+                            v-model="innerSearchParams.populationAlleleFrequency"
+                            multiple
+                            outlined
+                            hide-dropdown-icon
+                            :options="props.options.populationAlleleFrequency"
+                            :label="$t('populationAlleleFrequency')"
+                            stack-label
+                            dense
+                            class="col-8"
+                            label-color="primary"
+                            :disable="showSticky && stickDone"
+                        >
+                        </q-select>
+                        <q-select
+                            v-model="innerSearchParams.pafComp"
+                            :options="props.options.pafComp"
+                            stack-label
+                            dense
+                            outlined
+                            hide-dropdown-icon
+                            class="col-1 q-px-xs"
+                        />
+                        <q-input
+                            v-model="innerSearchParams.pafValue"
+                            :options="props.options.pafValue"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-3"
+                            label-color="primary"
+                        >
+                            <template v-slot:after><span class="text-subtitle1 text-primary">%</span></template>
+                        </q-input>
+                    </div>
+
+                    <div class="row">
+                        <q-select
+                            v-model="innerSearchParams.genoType"
+                            clearable
+                            outlined
+                            hide-dropdown-icon
+                            :options="props.options.genoType"
+                            :label="$t('genoType')"
+                            stack-label
+                            dense
+                            label-color="primary"
+                            class="col-8"
                             :disable="showSticky && stickDone"
                         />
-                        <div class="text-primary text-bold">{{ $t('Result') + `： ${filteredRows.length}` }}</div>
+                        <q-select
+                            v-model="innerSearchParams.genoTypeComp"
+                            :options="props.options.genoTypeComp"
+                            stack-label
+                            dense
+                            outlined
+                            hide-dropdown-icon
+                            class="col-1 q-px-xs"
+                        />
+                        <q-input
+                            v-model="innerSearchParams.genoTypeValue"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-3"
+                            label-color="primary"
+                        >
+                        </q-input>
+                    </div>
+
+                    <q-select
+                        v-model="innerSearchParams.seqQuality"
+                        clearable
+                        multiple
+                        outlined
+                        hide-dropdown-icon
+                        :options="props.options.seqQuality"
+                        :label="$t('seqQuality')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        :disable="showSticky && stickDone"
+                    />
+
+                    <div class="row q-gutter-xs">
+                        <q-select
+                            v-model="innerSearchParams.variantQualityComp"
+                            hide-dropdown-icon
+                            :options="props.options.variantQualityComp"
+                            :label="$t('variantQualityComp')"
+                            stack-label
+                            dense
+                            outlined
+                            label-color="primary"
+                            class="col-8"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-input
+                            v-model="innerSearchParams.variantQuality"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-3"
+                            label-color="primary"
+                        >
+                        </q-input>
+                    </div>
+                    <div class="row">
+                        <q-input
+                            v-model="innerSearchParams.minAlleleFraction"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-6"
+                            label-color="primary"
+                            label="minAlleleFraction"
+                        >
+                            <template v-slot:append><span class="text-subtitle2">%</span></template>
+                            <template v-slot:after><span class="text-subtitle2">~</span></template>
+                        </q-input>
+                        <q-input
+                            v-model="innerSearchParams.maxAlleleFraction"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-6"
+                            label-color="primary"
+                            label="maxAlleleFraction"
+                        >
+                            <template v-slot:append><span class="text-subtitle2">%</span></template>
+                        </q-input>
+                    </div>
+
+                    <div class="row q-gutter-xs">
+                        <q-select
+                            v-model="innerSearchParams.depthComp"
+                            hide-dropdown-icon
+                            :options="props.options.depthComp"
+                            :label="$t('variantQualityComp')"
+                            stack-label
+                            dense
+                            outlined
+                            label-color="primary"
+                            class="col-8"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-input
+                            v-model="innerSearchParams.depth"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-3"
+                            label-color="primary"
+                        >
+                        </q-input>
+                    </div>
+
+                    <div class="row">
+                        <q-select
+                            v-model="innerSearchParams.chromosome"
+                            hide-dropdown-icon
+                            :options="props.options.chromosome"
+                            :label="$t('chromosome')"
+                            stack-label
+                            dense
+                            outlined
+                            label-color="primary"
+                            class="col-5"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-input
+                            v-model="innerSearchParams.chromosomeStart"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-3 q-pl-xs"
+                            label-color="primary"
+                            label="Start"
+                        />
+                        <span>~</span>
+                        <q-input
+                            v-model="innerSearchParams.chromosomeEnd"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-3  q-pl-xs"
+                            label-color="primary"
+                            label="End"
+                        >
+                        </q-input>
                     </div>
 
                     <div class="q-gutter-xs text-center q-py-sm justify-between">
@@ -333,11 +525,11 @@ import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
-import { useCustomCell } from './index'
+import { useCustomCell, WES_PARAMS } from './index'
 
 const { t } = useI18n()
 const customCell = useCustomCell('col250')
-const splitterModel = ref(250)
+const splitterModel = ref(300)
 const emit = defineEmits(['filterChange'])
 const crowdCols = {
     // ['col26', 'col31', 'col39']
@@ -348,6 +540,7 @@ const crowdCols = {
     'European': [27, 35, 44],
     'South Asian': [30, 36]
 }
+
 const props = defineProps({
     samples: {
         type: Array,
@@ -397,23 +590,7 @@ const props = defineProps({
     searchParams: {
         type: Object,
         required: false,
-        default() {
-            return {
-                gene: null,
-                depth: { type: Number },
-                depthCmp: '>',
-                ratio: { type: Number },
-                ratioCmp: '>',
-                mutationType: null,
-                mutationPosition: [],
-                mutationMeaning: null,
-                mutationRisk: null,
-                human: 'ALL',
-                humanRatio: { type: Number },
-                sift: null,
-                drug: false,
-            }
-        },
+        default() { return {...WES_PARAMS }}
     },
     drugRows: {
         type: Array,
@@ -442,39 +619,7 @@ const route = useRoute()
 const igvVisible = ref(false)
 const igvFile = ref(null)
 const dialogVisible = ref(false)
-const searchParamsInit = {
-    gene: null,
-    depth: null,
-    depthCmp: '>',
-    ratio: null,
-    ratioCmp: '>',
-    mutationType: null,
-    mutationPosition: [],
-    mutationMeaning: null,
-    mutationRisk: null,
-    human: 'ALL',
-    humanRatio: null,
-    humanRatioCmp: '<',
-    sift: null,
-    drug: false,
-}
-
-const innerSearchParams = ref({
-    gene: null,
-    depth: null,
-    depthCmp: '>',
-    ratio: null,
-    ratioCmp: '>',
-    mutationType: null,
-    mutationPosition: [],
-    mutationMeaning: null,
-    mutationRisk: null,
-    human: 'ALL',
-    humanRatio: null,
-    humanRatioCmp: '<',
-    sift: null,
-    drug: false,
-})
+const innerSearchParams = ref({...WES_PARAMS})
 
 const chartTitles = {
     type: 'MutationTypeStatistics',
@@ -666,7 +811,7 @@ const customRow = (record, index) => {
 }
 
 const reset = () => {
-    innerSearchParams.value = { ...searchParamsInit }
+    innerSearchParams.value = { ...WES_PARAMS }
     search()
 }
 
@@ -990,5 +1135,9 @@ defineExpose({ getChangedData, })
 
 .ant-table-selection-column:hover #select-info {
     display: block;
+}
+
+.q-tab-panel {
+    padding: 0 !important;
 }
 </style>

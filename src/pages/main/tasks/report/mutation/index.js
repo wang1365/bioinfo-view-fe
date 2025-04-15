@@ -13,3 +13,43 @@ export const useCustomCell = (columnName) => {
         }
     }
 }
+
+export const WES_PARAMS = {
+    diseaseCategories: ['A', 'B', 'C'],
+    phenoType: null,
+    diseases: [],
+    diseaseInheritanceModes: [],
+    geneSet: '',
+    excludeGensets: false,
+    gene: [],
+    prioritizationTier: [],
+    acmgPathogenicity: [],
+    clinvarPathogenicity: [],
+    populationAlleleFrequency: [],
+    pafComp: '>',
+    pafValue: null,
+    genoType: null,
+    genoTypeComp: '>',
+    genoTypeValue: null,
+    seqQuality: null,
+    variantQualityComp: '>',
+    variantQuality: null,
+    minAlleleFraction: null,
+    maxAlleleFraction: null,
+    depth: { type: Number },
+    depthCmp: '>',
+    chromosome: null,
+    chromosomeStart: null,
+    chromosomeEnd: null,
+
+    ratio: { type: Number },
+    ratioCmp: '>',
+    mutationType: null,
+    mutationPosition: [],
+    mutationMeaning: null,
+    mutationRisk: null,
+    human: 'ALL',
+    humanRatio: { type: Number },
+    sift: null,
+    drug: false,
+}
