@@ -47,11 +47,7 @@
                 :label="$t('SomaticMutationAnalysis')"
                 v-if="props.viewConfig.showMutSomatic"
             />
-            <q-tab
-                name="WES突变分析"
-                :label="$t('SomaticMutationAnalysis')"
-                v-if="props.viewConfig.showMutWES || true"
-            />
+            <q-tab name="WES突变分析" :label="$t('WES突变分析')" v-if="props.viewConfig.showMutWES || true" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">
@@ -491,45 +487,33 @@ const loadSomaticEvidenceData = () => {
 const loadWesData = () => {
     readTaskMuFile(route.params.id, 'Mut_wes').then((res) => {
         const headNames = getCsvHeader(res, '\t')
-        const colKeys = _.range(1, headNames.length + 1, 1).map((i) => 'col' + i)
-        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: colKeys })
-        csvRows.forEach((row, i) => (row.id = i))
+        const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: headNames })
+        csvRows.forEach((row, i) => {
+            row.id = i
+            row.Gene_Related_Diseases = row.Gene_Related_Diseases.split(';')
+            row.ACMG = row.ACMG.split(';')
+        })
 
         // 提取options
         let positions = new Set()
         let meanings = new Set()
         let risks = new Set()
-        for (let columns of csvRows) {
-            const items = columns.col14.split(';')
-            items.forEach((item) => positions.add(item))
 
-            if (columns.col17 !== '.') {
-                meanings.add(columns.col17)
-            } else {
-                meanings.add('●')
-            }
-
-            if (columns.col25 !== '.') {
-                risks.add(columns.col25)
-            } else {
-                risks.add('●')
-            }
-        }
-        somaticData.value.rows = csvRows
-        somaticData.value.header = headNames
-        somaticData.value.options.mutationPosition = Array.from(positions)
-        somaticData.value.options.mutationMeaning = Array.from(meanings)
-        somaticData.value.options.mutationRisk = Array.from(risks)
-        somaticData.value.defaultReportRows = csvRows.filter(t => t.col254 === 'Y').map(t => t.lineNumber)
-        originsomaticData.value = JSON.stringify(somaticData.value)
-        if (stepData.value && stepData.value.somatic) {
-            somaticData.value.searchParams = stepData.value.somatic.searchParams
-            somaticData.value.selectedRows = stepData.value.somatic.selectedRows
-            somaticData.value.selectedDefaultRows = stepData.value.somatic.selectedDefaultRows
+        wesData.value.rows = csvRows
+        wesData.value.header = headNames
+        wesData.value.options.mutationPosition = Array.from(positions)
+        wesData.value.options.mutationMeaning = Array.from(meanings)
+        wesData.value.options.mutationRisk = Array.from(risks)
+        wesData.value.defaultReportRows = []
+        originWesData.value = JSON.stringify(wesData.value)
+        if (stepData.value && stepData.value.wes) {
+            wesData.value.searchParams = stepData.value.wes.searchParams
+            wesData.value.selectedRows = stepData.value.wes.selectedRows
+            wesData.value.selectedDefaultRows = stepData.value.wes.selectedDefaultRows
         } else {
-            somaticData.value.selectedRows = []
-            somaticData.value.selectedDefaultRows = somaticData.value.defaultReportRows
-            console.log('初始化选择行', somaticData.value.selectedRows , csvRows)
+            wesData.value.selectedRows = []
+            wesData.value.selectedDefaultRows = wesData.value.defaultReportRows
+            console.log('初始化选择行', wesData.value.selectedRows , csvRows)
         }
     })
 }

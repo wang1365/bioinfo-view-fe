@@ -2,7 +2,7 @@
     <div>
         <q-splitter v-model="splitterModel" unit="px" style="height: 780px" before-class="">
             <template v-slot:before>
-                <div class="column q-gutter-y-xs" style="width:90%">
+                <div :class="['column', 'q-gutter-y-xs', {dimmed: showSticky && stickDone}]" style="width:100%">
                     <div style="border-bottom: 1px solid lightgrey" class="q-p-xs">
                         <q-option-group
                             v-model="innerSearchParams.diseaseCategories"
@@ -26,7 +26,6 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
 
                     <q-select
@@ -41,7 +40,6 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
 
                     <q-select
@@ -56,7 +54,6 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
                     <q-input
                         v-model="innerSearchParams.geneSet"
@@ -67,7 +64,6 @@
                         stack-label
                         class="full-width"
                         label-color="primary"
-                        :disable="showSticky && stickDone"
                     >
                         <template v-slot:append>
                             <q-btn padding="xs" size="sm" icon="add" />
@@ -81,18 +77,17 @@
                     </q-checkbox>
 
                     <q-select
-                        v-model="innerSearchParams.genes"
+                        v-model="innerSearchParams.gene"
                         clearable
                         multiple
                         dense
                         outlined
                         hide-dropdown-icon
-                        :options="props.options.genes"
+                        :options="props.options.gene"
                         :label="$t('genes')"
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
 
                     <q-select
@@ -107,7 +102,6 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
 
                     <q-select
@@ -122,7 +116,6 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
 
                     <q-select
@@ -137,7 +130,6 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
 
                     <div class="row">
@@ -152,7 +144,6 @@
                             dense
                             class="col-8"
                             label-color="primary"
-                            :disable="showSticky && stickDone"
                         >
                         </q-select>
                         <q-select
@@ -189,7 +180,6 @@
                             dense
                             label-color="primary"
                             class="col-8"
-                            :disable="showSticky && stickDone"
                         />
                         <q-select
                             v-model="innerSearchParams.genoTypeComp"
@@ -222,7 +212,6 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
-                        :disable="showSticky && stickDone"
                     />
 
                     <div class="row q-gutter-xs">
@@ -236,7 +225,6 @@
                             outlined
                             label-color="primary"
                             class="col-8"
-                            :disable="showSticky && stickDone"
                         />
                         <q-input
                             v-model="innerSearchParams.variantQuality"
@@ -285,7 +273,6 @@
                             outlined
                             label-color="primary"
                             class="col-8"
-                            :disable="showSticky && stickDone"
                         />
                         <q-input
                             v-model="innerSearchParams.depth"
@@ -309,7 +296,6 @@
                             outlined
                             label-color="primary"
                             class="col-5"
-                            :disable="showSticky && stickDone"
                         />
                         <q-input
                             v-model="innerSearchParams.chromosomeStart"
@@ -332,40 +318,32 @@
                         >
                         </q-input>
                     </div>
-
-                    <div class="q-gutter-xs text-center q-py-sm justify-between">
+                    <!--                    :class="['column', 'q-gutter-y-xs', {dimmed: showSticky && stickDone}]"-->
+                    <div class="row q-gutter-x-sm">
                         <q-btn
                             color="primary"
                             :label="$t('Confirm')"
                             size="md"
+                            dense
                             padding="sm"
                             icon="search"
                             @click="search"
-                            :disable="showSticky && stickDone"
                         />
                         <q-btn
                             color="primary"
                             :label="$t('Reset')"
                             size="md"
+                            dense
                             padding="sm"
                             icon="settings_backup_restore"
                             @click="reset"
-                            :disable="showSticky && stickDone"
-                        />
-                        <q-btn
-                            color="primary"
-                            :label="$t('MoreColumns')"
-                            size="md"
-                            padding="sm"
-                            icon="last_page"
-                            @click="showDrawer = !showDrawer"
-                            :disable="showSticky && stickDone"
                         />
                         <q-btn
                             :href="tableFile"
                             :download="tableFileName"
                             :label="$t('Download')"
                             padding="sm"
+                            dense
                             icon="south"
                             color="primary"
                             target="_blank"
@@ -399,6 +377,70 @@
                         :row-selection="rowSelection"
                     >
                         <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex == 'geneInfo'">
+                                <div class="row">
+                                    <div class="col-1 text-weight-bolder text-green-5">{{record.Class}}</div>
+                                    <div class="col-10">
+                                        <div class="text-primary">{{record['Gene.refGene']}}</div>
+                                        <div>{{record['ExonicFunc.refGene']}}</div>
+                                        <div>
+                                            {{record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt}}
+                                        </div>
+                                        <div>{{record.NUChange}}</div>
+                                        <div>{{record.AAChange}}</div>
+                                        <div>{{record['GeneDetail.refGene'] + ' ' + record.exon}}</div>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="column.dataIndex == 'genoTypeQuality'">
+                                <div class="row q-gutter-x-sm">
+                                    <div class="col">
+                                        <div class="text-grey">Genotype Quality</div>
+                                        <div class="text-weight-bolder">{{record.Genotype_Quality || '-'}}</div>
+
+                                        <div class="text-grey">Variant Quality</div>
+                                        <div class="text-weight-bolder">{{record.Variant_Quality || '-'}}</div>
+
+                                        <div class="text-grey">Depth Quality</div>
+                                        <div class="text-weight-bolder">{{record.Depth_Quality}}</div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="text-grey">Allele Fraction</div>
+                                        <div class="text-weight-bolder">{{record.Mutation_Rate || '-'}}</div>
+
+                                        <div class="text-grey">Depth</div>
+                                        <div class="text-weight-bolder">{{record.Seq_Depths || '-'}}</div>
+
+                                        <div class="text-grey">Genotype</div>
+                                        <div>{{record.Genotype}}</div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template v-if="column.dataIndex == 'Gene_Related_Diseases'">
+                                <template v-for="grd in record.Gene_Related_Diseases" :key="grd">
+                                    <div>{{grd}}</div>
+                                </template>
+                            </template>
+
+                            <template v-if="column.dataIndex == 'ACMG_result'">
+                                <div class="text-purple">{{record.ACMG_result}}</div>
+                                <template v-for="acmg in record.ACMG" :key="acmg">
+                                    <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{acmg}}</q-chip>
+                                </template>
+                            </template>
+
+                            <template v-if="column.dataIndex == 'Clinvar'">
+                                <div class="text-purple">{{record.Clinvar}}</div>
+                                <q-rating
+                                    :model-value="record.Clinvar_ReviewStatus"
+                                    color="orange"
+                                    icon="star_border"
+                                    icon-selected="star"
+                                    readonly
+                                />
+                            </template>
+
                             <template v-if="column.key === 'operation'">
                                 <q-btn
                                     :label="$t('Detail')"
@@ -418,12 +460,11 @@
                                     @click="clickIgv(record)"
                                 />
                             </template>
-                            <template v-else>
-                                <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
-                                    <div>{{ record[column.dataIndex] }}</div>
-                                </a-tooltip>
-                                <span v-else>{{ record[column.dataIndex] }}</span>
-                            </template>
+                            <!--                            <template v-else>-->
+                            <!--                                <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">-->
+                            <!--                                    <div>{{ record[column.dataIndex] }}</div>-->
+                            <!--                                </a-tooltip>-->
+                            <!--                            </template>-->
                         </template>
                     </a-table>
                 </div>
@@ -460,33 +501,6 @@
         <q-separator class="q-my-lg" size="2px" color="primary" />
     </div>
 
-    <div class="q-my-sm">
-        <div class="row q-mb-sm">
-            <div class="col q-px-xs">
-                <PieChartVue :data="filteredRows" :titleKey="chartTitles.type" />
-            </div>
-            <div class="col q-px-xs">
-                <RoseChartVue :data="filteredRows" col-key="col13" :titleKey="chartTitles.meaning" />
-            </div>
-            <div class="col q-px-xs">
-                <RoseChartVue :data="filteredRows" col-key="col21" :titleKey="chartTitles.risk" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-4 q-px-xs">
-                <BarChartVue :data="filteredRows" :titleKey="chartTitles.snp" />
-            </div>
-
-            <div class="col-8 q-px-xs">
-                <BubbleChartVue
-                    :data="filteredRows"
-                    :titleKey="chartTitles.crowd"
-                    :colKeys="bubbleColKeys"
-                    :serialTitles="serialTitles"
-                />
-            </div>
-        </div>
-    </div>
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
@@ -621,23 +635,6 @@ const igvFile = ref(null)
 const dialogVisible = ref(false)
 const innerSearchParams = ref({...WES_PARAMS})
 
-const chartTitles = {
-    type: 'MutationTypeStatistics',
-    meaning: 'MutationMeaningStatistics',
-    risk: 'MutationRiskStatistics',
-    crowd: 'CrowdFrequencyStatistics',
-    snp: 'SnpStatistics',
-}
-
-const bubbleColKeys = computed(() => {
-    // ['col26', 'col31', 'col39']
-    return crowdCols[innerSearchParams.value.human].map(idx => `col${idx}`)
-})
-
-const serialTitles = computed(() => {
-    // ['col26', 'col31', 'col39']
-    return crowdCols[innerSearchParams.value.human].map(idx => props.header[idx-1])
-})
 
 const showDrawer = ref(false)
 
@@ -669,101 +666,48 @@ const rowSelection = computed(() => {
     }
 )
 
-const fixedColumns = [
-    { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
-    { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 100, fixed: 'left' }, // Start
-    { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 100 }, // End
-    { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
-    { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
-    { i: 6, title: '', dataIndex: 'col6', align: 'center', width: 120 }, // Geno_Type
-    { i: 7, title: '', dataIndex: 'col7', align: 'center', width: 125 }, // Allelic_depths
-    { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 120 }, // Seq_depths
-    { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 130 }, // Mutation_Rate
-    { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105 }, // Func.refGene
-    { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110 }, // Gene.refGene
-
-    { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
-    { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80 }, // exon
-    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100 }, // NUChange
-    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100 }, // AAChange
-
-    { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
-    { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
-    { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280, ellipsis: true }, // CLNREVSTAT
-    { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true }, //CLNSIG
-    { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 200, ellipsis: true }, // cosmic70
-    { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 100 }, // ExAC_ALL
-    // { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
-    // { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 105 }, // ExAC_AMR
-    // { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100 }, // ExAC_EAS
-
-    { i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100 },
-    // { i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100 },
-
-    // { i: 34, title: '', dataIndex: 'col34', align: 'center', width: 100 }, // avsnp150
-    // { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 120 },
-
-    { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 120 },
-    // { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 120 },
-
-    // { i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100 },
-    { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
-
-    // { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
-
-    // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
-    { title: '操作列',  key: 'operation', align: 'center', fixed: 'right', width: 100 }
-]
 
 const scrollX = computed(() => {
-    return 2000 + (fixedColumns.length - 33) * 100
+    return 2000
 })
 
-const selectedExpandColIdx = ref([])
-
-
-// 固定显示列的列号
-const fixedIdx = fixedColumns.map(t => t.i)
-// 扩展列的列号（所有列 排除固定列）
-const expandedColumns = computed(() => {
-    const expandedIdx = new Array(props.header.length).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
-    return expandedIdx.map(idx => {
-        return {
-            i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
-            label: header.value[idx - 1], value: idx
-        }
-    })
-})
-
-const clickSelectAll = () => {
-    selectedExpandColIdx.value = [...expandedColumns.value.map(t => t.i)]
-}
-
-const clickSelectNone = () => {
-    selectedExpandColIdx.value = []
-}
 
 const atOptionGroupChange = () => {
     console.log('atOptionGroupChange', selectedExpandColIdx)
 }
 
 const columns = computed(() => {
-    let result = [...fixedColumns]
-    result = result.splice(0, result.length-2)
-    selectedExpandColIdx.value.forEach(idx => {
-        result.push({
-            i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
-        })
-    })
-    result.push(fixedColumns[fixedColumns.length-1])
+    return [
+        { title: 'Gene Info', dataIndex: `geneInfo`, width: 150, ellipsis: true     },
+        { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 150, ellipsis: true     },
+        { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true     },
+        { title: 'User Verdict', dataIndex: ``, width: 100, ellipsis: true     },
+        { title: 'ACMG', dataIndex: `ACMG_result`, width: 100, ellipsis: true     },
 
-    // 如果有扩展列要展示，需要重置列宽
-    // if (fixedColumns.length > 0) {
-    //     result.forEach(t => t.width = 0)
-    // }
+        { title: 'Clinvar', dataIndex: `Clinvar`, width: 100, ellipsis: true     },
+        { title: 'Frequencies', dataIndex: `gnomAD_genome_ALL`, width: 100, ellipsis: true     },
+        { title: 'Related HPOs', dataIndex: `HPO`, width: 100, ellipsis: true     },
+        { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 100, ellipsis: true     },
+        { title: 'IGV', dataIndex: ``, width: 100, ellipsis: true     },
+    ]
 
-    result.forEach((c) => (c.customCell = customCell))
-    return result
+
+    // let result = [...fixedColumns]
+    // result = result.splice(0, result.length-2)
+    // selectedExpandColIdx.value.forEach(idx => {
+    //     result.push({
+    //         i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
+    //     })
+    // })
+    // result.push(fixedColumns[fixedColumns.length-1])
+    //
+    // // 如果有扩展列要展示，需要重置列宽
+    // // if (fixedColumns.length > 0) {
+    // //     result.forEach(t => t.width = 0)
+    // // }
+    //
+    // result.forEach((c) => (c.customCell = customCell))
+    // return result
 })
 
 function clickDetail (record) {
@@ -1005,41 +949,43 @@ const actionTitle = computed(() => t('Operate'))
 
 // 加载表格数据
 const loadTable = () => {
-    columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
-    const actionColumn = columns.value[columns.value.length - 1]
-    actionColumn.title = actionTitle
-    actionColumn.width = 105
-
-    innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)
-    searchFilterRows(propSearchParams.value)
-    selectedRows.value = []
-    selectedDefaultRows.value = []
-
-    for (let item of filteredRows.value) {
-        let finded = false
-        for (let lineNumber of propSelectedRows.value) {
-            if (lineNumber === item.lineNumber) {
-                finded = true
-                break
-            }
-        }
-        if (finded) {
-            selectedRows.value.push(item.lineNumber)
-        }
-    }
-    for (let item of filteredRows.value) {
-        let finded = false
-        for (let lineNumber of propSelectedDefaultRows.value) {
-            if (lineNumber === item.lineNumber) {
-                finded = true
-                break
-            }
-        }
-        if (finded) {
-            selectedRows.value.push(item.lineNumber)
-            selectedDefaultRows.value.push(item.lineNumber)
-        }
-    }
+    filteredRows.value = rows.value
+    console.log('====> wes rows', filteredRows.value)
+    // columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
+    // const actionColumn = columns.value[columns.value.length - 1]
+    // actionColumn.title = actionTitle
+    // actionColumn.width = 105
+    //
+    // innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)
+    // searchFilterRows(propSearchParams.value)
+    // selectedRows.value = []
+    // selectedDefaultRows.value = []
+    //
+    // for (let item of filteredRows.value) {
+    //     let finded = false
+    //     for (let lineNumber of propSelectedRows.value) {
+    //         if (lineNumber === item.lineNumber) {
+    //             finded = true
+    //             break
+    //         }
+    //     }
+    //     if (finded) {
+    //         selectedRows.value.push(item.lineNumber)
+    //     }
+    // }
+    // for (let item of filteredRows.value) {
+    //     let finded = false
+    //     for (let lineNumber of propSelectedDefaultRows.value) {
+    //         if (lineNumber === item.lineNumber) {
+    //             finded = true
+    //             break
+    //         }
+    //     }
+    //     if (finded) {
+    //         selectedRows.value.push(item.lineNumber)
+    //         selectedDefaultRows.value.push(item.lineNumber)
+    //     }
+    // }
 
     // filterChange()
 }
