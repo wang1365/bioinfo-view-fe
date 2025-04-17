@@ -492,6 +492,7 @@ const loadWesData = () => {
             row.id = i
             row.Gene_Related_Diseases = row.Gene_Related_Diseases.split(';')
             row.ACMG = row.ACMG.split(';')
+            row.HPO = row.HPO.split(';')
         })
 
         // 提取options

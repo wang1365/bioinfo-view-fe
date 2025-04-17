@@ -1,8 +1,11 @@
 <template>
     <div>
-        <q-splitter v-model="splitterModel" unit="px" style="height: 780px" before-class="">
+        <q-splitter v-model="splitterModel" unit="px" style="height: 680px" before-class="">
             <template v-slot:before>
-                <div :class="['column', 'q-gutter-y-xs', {dimmed: showSticky && stickDone}]" style="width:100%">
+                <div
+                    :class="['column', 'q-gutter-y-xs', 'q-pr-sm', {dimmed: showSticky && stickDone}]"
+                    style="width:100%"
+                >
                     <div style="border-bottom: 1px solid lightgrey" class="q-p-xs">
                         <q-option-group
                             v-model="innerSearchParams.diseaseCategories"
@@ -132,7 +135,7 @@
                         class="full-width"
                     />
 
-                    <div class="row">
+                    <div class="row justify-between">
                         <q-select
                             v-model="innerSearchParams.populationAlleleFrequency"
                             multiple
@@ -142,7 +145,7 @@
                             :label="$t('populationAlleleFrequency')"
                             stack-label
                             dense
-                            class="col-8"
+                            class="col-7"
                             label-color="primary"
                         >
                         </q-select>
@@ -153,7 +156,7 @@
                             dense
                             outlined
                             hide-dropdown-icon
-                            class="col-1 q-px-xs"
+                            class="col-1"
                         />
                         <q-input
                             v-model="innerSearchParams.pafValue"
@@ -168,7 +171,7 @@
                         </q-input>
                     </div>
 
-                    <div class="row">
+                    <div class="row justify-between">
                         <q-select
                             v-model="innerSearchParams.genoType"
                             clearable
@@ -179,7 +182,7 @@
                             stack-label
                             dense
                             label-color="primary"
-                            class="col-8"
+                            class="col-7"
                         />
                         <q-select
                             v-model="innerSearchParams.genoTypeComp"
@@ -188,7 +191,7 @@
                             dense
                             outlined
                             hide-dropdown-icon
-                            class="col-1 q-px-xs"
+                            class="col-1"
                         />
                         <q-input
                             v-model="innerSearchParams.genoTypeValue"
@@ -366,7 +369,6 @@
                     </q-icon>
                     <a-table
                         style="z-index:1"
-                        bordered
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
@@ -379,7 +381,9 @@
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex == 'geneInfo'">
                                 <div class="row">
-                                    <div class="col-1 text-weight-bolder text-green-5">{{record.Class}}</div>
+                                    <div class="col-1 text-weight-bolder text-green-5">
+                                        <div class="text-weight-bolder text-green-5">{{record.Class}}</div>
+                                    </div>
                                     <div class="col-10">
                                         <div class="text-primary">{{record['Gene.refGene']}}</div>
                                         <div>{{record['ExonicFunc.refGene']}}</div>
@@ -439,6 +443,17 @@
                                     icon-selected="star"
                                     readonly
                                 />
+                            </template>
+
+                            <template v-if="column.dataIndex == 'HPO'">
+                                <template v-for="hpo in record.HPO" :key="hpo">
+                                    <div>{{hpo}}</div>
+                                </template>
+                            </template>
+
+                            <template v-if="column.dataIndex == 'Software_Prediction_result'">
+                                <q-linear-progress :value="record.Software_Prediction_result" size="10px" />
+                                {{record.Software_Prediction_result}}
                             </template>
 
                             <template v-if="column.key === 'operation'">
