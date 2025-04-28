@@ -1,5 +1,5 @@
 <template>
-    <div class="q-py-sm" style="max-height: 80vh">
+    <div class="q-py-sm">
         <q-btn
             icon="help_outline"
             size="small"

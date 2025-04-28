@@ -1,5 +1,5 @@
 <template>
-    <q-page padding style="padding-top: 10px; overflow: hidden">
+    <q-page style="padding: 10px; overflow: auto; height: 90vh">
         <div class="row items-center">
             <h6>{{ $t('TaskResult') }}</h6>
             <q-space />

@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
+    <q-page>
+        <q-splitter v-model="splitterModel" unit="px" class="q-px-sm">
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input
@@ -266,7 +266,7 @@
             </q-card>
         </q-dialog>
         <q-separator class="q-my-lg" size="2px" color="primary" />
-    </div>
+    </q-page>
 
     <div class="q-my-sm">
         <div class="row q-mb-sm">

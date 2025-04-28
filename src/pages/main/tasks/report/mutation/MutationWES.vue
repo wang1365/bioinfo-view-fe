@@ -322,36 +322,38 @@
                         </q-input>
                     </div>
                     <!--                    :class="['column', 'q-gutter-y-xs', {dimmed: showSticky && stickDone}]"-->
-                    <div class="row q-gutter-x-sm">
-                        <q-btn
-                            color="primary"
-                            :label="$t('Confirm')"
-                            size="md"
-                            dense
-                            padding="sm"
-                            icon="search"
-                            @click="search"
-                        />
-                        <q-btn
-                            color="primary"
-                            :label="$t('Reset')"
-                            size="md"
-                            dense
-                            padding="sm"
-                            icon="settings_backup_restore"
-                            @click="reset"
-                        />
-                        <q-btn
-                            :href="tableFile"
-                            :download="tableFileName"
-                            :label="$t('Download')"
-                            padding="sm"
-                            dense
-                            icon="south"
-                            color="primary"
-                            target="_blank"
-                            size="md"
-                        />
+                    <div>
+                        <div class="row q-gutter-x-sm">
+                            <q-btn
+                                color="primary"
+                                :label="$t('Confirm')"
+                                size="md"
+                                dense
+                                padding="sm"
+                                icon="search"
+                                @click="search"
+                            />
+                            <q-btn
+                                color="primary"
+                                :label="$t('Reset')"
+                                size="md"
+                                dense
+                                padding="sm"
+                                icon="settings_backup_restore"
+                                @click="reset"
+                            />
+                            <q-btn
+                                :href="tableFile"
+                                :download="tableFileName"
+                                :label="$t('Download')"
+                                padding="sm"
+                                dense
+                                icon="south"
+                                color="primary"
+                                target="_blank"
+                                size="md"
+                            />
+                        </div>
                     </div>
                 </div>
             </template>
@@ -372,7 +374,7 @@
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
-                        :scroll="{ x: scrollX, y: 610 }"
+                        :scroll="{ x: scrollX, y: 550 }"
                         :custom-row="customRow"
                         :sticky="true"
                         rowKey="lineNumber"
@@ -513,7 +515,6 @@
                 </q-card-actions>
             </q-card>
         </q-dialog>
-        <q-separator class="q-my-lg" size="2px" color="primary" />
     </div>
 
     <q-dialog class="q-py-sm" v-model="dialogVisible">
@@ -683,7 +684,7 @@ const rowSelection = computed(() => {
 
 
 const scrollX = computed(() => {
-    return 2000
+    return 1600
 })
 
 
@@ -694,16 +695,16 @@ const atOptionGroupChange = () => {
 const columns = computed(() => {
     return [
         { title: 'Gene Info', dataIndex: `geneInfo`, width: 150, ellipsis: true     },
-        { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 150, ellipsis: true     },
+        { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true     },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true     },
         { title: 'User Verdict', dataIndex: ``, width: 100, ellipsis: true     },
         { title: 'ACMG', dataIndex: `ACMG_result`, width: 100, ellipsis: true     },
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 100, ellipsis: true     },
-        { title: 'Frequencies', dataIndex: `gnomAD_genome_ALL`, width: 100, ellipsis: true     },
+        { title: 'Frequencies', dataIndex: `gnomAD_genome_ALL`, width: 80, ellipsis: true     },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 100, ellipsis: true     },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 100, ellipsis: true     },
-        { title: 'IGV', dataIndex: ``, width: 100, ellipsis: true     },
+        { title: 'IGV', dataIndex: ``, width: 80, ellipsis: true     },
     ]
 
 
