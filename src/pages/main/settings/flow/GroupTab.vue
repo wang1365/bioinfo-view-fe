@@ -4,6 +4,7 @@
             :rows="rows"
             :columns="columns"
             :loading="loading"
+            :table-style="{ height: '600px' }"
             row-key="name"
             hide-no-data
             wrap-cells
@@ -25,17 +26,14 @@
                 />
             </template>
             <template v-slot:body-cell-panels="props">
-                <q-td :props="props" align="center">
-                    <div v-for="item in props.row.panels" :key="item.id">
-                        <q-chip :label="item.name" color="primary" outline size="sm" />
-                    </div>
-
-                    <!--                    <div v-for="item in props.row.panels" :key="item.id">{{item.name}}</div>-->
+                <q-td :props="props">
+                    <template v-for="item in props.row.panels" :key="item.id">
+                        <q-chip :label="item.name" color="primary" outline size="md" />
+                    </template>
                 </q-td>
             </template>
             <template v-slot:body-cell-operation="props">
-                <q-td :props="props" align="center" class="q-gutter-xs">
-                    <!--                    <q-btn label="查看" color="primary" outline size="sm" @click="showInfoDlg(props.row)"></q-btn>-->
+                <q-td :props="props" class="q-gutter-xs">
                     <q-btn
                         :label="$t('Edit')"
                         color="orange"
@@ -81,11 +79,11 @@ const config = ref({value: 0})
 
 const $q = useQuasar()
 const columns = computed( () => [
-    {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center', required: true},
-    {name: 'panels', label: 'Panel', field: 'panels', sortable: true, align: 'center', required: true},
-    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:220px', format: v => format(v)},
-    {name: 'operation', label: t('Operate'), align: 'center', style: 'width:250px'},
+    {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, style: 'width:80px', field: (row) => row.id},
+    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'left', style: 'width:120px', required: true},
+    {name: 'panels', label: 'Panel', field: 'panels', sortable: true, align: 'left', style: 'width:450px', required: true},
+    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:120px', format: v => format(v)},
+    {name: 'operation', label: t('Operate'), align: 'center', style: 'width:150px'},
 ])
 
 

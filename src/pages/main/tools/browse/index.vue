@@ -1,5 +1,5 @@
 <template>
-    <q-page padding>
+    <div class="q-pa-md">
         <PageTitle :title="$t('SampleDataSearch')" />
         <div class="row items-center q-gutter-sm q-my-sm">
             <q-input
@@ -54,9 +54,8 @@
         <a-table
             :data-source="rows"
             :columns="columns"
-            :scroll="{ x: 2000 }"
+            :scroll="{ x: 2000, y: 580 }"
             :sticky="true"
-            class="ant-table-striped"
             :rowClassName="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
             :pagination="pagination"
             @change="tableChange"
@@ -104,7 +103,7 @@
                 </template>
             </template>
         </a-table>
-    </q-page>
+    </div>
 </template>
 
 <script setup>
@@ -297,8 +296,5 @@ const clickView = (sample_id, task) => {
 .pagination {
     padding: 30px 30px 0 0;
     text-align: center;
-}
-.ant-table-striped :deep(.table-striped) td {
-    background-color: #fafafa;
 }
 </style>

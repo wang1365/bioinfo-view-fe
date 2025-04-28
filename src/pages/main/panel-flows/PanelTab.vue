@@ -1,16 +1,9 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <q-card>
-            <q-splitter v-model="splitterModel">
+            <q-splitter v-model="splitterModel" style="height: 90vh">
                 <template v-slot:before>
-                    <q-tabs
-                        v-model="tab"
-                        indicator-color="primary"
-                        active-bg-color="blue-2"
-                        vertical
-                        class="shadow-2 flex-end"
-                        :breakpoint="0"
-                    >
+                    <q-tabs v-model="tab" indicator-color="primary" active-bg-color="blue-2" vertical breakpoint="600">
                         <q-tab v-for="tab in rows" :key="tab.name" :name="tab.name" :label="tab.name" />
                     </q-tabs>
                 </template>

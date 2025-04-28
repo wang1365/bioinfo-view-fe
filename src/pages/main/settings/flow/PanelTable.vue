@@ -1,13 +1,15 @@
 <template>
-    <q-page padding>
+    <q-page>
         <q-table
             :rows="rows"
             :columns="columns"
             :loading="loading"
             :visible-columns="visibleColumns"
+            :table-style="{ height: '600px' }"
             row-key="name"
             hide-no-data
             wrap-cells
+            dense
             rows-per-page-label="每页条数"
             rows-per-page-options="0"
             class="bio-data-table"
@@ -25,10 +27,10 @@
                 <q-btn v-if="!props.readonly" color="primary" :label="$t('Add')" @click="addRow" />
             </template>
             <template v-slot:body-cell-flows="props">
-                <q-td :props="props" align="center" class="q-gutter-xs">
-                    <div v-for="item in props.row.flows" :key="item.id">
-                        <q-chip outline color="primary" size="sm" :label="item.name" />
-                    </div>
+                <q-td :props="props" class="q-gutter-xs">
+                    <template v-for="item in props.row.flows" :key="item.id">
+                        <q-chip outline color="primary" size="md" :label="item.name" />
+                    </template>
                 </q-td>
             </template>
             <template v-slot:body-cell-operation="props">
@@ -78,11 +80,11 @@ const keyword = ref('')
 const $q = useQuasar()
 const columns = computed(() => [
     {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, field: (row) => row.id},
-    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'center'},
-    {name: 'panel_group_name', label: t('PanelGroup'), field: row => row.panel_group_name, sortable: true, align: 'center'},
-    {name: 'flows', label: t('AnalysisModule'), field: 'flows', align: 'center', style: 'width:220px'},
-    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:220px', 'format': v => format(v)},
-    {name: 'operation', label: t('Operate'), align: 'center', style: 'width:250px'},
+    {name: 'name', label: t('Name'), field: 'name', style: 'width:120px', sortable: true, align: 'left'},
+    {name: 'panel_group_name', label: t('PanelGroup'), style: 'width:120px', field: row => row.panel_group_name, sortable: true, align: 'left'},
+    {name: 'flows', label: t('AnalysisModule'), field: 'flows', align: 'left', style: 'width:320px'},
+    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:120px', 'format': v => format(v)},
+    {name: 'operation', label: t('Operate'), align: 'center', style: 'width:120px'},
 ])
 
 

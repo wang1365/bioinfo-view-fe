@@ -379,7 +379,7 @@
                         :row-selection="rowSelection"
                     >
                         <template #bodyCell="{ column, record }">
-                            <template v-if="column.dataIndex == 'geneInfo'">
+                            <template v-if="column.dataIndex === 'geneInfo'">
                                 <div class="row">
                                     <div class="col-1 text-weight-bolder text-green-5">
                                         <div class="text-weight-bolder text-green-5">{{record.Class}}</div>
@@ -396,7 +396,7 @@
                                     </div>
                                 </div>
                             </template>
-                            <template v-if="column.dataIndex == 'genoTypeQuality'">
+                            <template v-if="column.dataIndex === 'genoTypeQuality'">
                                 <div class="row q-gutter-x-sm">
                                     <div class="col">
                                         <div class="text-grey">Genotype Quality</div>
@@ -421,20 +421,20 @@
                                 </div>
                             </template>
 
-                            <template v-if="column.dataIndex == 'Gene_Related_Diseases'">
+                            <template v-if="column.dataIndex === 'Gene_Related_Diseases'">
                                 <template v-for="grd in record.Gene_Related_Diseases" :key="grd">
                                     <div>{{grd}}</div>
                                 </template>
                             </template>
 
-                            <template v-if="column.dataIndex == 'ACMG_result'">
+                            <template v-if="column.dataIndex === 'ACMG_result'">
                                 <div class="text-purple">{{record.ACMG_result}}</div>
                                 <template v-for="acmg in record.ACMG" :key="acmg">
                                     <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{acmg}}</q-chip>
                                 </template>
                             </template>
 
-                            <template v-if="column.dataIndex == 'Clinvar'">
+                            <template v-if="column.dataIndex === 'Clinvar'">
                                 <div class="text-purple">{{record.Clinvar}}</div>
                                 <q-rating
                                     :model-value="record.Clinvar_ReviewStatus"
@@ -445,13 +445,13 @@
                                 />
                             </template>
 
-                            <template v-if="column.dataIndex == 'HPO'">
+                            <template v-if="column.dataIndex === 'HPO'">
                                 <template v-for="hpo in record.HPO" :key="hpo">
                                     <div>{{hpo}}</div>
                                 </template>
                             </template>
 
-                            <template v-if="column.dataIndex == 'Software_Prediction_result'">
+                            <template v-if="column.dataIndex === 'Software_Prediction_result'">
                                 <q-linear-progress :value="record.Software_Prediction_result" size="10px" />
                                 {{record.Software_Prediction_result}}
                             </template>

@@ -7,6 +7,7 @@
             indicator-color="purple"
             class="bg-gray text-black shadow-2"
             align="justify"
+            dense
         >
             <q-tab name="flow" :label="$t('AnalysisModule')" />
             <q-tab name="panel" :label="$t('PanelFlow')" />
