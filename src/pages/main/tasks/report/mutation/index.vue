@@ -496,15 +496,51 @@ const loadWesData = () => {
         })
 
         // 提取options
-        let positions = new Set()
-        let meanings = new Set()
-        let risks = new Set()
+        let phenoType = new Set()
+        let diseases = new Set()
+        let diseaseInheritanceModes = new Set()
+        let gene = new Set()
+        let prioritizationTier = new Set()
+        let acmgPathogenicity = new Set()
+        let clinvarPathogenicity = new Set()
+        let populationAlleleFrequency = new Set()
+        let pafComp = new Set()
+        let pafValue = new Set()
+        let genoType = new Set()
+        let genoTypeComp = new Set()
+        let seqQuality = new Set()
+        let variantQualityComp = new Set()
+        let depthComp = new Set()
+        let chromosome = new Set()
+
+        csvRows.forEach((row, i) => {
+            row.HPO.forEach(hpo => phenoType.add(hpo))
+            row.Gene_Related_Diseases.forEach(grd => diseases.add(grd.split('|')[1]))
+            row.Gene_Related_Diseases.forEach(grd => {
+                let arad = grd.split('|')[0]
+                arad.split('/').forEach(t => {
+                        diseaseInheritanceModes.add(t)
+                })
+            })
+            gene.add(row['Gene.refGene'])
+            prioritizationTier.add(row.Class)
+            acmgPathogenicity.add(row.ACMG_result)
+            clinvarPathogenicity.add(row.Clinar)
+        })
 
         wesData.value.rows = csvRows
         wesData.value.header = headNames
-        wesData.value.options.mutationPosition = Array.from(positions)
-        wesData.value.options.mutationMeaning = Array.from(meanings)
-        wesData.value.options.mutationRisk = Array.from(risks)
+        wesData.value.options.phenoType = Array.from(phenoType)
+        wesData.value.options.diseases = Array.from(diseases)
+        wesData.value.options.diseaseInheritanceModes = Array.from(diseaseInheritanceModes)
+        wesData.value.options.gene = Array.from(gene)
+        wesData.value.options.prioritizationTier = Array.from(prioritizationTier)
+        wesData.value.options.acmgPathogenicity = Array.from(acmgPathogenicity)
+        wesData.value.options.clinvarPathogenicity = Array.from(clinvarPathogenicity)
+
+        console.log('<<<<<<<<<<<<<<<<< wes options', wesData.value.options)
+
+
         wesData.value.defaultReportRows = []
         originWesData.value = JSON.stringify(wesData.value)
         if (stepData.value && stepData.value.wes) {

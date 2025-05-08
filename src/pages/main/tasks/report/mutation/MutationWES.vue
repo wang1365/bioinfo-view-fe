@@ -402,20 +402,20 @@
                                 <div class="row q-gutter-x-sm">
                                     <div class="col">
                                         <div class="text-grey">Genotype Quality</div>
-                                        <div class="text-weight-bolder">{{record.Genotype_Quality || '-'}}</div>
+                                        <div>{{record.Genotype_Quality || '-'}}</div>
 
                                         <div class="text-grey">Variant Quality</div>
-                                        <div class="text-weight-bolder">{{record.Variant_Quality || '-'}}</div>
+                                        <div>{{record.Variant_Quality || '-'}}</div>
 
                                         <div class="text-grey">Depth Quality</div>
-                                        <div class="text-weight-bolder">{{record.Depth_Quality}}</div>
+                                        <div>{{record.Depth_Quality}}</div>
                                     </div>
                                     <div class="col">
                                         <div class="text-grey">Allele Fraction</div>
-                                        <div class="text-weight-bolder">{{record.Mutation_Rate || '-'}}</div>
+                                        <div>{{record.Mutation_Rate || '-'}}</div>
 
                                         <div class="text-grey">Depth</div>
-                                        <div class="text-weight-bolder">{{record.Seq_Depths || '-'}}</div>
+                                        <div>{{record.Seq_Depths || '-'}}</div>
 
                                         <div class="text-grey">Genotype</div>
                                         <div>{{record.Genotype}}</div>
@@ -558,11 +558,9 @@ import { useI18n } from 'vue-i18n'
 import { useCustomCell, WES_PARAMS } from './index'
 
 const { t } = useI18n()
-const customCell = useCustomCell('col250')
 const splitterModel = ref(300)
 const emit = defineEmits(['filterChange'])
 const crowdCols = {
-    // ['col26', 'col31', 'col39']
     'ALL': [23, 31, 39],
     'African': [24, 32, 40],
     'American': [25, 33, 41],
@@ -707,23 +705,6 @@ const columns = computed(() => {
         { title: 'IGV', dataIndex: ``, width: 80, ellipsis: true     },
     ]
 
-
-    // let result = [...fixedColumns]
-    // result = result.splice(0, result.length-2)
-    // selectedExpandColIdx.value.forEach(idx => {
-    //     result.push({
-    //         i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
-    //     })
-    // })
-    // result.push(fixedColumns[fixedColumns.length-1])
-    //
-    // // 如果有扩展列要展示，需要重置列宽
-    // // if (fixedColumns.length > 0) {
-    // //     result.forEach(t => t.width = 0)
-    // // }
-    //
-    // result.forEach((c) => (c.customCell = customCell))
-    // return result
 })
 
 function clickDetail (record) {
@@ -779,142 +760,148 @@ const reset = () => {
 // 根据过滤条件筛选数据
 const searchFilterRows = (searchParams) => {
     filteredRows.value = rows.value.filter((line, i) => {
-        if (isDefineReport.value && line.col250 === 'Y') {
-            return true
-        }
-
         // 搜索基因
         // 原始表格11列，支持模糊搜索
-        let param = searchParams.gene
+        let param = searchParams.diseaseCategories
         if (param && param.length > 0) {
-            if (!line.col11.includes(param)) {
+            let matched = false
+            if (param.includes('A') && ['IA', 'IIA', 'IIIA'].includes(line.Class)) {
+                matched = true
+            }
+            if (param.includes('B') && ['IB', 'IIB', 'IIIB'].includes(line.Class)) {
+                matched = true
+            }
+            if (param.includes('C') && ['Others', 'IV', 'V'].includes(line.Class)) {
+                matched = true
+            }
+            if (!matched) {
                 return false
             }
         }
 
         // 深度
         // 原始表格8列，大于0的正整数，
-        param = searchParams.depth
-        if (param !== null && !(useComparator(searchParams.depthCmp).compare(Number(line.col8), param))) {
-            return false
-        }
-
-        // 频率
-        // 原始表格，大于0的小数
-        param = searchParams.ratio
-        if (param !== null && !(useComparator(searchParams.ratioCmp).compare(Number(line.col9), param))) {
-            return false
-        }
-
-        // 突变类型 All/SNP/INDEL
-        /*
-            根据原始表格4、5列判断，SNP是第4列只能为A/T/C/G单碱基且第5列也只能为A/T/C/G单碱基（中划线-算INDEL），其他情况为INDEL
-            SNP是第4只能是A/T/C/G，第5列也是只能为A/T/C/G，
-            例如第4列是A，第5列是T，
-            其他情况都是INDEL，如第4列为A，第5列为-；第4列为A，第5列为AGC，第四列为AT，第5列为T
-          */
-        param = searchParams.mutationType
-        if (param && param.length === 1) {
-            const Snp = ['A', 'T', 'C', 'G']
-            let isSnp = Snp.includes(line.col4) && Snp.includes(line.col5)
-            if (param[0] === 'SNP' && !isSnp) {
-                return false
-            }
-            if (param[0] === 'INDEL' && isSnp) {
-                return false
-            }
-        }
-
-        // 突变位置 All/Exonic / Intronic/ Intergenic /还有没列举完
-        /*
-            原始表格第14列，把这列信息提取排序去重后，再加上一个【exonic,splicing】选项，做成下拉菜单选择
-            （如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）
-          */
-        param = searchParams.mutationPosition
-        if (param && param.length > 0) {
-            const positions = line.col10.split(';')
-            if (!positions.some((position) => param.includes(position))) {
-                return false
-            }
-        }
-
-        // 突变意义 All/No synonymous SNV/还有没列举完
-        /*
-            原始表格第17列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
-          */
-        param = searchParams.mutationMeaning
-        if (param && param.length > 0) {
-            const realParam = param.map((t) => (t === '●' ? '.' : t))
-            if (!realParam.includes(line.col13)) {
-                return false
-            }
-        }
-
-        // 突变危险 All/No synonymous SNV/还有没列举完
-        /*
-            原始表格第21列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
-          */
-        param = searchParams.mutationRisk
-        if (param && param.length > 0) {
-            const realParam = param.map((t) => (t === '●' ? '.' : t))
-            if (!realParam.includes(line.col21)) {
-                return false
-            }
-        }
-
-        // 人群频率
-        /*
-            原始表格第26、31、39列，大于0的小数， 26、31、39列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，则该列满足条件（即可认为其等于0）
-            2023.03.20说明：
-              一共是三个数据库，看每一个突变位点这三个数据库的人群频率，就是如果是点的话，认为这个突变位点的这个数据库满足过滤条件
-              （点是因为这个突变位点在这个数据库里没有记录，所以是未知的，默认是满足筛选条件的）
-              就是如果ABC三个数据库都没有点的情况下，按照筛选数值筛选来
-              如果A数据库里面有点，BC不是点，那A直接默认小于筛选值，BC按照与筛选值比较，可以认为 这三个数据库里的点=0
-          */
-        param = searchParams.humanRatio
-        if (param !== null) {
-            // 不同地区人群使用的数据列
-            let hrColumns = crowdCols[searchParams.human]
-            hrColumns = hrColumns.map(h => line[`col${h}`])
-            if (hrColumns.length === 2) {
-                // 如果没有第三列，认为第三列数据为.
-                hrColumns.push('.')
-            }
-            const cmp = useComparator(searchParams.humanRatioCmp)
-            const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
-            const ltCount = hrColumns.map(v => ltRatio(v)).filter(v => v).length
-            if (ltCount < 2) {
-                return false
-            }
-        }
-
-        // SIFT_pred
-        /*
-            原始表格第56列，这列只包含3个选项：T、D、点
-          */
-        param = searchParams.sift
-        if (param && param.length > 0) {
-            if (!param.includes(line.col60)) {
-                return false
-            }
-        }
-
-        // 要去关联匹配, germline 和 somatic 的 match 使用的列不一样
-        // 读取
-        param = searchParams.drug
-        if (param) {
-            let relDrug = false
-            let match = `${line.col1}:${line.col2}-${line.col3}_${line.col4}>${line.col5}_${line.col11}`
-            for (const iterator of drugRows.value) {
-                if (iterator[0] === match) {
-                    relDrug = true
-                    break
-                }
-            }
-            if (!relDrug) {
-                return false
-            }
-        }
+        // param = searchParams.depth
+        // if (param !== null && !(useComparator(searchParams.depthCmp).compare(Number(line.col8), param))) {
+        //     return false
+        // }
+        //
+        // // 频率
+        // // 原始表格，大于0的小数
+        // param = searchParams.ratio
+        // if (param !== null && !(useComparator(searchParams.ratioCmp).compare(Number(line.col9), param))) {
+        //     return false
+        // }
+        //
+        // // 突变类型 All/SNP/INDEL
+        // /*
+        //     根据原始表格4、5列判断，SNP是第4列只能为A/T/C/G单碱基且第5列也只能为A/T/C/G单碱基（中划线-算INDEL），其他情况为INDEL
+        //     SNP是第4只能是A/T/C/G，第5列也是只能为A/T/C/G，
+        //     例如第4列是A，第5列是T，
+        //     其他情况都是INDEL，如第4列为A，第5列为-；第4列为A，第5列为AGC，第四列为AT，第5列为T
+        //   */
+        // param = searchParams.mutationType
+        // if (param && param.length === 1) {
+        //     const Snp = ['A', 'T', 'C', 'G']
+        //     let isSnp = Snp.includes(line.col4) && Snp.includes(line.col5)
+        //     if (param[0] === 'SNP' && !isSnp) {
+        //         return false
+        //     }
+        //     if (param[0] === 'INDEL' && isSnp) {
+        //         return false
+        //     }
+        // }
+        //
+        // // 突变位置 All/Exonic / Intronic/ Intergenic /还有没列举完
+        // /*
+        //     原始表格第14列，把这列信息提取排序去重后，再加上一个【exonic,splicing】选项，做成下拉菜单选择
+        //     （如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）
+        //   */
+        // param = searchParams.mutationPosition
+        // if (param && param.length > 0) {
+        //     const positions = line.col10.split(';')
+        //     if (!positions.some((position) => param.includes(position))) {
+        //         return false
+        //     }
+        // }
+        //
+        // // 突变意义 All/No synonymous SNV/还有没列举完
+        // /*
+        //     原始表格第17列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
+        //   */
+        // param = searchParams.mutationMeaning
+        // if (param && param.length > 0) {
+        //     const realParam = param.map((t) => (t === '●' ? '.' : t))
+        //     if (!realParam.includes(line.col13)) {
+        //         return false
+        //     }
+        // }
+        //
+        // // 突变危险 All/No synonymous SNV/还有没列举完
+        // /*
+        //     原始表格第21列，把这列信息提取排序去重后，做成下拉菜单选择（如果没法做到这样，可以和我们说，然后我们去查看资料，将下拉项固定几项）支持模糊搜索
+        //   */
+        // param = searchParams.mutationRisk
+        // if (param && param.length > 0) {
+        //     const realParam = param.map((t) => (t === '●' ? '.' : t))
+        //     if (!realParam.includes(line.col21)) {
+        //         return false
+        //     }
+        // }
+        //
+        // // 人群频率
+        // /*
+        //     原始表格第26、31、39列，大于0的小数， 26、31、39列如果有两列满足筛选要求，即可展示，注意，这三列中如果有点的，则该列满足条件（即可认为其等于0）
+        //     2023.03.20说明：
+        //       一共是三个数据库，看每一个突变位点这三个数据库的人群频率，就是如果是点的话，认为这个突变位点的这个数据库满足过滤条件
+        //       （点是因为这个突变位点在这个数据库里没有记录，所以是未知的，默认是满足筛选条件的）
+        //       就是如果ABC三个数据库都没有点的情况下，按照筛选数值筛选来
+        //       如果A数据库里面有点，BC不是点，那A直接默认小于筛选值，BC按照与筛选值比较，可以认为 这三个数据库里的点=0
+        //   */
+        // param = searchParams.humanRatio
+        // if (param !== null) {
+        //     // 不同地区人群使用的数据列
+        //     let hrColumns = crowdCols[searchParams.human]
+        //     hrColumns = hrColumns.map(h => line[`col${h}`])
+        //     if (hrColumns.length === 2) {
+        //         // 如果没有第三列，认为第三列数据为.
+        //         hrColumns.push('.')
+        //     }
+        //     const cmp = useComparator(searchParams.humanRatioCmp)
+        //     const ltRatio = (colVal) => colVal === '.' || cmp.compare(Number(colVal), param)
+        //     const ltCount = hrColumns.map(v => ltRatio(v)).filter(v => v).length
+        //     if (ltCount < 2) {
+        //         return false
+        //     }
+        // }
+        //
+        // // SIFT_pred
+        // /*
+        //     原始表格第56列，这列只包含3个选项：T、D、点
+        //   */
+        // param = searchParams.sift
+        // if (param && param.length > 0) {
+        //     if (!param.includes(line.col60)) {
+        //         return false
+        //     }
+        // }
+        //
+        // // 要去关联匹配, germline 和 somatic 的 match 使用的列不一样
+        // // 读取
+        // param = searchParams.drug
+        // if (param) {
+        //     let relDrug = false
+        //     let match = `${line.col1}:${line.col2}-${line.col3}_${line.col4}>${line.col5}_${line.col11}`
+        //     for (const iterator of drugRows.value) {
+        //         if (iterator[0] === match) {
+        //             relDrug = true
+        //             break
+        //         }
+        //     }
+        //     if (!relDrug) {
+        //         return false
+        //     }
+        // }
 
         return true
     })
