@@ -485,7 +485,7 @@ const loadSomaticEvidenceData = () => {
 }
 
 const loadWesData = () => {
-    readTaskMuFile(route.params.id, 'Mut_wes').then((res) => {
+    readTaskMuFile(route.params.id, 'Mut_WES').then((res) => {
         const headNames = getCsvHeader(res, '\t')
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: headNames })
         csvRows.forEach((row, i) => {
@@ -503,7 +503,6 @@ const loadWesData = () => {
         let prioritizationTier = new Set()
         let acmgPathogenicity = new Set()
         let clinvarPathogenicity = new Set()
-        let populationAlleleFrequency = new Set()
         let pafComp = new Set()
         let pafValue = new Set()
         let genoType = new Set()
@@ -525,18 +524,54 @@ const loadWesData = () => {
             gene.add(row['Gene.refGene'])
             prioritizationTier.add(row.Class)
             acmgPathogenicity.add(row.ACMG_result)
-            clinvarPathogenicity.add(row.Clinar)
+            clinvarPathogenicity.add(row.Clinvar)
+            genoType.add(row.Genotype)
+            seqQuality.add(row.Depth_Quality)
         })
 
         wesData.value.rows = csvRows
         wesData.value.header = headNames
-        wesData.value.options.phenoType = Array.from(phenoType)
-        wesData.value.options.diseases = Array.from(diseases)
-        wesData.value.options.diseaseInheritanceModes = Array.from(diseaseInheritanceModes)
-        wesData.value.options.gene = Array.from(gene)
-        wesData.value.options.prioritizationTier = Array.from(prioritizationTier)
-        wesData.value.options.acmgPathogenicity = Array.from(acmgPathogenicity)
-        wesData.value.options.clinvarPathogenicity = Array.from(clinvarPathogenicity)
+        wesData.value.options.phenoType = Array.from(phenoType).sort()
+        wesData.value.options.diseases = Array.from(diseases).sort()
+        wesData.value.options.diseaseInheritanceModes = Array.from(diseaseInheritanceModes).sort()
+        wesData.value.options.gene = Array.from(gene).sort()
+        wesData.value.options.prioritizationTier = Array.from(prioritizationTier).sort()
+        wesData.value.options.acmgPathogenicity = Array.from(acmgPathogenicity).sort()
+        wesData.value.options.clinvarPathogenicity = Array.from(clinvarPathogenicity).sort()
+        wesData.value.options.genoType = Array.from(genoType).sort()
+        wesData.value.options.seqQuality = Array.from(seqQuality).sort()
+        wesData.value.options.populationAlleleFrequency = [
+            "GnomAD Genome Total",
+            "GnomAD Genome AFR",
+            "GnomAD Genome AMR",
+            "GnomAD Genome ASJ",
+            "GnomAD Genome EAS",
+            "GnomAD Genome FIN",
+            "GnomAD Genome NFE",
+            "GnomAD Genome OTH",
+            "GnomAD exome Total",
+            "GnomAD exome AFR",
+            "GnomAD exome AMR",
+            "GnomAD exome ASJ",
+            "GnomAD exome EAS",
+            "GnomAD exome FIN",
+            "GnomAD exome NFE",
+            "GnomAD exome OTH",
+            "GnomAD exome SAS",
+            "ExAC Total",
+            "ExAC AFR",
+            "ExAC AMR",
+            "ExAC EAS",
+            "ExAC FIN",
+            "ExAC NFE",
+            "ExAC OTH",
+            "ExAC SAS",
+            "1000 Genomes Total",
+            "1000 Genomes AFR",
+            "1000 Genomes AMR",
+            "1000 Genomes ESA",
+            "1000 Genomes EUR",
+            "1000 Genomes SAS"]
 
         console.log('<<<<<<<<<<<<<<<<< wes options', wesData.value.options)
 

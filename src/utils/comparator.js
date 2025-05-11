@@ -13,3 +13,26 @@ export const useComparator = (operator) => {
         compare: f || falseCompare,
     }
 }
+
+export const useComparatorOptions = () => {
+    const options = [
+        { label: '>', value: '>', compare: (n1, n2) => Number(n1) > Number(n2) },
+        { label: '<', value: '<', compare: (n1, n2) => Number(n1) < Number(n2) },
+        { label: '=', value: '=', compare: (n1, n2) => Number(n1) === Number(n2) },
+        { label: '>=', value: '>=', compare: (n1, n2) => Number(n1) >= Number(n2) },
+        { label: '<=', value: '<=', compare: (n1, n2) => Number(n1) <= Number(n2) },
+    ]
+
+    const compare = (operator, a, b) => {
+        const option = options.find((opt) => opt.value === operator)
+        if (option) {
+            return option.compare(a, b)
+        }
+        return false
+    }
+
+    return {
+        options,
+        compare,
+    }
+}

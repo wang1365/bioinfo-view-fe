@@ -138,7 +138,6 @@
                     <div class="row justify-between">
                         <q-select
                             v-model="innerSearchParams.populationAlleleFrequency"
-                            multiple
                             outlined
                             hide-dropdown-icon
                             :options="props.options.populationAlleleFrequency"
@@ -151,12 +150,12 @@
                         </q-select>
                         <q-select
                             v-model="innerSearchParams.pafComp"
-                            :options="props.options.pafComp"
+                            :options="comparatorOptions"
                             stack-label
                             dense
                             outlined
                             hide-dropdown-icon
-                            class="col-1"
+                            class="col-2"
                         />
                         <q-input
                             v-model="innerSearchParams.pafValue"
@@ -182,63 +181,67 @@
                             stack-label
                             dense
                             label-color="primary"
-                            class="col-7"
+                            class="col-6"
                         />
                         <q-select
+                            v-model="innerSearchParams.seqQuality"
+                            clearable
+                            multiple
+                            outlined
+                            dense
+                            hide-dropdown-icon
+                            :options="props.options.seqQuality"
+                            :label="$t('seqQuality')"
+                            stack-label
+                            label-color="primary"
+                            class="col-6"
+                        />
+                    </div>
+
+                    <div class="row justify-between">
+                        <span class="col-5 text-primary">{{$t('genoTypeQuality')}}</span>
+                        <q-select
                             v-model="innerSearchParams.genoTypeComp"
-                            :options="props.options.genoTypeComp"
+                            :options="comparatorOptions"
                             stack-label
                             dense
                             outlined
                             hide-dropdown-icon
-                            class="col-1"
+                            class="col-2"
                         />
                         <q-input
                             v-model="innerSearchParams.genoTypeValue"
                             stack-label
                             dense
                             outlined
-                            class="col-3"
+                            class="col-5"
                             label-color="primary"
                         >
                         </q-input>
                     </div>
 
-                    <q-select
-                        v-model="innerSearchParams.seqQuality"
-                        clearable
-                        multiple
-                        outlined
-                        hide-dropdown-icon
-                        :options="props.options.seqQuality"
-                        :label="$t('seqQuality')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-
-                    <div class="row q-gutter-xs">
+                    <div class="row justify-between">
+                        <span class="col-5 text-primary">{{$t('variantQuality')}}</span>
                         <q-select
                             v-model="innerSearchParams.variantQualityComp"
-                            hide-dropdown-icon
-                            :options="props.options.variantQualityComp"
-                            :label="$t('variantQualityComp')"
+                            :options="comparatorOptions"
                             stack-label
                             dense
                             outlined
-                            label-color="primary"
-                            class="col-8"
+                            hide-dropdown-icon
+                            class="col-2"
                         />
                         <q-input
-                            v-model="innerSearchParams.variantQuality"
+                            v-model="innerSearchParams.variantQualityValue"
                             stack-label
                             dense
                             outlined
-                            class="col-3"
+                            class="col-5"
                             label-color="primary"
                         >
                         </q-input>
                     </div>
+
                     <div class="row">
                         <q-input
                             v-model="innerSearchParams.minAlleleFraction"
@@ -269,7 +272,7 @@
                         <q-select
                             v-model="innerSearchParams.depthComp"
                             hide-dropdown-icon
-                            :options="props.options.depthComp"
+                            :options="comparatorOptions"
                             :label="$t('variantQualityComp')"
                             stack-label
                             dense
@@ -540,13 +543,8 @@
 </template>
 <script setup>
 import { ref, onMounted, toRef, toRefs, watch, computed, onUnmounted } from 'vue'
-import BarChartVue from './SomaticInfoCharts/BarChart.vue'
-import PieChartVue from './SomaticInfoCharts/PieChart.vue'
-import RoseChartVue from './SomaticInfoCharts/RoseChart.vue'
-import BubbleChartVue from './SomaticInfoCharts/BubbleChart.vue'
-import RadarChartVue from './SomaticColumnCharts/RadarChart.vue'
 import MutationInfo from './MutationInfo'
-import { useComparator } from 'src/utils/comparator'
+import { useComparatorOptions } from 'src/utils/comparator'
 import Igv from './Igv'
 import Cmp from './Comparator.vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
@@ -558,6 +556,7 @@ import { useI18n } from 'vue-i18n'
 import { useCustomCell, WES_PARAMS } from './index'
 
 const { t } = useI18n()
+const { options: comparatorOptions, compare } = useComparatorOptions()
 const splitterModel = ref(300)
 const emit = defineEmits(['filterChange'])
 const crowdCols = {

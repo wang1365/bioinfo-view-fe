@@ -33,7 +33,7 @@ export const WES_PARAMS = {
     genoTypeValue: null,
     seqQuality: null,
     variantQualityComp: '>',
-    variantQuality: null,
+    variantQualityValue: null,
     minAlleleFraction: null,
     maxAlleleFraction: null,
     depth: { type: Number },
