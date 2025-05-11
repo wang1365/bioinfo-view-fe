@@ -3,61 +3,9 @@
         <q-splitter v-model="splitterModel" unit="px" before-class="">
             <template v-slot:before>
                 <div
-                    :class="['column', 'q-gutter-y-xs', 'q-pr-sm', {dimmed: showSticky && stickDone}]"
+                    :class="['column', 'q-gutter-y-xs', 'q-pr-sm', { dimmed: showSticky && stickDone }]"
                     style="width:100%"
                 >
-                    <div style="border-bottom: 1px solid lightgrey" class="q-p-xs">
-                        <q-option-group
-                            v-model="innerSearchParams.diseaseCategories"
-                            type="checkbox"
-                            dense
-                            color="primary"
-                            class="text-primary"
-                            :options="[{label: 'A (Disease Related: IA,IIA,IIIA)', value: 'A'},{label: 'B (Disease Related: IB,IIB,IIIB)', value: 'B'},{label: 'C (Others: IV,V)', value: 'C'}]"
-                        />
-                    </div>
-
-                    <q-select
-                        v-model="innerSearchParams.phenoType"
-                        clearable
-                        multiple
-                        dense
-                        outlined
-                        hide-dropdown-icon
-                        :options="props.options.phenoType"
-                        :label="$t('PhenoType')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-
-                    <q-select
-                        v-model="innerSearchParams.diseases"
-                        clearable
-                        multiple
-                        dense
-                        outlined
-                        hide-dropdown-icon
-                        :options="props.options.diseases"
-                        :label="$t('Disease')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-
-                    <q-select
-                        v-model="innerSearchParams.diseaseInheritanceModes"
-                        clearable
-                        multiple
-                        dense
-                        outlined
-                        hide-dropdown-icon
-                        :options="props.options.diseaseInheritanceModes"
-                        :label="$t('diseaseInheritanceModes')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
                     <q-input
                         v-model="innerSearchParams.geneSet"
                         :label="$t('GeneSet')"
@@ -78,7 +26,6 @@
                             <span class="text-primary">Exclude selected Gensets</span>
                         </template>
                     </q-checkbox>
-
                     <q-select
                         v-model="innerSearchParams.gene"
                         clearable
@@ -86,242 +33,141 @@
                         dense
                         outlined
                         hide-dropdown-icon
-                        :options="props.options.gene"
-                        :label="$t('genes')"
+                        :options="searchOptions.gene_set"
+                        :label="$t('Gene')"
                         stack-label
                         label-color="primary"
                         class="full-width"
                     />
-
                     <q-select
-                        v-model="innerSearchParams.prioritizationTier"
+                        v-model="innerSearchParams.acmg"
                         clearable
                         multiple
                         dense
                         outlined
                         hide-dropdown-icon
-                        :options="props.options.prioritizationTier"
-                        :label="$t('prioritizationTier')"
+                        :options="searchOptions.acmg_set"
+                        :label="$t('ACMGPathogenicity')"
                         stack-label
                         label-color="primary"
                         class="full-width"
                     />
-
                     <q-select
-                        v-model="innerSearchParams.acmgPathogenicity"
+                        v-model="innerSearchParams.user_pathogenicity"
                         clearable
                         multiple
                         dense
                         outlined
                         hide-dropdown-icon
-                        :options="props.options.acmgPathogenicity"
-                        :label="$t('acmgPathogenicity')"
+                        :options="searchOptions.user_pathogenicity_set"
+                        :label="$t('UsersPathogenicity')"
                         stack-label
                         label-color="primary"
                         class="full-width"
                     />
 
                     <q-select
-                        v-model="innerSearchParams.clinvarPathogenicity"
+                        v-model="innerSearchParams.cnv_cover_type"
                         clearable
                         multiple
                         dense
                         outlined
                         hide-dropdown-icon
-                        :options="props.options.clinvarPathogenicity"
-                        :label="$t('clinvarPathogenicity')"
+                        :options="searchOptions.cnv_cover_type_set"
+                        :label="$t('CNVCoverType')"
                         stack-label
                         label-color="primary"
                         class="full-width"
                     />
-
-                    <div class="row justify-between">
-                        <q-select
-                            v-model="innerSearchParams.populationAlleleFrequency"
-                            multiple
-                            outlined
-                            hide-dropdown-icon
-                            :options="props.options.populationAlleleFrequency"
-                            :label="$t('populationAlleleFrequency')"
-                            stack-label
-                            dense
-                            class="col-7"
-                            label-color="primary"
-                        >
-                        </q-select>
-                        <q-select
-                            v-model="innerSearchParams.pafComp"
-                            :options="props.options.pafComp"
-                            stack-label
-                            dense
-                            outlined
-                            hide-dropdown-icon
-                            class="col-1"
-                        />
-                        <q-input
-                            v-model="innerSearchParams.pafValue"
-                            :options="props.options.pafValue"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3"
-                            label-color="primary"
-                        >
-                            <template v-slot:after><span class="text-subtitle1 text-primary">%</span></template>
-                        </q-input>
-                    </div>
-
-                    <div class="row justify-between">
-                        <q-select
-                            v-model="innerSearchParams.genoType"
-                            clearable
-                            outlined
-                            hide-dropdown-icon
-                            :options="props.options.genoType"
-                            :label="$t('genoType')"
-                            stack-label
-                            dense
-                            label-color="primary"
-                            class="col-7"
-                        />
-                        <q-select
-                            v-model="innerSearchParams.genoTypeComp"
-                            :options="props.options.genoTypeComp"
-                            stack-label
-                            dense
-                            outlined
-                            hide-dropdown-icon
-                            class="col-1"
-                        />
-                        <q-input
-                            v-model="innerSearchParams.genoTypeValue"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3"
-                            label-color="primary"
-                        >
-                        </q-input>
-                    </div>
-
                     <q-select
-                        v-model="innerSearchParams.seqQuality"
+                        v-model="innerSearchParams.cnv_type"
                         clearable
                         multiple
+                        dense
                         outlined
                         hide-dropdown-icon
-                        :options="props.options.seqQuality"
-                        :label="$t('seqQuality')"
+                        :options="searchOptions.cnv_type_set"
+                        :label="$t('CNVType')"
                         stack-label
                         label-color="primary"
                         class="full-width"
                     />
-
-                    <div class="row q-gutter-xs">
-                        <q-select
-                            v-model="innerSearchParams.variantQualityComp"
-                            hide-dropdown-icon
-                            :options="props.options.variantQualityComp"
-                            :label="$t('variantQualityComp')"
-                            stack-label
-                            dense
-                            outlined
-                            label-color="primary"
-                            class="col-8"
-                        />
-                        <q-input
-                            v-model="innerSearchParams.variantQuality"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3"
-                            label-color="primary"
-                        >
-                        </q-input>
+                    <div class="row">
+                        <div class="col-6">
+                            <q-select
+                                v-model="innerSearchParams.chromosome"
+                                clearable
+                                multiple
+                                dense
+                                outlined
+                                hide-dropdown-icon
+                                :options="searchOptions.chr_set"
+                                :label="$t('Chromosome')"
+                                stack-label
+                                label-color="primary"
+                                class="full-width "
+                            />
+                        </div>
+                        <div class="col-3">
+                            <q-input
+                                v-model="innerSearchParams.start"
+                                dense
+                                outlined
+                                stack-label
+                                class="full-width"
+                                label-color="primary"
+                                :label="$t('Start')"
+                            ></q-input>
+                        </div>
+                        <div class="col-3">
+                            <q-input
+                                v-model="innerSearchParams.end"
+                                dense
+                                outlined
+                                stack-label
+                                class="full-width"
+                                label-color="primary"
+                                :label="$t('End')"
+                            >
+                            </q-input>
+                        </div>
                     </div>
                     <div class="row">
-                        <q-input
-                            v-model="innerSearchParams.minAlleleFraction"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-6"
-                            label-color="primary"
-                            label="minAlleleFraction"
-                        >
-                            <template v-slot:append><span class="text-subtitle2">%</span></template>
-                            <template v-slot:after><span class="text-subtitle2">~</span></template>
-                        </q-input>
-                        <q-input
-                            v-model="innerSearchParams.maxAlleleFraction"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-6"
-                            label-color="primary"
-                            label="maxAlleleFraction"
-                        >
-                            <template v-slot:append><span class="text-subtitle2">%</span></template>
-                        </q-input>
+                        <div class="col-6">
+                            <q-input
+                                v-model="innerSearchParams.cnv_length_ge"
+                                dense
+                                outlined
+                                class="full-width"
+                                stack-label
+                                label-color="primary"
+                                :label="'CNV Length>='"
+                            ></q-input>
+                        </div>
+                        <div class="col-6">
+                            <div class="col-6">
+                                <q-input
+                                    v-model="innerSearchParams.cnv_length_ge"
+                                    dense
+                                    outlined
+                                    class="full-width"
+                                    stack-label
+                                    label-color="primary"
+                                    :label="$t('CNV Length<=')"
+                                ></q-input>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="row q-gutter-xs">
-                        <q-select
-                            v-model="innerSearchParams.depthComp"
-                            hide-dropdown-icon
-                            :options="props.options.depthComp"
-                            :label="$t('variantQualityComp')"
-                            stack-label
-                            dense
-                            outlined
-                            label-color="primary"
-                            class="col-8"
-                        />
-                        <q-input
-                            v-model="innerSearchParams.depth"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3"
-                            label-color="primary"
-                        >
-                        </q-input>
-                    </div>
-
-                    <div class="row">
-                        <q-select
-                            v-model="innerSearchParams.chromosome"
-                            hide-dropdown-icon
-                            :options="props.options.chromosome"
-                            :label="$t('chromosome')"
-                            stack-label
-                            dense
-                            outlined
-                            label-color="primary"
-                            class="col-5"
-                        />
-                        <q-input
-                            v-model="innerSearchParams.chromosomeStart"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3 q-pl-xs"
-                            label-color="primary"
-                            label="Start"
-                        />
-                        <span>~</span>
-                        <q-input
-                            v-model="innerSearchParams.chromosomeEnd"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3  q-pl-xs"
-                            label-color="primary"
-                            label="End"
-                        >
-                        </q-input>
-                    </div>
-                    <!--                    :class="['column', 'q-gutter-y-xs', {dimmed: showSticky && stickDone}]"-->
+                    <q-input
+                        v-model="innerSearchParams.copy_number"
+                        dense
+                        outlined
+                        class="col-3"
+                        label-color="primary"
+                        stack-label
+                        :label="$t('CopyNumber')"
+                    >
+                    </q-input>
                     <div>
                         <div class="row q-gutter-x-sm">
                             <q-btn
@@ -376,18 +222,20 @@
                                 <div>
                                     <div
                                         class="text-weight-bolder text-green-5"
-                                        v-for="item of record.gene_data.slice(0,2)"
+                                        v-for="item of record.gene_data.slice(0, 2)"
                                         :key="item"
                                     >
-                                        {{item}}
+                                        {{ item }}
                                     </div>
-                                    <div v-if="record.gene_data.length>2">
+                                    <div v-if="record.gene_data.length > 2">
                                         <q-btn
                                             size="sm"
                                             color="secondary"
                                             flat
-                                            @click="record.show_gene_more=!record.show_gene_more"
-                                            >+{{ record.gene_data.length }} More</q-btn
+                                            @click="record.show_gene_more = !record.show_gene_more"
+                                            >+{{
+                                            record.gene_data.length }}
+                                            More</q-btn
                                         >
                                     </div>
                                     <div class="text-weight-bolder text-blue-5">
@@ -405,22 +253,22 @@
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'copyNumber'">
-                                <div class="text-blue text-weight-bolder" v-if="record.CNV_Type=='DUP'">
+                                <div class="text-blue text-weight-bolder" v-if="record.CNV_Type == 'DUP'">
                                     {{ record.Copy_Number }} | {{ record.CNV_Type }}
                                 </div>
-                                <div class="text-red text-weight-bolder" v-if="record.CNV_Type=='DEL'">
+                                <div class="text-red text-weight-bolder" v-if="record.CNV_Type == 'DEL'">
                                     {{ record.Copy_Number }} | {{ record.CNV_Type }}
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'geneRelatedDiseases'">
-                                <div v-if="record.gene_related_diseases_data.length<=2">
-                                    <div v-for="item of record.gene_related_diseases_data.slice(0,2)" :key="item">
+                                <div v-if="record.gene_related_diseases_data.length <= 2">
+                                    <div v-for="item of record.gene_related_diseases_data.slice(0, 2)" :key="item">
                                         {{ item }}
                                     </div>
                                 </div>
-                                <div v-if="record.gene_related_diseases_data.length>2">
+                                <div v-if="record.gene_related_diseases_data.length > 2">
                                     <div v-if="!record.show_gene_related_diseases_more">
-                                        <div v-for="item of record.gene_related_diseases_data.slice(0,2)" :key="item">
+                                        <div v-for="item of record.gene_related_diseases_data.slice(0, 2)" :key="item">
                                             {{ item }}
                                         </div>
                                     </div>
@@ -429,13 +277,15 @@
                                             {{ item }}
                                         </div>
                                     </div>
-                                    <div v-if="record.gene_related_diseases_data.length>2">
+                                    <div v-if="record.gene_related_diseases_data.length > 2">
                                         <q-btn
                                             size="sm"
                                             color="secondary"
                                             flat
-                                            @click="record.show_gene_related_diseases_more=!record.show_gene_related_diseases_more"
-                                            >+{{ record.gene_related_diseases_data.length }} More</q-btn
+                                            @click="record.show_gene_related_diseases_more = !record.show_gene_related_diseases_more"
+                                            >+{{
+                                            record.gene_related_diseases_data.length }}
+                                            More</q-btn
                                         >
                                     </div>
                                 </div>
@@ -445,18 +295,18 @@
                             </template>
                             <template v-if="column.dataIndex === 'acmg'">
                                 <template v-for="acmg in record.acmg_data" :key="acmg">
-                                    <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{acmg}}</q-chip>
+                                    <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{ acmg }}</q-chip>
                                 </template>
                             </template>
                             <template v-if="column.dataIndex === 'relatedHPOs'">
-                                <div v-if="record.hpo_data.length<=2">
-                                    <div v-for="item of record.hpo_data.slice(0,2)" :key="item">
+                                <div v-if="record.hpo_data.length <= 2">
+                                    <div v-for="item of record.hpo_data.slice(0, 2)" :key="item">
                                         {{ item }}
                                     </div>
                                 </div>
-                                <div v-if="record.hpo_data.length>2">
+                                <div v-if="record.hpo_data.length > 2">
                                     <div v-if="!record.show_hpo_more">
-                                        <div v-for="item of record.hpo_data.slice(0,2)" :key="item">
+                                        <div v-for="item of record.hpo_data.slice(0, 2)" :key="item">
                                             {{ item }}
                                         </div>
                                     </div>
@@ -465,26 +315,28 @@
                                             {{ item }}
                                         </div>
                                     </div>
-                                    <div v-if="record.hpo_data.length>2">
+                                    <div v-if="record.hpo_data.length > 2">
                                         <q-btn
                                             size="sm"
                                             color="secondary"
                                             flat
-                                            @click="record.show_hpo_more=!record.show_hpo_more"
-                                            >+{{ record.hpo_data.length }} More</q-btn
+                                            @click="record.show_hpo_more = !record.show_hpo_more"
+                                            >+{{
+                                            record.hpo_data.length }}
+                                            More</q-btn
                                         >
                                     </div>
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'dgv'">
-                                <div v-if="record.dgv_data.length<=2">
-                                    <div v-for="item of record.dgv_data.slice(0,2)" :key="item">
+                                <div v-if="record.dgv_data.length <= 2">
+                                    <div v-for="item of record.dgv_data.slice(0, 2)" :key="item">
                                         {{ item }}
                                     </div>
                                 </div>
-                                <div v-if="record.dgv_data.length>2">
+                                <div v-if="record.dgv_data.length > 2">
                                     <div v-if="!record.show_dgv_more">
-                                        <div v-for="item of record.dgv_data.slice(0,2)" :key="item">
+                                        <div v-for="item of record.dgv_data.slice(0, 2)" :key="item">
                                             {{ item }}
                                         </div>
                                     </div>
@@ -493,26 +345,28 @@
                                             {{ item }}
                                         </div>
                                     </div>
-                                    <div v-if="record.dgv_data.length>2">
+                                    <div v-if="record.dgv_data.length > 2">
                                         <q-btn
                                             size="sm"
                                             color="secondary"
                                             flat
-                                            @click="record.show_dgv_more=!record.show_dgv_more"
-                                            >+{{ record.dgv_data.length }} More</q-btn
+                                            @click="record.show_dgv_more = !record.show_dgv_more"
+                                            >+{{
+                                            record.dgv_data.length }}
+                                            More</q-btn
                                         >
                                     </div>
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'clinvar'">
-                                <div v-if="record.clinvar_data.length<=2">
-                                    <div v-for="item of record.clinvar_data.slice(0,2)" :key="item">
+                                <div v-if="record.clinvar_data.length <= 2">
+                                    <div v-for="item of record.clinvar_data.slice(0, 2)" :key="item">
                                         {{ item }}
                                     </div>
                                 </div>
-                                <div v-if="record.clinvar_data.length>2">
+                                <div v-if="record.clinvar_data.length > 2">
                                     <div v-if="!record.show_clinvar_more">
-                                        <div v-for="item of record.clinvar_data.slice(0,2)" :key="item">
+                                        <div v-for="item of record.clinvar_data.slice(0, 2)" :key="item">
                                             {{ item }}
                                         </div>
                                     </div>
@@ -521,13 +375,15 @@
                                             {{ item }}
                                         </div>
                                     </div>
-                                    <div v-if="record.clinvar_data.length>2">
+                                    <div v-if="record.clinvar_data.length > 2">
                                         <q-btn
                                             size="sm"
                                             color="secondary"
                                             flat
-                                            @click="record.show_clinvar_more=!record.show_clinvar_more"
-                                            >+{{ record.clinvar_data.length }} More</q-btn
+                                            @click="record.show_clinvar_more = !record.show_clinvar_more"
+                                            >+{{
+                                            record.clinvar_data.length }}
+                                            More</q-btn
                                         >
                                     </div>
                                 </div>
@@ -565,7 +421,7 @@
             <q-card style="width: 50%">
                 <q-card-section>
                     <div class="q-col">
-                        <div class="text-h6 q-mb-sm">{{$t('MoreColumns')}}</div>
+                        <div class="text-h6 q-mb-sm">{{ $t('MoreColumns') }}</div>
                         <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
@@ -594,12 +450,8 @@
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
-                <MutationInfo
-                    :row="currentRow"
-                    :task="props.task"
-                    :samples="props.samples"
-                    :headers="props.header"
-                ></MutationInfo>
+                <MutationInfo :row="currentRow" :task="props.task" :samples="props.samples" :headers="props.header">
+                </MutationInfo>
             </q-card-section>
             <q-card-actions align="center" vertical>
                 <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
@@ -616,7 +468,7 @@
 import { ref, onMounted, toRef, toRefs, watch, computed, onUnmounted } from 'vue'
 import { useComparator } from 'src/utils/comparator'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
-import { getCsvHeader, getCsvData,parseCsvToList } from 'src/utils/csv'
+import { getCsvHeader, getCsvData, parseCsvToList } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
@@ -676,7 +528,7 @@ const props = defineProps({
     searchParams: {
         type: Object,
         required: false,
-        default() { return {...WES_PARAMS }}
+        default() { return { ...WES_PARAMS } }
     },
     drugRows: {
         type: Array,
@@ -705,7 +557,7 @@ const route = useRoute()
 const igvVisible = ref(false)
 const igvFile = ref(null)
 const dialogVisible = ref(false)
-const innerSearchParams = ref({...WES_PARAMS})
+const innerSearchParams = ref({ ...WES_PARAMS })
 
 
 const showDrawer = ref(false)
@@ -714,12 +566,12 @@ const filteredRows = ref([])
 const currentRow = ref({})
 
 
-function clickDetail (record) {
+function clickDetail(record) {
     currentRow.value = record
     dialogVisible.value = true
 }
 
-function clickIgv (record) {
+function clickIgv(record) {
     currentRow.value = record
     igvFile.value = `Mut_germline/${record.col1}-${record.col2}.igv`
     igvVisible.value = true
@@ -781,41 +633,78 @@ onMounted(() => {
     loadTable()
 })
 
+const searchOptions = ref({})
+
 // 加载表格数据
 const loadTable = () => {
     console.log('load table')
-readTaskFile(route.params.id, `CNV_WES/D00000307.CNV_WES.txt`).then((res) => {
-    let data = parseCsvToList(res)
+    readTaskFile(route.params.id, `CNV_WES/D00000307.CNV_WES.txt`).then((res) => {
+        let data = parseCsvToList(res)
+        let rows = buildShowRowData(data.rows)
+        searchOptions.value = buildSearchOptions(data.rows)
+        filteredRows.value = Array.from({ length: 200 }, () => rows[0])
 
-    for (let row of data.rows) {
-        row.acmg_data=row.ACMG_result.split(';')
-        row.acmg_data.push(row.ACMG)
-        row.hpo_data=row.HPO.split(';')
-        row.show_hpo_more=false
-        row.gene_data=row.Gene.split(';')
-        row.gene_data.push(row.CNV_Cover_Type)
-        row.cnv_length_data=''
-        if (row.CNV_Length < 1000){
-            row.cnv_length_data=`${row.CNV_Length} bp`
-        }else if(row.CNV_Length >= 1000 && row.CNV_Length < 1000000){
-            row.cnv_length_data=`${row.CNV_Length/1000} Kbp`
-        }else if(row.CNV_Length >= 1000000){
-            row.cnv_length_data=`${row.CNV_Length/10000000} Mbp`
+        console.log("cnv-wes", data)
+    })
+}
+const buildSearchOptions = (originRows) => {
+    let gene_set = new Set()
+    let acmg_set = new Set()
+    let cnv_cover_type_set = new Set()
+    let cnv_type_set = new Set()
+    let chr_set = new Set()
+    for (let row of originRows) {
+        cnv_cover_type_set.add(row.CNV_Cover_Type)
+        cnv_type_set.add(row.CNV_Type)
+        chr_set.add(row.Chr)
+        acmg_set.add(row.ACMG_result)
+
+        row.gene_data = row.Gene.split(';')
+        for (const item of row.gene_data) {
+            gene_set.add(item)
         }
-        row.show_gene_more=false
-        row.gene_related_diseases_data=row.Gene_Related_Diseases.split(';')
-        row.show_gene_related_diseases_more=false
-
-        row.dgv_data=row.DGV.split(';')
-        row.show_dgv_more=false
-
-        row.clinvar_data= row.Clinvar.split(';')
-        row.show_clinvar_more=false
     }
-    filteredRows.value = Array.from({ length: 200 }, () => data.rows[0])
+    return {
+        gene_set: Array.from(gene_set).sort().map(value => ({ label: value, value: value })),
+        acmg_set: Array.from(acmg_set).sort().map(value => ({ label: value, value: value })),
+        cnv_cover_type_set: Array.from(cnv_cover_type_set).sort().map(value => ({ label: value, value: value })),
+        cnv_type_set: Array.from(cnv_type_set).sort().map(value => ({ label: value, value: value })),
+        chr_set: Array.from(chr_set).sort().map(value => ({ label: value, value: value }))
+    }
+}
+const buildShowRowData = (originRows) => {
+    let rows = []
+    for (let originRow of originRows) {
+        let row = JSON.parse(JSON.stringify(originRow))
+        row.acmg_data = row.ACMG.split(';')
+        row.acmg_data.push(originRow.ACMG_result)
 
-    console.log("cnv-wes", data)
-})
+        row.hpo_data = row.HPO.split(';')
+        row.show_hpo_more = false
+
+        row.gene_data = row.Gene.split(';')
+        row.show_gene_more = false
+
+        row.cnv_length_data = ''
+        if (row.CNV_Length < 1000) {
+            row.cnv_length_data = `${row.CNV_Length} bp`
+        } else if (row.CNV_Length >= 1000 && row.CNV_Length < 1000000) {
+            row.cnv_length_data = `${row.CNV_Length / 1000} Kbp`
+        } else if (row.CNV_Length >= 1000000) {
+            row.cnv_length_data = `${row.CNV_Length / 10000000} Mbp`
+        }
+
+        row.gene_related_diseases_data = row.Gene_Related_Diseases.split(';')
+        row.show_gene_related_diseases_more = false
+
+        row.dgv_data = row.DGV.split(';')
+        row.show_dgv_more = false
+
+        row.clinvar_data = row.Clinvar.split(';')
+        row.show_clinvar_more = false
+        rows.push(row)
+    }
+    return rows
 }
 </script>
 
