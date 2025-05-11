@@ -242,6 +242,28 @@
                         </q-input>
                     </div>
 
+                    <div class="row justify-between">
+                        <span class="col-5 text-primary">{{$t('seqDepth')}}</span>
+                        <q-select
+                            v-model="innerSearchParams.seqDepthComp"
+                            :options="comparatorOptions"
+                            stack-label
+                            dense
+                            outlined
+                            hide-dropdown-icon
+                            class="col-2"
+                        />
+                        <q-input
+                            v-model="innerSearchParams.seqDepthValue"
+                            stack-label
+                            dense
+                            outlined
+                            class="col-5"
+                            label-color="primary"
+                        >
+                        </q-input>
+                    </div>
+
                     <div class="row">
                         <q-input
                             v-model="innerSearchParams.minAlleleFraction"
@@ -265,29 +287,6 @@
                             label="maxAlleleFraction"
                         >
                             <template v-slot:append><span class="text-subtitle2">%</span></template>
-                        </q-input>
-                    </div>
-
-                    <div class="row q-gutter-xs">
-                        <q-select
-                            v-model="innerSearchParams.depthComp"
-                            hide-dropdown-icon
-                            :options="comparatorOptions"
-                            :label="$t('variantQualityComp')"
-                            stack-label
-                            dense
-                            outlined
-                            label-color="primary"
-                            class="col-8"
-                        />
-                        <q-input
-                            v-model="innerSearchParams.depth"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3"
-                            label-color="primary"
-                        >
                         </q-input>
                     </div>
 

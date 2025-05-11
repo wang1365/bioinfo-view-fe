@@ -29,15 +29,20 @@ export const WES_PARAMS = {
     pafComp: '>',
     pafValue: null,
     genoType: null,
+    seqQuality: null,
+
     genoTypeComp: '>',
     genoTypeValue: null,
-    seqQuality: null,
+
     variantQualityComp: '>',
     variantQualityValue: null,
+
+    seqDepthComp: '>',
+    seqDepthValue: null,
+
     minAlleleFraction: null,
     maxAlleleFraction: null,
-    depth: { type: Number },
-    depthCmp: '>',
+
     chromosome: null,
     chromosomeStart: null,
     chromosomeEnd: null,
