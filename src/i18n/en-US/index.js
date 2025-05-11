@@ -31,6 +31,7 @@ export default {
     View: 'View',
     Info: 'Info',
     Start: 'Start',
+    End: 'End',
     Init: 'Init',
     Database: 'Database',
     Type: 'Type',
@@ -773,4 +774,7 @@ export default {
     Mycobacterium: 'Mycobacterium',
     Nomycobacterium: 'Nomycobacterium',
     Mycoplasma: 'Intracellular parasites',
+
+    // Mut WES
+    Chromosome: 'Chromosome',
 }

@@ -295,7 +295,7 @@
                             v-model="innerSearchParams.chromosome"
                             hide-dropdown-icon
                             :options="props.options.chromosome"
-                            :label="$t('chromosome')"
+                            :label="$t('Chromosome')"
                             stack-label
                             dense
                             outlined
@@ -307,9 +307,9 @@
                             stack-label
                             dense
                             outlined
-                            class="col-3 q-pl-xs"
+                            class="col-3"
                             label-color="primary"
-                            label="Start"
+                            :label="$t('Start')"
                         />
                         <span>~</span>
                         <q-input
@@ -317,9 +317,9 @@
                             stack-label
                             dense
                             outlined
-                            class="col-3  q-pl-xs"
+                            class="col-3"
                             label-color="primary"
-                            label="End"
+                            :label="$t('End')"
                         >
                         </q-input>
                     </div>

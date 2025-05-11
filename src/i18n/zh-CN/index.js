@@ -29,6 +29,7 @@ export default {
     View: '查看',
     Info: '信息',
     Start: '开始',
+    End: '截止',
     Init: '初始化',
     Database: '数据库',
     Type: '类型',
@@ -768,4 +769,7 @@ export default {
     Mycobacterium: '结核分支杆菌复合群',
     Nomycobacterium: '非结核分支杆菌',
     Mycoplasma: '胞内寄生',
+
+    // Mut WES
+    Chromosome: '染色体',
 }

@@ -503,13 +503,8 @@ const loadWesData = () => {
         let prioritizationTier = new Set()
         let acmgPathogenicity = new Set()
         let clinvarPathogenicity = new Set()
-        let pafComp = new Set()
-        let pafValue = new Set()
         let genoType = new Set()
-        let genoTypeComp = new Set()
         let seqQuality = new Set()
-        let variantQualityComp = new Set()
-        let depthComp = new Set()
         let chromosome = new Set()
 
         csvRows.forEach((row, i) => {
@@ -527,6 +522,7 @@ const loadWesData = () => {
             clinvarPathogenicity.add(row.Clinvar)
             genoType.add(row.Genotype)
             seqQuality.add(row.Depth_Quality)
+            chromosome.add(row.Chr)
         })
 
         wesData.value.rows = csvRows
@@ -540,6 +536,7 @@ const loadWesData = () => {
         wesData.value.options.clinvarPathogenicity = Array.from(clinvarPathogenicity).sort()
         wesData.value.options.genoType = Array.from(genoType).sort()
         wesData.value.options.seqQuality = Array.from(seqQuality).sort()
+        wesData.value.options.chromosome = Array.from(chromosome).sort()
         wesData.value.options.populationAlleleFrequency = [
             "GnomAD Genome Total",
             "GnomAD Genome AFR",
