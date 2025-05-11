@@ -98,3 +98,28 @@ export function getCsvHeader(str, splitter = '\t', line = 0) {
     // let headLine = str.substring(0, str.indexOf('\n'))
     return lines[line].split(splitter)
 }
+
+export function parseCsvToList(str, splitter = '\t', hasHeader = true) {
+    const lines = str.split('\n').filter((line) => line.trim().length > 0)
+    const result = []
+    let headers = []
+
+    if (hasHeader) {
+        headers = lines
+            .shift()
+            .split(splitter)
+            .map((header) => header.trim())
+    }
+
+    for (const line of lines) {
+        const values = line.split(splitter)
+        const record = {}
+        values.forEach((value, index) => {
+            const key = headers[index] || `column${index + 1}`
+            record[key] = value.trim()
+        })
+        result.push(record)
+    }
+
+    return { rows: result, headers: headers }
+}

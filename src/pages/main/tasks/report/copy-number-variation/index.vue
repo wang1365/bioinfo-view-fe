@@ -26,198 +26,226 @@
         color="orange"
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
-        >{{$t('Intro')}}</q-btn
+        >{{ $t('Intro') }}</q-btn
     >
     <div>
-        <div v-if="props.viewConfig.showCNVcircos">
-            <div class="row">
-                <div
-                    :id="pieDivId"
-                    class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
-                    style="min-width: 600px;max-width:1000px; height: 600px"
-                ></div>
-                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 column justify-center">
-                    <div class="q-gutter-sm q-pb-sm">
-                        <div>
-                            <q-input
-                                v-model="pieParams.extra"
-                                class="col-1"
-                                :label="$t('CopyNumberAmplificationThreshold')"
-                                label-color="primary"
-                                stack-label
-                                :disable="viewConfig.showStick && viewConfig.stickDone"
-                            />
-                        </div>
+        <q-tabs
+            v-model="tab"
+            active-color="primary"
+            active-bg-color="grey-4"
+            align="left"
+            class="bg-grey-1"
+            :breakpoint="0"
+            dense
+        >
+            <q-tab
+                name="拷贝数变异分析"
+                :label="$t('CopyNumberVariationAnalysis')"
+                v-if="props.viewConfig.showCNVcircos || props.viewConfig.showCNVtable"
+            />
+            <q-tab name="WES突变分析" :label="$t('WES突变分析')" v-if="props.viewConfig.showCNVWES || true" />
+        </q-tabs>
+        <q-tab-panels v-model="tab" animated>
+            <q-tab-panel name="拷贝数变异分析">
+                <div v-if="props.viewConfig.showCNVcircos">
+                    <div class="row">
+                        <div
+                            :id="pieDivId"
+                            class="col-lg-10 col-md-10 col-sm-12 col-xs-12"
+                            style="min-width: 600px;max-width:1000px; height: 600px"
+                        ></div>
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 column justify-center">
+                            <div class="q-gutter-sm q-pb-sm">
+                                <div>
+                                    <q-input
+                                        v-model="pieParams.extra"
+                                        class="col-1"
+                                        :label="$t('CopyNumberAmplificationThreshold')"
+                                        label-color="primary"
+                                        stack-label
+                                        :disable="viewConfig.showStick && viewConfig.stickDone"
+                                    />
+                                </div>
 
-                        <div>
-                            <q-input
-                                v-model="pieParams.missing"
-                                class="col-1"
-                                :label="$t('CopyNumberDeletionThreshold')"
-                                label-color="primary"
-                                stack-label
-                                :disable="viewConfig.showStick && viewConfig.stickDone"
-                            />
-                        </div>
-                        <div class="q-gutter-xs">
-                            <q-btn
-                                class="col"
-                                color="primary"
-                                size="small"
-                                :label="$t('Confirm')"
-                                @click="refreshPie"
-                                :disable="viewConfig.showStick && viewConfig.stickDone"
-                            />
-                            <q-btn
-                                class="col"
-                                color="primary"
-                                size="small"
-                                :label="$t('FuWei')"
-                                @click="resetPie"
-                                :disable="viewConfig.showStick && viewConfig.stickDone"
-                            />
-                            <q-btn
-                                v-if="amISuper()"
-                                class="col"
-                                color="primary"
-                                size="small"
-                                :label="showPieTable ? $t('HideDetail') : $t('ShowDetail')"
-                                @click="showPieTable = !showPieTable"
-                                :disable="viewConfig.showStick && viewConfig.stickDone"
-                            />
+                                <div>
+                                    <q-input
+                                        v-model="pieParams.missing"
+                                        class="col-1"
+                                        :label="$t('CopyNumberDeletionThreshold')"
+                                        label-color="primary"
+                                        stack-label
+                                        :disable="viewConfig.showStick && viewConfig.stickDone"
+                                    />
+                                </div>
+                                <div class="q-gutter-xs">
+                                    <q-btn
+                                        class="col"
+                                        color="primary"
+                                        size="small"
+                                        :label="$t('Confirm')"
+                                        @click="refreshPie"
+                                        :disable="viewConfig.showStick && viewConfig.stickDone"
+                                    />
+                                    <q-btn
+                                        class="col"
+                                        color="primary"
+                                        size="small"
+                                        :label="$t('FuWei')"
+                                        @click="resetPie"
+                                        :disable="viewConfig.showStick && viewConfig.stickDone"
+                                    />
+                                    <q-btn
+                                        v-if="amISuper()"
+                                        class="col"
+                                        color="primary"
+                                        size="small"
+                                        :label="showPieTable ? $t('HideDetail') : $t('ShowDetail')"
+                                        @click="showPieTable = !showPieTable"
+                                        :disable="viewConfig.showStick && viewConfig.stickDone"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div v-if="showPieTable">
-            <a-table
-                class="col-5"
-                size="middle"
-                rowKey="lineNumber"
-                bordered
-                :data-source="variantRows"
-                :columns="variantColumns"
-                @change="handleChange"
-                :sticky="true"
-            ></a-table>
-        </div>
+                <div v-if="showPieTable">
+                    <a-table
+                        class="col-5"
+                        size="middle"
+                        rowKey="lineNumber"
+                        bordered
+                        :data-source="variantRows"
+                        :columns="variantColumns"
+                        @change="handleChange"
+                        :sticky="true"
+                    ></a-table>
+                </div>
 
-        <div v-if="props.viewConfig.showCNVtable">
-            <q-separator class="q-my-lg" size="2px" color="primary" />
-            <div class="row q-gutter-sm items-start q-py-md">
-                <q-input
-                    v-model="searchParams.gene"
-                    stack-label
-                    label-color="primary"
-                    :label="$t('GeneSearch') + ':'"
-                    clearable
-                    dense
-                    style="width:150px"
-                    :disable="viewConfig.showStick && viewConfig.stickDone"
-                />
-                <q-select
-                    v-model="searchParams.type"
-                    clearable
-                    stack-label
-                    label-color="primary"
-                    :options="['DUP', 'DEL']"
-                    :label="$t('CopyNumberVariationClassification')"
-                    style="width:150px"
-                    dense
-                    :disable="viewConfig.showStick && viewConfig.stickDone"
-                />
-                <q-select
-                    v-model="searchParams.drug"
-                    clearable
-                    stack-label
-                    label-color="primary"
-                    :options="['All', 'Yes', 'No',]"
-                    :label="$t('DrugTarget')"
-                    style="width:150px"
-                    dense
-                    :disable="viewConfig.showStick && viewConfig.stickDone"
-                />
-                <q-select
-                    v-model="searchParams.drugLevel"
-                    :disable="searchParams.drug !== 'Yes' && viewConfig.showStick && viewConfig.stickDone"
-                    stack-label
-                    label-color="primary"
-                    clearable
-                    :label="$t('MedicationLevel')"
-                    multiple
-                    :options="['1', '2', '3', '4', 'R1', 'R2', 'Dx1', 'Dx2', 'Dx3', 'Px1', 'Px2', 'Px3']"
-                    style="width:150px"
-                    dense
-                />
-                <q-btn
-                    color="primary"
-                    :label="$t('Confirm')"
-                    icon="search"
-                    @click="clickSearch()"
-                    :disable="viewConfig.showStick && viewConfig.stickDone"
-                />
-                <q-btn
-                    color="primary"
-                    :label="$t('Clear')"
-                    icon="delete"
-                    @click="clickClear()"
-                    :disable="viewConfig.showStick && viewConfig.stickDone"
-                />
-                <q-btn
-                    :href="tableFileUrl"
-                    :label="$t('Download')"
-                    icon="south"
-                    color="primary"
-                    target="_blank"
-                    class="q-ml-sm"
-                    :download="tableFileName"
-                />
-            </div>
-        </div>
-
-        <div style="position:relative">
-            <q-icon
-                v-if="isDefineReport"
-                color="accent"
-                name="question_mark"
-                size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px"
-            >
-                <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
-            </q-icon>
-            <a-table
-                style="z-index:1"
-                class="col-5"
-                size="middle"
-                rowKey="lineNumber"
-                bordered
-                :loading="loading"
-                :data-source="filteredRows"
-                :columns="columns"
-                :sticky="true"
-                :row-selection="rowSelection"
-            >
-                <template #bodyCell="{ column, record }">
-                    <template v-if="column.key !=='Operation'">
-                        <template v-if="column.key==='Drugs' && record[column.dataIndex].length > 0">
-                            <a-tooltip
-                                color="#3b4146"
-                                :title="record[column.dataIndex]"
-                                :overlay-style="{ maxWidth: '1200px' }"
-                            >
-                                <div>{{ record[column.dataIndex].substring(0, 20)+'...'}}</div>
-                            </a-tooltip>
+                <div v-if="props.viewConfig.showCNVtable">
+                    <q-separator class="q-my-lg" size="2px" color="primary" />
+                    <div class="row q-gutter-sm items-start q-py-md">
+                        <q-input
+                            v-model="searchParams.gene"
+                            stack-label
+                            label-color="primary"
+                            :label="$t('GeneSearch') + ':'"
+                            clearable
+                            dense
+                            style="width:150px"
+                            :disable="viewConfig.showStick && viewConfig.stickDone"
+                        />
+                        <q-select
+                            v-model="searchParams.type"
+                            clearable
+                            stack-label
+                            label-color="primary"
+                            :options="['DUP', 'DEL']"
+                            :label="$t('CopyNumberVariationClassification')"
+                            style="width:150px"
+                            dense
+                            :disable="viewConfig.showStick && viewConfig.stickDone"
+                        />
+                        <q-select
+                            v-model="searchParams.drug"
+                            clearable
+                            stack-label
+                            label-color="primary"
+                            :options="['All', 'Yes', 'No',]"
+                            :label="$t('DrugTarget')"
+                            style="width:150px"
+                            dense
+                            :disable="viewConfig.showStick && viewConfig.stickDone"
+                        />
+                        <q-select
+                            v-model="searchParams.drugLevel"
+                            :disable="searchParams.drug !== 'Yes' && viewConfig.showStick && viewConfig.stickDone"
+                            stack-label
+                            label-color="primary"
+                            clearable
+                            :label="$t('MedicationLevel')"
+                            multiple
+                            :options="['1', '2', '3', '4', 'R1', 'R2', 'Dx1', 'Dx2', 'Dx3', 'Px1', 'Px2', 'Px3']"
+                            style="width:150px"
+                            dense
+                        />
+                        <q-btn
+                            color="primary"
+                            :label="$t('Confirm')"
+                            icon="search"
+                            @click="clickSearch()"
+                            :disable="viewConfig.showStick && viewConfig.stickDone"
+                        />
+                        <q-btn
+                            color="primary"
+                            :label="$t('Clear')"
+                            icon="delete"
+                            @click="clickClear()"
+                            :disable="viewConfig.showStick && viewConfig.stickDone"
+                        />
+                        <q-btn
+                            :href="tableFileUrl"
+                            :label="$t('Download')"
+                            icon="south"
+                            color="primary"
+                            target="_blank"
+                            class="q-ml-sm"
+                            :download="tableFileName"
+                        />
+                    </div>
+                </div>
+                <div style="position:relative">
+                    <q-icon
+                        v-if="isDefineReport"
+                        color="accent"
+                        name="question_mark"
+                        size="xs"
+                        style="position:absolute;z-index:100;left:0px;top:0px"
+                    >
+                        <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
+                    </q-icon>
+                    <a-table
+                        style="z-index:1"
+                        class="col-5"
+                        size="middle"
+                        rowKey="lineNumber"
+                        bordered
+                        :loading="loading"
+                        :data-source="filteredRows"
+                        :columns="columns"
+                        :sticky="true"
+                        :row-selection="rowSelection"
+                    >
+                        <template #bodyCell="{ column, record }">
+                            <template v-if="column.key !== 'Operation'">
+                                <template v-if="column.key === 'Drugs' && record[column.dataIndex].length > 0">
+                                    <a-tooltip
+                                        color="#3b4146"
+                                        :title="record[column.dataIndex]"
+                                        :overlay-style="{ maxWidth: '1200px' }"
+                                    >
+                                        <div>{{ record[column.dataIndex].substring(0, 20) + '...' }}</div>
+                                    </a-tooltip>
+                                </template>
+                                <span v-else>{{ record[column.dataIndex] }}</span>
+                            </template>
+                            <template v-else>
+                                <q-btn
+                                    size="xs"
+                                    outline
+                                    color="primary"
+                                    :label="$t('View')"
+                                    @click="clickView(record)"
+                                />
+                            </template>
                         </template>
-                        <span v-else>{{ record[column.dataIndex] }}</span>
-                    </template>
-                    <template v-else>
-                        <q-btn size="xs" outline color="primary" :label="$t('View')" @click="clickView(record)" />
-                    </template>
-                </template>
-            </a-table>
-        </div>
+                    </a-table>
+                </div>
+            </q-tab-panel>
+            <q-tab-panel name="WES突变分析">
+                <CNVWES />
+            </q-tab-panel>
+        </q-tab-panels>
     </div>
 
     <q-dialog v-model="showImage">
@@ -230,12 +258,12 @@
 
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
-            <q-bar class="bg-primary text-white">{{$t('CopyNumberVariationAnalysis')}}</q-bar>
+            <q-bar class="bg-primary text-white">{{ $t('CopyNumberVariationAnalysis') }}</q-bar>
             <q-card-section>
-                <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
+                <div style="white-space:pre-wrap; line-height: 35px">{{ props.intro }}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
+                <q-btn v-close-popup color="primary">{{ $t('Close') }}</q-btn>
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -255,7 +283,9 @@ import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
+import CNVWES from "./CNVWES.vue"
 
+const tab = ref('拷贝数变异分析')
 const store = globalStore()
 const { langCode } = storeToRefs(store)
 const { t } = useI18n()
@@ -289,6 +319,7 @@ const props = defineProps({
                 showCNVcircos: true,
                 showCNVtable: true,
                 showSticky: false,
+                showCNVWES: false,
             }
         },
     },
@@ -331,7 +362,7 @@ const variantColumns = computed(() => {
     ]
 })
 
-const columns = computed(()=> [
+const columns = computed(() => [
     { key: 'Chr', title: 'Chr', dataIndex: 'Chr', align: 'center', width: 50 },
     { key: 'Start', title: 'Start', dataIndex: 'Start', align: 'center', width: 80 },
     { key: 'End', title: 'End', dataIndex: 'End', align: 'center', width: 80 },
@@ -396,16 +427,16 @@ const searchParams = ref({
 })
 
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
-        return {
-            selectedRowKeys: selectedRows,
-            onChange: onSelectChange,
-            columnWidth: 25,
-            getCheckboxProps: getCheckboxProps
-        }
+    if (!isDefineReport.value) {
+        return null
     }
+    return {
+        selectedRowKeys: selectedRows,
+        onChange: onSelectChange,
+        columnWidth: 25,
+        getCheckboxProps: getCheckboxProps
+    }
+}
 )
 
 const variants = ref([])
@@ -492,6 +523,9 @@ const refreshPie = () => {
     pieOption.series[2].data = result2
 
     pie.value.setOption(pieOption)
+
+    const div = document.getElementById(pieDivId.value)
+    pie.value = echarts.init(div)
 }
 
 watch(rows, v => {
@@ -501,8 +535,8 @@ onMounted(() => {
     loadData()
 })
 
-let selectedDefaultRows=ref([])
-let defaultRows=ref([])
+let selectedDefaultRows = ref([])
+let defaultRows = ref([])
 const loadData = () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     tableFileUrl.value = `igv${props.task.result_dir}/CNV/AnnotSV.tsv.filter_${suffix}.txt`
@@ -516,10 +550,10 @@ const loadData = () => {
             pieParams.value.missing = stepData.value.pie.searchParams.missing
         }
         for (const iterator of results) {
-                if(iterator.Report==='Y'){
-                    defaultRows.value.push(iterator.lineNumber)
-                }
+            if (iterator.Report === 'Y') {
+                defaultRows.value.push(iterator.lineNumber)
             }
+        }
 
         searchFilterRows(searchParams.value)
 
@@ -527,10 +561,10 @@ const loadData = () => {
             searchParams.value = stepData.value.table.searchParams
             searchFilterRows(stepData.value.table.searchParams)
             selectedRows.value = stepData.value.table.selectedRows
-            selectedDefaultRows.value=stepData.value.table.selectedDefaultRows
-        }else{
-            selectedDefaultRows.value=defaultRows.value
-            selectedRows.value=defaultRows.value
+            selectedDefaultRows.value = stepData.value.table.selectedDefaultRows
+        } else {
+            selectedDefaultRows.value = defaultRows.value
+            selectedRows.value = defaultRows.value
         }
         console.log(defaultRows.value)
     })
@@ -601,7 +635,7 @@ const clickSearch = () => {
         return false
     }
     searchFilterRows(searchParams.value)
-    selectedRows.value=selectedDefaultRows.value
+    selectedRows.value = selectedDefaultRows.value
 }
 
 const clickClear = () => {
@@ -610,7 +644,7 @@ const clickClear = () => {
         type: '', // DUP/DEL
         drug: '', // YES/NO
         drugLevel: [], // A/B/C/D/E
-        includeDefaultReport:isDefineReport.value
+        includeDefaultReport: isDefineReport.value
     }
     clickSearch()
 }
@@ -644,8 +678,8 @@ const onSelectChange = (selectedRowKeys) => {
     // }
     console.log(selectedRowKeys)
     selectedRows.value = selectedRowKeys
-    selectedDefaultRows.value=[]
-    for(let item of selectedRowKeys){
+    selectedDefaultRows.value = []
+    for (let item of selectedRowKeys) {
         let finded = false
         for (let lineNumber of defaultRows.value) {
             if (lineNumber === item) {
@@ -668,7 +702,7 @@ const stickFilter = () => {
         table: {
             searchParams: searchParams.value,
             selectedRows: selectedRows.value,
-            selectedDefaultRows:selectedDefaultRows.value,
+            selectedDefaultRows: selectedDefaultRows.value,
             filtered: true,
             // filtered: rows.value.length != filteredRows.value.length,
             selected: selectedRows.value.length > 0,
