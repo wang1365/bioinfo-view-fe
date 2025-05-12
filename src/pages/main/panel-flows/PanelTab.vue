@@ -35,7 +35,7 @@
 
 <script setup>
 import {getPanels} from "src/api/panel"
-import {ref, onMounted, defineProps, watch, toRefs} from "vue"
+import {ref, onMounted, watch, toRefs} from "vue"
 import PanelDetail from "pages/main/panel-flows/PanelDetail"
 
 const rows = ref([])

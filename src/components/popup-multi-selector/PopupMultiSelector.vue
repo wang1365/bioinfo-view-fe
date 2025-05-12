@@ -66,7 +66,7 @@
     </q-card>
 </template>
 <script setup>
-import { defineProps, ref, onUpdated, computed, defineEmits, onMounted } from "vue";
+import { ref, onUpdated, computed, onMounted } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 
 const checkAll = ref(false);

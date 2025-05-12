@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import {defineProps, computed, defineExpose, ref, toRefs, watch} from "vue"
+import {computed, defineExpose, ref, toRefs, watch} from "vue"
 import {getFlowDetail} from "src/api/flow"
 
 const props = defineProps({

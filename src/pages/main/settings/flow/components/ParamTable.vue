@@ -235,7 +235,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, defineExpose, ref, toRefs, onMounted, onBeforeMount } from "vue"
+import { computed, defineExpose, ref, toRefs, onMounted, onBeforeMount } from "vue"
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { api } from "src/boot/axios";

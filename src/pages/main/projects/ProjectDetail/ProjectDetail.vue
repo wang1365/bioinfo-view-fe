@@ -74,7 +74,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { ref, defineProps, computed } from "vue"
+import { ref, computed } from "vue"
 import { useApi } from "src/api/apiBase"
 import FlowSelect from "./ProjectTask/FlowSelect.vue"
 import CreateTask from "./ProjectTask/CreateTask.vue"

@@ -61,7 +61,7 @@
     </div>
 </template>
 <script setup>
-import {ref, onMounted, defineProps, watch, toRefs} from "vue"
+import {ref, onMounted, watch, toRefs} from "vue"
 import { getPanelDetail } from "src/api/panel"
 import PageTitle from "components/page-title/PageTitle"
 import FlowDialog from "pages/main/settings/flow/FlowDialog"

@@ -67,7 +67,7 @@
 <script setup>
 import { useQuasar } from "quasar";
 import DataInfo from "../../../data/DataInfo.vue";
-import { ref, onMounted, defineProps, watch, onUpdated, computed } from 'vue';
+import { ref, onMounted, watch, onUpdated, computed } from 'vue';
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 import ProjectDetailDataSelect from "./ProjectDetailDataSelect.vue";
 import { useApi } from "src/api/apiBase";

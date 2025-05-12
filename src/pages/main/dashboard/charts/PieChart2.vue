@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { markRaw, onMounted, ref, watch, defineProps, onUpdated } from 'vue'
+import { markRaw, onMounted, ref, watch, onUpdated } from 'vue'
 import { useI18n } from "vue-i18n";
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'

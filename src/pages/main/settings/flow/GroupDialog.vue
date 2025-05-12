@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import {ref, defineProps, defineExpose, defineEmits} from 'vue'
+import {ref, defineExpose, defineEmits} from 'vue'
 import {createPanelGroup} from 'src/api/panelGroup'
 import {useQuasar} from 'quasar'
 

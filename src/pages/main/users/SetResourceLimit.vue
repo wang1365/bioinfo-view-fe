@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, toRefs, onMounted } from 'vue'
+import { ref, toRefs, onMounted } from 'vue'
 import {createUser, resetPassword} from 'src/api/user'
 import { useQuasar } from 'quasar'
 

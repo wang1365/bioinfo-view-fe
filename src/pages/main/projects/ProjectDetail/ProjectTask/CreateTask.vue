@@ -282,7 +282,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, toRefs, defineEmits, onMounted } from "vue";
+import { ref, toRefs, onMounted } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
 import TaskDataSelectMulti from "./TaskDataSelectMulti.vue";
 import TaskDataSelectSingle from "./TaskDataSelectSingle.vue";

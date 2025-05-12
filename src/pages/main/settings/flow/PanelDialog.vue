@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import {ref, defineProps, defineExpose, defineEmits, onMounted} from 'vue'
+import {ref, defineExpose, defineEmits, onMounted} from 'vue'
 import {createPanel, updatePanel} from 'src/api/panel'
 import {useQuasar} from 'quasar'
 import {getPanelGroups} from "src/api/panelGroup";

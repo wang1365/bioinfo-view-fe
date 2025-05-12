@@ -86,7 +86,7 @@
     </q-card>
 </template>
 <script setup>
-import { defineProps, ref, defineEmits } from "vue";
+import { ref } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
 
 const selectedItem = ref({});

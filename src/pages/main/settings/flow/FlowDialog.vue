@@ -262,7 +262,7 @@
 import ParamTable from './components/ParamTable'
 import { getFlowDetail, createFlow, updateFlow } from 'src/api/flow'
 import { getPanels } from "src/api/panel"
-import { defineProps, computed, ref, toRefs, defineExpose, defineEmits, onMounted, watch } from 'vue'
+import { computed, ref, toRefs, onMounted, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 

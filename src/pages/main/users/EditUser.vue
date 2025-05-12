@@ -109,7 +109,7 @@
 </template>
 
 <script setup>
-import {ref, defineProps, toRefs, watch} from 'vue'
+import {ref, toRefs, watch} from 'vue'
 import {patchUser} from 'src/api/user'
 import {useQuasar} from 'quasar'
 import {useI18n} from 'vue-i18n'

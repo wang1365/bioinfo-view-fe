@@ -25,7 +25,7 @@
                         outlined
                         hide-dropdown-icon
                         :options="props.options.phenoType"
-                        :label="$t('PhenoType')"
+                        label="Phenotype"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -39,7 +39,7 @@
                         outlined
                         hide-dropdown-icon
                         :options="props.options.diseases"
-                        :label="$t('Disease')"
+                        label="Disease"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -53,14 +53,14 @@
                         outlined
                         hide-dropdown-icon
                         :options="props.options.diseaseInheritanceModes"
-                        :label="$t('diseaseInheritanceModes')"
+                        label="Disease Inheritance Modes"
                         stack-label
                         label-color="primary"
                         class="full-width"
                     />
                     <q-input
                         v-model="innerSearchParams.geneSet"
-                        :label="$t('GeneSet')"
+                        label="Geneset"
                         clearable
                         dense
                         outlined
@@ -101,7 +101,7 @@
                         outlined
                         hide-dropdown-icon
                         :options="props.options.prioritizationTier"
-                        :label="$t('prioritizationTier')"
+                        label="Prioritization Tier"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -115,7 +115,7 @@
                         outlined
                         hide-dropdown-icon
                         :options="props.options.acmgPathogenicity"
-                        :label="$t('acmgPathogenicity')"
+                        label="ACMG Pathogenicity"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -129,7 +129,7 @@
                         outlined
                         hide-dropdown-icon
                         :options="props.options.clinvarPathogenicity"
-                        :label="$t('clinvarPathogenicity')"
+                        label="Clinvar Pathogenicity"
                         stack-label
                         label-color="primary"
                         class="full-width"
@@ -141,7 +141,7 @@
                             outlined
                             hide-dropdown-icon
                             :options="props.options.populationAlleleFrequency"
-                            :label="$t('populationAlleleFrequency')"
+                            label="Population Allele Frequency"
                             stack-label
                             dense
                             class="col-7"
@@ -153,9 +153,8 @@
                             :options="comparatorOptions"
                             stack-label
                             dense
-                            outlined
                             hide-dropdown-icon
-                            class="col-2"
+                            class="col-1"
                         />
                         <q-input
                             v-model="innerSearchParams.pafValue"
@@ -163,7 +162,7 @@
                             stack-label
                             dense
                             outlined
-                            class="col-3"
+                            class="col-4"
                             label-color="primary"
                         >
                             <template v-slot:after><span class="text-subtitle1 text-primary">%</span></template>
@@ -177,7 +176,7 @@
                             outlined
                             hide-dropdown-icon
                             :options="props.options.genoType"
-                            :label="$t('genoType')"
+                            label="Genotype"
                             stack-label
                             dense
                             label-color="primary"
@@ -191,7 +190,7 @@
                             dense
                             hide-dropdown-icon
                             :options="props.options.seqQuality"
-                            :label="$t('seqQuality')"
+                            label="SEQ Quality"
                             stack-label
                             label-color="primary"
                             class="col-6"
@@ -199,15 +198,14 @@
                     </div>
 
                     <div class="row justify-between">
-                        <span class="col-5 text-primary">{{$t('genoTypeQuality')}}</span>
+                        <div class="text-primary col-5 content-center" style="font-size: 12px">Genotype Quality</div>
                         <q-select
                             v-model="innerSearchParams.genoTypeComp"
                             :options="comparatorOptions"
                             stack-label
                             dense
-                            outlined
                             hide-dropdown-icon
-                            class="col-2"
+                            class="col-1"
                         />
                         <q-input
                             v-model="innerSearchParams.genoTypeValue"
@@ -221,15 +219,14 @@
                     </div>
 
                     <div class="row justify-between">
-                        <span class="col-5 text-primary">{{$t('variantQuality')}}</span>
+                        <div class="text-primary col-5 content-center" style="font-size: 12px">Variant Quality</div>
                         <q-select
                             v-model="innerSearchParams.variantQualityComp"
                             :options="comparatorOptions"
                             stack-label
                             dense
-                            outlined
                             hide-dropdown-icon
-                            class="col-2"
+                            class="col-1"
                         />
                         <q-input
                             v-model="innerSearchParams.variantQualityValue"
@@ -243,15 +240,14 @@
                     </div>
 
                     <div class="row justify-between">
-                        <span class="col-5 text-primary">{{$t('seqDepth')}}</span>
+                        <div class="text-primary col-5 content-center" style="font-size: 12px">Depth</div>
                         <q-select
                             v-model="innerSearchParams.seqDepthComp"
                             :options="comparatorOptions"
                             stack-label
                             dense
-                            outlined
                             hide-dropdown-icon
-                            class="col-2"
+                            class="col-1"
                         />
                         <q-input
                             v-model="innerSearchParams.seqDepthValue"
@@ -272,7 +268,7 @@
                             outlined
                             class="col-6"
                             label-color="primary"
-                            label="minAlleleFraction"
+                            label="Min Allele Fraction"
                         >
                             <template v-slot:append><span class="text-subtitle2">%</span></template>
                             <template v-slot:after><span class="text-subtitle2">~</span></template>
@@ -284,7 +280,7 @@
                             outlined
                             class="col-6"
                             label-color="primary"
-                            label="maxAlleleFraction"
+                            label="Max Allele Fraction"
                         >
                             <template v-slot:append><span class="text-subtitle2">%</span></template>
                         </q-input>
