@@ -132,6 +132,7 @@ import igv from "igv"
 import { useI18n } from "vue-i18n"
 import { globalStore }from 'src/stores/global'
 import { storeToRefs } from 'pinia'
+import { populations } from './index'
 
 const store = globalStore()
 const { langCode } = storeToRefs(store)
@@ -537,38 +538,7 @@ const loadWesData = () => {
         wesData.value.options.genoType = Array.from(genoType).sort()
         wesData.value.options.seqQuality = Array.from(seqQuality).sort()
         wesData.value.options.chromosome = Array.from(chromosome).sort()
-        wesData.value.options.populationAlleleFrequency = [
-            "GnomAD Genome Total",
-            "GnomAD Genome AFR",
-            "GnomAD Genome AMR",
-            "GnomAD Genome ASJ",
-            "GnomAD Genome EAS",
-            "GnomAD Genome FIN",
-            "GnomAD Genome NFE",
-            "GnomAD Genome OTH",
-            "GnomAD exome Total",
-            "GnomAD exome AFR",
-            "GnomAD exome AMR",
-            "GnomAD exome ASJ",
-            "GnomAD exome EAS",
-            "GnomAD exome FIN",
-            "GnomAD exome NFE",
-            "GnomAD exome OTH",
-            "GnomAD exome SAS",
-            "ExAC Total",
-            "ExAC AFR",
-            "ExAC AMR",
-            "ExAC EAS",
-            "ExAC FIN",
-            "ExAC NFE",
-            "ExAC OTH",
-            "ExAC SAS",
-            "1000 Genomes Total",
-            "1000 Genomes AFR",
-            "1000 Genomes AMR",
-            "1000 Genomes ESA",
-            "1000 Genomes EUR",
-            "1000 Genomes SAS"]
+        wesData.value.options.populationAlleleFrequency = Object.getOwnPropertyNames(populations)
 
         console.log('<<<<<<<<<<<<<<<<< wes options', wesData.value.options)
 

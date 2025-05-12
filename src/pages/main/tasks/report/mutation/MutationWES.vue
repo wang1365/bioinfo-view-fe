@@ -143,6 +143,7 @@
                             :options="props.options.populationAlleleFrequency"
                             label="Population Allele Frequency"
                             stack-label
+                            multiple
                             dense clearable
                             class="col-7"
                             label-color="primary"
@@ -157,11 +158,12 @@
                             class="col-1"
                         />
                         <q-input
-                            v-model="innerSearchParams.pafValue"
+                            v-model.number="innerSearchParams.pafValue"
                             :options="props.options.pafValue"
                             stack-label
                             dense
                             outlined
+                            type="number"
                             class="col-4"
                             label-color="primary"
                         >
@@ -208,10 +210,11 @@
                             class="col-1"
                         />
                         <q-input
-                            v-model="innerSearchParams.genoTypeValue"
+                            v-model.number="innerSearchParams.genoTypeValue"
                             stack-label
                             dense
                             outlined
+                            type="number"
                             class="col-5"
                             label-color="primary"
                         >
@@ -229,10 +232,11 @@
                             class="col-1"
                         />
                         <q-input
-                            v-model="innerSearchParams.variantQualityValue"
+                            v-model.number="innerSearchParams.variantQualityValue"
                             stack-label
                             dense
                             outlined
+                            type="number"
                             class="col-5"
                             label-color="primary"
                         >
@@ -548,20 +552,13 @@ import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
-import { useCustomCell, WES_PARAMS } from './index'
+import {populations, useCustomCell, WES_PARAMS} from './index'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
 const splitterModel = ref(300)
 const emit = defineEmits(['filterChange'])
-const crowdCols = {
-    'ALL': [23, 31, 39],
-    'African': [24, 32, 40],
-    'American': [25, 33, 41],
-    'East Asian': [26, 34, 43],
-    'European': [27, 35, 44],
-    'South Asian': [30, 36]
-}
+
 
 const props = defineProps({
     samples: {
@@ -754,8 +751,6 @@ const reset = () => {
 // 根据过滤条件筛选数据
 const searchFilterRows = (searchParams) => {
     filteredRows.value = rows.value.filter((line, i) => {
-        // 搜索基因
-        // 原始表格11列，支持模糊搜索
         let param = searchParams.diseaseCategories
         if (param && param.length > 0) {
             let matched = false
@@ -797,6 +792,36 @@ const searchFilterRows = (searchParams) => {
         let genes = searchParams.gene
         if (genes && genes.length > 0  && genes.every(gene => gene !== line['Gene.refGene'])) {
             return false
+        }
+
+        let tiers = searchParams.prioritizationTier
+        if (tiers && tiers.length > 0  && tiers.every(tier => tier !== line.Class)) {
+            return false
+        }
+
+        let acmgs = searchParams.acmgPathogenicity
+        if (acmgs && acmgs.length > 0  && acmgs.every(acmg => acmg !== line.ACMG_result)) {
+            return false
+        }
+
+        let clinvars = searchParams.clinvarPathogenicity
+        if (clinvars && clinvars.length > 0  && clinvars.every(clinvar => clinvar !== line.Clinvar)) {
+            return false
+        }
+
+        let frequencies = searchParams.populationAlleleFrequency
+        const pafComp = searchParams.pafComp
+        let pafValue = searchParams.pafValue
+        if (frequencies && frequencies.length > 0 && pafValue) {
+            const matched = frequencies.every(fq => {
+                const col = populations[fq]
+                const colValue = line[col]
+                return compare(pafComp, colValue, pafValue/100)
+            })
+
+            if (!matched) {
+                return false
+            }
         }
 
 
