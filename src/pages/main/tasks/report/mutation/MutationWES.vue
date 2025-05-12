@@ -143,7 +143,7 @@
                             :options="props.options.populationAlleleFrequency"
                             label="Population Allele Frequency"
                             stack-label
-                            dense
+                            dense clearable
                             class="col-7"
                             label-color="primary"
                         >
@@ -381,7 +381,7 @@
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'geneInfo'">
                                 <div class="row">
-                                    <div class="col-1 text-weight-bolder text-green-5">
+                                    <div class="col-2 text-weight-bolder text-green-5">
                                         <div class="text-weight-bolder text-green-5">{{record.Class}}</div>
                                     </div>
                                     <div class="col-10">
@@ -772,6 +772,34 @@ const searchFilterRows = (searchParams) => {
                 return false
             }
         }
+
+        let phenoTypes = searchParams.phenoType
+        if (phenoTypes && phenoTypes.length > 0 ) {
+            if (phenoTypes.every(pt => !line.HPO.include(pt))) {
+                return false
+            }
+        }
+
+        let diseases = searchParams.diseases
+        if (diseases && diseases.length > 0 ) {
+            if (diseases.every(pt => !line.Gene_Related_Diseases.any(grd => grd.include(pt)))) {
+                return false
+            }
+        }
+
+        let modes = searchParams.diseaseInheritanceModes
+        if (modes && modes.length > 0 ) {
+            if (modes.every(m => !line.Gene_Related_Diseases.any(grd => grd.include(m)))) {
+                return false
+            }
+        }
+
+        let genes = searchParams.gene
+        if (genes && genes.length > 0  && genes.every(gene => gene !== line['Gene.refGene'])) {
+            return false
+        }
+
+
 
         // 深度
         // 原始表格8列，大于0的正整数，
