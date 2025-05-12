@@ -147,7 +147,7 @@
                         <div class="col-6">
                             <div class="col-6">
                                 <q-input
-                                    v-model="innerSearchParams.cnv_length_ge"
+                                    v-model="innerSearchParams.cnv_length_le"
                                     dense
                                     outlined
                                     class="full-width"
@@ -557,7 +557,22 @@ const route = useRoute()
 const igvVisible = ref(false)
 const igvFile = ref(null)
 const dialogVisible = ref(false)
-const innerSearchParams = ref({ ...WES_PARAMS })
+
+const originDataRows=ref([])
+const innerSearchParams = ref({ geneSet:"",
+    excludeGensets:false,
+    gene:[],
+    acmg:[],
+    user_pathogenicity:"",
+    cnv_cover_type:[],
+    cnv_type:[],
+    chromosome:[],
+    start:"",
+    end:"",
+    cnv_length_ge:"",
+    cnv_length_le:"",
+    copy_number:""
+ })
 
 
 const showDrawer = ref(false)
@@ -566,6 +581,95 @@ const filteredRows = ref([])
 const currentRow = ref({})
 
 
+const search=()=>{
+    console.log(innerSearchParams.value)
+    let resultRows=[]
+    for (const row of originDataRows.value) {
+        // 判断 gene 是否包含
+        if (innerSearchParams.value.gene && innerSearchParams.value.gene.length>0){
+            let geneSet=new Set(innerSearchParams.value.gene)
+            if (!row.Gene.split(";").some(item => geneSet.has(item))){
+                continue
+            }
+        }
+        // 是否包含 ACMG_result
+        if (innerSearchParams.value.acmg && innerSearchParams.value.acmg.length>0){
+            let acmgSet=new Set(innerSearchParams.value.acmg)
+            if (!acmgSet.has(row.ACMG_result)){
+                continue
+            }
+        }
+         // 是否包含CNV_Cover_Type
+        if (innerSearchParams.value.cnv_cover_type && innerSearchParams.value.cnv_cover_type.length>0){
+            let cnvCoverTypeSet=new Set(innerSearchParams.value.cnv_cover_type)
+            if (!cnvCoverTypeSet.has(row.CNV_Cover_Type)){
+                continue
+            }
+        }
+        // 是否包含 CNV_Type
+        if (innerSearchParams.value.cnv_type && innerSearchParams.value.cnv_type.length>0){
+            let cnvTypeSet=new Set(innerSearchParams.value.cnv_type)
+            if (!cnvTypeSet.has(row.CNV_Type)){
+                continue
+            }
+        }
+        // 是否包含 chromosome
+        if (innerSearchParams.value.chromosome && innerSearchParams.value.chromosome.length>0){
+            let chrSet=new Set(innerSearchParams.value.chromosome)
+            if (!chrSet.has(row.Chr)){
+                continue
+            }
+        }
+
+        if (innerSearchParams.value.start && !isNaN(Number.parseInt(innerSearchParams.value.start))){
+            if(!(Number.parseInt(row.Start) >= Number.parseInt(innerSearchParams.value.start))){
+                continue
+            }
+        }
+        if (innerSearchParams.value.end && !isNaN(Number.parseInt(innerSearchParams.value.end))){
+            if(!(Number.parseInt(row.End) <= Number.parseInt(innerSearchParams.value.end))){
+                continue
+            }
+        }
+        if (innerSearchParams.value.cnv_length_ge && !isNaN(Number.parseInt(innerSearchParams.value.cnv_length_ge))){
+            if( !(Number.parseInt(row.CNV_Length) >= Number.parseInt(innerSearchParams.value.cnv_length_ge))){
+                continue
+            }
+        }
+
+        if (innerSearchParams.value.cnv_length_le && !isNaN(Number.parseInt(innerSearchParams.value.cnv_length_le))){
+            if(!(Number.parseInt(row.CNV_Length) <= Number.parseInt(innerSearchParams.value.cnv_length_le))){
+                continue
+            }
+        }
+         if (innerSearchParams.value.copy_number && !isNaN(Number.parseInt(innerSearchParams.value.copy_number))){
+            if(!(Number.parseInt(row.Copy_Number) == Number.parseInt(innerSearchParams.value.copy_number))){
+                continue
+            }
+        }
+
+        resultRows.push(row)
+    }
+    console.log(resultRows)
+    buildShowRowData(resultRows)
+}
+const reset=()=>{
+    innerSearchParams.value = { geneSet:"",
+    excludeGensets:false,
+    gene:[],
+    acmg:[],
+    user_pathogenicity:"",
+    cnv_cover_type:[],
+    cnv_type:[],
+    chromosome:[],
+    start:"",
+    end:"",
+    cnv_length_ge:"",
+cnv_length_le:"",
+copy_number:""
+ }
+ search()
+}
 function clickDetail(record) {
     currentRow.value = record
     dialogVisible.value = true
@@ -622,14 +726,9 @@ const columns = ref([
     { title: 'Operation', dataIndex: 'operation', key: 'operation', width: 200, align: 'left' },
 ])
 
-const reset = () => {
-    innerSearchParams.value = { ...WES_PARAMS }
-    search()
-}
+
 
 onMounted(() => {
-    console.log('onmouted')
-    console.log(props)
     loadTable()
 })
 
@@ -640,13 +739,15 @@ const loadTable = () => {
     console.log('load table')
     readTaskFile(route.params.id, `CNV_WES/D00000307.CNV_WES.txt`).then((res) => {
         let data = parseCsvToList(res)
-        let rows = buildShowRowData(data.rows)
-        searchOptions.value = buildSearchOptions(data.rows)
-        filteredRows.value = Array.from({ length: 200 }, () => rows[0])
+        originDataRows.value=data.rows
+        console.log(data.rows)
 
-        console.log("cnv-wes", data)
+        buildShowRowData(data.rows)
+        buildSearchOptions(data.rows)
+
     })
 }
+
 const buildSearchOptions = (originRows) => {
     let gene_set = new Set()
     let acmg_set = new Set()
@@ -664,12 +765,12 @@ const buildSearchOptions = (originRows) => {
             gene_set.add(item)
         }
     }
-    return {
-        gene_set: Array.from(gene_set).sort().map(value => ({ label: value, value: value })),
-        acmg_set: Array.from(acmg_set).sort().map(value => ({ label: value, value: value })),
-        cnv_cover_type_set: Array.from(cnv_cover_type_set).sort().map(value => ({ label: value, value: value })),
-        cnv_type_set: Array.from(cnv_type_set).sort().map(value => ({ label: value, value: value })),
-        chr_set: Array.from(chr_set).sort().map(value => ({ label: value, value: value }))
+    searchOptions.value= {
+        gene_set: Array.from(gene_set).sort().map(value => value),
+        acmg_set: Array.from(acmg_set).sort().map(value => value),
+        cnv_cover_type_set: Array.from(cnv_cover_type_set).sort().map(value => value),
+        cnv_type_set: Array.from(cnv_type_set).sort().map(value => value),
+        chr_set: Array.from(chr_set).sort().map(value => value)
     }
 }
 const buildShowRowData = (originRows) => {
@@ -704,7 +805,12 @@ const buildShowRowData = (originRows) => {
         row.show_clinvar_more = false
         rows.push(row)
     }
-    return rows
+    filteredRows.value= rows
+    if(filteredRows.value.length>0){
+
+    filteredRows.value = Array.from({ length: 200 }, () => JSON.parse(JSON.stringify(filteredRows.value[0])))
+    }
+
 }
 </script>
 
