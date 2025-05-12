@@ -187,7 +187,6 @@
                         <q-select
                             v-model="innerSearchParams.seqQuality"
                             clearable
-                            multiple
                             outlined
                             dense
                             hide-dropdown-icon
@@ -254,10 +253,11 @@
                             class="col-1"
                         />
                         <q-input
-                            v-model="innerSearchParams.seqDepthValue"
+                            v-model.number="innerSearchParams.seqDepthValue"
                             stack-label
                             dense
                             outlined
+                            type="number"
                             class="col-5"
                             label-color="primary"
                         >
@@ -266,22 +266,24 @@
 
                     <div class="row">
                         <q-input
-                            v-model="innerSearchParams.minAlleleFraction"
+                            v-model.number="innerSearchParams.minAlleleFraction"
                             stack-label
                             dense
                             outlined
+                            type="number"
                             class="col-6"
                             label-color="primary"
                             label="Min Allele Fraction"
                         >
                             <template v-slot:append><span class="text-subtitle2">%</span></template>
-                            <template v-slot:after><span class="text-subtitle2">~</span></template>
+<!--                            <template v-slot:after><span class="text-subtitle2">~</span></template>-->
                         </q-input>
                         <q-input
-                            v-model="innerSearchParams.maxAlleleFraction"
+                            v-model.number="innerSearchParams.maxAlleleFraction"
                             stack-label
                             dense
                             outlined
+                            type="number"
                             class="col-6"
                             label-color="primary"
                             label="Max Allele Fraction"
@@ -824,6 +826,26 @@ const searchFilterRows = (searchParams) => {
             }
         }
 
+        console.log('>>>>>>>>>>>>>>>>>', searchParams, line)
+        let genoType = searchParams.genoType
+        if (genoType  && genoType !== line.Genotype) {
+            return false
+        }
+
+        let seqQuality = searchParams.seqQuality
+        if (seqQuality  && seqQuality !== line.Depth_Quality) {
+            return false
+        }
+
+        let minAlleleFraction = searchParams.minAlleleFraction
+        if (minAlleleFraction  && minAlleleFraction/100 > Number(line.Mutation_Rate)) {
+            return false
+        }
+
+        let maxAlleleFraction = searchParams.maxAlleleFraction
+        if (maxAlleleFraction  && maxAlleleFraction/100 < Number(line.Mutation_Rate)) {
+            return false
+        }
 
 
         // 深度
