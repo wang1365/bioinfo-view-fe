@@ -387,62 +387,101 @@
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'geneInfo'">
                                 <div class="row">
-                                    <div class="col-2 text-weight-bolder text-green-5">
-                                        <div class="text-weight-bolder text-green-5">{{record.Class}}</div>
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="text-primary">{{record['Gene.refGene']}}</div>
-                                        <div>{{record['ExonicFunc.refGene']}}</div>
-                                        <div>
-                                            {{record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt}}
+                                    <template v-if="record.expanded">
+                                        <div class="col-2 column justify-between">
+                                            <div class="col-2 text-weight-bolder text-green-5 q-pl-sm justify-between" style="font-size: 16px" >{{record.Class}}</div>
+                                            <q-btn class="col-10 q-mr-md" :icon="record.expanded ? 'unfold_less' : 'unfold_more'" color="primary" flat padding="0" left size="md" @click="record.expanded = !record.expanded"/>
                                         </div>
-                                        <div>{{record.NUChange}}</div>
-                                        <div>{{record.AAChange}}</div>
-                                        <div>{{record['GeneDetail.refGene'] + ' ' + record.exon}}</div>
-                                    </div>
+                                        <div class="col-10">
+                                            <div class="text-primary" style="font-size: 16px">{{record['Gene.refGene']}}</div>
+                                            <div>{{record['ExonicFunc.refGene']}}</div>
+                                            <div>
+                                                {{record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt}}
+                                            </div>
+                                            <div>{{record.NUChange}}</div>
+                                            <div>{{record.AAChange}}</div>
+                                            <div>{{record['GeneDetail.refGene'] + ' ' + record.exon}}</div>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="col-2 column justify-between">
+                                                <div class="col-6 text-weight-bolder text-green-5 q-pl-sm" style="font-size: 16px" >{{record.Class}}</div>
+                                                <q-btn class="col-6 q-mr-md" :icon="record.expanded ? 'unfold_less' : 'unfold_more'" color="primary" flat padding="0" left  @click="record.expanded = !record.expanded"/>
+                                        </div>
+                                        <div class="col-10 row justify-between">
+                                            <div class="text-primary col-4 content-center" style="font-size: 16px">{{record['Gene.refGene']}}</div>
+                                            <div class="col-7 row text-blue-grey-6">
+                                                <div >{{record['ExonicFunc.refGene']}}</div>
+                                                <div >{{record.NUChange}}</div>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'genoTypeQuality'">
-                                <div class="row q-gutter-x-sm">
-                                    <div class="col">
-                                        <div class="text-grey">Genotype Quality</div>
-                                        <div>{{record.Genotype_Quality || '-'}}</div>
+                                <template  v-if="record.expanded">
+                                    <div class="row q-gutter-x-sm">
+                                        <div class="col">
+                                            <div class="text-grey">Genotype Quality</div>
+                                            <div>{{record.Genotype_Quality || '-'}}</div>
 
-                                        <div class="text-grey">Variant Quality</div>
-                                        <div>{{record.Variant_Quality || '-'}}</div>
+                                            <div class="text-grey">Variant Quality</div>
+                                            <div>{{record.Variant_Quality || '-'}}</div>
 
-                                        <div class="text-grey">Depth Quality</div>
-                                        <div>{{record.Depth_Quality}}</div>
+                                            <div class="text-grey">Depth Quality</div>
+                                            <div>{{record.Depth_Quality}}</div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="text-grey">Allele Fraction</div>
+                                            <div>{{record.Mutation_Rate || '-'}}</div>
+
+                                            <div class="text-grey">Depth</div>
+                                            <div>{{record.Seq_Depths || '-'}}</div>
+
+                                            <div class="text-grey">Genotype</div>
+                                            <div>{{record.Genotype}}</div>
+                                        </div>
                                     </div>
-                                    <div class="col">
-                                        <div class="text-grey">Allele Fraction</div>
-                                        <div>{{record.Mutation_Rate || '-'}}</div>
-
-                                        <div class="text-grey">Depth</div>
-                                        <div>{{record.Seq_Depths || '-'}}</div>
-
-                                        <div class="text-grey">Genotype</div>
-                                        <div>{{record.Genotype}}</div>
+                                </template>
+                                <template v-else>
+                                    <div class="row q-gutter-x-sm">
+                                        <div>{{record.Depth_Quality}}(DP:{{record.Seq_Depths}})</div>
+                                        <div>AF: {{record.Mutation_Rate || '-'}}</div>
                                     </div>
-                                </div>
+                                </template>
+
                             </template>
 
                             <template v-if="column.dataIndex === 'Gene_Related_Diseases'">
-                                <template v-for="grd in record.Gene_Related_Diseases" :key="grd">
-                                    <div>{{grd}}</div>
+                                <template v-if="record.expanded">
+                                    <template v-for="grd in record.Gene_Related_Diseases" :key="grd">
+                                        <div>{{grd}}</div>
+                                    </template>
                                 </template>
+                                <template v-else>
+                                    <div>{{record.Gene_Related_Diseases[0]}}</div>
+                                    <div v-if="record.Gene_Related_Diseases.length > 1" class="row justify-between">
+                                        <div class="col-10">{{record.Gene_Related_Diseases[1]}}</div>
+                                        <div  v-if="record.Gene_Related_Diseases.length > 2" class="col-1 text-primary">+{{record.Gene_Related_Diseases.length-2}}</div>
+                                    </div>
+                                </template>
+
                             </template>
 
                             <template v-if="column.dataIndex === 'ACMG_result'">
                                 <div class="text-purple">{{record.ACMG_result}}</div>
-                                <template v-for="acmg in record.ACMG" :key="acmg">
-                                    <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{acmg}}</q-chip>
+                                <template v-if="record.expanded" >
+                                    <template v-for="acmg in record.ACMG" :key="acmg">
+                                        <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{acmg}}</q-chip>
+                                    </template>
                                 </template>
+
                             </template>
 
                             <template v-if="column.dataIndex === 'Clinvar'">
                                 <div class="text-purple">{{record.Clinvar}}</div>
                                 <q-rating
+                                    v-if="record.expanded"
                                     :model-value="record.Clinvar_ReviewStatus"
                                     color="orange"
                                     icon="star_border"
@@ -452,9 +491,19 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'HPO'">
-                                <template v-for="hpo in record.HPO" :key="hpo">
-                                    <div>{{hpo}}</div>
+                                <template v-if="record.expanded">
+                                    <template v-for="hpo in record.HPO" :key="hpo">
+                                        <div>{{hpo}}</div>
+                                    </template>
                                 </template>
+                                <template v-else>
+                                    <div>{{record.HPO[0]}}</div>
+                                    <div v-if="record.HPO.length > 1" class="row">
+                                        <div class="col-9">{{record.HPO[1]}}</div>
+                                        <div class="col-2" v-if="record.HPO.length > 2">+{{record.HPO.length - 2}}</div>
+                                    </div>
+                                </template>
+
                             </template>
 
                             <template v-if="column.dataIndex === 'Software_Prediction_result'">
@@ -655,9 +704,6 @@ const filteredRows = ref([])
 
 const currentRow = ref({})
 
-onMounted(() => {
-    console.log('Headers', props.header)
-})
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 const rowSelection = computed(() => {
@@ -693,7 +739,7 @@ const columns = computed(() => {
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 100, ellipsis: true     },
         { title: 'Frequencies', dataIndex: `gnomAD_genome_ALL`, width: 80, ellipsis: true     },
-        { title: 'Related HPOs', dataIndex: `HPO`, width: 100, ellipsis: true     },
+        { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true     },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 100, ellipsis: true     },
         { title: 'IGV', dataIndex: ``, width: 80, ellipsis: true     },
     ]
@@ -715,6 +761,7 @@ const customRow = (record, index) => {
     return {
         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
         style: {
+            // 'background-color': record.expanded  ? '#e3e9f5' : 'white',
             // 字体颜色
             // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
             // 行背景色
@@ -1021,6 +1068,7 @@ const actionTitle = computed(() => t('Operate'))
 
 // 加载表格数据
 const loadTable = () => {
+    rows.value.forEach(row => { row.expanded = false })
     filteredRows.value = rows.value
     console.log('====> wes rows', filteredRows.value)
     // columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
@@ -1134,12 +1182,12 @@ defineExpose({ getChangedData, })
 }
 
 .ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
-    background: #bbbbff;
+    background: #ffefbb;
 }
 
 /*//鼠标移入样式*/
 .ant-table-tbody>tr:hover>td {
-    background: #bbbbff !important;
+    background: #ffefbb !important;
 }
 
 .ant-table-selection-column #select-info {
