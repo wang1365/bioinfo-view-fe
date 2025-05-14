@@ -144,7 +144,8 @@
                             label="Population Allele Frequency"
                             stack-label
                             multiple
-                            dense clearable
+                            dense
+                            clearable
                             class="col-7"
                             label-color="primary"
                         >
@@ -276,7 +277,7 @@
                             label="Min Allele Fraction"
                         >
                             <template v-slot:append><span class="text-subtitle2">%</span></template>
-<!--                            <template v-slot:after><span class="text-subtitle2">~</span></template>-->
+                            <!--                            <template v-slot:after><span class="text-subtitle2">~</span></template>-->
                         </q-input>
                         <q-input
                             v-model.number="innerSearchParams.maxAlleleFraction"
@@ -389,11 +390,27 @@
                                 <div class="row">
                                     <template v-if="record.expanded">
                                         <div class="col-2 column justify-between">
-                                            <div class="col-2 text-weight-bolder text-green-5 q-pl-sm justify-between" style="font-size: 16px" >{{record.Class}}</div>
-                                            <q-btn class="col-10 q-mr-md" :icon="record.expanded ? 'unfold_less' : 'unfold_more'" color="primary" flat padding="0" left size="md" @click="record.expanded = !record.expanded"/>
+                                            <div
+                                                class="col-2 text-weight-bolder text-green-5 q-pl-sm justify-between"
+                                                style="font-size: 16px"
+                                            >
+                                                {{record.Class}}
+                                            </div>
+                                            <q-btn
+                                                class="col-10 q-mr-md"
+                                                :icon="record.expanded ? 'unfold_less' : 'unfold_more'"
+                                                color="primary"
+                                                flat
+                                                padding="0"
+                                                left
+                                                size="md"
+                                                @click="record.expanded = !record.expanded"
+                                            />
                                         </div>
                                         <div class="col-10">
-                                            <div class="text-primary" style="font-size: 16px">{{record['Gene.refGene']}}</div>
+                                            <div class="text-primary" style="font-size: 16px">
+                                                {{record['Gene.refGene']}}
+                                            </div>
                                             <div>{{record['ExonicFunc.refGene']}}</div>
                                             <div>
                                                 {{record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt}}
@@ -405,21 +422,36 @@
                                     </template>
                                     <template v-else>
                                         <div class="col-2 column justify-between">
-                                                <div class="col-6 text-weight-bolder text-green-5 q-pl-sm" style="font-size: 16px" >{{record.Class}}</div>
-                                                <q-btn class="col-6 q-mr-md" :icon="record.expanded ? 'unfold_less' : 'unfold_more'" color="primary" flat padding="0" left  @click="record.expanded = !record.expanded"/>
+                                            <div
+                                                class="col-6 text-weight-bolder text-green-5 q-pl-sm"
+                                                style="font-size: 16px"
+                                            >
+                                                {{record.Class}}
+                                            </div>
+                                            <q-btn
+                                                class="col-6 q-mr-md"
+                                                :icon="record.expanded ? 'unfold_less' : 'unfold_more'"
+                                                color="primary"
+                                                flat
+                                                padding="0"
+                                                left
+                                                @click="record.expanded = !record.expanded"
+                                            />
                                         </div>
                                         <div class="col-10 row justify-between">
-                                            <div class="text-primary col-4 content-center" style="font-size: 16px">{{record['Gene.refGene']}}</div>
+                                            <div class="text-primary col-4 content-center" style="font-size: 16px">
+                                                {{record['Gene.refGene']}}
+                                            </div>
                                             <div class="col-7 row text-blue-grey-6">
-                                                <div >{{record['ExonicFunc.refGene']}}</div>
-                                                <div >{{record.NUChange}}</div>
+                                                <div>{{record['ExonicFunc.refGene']}}</div>
+                                                <div>{{record.NUChange}}</div>
                                             </div>
                                         </div>
                                     </template>
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'genoTypeQuality'">
-                                <template  v-if="record.expanded">
+                                <template v-if="record.expanded">
                                     <div class="row q-gutter-x-sm">
                                         <div class="col">
                                             <div class="text-grey">Genotype Quality</div>
@@ -449,7 +481,6 @@
                                         <div>AF: {{(record.Mutation_Rate_*100).toFixed(2) || '-'}}%</div>
                                     </div>
                                 </template>
-
                             </template>
 
                             <template v-if="column.dataIndex === 'Gene_Related_Diseases'">
@@ -462,20 +493,27 @@
                                     <div>{{record.Gene_Related_Diseases[0]}}</div>
                                     <div v-if="record.Gene_Related_Diseases.length > 1" class="row justify-between">
                                         <div class="col-10">{{record.Gene_Related_Diseases[1]}}</div>
-                                        <div  v-if="record.Gene_Related_Diseases.length > 2" class="col-1 text-primary">+{{record.Gene_Related_Diseases.length-2}}</div>
+                                        <div v-if="record.Gene_Related_Diseases.length > 2" class="col-1 text-primary">
+                                            +{{record.Gene_Related_Diseases.length-2}}
+                                        </div>
                                     </div>
                                 </template>
-
                             </template>
 
                             <template v-if="column.dataIndex === 'ACMG_result'">
                                 <div class="text-purple">{{record.ACMG_result}}</div>
-                                <template v-if="record.expanded" >
+                                <template v-if="record.expanded">
                                     <template v-for="acmg in record.ACMG" :key="acmg">
-                                        <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{acmg}}</q-chip>
+                                        <q-chip
+                                            color="orange"
+                                            outline
+                                            square
+                                            v-if='acmg !== "."'
+                                            dense
+                                            >{{acmg}}</q-chip
+                                        >
                                     </template>
                                 </template>
-
                             </template>
 
                             <template v-if="column.dataIndex === 'Clinvar'">
@@ -490,7 +528,6 @@
                                 />
                             </template>
 
-
                             <template v-if="column.dataIndex === 'HPO'">
                                 <template v-if="record.expanded">
                                     <template v-for="hpo in record.HPO" :key="hpo">
@@ -504,7 +541,6 @@
                                         <div class="col-2" v-if="record.HPO.length > 2">+{{record.HPO.length - 2}}</div>
                                     </div>
                                 </template>
-
                             </template>
 
                             <template v-if="column.dataIndex === 'Software_Prediction_result'">
@@ -512,21 +548,12 @@
                                 {{record.Software_Prediction_result}}
                             </template>
 
-                            <template v-if="column.key === 'operation'">
+                            <template v-if="column.dataIndex === 'operation'">
                                 <q-btn
-                                    :label="$t('Detail')"
+                                    :label="$t('View')"
                                     color="primary"
-                                    size="xs"
-                                    outline
-                                    padding="xs"
-                                    class="q-mr-xs"
-                                    @click="clickDetail(record)"
-                                />
-                                <q-btn
-                                    label="IGV"
-                                    color="primary"
-                                    size="xs"
-                                    outline
+                                    size="md"
+                                    flat
                                     padding="xs"
                                     @click="clickIgv(record)"
                                 />
@@ -541,34 +568,6 @@
                 </div>
             </template>
         </q-splitter>
-        <q-dialog v-model="showDrawer" class="fit">
-            <q-card style="width: 50%">
-                <q-card-section>
-                    <div class="q-col">
-                        <div class="text-h6 q-mb-sm">{{$t('MoreColumns')}}</div>
-                        <div class="q-row-2">
-                            <q-separator />
-                            <q-scroll-area style="height: 500px">
-                                <q-option-group
-                                    :options="expandedColumns"
-                                    type="checkbox"
-                                    v-model="selectedExpandColIdx"
-                                    @change="atOptionGroupChange"
-                                    @update:model-value="atOptionGroupChange"
-                                />
-                            </q-scroll-area>
-                            <q-separator />
-                        </div>
-                    </div>
-                </q-card-section>
-
-                <q-card-actions align="center">
-                    <q-btn color="primary" @click="clickSelectAll">{{ $t('SelectAll') }}</q-btn>
-                    <q-btn color="primary" @click="clickSelectNone">{{ $t('Clear') }}</q-btn>
-                    <q-btn color="primary" v-close-popup>{{ $t('Confirm') }}</q-btn>
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
     </div>
 
     <q-dialog class="q-py-sm" v-model="dialogVisible">
@@ -742,19 +741,15 @@ const columns = computed(() => {
         { title: 'Frequencies', dataIndex: `gnomAD_genome_ALL`, width: 80, ellipsis: true     },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true     },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 100, ellipsis: true     },
-        { title: 'IGV', dataIndex: ``, width: 80, ellipsis: true     },
+        { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true     },
     ]
 
 })
 
-function clickDetail (record) {
-    currentRow.value = record
-    dialogVisible.value = true
-}
 
 function clickIgv (record) {
     currentRow.value = record
-    igvFile.value = `Mut_germline/${record.col1}-${record.col2}.igv`
+    igvFile.value = `Mut_WES/${record.col1}-${record.col2}.igv`
     igvVisible.value = true
 }
 
@@ -1093,7 +1088,7 @@ const tableFile = computed(() => {
 
 const tableFileName = computed(() => {
     const ret = getDualIdentifiers(props.samples)
-    return `${ret.qt}.combined.standard-new.txt`
+    return `${ret.qt}.Mut_WES.txt`
 })
 
 onMounted(() => {

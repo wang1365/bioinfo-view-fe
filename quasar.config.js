@@ -97,7 +97,7 @@ module.exports = configure(function (ctx) {
                     changeOrigin: true,
                     target: process.env.igv || 'http://10.10.0.208',
                     // target: process.env.igv || 'http://10.10.2.55', // v4.0 测试环境
-                    agent: new SocksProxyAgent('socks5://192.168.31.102:1080'),
+                    // agent: new SocksProxyAgent('socks5://192.168.31.102:1080'),
                 },
             },
         },
