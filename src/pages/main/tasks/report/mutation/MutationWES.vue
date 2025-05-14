@@ -445,8 +445,8 @@
                                 </template>
                                 <template v-else>
                                     <div class="row q-gutter-x-sm">
-                                        <div>{{record.Depth_Quality}}(DP:{{record.Seq_Depths}})</div>
-                                        <div>AF: {{record.Mutation_Rate || '-'}}</div>
+                                        <div>{{record.Depth_Quality}}(DP:{{record.Seq_Depths_}})</div>
+                                        <div>AF: {{record.Mutation_Rate_ || '-'}}</div>
                                     </div>
                                 </template>
 
