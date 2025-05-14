@@ -487,13 +487,19 @@ const loadSomaticEvidenceData = () => {
 
 const loadWesData = () => {
     readTaskMuFile(route.params.id, 'Mut_WES').then((res) => {
-        const headNames = getCsvHeader(res, '\t')
+        const headNames = getCsvHeader(res, '\t').map( h => {
+            // 如果h的样式是xxxx(yyyy), 改为xxxx_
+            if (h.indexOf('(') > -1) {
+                return h.substring(0, h.indexOf('(')) + '_'
+            }
+            return h
+        })
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: headNames })
         csvRows.forEach((row, i) => {
             row.id = i
-            row.Gene_Related_Diseases = row.Gene_Related_Diseases.split(';')
-            row.ACMG = row.ACMG.split(';')
-            row.HPO = row.HPO.split(';')
+            row.Gene_Related_Diseases = row.Gene_Related_Diseases ? row.Gene_Related_Diseases.split(';') : []
+            row.ACMG = row.ACMG ? row.ACMG.split(';') : []
+            row.HPO = row.HPO ? row.HPO.split(';') : []
         })
 
         // 提取options

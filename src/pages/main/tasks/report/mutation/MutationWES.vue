@@ -433,10 +433,10 @@
                                         </div>
                                         <div class="col">
                                             <div class="text-grey">Allele Fraction</div>
-                                            <div>{{record.Mutation_Rate || '-'}}</div>
+                                            <div>{{record.Mutation_Rate_*100 || '-'}}%</div>
 
                                             <div class="text-grey">Depth</div>
-                                            <div>{{record.Seq_Depths || '-'}}</div>
+                                            <div>{{record.Seq_Depths_ || '-'}}</div>
 
                                             <div class="text-grey">Genotype</div>
                                             <div>{{record.Genotype}}</div>
@@ -489,6 +489,7 @@
                                     readonly
                                 />
                             </template>
+
 
                             <template v-if="column.dataIndex === 'HPO'">
                                 <template v-if="record.expanded">
@@ -873,7 +874,6 @@ const searchFilterRows = (searchParams) => {
             }
         }
 
-        console.log('>>>>>>>>>>>>>>>>>', searchParams, line)
         let genoType = searchParams.genoType
         if (genoType  && genoType !== line.Genotype) {
             return false
@@ -884,13 +884,50 @@ const searchFilterRows = (searchParams) => {
             return false
         }
 
+        let genoTypeComp = searchParams.genoTypeComp
+        let genoTypeValue = searchParams.genoTypeValue
+        if (genoTypeComp  && genoTypeValue !== null) {
+            const v = line.Genotype_Quality
+            c
+            if (v === '-') {
+                return false
+            }
+            if (!compare(genoTypeComp, Number(v), genoTypeValue)) {
+                return false
+            }
+        }
+
+        let variantQualityComp = searchParams.variantQualityComp
+        let variantQualityValue = searchParams.variantQualityValue
+        if (variantQualityComp && variantQualityValue !== null) {
+            const v = line.Variant_Quality
+            if (v === '-') {
+                return false
+            }
+            if (!compare(variantQualityComp, Number(v), variantQualityValue)) {
+                return false
+            }
+        }
+
+        let seqDepthComp = searchParams.seqDepthComp
+        let seqDepthValue = searchParams.seqDepthValue
+        if (seqDepthComp && seqDepthValue !== null) {
+            const v = line.Seq_Depths_
+            if (v === '-') {
+                return false
+            }
+            if (!compare(seqDepthComp, Number(v), seqDepthValue)) {
+                return false
+            }
+        }
+
         let minAlleleFraction = searchParams.minAlleleFraction
-        if (minAlleleFraction  && minAlleleFraction/100 > Number(line.Mutation_Rate)) {
+        if (minAlleleFraction  && minAlleleFraction/100 > Number(line.Mutation_Rate_)) {
             return false
         }
 
         let maxAlleleFraction = searchParams.maxAlleleFraction
-        if (maxAlleleFraction  && maxAlleleFraction/100 < Number(line.Mutation_Rate)) {
+        if (maxAlleleFraction  && maxAlleleFraction/100 < Number(line.Mutation_Rate_)) {
             return false
         }
 
@@ -1051,7 +1088,7 @@ watch(rows, (rows) => {
 
 const tableFile = computed(() => {
     const ret = getDualIdentifiers(props.samples)
-    return `igv${props.task.result_dir}/Mut_germline/${ret.qt}.combined.standard-new.csv`
+    return `igv${props.task.result_dir}/Mut_WES/${ret.qt}.Mut_WES.txt`
 })
 
 const tableFileName = computed(() => {
@@ -1070,6 +1107,7 @@ const actionTitle = computed(() => t('Operate'))
 const loadTable = () => {
     rows.value.forEach(row => { row.expanded = false })
     filteredRows.value = rows.value
+    loading.value = false
     console.log('====> wes rows', filteredRows.value)
     // columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
     // const actionColumn = columns.value[columns.value.length - 1]
