@@ -362,6 +362,7 @@ export default {
     // 突变分析
     GermlineMutationAnalysis: '胚系突变分析',
     SomaticMutationAnalysis: '体细胞突变分析',
+    WESMutationAnalysis: 'WES突变分析',
     Depth: '深度',
     TumorFrequency: '肿瘤频率',
     ControlFrequency: '对照频率',

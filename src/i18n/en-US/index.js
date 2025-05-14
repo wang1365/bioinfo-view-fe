@@ -367,6 +367,7 @@ export default {
     // 突变分析
     GermlineMutationAnalysis: 'Germline Mutation Analysis',
     SomaticMutationAnalysis: 'Somatic Mutation Analysis',
+    WESMutationAnalysis: 'WES Mutation Analysis',
     Depth: 'Depth',
     TumorFrequency: 'Tumor Frequency',
     ControlFrequency: 'Control Frequency',
