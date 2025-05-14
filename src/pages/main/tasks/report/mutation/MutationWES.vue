@@ -433,7 +433,7 @@
                                         </div>
                                         <div class="col">
                                             <div class="text-grey">Allele Fraction</div>
-                                            <div>{{record.Mutation_Rate_*100 || '-'}}%</div>
+                                            <div>{{(record.Mutation_Rate_*100).toFixed(2) || '-'}}%</div>
 
                                             <div class="text-grey">Depth</div>
                                             <div>{{record.Seq_Depths_ || '-'}}</div>
@@ -446,7 +446,7 @@
                                 <template v-else>
                                     <div class="row q-gutter-x-sm">
                                         <div>{{record.Depth_Quality}}(DP:{{record.Seq_Depths_}})</div>
-                                        <div>AF: {{record.Mutation_Rate_*100 || '-'}}%</div>
+                                        <div>AF: {{(record.Mutation_Rate_*100).toFixed(2) || '-'}}%</div>
                                     </div>
                                 </template>
 
