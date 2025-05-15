@@ -17,8 +17,8 @@
                         label-color="primary"
                     >
                         <template v-slot:append>
-                            <q-btn padding="xs" size="sm" icon="add" />
-                            <q-btn padding="xs" size="sm" icon="menu" />
+                            <q-btn padding="xs" size="sm" icon="edit" @click="genesetEdit=true" />
+                            <!-- <q-btn padding="xs" size="sm" icon="menu" /> -->
                         </template>
                     </q-input>
                     <q-checkbox v-model="innerSearchParams.excludeGensets" keep-color dense size="sm" color="primary">
@@ -446,6 +446,36 @@
             </q-card>
         </q-dialog>
     </div>
+    <q-dialog v-model="genesetEdit" persistent>
+        <q-card style="min-width:500px;">
+            <!-- <q-toolbar>
+                <q-space />
+                <q-btn flat round dense icon="close" v-close-popup />
+            </q-toolbar> -->
+            <div class="q-pa-md">
+                <q-stepper v-model="geneSetStep" vertical color="primary" animated>
+                    <q-step :name="1" title="输入Gene" icon="create_new_folder" :done="step > 1">
+                        <div>Example: Gene1,Gene2,Gene3</div>
+                        <div>
+                            <q-input v-model="geneSetInput" label="" type="textarea" filled />
+                        </div>
+                        <q-stepper-navigation>
+                            <q-btn @click="checkGeneSetInput" color="primary" label="Continue" />
+                        </q-stepper-navigation>
+                    </q-step>
+
+                    <q-step :name="2" title="验证" icon="settings" :done="step > 2">
+                        {{ geneSetMessage }}
+
+                        <q-stepper-navigation>
+                            <q-btn @click="geneSetStep = 1" color="primary" label="Back" />
+                            <q-btn flat @click="confirmGeneSetInput" color="primary" label="Confirm" class="q-ml-sm" />
+                        </q-stepper-navigation>
+                    </q-step>
+                </q-stepper>
+            </div>
+        </q-card>
+    </q-dialog>
 
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
@@ -474,11 +504,47 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
 import { useCustomCell, WES_PARAMS } from './index'
-import { sample } from 'lodash'
 
 const { t } = useI18n()
 const splitterModel = ref(300)
 
+const genesetEdit=ref(false)
+const geneSetStep=ref(1)
+const geneSetMessage=ref("Ok")
+const geneSetInput=ref("")
+const geneSetOkValue=ref([])
+const geneSetErrValue=ref([])
+
+const checkGeneSetInput=()=>{
+    geneSetStep.value=2
+    let okValues=new Set()
+    let errValues=new Set()
+
+    for (const element of geneSetInput.value.split(",")) {
+        let gene=element.trim()
+        if( searchOptions.value.gene_set.indexOf(gene)>0){
+            okValues.add(gene)
+        }else if(gene.length>0){
+            errValues.add(gene)
+        }
+    }
+    geneSetOkValue.value=[...okValues]
+    geneSetErrValue.value=[...errValues]
+    if (geneSetErrValue.value.length==0 && geneSetOkValue.value.length==0 ){
+        geneSetMessage.value="没有输入有效基因数据"
+    }else if(geneSetErrValue.value.length!=0){
+         geneSetMessage.value=geneSetErrValue.value.join(",")+" 不在基因列表中"
+    }else{
+        geneSetMessage.value="OK"
+    }
+}
+
+const confirmGeneSetInput=()=>{
+    innerSearchParams.value.geneSet=[...geneSetOkValue.value,...geneSetErrValue.value].join(",")
+    geneSetInput.value=[...geneSetOkValue.value,...geneSetErrValue.value].join(",")
+    geneSetStep.value = 1;
+    genesetEdit.value=false
+}
 const props = defineProps({
     samples: {
         type: Array,
