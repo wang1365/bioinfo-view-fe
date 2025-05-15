@@ -9,7 +9,7 @@
                     <q-input
                         v-model="innerSearchParams.geneSet"
                         :label="$t('GeneSet')"
-                        clearable
+                        readonly
                         dense
                         outlined
                         stack-label
@@ -17,7 +17,7 @@
                         label-color="primary"
                     >
                         <template v-slot:append>
-                            <q-btn padding="xs" size="sm" icon="edit" @click="genesetEdit=true" />
+                            <q-btn padding="xs" size="sm" icon="edit" @click="openGeneSetDialog" />
                             <!-- <q-btn padding="xs" size="sm" icon="menu" /> -->
                         </template>
                     </q-input>
@@ -448,10 +448,10 @@
     </div>
     <q-dialog v-model="genesetEdit" persistent>
         <q-card style="min-width:500px;">
-            <!-- <q-toolbar>
+            <q-toolbar>
                 <q-space />
                 <q-btn flat round dense icon="close" v-close-popup />
-            </q-toolbar> -->
+            </q-toolbar>
             <div class="q-pa-md">
                 <q-stepper v-model="geneSetStep" vertical color="primary" animated>
                     <q-step :name="1" title="输入Gene" icon="create_new_folder" :done="step > 1">
@@ -515,6 +515,11 @@ const geneSetInput=ref("")
 const geneSetOkValue=ref([])
 const geneSetErrValue=ref([])
 
+const openGeneSetDialog=()=>{
+    genesetEdit.value=true
+    geneSetInput.value=[...geneSetOkValue.value,...geneSetErrValue.value].join(",")
+}
+
 const checkGeneSetInput=()=>{
     geneSetStep.value=2
     let okValues=new Set()
@@ -541,7 +546,6 @@ const checkGeneSetInput=()=>{
 
 const confirmGeneSetInput=()=>{
     innerSearchParams.value.geneSet=[...geneSetOkValue.value,...geneSetErrValue.value].join(",")
-    geneSetInput.value=[...geneSetOkValue.value,...geneSetErrValue.value].join(",")
     geneSetStep.value = 1;
     genesetEdit.value=false
 }
