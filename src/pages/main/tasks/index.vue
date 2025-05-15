@@ -86,7 +86,7 @@
             <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
         </div>
         <div class="q-px-sm">
-            <a-table :columns="columns" :data-source="rows" :pagination="pagination" :scroll="{ x: 1800, y: 550 }">
+            <a-table :columns="columns" :data-source="rows" :pagination="pagination" :scroll="{ x: 1800, y: 520 }">
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.dataIndex ==='name'">
                         <span class="text-weight-bolder" style="font-size: 14px" v-if="record.status !== 'FINISHED'">

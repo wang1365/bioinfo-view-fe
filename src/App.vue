@@ -15,6 +15,7 @@ import { listConfig } from 'src/api/config';
 import { useI18n } from 'vue-i18n';
 import permissionDirective from 'src/directives/permission';
 import { api } from 'boot/axios';
+import autofit from 'autofit.js'
 
 
 moment.locale('zh-cn');
@@ -34,6 +35,12 @@ export default defineComponent({
         }
     },
     mounted() {
+        const options = {
+            dh: 1080/1.25,
+            dw: 1920/1.25,
+        }
+        autofit.init(options);
+
         const store = globalStore();
         listConfig().then(res => {
             for (let item of res.results) {
@@ -42,7 +49,7 @@ export default defineComponent({
 
                     store.langConfig.langSwitch = langConfig.langSwitch;
                     store.langConfig.defaultLang = langConfig.defaultLang;
-                    console.log('---------->', langConfig);
+                    console.log('---------->', this, langConfig);
                     // 如果没有开启语言切换，则使用语言配置中的默认语言
                     if (!langConfig.lang_switch) {
                         this.locale = langConfig.defaultLang === 'en' ? 'en-US' : 'zh-CN';
@@ -63,6 +70,7 @@ export default defineComponent({
         .catch((e) => {
             console.log('获取用户信息失败!');
         });
+
     }
 });
 </script>
