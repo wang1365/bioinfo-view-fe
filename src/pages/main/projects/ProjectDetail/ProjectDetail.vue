@@ -2,12 +2,12 @@
     <q-card>
         <q-card-section>
             <q-toolbar class="q-gutter-x-sm">
-                <q-icon size="md" color="primary" name="auto_mode" />
+                <q-icon size="md" color="primary" name="auto_mode"/>
                 <q-toolbar-title class="text-h6">
                     {{ props.projectDetail.name }}-
                     <span class="text-subtitle1">{{
-                        toLocalString(props.projectDetail.create_time)
-                    }}</span>
+                            toLocalString(props.projectDetail.create_time)
+                        }}</span>
                 </q-toolbar-title>
                 <q-btn
                     v-permission="'createTask'"
@@ -20,73 +20,67 @@
         </q-card-section>
 
         <q-card-section>
-            <div class="q-pa-md row items-start q-gutter-md" style="justify-content: space-around">
+            <div class="row items-start q-gutter-md justify-around">
                 <q-card class="my-card">
                     <q-card-section class="text-primary text-center text-h5 text-bold">
-                        {{ props.projectDetail.running_task_count }}
+                        <div>{{ props.projectDetail.running_task_count }}</div>
+                        <div class="desc">{{ $t('TaskPageListStatusRun') }}</div>
                     </q-card-section>
-
-                    <q-card-section class="desc"> {{ $t('TaskPageListStatusRun') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-secondary text-center text-h5 text-bold">
-                        {{ props.projectDetail.pending_task_count }}
+                        <div>{{ props.projectDetail.pending_task_count }}</div>
+                        <div class="desc">{{ $t('TaskPageListStatusQueue') }}</div>
                     </q-card-section>
-
-                    <q-card-section class="desc"> {{ $t('TaskPageListStatusQueue') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-negative text-center text-h5 text-bold">
-                        {{ props.projectDetail.failured_task_count }}
+                        <div>{{ props.projectDetail.failured_task_count }}</div>
+                        <div class="desc">{{ $t('TaskPageListStatusFail') }}</div>
                     </q-card-section>
-
-                    <q-card-section class="desc"> {{ $t('TaskPageListStatusFail') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-grey text-center text-h5 text-bold">
-                        {{ props.projectDetail.canceled_task_count }}
+                        <div>{{ props.projectDetail.canceled_task_count }}</div>
+                        <div class="desc">{{ $t('TaskPageListStatusCancel') }}</div>
                     </q-card-section>
-
-                    <q-card-section class="desc"> {{ $t('TaskPageListStatusCancel') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-info text-center text-h5 text-bold">
-                        {{ props.projectDetail.finished_task_count }}
+                        <div>{{ props.projectDetail.finished_task_count }}</div>
+                        <div class="desc">{{ $t('TaskPageListStatusFinish') }}</div>
                     </q-card-section>
-
-                    <q-card-section class="desc"> {{ $t('TaskPageListStatusFinish') }} </q-card-section>
                 </q-card>
                 <q-card class="my-card">
                     <q-card-section class="text-positive text-center text-h5 text-bold">
-                        {{ props.projectDetail.total_task_count }}
+                        <div>{{ props.projectDetail.total_task_count }}</div>
+                        <div class="desc">{{ $t('TaskPageListStatusAll') }}</div>
                     </q-card-section>
-
-                    <q-card-section class="desc"> {{ $t('TaskPageListStatusAll') }} </q-card-section>
                 </q-card>
             </div>
         </q-card-section>
     </q-card>
     <q-dialog persistent v-model="openFlowSelector">
-        <FlowSelect @flowSelected="flowSelected($event)" />
+        <FlowSelect @flowSelected="flowSelected($event)"/>
     </q-dialog>
     <q-dialog persistent v-model="openCreateTask">
-        <CreateTask :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
+        <CreateTask :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)"/>
     </q-dialog>
 </template>
 <script setup>
-import { ref, computed } from "vue"
-import { useApi } from "src/api/apiBase"
+import {ref, computed} from "vue"
+import {useApi} from "src/api/apiBase"
 import FlowSelect from "./ProjectTask/FlowSelect.vue"
 import CreateTask from "./ProjectTask/CreateTask.vue"
-import { globalStore } from 'src/stores/global'
-import { errorMessage } from 'src/utils/notify'
-import { useI18n } from 'vue-i18n'
-import { toLocalString } from "src/utils/time"
+import {globalStore} from 'src/stores/global'
+import {errorMessage} from 'src/utils/notify'
+import {useI18n} from 'vue-i18n'
+import {toLocalString} from "src/utils/time"
 
-const { t } = useI18n()
+const {t} = useI18n()
 const store = globalStore()
-const { apiGet } = useApi()
-const props = defineProps({ projectDetail: Object })
+const {apiGet} = useApi()
+const props = defineProps({projectDetail: Object})
 const emit = defineEmits(['reloadProject'])
 
 const openFlowSelector = ref(false)

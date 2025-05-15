@@ -1,6 +1,6 @@
 <template>
     <q-card class="q-mt-md">
-        <q-section>
+        <q-card-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6">
@@ -19,13 +19,14 @@
                     @click="openDataSelector = true"
                 />
             </q-toolbar>
-        </q-section>
-        <q-section>
+        </q-card-section>
+        <q-card-section>
+            sss
             <div class="q-pa-md bio-data-table">
                 <a-table
                     :columns="columns"
                     :data-source="dataItems"
-                    :scroll="{ x: 2000, y: 1000 }"
+                    :scroll="{ x: 2000, y: 500 }"
                     size="small"
                     :pagination="pagination"
                     @change="handleTableChange"
@@ -54,7 +55,7 @@
                     </template>
                 </a-table>
             </div>
-        </q-section>
+        </q-card-section>
     </q-card>
 
     <q-dialog v-model="showDataInfo">

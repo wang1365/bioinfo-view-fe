@@ -1,14 +1,14 @@
 <template>
     <q-card class="q-mt-md">
-        <q-section>
+        <q-card-section>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6"> {{ $t('ProjectDetailPageChildTitle') }} </q-toolbar-title>
                 <q-btn color="primary" :label="$t('ProjectDetailPageCreateChildProject')" icon="folder"
                     @click="openNewProject = true" />
             </q-toolbar>
-        </q-section>
-        <q-section>
+        </q-card-section>
+        <q-card-section>
             <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
@@ -49,8 +49,8 @@
                     <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
-        </q-section>
-        <q-section class="q-pd-md"> </q-section>
+        </q-card-section>
+        <q-card-section class="q-pd-md"> </q-card-section>
     </q-card>
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
@@ -98,19 +98,19 @@
                         </q-section>
                     </q-item>
                     <q-item>
-                        <q-section v-if="updateProjectNameError" class="full-width text-red">
+                        <q-card-section v-if="updateProjectNameError" class="full-width text-red">
                             {{ updateProjectNameError }}
-                        </q-section>
+                        </q-card-section>
                     </q-item>
                 </q-list>
             </q-card-section>
             <q-card-actions align="right" class="bg-white text-teal">
                 <q-list>
                     <q-item>
-                        <q-section class="q-gutter-x-sm">
+                        <q-card-section class="q-gutter-x-sm">
                             <q-btn :label="$t('Cancel')" v-close-popup />
                             <q-btn color="primary" :label="$t('Confirm')" @click="updateProject()" />
-                        </q-section>
+                        </q-card-section>
                     </q-item>
                 </q-list>
             </q-card-actions>
