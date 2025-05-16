@@ -1,5 +1,5 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
+    <q-page padding style="overflow-y: scroll; max-height: 900px">
         <PageTitle :title="$t('DashboardTitle')" />
 
         <div class="q-pa-md row items-start q-gutter-md" style="justify-content: space-around">
@@ -38,10 +38,10 @@
                 <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
                     <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
                         <div class="row q-col-gutter-sm q-ml-xs q-mr-sm q-py-sm">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <LineChart2 />
                             </div>
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <UserTable />
                             </div>
                         </div>

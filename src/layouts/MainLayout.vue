@@ -101,10 +101,10 @@
         </q-drawer>
 
         <q-page-container>
-            <div style="height:calc(100vh - 70px);overflow-y: hidden;">
+<!--            <div style="height:calc(100vh - 20px);overflow-y: scroll;">-->
                 <!--            <div style="overflow-y: scroll;">-->
                 <router-view />
-            </div>
+<!--            </div>-->
         </q-page-container>
     </q-layout>
 </template>

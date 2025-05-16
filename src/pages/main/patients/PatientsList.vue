@@ -1,9 +1,9 @@
 <template>
-    <q-card class="q-mt-md">
+    <q-card class="q-mt-xs">
         <q-card-section>
             <div class=" q-gutter-md row items-start bio-data-table">
                 <q-input
-                    style="width:350px"
+                    style="width:250px"
                     v-model="searchParams.search"
                     stack-label
                     label-color="primary"
@@ -13,6 +13,7 @@
                 </q-input>
                 <q-input
                     type="number"
+                    style="width:100px"
                     v-model="searchParams.age_start"
                     stack-label
                     label-color="primary"
@@ -22,6 +23,7 @@
                 </q-input>
                 <q-input
                     type="number"
+                    style="width:100px"
                     v-model="searchParams.age_end"
                     stack-label
                     label-color="primary"

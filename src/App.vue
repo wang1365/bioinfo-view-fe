@@ -35,11 +35,11 @@ export default defineComponent({
         }
     },
     mounted() {
-        // const options = {
-        //     dh: 1080/1.25,
-        //     dw: 1920/1.25,
-        // }
-        // autofit.init(options);
+        const options = {
+            dh: 1080/1.25,
+            dw: 1920/1.25,
+        }
+        autofit.init(options);
 
         const store = globalStore();
         listConfig().then(res => {
