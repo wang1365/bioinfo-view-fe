@@ -1,36 +1,33 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
-        <q-card>
-            <q-splitter v-model="splitterModel" style="height: 90vh">
-                <template v-slot:before>
-                    <q-tabs v-model="tab" indicator-color="primary" active-bg-color="blue-2" vertical breakpoint="600">
-                        <q-tab v-for="tab in rows" :key="tab.name" :name="tab.name" :label="tab.name" />
-                    </q-tabs>
-                </template>
-                <template v-slot:after>
-                    <q-tab-panels v-model="tab" animated>
-                        <q-tab-panel
-                            v-for="item in rows"
-                            :key="item.id"
-                            :name="item.name"
-                            vertical
-                            class="q-px-xs"
-                            transition-prev="jump-up"
-                            transition-next="jump-up"
+        <q-splitter v-model="splitterModel" style="height: 95vh">
+            <template v-slot:before>
+                <q-tabs v-model="tab" indicator-color="primary" active-bg-color="blue-2" vertical breakpoint="600"
+                        style="height: 95%;">
+                    <q-tab v-for="tab in rows" :key="tab.name" :name="tab.name" :label="tab.name"/>
+                </q-tabs>
+            </template>
+            <template v-slot:after>
+                <q-tab-panels v-model="tab" animated>
+                    <q-tab-panel
+                        v-for="item in rows"
+                        :key="item.id"
+                        :name="item.name"
+                        vertical
+                        class="q-px-xs"
+                        transition-prev="jump-up"
+                        transition-next="jump-up"
+                    >
+                        <q-scroll-area
+                            style="height: 115vh; max-width: 100%;"
+                            class="q-pr-sm"
+                            :thumb-style="thumbStyle"
                         >
-                            <q-scroll-area
-                                style="height: 85vh; max-width: 100%;"
-                                class="q-pr-sm"
-                                :thumb-style="thumbStyle"
-                            >
-                                <PanelDetail :id="item.id" />
-                            </q-scroll-area>
-                        </q-tab-panel>
-                    </q-tab-panels>
-                </template>
-            </q-splitter>
-        </q-card>
-    </q-page>
+                            <PanelDetail :id="item.id"/>
+                        </q-scroll-area>
+                    </q-tab-panel>
+                </q-tab-panels>
+            </template>
+        </q-splitter>
 </template>
 
 <script setup>

@@ -15,7 +15,6 @@ import { listConfig } from 'src/api/config';
 import { useI18n } from 'vue-i18n';
 import permissionDirective from 'src/directives/permission';
 import { api } from 'boot/axios';
-import autofit from 'autofit.js'
 
 
 moment.locale('zh-cn');
@@ -35,12 +34,6 @@ export default defineComponent({
         }
     },
     mounted() {
-        const options = {
-            dh: 1080/1.25,
-            dw: 1920/1.25,
-        }
-        autofit.init(options);
-
         const store = globalStore();
         listConfig().then(res => {
             for (let item of res.results) {

@@ -185,6 +185,7 @@ onBeforeMount(() => {
 
 
 .header_normal {
+    height: 3.5rem;
     background: linear-gradient(
         145deg,
         rgb(21, 57, 102) 70%,
