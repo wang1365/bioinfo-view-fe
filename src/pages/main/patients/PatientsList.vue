@@ -77,7 +77,7 @@
                 <q-btn color="primary" :label="$t('PatientPageListSearchReset')" icon="clear" @click="reset()" />
             </div>
         </q-card-section>
-        <q-card-section>
+        <div>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="groups_2" />
                 <q-toolbar-title class="text-h6"> {{$t('PatientPageListTableTitle')}} </q-toolbar-title>
@@ -107,8 +107,8 @@
                     <q-tooltip>{{ $t('PageListTableTemplate') }} </q-tooltip>
                 </q-btn>
             </q-toolbar>
-        </q-card-section>
-        <q-card-section>
+        </div>
+        <div>
             <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
@@ -187,7 +187,7 @@
                     <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
-        </q-card-section>
+        </div>
         <q-card-section class="q-pd-md"> </q-card-section>
     </q-card>
     <q-dialog v-model="showPatientNew" persistent>

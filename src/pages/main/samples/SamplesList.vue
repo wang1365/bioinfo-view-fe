@@ -1,7 +1,7 @@
 <template>
-    <q-card class="q-mt-md">
-        <q-card-section>
-            <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
+    <q-card class="q-mt-sm">
+        <div>
+            <div class=" q-gutter-md row items-start q-px-md bio-data-table">
                 <q-input
                     style="width:350px"
                     v-model="searchParams.search"
@@ -96,8 +96,8 @@
                 <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 <q-btn color="primary" :label="$t('Reset')" icon="clear" @click="reset()" />
             </div>
-        </q-card-section>
-        <q-card-section>
+        </div>
+        <div>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6"> {{$t('SampleListTableTitle')}} </q-toolbar-title>
@@ -126,8 +126,8 @@
                 >
                 </q-btn>
             </q-toolbar>
-        </q-card-section>
-        <q-card-section>
+        </div>
+        <div>
             <div class="q-pa-md bio-data-table">
                 <table>
                     <thead>
@@ -213,7 +213,7 @@
                     <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
-        </q-card-section>
+        </div>
     </q-card>
     <q-dialog persistent v-model="showSampleNew">
         <SampleNew

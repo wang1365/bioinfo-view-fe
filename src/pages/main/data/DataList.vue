@@ -1,6 +1,6 @@
 <template>
     <q-card class="q-mt-md">
-        <q-card-section>
+        <div>
             <div class=" q-gutter-md row items-start q-pa-md bio-data-table">
                 <q-input
                     style="width:450px"
@@ -44,8 +44,8 @@
                 />
                 <q-btn color="primary" :label="$t('DataListPageListSearchReset')" icon="clear" @click="reset()" />
             </div>
-        </q-card-section>
-        <q-card-section>
+        </div>
+        <div>
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6"> {{ $t('DataListTableTitle') }} </q-toolbar-title>
@@ -81,7 +81,7 @@
                 >
                 </q-btn>
             </q-toolbar>
-        </q-card-section>
+        </div>
         <q-card-section>
             <div class="q-pa-md bio-data-table">
                 <table>

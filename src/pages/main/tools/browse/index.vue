@@ -54,7 +54,7 @@
         <a-table
             :data-source="rows"
             :columns="columns"
-            :scroll="{ x: 2000, y: 580 }"
+            :scroll="{ x: 2000, y: 550 }"
             :sticky="true"
             :rowClassName="(record, index) => (index % 2 === 1 ? 'table-striped' : null)"
             :pagination="pagination"

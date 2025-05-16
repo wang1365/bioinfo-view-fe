@@ -25,7 +25,7 @@
                 <q-btn color="primary" icon="add" size="md" :label="$t('Add')" @click="addFlow" />
             </div>
         </div>
-        <a-table :columns="columns" :data-source="flows" size="middle" sticky :scroll="{ x:500, y: 600 }">
+        <a-table :columns="columns" :data-source="flows" size="middle" sticky :scroll="{ x:500, y: 550 }">
             <template v-slot:bodyCell="{column, record}">
                 <template v-if="column.key === 'task_count'">
                     <span v-if="record.task_count >= record?.config?.taskLimit" class="text-red text-weight-bolder">
