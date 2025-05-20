@@ -65,6 +65,13 @@
                             <span>{{'OMIM: '}}</span>
                             <a :href="'https://omim.org/entry/' + omim" target="_blank">{{omim}}</a>
                         </div>
+                        <div>
+                            <span>{{'Mutalyzer: '}}</span>
+                            <a
+                                :href="`https://mutalyzer.nl/normalizer/${geneProperties.transcript}:${geneProperties.cDna}`"
+                                target="_blank">{{geneProperties.transcript + ":" + geneProperties.cDna}}
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <q-separator class="q-my-sm" />
