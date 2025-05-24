@@ -528,6 +528,43 @@
                                 />
                             </template>
 
+                            <template v-if="column.dataIndex === 'Frequencies'">
+                                <template v-if="record.expanded">
+                                    <div class="text-purple">
+                                        <div v-if='record.gnomAD_genome_ALL !== "."'>
+                                            {{record.gnomAD_genome_ALL}}
+                                        </div>
+                                        <div v-if='record.gnomAD_exome_ALL !== "."'>
+                                            {{record.gnomAD_exome_ALL}}
+                                        </div>
+                                        <div v-if='record.ExAC_ALL !== "."'>
+                                            {{record.ExAC_ALL}}
+                                        </div>
+                                        <div v-if='record["1000g2015aug_all"] !== "."'>
+                                            {{record['1000g2015aug_all']}}
+                                        </div>
+                                    </div>
+                                </template>
+                                <template v-else>
+                                    <template v-if="getValidFrequencies(record).length > 0">
+                                        <div class="text-purple">
+                                            {{getValidFrequencies(record)[0].value}}
+                                        </div>
+                                        <div v-if="getValidFrequencies(record).length > 1" class="row">
+                                            <div class="col-9 text-purple">
+                                                {{getValidFrequencies(record)[1].value}}
+                                            </div>
+                                            <div
+                                                class="col-2 text-primary"
+                                                v-if="getValidFrequencies(record).length > 2"
+                                            >
+                                                +{{getValidFrequencies(record).length - 2}}
+                                            </div>
+                                        </div>
+                                    </template>
+                                </template>
+                            </template>
+
                             <template v-if="column.dataIndex === 'HPO'">
                                 <template v-if="record.expanded">
                                     <template v-for="hpo in record.HPO" :key="hpo">
@@ -538,7 +575,9 @@
                                     <div>{{record.HPO[0]}}</div>
                                     <div v-if="record.HPO.length > 1" class="row">
                                         <div class="col-9">{{record.HPO[1]}}</div>
-                                        <div class="col-2" v-if="record.HPO.length > 2">+{{record.HPO.length - 2}}</div>
+                                        <div class="col-2 text-primary" v-if="record.HPO.length > 2">
+                                            +{{record.HPO.length - 2}}
+                                        </div>
                                     </div>
                                 </template>
                             </template>
@@ -738,7 +777,7 @@ const columns = computed(() => {
         { title: 'ACMG', dataIndex: `ACMG_result`, width: 100, ellipsis: true     },
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 100, ellipsis: true     },
-        { title: 'Frequencies', dataIndex: `gnomAD_genome_ALL`, width: 80, ellipsis: true     },
+        { title: 'Frequencies', dataIndex: `Frequencies`, width: 80, ellipsis: true     },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true     },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 100, ellipsis: true     },
         { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true     },
@@ -1144,6 +1183,16 @@ const loadTable = () => {
 }
 const selectedRows = ref([])
 const selectedDefaultRows = ref([])
+
+const getValidFrequencies = (record) => {
+    const frequencies = [
+        { name: 'gnomAD_genome_ALL', value: record.gnomAD_genome_ALL },
+        { name: 'gnomAD_exome_ALL', value: record.gnomAD_exome_ALL },
+        { name: 'ExAC_ALL', value: record.ExAC_ALL },
+        { name: '1000g2015aug_all', value: record['1000g2015aug_all'] }
+    ];
+    return frequencies.filter(freq => freq.value !== '.');
+}
 
 const onSelectChange = (selectedRowKeys) => {
     if (showSticky.value && stickDone.value) {
