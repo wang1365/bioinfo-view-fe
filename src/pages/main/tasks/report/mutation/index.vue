@@ -47,7 +47,7 @@
                 :label="$t('SomaticMutationAnalysis')"
                 v-if="props.viewConfig.showMutSomatic"
             />
-            <q-tab name="WES突变分析" :label="$t('WESMutationAnalysis')" v-if="props.viewConfig.showMutWES || true" />
+            <q-tab name="WES突变分析" :label="$t('WESMutationAnalysis')" v-if="props.viewConfig.showMutWES" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated v-if="loaded">
             <q-tab-panel name="胚系突变分析">
