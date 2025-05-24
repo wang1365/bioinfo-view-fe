@@ -529,40 +529,45 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'Frequencies'">
-                                <template v-if="record.expanded">
-                                    <div class="text-purple">
-                                        <div v-if='record.gnomAD_genome_ALL !== "."'>
-                                            {{record.gnomAD_genome_ALL}}
-                                        </div>
-                                        <div v-if='record.gnomAD_exome_ALL !== "."'>
-                                            {{record.gnomAD_exome_ALL}}
-                                        </div>
-                                        <div v-if='record.ExAC_ALL !== "."'>
-                                            {{record.ExAC_ALL}}
-                                        </div>
-                                        <div v-if='record["1000g2015aug_all"] !== "."'>
-                                            {{record['1000g2015aug_all']}}
-                                        </div>
-                                    </div>
-                                </template>
-                                <template v-else>
-                                    <template v-if="getValidFrequencies(record).length > 0">
+                                <div
+                                    @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                    class="cursor-pointer"
+                                >
+                                    <template v-if="record.expanded">
                                         <div class="text-purple">
-                                            {{getValidFrequencies(record)[0].value}}
-                                        </div>
-                                        <div v-if="getValidFrequencies(record).length > 1" class="row">
-                                            <div class="col-9 text-purple">
-                                                {{getValidFrequencies(record)[1].value}}
+                                            <div v-if='record.gnomAD_genome_ALL !== "."'>
+                                                {{record.gnomAD_genome_ALL}}
                                             </div>
-                                            <div
-                                                class="col-2 text-primary"
-                                                v-if="getValidFrequencies(record).length > 2"
-                                            >
-                                                +{{getValidFrequencies(record).length - 2}}
+                                            <div v-if='record.gnomAD_exome_ALL !== "."'>
+                                                {{record.gnomAD_exome_ALL}}
+                                            </div>
+                                            <div v-if='record.ExAC_ALL !== "."'>
+                                                {{record.ExAC_ALL}}
+                                            </div>
+                                            <div v-if='record["1000g2015aug_all"] !== "."'>
+                                                {{record['1000g2015aug_all']}}
                                             </div>
                                         </div>
                                     </template>
-                                </template>
+                                    <template v-else>
+                                        <template v-if="getValidFrequencies(record).length > 0">
+                                            <div class="text-purple">
+                                                {{getValidFrequencies(record)[0].value}}
+                                            </div>
+                                            <div v-if="getValidFrequencies(record).length > 1" class="row">
+                                                <div class="col-9 text-purple">
+                                                    {{getValidFrequencies(record)[1].value}}
+                                                </div>
+                                                <div
+                                                    class="col-2 text-primary"
+                                                    v-if="getValidFrequencies(record).length > 2"
+                                                >
+                                                    +{{getValidFrequencies(record).length - 2}}
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </template>
+                                </div>
                             </template>
 
                             <template v-if="column.dataIndex === 'HPO'">
@@ -629,6 +634,23 @@
             <Igv :taskId="props.task.id" :file="igvFile" />
         </q-card>
     </q-dialog>
+    <a-drawer
+        :get-container="false"
+        title="Frequencies"
+        placement="bottom"
+        :closable="true"
+        @close="frequenciesDrawerVisible = false"
+        :visible="frequenciesDrawerVisible"
+        v-if="frequenciesDrawerVisible"
+    >
+        <div class="row">
+            <template v-for="p in Object.getOwnPropertyNames(populations)" :key="p">
+                <div class="col-4">
+                    <span class="text-primary">{{p}} :</span> {{drawerRecord[populations[p]]}}
+                </div>
+            </template>
+        </div>
+    </a-drawer>
 </template>
 <script setup>
 import { ref, onMounted, toRef, toRefs, watch, computed, onUnmounted } from 'vue'
@@ -729,6 +751,8 @@ const igvVisible = ref(false)
 const igvFile = ref(null)
 const dialogVisible = ref(false)
 const innerSearchParams = ref({...WES_PARAMS})
+const frequenciesDrawerVisible = ref(false)
+const drawerRecord = ref(null)
 
 
 const showDrawer = ref(false)
