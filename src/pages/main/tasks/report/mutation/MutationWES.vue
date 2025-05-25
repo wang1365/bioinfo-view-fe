@@ -590,6 +590,11 @@
                             <template v-if="column.dataIndex === 'Software_Prediction_result'">
                                 <q-linear-progress :value="record.Software_Prediction_result" size="10px" />
                                 {{record.Software_Prediction_result}}
+                                <template v-if="record.expanded">
+                                    <div>
+                                        <wes-radar :record="record" />
+                                    </div>
+                                </template>
                             </template>
 
                             <template v-if="column.dataIndex === 'operation'">
@@ -665,6 +670,7 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
 import {populations, useCustomCell, WES_PARAMS} from './index'
+import WesRadar from './components/WesRadar.vue'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
@@ -803,7 +809,7 @@ const columns = computed(() => {
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 100, ellipsis: true     },
         { title: 'Frequencies', dataIndex: `Frequencies`, width: 80, ellipsis: true     },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true     },
-        { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 100, ellipsis: true     },
+        { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true     },
         { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true     },
     ]
 

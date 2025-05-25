@@ -94,6 +94,10 @@ export function getCsvDataAndSetLineNumber(str, options = {}) {
 }
 
 export function getCsvHeader(str, splitter = '\t', line = 0) {
+    if (!str) {
+        console.log('getCsvHeader: No data')
+        return []
+    }
     const lines = str.split('\n')
     // let headLine = str.substring(0, str.indexOf('\n'))
     return lines[line].split(splitter)
