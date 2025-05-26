@@ -285,10 +285,10 @@ onMounted(() => {
         loadSomaticEvidenceData()
     }
 
-    // if (viewConfig.value.showWes) {
+    if (viewConfig.value.showMutWES) {
         loadWesData()
         loadWesEvidenceData()
-    // }
+    }
     loaded.value = true
 })
 
