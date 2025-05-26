@@ -1,31 +1,33 @@
 <template>
-    <q-toolbar class="text-primary">
-        <q-input v-model="keyword" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable @clear="clearKeyword"
-            style="width:300px" :disable="showSticky && stickDone" />
-        <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword"
-            :disable="showSticky && stickDone" />
-        <q-btn :href="props.url" :label="$t('Download')" size="small" icon="south" color="primary" target="_blank"
-            class="q-ml-sm" />
-    </q-toolbar>
-    <div class="bio-data-table q-py-sm">
-        <div style="position:relative">
-            <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px">
-                <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
-            </q-icon>
-            <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows" :columns="columns" :sticky="true"
-                rowKey="0" :row-selection="rowSelection">
-                <template #bodyCell="{ column, record }">
-                    <q-btn v-if="column.title === 'IGV'" label="IGV" color="primary" size="xs" outline
-                        @click="clickView(record)"></q-btn>
-                </template>
-            </a-table>
+    <div>
+        <q-toolbar class="text-primary">
+            <q-input v-model="keyword" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable @clear="clearKeyword"
+                style="width:300px" :disable="showSticky && stickDone" />
+            <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword"
+                :disable="showSticky && stickDone" />
+            <q-btn :href="props.url" :label="$t('Download')" size="small" icon="south" color="primary" target="_blank"
+                class="q-ml-sm" />
+        </q-toolbar>
+        <div class="bio-data-table q-py-sm">
+            <div style="position:relative">
+                <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs"
+                    style="position:absolute;z-index:100;left:0px;top:0px">
+                    <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
+                </q-icon>
+                <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows" :columns="columns" :sticky="true"
+                    rowKey="0" :row-selection="rowSelection">
+                    <template #bodyCell="{ column, record }">
+                        <q-btn v-if="column.title === 'IGV'" label="IGV" color="primary" size="xs" outline
+                            @click="clickView(record)"></q-btn>
+                    </template>
+                </a-table>
+            </div>
+            <q-dialog v-model="igvVisible">
+                <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
+                    <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
+                </q-card>
+            </q-dialog>
         </div>
-        <q-dialog v-model="igvVisible">
-            <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
-                <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
-            </q-card>
-        </q-dialog>
     </div>
 </template>
 <script setup>
