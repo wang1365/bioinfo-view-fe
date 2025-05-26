@@ -224,6 +224,11 @@ onMounted(() => {
     loadData()
 
 })
+
+watch([rows], () => {
+    loadData()
+})
+
 onUnmounted(() => {
     filterChange()
 })
