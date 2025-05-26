@@ -43,7 +43,7 @@
                 :label="$t('CopyNumberVariationAnalysis')"
                 v-if="props.viewConfig.showCNVcircos || props.viewConfig.showCNVtable"
             />
-            <q-tab name="WES突变分析" :label="$t('WES突变分析(开发中)')" v-if="props.viewConfig.showCNVWES || true" />
+            <q-tab name="WES突变分析" :label="$t('WES突变分析(开发中)')" v-if="props.viewConfig.showCNVWES" />
         </q-tabs>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="拷贝数变异分析">
