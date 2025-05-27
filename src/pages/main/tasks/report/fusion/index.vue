@@ -136,18 +136,11 @@ const emit = defineEmits(['stickDone', 'reset'])
 const viewConfig = toRef(props, 'viewConfig')
 const samples = toRef(props, 'samples')
 const stepData = toRef(props, 'stepData')
+const tab = ref(viewConfig.value.showFusionGermline ? '单样品融合分析' : '体细胞融合分析')
 
 onMounted(() => {
     console.log('mounted')
     loadData()
-})
-
-
-const tab = computed(() => {
-    if (viewConfig.value.showFusionGermline) {
-        return '单样品融合分析'
-    }
-    return '体细胞融合分析'
 })
 
 const filterChange = (name, data) => {

@@ -274,7 +274,7 @@ const wesData = ref({
 const filterData = ref({ somatic: null, germline: null, wes: null })
 const stepData = toRef(props, 'stepData')
 
-const tab = computed(() => {
+const initTab = () => {
     if (viewConfig.value.showMutGermline) {
         return '胚系突变分析'
     }
@@ -285,7 +285,9 @@ const tab = computed(() => {
         return 'WES突变分析'
     }
     return '胚系突变分析'
-})
+}
+
+const tab = ref(initTab())
 
 onMounted(() => {
     loaded.value = false
