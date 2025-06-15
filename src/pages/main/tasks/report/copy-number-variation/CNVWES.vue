@@ -234,7 +234,7 @@
                                             flat
                                             @click="record.show_gene_more = !record.show_gene_more"
                                             >+{{
-                                            record.gene_data.length }}
+                                                record.gene_data.length }}
                                             More</q-btn
                                         >
                                     </div>
@@ -284,7 +284,7 @@
                                             flat
                                             @click="record.show_gene_related_diseases_more = !record.show_gene_related_diseases_more"
                                             >+{{
-                                            record.gene_related_diseases_data.length }}
+                                                record.gene_related_diseases_data.length }}
                                             More</q-btn
                                         >
                                     </div>
@@ -322,7 +322,7 @@
                                             flat
                                             @click="record.show_hpo_more = !record.show_hpo_more"
                                             >+{{
-                                            record.hpo_data.length }}
+                                                record.hpo_data.length }}
                                             More</q-btn
                                         >
                                     </div>
@@ -352,7 +352,7 @@
                                             flat
                                             @click="record.show_dgv_more = !record.show_dgv_more"
                                             >+{{
-                                            record.dgv_data.length }}
+                                                record.dgv_data.length }}
                                             More</q-btn
                                         >
                                     </div>
@@ -382,7 +382,7 @@
                                             flat
                                             @click="record.show_clinvar_more = !record.show_clinvar_more"
                                             >+{{
-                                            record.clinvar_data.length }}
+                                                record.clinvar_data.length }}
                                             More</q-btn
                                         >
                                     </div>
@@ -393,7 +393,7 @@
                                     <img :src="record.Plot" alt="." />
                                 </div>
                             </template>
-                            <template v-if="column.key === 'operation'">
+                            <!-- <template v-if="column.key === 'operation'">
                                 <q-btn
                                     :label="$t('Detail')"
                                     color="primary"
@@ -411,7 +411,7 @@
                                     padding="xs"
                                     @click="clickIgv(record)"
                                 />
-                            </template>
+                            </template> -->
                         </template>
                     </a-table>
                 </div>
@@ -508,46 +508,46 @@ import { useCustomCell, WES_PARAMS } from './index'
 const { t } = useI18n()
 const splitterModel = ref(300)
 
-const genesetEdit=ref(false)
-const geneSetStep=ref(1)
-const geneSetMessage=ref("Ok")
-const geneSetInput=ref("")
-const geneSetOkValue=ref([])
-const geneSetErrValue=ref([])
+const genesetEdit = ref(false)
+const geneSetStep = ref(1)
+const geneSetMessage = ref("Ok")
+const geneSetInput = ref("")
+const geneSetOkValue = ref([])
+const geneSetErrValue = ref([])
 
-const openGeneSetDialog=()=>{
-    genesetEdit.value=true
-    geneSetInput.value=[...geneSetOkValue.value,...geneSetErrValue.value].join(",")
+const openGeneSetDialog = () => {
+    genesetEdit.value = true
+    geneSetInput.value = [...geneSetOkValue.value, ...geneSetErrValue.value].join(",")
 }
 
-const checkGeneSetInput=()=>{
-    geneSetStep.value=2
-    let okValues=new Set()
-    let errValues=new Set()
+const checkGeneSetInput = () => {
+    geneSetStep.value = 2
+    let okValues = new Set()
+    let errValues = new Set()
 
     for (const element of geneSetInput.value.split(",")) {
-        let gene=element.trim()
-        if( searchOptions.value.gene_set.indexOf(gene)>0){
+        let gene = element.trim()
+        if (searchOptions.value.gene_set.indexOf(gene) > 0) {
             okValues.add(gene)
-        }else if(gene.length>0){
+        } else if (gene.length > 0) {
             errValues.add(gene)
         }
     }
-    geneSetOkValue.value=[...okValues]
-    geneSetErrValue.value=[...errValues]
-    if (geneSetErrValue.value.length==0 && geneSetOkValue.value.length==0 ){
-        geneSetMessage.value="没有输入有效基因数据"
-    }else if(geneSetErrValue.value.length!=0){
-         geneSetMessage.value=geneSetErrValue.value.join(",")+" 不在基因列表中"
-    }else{
-        geneSetMessage.value="OK"
+    geneSetOkValue.value = [...okValues]
+    geneSetErrValue.value = [...errValues]
+    if (geneSetErrValue.value.length == 0 && geneSetOkValue.value.length == 0) {
+        geneSetMessage.value = "没有输入有效基因数据"
+    } else if (geneSetErrValue.value.length != 0) {
+        geneSetMessage.value = geneSetErrValue.value.join(",") + " 不在基因列表中"
+    } else {
+        geneSetMessage.value = "OK"
     }
 }
 
-const confirmGeneSetInput=()=>{
-    innerSearchParams.value.geneSet=[...geneSetOkValue.value,...geneSetErrValue.value].join(",")
+const confirmGeneSetInput = () => {
+    innerSearchParams.value.geneSet = [...geneSetOkValue.value, ...geneSetErrValue.value].join(",")
     geneSetStep.value = 1;
-    genesetEdit.value=false
+    genesetEdit.value = false
 }
 const props = defineProps({
     samples: {
@@ -628,21 +628,22 @@ const igvVisible = ref(false)
 const igvFile = ref(null)
 const dialogVisible = ref(false)
 
-const originDataRows=ref([])
-const innerSearchParams = ref({ geneSet:"",
-    excludeGensets:false,
-    gene:[],
-    acmg:[],
-    user_pathogenicity:"",
-    cnv_cover_type:[],
-    cnv_type:[],
-    chromosome:[],
-    start:"",
-    end:"",
-    cnv_length_ge:"",
-    cnv_length_le:"",
-    copy_number:""
- })
+const originDataRows = ref([])
+const innerSearchParams = ref({
+    geneSet: "",
+    excludeGensets: false,
+    gene: [],
+    acmg: [],
+    user_pathogenicity: "",
+    cnv_cover_type: [],
+    cnv_type: [],
+    chromosome: [],
+    start: "",
+    end: "",
+    cnv_length_ge: "",
+    cnv_length_le: "",
+    copy_number: ""
+})
 
 
 const showDrawer = ref(false)
@@ -651,69 +652,69 @@ const filteredRows = ref([])
 const currentRow = ref({})
 
 
-const search=()=>{
+const search = () => {
     console.log(innerSearchParams.value)
-    let resultRows=[]
+    let resultRows = []
     for (const row of originDataRows.value) {
         // 判断 gene 是否包含
-        if (innerSearchParams.value.gene && innerSearchParams.value.gene.length>0){
-            let geneSet=new Set(innerSearchParams.value.gene)
-            if (!row.Gene.split(";").some(item => geneSet.has(item))){
+        if (innerSearchParams.value.gene && innerSearchParams.value.gene.length > 0) {
+            let geneSet = new Set(innerSearchParams.value.gene)
+            if (!row.Gene.split(";").some(item => geneSet.has(item))) {
                 continue
             }
         }
         // 是否包含 ACMG_result
-        if (innerSearchParams.value.acmg && innerSearchParams.value.acmg.length>0){
-            let acmgSet=new Set(innerSearchParams.value.acmg)
-            if (!acmgSet.has(row.ACMG_result)){
+        if (innerSearchParams.value.acmg && innerSearchParams.value.acmg.length > 0) {
+            let acmgSet = new Set(innerSearchParams.value.acmg)
+            if (!acmgSet.has(row.ACMG_result)) {
                 continue
             }
         }
-         // 是否包含CNV_Cover_Type
-        if (innerSearchParams.value.cnv_cover_type && innerSearchParams.value.cnv_cover_type.length>0){
-            let cnvCoverTypeSet=new Set(innerSearchParams.value.cnv_cover_type)
-            if (!cnvCoverTypeSet.has(row.CNV_Cover_Type)){
+        // 是否包含CNV_Cover_Type
+        if (innerSearchParams.value.cnv_cover_type && innerSearchParams.value.cnv_cover_type.length > 0) {
+            let cnvCoverTypeSet = new Set(innerSearchParams.value.cnv_cover_type)
+            if (!cnvCoverTypeSet.has(row.CNV_Cover_Type)) {
                 continue
             }
         }
         // 是否包含 CNV_Type
-        if (innerSearchParams.value.cnv_type && innerSearchParams.value.cnv_type.length>0){
-            let cnvTypeSet=new Set(innerSearchParams.value.cnv_type)
-            if (!cnvTypeSet.has(row.CNV_Type)){
+        if (innerSearchParams.value.cnv_type && innerSearchParams.value.cnv_type.length > 0) {
+            let cnvTypeSet = new Set(innerSearchParams.value.cnv_type)
+            if (!cnvTypeSet.has(row.CNV_Type)) {
                 continue
             }
         }
         // 是否包含 chromosome
-        if (innerSearchParams.value.chromosome && innerSearchParams.value.chromosome.length>0){
-            let chrSet=new Set(innerSearchParams.value.chromosome)
-            if (!chrSet.has(row.Chr)){
+        if (innerSearchParams.value.chromosome && innerSearchParams.value.chromosome.length > 0) {
+            let chrSet = new Set(innerSearchParams.value.chromosome)
+            if (!chrSet.has(row.Chr)) {
                 continue
             }
         }
 
-        if (innerSearchParams.value.start && !isNaN(Number.parseInt(innerSearchParams.value.start))){
-            if(!(Number.parseInt(row.Start) >= Number.parseInt(innerSearchParams.value.start))){
+        if (innerSearchParams.value.start && !isNaN(Number.parseInt(innerSearchParams.value.start))) {
+            if (!(Number.parseInt(row.Start) >= Number.parseInt(innerSearchParams.value.start))) {
                 continue
             }
         }
-        if (innerSearchParams.value.end && !isNaN(Number.parseInt(innerSearchParams.value.end))){
-            if(!(Number.parseInt(row.End) <= Number.parseInt(innerSearchParams.value.end))){
+        if (innerSearchParams.value.end && !isNaN(Number.parseInt(innerSearchParams.value.end))) {
+            if (!(Number.parseInt(row.End) <= Number.parseInt(innerSearchParams.value.end))) {
                 continue
             }
         }
-        if (innerSearchParams.value.cnv_length_ge && !isNaN(Number.parseInt(innerSearchParams.value.cnv_length_ge))){
-            if( !(Number.parseInt(row.CNV_Length) >= Number.parseInt(innerSearchParams.value.cnv_length_ge))){
+        if (innerSearchParams.value.cnv_length_ge && !isNaN(Number.parseInt(innerSearchParams.value.cnv_length_ge))) {
+            if (!(Number.parseInt(row.CNV_Length) >= Number.parseInt(innerSearchParams.value.cnv_length_ge))) {
                 continue
             }
         }
 
-        if (innerSearchParams.value.cnv_length_le && !isNaN(Number.parseInt(innerSearchParams.value.cnv_length_le))){
-            if(!(Number.parseInt(row.CNV_Length) <= Number.parseInt(innerSearchParams.value.cnv_length_le))){
+        if (innerSearchParams.value.cnv_length_le && !isNaN(Number.parseInt(innerSearchParams.value.cnv_length_le))) {
+            if (!(Number.parseInt(row.CNV_Length) <= Number.parseInt(innerSearchParams.value.cnv_length_le))) {
                 continue
             }
         }
-         if (innerSearchParams.value.copy_number && !isNaN(Number.parseInt(innerSearchParams.value.copy_number))){
-            if(!(Number.parseInt(row.Copy_Number) == Number.parseInt(innerSearchParams.value.copy_number))){
+        if (innerSearchParams.value.copy_number && !isNaN(Number.parseInt(innerSearchParams.value.copy_number))) {
+            if (!(Number.parseInt(row.Copy_Number) == Number.parseInt(innerSearchParams.value.copy_number))) {
                 continue
             }
         }
@@ -723,22 +724,23 @@ const search=()=>{
     console.log(resultRows)
     buildShowRowData(resultRows)
 }
-const reset=()=>{
-    innerSearchParams.value = { geneSet:"",
-    excludeGensets:false,
-    gene:[],
-    acmg:[],
-    user_pathogenicity:"",
-    cnv_cover_type:[],
-    cnv_type:[],
-    chromosome:[],
-    start:"",
-    end:"",
-    cnv_length_ge:"",
-cnv_length_le:"",
-copy_number:""
- }
- search()
+const reset = () => {
+    innerSearchParams.value = {
+        geneSet: "",
+        excludeGensets: false,
+        gene: [],
+        acmg: [],
+        user_pathogenicity: "",
+        cnv_cover_type: [],
+        cnv_type: [],
+        chromosome: [],
+        start: "",
+        end: "",
+        cnv_length_ge: "",
+        cnv_length_le: "",
+        copy_number: ""
+    }
+    search()
 }
 function clickDetail(record) {
     currentRow.value = record
@@ -793,7 +795,7 @@ const columns = ref([
     { title: 'DGV', dataIndex: 'dgv', key: 'dgv', width: 200, align: 'left' },
     { title: 'Clinvar', dataIndex: 'clinvar', key: 'clinvar', width: 200, align: 'left' },
     { title: 'Plot', dataIndex: 'plot', key: 'plot', width: 200, align: 'left' },
-    { title: 'Operation', dataIndex: 'operation', key: 'operation', width: 200, align: 'left' },
+    //{ title: 'Operation', dataIndex: 'operation', key: 'operation', width: 200, align: 'left' },
 ])
 
 
@@ -809,7 +811,7 @@ const loadTable = () => {
     console.log('load table')
     readTaskFile(route.params.id, `CNV_WES/D00000307.CNV_WES.txt`).then((res) => {
         let data = parseCsvToList(res)
-        originDataRows.value=data.rows
+        originDataRows.value = data.rows
         console.log(data.rows)
 
         buildShowRowData(data.rows)
@@ -835,7 +837,7 @@ const buildSearchOptions = (originRows) => {
             gene_set.add(item)
         }
     }
-    searchOptions.value= {
+    searchOptions.value = {
         gene_set: Array.from(gene_set).sort().map(value => value),
         acmg_set: Array.from(acmg_set).sort().map(value => value),
         cnv_cover_type_set: Array.from(cnv_cover_type_set).sort().map(value => value),
@@ -875,11 +877,11 @@ const buildShowRowData = (originRows) => {
         row.show_clinvar_more = false
         rows.push(row)
     }
-    filteredRows.value= rows
-    if(filteredRows.value.length>0){
+    filteredRows.value = rows
+    // if(filteredRows.value.length>0){
 
-    filteredRows.value = Array.from({ length: 200 }, () => JSON.parse(JSON.stringify(filteredRows.value[0])))
-    }
+    // filteredRows.value = Array.from({ length: 200 }, () => JSON.parse(JSON.stringify(filteredRows.value[0])))
+    // }
 
 }
 </script>
