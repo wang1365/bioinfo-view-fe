@@ -143,7 +143,7 @@ const somaticVue = ref(null)
 const $q = useQuasar()
 const route = useRoute()
 const loaded = ref(false)
-const tab = ref('胚系突变分析')
+
 const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
 const viewConfig = toRef(props, 'viewConfig')
@@ -275,6 +275,21 @@ const wesData = ref({
 const filterData = ref({ somatic: null, germline: null, wes: null })
 const stepData = toRef(props, 'stepData')
 
+const initTab = () => {
+    if (viewConfig.value.showMutGermline) {
+        return '胚系突变分析'
+    }
+    if (viewConfig.value.showMutSomatic ) {
+        return '体细胞突变分析'
+    }
+    if (viewConfig.value.showMutWES) {
+        return 'WES突变分析'
+    }
+    return '胚系突变分析'
+}
+
+const tab = ref(initTab())
+
 onMounted(() => {
     loaded.value = false
     if (viewConfig.value.showMutGermline) {
@@ -286,10 +301,10 @@ onMounted(() => {
         loadSomaticEvidenceData()
     }
 
-    // if (viewConfig.value.showWes) {
+    if (viewConfig.value.showMutWES) {
         loadWesData()
         loadWesEvidenceData()
-    // }
+    }
     loaded.value = true
 })
 

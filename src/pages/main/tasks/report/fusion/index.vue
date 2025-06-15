@@ -68,7 +68,6 @@ const { langCode } = storeToRefs(store)
 const singleVue = ref(null)
 const normalVue = ref(null)
 const route = useRoute()
-const tab = ref('单样品融合分析')
 const dlgVisible = ref(false)
 const isDefineReport = computed(() => route.name === 'defineReport')
 
@@ -137,6 +136,7 @@ const emit = defineEmits(['stickDone', 'reset'])
 const viewConfig = toRef(props, 'viewConfig')
 const samples = toRef(props, 'samples')
 const stepData = toRef(props, 'stepData')
+const tab = ref(viewConfig.value.showFusionGermline ? '单样品融合分析' : '体细胞融合分析')
 
 onMounted(() => {
     console.log('mounted')
