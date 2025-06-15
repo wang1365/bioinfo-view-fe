@@ -133,6 +133,7 @@ import { useI18n } from "vue-i18n"
 import { globalStore }from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { populations } from './index'
+import { listVerdictByPatient } from 'src/api/verdict'
 
 const store = globalStore()
 const { langCode } = storeToRefs(store)
@@ -486,9 +487,16 @@ const loadSomaticEvidenceData = () => {
     })
 }
 
-const loadWesData = () => {
-    readTaskMuFile(route.params.id, 'Mut_WES').then((res) => {
-        const headNames = getCsvHeader(res, '\t').map( h => {
+const loadWesData = async () => {
+    let verdict = await loadWesVerdictData()
+    // verdict是个数组，将其转化为map，key为gene_identifier，value为result
+    let verdictMap = new Map()
+    verdict.forEach(v => {
+        verdictMap.set(v.gene_identifier, v.result)
+    })
+
+    await readTaskMuFile(route.params.id, 'Mut_WES').then((res) => {
+        const headNames = getCsvHeader(res, '\t').map(h => {
             // 如果h的样式是xxxx(yyyy), 改为xxxx_
             if (h.indexOf('(') > -1) {
                 return h.substring(0, h.indexOf('(')) + '_'
@@ -501,6 +509,11 @@ const loadWesData = () => {
             row.Gene_Related_Diseases = row.Gene_Related_Diseases ? row.Gene_Related_Diseases.split(';') : []
             row.ACMG = row.ACMG ? row.ACMG.split(';') : []
             row.HPO = row.HPO ? row.HPO.split(';') : []
+
+            // AAChange.refGene列+Chr+Start+End+Ref+Alt
+            let gene_identifier = `${row['AAChange.refGene']}_${row.Chr}_${row.Start}_${row.End}_${row.Ref}_${row.Alt}`
+            row.geneIdentifier = gene_identifier
+            row.userVerdict = verdictMap.get(gene_identifier) || []
         })
 
         // 提取options
@@ -521,7 +534,7 @@ const loadWesData = () => {
             row.Gene_Related_Diseases.forEach(grd => {
                 let arad = grd.split('|')[0]
                 arad.split('/').forEach(t => {
-                        diseaseInheritanceModes.add(t)
+                    diseaseInheritanceModes.add(t)
                 })
             })
             gene.add(row['Gene.refGene'])
@@ -559,9 +572,15 @@ const loadWesData = () => {
         } else {
             wesData.value.selectedRows = []
             wesData.value.selectedDefaultRows = wesData.value.defaultReportRows
-            console.log('初始化选择行', wesData.value.selectedRows , csvRows)
+            console.log('初始化选择行', wesData.value.selectedRows, csvRows)
         }
     })
+
+}
+
+const loadWesVerdictData = async () => {
+    const patient_id = props.samples[0].sample_meta.patient_identifier
+    return await listVerdictByPatient(patient_id)
 }
 
 const loadWesEvidenceData = () => {

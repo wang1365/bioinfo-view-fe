@@ -500,6 +500,29 @@
                                 </template>
                             </template>
 
+                            <template v-if="column.dataIndex === 'userVerdict'">
+                                <div class="row">
+                                    <template v-for="v in record.userVerdict" :key="v">
+                                        <q-btn
+                                            :label="v"
+                                            color="primary"
+                                            size="sm"
+                                            outline
+                                            padding="3px"
+                                            class="q-ma-xs"
+                                        />
+                                    </template>
+                                    <q-btn
+                                        flat
+                                        icon="settings"
+                                        size="sm"
+                                        color="grey"
+                                        padding="3px"
+                                        @click="showVerdictDlg(record)"
+                                    />
+                                </div>
+                            </template>
+
                             <template v-if="column.dataIndex === 'ACMG_result'">
                                 <div class="text-purple">{{record.ACMG_result}}</div>
                                 <template v-if="record.expanded">
@@ -639,6 +662,20 @@
             <Igv :taskId="props.task.id" :file="igvFile" />
         </q-card>
     </q-dialog>
+    <q-dialog v-model="verdictData.visible">
+        <q-card class="q-pa-sm" style="width:40vw;height: 50vh;">
+            <q-card-section>
+                <div class="text-h6">{{verdictData.record.geneIdentifier}}</div>
+            </q-card-section>
+            <q-card-section>
+                <q-option-group v-model="verdictData.verdict" type="checkbox" :options="verdictData.options" />
+            </q-card-section>
+            <q-card-actions align="right">
+                <q-btn :label='$t("Confirm")' @click="onVerdictConfirm()" color="primary" />
+                <q-btn :label='$t("Cancel")' color="primary" v-close-popup />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
     <a-drawer
         :get-container="false"
         title="Frequencies"
@@ -671,6 +708,7 @@ import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
 import {populations, useCustomCell, WES_PARAMS} from './index'
 import WesRadar from './components/WesRadar.vue'
+import { setVerdictResult } from 'src/api/verdict'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
@@ -754,6 +792,42 @@ const props = defineProps({
 })
 const route = useRoute()
 const igvVisible = ref(false)
+const verdictData = ref({
+    visible: false,
+    record: null,
+    verdict: [],
+    options: [
+        {
+            label: 'Pathogenic',
+            value: 'pathogenic',
+        },
+        {
+            label: 'Likely pathogenic',
+            value: 'likely_pathogenic',
+        },
+        {
+            label: 'VUS++',
+            value: 'vus++',
+        },
+        {
+            label: 'VUS+',
+            value: 'vus+',
+        },
+        {
+            label: 'VUS',
+            value: 'vus',
+        },
+        {
+            label: 'Likely benign',
+            value: 'likely_benign',
+        },
+        {
+            label: 'Benign',
+            value: 'benign',
+        }
+    ]
+})
+const verdictRecord = ref(null)
 const igvFile = ref(null)
 const dialogVisible = ref(false)
 const innerSearchParams = ref({...WES_PARAMS})
@@ -803,7 +877,7 @@ const columns = computed(() => {
         { title: 'Gene Info', dataIndex: `geneInfo`, width: 150, ellipsis: true     },
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true     },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true     },
-        { title: 'User Verdict', dataIndex: ``, width: 100, ellipsis: true     },
+        { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, ellipsis: true     },
         { title: 'ACMG', dataIndex: `ACMG_result`, width: 100, ellipsis: true     },
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 100, ellipsis: true     },
@@ -814,6 +888,20 @@ const columns = computed(() => {
     ]
 
 })
+
+function showVerdictDlg(record) {
+    verdictData.value.visible = true
+    verdictData.value.record = record
+    verdictData.value.verdict = record.userVerdict || []
+}
+
+function onVerdictConfirm() {
+    setVerdictResult(props.samples[0].sample_meta.patient_identifier,
+        verdictData.value.record.geneIdentifier, verdictData.value.verdict)
+
+    verdictData.value.record.userVerdict = verdictData.value.verdict
+    verdictData.value.visible = false
+}
 
 
 function clickIgv (record) {
