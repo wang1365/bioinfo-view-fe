@@ -906,7 +906,7 @@ function onVerdictConfirm() {
 
 function clickIgv (record) {
     currentRow.value = record
-    igvFile.value = `Mut_WES/${record.col1}-${record.col2}.igv`
+    igvFile.value = `Mut_WES/igv/${record.Chr}_${record.Start}_${record.End}.igv`
     igvVisible.value = true
 }
 
