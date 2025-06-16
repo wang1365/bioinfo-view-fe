@@ -526,7 +526,7 @@ const loadWesData = async () => {
             row.HPO = row.HPO ? row.HPO.split(';') : []
 
             // AAChange.refGene列+Chr+Start+End+Ref+Alt
-            let gene_identifier = `${row['AAChange.refGene']}_${row.Chr}_${row.Start}_${row.End}_${row.Ref}_${row.Alt}`
+            let gene_identifier = `${row['Gene.refGene']}|${row['GeneDetail.refGene']}|${row['AAChange']}|${row.Chr}|${row.Start}|${row.End}|${row.Ref}|${row.Alt}`
             row.geneIdentifier = gene_identifier
             row.userVerdict = verdictMap.get(gene_identifier) || []
         })
@@ -594,8 +594,8 @@ const loadWesData = async () => {
 }
 
 const loadWesVerdictData = async () => {
-    const patient_id = props.samples[0].sample_meta.patient_identifier
-    return await listVerdictByPatient(patient_id)
+    const user_id = store.currentUser.username
+    return await listVerdictByPatient(user_id)
 }
 
 const loadWesEvidenceData = () => {

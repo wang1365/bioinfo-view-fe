@@ -663,9 +663,9 @@
         </q-card>
     </q-dialog>
     <q-dialog v-model="verdictData.visible">
-        <q-card class="q-pa-sm" style="width:40vw;height: 50vh;">
+        <q-card class="q-pa-sm" style="width:50vw;height: 55vh;">
             <q-card-section>
-                <div class="text-h6">{{verdictData.record.geneIdentifier}}</div>
+                <div class="text-primary">{{verdictData.record.geneIdentifier}}</div>
             </q-card-section>
             <q-card-section>
                 <q-option-group v-model="verdictData.verdict" type="checkbox" :options="verdictData.options" />
