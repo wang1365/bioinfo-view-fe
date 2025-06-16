@@ -392,7 +392,7 @@
                                         <div class="col-2 column justify-between">
                                             <div
                                                 class="col-2 text-weight-bolder text-green-5 q-pl-sm justify-between"
-                                                style="font-size: 16px"
+                                                style="font-size: 14px"
                                             >
                                                 {{record.Class}}
                                             </div>
@@ -486,13 +486,13 @@
                             <template v-if="column.dataIndex === 'Gene_Related_Diseases'">
                                 <template v-if="record.expanded">
                                     <template v-for="grd in record.Gene_Related_Diseases" :key="grd">
-                                        <div>{{grd}}</div>
+                                        <a-tooltip :title="grd"><div>{{grd}}</div></a-tooltip>
                                     </template>
                                 </template>
                                 <template v-else>
-                                    <div>{{record.Gene_Related_Diseases[0]}}</div>
+                                    <a-tooltip :title="record.Gene_Related_Diseases[0]"><div>{{record.Gene_Related_Diseases[0]}}</div></a-tooltip>
                                     <div v-if="record.Gene_Related_Diseases.length > 1" class="row justify-between">
-                                        <div class="col-10">{{record.Gene_Related_Diseases[1]}}</div>
+                                        <a-tooltip :title="record.Gene_Related_Diseases[1]"><div class="col-10">{{record.Gene_Related_Diseases[1]}}</div></a-tooltip>
                                         <div v-if="record.Gene_Related_Diseases.length > 2" class="col-1 text-primary">
                                             +{{record.Gene_Related_Diseases.length-2}}
                                         </div>
@@ -596,13 +596,13 @@
                             <template v-if="column.dataIndex === 'HPO'">
                                 <template v-if="record.expanded">
                                     <template v-for="hpo in record.HPO" :key="hpo">
-                                        <div>{{hpo}}</div>
+                                        <a-tooltip :title="record.HPO[1]"><div>{{hpo}}</div></a-tooltip>
                                     </template>
                                 </template>
                                 <template v-else>
-                                    <div>{{record.HPO[0]}}</div>
-                                    <div v-if="record.HPO.length > 1" class="row">
-                                        <div class="col-9">{{record.HPO[1]}}</div>
+                                    <a-tooltip :title="record.HPO[0]">{{record.HPO[0]}}</a-tooltip>
+                                    <div v-if="record.HPO.length > 1">
+                                        <a-tooltip :title="record.HPO[1]"><div class="col-9">{{record.HPO[1]}}</div></a-tooltip>
                                         <div class="col-2 text-primary" v-if="record.HPO.length > 2">
                                             +{{record.HPO.length - 2}}
                                         </div>
@@ -864,7 +864,7 @@ const rowSelection = computed(() => {
 
 
 const scrollX = computed(() => {
-    return 1600
+    return 2000
 })
 
 
@@ -874,13 +874,13 @@ const atOptionGroupChange = () => {
 
 const columns = computed(() => {
     return [
-        { title: 'Gene Info', dataIndex: `geneInfo`, width: 150, ellipsis: true     },
+        { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true     },
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true     },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true     },
         { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, ellipsis: true     },
-        { title: 'ACMG', dataIndex: `ACMG_result`, width: 100, ellipsis: true     },
+        { title: 'ACMG', dataIndex: `ACMG_result`, width: 110, ellipsis: true     },
 
-        { title: 'Clinvar', dataIndex: `Clinvar`, width: 100, ellipsis: true     },
+        { title: 'Clinvar', dataIndex: `Clinvar`, width: 80, ellipsis: true     },
         { title: 'Frequencies', dataIndex: `Frequencies`, width: 80, ellipsis: true     },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true     },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true     },
