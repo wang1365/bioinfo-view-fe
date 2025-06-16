@@ -407,7 +407,7 @@
                                                 @click="record.expanded = !record.expanded"
                                             />
                                         </div>
-                                        <div class="col-10">
+                                        <div class="col-10 text-left">
                                             <div class="text-primary" style="font-size: 16px">
                                                 {{record['Gene.refGene']}}
                                             </div>
