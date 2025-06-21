@@ -728,6 +728,7 @@ import { useI18n } from 'vue-i18n'
 import {populations, useCustomCell, WES_PARAMS} from './index'
 import WesRadar from './components/WesRadar.vue'
 import { setVerdictResult } from 'src/api/verdict'
+import { getCurrentUsername } from 'src/utils/user'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
@@ -915,8 +916,8 @@ function showVerdictDlg(record) {
 }
 
 function onVerdictConfirm() {
-    setVerdictResult(props.samples[0].sample_meta.patient_identifier,
-        verdictData.value.record.geneIdentifier, verdictData.value.verdict)
+    const username = getCurrentUsername()
+    setVerdictResult(username, verdictData.value.record.geneIdentifier, verdictData.value.verdict)
 
     verdictData.value.record.userVerdict = verdictData.value.verdict
     verdictData.value.visible = false

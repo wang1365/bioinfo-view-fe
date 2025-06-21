@@ -1,5 +1,15 @@
 import { globalStore } from 'src/stores/global'
 
+export const getCurrentUser = () => {
+    const { currentUser } = globalStore()
+    return currentUser
+}
+
+export const getCurrentUsername = () => {
+    const { currentUser } = globalStore()
+    return currentUser !== null ? currentUser.username : ''
+}
+
 export const isSuper = (user) => {
     return isRole(user, 'super')
 }

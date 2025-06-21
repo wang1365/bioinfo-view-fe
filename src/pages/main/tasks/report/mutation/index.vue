@@ -509,6 +509,7 @@ const loadWesData = async () => {
     verdict.forEach(v => {
         verdictMap.set(v.gene_identifier, v.result)
     })
+    console.log('verdictMap', verdictMap)
 
     await readTaskMuFile(route.params.id, 'Mut_WES').then((res) => {
         const headNames = getCsvHeader(res, '\t').map(h => {
