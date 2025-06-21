@@ -314,7 +314,7 @@
                             class="col-5"
                         />
                         <q-input
-                            v-model="innerSearchParams.chromosomeStart"
+                            v-model.number="innerSearchParams.chromosomeStart"
                             stack-label
                             dense
                             outlined
@@ -324,7 +324,7 @@
                         />
                         <span>~</span>
                         <q-input
-                            v-model="innerSearchParams.chromosomeEnd"
+                            v-model.number="innerSearchParams.chromosomeEnd"
                             stack-label
                             dense
                             outlined
@@ -1137,6 +1137,17 @@ const searchFilterRows = (searchParams) => {
         let maxAlleleFraction = searchParams.maxAlleleFraction
         if (maxAlleleFraction  && maxAlleleFraction/100 < Number(line.Mutation_Rate_)) {
             return false
+        }
+
+        let chromosome = searchParams.chromosome
+        if (chromosome) {
+            if (searchParams.chromosomeStart != null && line.Start < searchParams.chromosomeStart) {
+                return false
+            }
+
+            if (searchParams.chromosomeEnd != null && line.End > searchParams.chromosomeEnd) {
+                return false
+            }
         }
 
         return true
