@@ -630,7 +630,7 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'Software_Prediction_result'">
-                                <q-linear-progress :value="record.Software_Prediction_result" size="10px" />
+                                <q-linear-progress :value="Number(record.Software_Prediction_result)" size="10px" />
                                 {{record.Software_Prediction_result}}
                                 <template v-if="record.expanded">
                                     <div>
