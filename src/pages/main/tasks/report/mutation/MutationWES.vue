@@ -215,6 +215,7 @@
                             stack-label
                             dense
                             hide-dropdown-icon
+                            emit-value
                             class="col-1"
                         />
                         <q-input
@@ -236,6 +237,7 @@
                             :options="comparatorOptions"
                             stack-label
                             dense
+                            emit-value
                             hide-dropdown-icon
                             class="col-1"
                         />
@@ -258,6 +260,7 @@
                             :options="comparatorOptions"
                             stack-label
                             dense
+                            emit-value
                             hide-dropdown-icon
                             class="col-1"
                         />
@@ -1100,6 +1103,7 @@ const searchFilterRows = (searchParams) => {
             if (v === '-') {
                 return false
             }
+            console.log(')))))))))))))))))', genoTypeComp, v,  genoTypeValue)
             if (!compare(genoTypeComp, Number(v), genoTypeValue)) {
                 return false
             }
