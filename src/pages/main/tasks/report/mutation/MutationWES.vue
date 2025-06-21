@@ -1056,7 +1056,7 @@ const searchFilterRows = (searchParams) => {
             }
         }
 
-        let geneSet = searchParams.geneSet != null ? searchParams.geneSet.split(',') :  []
+        let geneSet = searchParams.geneSet != null ? searchParams.geneSet.split(',').filter(g => g.trim() !== '') :  []
         if (geneSet && geneSet.length > 0 ) {
             const exclude = searchParams.excludeGensets
             // 包含：所有都没有包含，返回false
@@ -1121,7 +1121,6 @@ const searchFilterRows = (searchParams) => {
             if (v === '-') {
                 return false
             }
-            console.log(')))))))))))))))))', genoTypeComp, v,  genoTypeValue)
             if (!compare(genoTypeComp, Number(v), genoTypeValue)) {
                 return false
             }
