@@ -1036,14 +1036,14 @@ const searchFilterRows = (searchParams) => {
 
         let diseases = searchParams.diseases
         if (diseases && diseases.length > 0 ) {
-            if (diseases.every(pt => !line.Gene_Related_Diseases.any(grd => grd.includes(pt)))) {
+            if (diseases.every(pt => line.Gene_Related_Diseases.every(grd => !grd.includes(pt)))) {
                 return false
             }
         }
 
         let modes = searchParams.diseaseInheritanceModes
         if (modes && modes.length > 0 ) {
-            if (modes.every(m => !line.Gene_Related_Diseases.any(grd => grd.includes(m)))) {
+            if (modes.every(m => line.Gene_Related_Diseases.every(grd => !grd.includes(m)))) {
                 return false
             }
         }
@@ -1097,7 +1097,6 @@ const searchFilterRows = (searchParams) => {
         let genoTypeValue = searchParams.genoTypeValue
         if (genoTypeComp  && genoTypeValue !== null) {
             const v = line.Genotype_Quality
-            c
             if (v === '-') {
                 return false
             }
