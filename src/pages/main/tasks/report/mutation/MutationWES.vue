@@ -486,16 +486,26 @@
                             <template v-if="column.dataIndex === 'Gene_Related_Diseases'">
                                 <template v-if="record.expanded">
                                     <template v-for="grd in record.Gene_Related_Diseases" :key="grd">
-                                        <a-tooltip :title="grd"><div>{{grd}}</div></a-tooltip>
+                                        <a-tooltip :title="grd"
+                                            ><div>{{grd}}</div></a-tooltip
+                                        >
                                     </template>
                                 </template>
                                 <template v-else>
-                                    <a-tooltip :title="record.Gene_Related_Diseases[0]"><div>{{record.Gene_Related_Diseases[0]}}</div></a-tooltip>
+                                    <a-tooltip :title="record.Gene_Related_Diseases[0]"
+                                        ><div>{{record.Gene_Related_Diseases[0]}}</div></a-tooltip
+                                    >
                                     <div v-if="record.Gene_Related_Diseases.length > 1" class="row justify-between">
-                                        <a-tooltip :title="record.Gene_Related_Diseases[1]"><div class="col-10">{{record.Gene_Related_Diseases[1]}}</div></a-tooltip>
-                                        <div v-if="record.Gene_Related_Diseases.length > 2" class="col-1 text-primary">
-                                            +{{record.Gene_Related_Diseases.length-2}}
-                                        </div>
+                                        <a-tooltip :title="record.Gene_Related_Diseases[1]"
+                                            ><div class="col-10">{{record.Gene_Related_Diseases[1]}}</div></a-tooltip
+                                        >
+                                    </div>
+                                    <div
+                                        v-if="record.Gene_Related_Diseases.length > 2"
+                                        class="col-1 text-primary cursor-pointer"
+                                        @click="record.expanded = !record.expanded"
+                                    >
+                                        +{{record.Gene_Related_Diseases.length-2}}
                                     </div>
                                 </template>
                             </template>
@@ -582,8 +592,9 @@
                                                     {{getValidFrequencies(record)[1].value}}
                                                 </div>
                                                 <div
-                                                    class="col-2 text-primary"
+                                                    class="col-2 text-primary cursor-pointer"
                                                     v-if="getValidFrequencies(record).length > 2"
+                                                    @click="record.expanded = !record.expanded"
                                                 >
                                                     +{{getValidFrequencies(record).length - 2}}
                                                 </div>
@@ -596,14 +607,22 @@
                             <template v-if="column.dataIndex === 'HPO'">
                                 <template v-if="record.expanded">
                                     <template v-for="hpo in record.HPO" :key="hpo">
-                                        <a-tooltip :title="record.HPO[1]"><div>{{hpo}}</div></a-tooltip>
+                                        <a-tooltip :title="record.HPO[1]"
+                                            ><div>{{hpo}}</div></a-tooltip
+                                        >
                                     </template>
                                 </template>
                                 <template v-else>
                                     <a-tooltip :title="record.HPO[0]">{{record.HPO[0]}}</a-tooltip>
                                     <div v-if="record.HPO.length > 1">
-                                        <a-tooltip :title="record.HPO[1]"><div class="col-9">{{record.HPO[1]}}</div></a-tooltip>
-                                        <div class="col-2 text-primary" v-if="record.HPO.length > 2">
+                                        <a-tooltip :title="record.HPO[1]"
+                                            ><div class="col-9">{{record.HPO[1]}}</div></a-tooltip
+                                        >
+                                        <div
+                                            class="col-2 text-primary cursor-pointer"
+                                            v-if="record.HPO.length > 2"
+                                            @click="record.expanded = !record.expanded"
+                                        >
                                             +{{record.HPO.length - 2}}
                                         </div>
                                     </div>
