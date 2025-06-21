@@ -81,7 +81,7 @@
                     </q-input>
                     <q-checkbox v-model="innerSearchParams.excludeGensets" keep-color dense size="sm" color="primary">
                         <template v-slot:default>
-                            <span class="text-primary">Exclude selected Gensets</span>
+                            <span class="text-primary">Exclude selected Genesets</span>
                         </template>
                     </q-checkbox>
 
