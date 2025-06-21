@@ -565,16 +565,36 @@ const loadWesData = async () => {
         wesData.value.rows = csvRows
         wesData.value.header = headNames
         wesData.value.options.phenoType = Array.from(phenoType).sort()
+
         wesData.value.options.diseases = Array.from(diseases).sort()
+        wesData.value.options.diseasesInit = Array.from(diseases).sort()
+
         wesData.value.options.diseaseInheritanceModes = Array.from(diseaseInheritanceModes).sort()
+        wesData.value.options.diseaseInheritanceModesInit = Array.from(diseaseInheritanceModes).sort()
+
         wesData.value.options.gene = Array.from(gene).sort()
+        wesData.value.options.geneInit = Array.from(gene).sort()
+
         wesData.value.options.prioritizationTier = Array.from(prioritizationTier).sort()
+        wesData.value.options.prioritizationTierInit = Array.from(prioritizationTier).sort()
+
         wesData.value.options.acmgPathogenicity = Array.from(acmgPathogenicity).sort()
+        wesData.value.options.acmgPathogenicityInit = Array.from(acmgPathogenicity).sort()
+
         wesData.value.options.clinvarPathogenicity = Array.from(clinvarPathogenicity).sort()
+        wesData.value.options.clinvarPathogenicityInit = Array.from(clinvarPathogenicity).sort()
+
         wesData.value.options.genoType = Array.from(genoType).sort()
+        wesData.value.options.genoTypeInit = Array.from(genoType).sort()
+
         wesData.value.options.seqQuality = Array.from(seqQuality).sort()
+        wesData.value.options.seqQualityInit = Array.from(seqQuality).sort()
+
         wesData.value.options.chromosome = Array.from(chromosome).sort()
+        wesData.value.options.chromosomeInit = Array.from(chromosome).sort()
+
         wesData.value.options.populationAlleleFrequency = Object.getOwnPropertyNames(populations)
+        wesData.value.options.populationAlleleFrequencyInit = Object.getOwnPropertyNames(populations)
 
         console.log('<<<<<<<<<<<<<<<<< wes options', wesData.value.options)
 

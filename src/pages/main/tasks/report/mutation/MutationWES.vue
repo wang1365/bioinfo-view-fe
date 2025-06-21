@@ -85,6 +85,8 @@
                         multiple
                         dense
                         outlined
+                        use-input
+                        @filter="optionFilters.gene"
                         hide-dropdown-icon
                         :options="props.options.gene"
                         :label="$t('genes')"
@@ -921,6 +923,27 @@ function onVerdictConfirm() {
 
     verdictData.value.record.userVerdict = verdictData.value.verdict
     verdictData.value.visible = false
+}
+
+function makeOptionFilter (val, update, optionName) {
+    const p = props.options
+    const optionInitName = `${optionName}Init`
+    if (val === '') {
+        update(() => {
+            p[optionName] = p[optionInitName]
+        })
+        return
+    }
+
+    update(() => {
+        const needle = val.toLowerCase()
+        p[optionName] = p[optionInitName].filter(v => v.toLowerCase().indexOf(needle) > -1)
+    })
+}
+
+
+const optionFilters = {
+    gene: (v, u) => makeOptionFilter(v, u, 'gene'),
 }
 
 
