@@ -565,6 +565,7 @@ const loadWesData = async () => {
         wesData.value.rows = csvRows
         wesData.value.header = headNames
         wesData.value.options.phenoType = Array.from(phenoType).sort()
+        wesData.value.options.phenoTypeInit = Array.from(phenoType).sort()
 
         wesData.value.options.diseases = Array.from(diseases).sort()
         wesData.value.options.diseasesInit = Array.from(diseases).sort()

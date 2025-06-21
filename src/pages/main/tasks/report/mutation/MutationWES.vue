@@ -24,6 +24,8 @@
                         dense
                         outlined
                         hide-dropdown-icon
+                        use-input
+                        @filter="optionFilters.phenoType"
                         :options="props.options.phenoType"
                         label="Phenotype"
                         stack-label
@@ -38,6 +40,8 @@
                         dense
                         outlined
                         hide-dropdown-icon
+                        use-input
+                        @filter="optionFilters.diseases"
                         :options="props.options.diseases"
                         label="Disease"
                         stack-label
@@ -52,6 +56,8 @@
                         dense
                         outlined
                         hide-dropdown-icon
+                        use-input
+                        @filter="optionFilters.diseaseInheritanceModes"
                         :options="props.options.diseaseInheritanceModes"
                         label="Disease Inheritance Modes"
                         stack-label
@@ -937,13 +943,21 @@ function makeOptionFilter (val, update, optionName) {
 
     update(() => {
         const needle = val.toLowerCase()
-        p[optionName] = p[optionInitName].filter(v => v.toLowerCase().indexOf(needle) > -1)
+        p[optionName] = p[optionInitName].filter(v => {
+            if (v === undefined || v === null) {
+                return false
+            }
+            return v.toLowerCase().indexOf(needle) > -1
+        })
     })
 }
 
 
 const optionFilters = {
     gene: (v, u) => makeOptionFilter(v, u, 'gene'),
+    phenoType: (v, u) => makeOptionFilter(v, u, 'phenoType'),
+    diseases: (v, u) => makeOptionFilter(v, u, 'diseases'),
+    diseaseInheritanceModes: (v, u) => makeOptionFilter(v, u, 'diseaseInheritanceModes'),
 }
 
 
