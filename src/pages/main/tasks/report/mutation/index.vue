@@ -95,7 +95,6 @@
                     :header="wesData.header"
                     :options="wesData.options"
                     :searchParams="wesData.searchParams"
-                    :drugRows="wesData.drugRows"
                     :selectedRows="wesData.selectedRows"
                     :selectedDefaultRows="wesData.selectedDefaultRows"
                     :defaultReportRows="wesData.defaultReportRows"
@@ -143,10 +142,8 @@ const somaticVue = ref(null)
 const $q = useQuasar()
 const route = useRoute()
 const loaded = ref(false)
-
 const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
-const viewConfig = toRef(props, 'viewConfig')
 const props = defineProps({
     intro: {
         type: String,
@@ -178,6 +175,8 @@ const props = defineProps({
         default: () => {}
     }
 })
+const viewConfig = toRef(props, 'viewConfig')
+
 
 const germlineData = ref({
     rows: [],

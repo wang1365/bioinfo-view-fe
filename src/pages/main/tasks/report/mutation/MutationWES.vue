@@ -75,8 +75,8 @@
                         label-color="primary"
                     >
                         <template v-slot:append>
-                            <q-btn padding="xs" size="sm" icon="add" />
-                            <q-btn padding="xs" size="sm" icon="menu" />
+                            <q-btn padding="xs" size="sm" icon="add" @click="genesetData.visible = true" />
+                            <!--                            <q-btn padding="xs" size="sm" icon="menu" />-->
                         </template>
                     </q-input>
                     <q-checkbox v-model="innerSearchParams.excludeGensets" keep-color dense size="sm" color="primary">
@@ -522,7 +522,7 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'userVerdict'">
-                                <div class="row">
+                                <div class="row justify-center">
                                     <template v-for="v in record.userVerdict" :key="v">
                                         <q-btn
                                             :label="v"
@@ -535,7 +535,7 @@
                                     </template>
                                     <q-btn
                                         flat
-                                        icon="settings"
+                                        icon="people"
                                         size="sm"
                                         color="grey"
                                         padding="3px"
@@ -708,6 +708,11 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
+    <geneset-dialog
+        v-model:visible="genesetData.visible"
+        v-model:gene="innerSearchParams.geneSet"
+        :base-genes="props.options.gene"
+    />
     <a-drawer
         :get-container="false"
         title="Frequencies"
@@ -742,6 +747,7 @@ import {populations, useCustomCell, WES_PARAMS} from './index'
 import WesRadar from './components/WesRadar.vue'
 import { setVerdictResult } from 'src/api/verdict'
 import { getCurrentUsername } from 'src/utils/user'
+import GenesetDialog from 'pages/main/tasks/report/common-module/GenesetDialog.vue'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
@@ -764,7 +770,6 @@ const props = defineProps({
         required: false,
         default: () => false,
     },
-
     stickDone: {
         type: Boolean,
         required: false,
@@ -799,13 +804,6 @@ const props = defineProps({
         type: Object,
         required: false,
         default() { return {...WES_PARAMS }}
-    },
-    drugRows: {
-        type: Array,
-        required: false,
-        default() {
-            return []
-        },
     },
     selectedRows: {
         type: Array,
@@ -860,7 +858,12 @@ const verdictData = ref({
         }
     ]
 })
-const verdictRecord = ref(null)
+
+const genesetData = ref({
+    visible: false,
+    genset: []
+})
+
 const igvFile = ref(null)
 const dialogVisible = ref(false)
 const innerSearchParams = ref({...WES_PARAMS})
@@ -910,7 +913,7 @@ const columns = computed(() => {
         { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true     },
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true     },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true     },
-        { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, ellipsis: true     },
+        { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, align:'center', ellipsis: true     },
         { title: 'ACMG', dataIndex: `ACMG_result`, width: 110, ellipsis: true     },
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 80, ellipsis: true     },
@@ -1049,6 +1052,19 @@ const searchFilterRows = (searchParams) => {
         let modes = searchParams.diseaseInheritanceModes
         if (modes && modes.length > 0 ) {
             if (modes.every(m => line.Gene_Related_Diseases.every(grd => !grd.includes(m)))) {
+                return false
+            }
+        }
+
+        let geneSet = searchParams.geneSet != null ? searchParams.geneSet.split(',') :  []
+        if (geneSet && geneSet.length > 0 ) {
+            const exclude = searchParams.excludeGensets
+            // 包含：所有都没有包含，返回false
+            if (!exclude && geneSet.every(gene => gene !== line['Gene.refGene'])) {
+                return false
+            }
+            // 排除：有包含，返回false
+            if (exclude && geneSet.some(gene => gene === line['Gene.refGene'])) {
                 return false
             }
         }

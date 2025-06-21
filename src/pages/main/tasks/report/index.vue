@@ -258,6 +258,8 @@ const sampleInfo = computed(() => {
 provide('sampleInfo', sampleInfo)
 
 onMounted(() => {
+    readResultAndModuleJson()
+
     // 查询任务
     getTask(route.params.id).then((res) => {
         taskDetail.value = res
@@ -273,14 +275,13 @@ onMounted(() => {
         )
     })
 
-    readResultAndModuleJson()
 })
 
 watch(langCode, lc => {
     nextTick(() => readResultAndModuleJson())
 })
 
-const readResultAndModuleJson = () => {
+const readResultAndModuleJson = async () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     const dict = {
         '质控': 'qc',
@@ -302,27 +303,27 @@ const readResultAndModuleJson = () => {
     // key 是 页面上的 tab 名称, value 是每个 tab 的说明信息
     // 如果没有 key 那么对应的 tab 也就不显示
     // 这里将 每个 tab 的说明信息放入 intros 中传递到 tab 中
-    readTaskFile(route.params.id, `result_${suffix}.json`).then((res) => {
-        const raw = JSON.parse(res)
+    let res = await readTaskFile(route.params.id, `result_${suffix}.json`)
+    const raw = JSON.parse(res)
 
-        // raw['拷贝数变异结果分析'] = {} // For test, need remove if test done
+    // raw['拷贝数变异结果分析'] = {} // For test, need remove if test done
 
-        const result = {}
-        for (let k in raw) {
-            result[dict[k]] = raw[k]
-        }
-        intros.value = result
+    const result = {}
+    for (let k in raw) {
+        result[dict[k]] = raw[k]
+    }
+    intros.value = result
 
-        console.log('>>>>>>>>>>>>>>>>>>> tab', intros.value)
+    console.log('>>>>>>>>>>>>>>>>>>> tab', intros.value)
 
-    })
 
     // module.json
     // 这个文件中配置每个 tab 下展示的内容
     /* if(samples.value.length==1){
 
         } */
-    readTaskFile(route.params.id, `module_${suffix}.json`).then((res) => {
+    res = await readTaskFile(route.params.id, `module_${suffix}.json`)
+    {
         let data = null
         const dict = {
             '质控': { key: 'qc', i18nKey: '' },
@@ -333,12 +334,12 @@ const readResultAndModuleJson = () => {
             '微卫星不稳定分析': { key: 'microsatellite_instability', i18nKey: '' },
             '肿瘤突变负荷分析': { key: 'tumor_mutation_load', i18nKey: '' },
             '同源重组缺陷分析': { key: 'homologous_recombination_defect', i18nKey: '' },
-            'commonModules': { key: 'commonModules', i18nKey: '', icon:'web_stories' }, // 自定义通用模块
-            '细菌': { key: 'bacteria', i18nKey: 'BacteriaDescription', icon:'line_axis' },
-            '真菌': { key: 'fungus', i18nKey: 'FungusDescription', icon:'line_axis' },
-            '病毒': { key: 'virus', i18nKey: 'VirusDescription', icon:'line_axis' },
-            '寄生虫': { key: 'parasite', i18nKey: 'ParasiteDescription', icon:'line_axis' },
-            '特殊病原体': { key: 'specificPathogen', i18nKey: 'SpecificPathogenDescription', icon:'line_axis' },
+            'commonModules': { key: 'commonModules', i18nKey: '', icon: 'web_stories' }, // 自定义通用模块
+            '细菌': { key: 'bacteria', i18nKey: 'BacteriaDescription', icon: 'line_axis' },
+            '真菌': { key: 'fungus', i18nKey: 'FungusDescription', icon: 'line_axis' },
+            '病毒': { key: 'virus', i18nKey: 'VirusDescription', icon: 'line_axis' },
+            '寄生虫': { key: 'parasite', i18nKey: 'ParasiteDescription', icon: 'line_axis' },
+            '特殊病原体': { key: 'specificPathogen', i18nKey: 'SpecificPathogenDescription', icon: 'line_axis' },
         }
         const pathogenKeys = ['commonModules', 'bacteria', 'fungus', 'virus', 'parasite', 'specificPathogen']
         try {
@@ -375,7 +376,7 @@ const readResultAndModuleJson = () => {
         if (tab.value === 'commonModules') {
             tab.value = 'commonTab0'
         }
-    })
+    }
 }
 
 const tabValid = (name) => {
