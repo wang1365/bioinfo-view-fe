@@ -733,18 +733,18 @@
 </template>
 <script setup>
 import { ref, onMounted, toRef, toRefs, watch, computed, onUnmounted } from 'vue'
-import MutationInfo from './MutationInfo'
+import MutationInfo from '../MutationInfo.vue'
 import { useComparatorOptions } from 'src/utils/comparator'
-import Igv from './Igv'
-import Cmp from './Comparator.vue'
+import Igv from '../Igv.vue'
+import Cmp from '../Comparator.vue'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
-import {populations, useCustomCell, WES_PARAMS} from './index'
-import WesRadar from './components/WesRadar.vue'
+import {populations, useCustomCell, WES_PARAMS} from '../index'
+import WesRadar from '../components/WesRadar.vue'
 import { setVerdictResult } from 'src/api/verdict'
 import { getCurrentUsername } from 'src/utils/user'
 import GenesetDialog from 'pages/main/tasks/report/common-module/GenesetDialog.vue'
@@ -776,13 +776,6 @@ const props = defineProps({
         default: () => false,
     },
     rows: {
-        type: Array,
-        required: false,
-        default() {
-            return []
-        },
-    },
-    header: {
         type: Array,
         required: false,
         default() {
@@ -869,20 +862,13 @@ const dialogVisible = ref(false)
 const innerSearchParams = ref({...WES_PARAMS})
 const frequenciesDrawerVisible = ref(false)
 const drawerRecord = ref(null)
-
-
-const showDrawer = ref(false)
-
-const loading = ref(false)
-const { rows, drugRows, header } = toRefs(props)
-const propSelectedRows = toRef(props, 'selectedRows')
+const loading = defineModel('loading')
+const { rows } = toRefs(props)
 const propSelectedDefaultRows = toRef(props, 'selectedDefaultRows')
 const showSticky = toRef(props, 'showSticky')
 const stickDone = toRef(props, 'stickDone')
 const filteredRows = ref([])
-
 const currentRow = ref({})
-
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 const rowSelection = computed(() => {
@@ -902,11 +888,6 @@ const rowSelection = computed(() => {
 const scrollX = computed(() => {
     return 2000
 })
-
-
-const atOptionGroupChange = () => {
-    console.log('atOptionGroupChange', selectedExpandColIdx)
-}
 
 const columns = computed(() => {
     return [
@@ -1222,7 +1203,6 @@ const actionTitle = computed(() => t('Operate'))
 const loadTable = () => {
     rows.value.forEach(row => { row.expanded = false })
     filteredRows.value = rows.value
-    loading.value = false
     console.log('====> wes rows', filteredRows.value)
     // columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
     // const actionColumn = columns.value[columns.value.length - 1]

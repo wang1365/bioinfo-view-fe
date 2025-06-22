@@ -100,6 +100,7 @@
                     :defaultReportRows="wesData.defaultReportRows"
                     :showSticky="props.viewConfig.showStick"
                     :stickDone="props.viewConfig.stickDone"
+                    v-model:loading="wesLoading"
                     @filterChange="filterChange('wes', $event)"
                 />
             </q-tab-panel>
@@ -125,9 +126,8 @@ import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import GermlineMutationVue from './MutationGermline.vue'
 import SomaticMutationVue from './MutationSomatic.vue'
-import MutationWES from './MutationWES.vue'
+import MutationWES from './wes/MutationWES.vue'
 import { useQuasar } from 'quasar'
-import igv from "igv"
 import { useI18n } from "vue-i18n"
 import { globalStore }from 'src/stores/global'
 import { storeToRefs } from 'pinia'
@@ -144,6 +144,7 @@ const route = useRoute()
 const loaded = ref(false)
 const dlgVisible = ref(false)
 const emit = defineEmits(['stickDone', 'reset'])
+const wesLoading = ref(false)
 const props = defineProps({
     intro: {
         type: String,
@@ -502,6 +503,7 @@ const loadSomaticEvidenceData = () => {
 }
 
 const loadWesData = async () => {
+    wesLoading.value = true
     let verdict = await loadWesVerdictData()
     // verdict是个数组，将其转化为map，key为gene_identifier，value为result
     let verdictMap = new Map()
@@ -518,6 +520,7 @@ const loadWesData = async () => {
             }
             return h
         })
+
         const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: headNames })
         csvRows.forEach((row, i) => {
             row.id = i
@@ -610,6 +613,8 @@ const loadWesData = async () => {
             wesData.value.selectedDefaultRows = wesData.value.defaultReportRows
             console.log('初始化选择行', wesData.value.selectedRows, csvRows)
         }
+
+        wesLoading.value = false
     })
 
 }
