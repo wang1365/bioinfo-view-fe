@@ -381,7 +381,7 @@
                         color="accent"
                         name="question_mark"
                         size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px"
+                        style="position:absolute;z-index:100;left:0;top:0"
                     >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
@@ -398,17 +398,6 @@
                     >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'expand'">
-                                <!--                                <q-btn-->
-                                <!--                                    class="full-height"-->
-                                <!--                                    style="height: 100px"-->
-                                <!--                                    :icon="record.expanded ? 'unfold_less' : 'unfold_more'"-->
-                                <!--                                    :color="record.expanded ? 'purple' : 'primary'"-->
-                                <!--                                    flat-->
-                                <!--                                    padding="0"-->
-                                <!--                                    left-->
-                                <!--                                    size="md"-->
-                                <!--                                    @click="record.expanded = !record.expanded"-->
-                                <!--                                />-->
                                 <div class="cursor-pointer" @click="record.expanded = !record.expanded">
                                     <q-icon
                                         :name="record.expanded ? 'unfold_less' : 'unfold_more'"
