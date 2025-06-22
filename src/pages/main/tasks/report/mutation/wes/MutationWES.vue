@@ -2,375 +2,42 @@
     <div>
         <q-splitter v-model="splitterModel" unit="px" style="height: 680px" before-class="">
             <template v-slot:before>
-                <div
-                    :class="['column', 'q-gutter-y-xs', 'q-pr-sm', {dimmed: showSticky && stickDone}]"
-                    style="width:100%"
-                >
-                    <div style="border-bottom: 1px solid lightgrey" class="q-p-xs">
-                        <q-option-group
-                            v-model="innerSearchParams.diseaseCategories"
-                            type="checkbox"
-                            dense
-                            color="primary"
-                            class="text-primary"
-                            :options="[{label: 'A (Disease Related: IA,IIA,IIIA)', value: 'A'},{label: 'B (Disease Related: IB,IIB,IIIB)', value: 'B'},{label: 'C (Others: IV,V)', value: 'C'}]"
-                        />
-                    </div>
-
-                    <q-select
-                        v-model="innerSearchParams.phenoType"
-                        clearable
-                        multiple
+                <search-control
+                    v-model:search-params="innerSearchParams"
+                    :show-sticky="showSticky"
+                    :stick-done="stickDone"
+                    :options="options"
+                />
+                <div class="row q-gutter-x-sm">
+                    <q-btn
+                        color="primary"
+                        :label="$t('Confirm')"
+                        size="md"
                         dense
-                        outlined
-                        hide-dropdown-icon
-                        use-input
-                        @filter="optionFilters.phenoType"
-                        :options="props.options.phenoType"
-                        label="Phenotype"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
+                        padding="sm"
+                        icon="search"
+                        @click="search"
                     />
-
-                    <q-select
-                        v-model="innerSearchParams.diseases"
-                        clearable
-                        multiple
+                    <q-btn
+                        color="primary"
+                        :label="$t('Reset')"
+                        size="md"
                         dense
-                        outlined
-                        hide-dropdown-icon
-                        use-input
-                        @filter="optionFilters.diseases"
-                        :options="props.options.diseases"
-                        label="Disease"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
+                        padding="sm"
+                        icon="settings_backup_restore"
+                        @click="reset"
                     />
-
-                    <q-select
-                        v-model="innerSearchParams.diseaseInheritanceModes"
-                        clearable
-                        multiple
+                    <q-btn
+                        :href="tableFile"
+                        :download="tableFileName"
+                        :label="$t('Download')"
+                        padding="sm"
                         dense
-                        outlined
-                        hide-dropdown-icon
-                        use-input
-                        @filter="optionFilters.diseaseInheritanceModes"
-                        :options="props.options.diseaseInheritanceModes"
-                        label="Disease Inheritance Modes"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
+                        icon="south"
+                        color="primary"
+                        target="_blank"
+                        size="md"
                     />
-                    <q-input
-                        v-model="innerSearchParams.geneSet"
-                        label="Geneset"
-                        clearable
-                        dense
-                        outlined
-                        stack-label
-                        class="full-width"
-                        label-color="primary"
-                    >
-                        <template v-slot:append>
-                            <q-btn padding="xs" size="sm" icon="add" @click="genesetData.visible = true" />
-                            <!--                            <q-btn padding="xs" size="sm" icon="menu" />-->
-                        </template>
-                    </q-input>
-                    <q-checkbox v-model="innerSearchParams.excludeGensets" keep-color dense size="sm" color="primary">
-                        <template v-slot:default>
-                            <span class="text-primary">Exclude selected Genesets</span>
-                        </template>
-                    </q-checkbox>
-
-                    <q-select
-                        v-model="innerSearchParams.gene"
-                        clearable
-                        multiple
-                        dense
-                        outlined
-                        use-input
-                        @filter="optionFilters.gene"
-                        hide-dropdown-icon
-                        :options="props.options.gene"
-                        :label="$t('genes')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-
-                    <q-select
-                        v-model="innerSearchParams.prioritizationTier"
-                        clearable
-                        multiple
-                        dense
-                        outlined
-                        hide-dropdown-icon
-                        :options="props.options.prioritizationTier"
-                        label="Prioritization Tier"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-
-                    <q-select
-                        v-model="innerSearchParams.acmgPathogenicity"
-                        clearable
-                        multiple
-                        dense
-                        outlined
-                        hide-dropdown-icon
-                        :options="props.options.acmgPathogenicity"
-                        label="ACMG Pathogenicity"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-
-                    <q-select
-                        v-model="innerSearchParams.clinvarPathogenicity"
-                        clearable
-                        multiple
-                        dense
-                        outlined
-                        hide-dropdown-icon
-                        :options="props.options.clinvarPathogenicity"
-                        label="Clinvar Pathogenicity"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                    />
-
-                    <div class="row justify-between">
-                        <q-select
-                            v-model="innerSearchParams.populationAlleleFrequency"
-                            outlined
-                            hide-dropdown-icon
-                            :options="props.options.populationAlleleFrequency"
-                            label="Population Allele Frequency"
-                            stack-label
-                            multiple
-                            dense
-                            clearable
-                            class="col-7"
-                            label-color="primary"
-                        >
-                        </q-select>
-                        <q-select
-                            v-model="innerSearchParams.pafComp"
-                            :options="comparatorOptions"
-                            stack-label
-                            dense
-                            hide-dropdown-icon
-                            class="col-1"
-                        />
-                        <q-input
-                            v-model.number="innerSearchParams.pafValue"
-                            :options="props.options.pafValue"
-                            stack-label
-                            dense
-                            outlined
-                            type="number"
-                            class="col-4"
-                            label-color="primary"
-                        >
-                            <template v-slot:after><span class="text-subtitle1 text-primary">%</span></template>
-                        </q-input>
-                    </div>
-
-                    <div class="row justify-between">
-                        <q-select
-                            v-model="innerSearchParams.genoType"
-                            clearable
-                            outlined
-                            hide-dropdown-icon
-                            :options="props.options.genoType"
-                            label="Genotype"
-                            stack-label
-                            dense
-                            label-color="primary"
-                            class="col-6"
-                        />
-                        <q-select
-                            v-model="innerSearchParams.seqQuality"
-                            clearable
-                            outlined
-                            dense
-                            hide-dropdown-icon
-                            :options="props.options.seqQuality"
-                            label="SEQ Quality"
-                            stack-label
-                            label-color="primary"
-                            class="col-6"
-                        />
-                    </div>
-
-                    <div class="row justify-between">
-                        <div class="text-primary col-5 content-center" style="font-size: 12px">Genotype Quality</div>
-                        <q-select
-                            v-model="innerSearchParams.genoTypeComp"
-                            :options="comparatorOptions"
-                            stack-label
-                            dense
-                            hide-dropdown-icon
-                            emit-value
-                            class="col-1"
-                        />
-                        <q-input
-                            v-model.number="innerSearchParams.genoTypeValue"
-                            stack-label
-                            dense
-                            outlined
-                            type="number"
-                            class="col-5"
-                            label-color="primary"
-                        >
-                        </q-input>
-                    </div>
-
-                    <div class="row justify-between">
-                        <div class="text-primary col-5 content-center" style="font-size: 12px">Variant Quality</div>
-                        <q-select
-                            v-model="innerSearchParams.variantQualityComp"
-                            :options="comparatorOptions"
-                            stack-label
-                            dense
-                            emit-value
-                            hide-dropdown-icon
-                            class="col-1"
-                        />
-                        <q-input
-                            v-model.number="innerSearchParams.variantQualityValue"
-                            stack-label
-                            dense
-                            outlined
-                            type="number"
-                            class="col-5"
-                            label-color="primary"
-                        >
-                        </q-input>
-                    </div>
-
-                    <div class="row justify-between">
-                        <div class="text-primary col-5 content-center" style="font-size: 12px">Depth</div>
-                        <q-select
-                            v-model="innerSearchParams.seqDepthComp"
-                            :options="comparatorOptions"
-                            stack-label
-                            dense
-                            emit-value
-                            hide-dropdown-icon
-                            class="col-1"
-                        />
-                        <q-input
-                            v-model.number="innerSearchParams.seqDepthValue"
-                            stack-label
-                            dense
-                            outlined
-                            type="number"
-                            class="col-5"
-                            label-color="primary"
-                        >
-                        </q-input>
-                    </div>
-
-                    <div class="row">
-                        <q-input
-                            v-model.number="innerSearchParams.minAlleleFraction"
-                            stack-label
-                            dense
-                            outlined
-                            type="number"
-                            class="col-6"
-                            label-color="primary"
-                            label="Min Allele Fraction"
-                        >
-                            <template v-slot:append><span class="text-subtitle2">%</span></template>
-                            <!--                            <template v-slot:after><span class="text-subtitle2">~</span></template>-->
-                        </q-input>
-                        <q-input
-                            v-model.number="innerSearchParams.maxAlleleFraction"
-                            stack-label
-                            dense
-                            outlined
-                            type="number"
-                            class="col-6"
-                            label-color="primary"
-                            label="Max Allele Fraction"
-                        >
-                            <template v-slot:append><span class="text-subtitle2">%</span></template>
-                        </q-input>
-                    </div>
-
-                    <div class="row">
-                        <q-select
-                            v-model="innerSearchParams.chromosome"
-                            hide-dropdown-icon
-                            :options="props.options.chromosome"
-                            :label="$t('Chromosome')"
-                            stack-label
-                            dense
-                            outlined
-                            label-color="primary"
-                            class="col-5"
-                        />
-                        <q-input
-                            v-model.number="innerSearchParams.chromosomeStart"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3"
-                            label-color="primary"
-                            :label="$t('Start')"
-                        />
-                        <span>~</span>
-                        <q-input
-                            v-model.number="innerSearchParams.chromosomeEnd"
-                            stack-label
-                            dense
-                            outlined
-                            class="col-3"
-                            label-color="primary"
-                            :label="$t('End')"
-                        >
-                        </q-input>
-                    </div>
-                    <!--                    :class="['column', 'q-gutter-y-xs', {dimmed: showSticky && stickDone}]"-->
-                    <div>
-                        <div class="row q-gutter-x-sm">
-                            <q-btn
-                                color="primary"
-                                :label="$t('Confirm')"
-                                size="md"
-                                dense
-                                padding="sm"
-                                icon="search"
-                                @click="search"
-                            />
-                            <q-btn
-                                color="primary"
-                                :label="$t('Reset')"
-                                size="md"
-                                dense
-                                padding="sm"
-                                icon="settings_backup_restore"
-                                @click="reset"
-                            />
-                            <q-btn
-                                :href="tableFile"
-                                :download="tableFileName"
-                                :label="$t('Download')"
-                                padding="sm"
-                                dense
-                                icon="south"
-                                color="primary"
-                                target="_blank"
-                                size="md"
-                            />
-                        </div>
-                    </div>
                 </div>
             </template>
 
@@ -383,7 +50,7 @@
                         size="xs"
                         style="position:absolute;z-index:100;left:0;top:0"
                     >
-                        <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
+                        <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
                     </q-icon>
                     <a-table
                         style="z-index:1"
@@ -414,20 +81,21 @@
                                                 class="col-2 text-weight-bolder text-green-5 q-pl-sm justify-between"
                                                 style="font-size: 14px"
                                             >
-                                                {{record.Class}}
+                                                {{ record.Class }}
                                             </div>
                                         </div>
                                         <div class="col-10 text-left">
                                             <div class="text-primary" style="font-size: 16px">
-                                                {{record['Gene.refGene']}}
+                                                {{ record['Gene.refGene'] }}
                                             </div>
-                                            <div>{{record['ExonicFunc.refGene']}}</div>
+                                            <div>{{ record['ExonicFunc.refGene'] }}</div>
                                             <div>
-                                                {{record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt}}
+                                                {{ record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt
+                                                }}
                                             </div>
-                                            <div>{{record.NUChange}}</div>
-                                            <div>{{record.AAChange}}</div>
-                                            <div>{{record['GeneDetail.refGene'] + ' ' + record.exon}}</div>
+                                            <div>{{ record.NUChange }}</div>
+                                            <div>{{ record.AAChange }}</div>
+                                            <div>{{ record['GeneDetail.refGene'] + ' ' + record.exon }}</div>
                                         </div>
                                     </template>
                                     <template v-else>
@@ -436,15 +104,15 @@
                                                 class="text-weight-bolder text-green-5 q-pl-sm"
                                                 style="font-size: 16px"
                                             >
-                                                {{record.Class}}
+                                                {{ record.Class }}
                                             </div>
                                             <div class="text-primary content-center" style="font-size: 16px">
-                                                {{record['Gene.refGene']}}
+                                                {{ record['Gene.refGene'] }}
                                             </div>
                                         </div>
                                         <div class="col-10 text-blue-grey-6 justify-between">
-                                            <div>{{record['ExonicFunc.refGene']}}</div>
-                                            <div>{{record.NUChange}}</div>
+                                            <div>{{ record['ExonicFunc.refGene'] }}</div>
+                                            <div>{{ record.NUChange }}</div>
                                         </div>
                                     </template>
                                 </div>
@@ -454,30 +122,30 @@
                                     <div class="row q-gutter-x-sm">
                                         <div class="col">
                                             <div class="text-grey">Genotype Quality</div>
-                                            <div>{{record.Genotype_Quality || '-'}}</div>
+                                            <div>{{ record.Genotype_Quality || '-' }}</div>
 
                                             <div class="text-grey">Variant Quality</div>
-                                            <div>{{record.Variant_Quality || '-'}}</div>
+                                            <div>{{ record.Variant_Quality || '-' }}</div>
 
                                             <div class="text-grey">Depth Quality</div>
-                                            <div>{{record.Depth_Quality}}</div>
+                                            <div>{{ record.Depth_Quality }}</div>
                                         </div>
                                         <div class="col">
                                             <div class="text-grey">Allele Fraction</div>
-                                            <div>{{(record.Mutation_Rate_*100).toFixed(2) || '-'}}%</div>
+                                            <div>{{ (record.Mutation_Rate_ * 100).toFixed(2) || '-' }}%</div>
 
                                             <div class="text-grey">Depth</div>
-                                            <div>{{record.Seq_Depths_ || '-'}}</div>
+                                            <div>{{ record.Seq_Depths_ || '-' }}</div>
 
                                             <div class="text-grey">Genotype</div>
-                                            <div>{{record.Genotype}}</div>
+                                            <div>{{ record.Genotype }}</div>
                                         </div>
                                     </div>
                                 </template>
                                 <template v-else>
                                     <div class="row q-gutter-x-sm">
-                                        <div>{{record.Depth_Quality}}(DP:{{record.Seq_Depths_}})</div>
-                                        <div>AF: {{(record.Mutation_Rate_*100).toFixed(2) || '-'}}%</div>
+                                        <div>{{ record.Depth_Quality }}(DP:{{ record.Seq_Depths_ }})</div>
+                                        <div>AF: {{ (record.Mutation_Rate_ * 100).toFixed(2) || '-' }}%</div>
                                     </div>
                                 </template>
                             </template>
@@ -485,26 +153,26 @@
                             <template v-if="column.dataIndex === 'Gene_Related_Diseases'">
                                 <template v-if="record.expanded">
                                     <template v-for="grd in record.Gene_Related_Diseases" :key="grd">
-                                        <a-tooltip :title="grd"
-                                            ><div>{{grd}}</div></a-tooltip
-                                        >
+                                        <a-tooltip :title="grd">
+                                            <div>{{ grd }}</div>
+                                        </a-tooltip>
                                     </template>
                                 </template>
                                 <template v-else>
-                                    <a-tooltip :title="record.Gene_Related_Diseases[0]"
-                                        ><div>{{record.Gene_Related_Diseases[0]}}</div></a-tooltip
-                                    >
+                                    <a-tooltip :title="record.Gene_Related_Diseases[0]">
+                                        <div>{{ record.Gene_Related_Diseases[0] }}</div>
+                                    </a-tooltip>
                                     <div v-if="record.Gene_Related_Diseases.length > 1" class="row justify-between">
-                                        <a-tooltip :title="record.Gene_Related_Diseases[1]"
-                                            ><div class="col-10">{{record.Gene_Related_Diseases[1]}}</div></a-tooltip
-                                        >
+                                        <a-tooltip :title="record.Gene_Related_Diseases[1]">
+                                            <div class="col-10">{{ record.Gene_Related_Diseases[1] }}</div>
+                                        </a-tooltip>
                                     </div>
                                     <div
                                         v-if="record.Gene_Related_Diseases.length > 2"
                                         class="col-1 text-primary cursor-pointer"
                                         @click="record.expanded = !record.expanded"
                                     >
-                                        +{{record.Gene_Related_Diseases.length-2}}
+                                        +{{ record.Gene_Related_Diseases.length - 2 }}
                                     </div>
                                 </template>
                             </template>
@@ -533,23 +201,18 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'ACMG_result'">
-                                <div class="text-purple">{{record.ACMG_result}}</div>
+                                <div class="text-purple">{{ record.ACMG_result }}</div>
                                 <template v-if="record.expanded">
                                     <template v-for="acmg in record.ACMG" :key="acmg">
-                                        <q-chip
-                                            color="orange"
-                                            outline
-                                            square
-                                            v-if='acmg !== "."'
-                                            dense
-                                            >{{acmg}}</q-chip
-                                        >
+                                        <q-chip color="orange" outline square v-if='acmg !== "."' dense
+                                            >{{ acmg }}
+                                        </q-chip>
                                     </template>
                                 </template>
                             </template>
 
                             <template v-if="column.dataIndex === 'Clinvar'">
-                                <div class="text-purple">{{record.Clinvar}}</div>
+                                <div class="text-purple">{{ record.Clinvar }}</div>
                                 <q-rating
                                     v-if="record.expanded"
                                     :model-value="record.Clinvar_ReviewStatus"
@@ -568,34 +231,34 @@
                                     <template v-if="record.expanded">
                                         <div class="text-purple">
                                             <div v-if='record.gnomAD_genome_ALL !== "."'>
-                                                {{record.gnomAD_genome_ALL}}
+                                                {{ record.gnomAD_genome_ALL }}
                                             </div>
                                             <div v-if='record.gnomAD_exome_ALL !== "."'>
-                                                {{record.gnomAD_exome_ALL}}
+                                                {{ record.gnomAD_exome_ALL }}
                                             </div>
                                             <div v-if='record.ExAC_ALL !== "."'>
-                                                {{record.ExAC_ALL}}
+                                                {{ record.ExAC_ALL }}
                                             </div>
                                             <div v-if='record["1000g2015aug_all"] !== "."'>
-                                                {{record['1000g2015aug_all']}}
+                                                {{ record['1000g2015aug_all'] }}
                                             </div>
                                         </div>
                                     </template>
                                     <template v-else>
                                         <template v-if="getValidFrequencies(record).length > 0">
                                             <div class="text-purple">
-                                                {{getValidFrequencies(record)[0].value}}
+                                                {{ getValidFrequencies(record)[0].value }}
                                             </div>
                                             <div v-if="getValidFrequencies(record).length > 1" class="row">
                                                 <div class="col-9 text-purple">
-                                                    {{getValidFrequencies(record)[1].value}}
+                                                    {{ getValidFrequencies(record)[1].value }}
                                                 </div>
                                                 <div
                                                     class="col-2 text-primary cursor-pointer"
                                                     v-if="getValidFrequencies(record).length > 2"
                                                     @click="record.expanded = !record.expanded"
                                                 >
-                                                    +{{getValidFrequencies(record).length - 2}}
+                                                    +{{ getValidFrequencies(record).length - 2 }}
                                                 </div>
                                             </div>
                                         </template>
@@ -607,24 +270,24 @@
                                 <template v-if="record.expanded">
                                     <q-scroll-area style="height: 300px">
                                         <template v-for="hpo in record.HPO" :key="hpo">
-                                            <a-tooltip :title="hpo"
-                                                ><div>{{hpo}}</div></a-tooltip
-                                            >
+                                            <a-tooltip :title="hpo">
+                                                <div>{{ hpo }}</div>
+                                            </a-tooltip>
                                         </template>
                                     </q-scroll-area>
                                 </template>
                                 <template v-else>
-                                    <a-tooltip :title="record.HPO[0]">{{record.HPO[0]}}</a-tooltip>
+                                    <a-tooltip :title="record.HPO[0]">{{ record.HPO[0] }}</a-tooltip>
                                     <div v-if="record.HPO.length > 1">
-                                        <a-tooltip :title="record.HPO[1]"
-                                            ><div class="col-9">{{record.HPO[1]}}</div></a-tooltip
-                                        >
+                                        <a-tooltip :title="record.HPO[1]">
+                                            <div class="col-9">{{ record.HPO[1] }}</div>
+                                        </a-tooltip>
                                         <div
                                             class="col-2 text-primary cursor-pointer"
                                             v-if="record.HPO.length > 2"
                                             @click="record.expanded = !record.expanded"
                                         >
-                                            +{{record.HPO.length - 2}}
+                                            +{{ record.HPO.length - 2 }}
                                         </div>
                                     </div>
                                 </template>
@@ -632,7 +295,7 @@
 
                             <template v-if="column.dataIndex === 'Software_Prediction_result'">
                                 <q-linear-progress :value="Number(record.Software_Prediction_result)" size="10px" />
-                                {{record.Software_Prediction_result}}
+                                {{ record.Software_Prediction_result }}
                                 <template v-if="record.expanded">
                                     <div>
                                         <wes-radar :record="record" />
@@ -685,7 +348,7 @@
     <q-dialog v-model="verdictData.visible">
         <q-card class="q-pa-sm" style="width:50vw;height: 55vh;">
             <q-card-section>
-                <div class="text-primary">{{verdictData.record.geneIdentifier}}</div>
+                <div class="text-primary">{{ verdictData.record.geneIdentifier }}</div>
             </q-card-section>
             <q-card-section>
                 <q-option-group v-model="verdictData.verdict" type="checkbox" :options="verdictData.options" />
@@ -713,7 +376,7 @@
         <div class="row">
             <template v-for="p in Object.getOwnPropertyNames(populations)" :key="p">
                 <div class="col-4">
-                    <span class="text-primary">{{p}} :</span> {{drawerRecord[populations[p]]}}
+                    <span class="text-primary">{{ p }} :</span> {{ drawerRecord[populations[p]] }}
                 </div>
             </template>
         </div>
@@ -728,14 +391,15 @@ import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData } from 'src/utils/csv'
 import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
-import { getDualIdentifiers } from "src/utils/samples"
+import { getDualIdentifiers } from 'src/utils/samples'
 import { useI18n } from 'vue-i18n'
-import {populations, } from '../index'
-import { WES_PARAMS} from './wes.js'
+import { populations } from '../index'
+import { WES_PARAMS } from './wes.js'
 import WesRadar from '../components/WesRadar.vue'
 import { setVerdictResult } from 'src/api/verdict'
 import { getCurrentUsername } from 'src/utils/user'
 import GenesetDialog from 'pages/main/tasks/report/common-module/GenesetDialog.vue'
+import SearchControl from 'pages/main/tasks/report/mutation/wes/SearchControl.vue'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
@@ -784,7 +448,9 @@ const props = defineProps({
     searchParams: {
         type: Object,
         required: false,
-        default() { return {...WES_PARAMS }}
+        default() {
+            return { ...WES_PARAMS }
+        },
     },
     selectedRows: {
         type: Array,
@@ -836,18 +502,18 @@ const verdictData = ref({
         {
             label: 'Benign',
             value: 'benign',
-        }
-    ]
+        },
+    ],
 })
 
 const genesetData = ref({
     visible: false,
-    genset: []
+    genset: [],
 })
 
 const igvFile = ref(null)
 const dialogVisible = ref(false)
-const innerSearchParams = ref({...WES_PARAMS})
+const innerSearchParams = ref({ ...WES_PARAMS })
 const frequenciesDrawerVisible = ref(false)
 const drawerRecord = ref(null)
 const loading = defineModel('loading')
@@ -867,9 +533,9 @@ const rowSelection = computed(() => {
             selectedRowKeys: selectedRows,
             onChange: onSelectChange,
             columnWidth: 35,
-            getCheckboxProps: getCheckboxProps
+            getCheckboxProps: getCheckboxProps,
         }
-    }
+    },
 )
 
 
@@ -880,19 +546,18 @@ const scrollX = computed(() => {
 const columns = computed(() => {
     return [
         { title: '', dataIndex: 'expand', width: 30, align: 'left', fixed: 'left' },
-        { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true     },
-        { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true     },
-        { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true     },
-        { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, align:'center', ellipsis: true     },
-        { title: 'ACMG', dataIndex: `ACMG_result`, width: 110, ellipsis: true     },
+        { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true },
+        { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true },
+        { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true },
+        { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, align: 'center', ellipsis: true },
+        { title: 'ACMG', dataIndex: `ACMG_result`, width: 110, ellipsis: true },
 
-        { title: 'Clinvar', dataIndex: `Clinvar`, width: 80, ellipsis: true     },
-        { title: 'Frequencies', dataIndex: `Frequencies`, width: 80, ellipsis: true     },
-        { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true     },
-        { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true     },
-        { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true     },
+        { title: 'Clinvar', dataIndex: `Clinvar`, width: 80, ellipsis: true },
+        { title: 'Frequencies', dataIndex: `Frequencies`, width: 80, ellipsis: true },
+        { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true },
+        { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true },
+        { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true },
     ]
-
 })
 
 function showVerdictDlg(record) {
@@ -909,37 +574,7 @@ function onVerdictConfirm() {
     verdictData.value.visible = false
 }
 
-function makeOptionFilter (val, update, optionName) {
-    const p = props.options
-    const optionInitName = `${optionName}Init`
-    if (val === '') {
-        update(() => {
-            p[optionName] = p[optionInitName]
-        })
-        return
-    }
-
-    update(() => {
-        const needle = val.toLowerCase()
-        p[optionName] = p[optionInitName].filter(v => {
-            if (v === undefined || v === null) {
-                return false
-            }
-            return v.toLowerCase().indexOf(needle) > -1
-        })
-    })
-}
-
-
-const optionFilters = {
-    gene: (v, u) => makeOptionFilter(v, u, 'gene'),
-    phenoType: (v, u) => makeOptionFilter(v, u, 'phenoType'),
-    diseases: (v, u) => makeOptionFilter(v, u, 'diseases'),
-    diseaseInheritanceModes: (v, u) => makeOptionFilter(v, u, 'diseaseInheritanceModes'),
-}
-
-
-function clickIgv (record) {
+function clickIgv(record) {
     currentRow.value = record
     igvFile.value = `Mut_WES/igv/${record.Chr}_${record.Start}_${record.End}.igv`
     igvVisible.value = true
@@ -1005,28 +640,28 @@ const searchFilterRows = (searchParams) => {
         }
 
         let phenoTypes = searchParams.phenoType
-        if (phenoTypes && phenoTypes.length > 0 ) {
+        if (phenoTypes && phenoTypes.length > 0) {
             if (phenoTypes.every(pt => !line.HPO.includes(pt))) {
                 return false
             }
         }
 
         let diseases = searchParams.diseases
-        if (diseases && diseases.length > 0 ) {
+        if (diseases && diseases.length > 0) {
             if (diseases.every(pt => line.Gene_Related_Diseases.every(grd => !grd.includes(pt)))) {
                 return false
             }
         }
 
         let modes = searchParams.diseaseInheritanceModes
-        if (modes && modes.length > 0 ) {
+        if (modes && modes.length > 0) {
             if (modes.every(m => line.Gene_Related_Diseases.every(grd => !grd.includes(m)))) {
                 return false
             }
         }
 
-        let geneSet = searchParams.geneSet != null ? searchParams.geneSet.split(',').filter(g => g.trim() !== '') :  []
-        if (geneSet && geneSet.length > 0 ) {
+        let geneSet = searchParams.geneSet != null ? searchParams.geneSet.split(',').filter(g => g.trim() !== '') : []
+        if (geneSet && geneSet.length > 0) {
             const exclude = searchParams.excludeGensets
             // 包含：所有都没有包含，返回false
             if (!exclude && geneSet.every(gene => gene !== line['Gene.refGene'])) {
@@ -1039,22 +674,22 @@ const searchFilterRows = (searchParams) => {
         }
 
         let genes = searchParams.gene
-        if (genes && genes.length > 0  && genes.every(gene => gene !== line['Gene.refGene'])) {
+        if (genes && genes.length > 0 && genes.every(gene => gene !== line['Gene.refGene'])) {
             return false
         }
 
         let tiers = searchParams.prioritizationTier
-        if (tiers && tiers.length > 0  && tiers.every(tier => tier !== line.Class)) {
+        if (tiers && tiers.length > 0 && tiers.every(tier => tier !== line.Class)) {
             return false
         }
 
         let acmgs = searchParams.acmgPathogenicity
-        if (acmgs && acmgs.length > 0  && acmgs.every(acmg => acmg !== line.ACMG_result)) {
+        if (acmgs && acmgs.length > 0 && acmgs.every(acmg => acmg !== line.ACMG_result)) {
             return false
         }
 
         let clinvars = searchParams.clinvarPathogenicity
-        if (clinvars && clinvars.length > 0  && clinvars.every(clinvar => clinvar !== line.Clinvar)) {
+        if (clinvars && clinvars.length > 0 && clinvars.every(clinvar => clinvar !== line.Clinvar)) {
             return false
         }
 
@@ -1065,7 +700,7 @@ const searchFilterRows = (searchParams) => {
             const matched = frequencies.every(fq => {
                 const col = populations[fq]
                 const colValue = line[col]
-                return compare(pafComp, colValue, pafValue/100)
+                return compare(pafComp, colValue, pafValue / 100)
             })
 
             if (!matched) {
@@ -1074,18 +709,18 @@ const searchFilterRows = (searchParams) => {
         }
 
         let genoType = searchParams.genoType
-        if (genoType  && genoType !== line.Genotype) {
+        if (genoType && genoType !== line.Genotype) {
             return false
         }
 
         let seqQuality = searchParams.seqQuality
-        if (seqQuality  && seqQuality !== line.Depth_Quality) {
+        if (seqQuality && seqQuality !== line.Depth_Quality) {
             return false
         }
 
         let genoTypeComp = searchParams.genoTypeComp
         let genoTypeValue = searchParams.genoTypeValue
-        if (genoTypeComp  && genoTypeValue !== null) {
+        if (genoTypeComp && genoTypeValue !== null) {
             const v = line.Genotype_Quality
             if (v === '-') {
                 return false
@@ -1120,12 +755,12 @@ const searchFilterRows = (searchParams) => {
         }
 
         let minAlleleFraction = searchParams.minAlleleFraction
-        if (minAlleleFraction  && minAlleleFraction/100 > Number(line.Mutation_Rate_)) {
+        if (minAlleleFraction && minAlleleFraction / 100 > Number(line.Mutation_Rate_)) {
             return false
         }
 
         let maxAlleleFraction = searchParams.maxAlleleFraction
-        if (maxAlleleFraction  && maxAlleleFraction/100 < Number(line.Mutation_Rate_)) {
+        if (maxAlleleFraction && maxAlleleFraction / 100 < Number(line.Mutation_Rate_)) {
             return false
         }
 
@@ -1152,14 +787,14 @@ const search = () => {
     selectedRows.value = selectedDefaultRows.value
     // filterChange()
     console.log(selectedRows.value)
-    if(showSticky.value){
-        if(propSelectedDefaultRows.value.length>0 ){
-            if(selectedRows.value.length>0){
+    if (showSticky.value) {
+        if (propSelectedDefaultRows.value.length > 0) {
+            if (selectedRows.value.length > 0) {
                 infoMessage(`${selectedRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
-            }else if(filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length){
+            } else if (filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
                 infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
             }
-        }else if(filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length){
+        } else if (filteredRows.value.length > 0 && filteredRows.value.length !== rows.value.length) {
             infoMessage(`${filteredRows.value.length} ${t('DefineReportSelectAlertMessage')}`)
         }
     }
@@ -1189,7 +824,9 @@ const actionTitle = computed(() => t('Operate'))
 
 // 加载表格数据
 const loadTable = () => {
-    rows.value.forEach(row => { row.expanded = false })
+    rows.value.forEach(row => {
+        row.expanded = false
+    })
     filteredRows.value = rows.value
     console.log('====> wes rows', filteredRows.value)
     // columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
@@ -1238,9 +875,9 @@ const getValidFrequencies = (record) => {
         { name: 'gnomAD_genome_ALL', value: record.gnomAD_genome_ALL },
         { name: 'gnomAD_exome_ALL', value: record.gnomAD_exome_ALL },
         { name: 'ExAC_ALL', value: record.ExAC_ALL },
-        { name: '1000g2015aug_all', value: record['1000g2015aug_all'] }
-    ];
-    return frequencies.filter(freq => freq.value !== '.');
+        { name: '1000g2015aug_all', value: record['1000g2015aug_all'] },
+    ]
+    return frequencies.filter(freq => freq.value !== '.')
 }
 
 const onSelectChange = (selectedRowKeys) => {
@@ -1249,8 +886,8 @@ const onSelectChange = (selectedRowKeys) => {
         return false
     }
     selectedRows.value = selectedRowKeys
-    selectedDefaultRows.value=[]
-    for(let item of selectedRowKeys){
+    selectedDefaultRows.value = []
+    for (let item of selectedRowKeys) {
         let finded = false
         for (let lineNumber of propSelectedDefaultRows.value) {
             if (lineNumber === item) {
@@ -1297,7 +934,7 @@ const getChangedData = () => {
 const filterChange = () => {
     emit('filterChange', getChangedData())
 }
-defineExpose({ getChangedData, })
+defineExpose({ getChangedData })
 </script>
 
 <style lang="scss" scoped>
@@ -1312,12 +949,12 @@ defineExpose({ getChangedData, })
     background-color: #aad4fd46 !important;
 }
 
-.ant-table-tbody>tr:hover:not(.ant-table-expanded-row)>td {
+.ant-table-tbody > tr:hover:not(.ant-table-expanded-row) > td {
     background: #ffefbb;
 }
 
 /*//鼠标移入样式*/
-.ant-table-tbody>tr:hover>td {
+.ant-table-tbody > tr:hover > td {
     background: #ffefbb !important;
 }
 
