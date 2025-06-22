@@ -627,7 +627,7 @@ const route = useRoute()
 const igvVisible = ref(false)
 const igvFile = ref(null)
 const dialogVisible = ref(false)
-
+const samples = toRef(props, 'samples');
 const originDataRows = ref([])
 const innerSearchParams = ref({
     geneSet: "",
@@ -804,12 +804,18 @@ onMounted(() => {
     loadTable()
 })
 
+watch(() => props.samples,
+    (newv, oldv) => {
+        console.log(newv)
+    })
 const searchOptions = ref({})
 
 // 加载表格数据
 const loadTable = () => {
-    console.log('load table')
-    readTaskFile(route.params.id, `CNV_WES/D00000307.CNV_WES.txt`).then((res) => {
+
+    console.log(`CNV_WES/${samples.value}.CNV_WES.txt`)
+    readTaskFile(route.params.id, `CNV_WES/${samples.value[0].identifier}.CNV_WES.txt`).then((res) => {
+
         let data = parseCsvToList(res)
         originDataRows.value = data.rows
         console.log(data.rows)

@@ -58,7 +58,13 @@
                 ></CNVTable>
             </q-tab-panel>
             <q-tab-panel name="WES突变分析">
-                <CNVWES ref="cnvWESVue" />
+                <CNVWES
+                    ref="cnvWESVue"
+                    :samples="props.samples"
+                    :task="props.task"
+                    :viewConfig="props.viewConfig"
+                    :stepData="props.stepData"
+                />
             </q-tab-panel>
         </q-tab-panels>
     </div>
@@ -126,6 +132,8 @@ const props = defineProps({
 })
 
 watch(langCode, v => loadData())
+
+watch(props.samples,v=>console.log("samples ----------",v))
 
 const dlgVisible = ref(false)
 
