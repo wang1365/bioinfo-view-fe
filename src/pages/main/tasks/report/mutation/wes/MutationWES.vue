@@ -619,7 +619,7 @@
                                 <template v-if="record.expanded">
                                     <q-scroll-area style="height: 300px">
                                         <template v-for="hpo in record.HPO" :key="hpo">
-                                            <a-tooltip :title="record.HPO[1]"
+                                            <a-tooltip :title="hpo"
                                                 ><div>{{hpo}}</div></a-tooltip
                                             >
                                         </template>
