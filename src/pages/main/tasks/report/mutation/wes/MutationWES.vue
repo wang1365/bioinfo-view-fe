@@ -397,6 +397,26 @@
                         :row-selection="rowSelection"
                     >
                         <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex === 'expand'">
+                                <!--                                <q-btn-->
+                                <!--                                    class="full-height"-->
+                                <!--                                    style="height: 100px"-->
+                                <!--                                    :icon="record.expanded ? 'unfold_less' : 'unfold_more'"-->
+                                <!--                                    :color="record.expanded ? 'purple' : 'primary'"-->
+                                <!--                                    flat-->
+                                <!--                                    padding="0"-->
+                                <!--                                    left-->
+                                <!--                                    size="md"-->
+                                <!--                                    @click="record.expanded = !record.expanded"-->
+                                <!--                                />-->
+                                <div class="cursor-pointer" @click="record.expanded = !record.expanded">
+                                    <q-icon
+                                        :name="record.expanded ? 'unfold_less' : 'unfold_more'"
+                                        :color="record.expanded ? 'purple' : 'primary'"
+                                        size="sm"
+                                    />
+                                </div>
+                            </template>
                             <template v-if="column.dataIndex === 'geneInfo'">
                                 <div class="row">
                                     <template v-if="record.expanded">
@@ -407,16 +427,6 @@
                                             >
                                                 {{record.Class}}
                                             </div>
-                                            <q-btn
-                                                class="col-10 q-mr-md"
-                                                :icon="record.expanded ? 'unfold_less' : 'unfold_more'"
-                                                color="primary"
-                                                flat
-                                                padding="0"
-                                                left
-                                                size="md"
-                                                @click="record.expanded = !record.expanded"
-                                            />
                                         </div>
                                         <div class="col-10 text-left">
                                             <div class="text-primary" style="font-size: 16px">
@@ -432,31 +442,20 @@
                                         </div>
                                     </template>
                                     <template v-else>
-                                        <div class="col-2 column justify-between">
+                                        <div class="col-2">
                                             <div
-                                                class="col-6 text-weight-bolder text-green-5 q-pl-sm"
+                                                class="text-weight-bolder text-green-5 q-pl-sm"
                                                 style="font-size: 16px"
                                             >
                                                 {{record.Class}}
                                             </div>
-                                            <q-btn
-                                                class="col-6 q-mr-md"
-                                                :icon="record.expanded ? 'unfold_less' : 'unfold_more'"
-                                                color="primary"
-                                                flat
-                                                padding="0"
-                                                left
-                                                @click="record.expanded = !record.expanded"
-                                            />
-                                        </div>
-                                        <div class="col-10 row justify-between">
-                                            <div class="text-primary col-4 content-center" style="font-size: 16px">
+                                            <div class="text-primary content-center" style="font-size: 16px">
                                                 {{record['Gene.refGene']}}
                                             </div>
-                                            <div class="col-7 row text-blue-grey-6">
-                                                <div>{{record['ExonicFunc.refGene']}}</div>
-                                                <div>{{record.NUChange}}</div>
-                                            </div>
+                                        </div>
+                                        <div class="col-10 text-blue-grey-6 justify-between">
+                                            <div>{{record['ExonicFunc.refGene']}}</div>
+                                            <div>{{record.NUChange}}</div>
                                         </div>
                                     </template>
                                 </div>
@@ -891,6 +890,7 @@ const scrollX = computed(() => {
 
 const columns = computed(() => {
     return [
+        { title: '', dataIndex: 'expand', width: 30, align: 'left', fixed: 'left' },
         { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true     },
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true     },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true     },
@@ -960,7 +960,6 @@ const customRow = (record, index) => {
     return {
         // 自定义属性，也就是官方文档中的props，可通过条件来控制样式
         style: {
-            // 'background-color': record.expanded  ? '#e3e9f5' : 'white',
             // 字体颜色
             // 'color': record.id === physicalSurveyCurrRowId.value ? 'orange' : 'rgba(0, 0, 0, 0.65)',
             // 行背景色
