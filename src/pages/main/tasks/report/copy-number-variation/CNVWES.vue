@@ -218,8 +218,17 @@
                         :row-selection="rowSelection"
                     >
                         <template #bodyCell="{ column, record }">
+                            <template v-if="column.dataIndex === 'expand'">
+                                <div class="cursor-pointer" @click="record.expanded = !record.expanded">
+                                    <q-icon
+                                        :name="record.expanded ? 'unfold_less' : 'unfold_more'"
+                                        :color="record.expanded ? 'purple' : 'primary'"
+                                        size="sm"
+                                    />
+                                </div>
+                            </template>
                             <template v-if="column.dataIndex === 'geneInfo'">
-                                <div>
+                                <q-scroll-area style="height: 300px;" v-if="record.expanded">
                                     <div
                                         class="text-weight-bolder text-green-5"
                                         v-for="item of record.gene_data.slice(0, 2)"
@@ -227,30 +236,32 @@
                                     >
                                         {{ item }}
                                     </div>
-                                    <div v-if="record.gene_data.length > 2">
-                                        <q-btn
-                                            size="sm"
-                                            color="secondary"
-                                            flat
-                                            @click="record.show_gene_more = !record.show_gene_more"
-                                            >+{{
-                                                record.gene_data.length }}
-                                            More</q-btn
-                                        >
+                                    <div class="text-weight-bolder text-blue-5">
+                                        {{ record.CNV_Cover_Type }}
+                                    </div>
+                                    <div class="text-weight-bolder text-orange-5">
+                                        {{ record.Chr }}:{{ record.Start }}-{{ record.End }}
+                                    </div>
+                                    <div class="text-weight-bolder text-pink-5">
+                                        {{ record.Chromosomal_Region }}
+                                    </div>
+                                    <div class="text-weight-bolder text-purple-5">
+                                        {{ record.cnv_length_data }}
+                                    </div>
+                                </q-scroll-area>
+                                <div v-if="!record.expanded">
+                                    <div
+                                        class="text-weight-bolder text-green-5"
+                                        v-for="item of record.gene_data.slice(0, 2)"
+                                        :key="item"
+                                    >
+                                        {{ item }}
                                     </div>
                                     <div class="text-weight-bolder text-blue-5">
                                         {{ record.CNV_Cover_Type }}
                                     </div>
-                                    <div v-if="record.show_gene_more" class="text-weight-bolder text-orange-5">
-                                        {{ record.Chr }}:{{ record.Start }}-{{ record.End }}
-                                    </div>
-                                    <div v-if="record.show_gene_more" class="text-weight-bolder text-pink-5">
-                                        {{ record.Chromosomal_Region }}
-                                    </div>
-                                    <div v-if="record.show_gene_more" class="text-weight-bolder text-purple-5">
-                                        {{ record.cnv_length_data }}
-                                    </div>
                                 </div>
+                                <div></div>
                             </template>
                             <template v-if="column.dataIndex === 'copyNumber'">
                                 <div class="text-blue text-weight-bolder" v-if="record.CNV_Type == 'DUP'">
@@ -261,32 +272,14 @@
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'geneRelatedDiseases'">
-                                <div v-if="record.gene_related_diseases_data.length <= 2">
-                                    <div v-for="item of record.gene_related_diseases_data.slice(0, 2)" :key="item">
+                                <q-scroll-area style="height: 300px;" v-if="record.expanded">
+                                    <div v-for="item of record.gene_related_diseases_data" :key="item">
                                         {{ item }}
                                     </div>
-                                </div>
-                                <div v-if="record.gene_related_diseases_data.length > 2">
-                                    <div v-if="!record.show_gene_related_diseases_more">
-                                        <div v-for="item of record.gene_related_diseases_data.slice(0, 2)" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.show_gene_related_diseases_more">
-                                        <div v-for="item of record.gene_related_diseases_data" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.gene_related_diseases_data.length > 2">
-                                        <q-btn
-                                            size="sm"
-                                            color="secondary"
-                                            flat
-                                            @click="record.show_gene_related_diseases_more = !record.show_gene_related_diseases_more"
-                                            >+{{
-                                                record.gene_related_diseases_data.length }}
-                                            More</q-btn
-                                        >
+                                </q-scroll-area>
+                                <div v-if="!record.expanded">
+                                    <div v-for="item of record.gene_related_diseases_data.slice(0, 2)" :key="item">
+                                        {{ item }}
                                     </div>
                                 </div>
                             </template>
@@ -299,92 +292,38 @@
                                 </template>
                             </template>
                             <template v-if="column.dataIndex === 'relatedHPOs'">
-                                <div v-if="record.hpo_data.length <= 2">
+                                <q-scroll-area style="height: 300px;" v-if="record.expanded">
+                                    <div v-for="item of record.hpo_data" :key="item">
+                                        {{ item }}
+                                    </div>
+                                </q-scroll-area>
+                                <div v-if="!record.expanded">
                                     <div v-for="item of record.hpo_data.slice(0, 2)" :key="item">
                                         {{ item }}
                                     </div>
                                 </div>
-                                <div v-if="record.hpo_data.length > 2">
-                                    <div v-if="!record.show_hpo_more">
-                                        <div v-for="item of record.hpo_data.slice(0, 2)" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.show_hpo_more">
-                                        <div v-for="item of record.hpo_data" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.hpo_data.length > 2">
-                                        <q-btn
-                                            size="sm"
-                                            color="secondary"
-                                            flat
-                                            @click="record.show_hpo_more = !record.show_hpo_more"
-                                            >+{{
-                                                record.hpo_data.length }}
-                                            More</q-btn
-                                        >
-                                    </div>
-                                </div>
                             </template>
                             <template v-if="column.dataIndex === 'dgv'">
-                                <div v-if="record.dgv_data.length <= 2">
+                                <q-scroll-area style="height: 300px;" v-if="record.expanded">
+                                    <div v-for="item of record.dgv_data" :key="item">
+                                        {{ item }}
+                                    </div>
+                                </q-scroll-area>
+                                <div v-if="!record.expanded">
                                     <div v-for="item of record.dgv_data.slice(0, 2)" :key="item">
                                         {{ item }}
                                     </div>
                                 </div>
-                                <div v-if="record.dgv_data.length > 2">
-                                    <div v-if="!record.show_dgv_more">
-                                        <div v-for="item of record.dgv_data.slice(0, 2)" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.show_dgv_more">
-                                        <div v-for="item of record.dgv_data" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.dgv_data.length > 2">
-                                        <q-btn
-                                            size="sm"
-                                            color="secondary"
-                                            flat
-                                            @click="record.show_dgv_more = !record.show_dgv_more"
-                                            >+{{
-                                                record.dgv_data.length }}
-                                            More</q-btn
-                                        >
-                                    </div>
-                                </div>
                             </template>
                             <template v-if="column.dataIndex === 'clinvar'">
-                                <div v-if="record.clinvar_data.length <= 2">
-                                    <div v-for="item of record.clinvar_data.slice(0, 2)" :key="item">
+                                <q-scroll-area style="height: 300px;" v-if="record.expanded">
+                                    <div v-for="item of record.clinvar_data" :key="item">
                                         {{ item }}
                                     </div>
-                                </div>
-                                <div v-if="record.clinvar_data.length > 2">
-                                    <div v-if="!record.show_clinvar_more">
-                                        <div v-for="item of record.clinvar_data.slice(0, 2)" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.show_clinvar_more">
-                                        <div v-for="item of record.clinvar_data" :key="item">
-                                            {{ item }}
-                                        </div>
-                                    </div>
-                                    <div v-if="record.clinvar_data.length > 2">
-                                        <q-btn
-                                            size="sm"
-                                            color="secondary"
-                                            flat
-                                            @click="record.show_clinvar_more = !record.show_clinvar_more"
-                                            >+{{
-                                                record.clinvar_data.length }}
-                                            More</q-btn
-                                        >
+                                </q-scroll-area>
+                                <div v-if="!record.expanded">
+                                    <div v-for="item of record.clinvar_data.slice(0, 2)" :key="item">
+                                        {{ item }}
                                     </div>
                                 </div>
                             </template>
@@ -786,14 +725,15 @@ const customRow = (record, index) => {
     }
 }
 const columns = ref([
+     { title: '', dataIndex: 'expand', width: 50, align: 'left', fixed: 'left' },
     { title: 'Gene Info', dataIndex: 'geneInfo', key: 'geneInfo', width: 200, align: 'left' },
     { title: 'Copy Number', dataIndex: 'copyNumber', key: 'copyNumber', width: 200, align: 'left' },
     { title: 'Gene Related Diseases', dataIndex: 'geneRelatedDiseases', key: 'geneRelatedDiseases', width: 200, align: 'left' },
     { title: 'User Verdict', dataIndex: 'userVerdict', key: 'userVerdict', width: 200, align: 'left' },
     { title: 'ACMG', dataIndex: 'acmg', key: 'acmg', width: 200, align: 'left' },
-    { title: 'Related HPOs', dataIndex: 'relatedHPOs', key: 'relatedHPOs', width: 200, align: 'left' },
+    { title: 'Related HPOs', dataIndex: 'relatedHPOs', key: 'relatedHPOs', width: 300, align: 'left' },
     { title: 'DGV', dataIndex: 'dgv', key: 'dgv', width: 200, align: 'left' },
-    { title: 'Clinvar', dataIndex: 'clinvar', key: 'clinvar', width: 200, align: 'left' },
+    { title: 'Clinvar', dataIndex: 'clinvar', key: 'clinvar', width: 300, align: 'left' },
     { title: 'Plot', dataIndex: 'plot', key: 'plot', width: 200, align: 'left' },
     //{ title: 'Operation', dataIndex: 'operation', key: 'operation', width: 200, align: 'left' },
 ])
@@ -866,11 +806,11 @@ const buildShowRowData = (originRows) => {
 
         row.cnv_length_data = ''
         if (row.CNV_Length < 1000) {
-            row.cnv_length_data = `${row.CNV_Length} bp`
+            row.cnv_length_data = `${row.CNV_Length.toFixed(2)} bp`
         } else if (row.CNV_Length >= 1000 && row.CNV_Length < 1000000) {
-            row.cnv_length_data = `${row.CNV_Length / 1000} Kbp`
+            row.cnv_length_data = `${(row.CNV_Length / 1000).toFixed(2)} Kbp`
         } else if (row.CNV_Length >= 1000000) {
-            row.cnv_length_data = `${row.CNV_Length / 10000000} Mbp`
+            row.cnv_length_data = `${(row.CNV_Length / 10000000).toFixed(2)} Mbp`
         }
 
         row.gene_related_diseases_data = row.Gene_Related_Diseases.split(';')
@@ -881,6 +821,7 @@ const buildShowRowData = (originRows) => {
 
         row.clinvar_data = row.Clinvar.split(';')
         row.show_clinvar_more = false
+        row.expanded=false
         rows.push(row)
     }
     filteredRows.value = rows
