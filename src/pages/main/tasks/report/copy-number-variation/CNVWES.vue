@@ -117,7 +117,8 @@
                                 class="full-width"
                                 label-color="primary"
                                 :label="$t('Start')"
-                            ></q-input>
+                            >
+                            </q-input>
                         </div>
                         <div class="col-3">
                             <q-input
@@ -142,7 +143,9 @@
                                 stack-label
                                 label-color="primary"
                                 :label="'CNV Length>='"
-                            ></q-input>
+                            >
+                                <template v-slot:append> bp </template>
+                            </q-input>
                         </div>
                         <div class="col-6">
                             <div class="col-6">
@@ -154,7 +157,9 @@
                                     stack-label
                                     label-color="primary"
                                     :label="$t('CNV Length<=')"
-                                ></q-input>
+                                >
+                                    <template v-slot:append> bp </template>
+                                </q-input>
                             </div>
                         </div>
                     </div>

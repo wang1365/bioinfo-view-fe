@@ -497,6 +497,11 @@ export default {
     ReportDefineGoToReport: 'Go To Report Page',
     ReportStickData: 'Lock result',
     ReportStickDone: 'Locked',
+    ACMGPathogenicity: 'ACMG Pathogenicity',
+    UsersPathogenicity: 'User’s Pathogenicity',
+    CNVCoverType: 'CNV Cover Type',
+    CNVType: 'CNV Type',
+    CopyNumber: 'Copy Number',
 
     // 弹出框选择
     PopupSelectCurrrentSelected: 'Selected',

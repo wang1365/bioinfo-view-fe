@@ -493,6 +493,12 @@ export default {
     ReportStickData: '固定过滤',
     ReportStickDone: '已固定过滤',
 
+    ACMGPathogenicity: 'ACMG Pathogenicity',
+    UsersPathogenicity: 'User’s Pathogenicity',
+    CNVCoverType: 'CNV Cover Type',
+    CNVType: 'CNV Type',
+    CopyNumber: 'Copy Number',
+
     // 表格头部的按钮
     PageListTableExport: '导出数据',
     PageListTableUpload: '批量上传',
