@@ -652,9 +652,6 @@ const searchFilterRows = (searchParams) => {
                 matched = true
             }
             if (!matched) {
-                if (!['IA', 'IIA', 'IIIA','IB', 'IIB', 'IIIB'].includes(cls)) {
-                    console.log(`line ${i} not matched by disease categories: ${cls}`, param)
-                }
                 return false
             }
         }
@@ -786,11 +783,13 @@ const searchFilterRows = (searchParams) => {
 
         let chromosome = searchParams.chromosome
         if (chromosome) {
-            if (searchParams.chromosomeStart != null && line.Start < searchParams.chromosomeStart) {
+            if (searchParams.chromosomeStart != null && searchParams.chromosomeStart !== ''
+                && Number(line.Start) < Number(searchParams.chromosomeStart)) {
                 return false
             }
 
-            if (searchParams.chromosomeEnd != null && line.End > searchParams.chromosomeEnd) {
+            if (searchParams.chromosomeEnd != null  && searchParams.chromosomeEnd !== ''
+                && Number(line.End) > Number(searchParams.chromosomeEnd)) {
                 return false
             }
         }
