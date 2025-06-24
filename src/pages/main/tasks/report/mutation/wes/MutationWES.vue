@@ -556,7 +556,7 @@ const rowSelection = computed(() => {
 
 
 const scrollX = computed(() => {
-    return 2000
+    return 2200
 })
 
 const columns = computed(() => {
@@ -566,10 +566,10 @@ const columns = computed(() => {
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true },
         { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, align: 'center', ellipsis: true },
-        { title: 'ACMG', dataIndex: `ACMG_result`, width: 110, ellipsis: true },
+        { title: 'ACMG', dataIndex: `ACMG_result`, width: 150, ellipsis: true },
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 80, ellipsis: true },
-        { title: 'Frequencies', dataIndex: `Frequencies`, width: 150, ellipsis: true },
+        { title: 'Frequencies', dataIndex: `Frequencies`, width: 170, ellipsis: true },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true },
         { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true },
