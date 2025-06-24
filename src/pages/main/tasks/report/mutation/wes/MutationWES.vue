@@ -225,8 +225,7 @@
 
                             <template v-if="column.dataIndex === 'Frequencies'">
                                 <div
-                                    @click="frequenciesDrawerVisible = true; drawerRecord = record"
-                                    class="cursor-pointer"
+
                                 >
                                     <template v-if="record.expanded">
                                         <div>
@@ -242,25 +241,42 @@
                                             <div v-if='record["1000g2015aug_all"] !== "."'>
                                                 1000g2015aug Total: {{ record['1000g2015aug_all'] }}
                                             </div>
+                                            <div v-else class="row justify-end">
+                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
+                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                />
+                                            </div>
                                         </div>
                                     </template>
                                     <template v-else>
-                                        <template v-if="getValidFrequencies(record).length > 0">
-                                            <div>
-                                               {{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}
+                                        <template v-if="getValidFrequencies(record).length <= 2">
+                                            <div v-if="getValidFrequencies(record).length === 1">
+                                                {{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}
                                             </div>
-                                            <div v-if="getValidFrequencies(record).length > 1" >
-                                                <div>
-                                                    {{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}
-                                                </div>
+                                            <div v-if="getValidFrequencies(record).length === 2">
+                                                {{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}
+                                            </div>
+                                            <div class="row justify-end">
+                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
+                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                />
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <div >{{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}</div>
+                                            <div >{{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}</div>
+                                            <div class="row justify-between">
                                                 <div
-                                                    class="text-primary cursor-pointer"
+                                                    class="col text-primary cursor-pointer"
                                                     v-if="getValidFrequencies(record).length > 2"
                                                     @click="record.expanded = !record.expanded"
                                                 >
                                                     +{{ getValidFrequencies(record).length - 2 }}
                                                 </div>
-                                            </div>
+                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
+                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                />
+                                                </div>
                                         </template>
                                     </template>
                                 </div>
