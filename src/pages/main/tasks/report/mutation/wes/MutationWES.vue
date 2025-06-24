@@ -713,19 +713,18 @@ const searchFilterRows = (searchParams) => {
 
         let genoTypeComp = searchParams.genoTypeComp
         let genoTypeValue = searchParams.genoTypeValue
-        if (genoTypeComp && genoTypeValue !== null) {
+        if (genoTypeComp && genoTypeValue !== null && genoTypeValue !== '' && line.Genotype_Quality !== null) {
             const v = line.Genotype_Quality
             if (v === '-') {
                 return false
             }
-            if (!compare(genoTypeComp, Number(v), genoTypeValue)) {
+            if (!compare(genoTypeComp, Number(v), Number(genoTypeValue))) {
                 return false
             }
         }
 
         let variantQualityComp = searchParams.variantQualityComp
         let variantQualityValue = searchParams.variantQualityValue
-            typeof(line.Variant_Quality), variantQualityValue, line.Variant_Quality)
         if (variantQualityComp && variantQualityValue !== null && variantQualityValue !== '' && line.Variant_Quality !== null) {
             const v = line.Variant_Quality
             if (v === '-') {
@@ -738,12 +737,12 @@ const searchFilterRows = (searchParams) => {
 
         let seqDepthComp = searchParams.seqDepthComp
         let seqDepthValue = searchParams.seqDepthValue
-        if (seqDepthComp && seqDepthValue !== null&& seqDepthValue !== '' && line.Seq_Depths_ != null) {
+        if (seqDepthComp && seqDepthValue !== null && seqDepthValue !== '' && line.Seq_Depths_ != null) {
             const v = line.Seq_Depths_
             if (v === '-') {
                 return false
             }
-            if (!compare(seqDepthComp, Number(v), seqDepthValue)) {
+            if (!compare(seqDepthComp, Number(v), Number(seqDepthValue))) {
                 return false
             }
         }
