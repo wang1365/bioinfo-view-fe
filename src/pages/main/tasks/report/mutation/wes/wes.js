@@ -42,3 +42,34 @@ export const WES_PARAMS = {
     sift: null,
     drug: false,
 }
+
+export const verdictOptions = [
+    {
+        label: 'Pathogenic',
+        value: 'pathogenic',
+    },
+    {
+        label: 'Likely pathogenic',
+        value: 'likely_pathogenic',
+    },
+    {
+        label: 'VUS++',
+        value: 'vus++',
+    },
+    {
+        label: 'VUS+',
+        value: 'vus+',
+    },
+    {
+        label: 'VUS',
+        value: 'vus',
+    },
+    {
+        label: 'Likely benign',
+        value: 'likely_benign',
+    },
+    {
+        label: 'Benign',
+        value: 'benign',
+    },
+]

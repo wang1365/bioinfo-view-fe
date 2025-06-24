@@ -169,6 +169,7 @@ export const WES_PARAMS = {
     prioritizationTier: [],
     acmgPathogenicity: [],
     clinvarPathogenicity: [],
+    userPathogenicity: [],
     populationAlleleFrequency: [],
     pafComp: '>',
     pafValue: null,

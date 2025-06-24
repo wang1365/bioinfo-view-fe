@@ -112,32 +112,49 @@
             class="full-width"
         />
 
-        <q-select
-            v-model="innerSearchParams.acmgPathogenicity"
-            clearable
-            multiple
-            dense
-            outlined
-            hide-dropdown-icon
-            :options="props.options.acmgPathogenicity"
-            label="ACMG Pathogenicity"
-            stack-label
-            label-color="primary"
-            class="full-width"
-        />
+        <div class="row">
+            <q-select
+                v-model="innerSearchParams.acmgPathogenicity"
+                clearable
+                multiple
+                dense
+                outlined
+                hide-dropdown-icon
+                :options="props.options.acmgPathogenicity"
+                label="ACMG Pathogenicity"
+                stack-label
+                label-color="primary"
+                class="col full-width"
+            />
+
+            <q-select
+                v-model="innerSearchParams.clinvarPathogenicity"
+                clearable
+                multiple
+                dense
+                outlined
+                hide-dropdown-icon
+                :options="props.options.clinvarPathogenicity"
+                label="Clinvar Pathogenicity"
+                stack-label
+                label-color="primary"
+                class="col full-width"
+            />
+        </div>
 
         <q-select
-            v-model="innerSearchParams.clinvarPathogenicity"
+            v-model="innerSearchParams.userPathogenicity"
             clearable
             multiple
             dense
             outlined
             hide-dropdown-icon
-            :options="props.options.clinvarPathogenicity"
-            label="Clinvar Pathogenicity"
+            :options="verdictOptions"
+            label="User's Pathogenicity"
             stack-label
             label-color="primary"
-            class="full-width"
+            class="col full-width"
+            emit-value
         />
 
         <div class="row justify-between">
@@ -340,6 +357,7 @@
 <script setup>
 
 import { useComparatorOptions } from 'src/utils/comparator'
+import { verdictOptions } from './wes.js'
 
 const props = defineProps({
     showSticky: {

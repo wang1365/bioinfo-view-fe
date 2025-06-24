@@ -585,7 +585,7 @@ const loadWesData = async () => {
         wesData.value.options.acmgPathogenicityInit = Array.from(acmgPathogenicity).sort()
 
         wesData.value.options.clinvarPathogenicity = Array.from(clinvarPathogenicity).sort()
-        wesData.value.options.clinvarPathogenicityInit = Array.from(clinvarPathogenicity).sort()
+        wesData.value.options.clinvarPathogenicityInit = []
 
         wesData.value.options.genoType = Array.from(genoType).sort()
         wesData.value.options.genoTypeInit = Array.from(genoType).sort()
