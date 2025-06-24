@@ -410,7 +410,7 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { useI18n } from 'vue-i18n'
 import { populations } from '../index'
-import { WES_PARAMS } from './wes.js'
+import {verdictOptions, WES_PARAMS} from './wes.js'
 import WesRadar from '../components/WesRadar.vue'
 import { setVerdictResult } from 'src/api/verdict'
 import { getCurrentUsername } from 'src/utils/user'
@@ -490,36 +490,7 @@ const verdictData = ref({
     visible: false,
     record: null,
     verdict: [],
-    options: [
-        {
-            label: 'Pathogenic',
-            value: 'pathogenic',
-        },
-        {
-            label: 'Likely pathogenic',
-            value: 'likely_pathogenic',
-        },
-        {
-            label: 'VUS++',
-            value: 'vus++',
-        },
-        {
-            label: 'VUS+',
-            value: 'vus+',
-        },
-        {
-            label: 'VUS',
-            value: 'vus',
-        },
-        {
-            label: 'Likely benign',
-            value: 'likely_benign',
-        },
-        {
-            label: 'Benign',
-            value: 'benign',
-        },
-    ],
+    options: verdictOptions
 })
 
 const genesetData = ref({
@@ -707,6 +678,11 @@ const searchFilterRows = (searchParams) => {
 
         let clinvars = searchParams.clinvarPathogenicity
         if (clinvars && clinvars.length > 0 && clinvars.every(clinvar => clinvar !== line.Clinvar)) {
+            return false
+        }
+
+        let up = searchParams.userPathogenicity
+        if (up && up.length > 0 && up.every(upi => !line.userVerdict.includes(upi.toLowerCase()))) {
             return false
         }
 
