@@ -241,7 +241,7 @@
                                             <div v-if='record["1000g2015aug_all"] !== "."'>
                                                 1000g2015aug Total: {{ record['1000g2015aug_all'] }}
                                             </div>
-                                            <div v-else class="row justify-end">
+                                            <div class="row justify-end">
                                                 <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
                                                          @click="frequenciesDrawerVisible = true; drawerRecord = record"
                                                 />
