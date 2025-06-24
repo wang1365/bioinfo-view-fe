@@ -229,32 +229,32 @@
                                     class="cursor-pointer"
                                 >
                                     <template v-if="record.expanded">
-                                        <div class="text-purple">
+                                        <div>
                                             <div v-if='record.gnomAD_genome_ALL !== "."'>
-                                                {{ record.gnomAD_genome_ALL }}
+                                                GnomAD Genome Total: {{ record.gnomAD_genome_ALL }}
                                             </div>
                                             <div v-if='record.gnomAD_exome_ALL !== "."'>
-                                                {{ record.gnomAD_exome_ALL }}
+                                                GnomAD Exome Total: {{ record.gnomAD_exome_ALL }}
                                             </div>
                                             <div v-if='record.ExAC_ALL !== "."'>
-                                                {{ record.ExAC_ALL }}
+                                                ExAC Total: {{ record.ExAC_ALL }}
                                             </div>
                                             <div v-if='record["1000g2015aug_all"] !== "."'>
-                                                {{ record['1000g2015aug_all'] }}
+                                                1000g2015aug Total: {{ record['1000g2015aug_all'] }}
                                             </div>
                                         </div>
                                     </template>
                                     <template v-else>
                                         <template v-if="getValidFrequencies(record).length > 0">
-                                            <div class="text-purple">
-                                                {{ getValidFrequencies(record)[0].value }}
+                                            <div>
+                                               {{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}
                                             </div>
-                                            <div v-if="getValidFrequencies(record).length > 1" class="row">
-                                                <div class="col-9 text-purple">
-                                                    {{ getValidFrequencies(record)[1].value }}
+                                            <div v-if="getValidFrequencies(record).length > 1" >
+                                                <div>
+                                                    {{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}
                                                 </div>
                                                 <div
-                                                    class="col-2 text-primary cursor-pointer"
+                                                    class="text-primary cursor-pointer"
                                                     v-if="getValidFrequencies(record).length > 2"
                                                     @click="record.expanded = !record.expanded"
                                                 >
@@ -553,7 +553,7 @@ const columns = computed(() => {
         { title: 'ACMG', dataIndex: `ACMG_result`, width: 110, ellipsis: true },
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 80, ellipsis: true },
-        { title: 'Frequencies', dataIndex: `Frequencies`, width: 80, ellipsis: true },
+        { title: 'Frequencies', dataIndex: `Frequencies`, width: 150, ellipsis: true },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true },
         { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true },
@@ -872,11 +872,11 @@ const selectedDefaultRows = ref([])
 
 const getValidFrequencies = (record) => {
     const frequencies = [
-        { name: 'gnomAD_genome_ALL', value: record.gnomAD_genome_ALL },
-        { name: 'gnomAD_exome_ALL', value: record.gnomAD_exome_ALL },
-        { name: 'ExAC_ALL', value: record.ExAC_ALL },
-        { name: '1000g2015aug_all', value: record['1000g2015aug_all'] },
-    ]
+        { name: 'GnomAD Genome Total', value: record.gnomAD_genome_ALL },
+        { name: 'GnomAD Exome Total', value: record.gnomAD_exome_ALL },
+        { name: 'ExAC Total', value: record.ExAC_ALL },
+        { name: '1000g2015aug Total', value: record['1000g2015aug_all'] },
+]
     return frequencies.filter(freq => freq.value !== '.')
 }
 
