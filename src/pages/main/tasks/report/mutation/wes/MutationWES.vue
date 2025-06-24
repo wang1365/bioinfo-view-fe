@@ -725,19 +725,20 @@ const searchFilterRows = (searchParams) => {
 
         let variantQualityComp = searchParams.variantQualityComp
         let variantQualityValue = searchParams.variantQualityValue
-        if (variantQualityComp && variantQualityValue !== null) {
+            typeof(line.Variant_Quality), variantQualityValue, line.Variant_Quality)
+        if (variantQualityComp && variantQualityValue !== null && variantQualityValue !== '' && line.Variant_Quality !== null) {
             const v = line.Variant_Quality
             if (v === '-') {
                 return false
             }
-            if (!compare(variantQualityComp, Number(v), variantQualityValue)) {
+            if (!compare(variantQualityComp, Number(v), Number(variantQualityValue))) {
                 return false
             }
         }
 
         let seqDepthComp = searchParams.seqDepthComp
         let seqDepthValue = searchParams.seqDepthValue
-        if (seqDepthComp && seqDepthValue !== null) {
+        if (seqDepthComp && seqDepthValue !== null&& seqDepthValue !== '' && line.Seq_Depths_ != null) {
             const v = line.Seq_Depths_
             if (v === '-') {
                 return false
