@@ -246,7 +246,7 @@
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
-                        :scroll="{ x: 2000, y: 600 }"
+                        :scroll="{ x: 2200, y: 600 }"
                         :custom-row="customRow"
                         :sticky="true"
                         rowKey="lineNumber"
@@ -595,7 +595,7 @@ const fixedColumns = [
 
     { i: 17, title: '', dataIndex: 'col17', align: 'center', width: 160 }, // ExonicFunc.refGene
     { i: 18, title: '', dataIndex: 'col18', align: 'center', width: 90 }, // exon
-    { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 100 }, // NUChange
+    { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 200 }, // NUChange
     { i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100 }, // AAChange
 
     { i: 22, title: '', dataIndex: 'col22', align: 'left', width: 200, ellipsis: true }, // CLNDN

@@ -641,6 +641,7 @@ const searchFilterRows = (searchParams) => {
         let param = searchParams.diseaseCategories
         if (param && param.length > 0) {
             let matched = false
+            const cls = line.Class
             if (param.includes('A') && ['IA', 'IIA', 'IIIA'].includes(line.Class)) {
                 matched = true
             }
@@ -651,6 +652,9 @@ const searchFilterRows = (searchParams) => {
                 matched = true
             }
             if (!matched) {
+                if (!['IA', 'IIA', 'IIIA','IB', 'IIB', 'IIIB'].includes(cls)) {
+                    console.log(`line ${i} not matched by disease categories: ${cls}`, param)
+                }
                 return false
             }
         }
