@@ -760,7 +760,11 @@ const searchFilterRows = (searchParams) => {
         }
 
         let chromosome = searchParams.chromosome
-        if (chromosome) {
+        if (chromosome !== null && chromosome !== '') {
+            if (line.Chr !== searchParams.chromosome) {
+                return false
+            }
+
             if (searchParams.chromosomeStart != null && searchParams.chromosomeStart !== ''
                 && Number(line.Start) < Number(searchParams.chromosomeStart)) {
                 return false

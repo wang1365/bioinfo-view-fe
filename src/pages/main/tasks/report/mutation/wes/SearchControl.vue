@@ -319,7 +319,7 @@
             </q-input>
         </div>
 
-        <div class="row">
+        <div class="row justify-between">
             <q-select
                 v-model="innerSearchParams.chromosome"
                 hide-dropdown-icon
@@ -329,14 +329,14 @@
                 dense
                 outlined
                 label-color="primary"
-                class="col-5"
+                class="col-3"
             />
             <q-input
                 v-model.number="innerSearchParams.chromosomeStart"
                 stack-label
                 dense
                 outlined
-                class="col-3"
+                class="col-4"
                 label-color="primary"
                 :label="$t('Start')"
             />
@@ -346,7 +346,7 @@
                 stack-label
                 dense
                 outlined
-                class="col-3"
+                class="col-4"
                 label-color="primary"
                 :label="$t('End')"
             >
