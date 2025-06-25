@@ -92,7 +92,6 @@
                     :task="props.task"
                     ref="wesVue"
                     :rows="wesData.rows"
-                    :header="wesData.header"
                     :options="wesData.options"
                     :searchParams="wesData.searchParams"
                     :selectedRows="wesData.selectedRows"
