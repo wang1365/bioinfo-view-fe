@@ -225,42 +225,58 @@
 
                             <template v-if="column.dataIndex === 'Frequencies'">
                                 <div
-                                    @click="frequenciesDrawerVisible = true; drawerRecord = record"
-                                    class="cursor-pointer"
+
                                 >
                                     <template v-if="record.expanded">
-                                        <div class="text-purple">
+                                        <div>
                                             <div v-if='record.gnomAD_genome_ALL !== "."'>
-                                                {{ record.gnomAD_genome_ALL }}
+                                                GnomAD Genome Total: {{ record.gnomAD_genome_ALL }}
                                             </div>
                                             <div v-if='record.gnomAD_exome_ALL !== "."'>
-                                                {{ record.gnomAD_exome_ALL }}
+                                                GnomAD Exome Total: {{ record.gnomAD_exome_ALL }}
                                             </div>
                                             <div v-if='record.ExAC_ALL !== "."'>
-                                                {{ record.ExAC_ALL }}
+                                                ExAC Total: {{ record.ExAC_ALL }}
                                             </div>
                                             <div v-if='record["1000g2015aug_all"] !== "."'>
-                                                {{ record['1000g2015aug_all'] }}
+                                                1000g2015aug Total: {{ record['1000g2015aug_all'] }}
+                                            </div>
+                                            <div class="row justify-end">
+                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
+                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                />
                                             </div>
                                         </div>
                                     </template>
                                     <template v-else>
-                                        <template v-if="getValidFrequencies(record).length > 0">
-                                            <div class="text-purple">
-                                                {{ getValidFrequencies(record)[0].value }}
+                                        <template v-if="getValidFrequencies(record).length <= 2">
+                                            <div v-if="getValidFrequencies(record).length === 1">
+                                                {{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}
                                             </div>
-                                            <div v-if="getValidFrequencies(record).length > 1" class="row">
-                                                <div class="col-9 text-purple">
-                                                    {{ getValidFrequencies(record)[1].value }}
-                                                </div>
+                                            <div v-if="getValidFrequencies(record).length === 2">
+                                                {{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}
+                                            </div>
+                                            <div class="row justify-end">
+                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
+                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                />
+                                            </div>
+                                        </template>
+                                        <template v-else>
+                                            <div >{{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}</div>
+                                            <div >{{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}</div>
+                                            <div class="row justify-between">
                                                 <div
-                                                    class="col-2 text-primary cursor-pointer"
+                                                    class="col text-primary cursor-pointer"
                                                     v-if="getValidFrequencies(record).length > 2"
                                                     @click="record.expanded = !record.expanded"
                                                 >
                                                     +{{ getValidFrequencies(record).length - 2 }}
                                                 </div>
-                                            </div>
+                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
+                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                />
+                                                </div>
                                         </template>
                                     </template>
                                 </div>
@@ -394,7 +410,7 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { useI18n } from 'vue-i18n'
 import { populations } from '../index'
-import { WES_PARAMS } from './wes.js'
+import {verdictOptions, WES_PARAMS} from './wes.js'
 import WesRadar from '../components/WesRadar.vue'
 import { setVerdictResult } from 'src/api/verdict'
 import { getCurrentUsername } from 'src/utils/user'
@@ -474,36 +490,7 @@ const verdictData = ref({
     visible: false,
     record: null,
     verdict: [],
-    options: [
-        {
-            label: 'Pathogenic',
-            value: 'pathogenic',
-        },
-        {
-            label: 'Likely pathogenic',
-            value: 'likely_pathogenic',
-        },
-        {
-            label: 'VUS++',
-            value: 'vus++',
-        },
-        {
-            label: 'VUS+',
-            value: 'vus+',
-        },
-        {
-            label: 'VUS',
-            value: 'vus',
-        },
-        {
-            label: 'Likely benign',
-            value: 'likely_benign',
-        },
-        {
-            label: 'Benign',
-            value: 'benign',
-        },
-    ],
+    options: verdictOptions
 })
 
 const genesetData = ref({
@@ -540,7 +527,7 @@ const rowSelection = computed(() => {
 
 
 const scrollX = computed(() => {
-    return 2000
+    return 2200
 })
 
 const columns = computed(() => {
@@ -550,10 +537,10 @@ const columns = computed(() => {
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true },
         { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, align: 'center', ellipsis: true },
-        { title: 'ACMG', dataIndex: `ACMG_result`, width: 110, ellipsis: true },
+        { title: 'ACMG', dataIndex: `ACMG_result`, width: 150, ellipsis: true },
 
         { title: 'Clinvar', dataIndex: `Clinvar`, width: 80, ellipsis: true },
-        { title: 'Frequencies', dataIndex: `Frequencies`, width: 80, ellipsis: true },
+        { title: 'Frequencies', dataIndex: `Frequencies`, width: 170, ellipsis: true },
         { title: 'Related HPOs', dataIndex: `HPO`, width: 130, ellipsis: true },
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true },
         { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true },
@@ -625,6 +612,7 @@ const searchFilterRows = (searchParams) => {
         let param = searchParams.diseaseCategories
         if (param && param.length > 0) {
             let matched = false
+            const cls = line.Class
             if (param.includes('A') && ['IA', 'IIA', 'IIIA'].includes(line.Class)) {
                 matched = true
             }
@@ -693,14 +681,21 @@ const searchFilterRows = (searchParams) => {
             return false
         }
 
+        let up = searchParams.userPathogenicity
+        if (up && up.length > 0 && up.every(upi => !line.userVerdict.includes(upi.toLowerCase()))) {
+            return false
+        }
+
         let frequencies = searchParams.populationAlleleFrequency
         const pafComp = searchParams.pafComp
         let pafValue = searchParams.pafValue
-        if (frequencies && frequencies.length > 0 && pafValue) {
+        if (frequencies && frequencies.length > 0 && pafValue !== null && pafValue !== '') {
             const matched = frequencies.every(fq => {
-                const col = populations[fq]
-                const colValue = line[col]
-                return compare(pafComp, colValue, pafValue / 100)
+                let colValue = line[populations[fq]]
+                if (colValue === '' || colValue === null) {
+                    return false
+                }
+                return compare(pafComp, Number(colValue), Number(pafValue) / 100)
             })
 
             if (!matched) {
@@ -720,36 +715,36 @@ const searchFilterRows = (searchParams) => {
 
         let genoTypeComp = searchParams.genoTypeComp
         let genoTypeValue = searchParams.genoTypeValue
-        if (genoTypeComp && genoTypeValue !== null) {
+        if (genoTypeComp && genoTypeValue !== null && genoTypeValue !== '' && line.Genotype_Quality !== null) {
             const v = line.Genotype_Quality
             if (v === '-') {
                 return false
             }
-            if (!compare(genoTypeComp, Number(v), genoTypeValue)) {
+            if (!compare(genoTypeComp, Number(v), Number(genoTypeValue))) {
                 return false
             }
         }
 
         let variantQualityComp = searchParams.variantQualityComp
         let variantQualityValue = searchParams.variantQualityValue
-        if (variantQualityComp && variantQualityValue !== null) {
+        if (variantQualityComp && variantQualityValue !== null && variantQualityValue !== '' && line.Variant_Quality !== null) {
             const v = line.Variant_Quality
             if (v === '-') {
                 return false
             }
-            if (!compare(variantQualityComp, Number(v), variantQualityValue)) {
+            if (!compare(variantQualityComp, Number(v), Number(variantQualityValue))) {
                 return false
             }
         }
 
         let seqDepthComp = searchParams.seqDepthComp
         let seqDepthValue = searchParams.seqDepthValue
-        if (seqDepthComp && seqDepthValue !== null) {
+        if (seqDepthComp && seqDepthValue !== null && seqDepthValue !== '' && line.Seq_Depths_ != null) {
             const v = line.Seq_Depths_
             if (v === '-') {
                 return false
             }
-            if (!compare(seqDepthComp, Number(v), seqDepthValue)) {
+            if (!compare(seqDepthComp, Number(v), Number(seqDepthValue))) {
                 return false
             }
         }
@@ -765,12 +760,18 @@ const searchFilterRows = (searchParams) => {
         }
 
         let chromosome = searchParams.chromosome
-        if (chromosome) {
-            if (searchParams.chromosomeStart != null && line.Start < searchParams.chromosomeStart) {
+        if (chromosome !== null && chromosome !== '') {
+            if (line.Chr !== searchParams.chromosome) {
                 return false
             }
 
-            if (searchParams.chromosomeEnd != null && line.End > searchParams.chromosomeEnd) {
+            if (searchParams.chromosomeStart != null && searchParams.chromosomeStart !== ''
+                && Number(line.Start) < Number(searchParams.chromosomeStart)) {
+                return false
+            }
+
+            if (searchParams.chromosomeEnd != null  && searchParams.chromosomeEnd !== ''
+                && Number(line.End) > Number(searchParams.chromosomeEnd)) {
                 return false
             }
         }
@@ -872,11 +873,11 @@ const selectedDefaultRows = ref([])
 
 const getValidFrequencies = (record) => {
     const frequencies = [
-        { name: 'gnomAD_genome_ALL', value: record.gnomAD_genome_ALL },
-        { name: 'gnomAD_exome_ALL', value: record.gnomAD_exome_ALL },
-        { name: 'ExAC_ALL', value: record.ExAC_ALL },
-        { name: '1000g2015aug_all', value: record['1000g2015aug_all'] },
-    ]
+        { name: 'GnomAD Genome Total', value: record.gnomAD_genome_ALL },
+        { name: 'GnomAD Exome Total', value: record.gnomAD_exome_ALL },
+        { name: 'ExAC Total', value: record.ExAC_ALL },
+        { name: '1000g2015aug Total', value: record['1000g2015aug_all'] },
+]
     return frequencies.filter(freq => freq.value !== '.')
 }
 

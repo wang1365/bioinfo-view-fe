@@ -112,32 +112,49 @@
             class="full-width"
         />
 
-        <q-select
-            v-model="innerSearchParams.acmgPathogenicity"
-            clearable
-            multiple
-            dense
-            outlined
-            hide-dropdown-icon
-            :options="props.options.acmgPathogenicity"
-            label="ACMG Pathogenicity"
-            stack-label
-            label-color="primary"
-            class="full-width"
-        />
+        <div class="row">
+            <q-select
+                v-model="innerSearchParams.acmgPathogenicity"
+                clearable
+                multiple
+                dense
+                outlined
+                hide-dropdown-icon
+                :options="props.options.acmgPathogenicity"
+                label="ACMG Pathogenicity"
+                stack-label
+                label-color="primary"
+                class="col full-width"
+            />
+
+            <q-select
+                v-model="innerSearchParams.clinvarPathogenicity"
+                clearable
+                multiple
+                dense
+                outlined
+                hide-dropdown-icon
+                :options="props.options.clinvarPathogenicity"
+                label="Clinvar Pathogenicity"
+                stack-label
+                label-color="primary"
+                class="col full-width"
+            />
+        </div>
 
         <q-select
-            v-model="innerSearchParams.clinvarPathogenicity"
+            v-model="innerSearchParams.userPathogenicity"
             clearable
             multiple
             dense
             outlined
             hide-dropdown-icon
-            :options="props.options.clinvarPathogenicity"
-            label="Clinvar Pathogenicity"
+            :options="verdictOptions"
+            label="User's Pathogenicity"
             stack-label
             label-color="primary"
-            class="full-width"
+            class="col full-width"
+            emit-value
         />
 
         <div class="row justify-between">
@@ -162,6 +179,7 @@
                 dense
                 hide-dropdown-icon
                 class="col-1"
+                emit-value
             />
             <q-input
                 v-model.number="innerSearchParams.pafValue"
@@ -301,7 +319,7 @@
             </q-input>
         </div>
 
-        <div class="row">
+        <div class="row justify-between">
             <q-select
                 v-model="innerSearchParams.chromosome"
                 hide-dropdown-icon
@@ -311,14 +329,14 @@
                 dense
                 outlined
                 label-color="primary"
-                class="col-5"
+                class="col-3"
             />
             <q-input
                 v-model.number="innerSearchParams.chromosomeStart"
                 stack-label
                 dense
                 outlined
-                class="col-3"
+                class="col-4"
                 label-color="primary"
                 :label="$t('Start')"
             />
@@ -328,7 +346,7 @@
                 stack-label
                 dense
                 outlined
-                class="col-3"
+                class="col-4"
                 label-color="primary"
                 :label="$t('End')"
             >
@@ -340,6 +358,7 @@
 <script setup>
 
 import { useComparatorOptions } from 'src/utils/comparator'
+import { verdictOptions } from './wes.js'
 
 const props = defineProps({
     showSticky: {

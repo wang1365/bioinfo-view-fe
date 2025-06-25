@@ -539,7 +539,7 @@ const fixedColumns = [
 
     { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
     { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80 }, // exon
-    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100 }, // NUChange
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 200 }, // NUChange
     { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100 }, // AAChange
 
     { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
@@ -571,7 +571,7 @@ const fixedColumns = [
 ]
 
 const scrollX = computed(() => {
-    return 2000 + (fixedColumns.length - 33) * 100
+    return 2200 + (fixedColumns.length - 33) * 100
 })
 
 const selectedExpandColIdx = ref([])
