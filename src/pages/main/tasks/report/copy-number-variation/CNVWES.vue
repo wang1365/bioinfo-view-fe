@@ -38,6 +38,8 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
+                        use-input
+                        @filter="filterFunctions.gene_set"
                     />
                     <q-select
                         v-model="innerSearchParams.acmg"
@@ -51,6 +53,8 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
+                        use-input
+                        @filter="filterFunctions.acmg_set"
                     />
                     <q-select
                         v-model="innerSearchParams.user_pathogenicity"
@@ -64,6 +68,8 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
+                        use-input
+                        @filter="filterFunctions.user_pathogenicity_set"
                     />
 
                     <q-select
@@ -78,6 +84,8 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
+                        use-input
+                        @filter="filterFunctions.cnv_cover_type_set"
                     />
                     <q-select
                         v-model="innerSearchParams.cnv_type"
@@ -91,6 +99,8 @@
                         stack-label
                         label-color="primary"
                         class="full-width"
+                        use-input
+                        @filter="filterFunctions.cnv_type_set"
                     />
                     <div class="row">
                         <div class="col-6">
@@ -106,6 +116,8 @@
                                 stack-label
                                 label-color="primary"
                                 class="full-width "
+                                use-input
+                                @filter="filterFunctions.chr_set"
                             />
                         </div>
                         <div class="col-3">
@@ -730,7 +742,7 @@ const customRow = (record, index) => {
     }
 }
 const columns = ref([
-     { title: '', dataIndex: 'expand', width: 50, align: 'left', fixed: 'left' },
+    { title: '', dataIndex: 'expand', width: 50, align: 'left', fixed: 'left' },
     { title: 'Gene Info', dataIndex: 'geneInfo', key: 'geneInfo', width: 200, align: 'left' },
     { title: 'Copy Number', dataIndex: 'copyNumber', key: 'copyNumber', width: 200, align: 'left' },
     { title: 'Gene Related Diseases', dataIndex: 'geneRelatedDiseases', key: 'geneRelatedDiseases', width: 200, align: 'left' },
@@ -754,6 +766,8 @@ watch(() => props.samples,
         console.log(newv)
     })
 const searchOptions = ref({})
+
+const dumpedSearchOptions = ref({})
 
 // 加载表格数据
 const loadTable = () => {
@@ -795,6 +809,8 @@ const buildSearchOptions = (originRows) => {
         cnv_type_set: Array.from(cnv_type_set).sort().map(value => value),
         chr_set: Array.from(chr_set).sort().map(value => value)
     }
+    dumpedSearchOptions.value = JSON.parse(JSON.stringify(searchOptions.value))
+    console.log(dumpedSearchOptions.value)
 }
 const buildShowRowData = (originRows) => {
     let rows = []
@@ -826,7 +842,7 @@ const buildShowRowData = (originRows) => {
 
         row.clinvar_data = row.Clinvar.split(';')
         row.show_clinvar_more = false
-        row.expanded=false
+        row.expanded = false
         rows.push(row)
     }
     filteredRows.value = rows
@@ -835,6 +851,30 @@ const buildShowRowData = (originRows) => {
     // filteredRows.value = Array.from({ length: 200 }, () => JSON.parse(JSON.stringify(filteredRows.value[0])))
     // }
 
+}
+
+const filterFunctions = {
+    gene_set: (v, u) => makeOptionFilter(v, u, 'gene_set'),
+    acmg_set: (v, u) => makeOptionFilter(v, u, 'acmg_set'),
+    cnv_cover_type_set: (v, u) => makeOptionFilter(v, u, 'cnv_cover_type_set'),
+    cnv_type_set: (v, u) => makeOptionFilter(v, u, 'cnv_type_set'),
+    chr_set: (v, u) => makeOptionFilter(v, u, 'chr_set'),
+}
+
+function makeOptionFilter(val, update, optionName) {
+
+    if (val === '') {
+        update(() => {
+            searchOptions.value[optionName] = dumpedSearchOptions.value[optionName]
+        })
+        console.log(searchOptions.value[optionName])
+        return
+    }
+
+    update(() => {
+        const needle = val.toLowerCase()
+        searchOptions.value[optionName] = dumpedSearchOptions.value[optionName].filter(v => v.toLowerCase().indexOf(needle) > -1)
+    })
 }
 </script>
 
