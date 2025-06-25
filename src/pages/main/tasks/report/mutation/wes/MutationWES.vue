@@ -689,11 +689,13 @@ const searchFilterRows = (searchParams) => {
         let frequencies = searchParams.populationAlleleFrequency
         const pafComp = searchParams.pafComp
         let pafValue = searchParams.pafValue
-        if (frequencies && frequencies.length > 0 && pafValue) {
+        if (frequencies && frequencies.length > 0 && pafValue !== null && pafValue !== '') {
             const matched = frequencies.every(fq => {
-                const col = populations[fq]
-                const colValue = line[col]
-                return compare(pafComp, colValue, pafValue / 100)
+                let colValue = line[populations[fq]]
+                if (colValue === '' || colValue === null) {
+                    return false
+                }
+                return compare(pafComp, Number(colValue), Number(pafValue) / 100)
             })
 
             if (!matched) {

@@ -179,6 +179,7 @@
                 dense
                 hide-dropdown-icon
                 class="col-1"
+                emit-value
             />
             <q-input
                 v-model.number="innerSearchParams.pafValue"
