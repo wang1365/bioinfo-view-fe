@@ -215,6 +215,7 @@
                                 color="primary"
                                 target="_blank"
                                 size="md"
+                                @click="downloadFile()"
                             />
                         </div>
                     </div>
@@ -773,6 +774,23 @@ const searchOptions = ref({})
 
 const dumpedSearchOptions = ref({})
 
+const downloadFile = () => {
+    readTaskFile(route.params.id, `CNV_WES/${samples.value[0].identifier}.CNV_WES.txt`).then((res) => {
+        console.log(res.data);
+        // Create a Blob from the data
+        const blob = new Blob([res.data], { type: 'text/plain' });
+        // Create a temporary anchor element
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'cnv_wes.txt'; // Set the desired file name
+        // Trigger the download
+        link.click();
+        // Clean up
+        URL.revokeObjectURL(link.href);
+    }).catch((error) => {
+        console.error('Error downloading file:', error);
+    });
+};
 // 加载表格数据
 const loadTable = () => {
 
