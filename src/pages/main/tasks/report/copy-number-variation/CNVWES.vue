@@ -346,7 +346,7 @@
                             </template>
                             <template v-if="column.dataIndex === 'plot'">
                                 <div class="row">
-                                    <img :src="record.Plot" alt="." />
+                                    <img :src="'/igv'+record.Plot.replace('//','/')" alt="." />
                                 </div>
                             </template>
                             <!-- <template v-if="column.key === 'operation'">
