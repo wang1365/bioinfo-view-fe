@@ -147,7 +147,13 @@
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'userVerdict'">
-                                <div class="row">NA</div>
+                                <div class="row" v-if="record.user_verdict.length == 0"
+                                    @click="currentRow = record, userVerdictVisible = true">NA</div>
+                                <div class="row" v-if="record.user_verdict.length != 0">
+                                    <q-chip @click="currentRow = record, userVerdictVisible = true" color="orange"
+                                        outline square dense v-for="item of record.user_verdict" v-bind:key="item">{{
+                                            item }}</q-chip>
+                                </div>
                             </template>
                             <template v-if="column.dataIndex === 'acmg'">
                                 <template v-for="acmg in record.acmg_data" :key="acmg">
@@ -286,6 +292,20 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
+
+    <q-dialog class="q-py-sm" v-model="userVerdictVisible">
+        <q-card style="max-width: 70vw;max-height: 90vh">
+            <q-card-section>
+                <h5>Select User Verdict</h5>
+                <q-select v-model="currentRow.user_verdict" clearable multiple dense outlined hide-dropdown-icon
+                    :options="['Pathogenic', 'Likely pathogenic', 'VUS++', 'VUS+', 'VUS', 'Likely benign', 'Benign']"
+                    stack-label label-color="primary" class="full-width" use-input />
+            </q-card-section>
+            <q-card-actions align="center" vertical>
+                <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
     <q-dialog v-model="igvVisible">
         <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
             <Igv :taskId="props.task.id" :file="igvFile" />
@@ -306,6 +326,7 @@ import { useCustomCell, WES_PARAMS } from './index'
 const { t } = useI18n()
 const splitterModel = ref(300)
 
+const userVerdictVisible = ref(false)
 const genesetEdit = ref(false)
 const geneSetStep = ref(1)
 const geneSetMessage = ref("Ok")
@@ -689,6 +710,7 @@ const buildShowRowData = (originRows) => {
     let rows = []
     for (let originRow of originRows) {
         let row = JSON.parse(JSON.stringify(originRow))
+        row.user_verdict = []
         row.acmg_data = []
         row.acmg_data.push(originRow.ACMG_result)
 
@@ -723,11 +745,6 @@ const buildShowRowData = (originRows) => {
         rows.push(row)
     }
     filteredRows.value = rows
-    // if(filteredRows.value.length>0){
-
-    // filteredRows.value = Array.from({ length: 200 }, () => JSON.parse(JSON.stringify(filteredRows.value[0])))
-    // }
-
 }
 
 const filterFunctions = {
