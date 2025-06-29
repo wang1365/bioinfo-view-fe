@@ -99,7 +99,8 @@
                             <template v-if="column.dataIndex === 'geneInfo'">
                                 <q-scroll-area style="height: 300px;" v-if="record.expanded">
                                     <div class="text-weight-bolder text-green-5"
-                                        v-for="item of record.gene_data.slice(0, 2)" :key="item">
+                                        v-for="item of record.gene_data.slice(0, 2)" :key="item"
+                                        @click="findCnvkit(item)">
                                         {{ item }}
                                     </div>
                                     <div class="text-weight-bolder text-blue-5">
@@ -117,7 +118,8 @@
                                 </q-scroll-area>
                                 <div v-if="!record.expanded">
                                     <div class="text-weight-bolder text-green-5"
-                                        v-for="item of record.gene_data.slice(0, 2)" :key="item">
+                                        v-for="item of record.gene_data.slice(0, 2)" :key="item"
+                                        @click="findCnvkit(item)">
                                         {{ item }}
                                     </div>
                                     <div class="text-weight-bolder text-blue-5">
@@ -649,6 +651,18 @@ const downloadFile = () => {
         console.error('Error downloading file:', error);
     });
 };
+
+
+const cnvkitrows = ref([])
+const findCnvkit = (gene) => {
+    let data = []
+    for (const element of cnvkitrows.value) {
+        if (element.Gene == gene) {
+            data.push(element)
+        }
+    }
+    console.log(data)
+}
 // 加载表格数据
 const loadTable = () => {
 
@@ -662,6 +676,11 @@ const loadTable = () => {
         buildShowRowData(data.rows)
         buildSearchOptions(data.rows)
 
+    })
+    readTaskFile(route.params.id, `CNV_gene/cnvkit_gene.txt`).then((res) => {
+        console.log("cnv ggene")
+        let data = parseCsvToList(res)
+        cnvkitrows.value = data.rows
     })
 }
 
