@@ -500,6 +500,9 @@ const loadData = () => {
     const genomeFile =
         genome === 'hg38' ? 'database_dir/hg38/hg38_genome/hg38.length' : 'database_dir/hg19/hg19_genome/hg19.length'
     readSystemFile(genomeFile).then((res) => {
+        if (!res) {
+            return
+        }
         const data = getCsvData(res, { fields: ['name', 'value'], hasHeaderLine: false })
         data.forEach((t) => (t.value = Number(t.value)))
         chrs.value = data
