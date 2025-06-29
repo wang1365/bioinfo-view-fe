@@ -346,7 +346,12 @@
                             </template>
                             <template v-if="column.dataIndex === 'plot'">
                                 <div class="row">
-                                    <img :src="'/igv'+record.Plot.replace('//','/')" alt="." />
+                                    <img
+                                        :src="'/igv'+record.Plot.replace('//','/')"
+                                        alt="."
+                                        style="width: 100px;height: 100px;"
+                                        @click="clickDetail(record)"
+                                    />
                                 </div>
                             </template>
                             <!-- <template v-if="column.key === 'operation'">
@@ -436,8 +441,7 @@
     <q-dialog class="q-py-sm" v-model="dialogVisible">
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
-                <MutationInfo :row="currentRow" :task="props.task" :samples="props.samples" :headers="props.header">
-                </MutationInfo>
+                <img :src="'/igv'+currentRow.Plot.replace('//','/')" alt="." />
             </q-card-section>
             <q-card-actions align="center" vertical>
                 <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
