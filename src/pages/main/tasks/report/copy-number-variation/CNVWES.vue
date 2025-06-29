@@ -826,7 +826,7 @@ const buildSearchOptions = (originRows) => {
     }
     searchOptions.value = {
         gene_set: Array.from(gene_set).sort().map(value => value),
-        acmg_set: Array.from(acmg_set).sort((a,b)=>{a>b}).map(value => value),
+        acmg_set: Array.from(acmg_set).sort((a,b)=>{a<b}).map(value => value),
         cnv_cover_type_set: Array.from(cnv_cover_type_set).sort().map(value => value),
         cnv_type_set: Array.from(cnv_type_set).sort().map(value => value),
         chr_set: Array.from(chr_set).sort().map(value => value)
