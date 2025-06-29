@@ -776,9 +776,9 @@ const dumpedSearchOptions = ref({})
 
 const downloadFile = () => {
     readTaskFile(route.params.id, `CNV_WES/${samples.value[0].identifier}.CNV_WES.txt`).then((res) => {
-        console.log(res.data);
+        console.log(res);
         // Create a Blob from the data
-        const blob = new Blob([res.data], { type: 'text/plain' });
+        const blob = new Blob([res], { type: 'text/plain' });
         // Create a temporary anchor element
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
