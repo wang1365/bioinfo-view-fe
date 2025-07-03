@@ -542,7 +542,9 @@ const columns = computed(() => {
     return [
         { title: '', dataIndex: 'expand', width: 30, align: 'left', fixed: 'left' },
         { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true },
-        { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true },
+        { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true,
+          sorter: (a, b) => Number(a.Mutation_Rate_) - Number(b.Mutation_Rate_),
+        },
         { title: 'Gene Related Diseases', dataIndex: `Gene_Related_Diseases`, width: 100, ellipsis: true },
         { title: 'User Verdict', dataIndex: `userVerdict`, width: 100, align: 'center', ellipsis: true },
         { title: 'ACMG', dataIndex: `ACMG_result`, width: 150, ellipsis: true },
