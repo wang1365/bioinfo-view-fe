@@ -352,6 +352,11 @@
             >
             </q-input>
         </div>
+        <geneset-dialog
+            v-model:visible="genesetData.visible"
+            v-model:gene="innerSearchParams.geneSet"
+            :base-genes="props.options.gene"
+        />
     </div>
 </template>
 
@@ -359,6 +364,8 @@
 
 import { useComparatorOptions } from 'src/utils/comparator'
 import { verdictOptions } from './wes.js'
+import GenesetDialog from 'pages/main/tasks/report/common-module/GenesetDialog.vue'
+import { ref } from 'vue'
 
 const props = defineProps({
     showSticky: {
@@ -392,6 +399,11 @@ const props = defineProps({
 const innerSearchParams = defineModel('searchParams', {})
 
 const { options: comparatorOptions, compare } = useComparatorOptions()
+
+const genesetData = ref({
+    visible: false,
+    genset: [],
+})
 
 function makeOptionFilter (val, update, optionName) {
     const p = props.options

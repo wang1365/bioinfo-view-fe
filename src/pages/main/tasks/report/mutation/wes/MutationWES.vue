@@ -224,9 +224,7 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'Frequencies'">
-                                <div
-
-                                >
+                                <div>
                                     <template v-if="record.expanded">
                                         <div>
                                             <div v-if='record.gnomAD_genome_ALL !== "."'>
@@ -235,15 +233,17 @@
                                             <div v-if='record.gnomAD_exome_ALL !== "."'>
                                                 GnomAD Exome Total: {{ record.gnomAD_exome_ALL }}
                                             </div>
-                                            <div v-if='record.ExAC_ALL !== "."'>
-                                                ExAC Total: {{ record.ExAC_ALL }}
-                                            </div>
+                                            <div v-if='record.ExAC_ALL !== "."'>ExAC Total: {{ record.ExAC_ALL }}</div>
                                             <div v-if='record["1000g2015aug_all"] !== "."'>
                                                 1000g2015aug Total: {{ record['1000g2015aug_all'] }}
                                             </div>
                                             <div class="row justify-end">
-                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
-                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                <q-icon
+                                                    class="col-1 cursor-pointer"
+                                                    name="menu"
+                                                    color="grey"
+                                                    size="20px"
+                                                    @click="frequenciesDrawerVisible = true; drawerRecord = record"
                                                 />
                                             </div>
                                         </div>
@@ -251,20 +251,32 @@
                                     <template v-else>
                                         <template v-if="getValidFrequencies(record).length <= 2">
                                             <div v-if="getValidFrequencies(record).length === 1">
-                                                {{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}
+                                                {{getValidFrequencies(record)[0].name}}:
+                                                {{ getValidFrequencies(record)[0].value }}
                                             </div>
                                             <div v-if="getValidFrequencies(record).length === 2">
-                                                {{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}
+                                                {{getValidFrequencies(record)[1].name}}:
+                                                {{ getValidFrequencies(record)[1].value }}
                                             </div>
                                             <div class="row justify-end">
-                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
-                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                <q-icon
+                                                    class="col-1 cursor-pointer"
+                                                    name="menu"
+                                                    color="grey"
+                                                    size="20px"
+                                                    @click="frequenciesDrawerVisible = true; drawerRecord = record"
                                                 />
                                             </div>
                                         </template>
                                         <template v-else>
-                                            <div >{{getValidFrequencies(record)[0].name}}: {{ getValidFrequencies(record)[0].value }}</div>
-                                            <div >{{getValidFrequencies(record)[1].name}}: {{ getValidFrequencies(record)[1].value }}</div>
+                                            <div>
+                                                {{getValidFrequencies(record)[0].name}}:
+                                                {{ getValidFrequencies(record)[0].value }}
+                                            </div>
+                                            <div>
+                                                {{getValidFrequencies(record)[1].name}}:
+                                                {{ getValidFrequencies(record)[1].value }}
+                                            </div>
                                             <div class="row justify-between">
                                                 <div
                                                     class="col text-primary cursor-pointer"
@@ -273,10 +285,14 @@
                                                 >
                                                     +{{ getValidFrequencies(record).length - 2 }}
                                                 </div>
-                                                <q-icon  class="col-1 cursor-pointer" name="menu" color="grey" size="20px"
-                                                         @click="frequenciesDrawerVisible = true; drawerRecord = record"
+                                                <q-icon
+                                                    class="col-1 cursor-pointer"
+                                                    name="menu"
+                                                    color="grey"
+                                                    size="20px"
+                                                    @click="frequenciesDrawerVisible = true; drawerRecord = record"
                                                 />
-                                                </div>
+                                            </div>
                                         </template>
                                     </template>
                                 </div>
@@ -375,11 +391,6 @@
             </q-card-actions>
         </q-card>
     </q-dialog>
-    <geneset-dialog
-        v-model:visible="genesetData.visible"
-        v-model:gene="innerSearchParams.geneSet"
-        :base-genes="props.options.gene"
-    />
     <a-drawer
         :get-container="false"
         title="Frequencies"
@@ -493,10 +504,7 @@ const verdictData = ref({
     options: verdictOptions
 })
 
-const genesetData = ref({
-    visible: false,
-    genset: [],
-})
+
 
 const igvFile = ref(null)
 const dialogVisible = ref(false)
