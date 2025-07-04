@@ -57,6 +57,15 @@ export function getRelatedTasks(task_id) {
     return api({
         url: `/report/pathogen/read`,
         method: 'get',
-        params: { task_id }
+        params: { task_id },
+    })
+}
+
+// 根据任务查询查询项目下的关联任务
+export function getCohortStatus(task_id) {
+    return api({
+        url: `/cohort/stats_by_task`,
+        method: 'get',
+        params: { task_id },
     })
 }

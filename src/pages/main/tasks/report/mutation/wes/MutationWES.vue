@@ -224,6 +224,7 @@
                             </template>
 
                             <template v-if="column.dataIndex === 'Frequencies'">
+                                <div>My Cohort: {{record.cohort}}</div>
                                 <div>
                                     <template v-if="record.expanded">
                                         <div>

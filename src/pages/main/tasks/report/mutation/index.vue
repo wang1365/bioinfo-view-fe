@@ -132,6 +132,7 @@ import { globalStore }from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { populations } from './index'
 import { listVerdictByPatient } from 'src/api/verdict'
+import { getCohortStatus } from 'src/api/report'
 
 const store = globalStore()
 const { langCode } = storeToRefs(store)
@@ -511,6 +512,12 @@ const loadWesData = async () => {
     })
     console.log('verdictMap', verdictMap)
 
+    const cohortData = await loadWesCohortData()
+    let cohortMap = new Map()
+    cohortData.forEach(v => {
+        cohortMap.set(v.gene_info, (v.cnt/v.total).toFixed(2))
+    })
+
     await readTaskMuFile(route.params.id, 'Mut_WES').then((res) => {
         const headNames = getCsvHeader(res, '\t').map(h => {
             // 如果h的样式是xxxx(yyyy), 改为xxxx_
@@ -531,6 +538,7 @@ const loadWesData = async () => {
             let gene_identifier = `${row['Gene.refGene']}|${row['GeneDetail.refGene']}|${row['AAChange']}|${row.Chr}|${row.Start}|${row.End}|${row.Ref}|${row.Alt}`
             row.geneIdentifier = gene_identifier
             row.userVerdict = verdictMap.get(gene_identifier) || []
+            row.cohort = cohortMap.get(gene_identifier)
         })
 
         // 提取options
@@ -623,15 +631,11 @@ const loadWesVerdictData = async () => {
     return await listVerdictByPatient(user_id)
 }
 
-const loadWesEvidenceData = () => {
-    // const suffix = langCode.value === "en" ? "EN" : "CN"
-    // const tablefile = `Mut_somatic/somatic_${suffix}.evidence`
-    // readTaskFile(route.params.id, tablefile).then((res) => {
-    //     const items = getCsvData(res)
-    //     somaticData.value.drugRows = items
-    //     originsomaticData.value = JSON.stringify(somaticData.value)
-    // })
+const loadWesCohortData = async () => {
+    return await getCohortStatus(props.task.id)
+}
 
+const loadWesEvidenceData = () => {
     somaticData.value.drugRows = []
     originsomaticData.value = []
 }
