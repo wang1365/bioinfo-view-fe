@@ -73,10 +73,10 @@
                 @change="handleChange"
                 :sticky="true"
             ></a-table>
+            <q-separator class="q-my-lg" size="2px" color="primary" />
         </div>
 
         <div v-if="props.viewConfig.showCNVtable">
-            <q-separator class="q-my-lg" size="2px" color="primary" />
             <div class="row q-gutter-sm items-start q-py-md">
                 <q-input
                     v-model="searchParams.gene"

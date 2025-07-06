@@ -1,5 +1,5 @@
 <template>
-    <q-btn
+    <!-- <q-btn
         v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
         icon="bookmarks"
         size="small"
@@ -17,9 +17,9 @@
         class="relative-position float-right q-mr-md"
         @click="stickFilter()"
         :label="$t('ReportStickData')"
-    />
+    /> -->
 
-    <q-btn
+    <!-- <q-btn
         icon="help_outline"
         size="small"
         outline
@@ -27,48 +27,15 @@
         class="relative-position float-right q-mr-md"
         @click="dlgVisible = !dlgVisible"
         >{{ $t('Intro') }}</q-btn
-    >
+    > -->
     <div>
-        <div style="height:50px"></div>
-        <CNVTable
-            ref="cnvTableVue"
-            :info="props.intro"
-            :task="props.task"
+        <CNVWES
+            ref="cnvWESVue"
             :samples="props.samples"
+            :task="props.task"
             :viewConfig="props.viewConfig"
             :stepData="props.stepData"
-            @filterChange="filterChange('cnvtable', $event)"
-        ></CNVTable>
-        <!-- <q-tabs
-            v-model="tab"
-            active-color="primary"
-            active-bg-color="grey-4"
-            align="left"
-            class="bg-grey-1"
-            :breakpoint="0"
-            dense
-        >
-            <q-tab
-                name="拷贝数变异分析"
-                :label="$t('CopyNumberVariationAnalysis')"
-                v-if="props.viewConfig.showCNVcircos || props.viewConfig.showCNVtable"
-            />
-            <q-tab name="WES突变分析" :label="$t('WES CNV分析')" v-if="props.viewConfig.showCNVWES" />
-        </q-tabs>
-        <q-tab-panels v-model="tab" animated>
-            <q-tab-panel name="拷贝数变异分析">
-
-            </q-tab-panel>
-            <q-tab-panel name="WES突变分析">
-                <CNVWES
-                    ref="cnvWESVue"
-                    :samples="props.samples"
-                    :task="props.task"
-                    :viewConfig="props.viewConfig"
-                    :stepData="props.stepData"
-                />
-            </q-tab-panel>
-        </q-tab-panels> -->
+        />
     </div>
 
     <q-dialog v-model="dlgVisible">
@@ -90,7 +57,6 @@ import { useI18n } from "vue-i18n"
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import CNVWES from "./CNVWES.vue"
-import CNVTable from "./CNVTable.vue"
 
 const cnvTableVue = ref(null)
 const cnvWESVue = ref(null)

@@ -37,6 +37,13 @@
                     v-if="tabValid('copy-number-variation')"
                 />
                 <q-tab
+                    name="copy-number-variation-wes"
+                    :label="$t('CopyNumberVariationWes')"
+                    icon="polyline"
+                    v-if="tabValid('copy-number-variation-wes')"
+                />
+
+                <q-tab
                     name="copy-number-variation-gene"
                     :label="$t('CopyNumberVariationGeneAnalysis')"
                     icon="polyline"
@@ -84,6 +91,14 @@
                 </q-tab-panel>
                 <q-tab-panel name="copy-number-variation" v-if="tabValid('copy-number-variation')">
                     <CopyNumberVariationVue
+                        :viewConfig="module.copy_number_variation"
+                        :intro="intros['copy-number-variation']"
+                        :task="taskDetail"
+                        :samples="samples"
+                    />
+                </q-tab-panel>
+                <q-tab-panel name="copy-number-variation-wes" v-if="tabValid('copy-number-variation-wes')">
+                    <CopyNumberVariationVueWes
                         :viewConfig="module.copy_number_variation"
                         :intro="intros['copy-number-variation']"
                         :task="taskDetail"
@@ -187,6 +202,7 @@ import QcVue from './qc/index.vue'
 import MutaionVue from './mutation/index.vue'
 import FusionVue from './fusion/index.vue'
 import CopyNumberVariationVue from './copy-number-variation/index.vue'
+import CopyNumberVariationVueWes from './copy-number-variation-wes/index.vue'
 import CopyNumberVariationGeneVue from './copy-number-variation-gene/index.vue'
 import MicrosatelliteInstabilityVue from './microsatellite-instability/index.vue'
 import TumorMutationLoadVue from './tumor-mutation-load/index.vue'
@@ -380,6 +396,10 @@ const readResultAndModuleJson = async () => {
 }
 
 const tabValid = (name) => {
+    if (name=='copy-number-variation-wes'){
+        if (module.value.copy_number_variation && module.value.copy_number_variation.showCNVWES)
+        return true
+    }
     return intros.value[name]
 }
 </script>

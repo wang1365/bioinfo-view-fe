@@ -338,6 +338,7 @@ export default {
     TumorMutationLoadAnalysis: 'Tumor Mutation Load Analysis',
     HomologousRecombinationDefectAnalysis: 'Homologous Recombination Defect Analysis',
     CopyNumberVariationAnalysis: 'Copy Number Variation Analysis',
+    CopyNumberVariationWes: 'Copy Number Variation WES',
     CopyNumberVariationGeneAnalysis: 'Copy Number Variation Gene Analysis',
     MicroSatelliteInstability: 'Micro-satellite Status',
 
