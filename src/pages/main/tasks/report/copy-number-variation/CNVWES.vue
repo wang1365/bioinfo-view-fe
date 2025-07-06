@@ -2,10 +2,20 @@
     <div>
         <q-splitter v-model="splitterModel" unit="px" before-class="">
             <template v-slot:before>
-                <div :class="['column', 'q-gutter-y-xs', 'q-pr-sm', { dimmed: showSticky && stickDone }]"
-                    style="width:100%">
-                    <q-input v-model="innerSearchParams.geneSet" :label="$t('GeneSet')" readonly dense outlined
-                        stack-label class="full-width" label-color="primary">
+                <div
+                    :class="['column', 'q-gutter-y-xs', 'q-pr-sm', { dimmed: showSticky && stickDone }]"
+                    style="width:100%"
+                >
+                    <q-input
+                        v-model="innerSearchParams.geneSet"
+                        :label="$t('GeneSet')"
+                        readonly
+                        dense
+                        outlined
+                        stack-label
+                        class="full-width"
+                        label-color="primary"
+                    >
                         <template v-slot:append>
                             <q-btn padding="xs" size="sm" icon="edit" @click="openGeneSetDialog" />
                             <!-- <q-btn padding="xs" size="sm" icon="menu" /> -->
@@ -16,69 +26,197 @@
                             <span class="text-primary">Exclude selected Gensets</span>
                         </template>
                     </q-checkbox>
-                    <q-select v-model="innerSearchParams.gene" clearable multiple dense outlined hide-dropdown-icon
-                        :options="searchOptions.gene_set" :label="$t('Gene')" stack-label label-color="primary"
-                        class="full-width" use-input @filter="filterFunctions.gene_set" />
-                    <q-select v-model="innerSearchParams.acmg" clearable multiple dense outlined hide-dropdown-icon
-                        :options="searchOptions.acmg_set" :label="$t('ACMGPathogenicity')" stack-label
-                        label-color="primary" class="full-width" use-input @filter="filterFunctions.acmg_set" />
-                    <q-select v-model="innerSearchParams.user_pathogenicity" clearable multiple dense outlined
-                        hide-dropdown-icon :options="searchOptions.user_pathogenicity_set"
-                        :label="$t('UsersPathogenicity')" stack-label label-color="primary" class="full-width" use-input
-                        @filter="filterFunctions.user_pathogenicity_set" />
+                    <q-select
+                        v-model="innerSearchParams.gene"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="searchOptions.gene_set"
+                        :label="$t('Gene')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        use-input
+                        @filter="filterFunctions.gene_set"
+                    />
+                    <q-select
+                        v-model="innerSearchParams.acmg"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="searchOptions.acmg_set"
+                        :label="$t('ACMGPathogenicity')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        use-input
+                        @filter="filterFunctions.acmg_set"
+                    />
+                    <q-select
+                        v-model="innerSearchParams.user_pathogenicity"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="verdictData.options"
+                        :label="$t('UsersPathogenicity')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        use-input
+                        @filter="filterFunctions.user_pathogenicity_set"
+                    />
 
-                    <q-select v-model="innerSearchParams.cnv_cover_type" clearable multiple dense outlined
-                        hide-dropdown-icon :options="searchOptions.cnv_cover_type_set" :label="$t('CNVCoverType')"
-                        stack-label label-color="primary" class="full-width" use-input
-                        @filter="filterFunctions.cnv_cover_type_set" />
-                    <q-select v-model="innerSearchParams.cnv_type" clearable multiple dense outlined hide-dropdown-icon
-                        :options="searchOptions.cnv_type_set" :label="$t('CNVType')" stack-label label-color="primary"
-                        class="full-width" use-input @filter="filterFunctions.cnv_type_set" />
+                    <q-select
+                        v-model="innerSearchParams.cnv_cover_type"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="searchOptions.cnv_cover_type_set"
+                        :label="$t('CNVCoverType')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        use-input
+                        @filter="filterFunctions.cnv_cover_type_set"
+                    />
+                    <q-select
+                        v-model="innerSearchParams.cnv_type"
+                        clearable
+                        multiple
+                        dense
+                        outlined
+                        hide-dropdown-icon
+                        :options="searchOptions.cnv_type_set"
+                        :label="$t('CNVType')"
+                        stack-label
+                        label-color="primary"
+                        class="full-width"
+                        use-input
+                        @filter="filterFunctions.cnv_type_set"
+                    />
                     <div class="row">
                         <div class="col-6">
-                            <q-select v-model="innerSearchParams.chromosome" clearable multiple dense outlined
-                                hide-dropdown-icon :options="searchOptions.chr_set" :label="$t('Chromosome')"
-                                stack-label label-color="primary" class="full-width " use-input
-                                @filter="filterFunctions.chr_set" />
+                            <q-select
+                                v-model="innerSearchParams.chromosome"
+                                clearable
+                                multiple
+                                dense
+                                outlined
+                                hide-dropdown-icon
+                                :options="searchOptions.chr_set"
+                                :label="$t('Chromosome')"
+                                stack-label
+                                label-color="primary"
+                                class="full-width "
+                                use-input
+                                @filter="filterFunctions.chr_set"
+                            />
                         </div>
                         <div class="col-3">
-                            <q-input v-model="innerSearchParams.start" dense outlined stack-label class="full-width"
-                                label-color="primary" :label="$t('Start')">
+                            <q-input
+                                v-model="innerSearchParams.start"
+                                dense
+                                outlined
+                                stack-label
+                                class="full-width"
+                                label-color="primary"
+                                :label="$t('Start')"
+                            >
                             </q-input>
                         </div>
                         <div class="col-3">
-                            <q-input v-model="innerSearchParams.end" dense outlined stack-label class="full-width"
-                                label-color="primary" :label="$t('End')">
+                            <q-input
+                                v-model="innerSearchParams.end"
+                                dense
+                                outlined
+                                stack-label
+                                class="full-width"
+                                label-color="primary"
+                                :label="$t('End')"
+                            >
                             </q-input>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <q-input v-model="innerSearchParams.cnv_length_ge" dense outlined class="full-width"
-                                stack-label label-color="primary" :label="'CNV Length>='">
+                            <q-input
+                                v-model="innerSearchParams.cnv_length_ge"
+                                dense
+                                outlined
+                                class="full-width"
+                                stack-label
+                                label-color="primary"
+                                :label="'CNV Length>='"
+                            >
                                 <template v-slot:append> bp </template>
                             </q-input>
                         </div>
                         <div class="col-6">
                             <div class="col-6">
-                                <q-input v-model="innerSearchParams.cnv_length_le" dense outlined class="full-width"
-                                    stack-label label-color="primary" :label="$t('CNV Length<=')">
+                                <q-input
+                                    v-model="innerSearchParams.cnv_length_le"
+                                    dense
+                                    outlined
+                                    class="full-width"
+                                    stack-label
+                                    label-color="primary"
+                                    :label="$t('CNV Length<=')"
+                                >
                                     <template v-slot:append> bp </template>
                                 </q-input>
                             </div>
                         </div>
                     </div>
-                    <q-input v-model="innerSearchParams.copy_number" dense outlined class="col-3" label-color="primary"
-                        stack-label :label="$t('CopyNumber')">
+                    <q-input
+                        v-model="innerSearchParams.copy_number"
+                        dense
+                        outlined
+                        class="col-3"
+                        label-color="primary"
+                        stack-label
+                        :label="$t('CopyNumber')"
+                    >
                     </q-input>
                     <div>
                         <div class="row q-gutter-x-sm">
-                            <q-btn color="primary" :label="$t('Confirm')" size="md" dense padding="sm" icon="search"
-                                @click="search" />
-                            <q-btn color="primary" :label="$t('Reset')" size="md" dense padding="sm"
-                                icon="settings_backup_restore" @click="reset" />
-                            <q-btn :href="tableFile" :download="tableFileName" :label="$t('Download')" padding="sm"
-                                dense icon="south" color="primary" target="_blank" size="md" @click="downloadFile()" />
+                            <q-btn
+                                color="primary"
+                                :label="$t('Confirm')"
+                                size="md"
+                                dense
+                                padding="sm"
+                                icon="search"
+                                @click="search"
+                            />
+                            <q-btn
+                                color="primary"
+                                :label="$t('Reset')"
+                                size="md"
+                                dense
+                                padding="sm"
+                                icon="settings_backup_restore"
+                                @click="reset"
+                            />
+                            <q-btn
+                                :href="tableFile"
+                                :download="tableFileName"
+                                :label="$t('Download')"
+                                padding="sm"
+                                dense
+                                icon="south"
+                                color="primary"
+                                target="_blank"
+                                size="md"
+                                @click="downloadFile()"
+                            />
                         </div>
                     </div>
                 </div>
@@ -86,21 +224,35 @@
 
             <template v-slot:after>
                 <div style="position:relative">
-                    <a-table style="z-index:1" :loading="loading" :data-source="filteredRows" :columns="columns"
-                        :scroll="{ x: '100%', y: 650 }" :custom-row="customRow" :sticky="true" rowKey="lineNumber"
-                        :row-selection="rowSelection">
+                    <a-table
+                        style="z-index:1"
+                        :loading="loading"
+                        :data-source="filteredRows"
+                        :columns="columns"
+                        :scroll="{ x: '100%', y: 650 }"
+                        :custom-row="customRow"
+                        :sticky="true"
+                        rowKey="lineNumber"
+                        :row-selection="rowSelection"
+                    >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'expand'">
                                 <div class="cursor-pointer" @click="record.expanded = !record.expanded">
-                                    <q-icon :name="record.expanded ? 'unfold_less' : 'unfold_more'"
-                                        :color="record.expanded ? 'purple' : 'primary'" size="sm" />
+                                    <q-icon
+                                        :name="record.expanded ? 'unfold_less' : 'unfold_more'"
+                                        :color="record.expanded ? 'purple' : 'primary'"
+                                        size="sm"
+                                    />
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'geneInfo'">
                                 <q-scroll-area style="height: 300px;" v-if="record.expanded">
-                                    <div class="text-weight-bolder text-green-5"
-                                        v-for="item of record.gene_data.slice(0, 2)" :key="item"
-                                        @click="findCnvkit(item)">
+                                    <div
+                                        class="text-weight-bolder text-green-5"
+                                        v-for="item of record.gene_data.slice(0, 2)"
+                                        :key="item"
+                                        @click="findCnvkit(item)"
+                                    >
                                         {{ item }}
                                     </div>
                                     <div class="text-weight-bolder text-blue-5">
@@ -117,9 +269,12 @@
                                     </div>
                                 </q-scroll-area>
                                 <div v-if="!record.expanded">
-                                    <div class="text-weight-bolder text-green-5"
-                                        v-for="item of record.gene_data.slice(0, 2)" :key="item"
-                                        @click="findCnvkit(item)">
+                                    <div
+                                        class="text-weight-bolder text-green-5"
+                                        v-for="item of record.gene_data.slice(0, 2)"
+                                        :key="item"
+                                        @click="findCnvkit(item)"
+                                    >
                                         {{ item }}
                                     </div>
                                     <div class="text-weight-bolder text-blue-5">
@@ -148,14 +303,48 @@
                                     </div>
                                 </div>
                             </template>
+
                             <template v-if="column.dataIndex === 'userVerdict'">
-                                <div class="row" v-if="record.user_verdict.length == 0"
-                                    @click="currentRow = record, userVerdictVisible = true">NA</div>
-                                <div class="row" v-if="record.user_verdict.length != 0">
-                                    <q-chip @click="currentRow = record, userVerdictVisible = true" color="orange"
-                                        outline square dense v-for="item of record.user_verdict" v-bind:key="item">{{
-                                            item }}</q-chip>
+                                <div class="row justify-center">
+                                    <template v-for="v in record.userVerdict" :key="v">
+                                        <q-btn
+                                            :label="v"
+                                            color="primary"
+                                            size="sm"
+                                            outline
+                                            padding="3px"
+                                            class="q-ma-xs"
+                                        />
+                                    </template>
+                                    <q-btn
+                                        flat
+                                        icon="people"
+                                        size="sm"
+                                        color="grey"
+                                        padding="3px"
+                                        @click="showVerdictDlg(record)"
+                                    />
                                 </div>
+                                <!-- <div
+                                    class="row"
+                                    v-if="record.userVerdict.length == 0"
+                                    @click="currentRow = record, userVerdictVisible = true"
+                                >
+                                    NA
+                                </div>
+                                <div class="row" v-if="record.userVerdict.length != 0">
+                                    <q-chip
+                                        @click="currentRow = record, userVerdictVisible = true"
+                                        color="orange"
+                                        outline
+                                        square
+                                        dense
+                                        v-for="item of record.userVerdict"
+                                        v-bind:key="item"
+                                        >{{
+                                            item }}</q-chip
+                                    >
+                                </div> -->
                             </template>
                             <template v-if="column.dataIndex === 'acmg'">
                                 <template v-for="acmg in record.acmg_data" :key="acmg">
@@ -200,8 +389,12 @@
                             </template>
                             <template v-if="column.dataIndex === 'plot'">
                                 <div class="row">
-                                    <img :src="'/igv' + record.Plot.replace('//', '/')" alt="."
-                                        style="width: 100px;height: 100px;" @click="clickDetail(record)" />
+                                    <img
+                                        :src="'/igv' + record.Plot.replace('//', '/')"
+                                        alt="."
+                                        style="width: 100px;height: 100px;"
+                                        @click="clickDetail(record)"
+                                    />
                                 </div>
                             </template>
                             <!-- <template v-if="column.key === 'operation'">
@@ -236,9 +429,13 @@
                         <div class="q-row-2">
                             <q-separator />
                             <q-scroll-area style="height: 500px">
-                                <q-option-group :options="expandedColumns" type="checkbox"
-                                    v-model="selectedExpandColIdx" @change="atOptionGroupChange"
-                                    @update:model-value="atOptionGroupChange" />
+                                <q-option-group
+                                    :options="expandedColumns"
+                                    type="checkbox"
+                                    v-model="selectedExpandColIdx"
+                                    @change="atOptionGroupChange"
+                                    @update:model-value="atOptionGroupChange"
+                                />
                             </q-scroll-area>
                             <q-separator />
                         </div>
@@ -299,12 +496,36 @@
         <q-card style="max-width: 70vw;max-height: 90vh">
             <q-card-section>
                 <h5>Select User Verdict</h5>
-                <q-select v-model="currentRow.user_verdict" clearable multiple dense outlined hide-dropdown-icon
+                <q-select
+                    v-model="currentRow.userVerdict"
+                    clearable
+                    multiple
+                    dense
+                    outlined
+                    hide-dropdown-icon
                     :options="['Pathogenic', 'Likely pathogenic', 'VUS++', 'VUS+', 'VUS', 'Likely benign', 'Benign']"
-                    stack-label label-color="primary" class="full-width" use-input />
+                    stack-label
+                    label-color="primary"
+                    class="full-width"
+                    use-input
+                />
             </q-card-section>
             <q-card-actions align="center" vertical>
                 <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
+    <q-dialog v-model="verdictData.visible">
+        <q-card class="q-pa-sm" style="width:50vw;height: 55vh;">
+            <q-card-section>
+                <div class="text-primary">{{ verdictData.record.geneIdentifier }}</div>
+            </q-card-section>
+            <q-card-section>
+                <q-option-group v-model="verdictData.verdict" type="checkbox" :options="verdictData.options" />
+            </q-card-section>
+            <q-card-actions align="right">
+                <q-btn :label='$t("Confirm")' @click="onVerdictConfirm()" color="primary" />
+                <q-btn :label='$t("Cancel")' color="primary" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -324,6 +545,12 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
 import { useCustomCell, WES_PARAMS } from './index'
+import { setVerdictResult } from 'src/api/verdict'
+import { getCurrentUsername } from 'src/utils/user'
+import { listVerdictByPatient } from 'src/api/verdict'
+import { globalStore }from 'src/stores/global'
+
+const store = globalStore()
 
 const { t } = useI18n()
 const splitterModel = ref(300)
@@ -335,12 +562,60 @@ const geneSetMessage = ref("Ok")
 const geneSetInput = ref("")
 const geneSetOkValue = ref([])
 const geneSetErrValue = ref([])
+const verdictData = ref({
+    visible: false,
+    record: null,
+    verdict: [],
+    options: [
+    {
+        label: 'Pathogenic',
+        value: 'pathogenic',
+    },
+    {
+        label: 'Likely pathogenic',
+        value: 'likely_pathogenic',
+    },
+    {
+        label: 'VUS++',
+        value: 'vus++',
+    },
+    {
+        label: 'VUS+',
+        value: 'vus+',
+    },
+    {
+        label: 'VUS',
+        value: 'vus',
+    },
+    {
+        label: 'Likely benign',
+        value: 'likely_benign',
+    },
+    {
+        label: 'Benign',
+        value: 'benign',
+    },
+]
 
+})
 const openGeneSetDialog = () => {
     genesetEdit.value = true
     geneSetInput.value = [...geneSetOkValue.value, ...geneSetErrValue.value].join(",")
 }
 
+function showVerdictDlg(record) {
+    verdictData.value.visible = true
+    verdictData.value.record = record
+    verdictData.value.verdict = record.userVerdict || []
+}
+
+function onVerdictConfirm() {
+    const username = getCurrentUsername()
+    setVerdictResult(username, verdictData.value.record.geneIdentifier, verdictData.value.verdict)
+
+    verdictData.value.record.userVerdict = verdictData.value.verdict
+    verdictData.value.visible = false
+}
 const checkGeneSetInput = () => {
     geneSetStep.value = 2
     let okValues = new Set()
@@ -540,6 +815,11 @@ const search = () => {
             }
         }
 
+        up=innerSearchParams.value.user_pathogenicity
+         if (up && up.length > 0 && up.every(upi => !row.userVerdict.includes(upi.toLowerCase()))) {
+            return false
+        }
+
         resultRows.push(row)
     }
     console.log(resultRows)
@@ -725,11 +1005,27 @@ const acmgCustomSort = (a, b) => {
     return a.localeCompare(b);
 };
 
-const buildShowRowData = (originRows) => {
+const loadWesVerdictData = async () => {
+    const user_id = store.currentUser.username
+    return await listVerdictByPatient(user_id)
+}
+
+const buildShowRowData = async (originRows) => {
+    let verdict = await loadWesVerdictData()
+    // verdict是个数组，将其转化为map，key为gene_identifier，value为result
+    let verdictMap = new Map()
+    verdict.forEach(v => {
+        verdictMap.set(v.gene_identifier, v.result)
+    })
+    console.log('verdictMap', verdictMap)
     let rows = []
     for (let originRow of originRows) {
+
+
         let row = JSON.parse(JSON.stringify(originRow))
-        row.user_verdict = []
+        let gene_identifier = `${row['Gene']}|${row['Chr']}|${row['Start']}|${row['End']}|${row['CNV_Type']}`
+        row.geneIdentifier = gene_identifier
+        row.userVerdict = verdictMap.get(gene_identifier) || []
         row.acmg_data = []
         row.acmg_data.push(originRow.ACMG_result)
 
