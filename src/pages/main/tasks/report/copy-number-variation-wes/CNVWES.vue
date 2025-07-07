@@ -575,6 +575,7 @@ const verdictData = ref({
     visible: false,
     record: null,
     verdict: [],
+    verdictMap:{},
     options: [
     {
         label: 'Pathogenic',
@@ -739,7 +740,7 @@ const innerSearchParams = ref({
     excludeGensets: false,
     gene: [],
     acmg: [],
-    user_pathogenicity: "",
+    user_pathogenicity: [],
     cnv_cover_type: [],
     cnv_type: [],
     chromosome: [],
@@ -826,17 +827,13 @@ const search = () => {
         }
 
         let up=innerSearchParams.value.user_pathogenicity
-         if (up && up.length > 0 && up.every(upi => !row.userVerdict.includes(upi.toLowerCase()))) {
+         if (up && up.length > 0 && up.every(upi => !row.userVerdict.includes(upi.value.toLowerCase()))) {
             continue
         }
 
         resultRows.push(row)
     }
-    console.log(resultRows)
-    debugger
-     buildShowRowData(resultRows).then(()=>{
-console.log("builded")
-     })
+     buildShowRowData(resultRows)
 }
 const reset = () => {
     innerSearchParams.value = {
@@ -915,8 +912,8 @@ const columns = ref([
 
 
 
-onMounted(() => {
-    loadTable()
+onMounted(async () => {
+     await loadTable()
 })
 
 watch(() => props.samples,
@@ -957,9 +954,17 @@ const findCnvkit = (gene) => {
     console.log(data)
 }
 // 加载表格数据
-const loadTable = () => {
+const loadTable = async () => {
 
     console.log(`CNV_WES/${samples.value}.CNV_WES.txt`)
+    let verdict = await loadWesVerdictData()
+    // verdict是个数组，将其转化为map，key为gene_identifier，value为result
+    let verdictMap = new Map()
+    verdict.forEach(v => {
+        verdictMap.set(v.gene_identifier, v.result)
+    })
+    verdictData.value.verdictMap=verdictMap
+    console.log('verdictMap', verdictMap)
     readTaskFile(route.params.id, `CNV_WES/${samples.value[0].identifier}.CNV_WES.txt`).then((res) => {
 
         let data = parseCsvToList(res)
@@ -1023,28 +1028,21 @@ const loadWesVerdictData = async () => {
     return await listVerdictByPatient(user_id)
 }
 
-const buildShowRowData = async (originRows) => {
-    let verdict = await loadWesVerdictData()
+const buildShowRowData = (originRows) => {
     // verdict是个数组，将其转化为map，key为gene_identifier，value为result
-    let verdictMap = new Map()
-    verdict.forEach(v => {
-        verdictMap.set(v.gene_identifier, v.result)
-    })
-    console.log('verdictMap', verdictMap)
     let rows = []
     for (let originRow of originRows) {
-
-
-        let row = JSON.parse(JSON.stringify(originRow))
+        let row = originRow
         let gene_identifier = `${row['Gene']}|${row['Chr']}|${row['Start']}|${row['End']}|${row['CNV_Type']}`
         row.geneIdentifier = gene_identifier
-        row.userVerdict = verdictMap.get(gene_identifier) || []
+        row.userVerdict = verdictData.value.verdictMap.get(gene_identifier) || []
         row.acmg_data = []
         row.acmg_data.push(originRow.ACMG_result)
 
         for (const element of row.ACMG.split(';')) {
             row.acmg_data.push(element)
         }
+        row.acmg_data=row.acmg_data.sort()
 
         row.hpo_data = row.HPO.split(';')
         row.show_hpo_more = false
