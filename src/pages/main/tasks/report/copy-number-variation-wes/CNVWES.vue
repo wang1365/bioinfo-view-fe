@@ -349,14 +349,8 @@
                             <template v-if="column.dataIndex === 'acmg'">
                                 <template v-for="acmg in record.acmg_data" :key="acmg">
                                     <div>
-                                        <q-chip
-                                            color="orange"
-                                            outline
-                                            square
-                                            v-if='acmg !== "."'
-                                            dense
-                                            >{{ acmg }}</q-chip
-                                        >
+                                        <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{ acmg
+                                        }}</q-chip>
                                     </div>
                                 </template>
                             </template>
@@ -557,7 +551,7 @@ import { useCustomCell, WES_PARAMS } from './index'
 import { setVerdictResult } from 'src/api/verdict'
 import { getCurrentUsername } from 'src/utils/user'
 import { listVerdictByPatient } from 'src/api/verdict'
-import { globalStore }from 'src/stores/global'
+import { globalStore } from 'src/stores/global'
 
 const store = globalStore()
 
@@ -575,37 +569,37 @@ const verdictData = ref({
     visible: false,
     record: null,
     verdict: [],
-    verdictMap:{},
+    verdictMap: {},
     options: [
-    {
-        label: 'Pathogenic',
-        value: 'pathogenic',
-    },
-    {
-        label: 'Likely pathogenic',
-        value: 'likely_pathogenic',
-    },
-    {
-        label: 'VUS++',
-        value: 'vus++',
-    },
-    {
-        label: 'VUS+',
-        value: 'vus+',
-    },
-    {
-        label: 'VUS',
-        value: 'vus',
-    },
-    {
-        label: 'Likely benign',
-        value: 'likely_benign',
-    },
-    {
-        label: 'Benign',
-        value: 'benign',
-    },
-]
+        {
+            label: 'Pathogenic',
+            value: 'pathogenic',
+        },
+        {
+            label: 'Likely pathogenic',
+            value: 'likely_pathogenic',
+        },
+        {
+            label: 'VUS++',
+            value: 'vus++',
+        },
+        {
+            label: 'VUS+',
+            value: 'vus+',
+        },
+        {
+            label: 'VUS',
+            value: 'vus',
+        },
+        {
+            label: 'Likely benign',
+            value: 'likely_benign',
+        },
+        {
+            label: 'Benign',
+            value: 'benign',
+        },
+    ]
 
 })
 const openGeneSetDialog = () => {
@@ -764,6 +758,19 @@ const search = () => {
     for (const row of originDataRows.value) {
         // 判断 gene 是否包含
 
+        if (innerSearchParams.value.geneSet.length > 0) {
+            console.log(row.Gene.split(";"))
+            console.log(new Set(innerSearchParams.value.geneSet))
+            if (innerSearchParams.value.excludeGensets) {
+                if (row.Gene.split(";").some(item => new Set(innerSearchParams.value.geneSet.split(",")).has(item))) {
+                    continue
+                }
+            } else {
+                if (!row.Gene.split(";").some(item => new Set(innerSearchParams.value.geneSet.split(",")).has(item))) {
+                    continue
+                }
+            }
+        }
         if (innerSearchParams.value.gene && innerSearchParams.value.gene.length > 0) {
             let geneSet = new Set(innerSearchParams.value.gene)
             if (!row.Gene.split(";").some(item => geneSet.has(item))) {
@@ -826,14 +833,14 @@ const search = () => {
             }
         }
 
-        let up=innerSearchParams.value.user_pathogenicity
-         if (up && up.length > 0 && up.every(upi => !row.userVerdict.includes(upi.value.toLowerCase()))) {
+        let up = innerSearchParams.value.user_pathogenicity
+        if (up && up.length > 0 && up.every(upi => !row.userVerdict.includes(upi.value.toLowerCase()))) {
             continue
         }
 
         resultRows.push(row)
     }
-     buildShowRowData(resultRows)
+    buildShowRowData(resultRows)
 }
 const reset = () => {
     innerSearchParams.value = {
@@ -913,7 +920,7 @@ const columns = ref([
 
 
 onMounted(async () => {
-     await loadTable()
+    await loadTable()
 })
 
 watch(() => props.samples,
@@ -963,7 +970,7 @@ const loadTable = async () => {
     verdict.forEach(v => {
         verdictMap.set(v.gene_identifier, v.result)
     })
-    verdictData.value.verdictMap=verdictMap
+    verdictData.value.verdictMap = verdictMap
     console.log('verdictMap', verdictMap)
     readTaskFile(route.params.id, `CNV_WES/${samples.value[0].identifier}.CNV_WES.txt`).then((res) => {
 
@@ -1042,7 +1049,7 @@ const buildShowRowData = (originRows) => {
         for (const element of row.ACMG.split(';')) {
             row.acmg_data.push(element)
         }
-        row.acmg_data=row.acmg_data.sort()
+        row.acmg_data = row.acmg_data.sort()
 
         row.hpo_data = row.HPO.split(';')
         row.show_hpo_more = false
@@ -1064,13 +1071,13 @@ const buildShowRowData = (originRows) => {
 
         row.dgv_data = []
         for (const element of row.DGV.split(';')) {
-            row.dgv_data.push(element.replace(",",""))
+            row.dgv_data.push(element.replace(",", ""))
         }
         row.show_dgv_more = false
 
         row.clinvar_data = []
         for (const element of row.Clinvar.split(';')) {
-            row.clinvar_data.push(element.replace(",",""))
+            row.clinvar_data.push(element.replace(",", ""))
         }
         row.show_clinvar_more = false
         row.expanded = false
