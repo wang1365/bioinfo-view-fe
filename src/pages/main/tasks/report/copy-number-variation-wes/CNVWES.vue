@@ -348,7 +348,16 @@
                             </template>
                             <template v-if="column.dataIndex === 'acmg'">
                                 <template v-for="acmg in record.acmg_data" :key="acmg">
-                                    <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{ acmg }}</q-chip>
+                                    <div>
+                                        <q-chip
+                                            color="orange"
+                                            outline
+                                            square
+                                            v-if='acmg !== "."'
+                                            dense
+                                            >{{ acmg }}</q-chip
+                                        >
+                                    </div>
                                 </template>
                             </template>
                             <template v-if="column.dataIndex === 'relatedHPOs'">
@@ -753,6 +762,7 @@ const search = () => {
     let resultRows = []
     for (const row of originDataRows.value) {
         // 判断 gene 是否包含
+
         if (innerSearchParams.value.gene && innerSearchParams.value.gene.length > 0) {
             let geneSet = new Set(innerSearchParams.value.gene)
             if (!row.Gene.split(";").some(item => geneSet.has(item))) {
@@ -815,15 +825,18 @@ const search = () => {
             }
         }
 
-        up=innerSearchParams.value.user_pathogenicity
+        let up=innerSearchParams.value.user_pathogenicity
          if (up && up.length > 0 && up.every(upi => !row.userVerdict.includes(upi.toLowerCase()))) {
-            return false
+            continue
         }
 
         resultRows.push(row)
     }
     console.log(resultRows)
-    buildShowRowData(resultRows)
+    debugger
+     buildShowRowData(resultRows).then(()=>{
+console.log("builded")
+     })
 }
 const reset = () => {
     innerSearchParams.value = {
@@ -1051,15 +1064,22 @@ const buildShowRowData = async (originRows) => {
         row.gene_related_diseases_data = row.Gene_Related_Diseases.split(';')
         row.show_gene_related_diseases_more = false
 
-        row.dgv_data = row.DGV.split(';')
+        row.dgv_data = []
+        for (const element of row.DGV.split(';')) {
+            row.dgv_data.push(element.replace(",",""))
+        }
         row.show_dgv_more = false
 
-        row.clinvar_data = row.Clinvar.split(';')
+        row.clinvar_data = []
+        for (const element of row.Clinvar.split(';')) {
+            row.clinvar_data.push(element.replace(",",""))
+        }
         row.show_clinvar_more = false
         row.expanded = false
         rows.push(row)
     }
     filteredRows.value = rows
+    console.log(filteredRows.value)
 }
 
 const filterFunctions = {
