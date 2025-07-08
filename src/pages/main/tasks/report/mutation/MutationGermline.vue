@@ -169,16 +169,14 @@
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn
-                            :href="tableFile"
-                            :download="tableFileName"
-                            :label="$t('Download')"
-                            padding="sm"
-                            icon="south"
-                            color="primary"
-                            target="_blank"
-                            size="md"
-                        />
+                        <q-btn icon="south" color="primary" :label="$t('Download')">
+                            <q-menu>
+                                <q-list>
+                                    <q-item clickable><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item>
+                                    <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
+                                </q-list>
+                            </q-menu>
+                        </q-btn>
                     </div>
                 </div>
             </template>
@@ -334,6 +332,7 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
 import { useCustomCell } from './index'
+import * as XLSX from "xlsx";
 
 const { t } = useI18n()
 const customCell = useCustomCell('col250')
@@ -956,6 +955,34 @@ const filterChange = () => {
     emit('filterChange', getChangedData())
 }
 defineExpose({ getChangedData, })
+
+
+
+const downloadExcel = () => {
+    loading.value = true
+    readTaskMuFile(props.task.id, 'Mut_somatic', 'standard-new')
+        .then((res) => {
+            let rows = res.split('\n')
+            const data = rows.map(row => row.split('\t'))
+
+            // 创建工作簿和工作表
+            const ws = XLSX.utils.aoa_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+            // 导出Excel文件
+            // fileName将.xxx后缀替换为xlsx
+            const fileNameWithoutExt = tableFileName.value.substring(0, tableFileName.value.lastIndexOf('.'));
+            const fileNameWithXlsx = `${fileNameWithoutExt}.xlsx`;
+            XLSX.writeFile(wb, fileNameWithXlsx);
+        })
+        .catch((err) => {
+            errorMessage(err.message || t('DownloadFailed'))
+        })
+        .finally(() => {
+            loading.value = false
+        })
+}
 </script>
 
 <style lang="scss" scoped>
