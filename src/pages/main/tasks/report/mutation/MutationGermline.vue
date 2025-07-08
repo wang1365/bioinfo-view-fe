@@ -960,7 +960,7 @@ defineExpose({ getChangedData, })
 
 const downloadExcel = () => {
     loading.value = true
-    readTaskMuFile(props.task.id, 'Mut_somatic', 'standard-new')
+    readTaskMuFile(props.task.id, 'Mut_germline', 'standard-new')
         .then((res) => {
             let rows = res.split('\n')
             const data = rows.map(row => row.split('\t'))
