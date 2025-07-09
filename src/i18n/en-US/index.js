@@ -405,6 +405,7 @@ export default {
     CopyNumberVariationClassification: 'Copy Number Variation Classification',
     DrugTarget: 'Drug Target',
     MedicationLevel: 'Medication Level',
+    OriginalFile: 'Original File',
 
     // 微卫星不稳定
     OverallMicrosatelliteStatusTable: 'Overall Microsatellite Status Table',
