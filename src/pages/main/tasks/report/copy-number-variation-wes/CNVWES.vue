@@ -18,6 +18,7 @@
                     >
                         <template v-slot:append>
                             <q-btn padding="xs" size="sm" icon="edit" @click="openGeneSetDialog" />
+                            <q-btn padding="xs" size="sm" icon="close" @click="innerSearchParams.geneSet=''" />
                             <!-- <q-btn padding="xs" size="sm" icon="menu" /> -->
                         </template>
                     </q-input>
@@ -565,6 +566,7 @@ const geneSetMessage = ref("Ok")
 const geneSetInput = ref("")
 const geneSetOkValue = ref([])
 const geneSetErrValue = ref([])
+const verdictMap=ref({})
 const verdictData = ref({
     visible: false,
     record: null,
@@ -615,7 +617,10 @@ function showVerdictDlg(record) {
 
 function onVerdictConfirm() {
     const username = getCurrentUsername()
+
     setVerdictResult(username, verdictData.value.record.geneIdentifier, verdictData.value.verdict)
+    verdictMap.value.set(verdictData.value.record.geneIdentifier,verdictData.value.verdict)
+    console.log(verdictData.value.record.geneIdentifier,verdictMap.value)
 
     verdictData.value.record.userVerdict = verdictData.value.verdict
     verdictData.value.visible = false
@@ -844,19 +849,19 @@ const search = () => {
 }
 const reset = () => {
     innerSearchParams.value = {
-        geneSet: "",
-        excludeGensets: false,
-        gene: [],
-        acmg: [],
-        user_pathogenicity: "",
-        cnv_cover_type: [],
-        cnv_type: [],
-        chromosome: [],
-        start: "",
-        end: "",
-        cnv_length_ge: "",
-        cnv_length_le: "",
-        copy_number: ""
+         geneSet: "",
+    excludeGensets: false,
+    gene: [],
+    acmg: [],
+    user_pathogenicity: [],
+    cnv_cover_type: [],
+    cnv_type: [],
+    chromosome: [],
+    start: "",
+    end: "",
+    cnv_length_ge: "",
+    cnv_length_le: "",
+    copy_number: ""
     }
     search()
 }
@@ -966,17 +971,17 @@ const loadTable = async () => {
     console.log(`CNV_WES/${samples.value}.CNV_WES.txt`)
     let verdict = await loadWesVerdictData()
     // verdict是个数组，将其转化为map，key为gene_identifier，value为result
-    let verdictMap = new Map()
+    let map = new Map()
     verdict.forEach(v => {
-        verdictMap.set(v.gene_identifier, v.result)
+        map.set(v.gene_identifier, v.result)
     })
-    verdictData.value.verdictMap = verdictMap
-    console.log('verdictMap', verdictMap)
+    verdictData.value.verdictMap = map
+    verdictMap.value=map
+    console.log('verdictMap', map)
     readTaskFile(route.params.id, `CNV_WES/${samples.value[0].identifier}.CNV_WES.txt`).then((res) => {
 
         let data = parseCsvToList(res)
         originDataRows.value = data.rows
-        console.log(data.rows)
 
         buildShowRowData(data.rows)
         buildSearchOptions(data.rows)
@@ -1038,11 +1043,12 @@ const loadWesVerdictData = async () => {
 const buildShowRowData = (originRows) => {
     // verdict是个数组，将其转化为map，key为gene_identifier，value为result
     let rows = []
+    console.log(originRows)
     for (let originRow of originRows) {
         let row = originRow
         let gene_identifier = `${row['Gene']}|${row['Chr']}|${row['Start']}|${row['End']}|${row['CNV_Type']}`
         row.geneIdentifier = gene_identifier
-        row.userVerdict = verdictData.value.verdictMap.get(gene_identifier) || []
+        row.userVerdict = verdictMap.value.get(gene_identifier) || []
         row.acmg_data = []
         row.acmg_data.push(originRow.ACMG_result)
 
@@ -1084,7 +1090,6 @@ const buildShowRowData = (originRows) => {
         rows.push(row)
     }
     filteredRows.value = rows
-    console.log(filteredRows.value)
 }
 
 const filterFunctions = {
