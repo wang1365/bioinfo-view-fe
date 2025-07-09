@@ -348,12 +348,23 @@
                                 </div> -->
                             </template>
                             <template v-if="column.dataIndex === 'acmg'">
-                                <template v-for="acmg in record.acmg_data" :key="acmg">
-                                    <div>
-                                        <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{ acmg
-                                        }}</q-chip>
-                                    </div>
-                                </template>
+                                <div v-for="acmg in record.ACMG_result.split(';')" :key="acmg">
+                                    <q-chip color="orange" outline square v-if='acmg !== "."' dense>{{ acmg
+                                    }}</q-chip>
+                                </div>
+                                <div>
+                                    <span>
+                                        <q-chip
+                                            color="orange"
+                                            outline
+                                            square
+                                            v-if='record.ACMG !== "."'
+                                            dense
+                                            >{{ record.ACMG.replace(';','/')
+                                            }}</q-chip
+                                        >
+                                    </span>
+                                </div>
                             </template>
                             <template v-if="column.dataIndex === 'relatedHPOs'">
                                 <q-scroll-area style="height: 300px;" v-if="record.expanded">
