@@ -250,7 +250,7 @@
                                 <q-scroll-area style="height: 300px;" v-if="record.expanded">
                                     <div
                                         class="text-weight-bolder text-green-5"
-                                        v-for="item of record.gene_data.slice(0, 2)"
+                                        v-for="item of record.gene_data"
                                         :key="item"
                                         @click="findCnvkit(item)"
                                     >
