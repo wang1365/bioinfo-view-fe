@@ -18,7 +18,7 @@
                     >
                         <template v-slot:append>
                             <q-btn padding="xs" size="sm" icon="edit" @click="openGeneSetDialog" />
-                            <q-btn padding="xs" size="sm" icon="close" @click="innerSearchParams.geneSet=''" />
+                            <q-btn padding="xs" size="sm" icon="close" @click="innerSearchParams.geneSet = ''" />
                             <!-- <q-btn padding="xs" size="sm" icon="menu" /> -->
                         </template>
                     </q-input>
@@ -354,15 +354,9 @@
                                 </div>
                                 <div>
                                     <span>
-                                        <q-chip
-                                            color="orange"
-                                            outline
-                                            square
-                                            v-if='record.ACMG !== "."'
-                                            dense
-                                            >{{ record.ACMG.replace(';','/')
-                                            }}</q-chip
-                                        >
+                                        <q-chip color="orange" outline square v-if='record.ACMG !== "."' dense>{{
+                                            record.ACMG.replace(';', '/')
+                                        }}</q-chip>
                                     </span>
                                 </div>
                             </template>
@@ -577,7 +571,7 @@ const geneSetMessage = ref("Ok")
 const geneSetInput = ref("")
 const geneSetOkValue = ref([])
 const geneSetErrValue = ref([])
-const verdictMap=ref({})
+const verdictMap = ref({})
 const verdictData = ref({
     visible: false,
     record: null,
@@ -630,8 +624,8 @@ function onVerdictConfirm() {
     const username = getCurrentUsername()
 
     setVerdictResult(username, verdictData.value.record.geneIdentifier, verdictData.value.verdict)
-    verdictMap.value.set(verdictData.value.record.geneIdentifier,verdictData.value.verdict)
-    console.log(verdictData.value.record.geneIdentifier,verdictMap.value)
+    verdictMap.value.set(verdictData.value.record.geneIdentifier, verdictData.value.verdict)
+    console.log(verdictData.value.record.geneIdentifier, verdictMap.value)
 
     verdictData.value.record.userVerdict = verdictData.value.verdict
     verdictData.value.visible = false
@@ -860,19 +854,19 @@ const search = () => {
 }
 const reset = () => {
     innerSearchParams.value = {
-         geneSet: "",
-    excludeGensets: false,
-    gene: [],
-    acmg: [],
-    user_pathogenicity: [],
-    cnv_cover_type: [],
-    cnv_type: [],
-    chromosome: [],
-    start: "",
-    end: "",
-    cnv_length_ge: "",
-    cnv_length_le: "",
-    copy_number: ""
+        geneSet: "",
+        excludeGensets: false,
+        gene: [],
+        acmg: [],
+        user_pathogenicity: [],
+        cnv_cover_type: [],
+        cnv_type: [],
+        chromosome: [],
+        start: "",
+        end: "",
+        cnv_length_ge: "",
+        cnv_length_le: "",
+        copy_number: ""
     }
     search()
 }
@@ -987,7 +981,7 @@ const loadTable = async () => {
         map.set(v.gene_identifier, v.result)
     })
     verdictData.value.verdictMap = map
-    verdictMap.value=map
+    verdictMap.value = map
     console.log('verdictMap', map)
     readTaskFile(route.params.id, `CNV_WES/${samples.value[0].identifier}.CNV_WES.txt`).then((res) => {
 
@@ -1075,14 +1069,17 @@ const buildShowRowData = (originRows) => {
         row.show_gene_more = false
 
         row.cnv_length_data = ''
-        if (row.CNV_Length < 1000) {
-            row.cnv_length_data = `${row.CNV_Length.toFixed(2)} bp`
-        } else if (row.CNV_Length >= 1000 && row.CNV_Length < 1000000) {
-            row.cnv_length_data = `${(row.CNV_Length / 1000).toFixed(2)} Kbp`
-        } else if (row.CNV_Length >= 1000000) {
-            row.cnv_length_data = `${(row.CNV_Length / 10000000).toFixed(2)} Mbp`
-        }
 
+        if (!isNaN(Number.parseInt(row.CNV_Length))) {
+            row.CNV_Length = Number.parseInt(row.CNV_Length)
+            if (row.CNV_Length < 1000) {
+                row.cnv_length_data = `${row.CNV_Length.toFixed(2)} bp`
+            } else if (row.CNV_Length >= 1000 && row.CNV_Length < 1000000) {
+                row.cnv_length_data = `${(row.CNV_Length / 1000).toFixed(2)} Kbp`
+            } else if (row.CNV_Length >= 1000000) {
+                row.cnv_length_data = `${(row.CNV_Length / 10000000).toFixed(2)} Mbp`
+            }
+        }
         row.gene_related_diseases_data = row.Gene_Related_Diseases.split(';')
         row.show_gene_related_diseases_more = false
 
