@@ -1051,7 +1051,7 @@ const buildShowRowData = (originRows) => {
     console.log(originRows)
     for (let originRow of originRows) {
         let row = originRow
-        let gene_identifier = `${row['Gene']}|${row['Chr']}|${row['Start']}|${row['End']}|${row['CNV_Type']}`
+        let gene_identifier = `${row['Gene']}|${row['Chr']}|${row['Start']}|${row['End']}|${row['CNV_Type']}`.slice(-99)
         row.geneIdentifier = gene_identifier
         row.userVerdict = verdictMap.value.get(gene_identifier) || []
         row.acmg_data = []
