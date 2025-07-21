@@ -772,6 +772,7 @@ export default {
     TotalProportion: '总占比',
     UniqReads: '去重后序列数',
     Verification: '验证',
+    Verify: '验证',
 
     VirusName: '病毒名',
 
@@ -781,4 +782,5 @@ export default {
 
     // Mut WES
     Chromosome: '染色体',
+    InputGene: '输入基因',
 }

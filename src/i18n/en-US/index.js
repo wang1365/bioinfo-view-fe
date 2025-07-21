@@ -776,6 +776,7 @@ export default {
     TotalProportion: 'Total Proportion',
     UniqReads: 'Uniq reads',
     Verification: 'Verification',
+    Verify: 'Verify',
 
     VirusName: 'Virus',
 
@@ -785,4 +786,5 @@ export default {
 
     // Mut WES
     Chromosome: 'Chromosome',
+    InputGene: 'Input Gene',
 }

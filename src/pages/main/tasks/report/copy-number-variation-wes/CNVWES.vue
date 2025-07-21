@@ -467,7 +467,7 @@
             </q-toolbar>
             <div class="q-pa-md">
                 <q-stepper v-model="geneSetStep" vertical color="primary" animated>
-                    <q-step :name="1" title="输入Gene" icon="create_new_folder" :done="step > 1">
+                    <q-step :name="1" :title="$t('InputGene')" icon="create_new_folder" :done="step > 1">
                         <div>Example: Gene1,Gene2,Gene3</div>
                         <div>
                             <q-input v-model="geneSetInput" label="" type="textarea" filled />
@@ -477,7 +477,7 @@
                         </q-stepper-navigation>
                     </q-step>
 
-                    <q-step :name="2" title="验证" icon="settings" :done="step > 2">
+                    <q-step :name="2" :title="$t('Verify')" icon="settings" :done="step > 2">
                         {{ geneSetMessage }}
 
                         <q-stepper-navigation>
