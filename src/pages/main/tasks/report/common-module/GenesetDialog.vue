@@ -78,9 +78,9 @@ const checkGeneSetInput = () => {
     geneSetOkValue.value = [...okValues]
     geneSetErrValue.value = [...errValues]
     if (geneSetErrValue.value.length == 0 && geneSetOkValue.value.length == 0) {
-        geneSetMessage.value = "没有输入有效基因数据"
+        geneSetMessage.value = t("NoValidData")
     } else if (geneSetErrValue.value.length != 0) {
-        geneSetMessage.value = geneSetErrValue.value.join(",") + " 不在基因列表中"
+        geneSetMessage.value = geneSetErrValue.value.join(",") + " " + t("NotInGeneList")
     } else {
         geneSetMessage.value = "OK"
     }

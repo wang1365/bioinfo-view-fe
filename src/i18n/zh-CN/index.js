@@ -783,4 +783,6 @@ export default {
     // Mut WES
     Chromosome: '染色体',
     InputGene: '输入基因',
+    NotInGeneList: '不在基因列表中',
+    NoValidData: '没有输入有效基因数据',
 }

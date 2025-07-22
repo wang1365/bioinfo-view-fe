@@ -787,4 +787,6 @@ export default {
     // Mut WES
     Chromosome: 'Chromosome',
     InputGene: 'Input Gene',
+    NotInGeneList: 'not in Gene List',
+    NoValidData: 'No valid Gene Data',
 }
