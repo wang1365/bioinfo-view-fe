@@ -50,7 +50,6 @@ export default boot(({ app, router, store }) => {
     api.interceptors.request.use((config) => {
         // 请求拦截器通过Header增加国际化语言参数给后端， 例如 Language：zh-CN
         const { langConfig } = globalStore()
-        console.log('===> add header:', langConfig)
         config.headers.Language = langConfig.lang
         Cookies.set('django_language', langConfig.lang)
         return config

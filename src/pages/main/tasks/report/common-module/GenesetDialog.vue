@@ -34,6 +34,7 @@
 <script setup>
 
 import { ref } from 'vue'
+import { useI18n } from "vue-i18n";
 
 const genesetEdit = ref(false)
 const geneSetStep = ref(1)
@@ -44,6 +45,7 @@ const step = ref(1)
 const gene = defineModel('gene')
 const visible = defineModel('visible')
 const geneSetInput = ref(gene.value)
+const { t } = useI18n()
 
 
 const props = defineProps({
@@ -77,9 +79,10 @@ const checkGeneSetInput = () => {
     }
     geneSetOkValue.value = [...okValues]
     geneSetErrValue.value = [...errValues]
-    if (geneSetErrValue.value.length == 0 && geneSetOkValue.value.length == 0) {
+
+    if (geneSetErrValue.value.length === 0 && geneSetOkValue.value.length === 0) {
         geneSetMessage.value = t("NoValidData")
-    } else if (geneSetErrValue.value.length != 0) {
+    } else if (geneSetErrValue.value.length !== 0) {
         geneSetMessage.value = geneSetErrValue.value.join(",") + " " + t("NotInGeneList")
     } else {
         geneSetMessage.value = "OK"
