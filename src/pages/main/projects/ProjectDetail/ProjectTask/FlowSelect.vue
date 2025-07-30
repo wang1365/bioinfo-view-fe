@@ -51,7 +51,7 @@ import { errorMessage } from 'src/utils/notify.js'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const emit = defineEmits(['flowSelected'])
+const emit = defineEmit(['flowSelected'])
 const { apiGet } = useApi()
 
 const columns = computed(() => [
@@ -62,17 +62,6 @@ const columns = computed(() => [
     { title: t('SampleType'), dataIndex: 'sample_type',  width: 50, },
     { title: t('TaskCount'), dataIndex: 'task_count',  width: 50, },
 ])
-const tableRowFields = ref([
-    'name',
-    'flow_category',
-    'desp',
-    'sample_type',
-    'task_count',
-])
-
-const tableRowSelectable = (row) => {
-    return row.task_count < row.config.taskLimit
-}
 
 const current = ref(1)
 const pageSize = ref(10)
