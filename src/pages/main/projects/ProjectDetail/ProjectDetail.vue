@@ -7,7 +7,7 @@
                     {{ props.projectDetail.name }}-
                     <span class="text-subtitle1">{{
                             toLocalString(props.projectDetail.create_time)
-                        }}</span>
+                    }}</span>
                 </q-toolbar-title>
                 <q-btn
                     v-permission="'createTask'"
@@ -60,11 +60,11 @@
             </div>
         </q-card-section>
     </q-card>
-    <q-dialog persistent v-model="openFlowSelector">
-        <FlowSelect @flowSelected="flowSelected($event)"/>
+    <q-dialog v-model="openFlowSelector">
+        <FlowSelect @flowSelected="flowSelected" />
     </q-dialog>
     <q-dialog persistent v-model="openCreateTask">
-        <CreateTask :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)"/>
+        <CreateTask :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
     </q-dialog>
 </template>
 <script setup>
@@ -93,10 +93,10 @@ const allowCreateTask = computed(() => {
     return user.task_limit === null || user.task_limit > user.task_count
 })
 
-const flowSelected = (event) => {
+const flowSelected = (flow) => {
     openFlowSelector.value = false;
-    selectedFlowId.value = event.id;
-    getFlowDetail(event.id);
+    selectedFlowId.value = flow.id;
+    getFlowDetail(flow.id);
 }
 
 const taskCreated = (event) => {
@@ -136,7 +136,7 @@ const getFlowDetail = (flowId) => {
 .my-card {
     text-align: center;
     min-width: 80px;
-    
+
     &.compact {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     }
