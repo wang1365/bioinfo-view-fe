@@ -64,7 +64,8 @@
         <FlowSelect @flowSelected="flowSelected" />
     </q-dialog>
     <q-dialog persistent v-model="openCreateTask">
-        <CreateTask :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
+        <CreateTask v-if="flowDetail.flow_category !== 'CDC'" :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
+        <CreateCdcTask v-if="flowDetail.code === '自建参考基因组'" :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
     </q-dialog>
 </template>
 <script setup>
@@ -76,6 +77,7 @@ import {globalStore} from 'src/stores/global'
 import {errorMessage} from 'src/utils/notify'
 import {useI18n} from 'vue-i18n'
 import {toLocalString} from "src/utils/time"
+import CreateCdcTask from "pages/main/projects/ProjectDetail/ProjectTask/CreateCdcTask.vue";
 
 const {t} = useI18n()
 const store = globalStore()

@@ -500,10 +500,21 @@ export default {
     ReportStickData: 'Lock result',
     ReportStickDone: 'Locked',
     ACMGPathogenicity: 'ACMG Pathogenicity',
-    UsersPathogenicity: 'User’s Pathogenicity',
+    UsersPathogenicity: "User's Pathogenicity",
     CNVCoverType: 'CNV Cover Type',
     CNVType: 'CNV Type',
     CopyNumber: 'Copy Number',
+
+    // Sequence Selection Parameters
+    SequenceSelection: 'Sequence Selection',
+    VirusName: 'Virus Name',
+    VirusType: 'Virus Type',
+    Host: 'Host',
+    HostGenomeVersion: 'Host Genome Version',
+    CustomDatabase: 'Custom Database',
+    CustomDatabaseTooltip: 'Only letters, numbers and underscores are allowed',
+    OnlyAllowAlphanumericAndUnderscore: 'Only letters, numbers and underscores are allowed',
+    DatabaseAlreadyExists: 'Database already exists',
 
     // 弹出框选择
     PopupSelectCurrrentSelected: 'Selected',

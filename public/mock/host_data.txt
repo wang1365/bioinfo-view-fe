@@ -1,0 +1,13 @@
+ALL	ALL
+human	ALL
+human	hg19
+human	hg38
+mouse	ALL
+mouse	mm10
+mouse	mm9
+rat	ALL
+rat	rn6
+rat	rn7
+zebrafish	ALL
+zebrafish	GRCz11
+zebrafish	GRCz10
