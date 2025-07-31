@@ -712,13 +712,43 @@ const atOptionGroupChange = () => {
 
 const columns = computed(() => {
     let result = [...fixedColumns]
-    result = result.splice(0, result.length - 2)
+    result = result.splice(0, result.length - 1) // 移除操作列，稍后添加
+
+    // 定义需要固定在右侧的列名
+    const rightFixedColumnNames = [
+        'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Hot',
+        'In_house_freq',
+        'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
+    ]
+
+    // 分离普通扩展列和需要固定在右侧的列
+    const normalExpandCols = []
+    const rightFixedCols = []
+
     selectedExpandColIdx.value.forEach(idx => {
-        result.push({
-            i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
-        })
+        const columnTitle = header.value[idx - 1]
+        const columnConfig = {
+            i: idx,
+            title: columnTitle,
+            dataIndex: `col${idx}`,
+            width: columnTitle === 'Strand_Bias(ref_f,ref_r,alt_f,alt_r)' ? 120: 95,
+            ellipsis: true
+        }
+
+        if (rightFixedColumnNames.includes(columnTitle)) {
+            columnConfig.fixed = 'right'
+            rightFixedCols.push(columnConfig)
+        } else {
+            normalExpandCols.push(columnConfig)
+        }
     })
-    result.push(fixedColumns[fixedColumns.length - 1])
+
+    // 按顺序添加列：固定左侧列 + 普通扩展列 + 固定右侧列 + 操作列
+    result.push(...normalExpandCols)
+    result.push(...rightFixedCols)
+    result.push(fixedColumns[fixedColumns.length - 1]) // 添加操作列
 
     // 如果有扩展列要展示，需要重置列宽
     // if (fixedColumns.length > 0) {
