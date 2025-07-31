@@ -633,11 +633,11 @@ const columns = computed(() => {
     
     // 定义需要固定在右侧的列名
     const rightFixedColumnNames = [
-        'Strand_Bias(ref_f.ref_r,alt_f,alt_r)',
+        'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
         'Hot',
         'In_house_freq',
-        'Tumor_strand_Bias(ref_f.ref_r,alt_f,alt_r)',
-        'Normal_strand_Bias(ref_f.ref_r,alt_f,alt_r)'
+        'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
     ]
     
     // 分离普通扩展列和需要固定在右侧的列
@@ -650,11 +650,22 @@ const columns = computed(() => {
             i: idx, 
             title: columnTitle, 
             dataIndex: `col${idx}`, 
-            width: 100, 
-            ellipsis: true
+            width: 150, // 增加宽度以适应较长的列名
+            ellipsis: true,
+            align: 'center'
         }
         
-        if (rightFixedColumnNames.includes(columnTitle)) {
+        // 检查列名是否匹配需要固定在右侧的列
+        const isRightFixed = rightFixedColumnNames.some(fixedName => {
+            // 支持模糊匹配，因为列名可能有细微差异
+            return columnTitle.includes('Strand_Bias') && fixedName.includes('Strand_Bias') ||
+                   columnTitle === 'Hot' && fixedName === 'Hot' ||
+                   columnTitle === 'In_house_freq' && fixedName === 'In_house_freq' ||
+                   (columnTitle.includes('Tumor_strand_Bias') && fixedName.includes('Tumor_strand_Bias')) ||
+                   (columnTitle.includes('Normal_strand_Bias') && fixedName.includes('Normal_strand_Bias'))
+        })
+        
+        if (isRightFixed) {
             columnConfig.fixed = 'right'
             rightFixedCols.push(columnConfig)
         } else {
