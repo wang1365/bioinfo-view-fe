@@ -1,6 +1,11 @@
 <template>
     <div>
         <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
+            <template v-slot:separator>
+                <q-avatar size="20px" color="primary" text-color="white" class="cursor-pointer" @click="toggleLeftPanel">
+                    <q-icon :name="leftPanelOpen ? 'chevron_left' : 'chevron_right'" size="18px" />
+                </q-avatar>
+            </template>
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input
@@ -388,6 +393,12 @@ import * as XLSX from "xlsx";
 const { t } = useI18n()
 const customCell = useCustomCell('col254')
 const splitterModel = ref(250)
+const leftPanelOpen = ref(true)
+
+function toggleLeftPanel() {
+    leftPanelOpen.value = !leftPanelOpen.value
+    splitterModel.value = leftPanelOpen.value ? 250 : 0
+}
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
     intro: {
@@ -578,6 +589,10 @@ const currentRow = ref({})
 const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 110, fixed: 'left' }, // Gene.refGene
+    { i: 18, title: '', dataIndex: 'col18', align: 'center', width: 90, fixed: 'left' }, // exon
+    { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 100, fixed: 'left' }, // NUChange
+    { i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100, fixed: 'left' }, // AAChange
     { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85 }, // End
     { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
     { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
@@ -590,12 +605,8 @@ const fixedColumns = [
     { i: 12, title: '', dataIndex: 'col12', align: 'center', width: 95 }, // Seq_Depths
     { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // Mutation_Rate
     { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 110 }, // Func.refGene
-    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 110 }, // Gene.refGene
 
     { i: 17, title: '', dataIndex: 'col17', align: 'center', width: 160 }, // ExonicFunc.refGene
-    { i: 18, title: '', dataIndex: 'col18', align: 'center', width: 90 }, // exon
-    { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 200 }, // NUChange
-    { i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100 }, // AAChange
 
     { i: 22, title: '', dataIndex: 'col22', align: 'left', width: 200, ellipsis: true }, // CLNDN
     { i: 23, title: '', dataIndex: 'col23', align: 'left', width: 200, ellipsis: true }, // CLNDISDB

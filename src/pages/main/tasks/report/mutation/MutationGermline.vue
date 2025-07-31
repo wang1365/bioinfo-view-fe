@@ -1,6 +1,11 @@
 <template>
     <q-page>
         <q-splitter v-model="splitterModel" unit="px" class="q-px-sm">
+            <template v-slot:separator>
+                <q-avatar size="20px" color="primary" text-color="white" class="cursor-pointer" @click="toggleLeftPanel">
+                    <q-icon :name="leftPanelOpen ? 'chevron_left' : 'chevron_right'" size="18px" />
+                </q-avatar>
+            </template>
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input
@@ -172,7 +177,9 @@
                         <q-btn icon="south" color="primary" :label="$t('Download')">
                             <q-menu>
                                 <q-list>
-                                    <q-item clickable><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item>
+                                    <q-item clickable
+                                        ><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item
+                                    >
                                     <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
                                 </q-list>
                             </q-menu>
@@ -337,6 +344,12 @@ import * as XLSX from "xlsx";
 const { t } = useI18n()
 const customCell = useCustomCell('col250')
 const splitterModel = ref(250)
+const leftPanelOpen = ref(true)
+
+function toggleLeftPanel() {
+    leftPanelOpen.value = !leftPanelOpen.value
+    splitterModel.value = leftPanelOpen.value ? 250 : 0
+}
 const emit = defineEmits(['filterChange'])
 const crowdCols = {
     // ['col26', 'col31', 'col39']
@@ -526,6 +539,10 @@ const rowSelection = computed(() => {
 const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 100, fixed: 'left' }, // Start
+    { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110, fixed: 'left' }, // Gene.refGene
+    { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80, fixed: 'left' }, // exon
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100, fixed: 'left' }, // NUChange
+    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100, fixed: 'left' }, // AAChange
     { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 100 }, // End
     { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
     { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
@@ -534,12 +551,8 @@ const fixedColumns = [
     { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 120 }, // Seq_depths
     { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 130 }, // Mutation_Rate
     { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105 }, // Func.refGene
-    { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110 }, // Gene.refGene
 
     { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
-    { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80 }, // exon
-    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 200 }, // NUChange
-    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100 }, // AAChange
 
     { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
     { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
