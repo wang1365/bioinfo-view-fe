@@ -2,9 +2,17 @@
     <div>
         <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
             <template v-slot:separator>
-                <q-avatar size="20px" color="primary" text-color="white" class="cursor-pointer" @click="toggleLeftPanel">
-                    <q-icon :name="leftPanelOpen ? 'chevron_left' : 'chevron_right'" size="18px" />
-                </q-avatar>
+                <q-btn
+                    round
+                    dense
+                    color="primary"
+                    class="cursor-pointer q-ml-sm"
+                    @click="toggleLeftPanel"
+                    size="lg"
+                    style="opacity: 0.7;"
+                >
+                    <q-icon :name="leftPanelOpen ? 'chevron_left' : 'chevron_right'" size="24px" />
+                </q-btn>
             </template>
             <template v-slot:before>
                 <div class="column" style="width:90%">
@@ -200,7 +208,9 @@
                         <q-btn icon="south" color="primary" :label="$t('Download')">
                             <q-menu>
                                 <q-list>
-                                    <q-item clickable><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item>
+                                    <q-item clickable
+                                        ><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item
+                                    >
                                     <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
                                 </q-list>
                             </q-menu>
@@ -398,7 +408,20 @@ const leftPanelOpen = ref(true)
 function toggleLeftPanel() {
     leftPanelOpen.value = !leftPanelOpen.value
     splitterModel.value = leftPanelOpen.value ? 250 : 0
+    // 设置before插槽的样式，完全隐藏查询区域
+    const beforeSlot = document.querySelector('.q-splitter__before')
+    if (beforeSlot) {
+        beforeSlot.style.display = leftPanelOpen.value ? 'block' : 'none'
+    }
 }
+
+// 确保组件挂载后初始化查询区域显示状态
+onMounted(() => {
+    const beforeSlot = document.querySelector('.q-splitter__before')
+    if (beforeSlot) {
+        beforeSlot.style.display = 'block'
+    }
+})
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
     intro: {
