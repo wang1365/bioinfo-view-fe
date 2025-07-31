@@ -1,0 +1,16 @@
+ALL	ALL
+Adenoviridae	ALL
+Adenoviridae	HAdVF
+Adenoviridae	HadV40
+Adenoviridae	HadV41
+Hepatitis	ALL
+Hepatitis	HBV
+Hepatitis	HCV
+Hepatitis	HDV
+Influenza	ALL
+Influenza	H1N1
+Influenza	H3N2
+Influenza	H5N1
+HIV	ALL
+HIV	HIV-1
+HIV	HIV-2

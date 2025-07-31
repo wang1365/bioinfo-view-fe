@@ -1,0 +1,4 @@
+hg19_Adenoviridae	human_hg19.Adenoviridae_ALL	/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/hg19_Adenoviridae/hg19_Adenoviridae.fasta
+hg38_HIV	human_hg38.HIV_ALL	/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/hg38_HIV/hg38_HIV.fasta
+mm10_Influenza	mouse_mm10.Influenza_H1N1	/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/mm10_Influenza/mm10_Influenza.fasta
+test_database	test.database	/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/test_database/test_database.fasta

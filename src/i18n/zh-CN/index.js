@@ -501,6 +501,17 @@ export default {
     CNVType: 'CNV Type',
     CopyNumber: 'Copy Number',
 
+    // 序列选择参数
+    SequenceSelection: '序列选择',
+    VirusName: '病毒种名',
+    VirusType: '病毒分型',
+    Host: '宿主',
+    HostGenomeVersion: '宿主基因组版本',
+    CustomDatabase: '自定义数据库',
+    CustomDatabaseTooltip: '仅支持字母、数字和下划线',
+    OnlyAllowAlphanumericAndUnderscore: '仅允许字母、数字和下划线',
+    DatabaseAlreadyExists: '数据库已存在',
+
     // 表格头部的按钮
     PageListTableExport: '导出数据',
     PageListTableUpload: '批量上传',
