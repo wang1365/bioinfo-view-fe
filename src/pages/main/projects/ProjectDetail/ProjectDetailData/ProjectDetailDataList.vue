@@ -21,7 +21,6 @@
             </q-toolbar>
         </q-card-section>
         <q-card-section>
-            sss
             <div class="q-pa-md bio-data-table">
                 <a-table
                     :columns="columns"
