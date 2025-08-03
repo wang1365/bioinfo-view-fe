@@ -174,6 +174,44 @@
                             <q-btn color="purple" label="信息汇总" @click="showInformationSummary" />
                         </div>
                     </div>
+
+                    <!-- 宿主原序列表格 -->
+                    <div class="q-mt-md">
+                        <a-table
+                            :columns="hostSequenceColumns"
+                            :data-source="hostSequenceData"
+                            :pagination="false"
+                            size="small"
+                            bordered
+                        >
+                            <template #bodyCell="{ column, index }">
+                                <template v-if="column.key === 'action'">
+                                    <a-button type="link" size="small" danger @click="deleteHostSequence(index)"
+                                        >删除</a-button
+                                    >
+                                </template>
+                            </template>
+                        </a-table>
+                    </div>
+
+                    <!-- 病原原序列表格 -->
+                    <div class="q-mt-md">
+                        <a-table
+                            :columns="pathogenSequenceColumns"
+                            :data-source="pathogenSequenceData"
+                            :pagination="false"
+                            size="small"
+                            bordered
+                        >
+                            <template #bodyCell="{ column, index }">
+                                <template v-if="column.key === 'action'">
+                                    <a-button type="link" size="small" danger @click="deletePathogenSequence(index)"
+                                        >删除</a-button
+                                    >
+                                </template>
+                            </template>
+                        </a-table>
+                    </div>
                 </div>
             </template>
             <template v-slot:contentFooter>
@@ -220,6 +258,48 @@ const hostGenomeVersionOptions = ref([]);
 
 // 自定义数据库路径数据
 const customDatabasePaths = ref([]);
+
+// 宿主原序列表格数据
+const hostSequenceColumns = ref([
+    { title: '宿主原序列路径', dataIndex: 'sequencePath',  key: 'sequencePath', width: 200 },
+    { title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 120 },
+    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 120 },
+    { title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 100 },
+    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 150 },
+    { title: '操作', key: 'action', width: 120 }
+]);
+
+const hostSequenceData = ref([
+    {
+        key: '1',
+        sequencePath: '/data/bioinfo/host/human_hg19.fasta',
+        speciesName: 'Human',
+        sequenceId: 'hg19_001',
+        versionInfo: 'v1.0',
+        originalName: 'Homo sapiens genome hg19'
+    }
+]);
+
+// 病原原序列表格数据
+const pathogenSequenceColumns = ref([
+    { title: '病原原序列路径', dataIndex: 'sequencePath',  key: 'sequencePath', width: 200 },
+    { title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 120 },
+    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 120 },
+    { title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 100 },
+    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 150 },
+    { title: '操作', key: 'action', width: 120 }
+]);
+
+const pathogenSequenceData = ref([
+    {
+        key: '1',
+        sequencePath: '/data/bioinfo/pathogen/adenovirus.fasta',
+        strainName: 'HAdV-F',
+        sequenceId: 'adv_001',
+        classificationInfo: 'Adenoviridae',
+        originalName: 'Human adenovirus F strain'
+    }
+]);
 
 const paramTabs = ref([])
 const activeParamFileIndex = ref(0)
@@ -895,5 +975,17 @@ const sampleTypetrans = (flow) => {
         case "multiple":
             return t('MultipleSample')
     }
+}
+
+// 宿主原序列表格操作方法
+const deleteHostSequence = (index) => {
+    console.log('删除宿主原序列:', index);
+    hostSequenceData.value.splice(index, 1);
+}
+
+// 病原原序列表格操作方法
+const deletePathogenSequence = (index) => {
+    console.log('删除病原原序列:', index);
+    pathogenSequenceData.value.splice(index, 1);
 }
 </script>
