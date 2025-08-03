@@ -1,6 +1,11 @@
 <template>
     <q-page>
         <q-splitter v-model="splitterModel" unit="px" class="q-px-sm">
+            <template v-slot:separator>
+                <q-btn round dense color="primary" class="cursor-pointer" @click="toggleLeftPanel" size="lg" style="opacity: 0.7;">
+                    <q-icon :name="leftPanelOpen ? 'chevron_left' : 'chevron_right'" size="24px" />
+                </q-btn>
+            </template>
             <template v-slot:before>
                 <div class="column" style="width:90%">
                     <q-input
@@ -172,7 +177,9 @@
                         <q-btn icon="south" color="primary" :label="$t('Download')">
                             <q-menu>
                                 <q-list>
-                                    <q-item clickable><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item>
+                                    <q-item clickable
+                                        ><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item
+                                    >
                                     <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
                                 </q-list>
                             </q-menu>
@@ -337,6 +344,25 @@ import * as XLSX from "xlsx";
 const { t } = useI18n()
 const customCell = useCustomCell('col250')
 const splitterModel = ref(250)
+const leftPanelOpen = ref(true)
+
+function toggleLeftPanel() {
+    leftPanelOpen.value = !leftPanelOpen.value
+    splitterModel.value = leftPanelOpen.value ? 250 : 0
+    // 设置before插槽的样式，完全隐藏查询区域
+    const beforeSlot = document.querySelector('.q-splitter__before')
+    if (beforeSlot) {
+        beforeSlot.style.display = leftPanelOpen.value ? 'block' : 'none'
+    }
+}
+
+// 确保组件挂载后初始化查询区域显示状态
+onMounted(() => {
+    const beforeSlot = document.querySelector('.q-splitter__before')
+    if (beforeSlot) {
+        beforeSlot.style.display = 'block'
+    }
+})
 const emit = defineEmits(['filterChange'])
 const crowdCols = {
     // ['col26', 'col31', 'col39']
@@ -526,6 +552,10 @@ const rowSelection = computed(() => {
 const fixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 100, fixed: 'left' }, // Start
+    { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110, fixed: 'left' }, // Gene.refGene
+    { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80, fixed: 'left' }, // exon
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100, fixed: 'left' }, // NUChange
+    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100, fixed: 'left' }, // AAChange
     { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 100 }, // End
     { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
     { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
@@ -534,12 +564,8 @@ const fixedColumns = [
     { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 120 }, // Seq_depths
     { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 130 }, // Mutation_Rate
     { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105 }, // Func.refGene
-    { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110 }, // Gene.refGene
 
     { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
-    { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80 }, // exon
-    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 200 }, // NUChange
-    { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100 }, // AAChange
 
     { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
     { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
@@ -603,13 +629,54 @@ const atOptionGroupChange = () => {
 
 const columns = computed(() => {
     let result = [...fixedColumns]
-    result = result.splice(0, result.length-2)
+    result = result.splice(0, result.length - 1) // 移除操作列，稍后添加
+    
+    // 定义需要固定在右侧的列名
+    const rightFixedColumnNames = [
+        'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Hot',
+        'In_house_freq',
+        'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
+    ]
+    
+    // 分离普通扩展列和需要固定在右侧的列
+    const normalExpandCols = []
+    const rightFixedCols = []
+    
     selectedExpandColIdx.value.forEach(idx => {
-        result.push({
-            i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true
+        const columnTitle = header.value[idx - 1]
+        const columnConfig = {
+            i: idx, 
+            title: columnTitle, 
+            dataIndex: `col${idx}`, 
+            width: 150, // 增加宽度以适应较长的列名
+            ellipsis: true,
+            align: 'center'
+        }
+        
+        // 检查列名是否匹配需要固定在右侧的列
+        const isRightFixed = rightFixedColumnNames.some(fixedName => {
+            // 支持模糊匹配，因为列名可能有细微差异
+            return columnTitle.includes('Strand_Bias') && fixedName.includes('Strand_Bias') ||
+                   columnTitle === 'Hot' && fixedName === 'Hot' ||
+                   columnTitle === 'In_house_freq' && fixedName === 'In_house_freq' ||
+                   (columnTitle.includes('Tumor_strand_Bias') && fixedName.includes('Tumor_strand_Bias')) ||
+                   (columnTitle.includes('Normal_strand_Bias') && fixedName.includes('Normal_strand_Bias'))
         })
+        
+        if (isRightFixed) {
+            columnConfig.fixed = 'right'
+            rightFixedCols.push(columnConfig)
+        } else {
+            normalExpandCols.push(columnConfig)
+        }
     })
-    result.push(fixedColumns[fixedColumns.length-1])
+    
+    // 按顺序添加列：固定左侧列 + 普通扩展列 + 固定右侧列 + 操作列
+    result.push(...normalExpandCols)
+    result.push(...rightFixedCols)
+    result.push(fixedColumns[fixedColumns.length - 1]) // 添加操作列
 
     // 如果有扩展列要展示，需要重置列宽
     // if (fixedColumns.length > 0) {
