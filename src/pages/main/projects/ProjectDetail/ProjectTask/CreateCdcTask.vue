@@ -138,28 +138,21 @@
 </template>
 
 <script setup>
-import { ref, toRefs, onMounted, watch } from "vue";
+import { ref, toRefs, onMounted } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
 import TaskDataSelectMulti from "./TaskDataSelectMulti.vue";
 import TaskDataSelectSingle from "./TaskDataSelectSingle.vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
-import { event } from "quasar";
-import { globalStore } from "src/stores/global";
-import { update } from "lodash";
 import { readFileFromDatabaseDir } from "src/api/file";
-const { langConfig } = globalStore()
 const { t } = useI18n();
 const { apiPost, apiGet } = useApi();
 const openDataSelectorSingle = ref(false);
 const openDataSelectorMulti = ref(false);
-const newTaskName = ref("");
-const newTaskNameError = ref(false);
 const paramsDefine = ref([]);
 const newTabParams = ref({})
 const newTabParamFiles = ref([])
-const params = ref({});
 
 // 病毒种名和病毒分型数据
 const virusData = ref([]);
@@ -177,49 +170,13 @@ const customDatabasePaths = ref([]);
 const paramTabs = ref([])
 const activeParamFileIndex = ref(0)
 
-const samples = ref([]);
-const sampleFirst = ref({});
-const sampleSecond = ref({});
 const currentSample = ref("first");
-const sampleFirstError = ref(false);
-const sampleSecondError = ref(false);
-const samplesError = ref(false);
 
 const emit = defineEmits(["taskCreated"])
 const props = defineProps({
     flowDetail: { type: Object, required: true },
     projectDetail: { type: Object, required: true },
 })
-const { flowId } = toRefs(props)
-
-const currentFocusSelectKey = ref('')
-const currentFocusSelectParam = ref({})
-const focusSelect = (key, param) => {
-    currentFocusSelectKey.value = key
-    currentFocusSelectParam.value = param
-    console.log(key)
-}
-const filterFn = (val, update) => {
-    console.log('fileter', val)
-    if (val === '') {
-        update(() => {
-            currentFocusSelectParam.value.choices = selectParams.value[currentFocusSelectKey.value]
-        });
-        return;
-    } else {
-
-        let choices = []
-        let re = new RegExp(val, 'i')
-        for (const item of selectParams.value[currentFocusSelectKey.value]) {
-            if (re.test(item.value) || re.test(item.enLabel) || re.test(item.cnLabel)) {
-                choices.push(item)
-            }
-        }
-        update(() => {
-            currentFocusSelectParam.value.choices = choices
-        });
-    }
-}
 
 // 加载病毒种名和病毒分型数据
 const loadVirusData = async () => {
@@ -336,7 +293,7 @@ const loadCustomDatabasePaths = async () => {
         ]
     }
 }
-const selectParams = ref({})
+
 
 onMounted(() => {
     let flowParams = JSON.parse(props.flowDetail.parameter_schema);
@@ -356,7 +313,6 @@ onMounted(() => {
                 }
             }
             param.choices = choices
-            selectParams.value[param.key] = JSON.parse(JSON.stringify(choices))
         }
 
         paramsDefine.value.push({
@@ -370,7 +326,6 @@ onMounted(() => {
         });
         params[param.key] = { value: null, isError: false }
     }
-    console.log(paramsDefine)
 
     // 加载病毒种名和病毒分型数据
     loadVirusData();
@@ -422,49 +377,13 @@ const addParamTabFiles = (index) => {
     )
     console.log(paramTabs.value)
 }
-const deleteParamTabFiles = (index, file_index) => {
-    if (paramTabs.value[index].files.length > 1)
-        paramTabs.value[index].files.splice(file_index, 1)
-}
-const selectSingle = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "first";
-    openDataSelectorSingle.value = true;
-};
-const selectFirst = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "first";
-    openDataSelectorSingle.value = true;
-};
-const selectSecond = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "second";
-    openDataSelectorSingle.value = true;
-};
-const selectMulti = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "multi";
-    openDataSelectorMulti.value = true;
-};
-const selectFirstMulti = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "first-multi";
-    openDataSelectorMulti.value = true;
-};
-const selectSecondMulti = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "second-multi";
-    openDataSelectorMulti.value = true;
-};
 
 const singleSelected = (event) => {
     openDataSelectorSingle.value = false;
     if (currentSample.value == "first") {
         paramTabs.value[0].files[activeParamFileIndex.value].sampleFirst = event
-        sampleFirst.value = event;
     } else {
         paramTabs.value[0].files[activeParamFileIndex.value].sampleSecond = event
-        sampleSecond.value = event;
     }
 }
 
@@ -477,8 +396,6 @@ const multiSelected = (event) => {
     } else {
         paramTabs.value[0].files[activeParamFileIndex.value].samplesSecond = event
     }
-    samples.value = event;
-    console.log(event);
 };
 
 // 过滤病毒种名
@@ -897,100 +814,6 @@ const confirmTaskCreated = () => {
         {}, (res) => {
             errorMessage(res.msg)
         }
-    )
-
-
-    return
-    let paramsError = false
-
-    if (!newTaskName.value) {
-        newTaskNameError.value = true
-        paramsError = true
-    } else {
-        newTaskNameError.value = false
-    }
-    let data = new FormData();
-    let taskParameter = [];
-    for (let param of paramsDefine.value) {
-
-        if (!params.value[param.key] && param.required) {
-            param.isError = true
-            paramsError = true
-        } else {
-            if (param.type === 'file') {
-                data.append(param.key, params.value[param.key])
-            }
-            else {
-                taskParameter.push({
-                    key: param.key,
-                    value: params.value[param.key],
-                });
-            }
-            param.isError = false
-        }
-    }
-
-    let taskSamples = []
-    switch (props.flowDetail.sample_type) {
-        case "single": {
-            if (!sampleFirst.value.id) {
-                sampleFirstError.value = true
-                paramsError = true
-            } else {
-                sampleFirstError.value = false
-                taskSamples.push(sampleFirst.value.id)
-            }
-            break
-        }
-        case "double": {
-            if (!sampleFirst.value.id) {
-                sampleFirstError.value = true
-                paramsError = true
-            } else {
-                taskSamples.push(sampleFirst.value.id)
-                sampleFirstError.value = false
-            }
-            if (!sampleSecond.value.id) {
-                sampleSecondError.value = true
-                paramsError = true
-            } else {
-                taskSamples.push(sampleSecond.value.id)
-                sampleSecondError.value = false
-            }
-            break
-        }
-        case "multiple": {
-            if (samples.value.length === 0) {
-                samplesError.value = true
-                paramsError = true
-            } else {
-                for (const item of samples.value) {
-                    taskSamples.push(item.id)
-                }
-                samplesError.value = false
-            }
-            break
-        }
-    }
-    if (paramsError) {
-        errorMessage("Fix Error")
-        return
-    }
-
-
-    data.append("flow_id", props.flowDetail.id)
-    data.append("project_id", props.projectDetail.id)
-    data.append("samples", taskSamples.join(","))
-    data.append("parameter", JSON.stringify(taskParameter))
-    data.append("name", newTaskName.value)
-
-    apiPost(
-        "/task",
-        (res) => {
-            infoMessage("Success")
-            emit("taskCreated")
-        },
-        data
     )
 }
 const sampleTypetrans = (flow) => {
