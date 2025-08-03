@@ -166,7 +166,7 @@
                             label-color="purple"
                             stack-label
                             outlined
-                            class="col-4"
+                            class="col-6"
                         >
                             <q-tooltip>{{ $t('CustomDatabaseTooltip') }}</q-tooltip>
                         </q-input>
@@ -688,10 +688,18 @@ const checkCustomDatabase = () => {
 }
 
 // 显示信息摘要
-const showInformationSummary = () => {
+const showInformationSummary = async () => {
     const item = paramTabs.value[0]
 
-    // 构建摘要信息
+    // 首先校验自定义数据库名字段
+    if (!item.customDatabase) {
+        errorMessage('请先填写自定义数据库名')
+        return
+    }
+
+
+
+    // 如果数据库名不存在，继续显示信息摘要
     let summary = ''
     summary += `${t('VirusName')}: ${Array.isArray(item.virusName) ? item.virusName.join(', ') : item.virusName || 'N/A'}\n`
     summary += `${t('VirusType')}: ${Array.isArray(item.virusType) ? item.virusType.join(', ') : item.virusType || 'N/A'}\n`
