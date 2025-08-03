@@ -1,8 +1,7 @@
 <template>
     <q-card style="width: 80vw; max-width: 80vw">
-        <PopupContentScroll :title="$t('ProjectDetailPageCreateTask')">
+        <PopupContentScroll title="创建基因组">
             <template v-slot:contentBody>
-                <div class="text-h6 q-py-xs">{{ $t('Flow') }}:</div>
                 <div class="q-px-md">
                     <div class="row q-col-gutter-md">
                         <div class="col-3">
