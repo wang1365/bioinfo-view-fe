@@ -35,20 +35,31 @@
                     <q-splitter v-model="splitterModel">
                         <template v-slot:before>
                             <q-list bordered separator>
-                                <q-item v-ripple v-for="item, index in paramTabs" :key="index" :name="item.name"
-                                    :class="{ 'bg-primary': index == activeParamTab, 'text-white': index == activeParamTab }">
-                                    <span class="cursor-pointer" @click="activeParamTab = index">{{
+                                <q-item
+                                    v-ripple
+                                    v-for="item, index in paramTabs"
+                                    :key="index"
+                                    :name="item.name"
+                                    :class="{ 'bg-primary': index == activeParamTab, 'text-white': index == activeParamTab }"
+                                >
+                                    <span class="cursor-pointer" @click="activeParamTab = index"
+                                        >{{
                                             $t('Task')
 
-
-                                        }}&nbsp;{{ index + 1
-                                        }}
+                                        }}&nbsp;{{ index + 1}}
                                     </span>
-                                    <q-icon name="delete" color="red" class="q-ml-md cursor-pointer"
-
-                                        @click="deleteParamTab(index)"></q-icon>
-                                    <q-icon name="error" color="red" style="float:right;top:0px;right:-10px"
-                                        v-if="item.isError"></q-icon>
+                                    <q-icon
+                                        name="delete"
+                                        color="red"
+                                        class="q-ml-md cursor-pointer"
+                                        @click="deleteParamTab(index)"
+                                    ></q-icon>
+                                    <q-icon
+                                        name="error"
+                                        color="red"
+                                        style="float:right;top:0px;right:-10px"
+                                        v-if="item.isError"
+                                    ></q-icon>
                                 </q-item>
                                 <q-item clickable class="center" @click="addParamTab()">
                                     <q-btn icon="add" color="primary" outline></q-btn>
@@ -61,59 +72,95 @@
                                 <div class="q-pa-md" v-if="activeParamTab === index">
                                     <div class="text-h6">{{ $t('CustomParameters') }}:</div>
                                     <div>
-                                        <q-input v-model="item.name" :label="$t('Task')" :error="item.nameError"
-                                            :error-message="$t('Required')">
+                                        <q-input
+                                            v-model="item.name"
+                                            :label="$t('Task')"
+                                            :error="item.nameError"
+                                            :error-message="$t('Required')"
+                                        >
                                         </q-input>
                                     </div>
                                     <div class="text-h6">{{ $t('SequenceSelection') }}:</div>
                                     <div class="row">
                                         <div class="col-6 q-pr-sm">
-                                            <q-select :error="item.virusNameError" use-input
-                                                @filter="filterVirusName" :error-message="$t('Required')"
-                                                v-model="item.virusName" :options="virusNameOptions"
+                                            <q-select
+                                                :error="item.virusNameError"
+                                                use-input
+                                                @filter="filterVirusName"
+                                                :error-message="$t('Required')"
+                                                v-model="item.virusName"
+                                                :options="virusNameOptions"
                                                 :label="$t('VirusName')"
-                                                multiple use-chips @update:model-value="onVirusNameChange">
+                                                multiple
+                                                use-chips
+                                                @update:model-value="onVirusNameChange"
+                                            >
                                             </q-select>
                                         </div>
                                         <div class="col-6 q-pr-sm">
-                                            <q-select :error="item.virusTypeError" use-input
-                                                @filter="filterVirusType" :error-message="$t('Required')"
-                                                v-model="item.virusType" :options="virusTypeOptions"
+                                            <q-select
+                                                :error="item.virusTypeError"
+                                                use-input
+                                                @filter="filterVirusType"
+                                                :error-message="$t('Required')"
+                                                v-model="item.virusType"
+                                                :options="virusTypeOptions"
                                                 :label="$t('VirusType')"
-                                                multiple use-chips :disable="item.virusName && item.virusName.length > 1">
+                                                multiple
+                                                use-chips
+                                                :disable="item.virusName && item.virusName.length > 1"
+                                            >
                                             </q-select>
                                         </div>
                                         <div class="col-6 q-pr-sm">
-                                            <q-select :error="item.hostError" use-input
-                                                @filter="filterHost" :error-message="$t('Required')"
-                                                v-model="item.host" :options="hostOptions"
-                                                :label="$t('Host')" @update:model-value="onHostChange">
+                                            <q-select
+                                                :error="item.hostError"
+                                                use-input
+                                                @filter="filterHost"
+                                                :error-message="$t('Required')"
+                                                v-model="item.host"
+                                                :options="hostOptions"
+                                                :label="$t('Host')"
+                                                @update:model-value="onHostChange"
+                                            >
                                             </q-select>
                                         </div>
                                         <div class="col-6 q-pr-sm">
-                                            <q-select :error="item.hostGenomeVersionError" use-input
-                                                @filter="filterHostGenomeVersion" :error-message="$t('Required')"
-                                                v-model="item.hostGenomeVersion" :options="hostGenomeVersionOptions"
-                                                :label="$t('HostGenomeVersion')" :disable="!item.host">
+                                            <q-select
+                                                :error="item.hostGenomeVersionError"
+                                                use-input
+                                                @filter="filterHostGenomeVersion"
+                                                :error-message="$t('Required')"
+                                                v-model="item.hostGenomeVersion"
+                                                :options="hostGenomeVersionOptions"
+                                                :label="$t('HostGenomeVersion')"
+                                                :disable="!item.host"
+                                            >
                                             </q-select>
                                         </div>
                                         <div class="col-6 q-pr-sm">
-                                            <q-input :error="item.customDatabaseError"
+                                            <q-input
+                                                :error="item.customDatabaseError"
                                                 :error-message="item.customDatabaseErrorMsg || $t('Required')"
-                                                v-model="item.customDatabase" :label="$t('CustomDatabase')"
-                                                @blur="checkCustomDatabase">
+                                                v-model="item.customDatabase"
+                                                :label="$t('CustomDatabase')"
+                                                @blur="checkCustomDatabase"
+                                            >
                                                 <q-tooltip>{{ $t('CustomDatabaseTooltip') }}</q-tooltip>
                                             </q-input>
                                         </div>
                                     </div>
-                                    
-
 
                                     <div class="q-my-md">
-                                        <q-btn icon="add" color="primary" style="width: 100%"
-                                            @click="addParamTabFiles(index)">{{ $t('Add') }}
+                                        <q-btn
+                                            icon="add"
+                                            color="primary"
+                                            style="width: 100%"
+                                            @click="addParamTabFiles(index)"
+                                            >{{ $t('Add') }}
                                             {{ $t('Data')
-                                            }}</q-btn>
+                                            }}</q-btn
+                                        >
                                     </div>
                                 </div>
                             </div>
@@ -126,12 +173,7 @@
                 <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()" />
             </template>
         </PopupContentScroll>
-        <!-- <q-dialog persistent v-model="openDataSelectorSingle">
-            <TaskDataSelect :multi-select="false" :projectDetail="props.projectDetail" @select="onSelect($event)" />
-        </q-dialog>
-        <q-dialog persistent v-model="openDataSelectorMulti">
-            <TaskDataSelect :multi-select="true" :projectDetail="props.projectDetail" @select="onSelectMulti($event)" />
-        </q-dialog> -->
+
         <q-dialog persistent v-model="openDataSelectorSingle">
             <TaskDataSelectSingle :projectDetail="props.projectDetail" @refresh="singleSelected($event)" />
         </q-dialog>
@@ -152,7 +194,7 @@ import { useI18n } from "vue-i18n";
 import { event } from "quasar";
 import { globalStore } from "src/stores/global";
 import { update } from "lodash";
-import axios from "axios";
+import { readFile, readFileFromDatabaseDir } from "src/api/file";
 const { langConfig } = globalStore()
 const { t } = useI18n();
 const { apiPost, apiGet } = useApi();
@@ -229,23 +271,22 @@ const filterFn = (val, update) => {
 // 加载病毒种名和病毒分型数据
 const loadVirusData = async () => {
     try {
-        // 在开发环境中使用模拟数据文件
-        // 实际项目中应该使用apiGet从服务器路径读取：/data/bioinfo/database_dir/Pathogen_database\ref_seq_db\species/sp_mapdb.species.class
-        const response = await axios.get('/mock/virus_data.txt')
-        
+        // 使用文件API从服务器路径读取：/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/sp_mapdb.species.class
+        const response = await readFile('/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/sp_mapdb.species.class')
+
         // 解析文件内容
-        const lines = response.data.split('\n')
+        const lines = response.split('\n')
         const data = []
-        
+
         for (const line of lines) {
             if (line.trim()) {
                 const [virusName, virusType] = line.split('\t').map(item => item.trim())
                 data.push({ virusName, virusType })
             }
         }
-        
+
         virusData.value = data
-        
+
         // 提取唯一的病毒种名
         const uniqueVirusNames = [...new Set(data.map(item => item.virusName))]
         virusNameOptions.value = uniqueVirusNames
@@ -266,23 +307,22 @@ const loadVirusData = async () => {
 // 加载宿主和宿主基因组版本数据
 const loadHostData = async () => {
     try {
-        // 在开发环境中使用模拟数据文件
-        // 实际项目中应该使用apiGet从服务器路径读取：/data/bioinfo/database_dir\Pathogen_database\ref_seq_db\host\host_mapdb.species.class
-        const response = await axios.get('/mock/host_data.txt')
-        
+        // 使用文件API从服务器路径读取：/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/host_mapdb.species.class
+        const response = await readFileFromDatabaseDir('Pathogen_database/ref_seq_db/host/host_mapdb.species.class')
+
         // 解析文件内容
-        const lines = response.data.split('\n')
+        const lines = response.split('\n')
         const data = []
-        
+
         for (const line of lines) {
             if (line.trim()) {
                 const [hostName, hostGenomeVersion] = line.split('\t').map(item => item.trim())
                 data.push({ hostName, hostGenomeVersion })
             }
         }
-        
+
         hostData.value = data
-        
+
         // 提取唯一的宿主名称
         const uniqueHostNames = [...new Set(data.map(item => item.hostName))]
         hostOptions.value = uniqueHostNames
@@ -301,29 +341,28 @@ const loadHostData = async () => {
 // 加载自定义数据库路径数据
 const loadCustomDatabasePaths = async () => {
     try {
-        // 在开发环境中使用模拟数据文件
-        // 实际项目中应该使用apiGet从服务器路径读取：/data/bioinfo/database_dir\Pathogen_database\customize_ref_db/all.ref.path
-        const response = await axios.get('/mock/custom_database_paths.txt')
-        
+        // 使用文件API从服务器路径读取：/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/all.ref.path
+        const response = await readFileFromDatabaseDir('Pathogen_database/customize_ref_db/all.ref.path')
+
         // 解析文件内容
-        const lines = response.data.split('\n')
+        const lines = response.split('\n')
         const data = []
-        
+
         for (const line of lines) {
             if (line.trim()) {
                 const [dbName, dbFullName, dbPath] = line.split('\t').map(item => item.trim())
                 data.push({ dbName, dbFullName, dbPath })
             }
         }
-        
+
         customDatabasePaths.value = data
     } catch (error) {
         console.error('加载自定义数据库路径失败:', error)
         // 使用示例数据
         customDatabasePaths.value = [
-            { 
-                dbName: 'hg19_Adenoviridae', 
-                dbFullName: 'human_hg19.Adenoviridae_ALL', 
+            {
+                dbName: 'hg19_Adenoviridae',
+                dbFullName: 'human_hg19.Adenoviridae_ALL',
                 dbPath: '/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/hg19_Adenoviridae/hg19_Adenoviridae.fasta'
             }
         ]
@@ -364,7 +403,7 @@ onMounted(() => {
         params[param.key] = { value: null, isError: false }
     }
     console.log(paramsDefine)
-    
+
     // 加载病毒种名和病毒分型数据
     loadVirusData();
     // 加载宿主和宿主基因组版本数据
@@ -510,7 +549,7 @@ const filterVirusName = (val, update) => {
         })
         return
     }
-    
+
     update(() => {
         const needle = val.toLowerCase()
         virusNameOptions.value = [...new Set(virusData.value
@@ -535,7 +574,7 @@ const filterVirusType = (val, update) => {
         })
         return
     }
-    
+
     update(() => {
         const needle = val.toLowerCase()
         virusTypeOptions.value = virusTypeOptions.value.filter(v => v.toLowerCase().indexOf(needle) > -1)
@@ -550,7 +589,7 @@ const filterHost = (val, update) => {
         })
         return
     }
-    
+
     update(() => {
         const needle = val.toLowerCase()
         hostOptions.value = [...new Set(hostData.value
@@ -570,7 +609,7 @@ const filterHostGenomeVersion = (val, update) => {
         })
         return
     }
-    
+
     update(() => {
         const needle = val.toLowerCase()
         hostGenomeVersionOptions.value = hostGenomeVersionOptions.value.filter(v => v.toLowerCase().indexOf(needle) > -1)
@@ -580,12 +619,12 @@ const filterHostGenomeVersion = (val, update) => {
 // 当病毒种名变化时的处理函数
 const onVirusNameChange = (value) => {
     const item = paramTabs.value[activeParamTab.value]
-    
+
     // 如果选择了多个病毒种名，则病毒分型固定为ALL
     if (Array.isArray(value) && value.length > 1) {
         item.virusType = ['ALL']
     }
-    
+
     // 更新病毒分型选项
     if (!value) {
         virusTypeOptions.value = []
@@ -602,7 +641,7 @@ const onVirusNameChange = (value) => {
 // 当宿主变化时的处理函数
 const onHostChange = (value) => {
     const item = paramTabs.value[activeParamTab.value]
-    
+
     // 更新宿主基因组版本选项
     if (!value) {
         hostGenomeVersionOptions.value = []
@@ -611,7 +650,7 @@ const onHostChange = (value) => {
         hostGenomeVersionOptions.value = hostData.value
             .filter(item => item.hostName === value)
             .map(item => item.hostGenomeVersion)
-        
+
         // 如果只有一个选项，自动选择
         if (hostGenomeVersionOptions.value.length === 1) {
             item.hostGenomeVersion = hostGenomeVersionOptions.value[0]
@@ -621,7 +660,7 @@ const onHostChange = (value) => {
             item.hostGenomeVersion = null
         }
     }
-    
+
     // 重置自定义数据库错误状态
     if (item.customDatabaseError) {
         item.customDatabaseError = false
@@ -636,7 +675,7 @@ const checkCustomDatabase = (item) => {
         item.customDatabaseErrorMsg = t('Required')
         return
     }
-    
+
     // 检查格式（字母、数字、下划线）
     const regex = /^[a-zA-Z0-9_]+$/
     if (!regex.test(item.customDatabase)) {
@@ -644,7 +683,7 @@ const checkCustomDatabase = (item) => {
         item.customDatabaseErrorMsg = t('OnlyAllowAlphanumericAndUnderscore')
         return
     }
-    
+
     // 检查是否已存在
     const existingDb = customDatabasePaths.value.find(db => db.dbName === item.customDatabase)
     if (existingDb) {
@@ -652,7 +691,7 @@ const checkCustomDatabase = (item) => {
         item.customDatabaseErrorMsg = `${t('DatabaseAlreadyExists')}: ${existingDb.dbPath}`
         return
     }
-    
+
     item.customDatabaseError = false
     item.customDatabaseErrorMsg = ''
 }
@@ -671,7 +710,7 @@ const confirmTaskCreated = () => {
         } else {
             taskParam.nameError = false;
         }
-        
+
         // 验证病毒种名
         if (!taskParam.virusName || (Array.isArray(taskParam.virusName) && taskParam.virusName.length === 0)) {
             taskParam.virusNameError = true;
@@ -680,7 +719,7 @@ const confirmTaskCreated = () => {
         } else {
             taskParam.virusNameError = false;
         }
-        
+
         // 验证病毒分型
         if (!taskParam.virusType || (Array.isArray(taskParam.virusType) && taskParam.virusType.length === 0)) {
             taskParam.virusTypeError = true;
@@ -689,7 +728,7 @@ const confirmTaskCreated = () => {
         } else {
             taskParam.virusTypeError = false;
         }
-        
+
         // 验证宿主
         if (!taskParam.host) {
             taskParam.hostError = true;
@@ -698,7 +737,7 @@ const confirmTaskCreated = () => {
         } else {
             taskParam.hostError = false;
         }
-        
+
         // 验证宿主基因组版本
         if (!taskParam.hostGenomeVersion) {
             taskParam.hostGenomeVersionError = true;
@@ -707,7 +746,7 @@ const confirmTaskCreated = () => {
         } else {
             taskParam.hostGenomeVersionError = false;
         }
-        
+
         // 验证自定义数据库
         if (!taskParam.customDatabase) {
             taskParam.customDatabaseError = true;
@@ -750,7 +789,7 @@ const confirmTaskCreated = () => {
                 taskParam.params[param.key].isError = false
             }
         }
-        
+
         // 添加序列选择参数
         taskParameter.push(
             { key: 'virusName', value: Array.isArray(taskParam.virusName) ? taskParam.virusName : [taskParam.virusName] },
