@@ -2,49 +2,92 @@
     <q-card style="width: 80vw; max-width: 80vw">
         <PopupContentScroll :title="$t('ProjectDetailPageCreateTask')">
             <template v-slot:contentBody>
-                <div class="text-h6 q-py-md">{{ $t('Flow') }}:</div>
-                <div>
+                <div class="text-h6 q-py-xs">{{ $t('Flow') }}:</div>
+                <div class="q-px-md">
                     <div class="row q-col-gutter-md">
-                        <div class="col">{{ $t('FlowName') }}: {{ props.flowDetail.name }}</div>
-                        <div class="col">{{ $t('Code') }}: {{ props.flowDetail.code }}</div>
-                    </div>
-                    <div class="row q-col-gutter-md">
-                        <div class="col">
-                            {{ $t('Sample') }}:
-                            {{ sampleTypetrans(props.flowDetail) }}
+                        <div class="col-3">
+                            <q-input
+                                :model-value="props.flowDetail.name"
+                                :label="$t('FlowName')"
+                                readonly
+                                dense
+                                stack-label
+                                label-color="primary"
+                            />
                         </div>
-                        <div class="col">
-                            {{ $t('SupportNonStandardSample') }}:
-                            {{
-                                props.flowDetail.allow_nonstandard_samples
-                                    ? $t('Yes')
-                                    : $t('No')
-                            }}
+                        <div class="col-3">
+                            <q-input
+                                :model-value="props.flowDetail.code"
+                                :label="$t('Code')"
+                                readonly
+                                dense
+                                stack-label
+                                label-color="primary"
+                            />
+                        </div>
+                        <div class="col-3">
+                            <q-input
+                                :model-value="sampleTypetrans(props.flowDetail)"
+                                :label="$t('Sample')"
+                                readonly
+                                dense
+                                stack-label
+                                label-color="primary"
+                            />
+                        </div>
+                        <div class="col-3">
+                            <q-input
+                                :model-value="props.flowDetail.allow_nonstandard_samples ? $t('Yes') : $t('No')"
+                                :label="$t('SupportNonStandardSample')"
+                                readonly
+                                dense
+                                stack-label
+                                label-color="primary"
+                            />
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col">{{ $t('FlowDetail') }}: {{ props.flowDetail.desc }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col">{{ $t('Detail') }}: {{ props.flowDetail.details }}</div>
+                    <div class="row q-col-gutter-md">
+                        <div class="col-6">
+                            <q-input
+                                :model-value="props.flowDetail.desc"
+                                :label="$t('FlowDetail')"
+                                readonly
+                                dense
+                                stack-label
+                                label-color="primary"
+                            />
+                        </div>
+                        <div class="col-6">
+                            <q-input
+                                :model-value="props.flowDetail.details"
+                                :label="$t('Detail')"
+                                readonly
+                                dense
+                                stack-label
+                                label-color="primary"
+                            />
+                        </div>
                     </div>
                 </div>
                 <q-separator />
                 <div class="q-pa-md" v-if="paramTabs.length > 0">
-                    <div>
+                    <div class="row">
                         <q-input
                             v-model="paramTabs[0].name"
                             :label="$t('Task')"
                             :error="paramTabs[0].nameError"
                             :error-message="$t('Required')"
+                            class="col-5 q-my-sm"
                             required
-                        >
-                        </q-input>
+                            stack-label
+                            label-color="purple"
+                            outlined
+                        />
                     </div>
-                    <div class="text-h6">{{ $t('SequenceSelection') }}:</div>
+                    <div class="text-h6 q-my-sm">{{ $t('SequenceSelection') }}:</div>
                     <div class="row">
-                        <div class="col-6 q-pr-sm">
+                        <div class="col-3 q-pr-sm">
                             <q-select
                                 :error="paramTabs[0].virusNameError"
                                 use-input
@@ -54,12 +97,15 @@
                                 :options="virusNameOptions"
                                 :label="$t('VirusName')"
                                 multiple
+                                stack-label
                                 use-chips
+                                outlined
+                                label-color="purple"
                                 @update:model-value="onVirusNameChange"
                             >
                             </q-select>
                         </div>
-                        <div class="col-6 q-pr-sm">
+                        <div class="col-3 q-pr-sm">
                             <q-select
                                 :error="paramTabs[0].virusTypeError"
                                 use-input
@@ -69,12 +115,15 @@
                                 :options="virusTypeOptions"
                                 :label="$t('VirusType')"
                                 multiple
+                                stack-label
                                 use-chips
+                                outlined
+                                label-color="purple"
                                 :disable="paramTabs[0].virusName && paramTabs[0].virusName.length > 1"
                             >
                             </q-select>
                         </div>
-                        <div class="col-6 q-pr-sm">
+                        <div class="col-3 q-pr-sm">
                             <q-select
                                 :error="paramTabs[0].hostError"
                                 use-input
@@ -83,11 +132,14 @@
                                 v-model="paramTabs[0].host"
                                 :options="hostOptions"
                                 :label="$t('Host')"
+                                stack-label
+                                outlined
+                                label-color="purple"
                                 @update:model-value="onHostChange"
                             >
                             </q-select>
                         </div>
-                        <div class="col-6 q-pr-sm">
+                        <div class="col-3 q-pr-sm">
                             <q-select
                                 :error="paramTabs[0].hostGenomeVersionError"
                                 use-input
@@ -97,16 +149,22 @@
                                 :options="hostGenomeVersionOptions"
                                 :label="$t('HostGenomeVersion')"
                                 :disable="!paramTabs[0].host"
+                                stack-label
+                                outlined
+                                label-color="purple"
                             >
                             </q-select>
                         </div>
-                        <div class="col-6 q-pr-sm">
+                        <div class="col-3 q-pr-sm q-my-sm">
                             <q-input
                                 :error="paramTabs[0].customDatabaseError"
                                 :error-message="paramTabs[0].customDatabaseErrorMsg || $t('Required')"
                                 v-model="paramTabs[0].customDatabase"
                                 :label="$t('CustomDatabase')"
                                 @blur="checkCustomDatabase"
+                                label-color="purple"
+                                stack-label
+                                outlined
                             >
                                 <q-tooltip>{{ $t('CustomDatabaseTooltip') }}</q-tooltip>
                             </q-input>
