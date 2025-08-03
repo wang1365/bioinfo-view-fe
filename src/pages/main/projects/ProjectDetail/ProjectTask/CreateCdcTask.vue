@@ -170,14 +170,6 @@
                             </q-input>
                         </div>
                     </div>
-
-                    <div class="q-my-md">
-                        <q-btn icon="add" color="primary" style="width: 100%" @click="addParamTabFiles(0)"
-                            >{{ $t('Add') }}
-                            {{ $t('Data')
-                            }}</q-btn
-                        >
-                    </div>
                 </div>
             </template>
             <template v-slot:contentFooter>
