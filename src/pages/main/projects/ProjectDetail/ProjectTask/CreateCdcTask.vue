@@ -155,19 +155,23 @@
                             >
                             </q-select>
                         </div>
-                        <div class="col-3 q-pr-sm q-my-sm">
-                            <q-input
-                                :error="paramTabs[0].customDatabaseError"
-                                :error-message="paramTabs[0].customDatabaseErrorMsg || $t('Required')"
-                                v-model="paramTabs[0].customDatabase"
-                                :label="$t('CustomDatabase')"
-                                @blur="checkCustomDatabase"
-                                label-color="purple"
-                                stack-label
-                                outlined
-                            >
-                                <q-tooltip>{{ $t('CustomDatabaseTooltip') }}</q-tooltip>
-                            </q-input>
+                    </div>
+                    <div class="row q-pr-sm q-my-sm justify-between">
+                        <q-input
+                            :error="paramTabs[0].customDatabaseError"
+                            :error-message="paramTabs[0].customDatabaseErrorMsg || $t('Required')"
+                            v-model="paramTabs[0].customDatabase"
+                            :label="$t('CustomDatabase')"
+                            @blur="checkCustomDatabase"
+                            label-color="purple"
+                            stack-label
+                            outlined
+                            class="col-4"
+                        >
+                            <q-tooltip>{{ $t('CustomDatabaseTooltip') }}</q-tooltip>
+                        </q-input>
+                        <div class="content-center">
+                            <q-btn color="purple" label="信息汇总" @click="showInformationSummary" />
                         </div>
                     </div>
                 </div>
@@ -575,8 +579,8 @@ const onHostChange = (value) => {
     }
 }
 
-// 检查自定义数据库名称是否已存在
-const checkCustomDatabase = (item) => {
+const checkCustomDatabase = () => {
+    const item = paramTabs.value[0]
     if (!item.customDatabase) {
         item.customDatabaseError = true
         item.customDatabaseErrorMsg = t('Required')
@@ -601,6 +605,22 @@ const checkCustomDatabase = (item) => {
 
     item.customDatabaseError = false
     item.customDatabaseErrorMsg = ''
+}
+
+// 显示信息摘要
+const showInformationSummary = () => {
+    const item = paramTabs.value[0]
+
+    // 构建摘要信息
+    let summary = ''
+    summary += `${t('VirusName')}: ${Array.isArray(item.virusName) ? item.virusName.join(', ') : item.virusName || 'N/A'}\n`
+    summary += `${t('VirusType')}: ${Array.isArray(item.virusType) ? item.virusType.join(', ') : item.virusType || 'N/A'}\n`
+    summary += `${t('Host')}: ${item.host || 'N/A'}\n`
+    summary += `${t('HostGenomeVersion')}: ${item.hostGenomeVersion || 'N/A'}\n`
+    summary += `${t('CustomDatabase')}: ${item.customDatabase || 'N/A'}\n`
+
+    // 显示摘要对话框
+    alert(summary)
 }
 
 const confirmTaskCreated = () => {
