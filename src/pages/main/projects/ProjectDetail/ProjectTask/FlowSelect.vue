@@ -1,13 +1,13 @@
 <template>
-    <q-card style="width: 1200px; max-width:90vw; height: 70vh;" class="q-px-sm">
-        <q-card-section>
+    <q-card style="width: 1200px; max-width:90vw; height: 70vh; display: flex; flex-direction: column;" class="q-px-sm">
+        <q-card-section class="q-pb-none">
             <div class="text-h6">{{$t('ProjectSelectFlowTitle')}}</div>
         </q-card-section>
-        <q-card-section>
+        <q-card-section class="flex-1 q-pt-sm" style="overflow: hidden;">
             <a-table
                 :data-source="dataItems"
                 :columns="columns"
-                :scroll="{ y: 500 }"
+                :scroll="{ y: 'calc(70vh - 160px)' }"
                 row-key="id"
                 :pagination="{
                 total,
@@ -32,7 +32,7 @@
                 size="small"
             />
         </q-card-section>
-        <q-card-actions align="center">
+        <q-card-actions align="center" class="q-mt-auto">
             <q-btn
                 :label="$t('Confirm')"
                 color="primary"
