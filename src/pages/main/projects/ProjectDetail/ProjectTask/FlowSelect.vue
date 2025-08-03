@@ -28,6 +28,7 @@
                     disabled: record.task_count >= record.config.taskLimit,
                 }),
             }"
+                :custom-row="customRow"
                 size="small"
             />
         </q-card-section>
@@ -104,4 +105,30 @@ const onSelectChange = (keys, rows) => {
     selectedRowKeys.value = keys
     selectedRows.value = rows
 }
+
+const customRow = (record) => {
+    const isDisabled = record.task_count >= record.config.taskLimit
+    return {
+        style: {
+            cursor: isDisabled ? 'not-allowed' : 'pointer',
+            color: isDisabled ? '#999999' : 'inherit'
+        },
+        onClick: () => {
+            if (!isDisabled) {
+                selectedRowKeys.value = [record.id]
+                selectedRows.value = [record]
+            }
+        }
+    }
+}
 </script>
+
+<style scoped>
+:deep(.ant-table-tbody > tr:hover > td) {
+    background-color: #f5f5f5 !important;
+}
+
+:deep(.ant-table-tbody > tr) {
+    transition: background-color 0.2s ease;
+}
+</style>
