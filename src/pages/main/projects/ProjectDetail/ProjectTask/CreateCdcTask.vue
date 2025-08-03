@@ -691,12 +691,31 @@ const checkCustomDatabase = () => {
 const showInformationSummary = async () => {
     const item = paramTabs.value[0]
 
-    // 首先校验自定义数据库名字段
-    if (!item.customDatabase) {
-        errorMessage('请先填写自定义数据库名')
+    // 校验所有必填字段
+    if (!item.virusName || (Array.isArray(item.virusName) && item.virusName.length === 0)) {
+        errorMessage('请先选择病毒名')
         return
     }
 
+    if (!item.virusType || (Array.isArray(item.virusType) && item.virusType.length === 0)) {
+        errorMessage('请先选择病毒分型')
+        return
+    }
+
+    if (!item.host) {
+        errorMessage('请先选择宿主')
+        return
+    }
+
+    if (!item.hostGenomeVersion) {
+        errorMessage('请先选择宿主基因组版本')
+        return
+    }
+
+    if (!checkCustomDatabase()) {
+        errorMessage('请先填写自定义数据库名')
+        return
+    }
 
 
     // 如果数据库名不存在，继续显示信息摘要
