@@ -237,6 +237,8 @@ import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
 import { readFileFromDatabaseDir } from "src/api/file";
+import { collectInformation } from "src/api/cdc";
+
 const { t } = useI18n();
 const { apiPost, apiGet } = useApi();
 const openDataSelectorSingle = ref(false);
@@ -711,22 +713,62 @@ const showInformationSummary = async () => {
         return
     }
 
-    if (!checkCustomDatabase()) {
-        errorMessage('请先填写自定义数据库名')
+    // 校验自定义数据库
+    checkCustomDatabase()
+    if (item.customDatabaseError) {
+        errorMessage('请先填写正确的自定义数据库名')
         return
     }
 
+    try {
+        // 收集表单信息
+        const requestData = {
+            virusName: Array.isArray(item.virusName) ? item.virusName : [item.virusName],
+            virusType: Array.isArray(item.virusType) ? item.virusType : [item.virusType],
+            host: item.host,
+            hostGenomeVersion: item.hostGenomeVersion,
+            customDatabase: item.customDatabase
+        }
 
-    // 如果数据库名不存在，继续显示信息摘要
-    let summary = ''
-    summary += `${t('VirusName')}: ${Array.isArray(item.virusName) ? item.virusName.join(', ') : item.virusName || 'N/A'}\n`
-    summary += `${t('VirusType')}: ${Array.isArray(item.virusType) ? item.virusType.join(', ') : item.virusType || 'N/A'}\n`
-    summary += `${t('Host')}: ${item.host || 'N/A'}\n`
-    summary += `${t('HostGenomeVersion')}: ${item.hostGenomeVersion || 'N/A'}\n`
-    summary += `${t('CustomDatabase')}: ${item.customDatabase || 'N/A'}\n`
+        // 调用API获取数据
+        infoMessage('正在获取序列信息...')
+        const data = await collectInformation(requestData)
 
-    // 显示摘要对话框
-    alert(summary)
+        if (data) {
+            const { hostSequences, pathogenSequences } = data
+
+            // 更新宿主原序列表格数据
+            if (hostSequences && Array.isArray(hostSequences)) {
+                hostSequenceData.value = hostSequences.map((item, index) => ({
+                    key: (index + 1).toString(),
+                    sequencePath: item.sequencePath || '',
+                    speciesName: item.speciesName || '',
+                    sequenceId: item.sequenceId || '',
+                    versionInfo: item.versionInfo || '',
+                    originalName: item.originalName || ''
+                }))
+            }
+
+            // 更新病原原序列表格数据
+            if (pathogenSequences && Array.isArray(pathogenSequences)) {
+                pathogenSequenceData.value = pathogenSequences.map((item, index) => ({
+                    key: (index + 1).toString(),
+                    sequencePath: item.sequencePath || '',
+                    strainName: item.strainName || '',
+                    sequenceId: item.sequenceId || '',
+                    classificationInfo: item.classificationInfo || '',
+                    originalName: item.originalName || ''
+                }))
+            }
+
+            infoMessage('序列信息获取成功')
+        } else {
+            errorMessage('获取序列信息失败：响应数据格式错误')
+        }
+    } catch (error) {
+        console.error('获取序列信息失败:', error)
+        errorMessage(`获取序列信息失败：${error.message || '未知错误'}`)
+    }
 }
 
 const confirmTaskCreated = () => {
