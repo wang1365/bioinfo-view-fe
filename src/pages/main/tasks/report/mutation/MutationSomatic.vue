@@ -609,7 +609,9 @@ const serialTitles = computed(() => {
 })
 
 const currentRow = ref({})
-const fixedColumns = [
+
+// 基础固定列配置
+const baseFixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
     { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 110, fixed: 'left' }, // Gene.refGene
@@ -653,9 +655,46 @@ const fixedColumns = [
     { i: 64, title: '', dataIndex: 'col64', align: 'center', width: 100 },
 
     // { i: 148, title: '', dataIndex: 'col148', align: 'center', width: 100 },
-
-    { title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 100 }
 ]
+
+// 动态生成包含指定列的固定列配置
+const fixedColumns = computed(() => {
+    const result = [...baseFixedColumns]
+    
+    // 定义需要自动添加的列名
+    const targetColumnNames = [
+        'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Hot',
+        'In_house_freq',
+        'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
+    ]
+    
+    // 检查props.header中是否包含指定的列，如果包含则添加到固定列中
+    targetColumnNames.forEach(targetName => {
+        const columnIndex = header.value.findIndex(headerName => headerName === targetName)
+        if (columnIndex !== -1) {
+            const colIdx = columnIndex + 1 // 列索引从1开始
+            // 检查是否已经在基础固定列中
+            const alreadyExists = baseFixedColumns.some(col => col.i === colIdx)
+            if (!alreadyExists) {
+                result.push({
+                    i: colIdx,
+                    title: '',
+                    dataIndex: `col${colIdx}`,
+                    align: 'center',
+                    width: targetName === 'Strand_Bias(ref_f,ref_r,alt_f,alt_r)' ? 120 : 95,
+                    ellipsis: true
+                })
+            }
+        }
+    })
+    
+    // 添加操作列
+    result.push({ title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 100 })
+    
+    return result
+})
 
 
 const selectedExpandColIdx = ref([])
@@ -685,11 +724,11 @@ const tableFileName = computed(() => {
     return `${ret.qn}_${ret.qt}.combined.standard-new.txt`
 })
 
-// 固定显示列的列号
-const fixedIdx = fixedColumns.map(t => t.i)
+// 固定显示列的列号（动态计算）
+const fixedIdx = computed(() => fixedColumns.value.map(t => t.i).filter(i => i !== undefined))
 // 扩展列的列号（所有列 排除固定列）
 const expandedColumns = computed(() => {
-    const expandedIdx = new Array(props.header.length).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
+    const expandedIdx = new Array(props.header.length).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.value.includes(t))
     return expandedIdx.map(idx => {
         return {
             i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
@@ -711,21 +750,11 @@ const atOptionGroupChange = () => {
 }
 
 const columns = computed(() => {
-    let result = [...fixedColumns]
+    let result = [...fixedColumns.value]
     result = result.splice(0, result.length - 1) // 移除操作列，稍后添加
 
-    // 定义需要固定在右侧的列名
-    const rightFixedColumnNames = [
-        'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
-        'Hot',
-        'In_house_freq',
-        'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
-        'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
-    ]
-
-    // 分离普通扩展列和需要固定在右侧的列
+    // 添加普通扩展列
     const normalExpandCols = []
-    const rightFixedCols = []
 
     selectedExpandColIdx.value.forEach(idx => {
         const columnTitle = header.value[idx - 1]
@@ -736,19 +765,12 @@ const columns = computed(() => {
             width: columnTitle === 'Strand_Bias(ref_f,ref_r,alt_f,alt_r)' ? 120: 95,
             ellipsis: true
         }
-
-        if (rightFixedColumnNames.includes(columnTitle)) {
-            columnConfig.fixed = 'right'
-            rightFixedCols.push(columnConfig)
-        } else {
-            normalExpandCols.push(columnConfig)
-        }
+        normalExpandCols.push(columnConfig)
     })
 
-    // 按顺序添加列：固定左侧列 + 普通扩展列 + 固定右侧列 + 操作列
+    // 按顺序添加列：固定列 + 普通扩展列 + 操作列
     result.push(...normalExpandCols)
-    result.push(...rightFixedCols)
-    result.push(fixedColumns[fixedColumns.length - 1]) // 添加操作列
+    result.push(fixedColumns.value[fixedColumns.value.length - 1]) // 添加操作列
 
     // 如果有扩展列要展示，需要重置列宽
     // if (fixedColumns.length > 0) {
