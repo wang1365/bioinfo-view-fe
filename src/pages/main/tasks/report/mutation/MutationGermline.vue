@@ -549,7 +549,7 @@ const rowSelection = computed(() => {
     }
 )
 
-const fixedColumns = [
+const baseFixedColumns = [
     { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 100, fixed: 'left' }, // Start
     { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110, fixed: 'left' }, // Gene.refGene
@@ -595,18 +595,62 @@ const fixedColumns = [
     { title: '操作列',  key: 'operation', align: 'center', fixed: 'right', width: 100 }
 ]
 
+// 动态计算固定列，包括基础固定列和来自props.header的特定列
+const fixedColumns = computed(() => {
+    const targetColumnNames = [
+        'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Hot',
+        'In_house_freq',
+        'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
+        'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
+    ]
+    
+    const additionalColumns = []
+    
+    // 检查props.header中是否存在目标列
+    targetColumnNames.forEach(targetName => {
+        const columnIndex = props.header.findIndex(headerName => {
+            // 支持模糊匹配
+            return headerName.includes('Strand_Bias') && targetName.includes('Strand_Bias') ||
+                   headerName === 'Hot' && targetName === 'Hot' ||
+                   headerName === 'In_house_freq' && targetName === 'In_house_freq' ||
+                   (headerName.includes('Tumor_strand_Bias') && targetName.includes('Tumor_strand_Bias')) ||
+                   (headerName.includes('Normal_strand_Bias') && targetName.includes('Normal_strand_Bias'))
+        })
+        
+        if (columnIndex !== -1) {
+            additionalColumns.push({
+                i: columnIndex + 1,
+                title: props.header[columnIndex],
+                dataIndex: `col${columnIndex + 1}`,
+                align: 'center',
+                width: 150,
+                ellipsis: true
+            })
+        }
+    })
+    
+    // 将额外的列插入到操作列之前
+    const result = [...baseFixedColumns]
+    const operationColumn = result.pop() // 移除操作列
+    result.push(...additionalColumns) // 添加额外的列
+    result.push(operationColumn) // 重新添加操作列
+    
+    return result
+})
+
 const scrollX = computed(() => {
-    return 2200 + (fixedColumns.length - 33) * 100
+    return 2200 + (fixedColumns.value.length - 33) * 100
 })
 
 const selectedExpandColIdx = ref([])
 
 
 // 固定显示列的列号
-const fixedIdx = fixedColumns.map(t => t.i)
+const fixedIdx = computed(() => fixedColumns.value.map(t => t.i))
 // 扩展列的列号（所有列 排除固定列）
 const expandedColumns = computed(() => {
-    const expandedIdx = new Array(props.header.length).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.includes(t))
+    const expandedIdx = new Array(props.header.length).fill(0).map((t, i) => i + 1).filter(t => !fixedIdx.value.includes(t))
     return expandedIdx.map(idx => {
         return {
             i: idx, title: header.value[idx - 1], dataIndex: `col${idx}`, width: 100, ellipsis: true,
@@ -628,60 +672,25 @@ const atOptionGroupChange = () => {
 }
 
 const columns = computed(() => {
-    let result = [...fixedColumns]
+    let result = [...fixedColumns.value]
     result = result.splice(0, result.length - 1) // 移除操作列，稍后添加
     
-    // 定义需要固定在右侧的列名
-    const rightFixedColumnNames = [
-        'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
-        'Hot',
-        'In_house_freq',
-        'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
-        'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
-    ]
-    
-    // 分离普通扩展列和需要固定在右侧的列
-    const normalExpandCols = []
-    const rightFixedCols = []
-    
+    // 添加选中的扩展列
     selectedExpandColIdx.value.forEach(idx => {
         const columnTitle = header.value[idx - 1]
         const columnConfig = {
             i: idx, 
             title: columnTitle, 
             dataIndex: `col${idx}`, 
-            width: 150, // 增加宽度以适应较长的列名
+            width: 150,
             ellipsis: true,
             align: 'center'
         }
-        
-        // 检查列名是否匹配需要固定在右侧的列
-        const isRightFixed = rightFixedColumnNames.some(fixedName => {
-            // 支持模糊匹配，因为列名可能有细微差异
-            return columnTitle.includes('Strand_Bias') && fixedName.includes('Strand_Bias') ||
-                   columnTitle === 'Hot' && fixedName === 'Hot' ||
-                   columnTitle === 'In_house_freq' && fixedName === 'In_house_freq' ||
-                   (columnTitle.includes('Tumor_strand_Bias') && fixedName.includes('Tumor_strand_Bias')) ||
-                   (columnTitle.includes('Normal_strand_Bias') && fixedName.includes('Normal_strand_Bias'))
-        })
-        
-        if (isRightFixed) {
-            columnConfig.fixed = 'right'
-            rightFixedCols.push(columnConfig)
-        } else {
-            normalExpandCols.push(columnConfig)
-        }
+        result.push(columnConfig)
     })
     
-    // 按顺序添加列：固定左侧列 + 普通扩展列 + 固定右侧列 + 操作列
-    result.push(...normalExpandCols)
-    result.push(...rightFixedCols)
-    result.push(fixedColumns[fixedColumns.length - 1]) // 添加操作列
-
-    // 如果有扩展列要展示，需要重置列宽
-    // if (fixedColumns.length > 0) {
-    //     result.forEach(t => t.width = 0)
-    // }
+    // 添加操作列
+    result.push(fixedColumns.value[fixedColumns.value.length - 1])
 
     result.forEach((c) => (c.customCell = customCell))
     return result
