@@ -270,8 +270,8 @@
                                 <q-btn
                                     :label="$t('Detail')"
                                     color="primary"
-                                    size="xs"
-                                    outline
+                                    size="12px"
+                                    flat
                                     padding="xs"
                                     class="q-mr-xs"
                                     @click="clickDetail(record)"
@@ -279,9 +279,9 @@
                                 <q-btn
                                     label="IGV"
                                     color="primary"
-                                    size="xs"
+                                    size="12px"
                                     padding="xs"
-                                    outline
+                                    flat
                                     @click="clickIgv(record)"
                                 />
                             </template>
@@ -660,7 +660,7 @@ const baseFixedColumns = [
 // 动态生成包含指定列的固定列配置
 const fixedColumns = computed(() => {
     const result = [...baseFixedColumns]
-    
+
     // 定义需要自动添加的列名
     const targetColumnNames = [
         'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
@@ -669,7 +669,7 @@ const fixedColumns = computed(() => {
         'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
         'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
     ]
-    
+
     // 检查props.header中是否包含指定的列，如果包含则添加到固定列中
     targetColumnNames.forEach(targetName => {
         const columnIndex = header.value.findIndex(headerName => headerName === targetName)
@@ -689,10 +689,10 @@ const fixedColumns = computed(() => {
             }
         }
     })
-    
+
     // 添加操作列
     result.push({ title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 100 })
-    
+
     return result
 })
 

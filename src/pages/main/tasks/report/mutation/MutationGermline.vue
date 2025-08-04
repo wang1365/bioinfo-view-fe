@@ -2,7 +2,15 @@
     <q-page>
         <q-splitter v-model="splitterModel" unit="px" class="q-px-sm">
             <template v-slot:separator>
-                <q-btn round dense color="primary" class="cursor-pointer" @click="toggleLeftPanel" size="lg" style="opacity: 0.7;">
+                <q-btn
+                    round
+                    dense
+                    color="primary"
+                    class="cursor-pointer"
+                    @click="toggleLeftPanel"
+                    size="lg"
+                    style="opacity: 0.7;"
+                >
                     <q-icon :name="leftPanelOpen ? 'chevron_left' : 'chevron_right'" size="24px" />
                 </q-btn>
             </template>
@@ -216,8 +224,8 @@
                                 <q-btn
                                     :label="$t('Detail')"
                                     color="primary"
-                                    size="xs"
-                                    outline
+                                    flat
+                                    size="12px"
                                     padding="xs"
                                     class="q-mr-xs"
                                     @click="clickDetail(record)"
@@ -225,8 +233,8 @@
                                 <q-btn
                                     label="IGV"
                                     color="primary"
-                                    size="xs"
-                                    outline
+                                    size="12px"
+                                    flat
                                     padding="xs"
                                     @click="clickIgv(record)"
                                 />
@@ -604,9 +612,9 @@ const fixedColumns = computed(() => {
         'Tumor_strand_Bias(ref_f,ref_r,alt_f,alt_r)',
         'Normal_strand_Bias(ref_f,ref_r,alt_f,alt_r)'
     ]
-    
+
     const additionalColumns = []
-    
+
     // 检查props.header中是否存在目标列
     targetColumnNames.forEach(targetName => {
         const columnIndex = props.header.findIndex(headerName => {
@@ -617,7 +625,7 @@ const fixedColumns = computed(() => {
                    (headerName.includes('Tumor_strand_Bias') && targetName.includes('Tumor_strand_Bias')) ||
                    (headerName.includes('Normal_strand_Bias') && targetName.includes('Normal_strand_Bias'))
         })
-        
+
         if (columnIndex !== -1) {
             additionalColumns.push({
                 i: columnIndex + 1,
@@ -629,13 +637,13 @@ const fixedColumns = computed(() => {
             })
         }
     })
-    
+
     // 将额外的列插入到操作列之前
     const result = [...baseFixedColumns]
     const operationColumn = result.pop() // 移除操作列
     result.push(...additionalColumns) // 添加额外的列
     result.push(operationColumn) // 重新添加操作列
-    
+
     return result
 })
 
@@ -674,21 +682,21 @@ const atOptionGroupChange = () => {
 const columns = computed(() => {
     let result = [...fixedColumns.value]
     result = result.splice(0, result.length - 1) // 移除操作列，稍后添加
-    
+
     // 添加选中的扩展列
     selectedExpandColIdx.value.forEach(idx => {
         const columnTitle = header.value[idx - 1]
         const columnConfig = {
-            i: idx, 
-            title: columnTitle, 
-            dataIndex: `col${idx}`, 
+            i: idx,
+            title: columnTitle,
+            dataIndex: `col${idx}`,
             width: 150,
             ellipsis: true,
             align: 'center'
         }
         result.push(columnConfig)
     })
-    
+
     // 添加操作列
     result.push(fixedColumns.value[fixedColumns.value.length - 1])
 
