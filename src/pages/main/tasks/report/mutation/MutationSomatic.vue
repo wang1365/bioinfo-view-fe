@@ -683,7 +683,7 @@ const fixedColumns = computed(() => {
                     title: '',
                     dataIndex: `col${colIdx}`,
                     align: 'center',
-                    width: targetName === 'Strand_Bias(ref_f,ref_r,alt_f,alt_r)' ? 120 : 95,
+                    width: targetName.includes('Bias') ? 120 : 95,
                     ellipsis: true
                 })
             }

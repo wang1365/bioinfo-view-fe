@@ -632,7 +632,7 @@ const fixedColumns = computed(() => {
                 title: props.header[columnIndex],
                 dataIndex: `col${columnIndex + 1}`,
                 align: 'center',
-                width: 150,
+                width: targetName.includes('Bias') ? 130 : 110,
                 ellipsis: true
             })
         }
@@ -648,7 +648,7 @@ const fixedColumns = computed(() => {
 })
 
 const scrollX = computed(() => {
-    return 2200 + (fixedColumns.value.length - 33) * 100
+    return 2500 + (fixedColumns.value.length - 33) * 100
 })
 
 const selectedExpandColIdx = ref([])
