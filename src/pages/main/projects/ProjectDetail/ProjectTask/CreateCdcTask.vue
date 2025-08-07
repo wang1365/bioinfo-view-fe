@@ -176,10 +176,21 @@
 
                     <!-- 宿主原序列表格 -->
                     <div class="q-mt-md">
+                        <div class="text-h6 q-mb-sm text-purple">宿主原序列信息</div>
                         <a-table
                             :columns="hostSequenceColumns"
                             :data-source="hostSequenceData"
-                            :pagination="false"
+                            :pagination="{
+                                current: hostPagination.current,
+                                pageSize: hostPagination.pageSize,
+                                total: hostSequenceData.length,
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+                                pageSizeOptions: ['5', '10', '20', '50'],
+                                onChange: (page, pageSize) => handleHostPageChange(page, pageSize),
+                                onShowSizeChange: (current, size) => handleHostPageChange(current, size)
+                            }"
                             size="small"
                             bordered
                         >
@@ -195,10 +206,21 @@
 
                     <!-- 病原原序列表格 -->
                     <div class="q-mt-md">
+                        <div class="text-h6 q-mb-sm text-purple">病原原序列信息</div>
                         <a-table
                             :columns="pathogenSequenceColumns"
                             :data-source="pathogenSequenceData"
-                            :pagination="false"
+                            :pagination="{
+                                current: pathogenPagination.current,
+                                pageSize: pathogenPagination.pageSize,
+                                total: pathogenSequenceData.length,
+                                showSizeChanger: true,
+                                showQuickJumper: true,
+                                showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
+                                pageSizeOptions: ['5', '10', '20', '50'],
+                                onChange: (page, pageSize) => handlePathogenPageChange(page, pageSize),
+                                onShowSizeChange: (current, size) => handlePathogenPageChange(current, size)
+                            }"
                             size="small"
                             bordered
                         >
@@ -262,45 +284,50 @@ const customDatabasePaths = ref([]);
 
 // 宿主原序列表格数据
 const hostSequenceColumns = ref([
-    { title: '宿主原序列路径', dataIndex: 'sequencePath',  key: 'sequencePath', width: 200 },
-    { title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 120 },
-    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 120 },
-    { title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 100 },
-    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 150 },
-    { title: '操作', key: 'action', width: 120 }
+    {
+        title: '宿主原序列路径',
+        dataIndex: 'sequencePath',
+        key: 'sequencePath',
+        width: 200,
+        customRender: ({ text }) => text
+    },
+    { title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 80 },
+    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 100 },
+    { title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 60 },
+    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 100 },
+    { title: '操作', key: 'action', width: 30 }
 ]);
 
-const hostSequenceData = ref([
-    {
-        key: '1',
-        sequencePath: '/data/bioinfo/host/human_hg19.fasta',
-        speciesName: 'Human',
-        sequenceId: 'hg19_001',
-        versionInfo: 'v1.0',
-        originalName: 'Homo sapiens genome hg19'
-    }
-]);
+const hostSequenceData = ref([]);
 
 // 病原原序列表格数据
 const pathogenSequenceColumns = ref([
-    { title: '病原原序列路径', dataIndex: 'sequencePath',  key: 'sequencePath', width: 200 },
-    { title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 120 },
-    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 120 },
-    { title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 100 },
-    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 150 },
-    { title: '操作', key: 'action', width: 120 }
+    {
+        title: '病原原序列路径',
+        dataIndex: 'sequencePath',
+        key: 'sequencePath',
+        width: 200,
+        customRender: ({ text }) => text
+    },
+    { title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 80 },
+    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 80 },
+    { title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80 },
+    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 200 },
+    { title: '操作', key: 'action', width: 30 }
 ]);
 
-const pathogenSequenceData = ref([
-    {
-        key: '1',
-        sequencePath: '/data/bioinfo/pathogen/adenovirus.fasta',
-        strainName: 'HAdV-F',
-        sequenceId: 'adv_001',
-        classificationInfo: 'Adenoviridae',
-        originalName: 'Human adenovirus F strain'
-    }
-]);
+const pathogenSequenceData = ref([]);
+
+// 分页相关数据
+const hostPagination = ref({
+    current: 1,
+    pageSize: 10
+});
+
+const pathogenPagination = ref({
+    current: 1,
+    pageSize: 10
+});
 
 const paramTabs = ref([])
 const activeParamFileIndex = ref(0)
@@ -734,31 +761,50 @@ const showInformationSummary = async () => {
         infoMessage('正在获取序列信息...')
         const data = await collectInformation(requestData)
 
-        if (data) {
-            const { hostSequences, pathogenSequences } = data
+        /**
+         const data = await collectInformation(requestData) 返回如下内容
+          {
+                "host_mapdb_info": "/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr1/human.chr1.hg19.fasta\thuman\tchr1\thg19\tchr1\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr10/human.chr10.hg19.fasta\thuman\tchr10\thg19\tchr10\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr11/human.chr11.hg19.fasta\thuman\tchr11\thg19\tchr11\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr11_gl000202_random/human.chr11_gl000202_random.hg19.fasta\thuman\tchr11_gl000202_random\thg19\tchr11_gl000202_random\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr12/human.chr12.hg19.fasta\thuman\tchr12\thg19\tchr12\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr13/human.chr13.hg19.fasta\thuman\tchr13\thg19\tchr13\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr14/human.chr14.hg19.fasta\thuman\tchr14\thg19\tchr14\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr15/human.chr15.hg19.fasta\thuman\tchr15\thg19\tchr15\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr16/human.chr16.hg19.fasta\thuman\tchr16\thg19\tchr16\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17/human.chr17.hg19.fasta\thuman\tchr17\thg19\tchr17\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17_ctg5_hap1/human.chr17_ctg5_hap1.hg19.fasta\thuman\tchr17_ctg5_hap1\thg19\tchr17_ctg5_hap1\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17_gl000203_random/human.chr17_gl000203_random.hg19.fasta\thuman\tchr17_gl000203_random\thg19\tchr17_gl000203_random",
+                "sp_mapdb_info": "/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/Norovirus/GI/2014-USA/KX907730.1/2014-USA.KX907730.1.GI_P7.fasta\t2014-USA\tKX907730.1\tGI_P7\tKX907730.1 Norovirus Hu/USA/2014/GI.P7_GI.7/GA5043, partial genome\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/Norovirus/GI/2015-China/KY934262.1/2015-China.KY934262.1.GI_P3.fasta\t2015-China\tKY934262.1\tGI_P3\tKY934262.1 Norovirus GI isolate 0304-19, complete genome"
+            }
+        将host_mapdb_info 和 sp_mapdb_info 分别解析后渲染到2个表格中
+         */
 
-            // 更新宿主原序列表格数据
-            if (hostSequences && Array.isArray(hostSequences)) {
-                hostSequenceData.value = hostSequences.map((item, index) => ({
-                    key: (index + 1).toString(),
-                    sequencePath: item.sequencePath || '',
-                    speciesName: item.speciesName || '',
-                    sequenceId: item.sequenceId || '',
-                    versionInfo: item.versionInfo || '',
-                    originalName: item.originalName || ''
-                }))
+        if (data) {
+            // 解析宿主原序列信息 (host_mapdb_info)
+            if (data.host_mapdb_info) {
+                const hostLines = data.host_mapdb_info.split('\n').filter(line => line.trim())
+                hostSequenceData.value = hostLines.map((line, index) => {
+                    const parts = line.split('\t')
+                    return {
+                        key: (index + 1).toString(),
+                        sequencePath: parts[0] || '',
+                        speciesName: parts[1] || '',
+                        sequenceId: parts[2] || '',
+                        versionInfo: parts[3] || '',
+                        originalName: parts[4] || ''
+                    }
+                })
+                // 重置宿主表格分页状态
+                hostPagination.value.current = 1;
             }
 
-            // 更新病原原序列表格数据
-            if (pathogenSequences && Array.isArray(pathogenSequences)) {
-                pathogenSequenceData.value = pathogenSequences.map((item, index) => ({
-                    key: (index + 1).toString(),
-                    sequencePath: item.sequencePath || '',
-                    strainName: item.strainName || '',
-                    sequenceId: item.sequenceId || '',
-                    classificationInfo: item.classificationInfo || '',
-                    originalName: item.originalName || ''
-                }))
+            // 解析病原原序列信息 (sp_mapdb_info)
+            if (data.sp_mapdb_info) {
+                const pathogenLines = data.sp_mapdb_info.split('\n').filter(line => line.trim())
+                pathogenSequenceData.value = pathogenLines.map((line, index) => {
+                    const parts = line.split('\t')
+                    return {
+                        key: (index + 1).toString(),
+                        sequencePath: parts[0] || '',
+                        strainName: parts[1] || '',
+                        sequenceId: parts[2] || '',
+                        classificationInfo: parts[3] || '',
+                        originalName: parts[4] || ''
+                    }
+                })
+                // 重置病原表格分页状态
+                pathogenPagination.value.current = 1;
             }
 
             infoMessage('序列信息获取成功')
@@ -1048,12 +1094,60 @@ const sampleTypetrans = (flow) => {
 // 宿主原序列表格操作方法
 const deleteHostSequence = (index) => {
     console.log('删除宿主原序列:', index);
-    hostSequenceData.value.splice(index, 1);
+    // 计算实际的数据索引（考虑分页）
+    const actualIndex = (hostPagination.value.current - 1) * hostPagination.value.pageSize + index;
+    hostSequenceData.value.splice(actualIndex, 1);
+
+    // 如果当前页没有数据了，跳转到上一页
+    const totalPages = Math.ceil(hostSequenceData.value.length / hostPagination.value.pageSize);
+    if (hostPagination.value.current > totalPages && totalPages > 0) {
+        hostPagination.value.current = totalPages;
+    }
 }
 
 // 病原原序列表格操作方法
 const deletePathogenSequence = (index) => {
     console.log('删除病原原序列:', index);
-    pathogenSequenceData.value.splice(index, 1);
+    // 计算实际的数据索引（考虑分页）
+    const actualIndex = (pathogenPagination.value.current - 1) * pathogenPagination.value.pageSize + index;
+    pathogenSequenceData.value.splice(actualIndex, 1);
+
+    // 如果当前页没有数据了，跳转到上一页
+    const totalPages = Math.ceil(pathogenSequenceData.value.length / pathogenPagination.value.pageSize);
+    if (pathogenPagination.value.current > totalPages && totalPages > 0) {
+        pathogenPagination.value.current = totalPages;
+    }
+}
+
+// 宿主原序列表格分页处理
+const handleHostPageChange = (page, pageSize) => {
+    console.log('宿主表格分页变化:', page, pageSize);
+    hostPagination.value.current = page;
+    hostPagination.value.pageSize = pageSize;
+}
+
+// 病原原序列表格分页处理
+const handlePathogenPageChange = (page, pageSize) => {
+    console.log('病原表格分页变化:', page, pageSize);
+    pathogenPagination.value.current = page;
+    pathogenPagination.value.pageSize = pageSize;
 }
 </script>
+
+<style scoped>
+/* 支持表格单元格自动换行 */
+:deep(.ant-table-tbody > tr > td) {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+}
+
+/* 特别针对路径列的样式 */
+:deep(.ant-table-tbody > tr > td:first-child) {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    line-height: 1.4;
+    padding: 8px 16px;
+}
+</style>
