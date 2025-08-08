@@ -70,12 +70,12 @@
                     </div>
                 </div>
                 <q-separator />
-                <div class="q-pa-md" v-if="paramTabs.length > 0">
+                <div class="q-pa-md">
                     <div class="row">
                         <q-input
-                            v-model="paramTabs[0].name"
+                            v-model="formData.name"
                             :label="$t('Task')"
-                            :error="paramTabs[0].nameError"
+                            :error="formData.nameError"
                             :error-message="$t('Required')"
                             class="col-5 q-my-sm"
                             required
@@ -88,11 +88,11 @@
                     <div class="row">
                         <div class="col-3 q-pr-sm">
                             <q-select
-                                :error="paramTabs[0].virusNameError"
+                                :error="formData.virusNameError"
                                 use-input
                                 @filter="filterVirusName"
                                 :error-message="$t('Required')"
-                                v-model="paramTabs[0].virusName"
+                                v-model="formData.virusName"
                                 :options="virusNameOptions"
                                 :label="$t('VirusName')"
                                 multiple
@@ -106,11 +106,11 @@
                         </div>
                         <div class="col-3 q-pr-sm">
                             <q-select
-                                :error="paramTabs[0].virusTypeError"
+                                :error="formData.virusTypeError"
                                 use-input
                                 @filter="filterVirusType"
                                 :error-message="$t('Required')"
-                                v-model="paramTabs[0].virusType"
+                                v-model="formData.virusType"
                                 :options="virusTypeOptions"
                                 :label="$t('VirusType')"
                                 multiple
@@ -118,17 +118,17 @@
                                 use-chips
                                 outlined
                                 label-color="purple"
-                                :disable="paramTabs[0].virusName && paramTabs[0].virusName.length > 1"
+                                :disable="formData.virusName && formData.virusName.length > 1"
                             >
                             </q-select>
                         </div>
                         <div class="col-3 q-pr-sm">
                             <q-select
-                                :error="paramTabs[0].hostError"
+                                :error="formData.hostError"
                                 use-input
                                 @filter="filterHost"
                                 :error-message="$t('Required')"
-                                v-model="paramTabs[0].host"
+                                v-model="formData.host"
                                 :options="hostOptions"
                                 :label="$t('Host')"
                                 stack-label
@@ -140,14 +140,14 @@
                         </div>
                         <div class="col-3 q-pr-sm">
                             <q-select
-                                :error="paramTabs[0].hostGenomeVersionError"
+                                :error="formData.hostGenomeVersionError"
                                 use-input
                                 @filter="filterHostGenomeVersion"
                                 :error-message="$t('Required')"
-                                v-model="paramTabs[0].hostGenomeVersion"
+                                v-model="formData.hostGenomeVersion"
                                 :options="hostGenomeVersionOptions"
                                 :label="$t('HostGenomeVersion')"
-                                :disable="!paramTabs[0].host"
+                                :disable="!formData.host"
                                 stack-label
                                 outlined
                                 label-color="purple"
@@ -157,9 +157,9 @@
                     </div>
                     <div class="row q-pr-sm q-my-sm justify-between">
                         <q-input
-                            :error="paramTabs[0].customDatabaseError"
-                            :error-message="paramTabs[0].customDatabaseErrorMsg || $t('Required')"
-                            v-model="paramTabs[0].customDatabase"
+                            :error="formData.customDatabaseError"
+                            :error-message="formData.customDatabaseErrorMsg || $t('Required')"
+                            v-model="formData.customDatabase"
                             :label="$t('CustomDatabase')"
                             @blur="checkCustomDatabase"
                             label-color="purple"
@@ -329,7 +329,22 @@ const pathogenPagination = ref({
     pageSize: 10
 });
 
-const paramTabs = ref([])
+const formData = ref({
+    virusName: [],
+    virusNameError:'',
+
+    viruasType: [],
+    viruasTypeError: '',
+
+    host: '',
+    hostError:'',
+
+    hostGenomeVersion: '',
+    hostGenomeVersionError: '',
+
+    customDatabase: '',
+    customDatabaseError: '',
+})
 const activeParamFileIndex = ref(0)
 
 const currentSample = ref("first");
@@ -527,38 +542,12 @@ onMounted(() => {
     }
     newTabParamFiles.value = file
     newTabParams.value = { params: params, files: [file], name: "", isError: false };
-    paramTabs.value.push(
-        JSON.parse(JSON.stringify(newTabParams.value))
-    )
+
 });
 // 移除了addParamTab和deleteParamTab函数，因为只允许创建一个任务
 
-const addParamTabFiles = (index) => {
-    paramTabs.value[index].files.push(
-        JSON.parse(JSON.stringify(newTabParamFiles.value))
-    )
-    console.log(paramTabs.value)
-}
 
-const singleSelected = (event) => {
-    openDataSelectorSingle.value = false;
-    if (currentSample.value == "first") {
-        paramTabs.value[0].files[activeParamFileIndex.value].sampleFirst = event
-    } else {
-        paramTabs.value[0].files[activeParamFileIndex.value].sampleSecond = event
-    }
-}
 
-const multiSelected = (event) => {
-    openDataSelectorMulti.value = false;
-    if (currentSample.value == "multi") {
-        paramTabs.value[0].files[activeParamFileIndex.value].samples = event
-    } else if (currentSample.value == "first-multi") {
-        paramTabs.value[0].files[activeParamFileIndex.value].samplesFirst = event
-    } else {
-        paramTabs.value[0].files[activeParamFileIndex.value].samplesSecond = event
-    }
-};
 
 // 过滤病毒种名
 const filterVirusName = (val, update) => {
@@ -637,7 +626,7 @@ const filterHostGenomeVersion = (val, update) => {
 
 // 当病毒种名变化时的处理函数
 const onVirusNameChange = (value) => {
-    const item = paramTabs.value[0]
+    const item = formData.value
 
     // 如果选择了多个病毒种名，则病毒分型固定为ALL
     if (Array.isArray(value) && value.length > 1) {
@@ -659,7 +648,7 @@ const onVirusNameChange = (value) => {
 
 // 当宿主变化时的处理函数
 const onHostChange = (value) => {
-    const item = paramTabs.value[0]
+    const item = formData.value
 
     // 更新宿主基因组版本选项
     if (!value) {
@@ -688,7 +677,7 @@ const onHostChange = (value) => {
 }
 
 const checkCustomDatabase = () => {
-    const item = paramTabs.value[0]
+    const item = formData.value
     if (!item.customDatabase) {
         item.customDatabaseError = true
         item.customDatabaseErrorMsg = t('Required')
@@ -715,9 +704,8 @@ const checkCustomDatabase = () => {
     item.customDatabaseErrorMsg = ''
 }
 
-// 显示信息摘要
-const showInformationSummary = async () => {
-    const item = paramTabs.value[0]
+const validateForm = () => {
+    const item = formData.value
 
     // 校验所有必填字段
     if (!item.virusName || (Array.isArray(item.virusName) && item.virusName.length === 0)) {
@@ -727,34 +715,43 @@ const showInformationSummary = async () => {
 
     if (!item.virusType || (Array.isArray(item.virusType) && item.virusType.length === 0)) {
         errorMessage('请先选择病毒分型')
-        return
+        return false
     }
 
     if (!item.host) {
         errorMessage('请先选择宿主')
-        return
+        return false
     }
 
     if (!item.hostGenomeVersion) {
         errorMessage('请先选择宿主基因组版本')
-        return
+        return false
     }
 
     // 校验自定义数据库
     checkCustomDatabase()
     if (item.customDatabaseError) {
         errorMessage('请先填写正确的自定义数据库名')
+        return false
+    }
+
+    return true
+}
+
+// 显示信息摘要
+const showInformationSummary = async () => {
+    if (!validateForm()) {
         return
     }
 
     try {
         // 收集表单信息
         const requestData = {
-            virusName: Array.isArray(item.virusName) ? item.virusName : [item.virusName],
-            virusType: Array.isArray(item.virusType) ? item.virusType : [item.virusType],
-            host: item.host,
-            hostGenomeVersion: item.hostGenomeVersion,
-            customDatabase: item.customDatabase
+            virusName: virusName.value,
+            virusType: virusType.value,
+            host: host.value,
+            hostGenomeVersion: hostGenomeVersion.value,
+            customDatabase: customDatabase.value
         }
 
         // 调用API获取数据
@@ -817,269 +814,85 @@ const showInformationSummary = async () => {
     }
 }
 
-const confirmTaskCreated = () => {
-    console.log(paramTabs.value)
-    let hasError = false;
-    let datas = []
-    for (let taskParam of paramTabs.value) {
-        let taskParameter = [];
-        let taskHasError = false
-        if (!taskParam.name) {
-            taskParam.nameError = true;
-            hasError = true
-            taskHasError = true
-        } else {
-            taskParam.nameError = false;
-        }
-
-        // 验证病毒种名
-        if (!taskParam.virusName || (Array.isArray(taskParam.virusName) && taskParam.virusName.length === 0)) {
-            taskParam.virusNameError = true;
-            hasError = true
-            taskHasError = true
-        } else {
-            taskParam.virusNameError = false;
-        }
-
-        // 验证病毒分型
-        if (!taskParam.virusType || (Array.isArray(taskParam.virusType) && taskParam.virusType.length === 0)) {
-            taskParam.virusTypeError = true;
-            hasError = true
-            taskHasError = true
-        } else {
-            taskParam.virusTypeError = false;
-        }
-
-        // 验证宿主
-        if (!taskParam.host) {
-            taskParam.hostError = true;
-            hasError = true
-            taskHasError = true
-        } else {
-            taskParam.hostError = false;
-        }
-
-        // 验证宿主基因组版本
-        if (!taskParam.hostGenomeVersion) {
-            taskParam.hostGenomeVersionError = true;
-            hasError = true
-            taskHasError = true
-        } else {
-            taskParam.hostGenomeVersionError = false;
-        }
-
-        // 验证自定义数据库
-        if (!taskParam.customDatabase) {
-            taskParam.customDatabaseError = true;
-            taskParam.customDatabaseErrorMsg = t('Required');
-            hasError = true
-            taskHasError = true
-        }
-        let uploadFiles = []
-        for (let param of paramsDefine.value) {
-            if (!taskParam.params[param.key].value && param.required) {
-                taskParam.params[param.key].isError = true
-                hasError = true
-                taskHasError = true
-            } else {
-                if (param.type === 'file') {
-                    uploadFiles.push([param.key, taskParam.params[param.key].value])
-                }
-                else if (param.type === 'select') {
-                    taskParameter.push({
-                        key: param.key,
-                        value: taskParam.params[param.key].value.value,
-                    });
-                }
-                else if (param.type === 'multiSelect') {
-                    let values = []
-                    for (const item of taskParam.params[param.key].value) {
-                        values.push(item.value)
-                    }
-                    taskParameter.push({
-                        key: param.key,
-                        value: values,
-                    });
-                }
-                else {
-                    taskParameter.push({
-                        key: param.key,
-                        value: taskParam.params[param.key].value,
-                    });
-                }
-                taskParam.params[param.key].isError = false
-            }
-        }
-
-        // 添加序列选择参数
-        taskParameter.push(
-            { key: 'virusName', value: Array.isArray(taskParam.virusName) ? taskParam.virusName : [taskParam.virusName] },
-            { key: 'virusType', value: Array.isArray(taskParam.virusType) ? taskParam.virusType : [taskParam.virusType] },
-            { key: 'host', value: taskParam.host },
-            { key: 'hostGenomeVersion', value: taskParam.hostGenomeVersion },
-            { key: 'customDatabase', value: taskParam.customDatabase }
-        )
-
-        for (let file of taskParam.files) {
-
-            let taskSamples = ""
-            let taskSamplesFirst = ""
-            let taskSamplesSecond = ""
-            switch (props.flowDetail.sample_type) {
-                case "single": {
-                    let samples = []
-                    if (!file.sampleFirst.id) {
-                        file.sampleFirstError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        file.sampleFirstError = false
-                        samples.push(file.sampleFirst.id)
-                    }
-                    taskSamples = samples.join(",")
-
-                    break
-                }
-                case "double": {
-                    let samples = []
-                    if (!file.sampleFirst.id) {
-                        file.sampleFirstError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        samples.push(file.sampleFirst.id)
-                        file.sampleFirstError = false
-                    }
-                    if (!file.sampleSecond.id) {
-                        file.sampleSecondError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        samples.push(file.sampleSecond.id)
-                        file.sampleSecondError = false
-                    }
-                    taskSamples = samples.join(",")
-                    break
-                }
-                case "multiple": {
-                    let samples = []
-                    if (file.samples.length === 0) {
-                        file.samplesError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        for (const item of file.samples) {
-                            samples.push(item.id)
-                        }
-                        file.samplesError = false
-                    }
-                    taskSamples = samples.join(",")
-                    break
-                }
-                case "double_multiple": {
-                    let samples = {
-                        first: [],
-                        second: []
-                    }
-                    if (file.samplesFirst.length === 0) {
-                        file.samplesFirstError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        for (const item of file.samplesFirst) {
-                            samples.first.push(item.id)
-                        }
-                        file.samplesFirstError = false
-                    }
-                    if (file.samplesSecond.length === 0) {
-                        file.samplesSecondError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        for (const item of file.samplesSecond) {
-                            samples.second.push(item.id)
-                        }
-                        file.samplesSecondError = false
-                    }
-                    taskSamples = samples.first.join(',') + ',' + samples.second.join(',')
-                    taskSamplesFirst = samples.first.join(',')
-                    taskSamplesSecond = samples.second.join(',')
-
-                    break
-                }
-            }
-            let data = {}
-            data.uploadFiles = uploadFiles
-            data.name = taskParam.name
-            data.parameter = JSON.stringify(taskParameter)
-            data.samples = taskSamples
-            if (taskSamplesFirst != "") {
-                data.taskSamplesFirst = taskSamplesFirst
-            }
-            if (taskSamplesSecond != "") {
-                data.taskSamplesSecond = taskSamplesSecond
-            }
-
-            datas.push(data)
-            console.log(data)
-        }
-        taskParam.isError = taskHasError
+// 将表格数据转换为CSV字符串
+const convertTableDataToCsv = (data, columns) => {
+    if (!data || data.length === 0) {
+        return '';
     }
-    console.log(datas)
-    if (hasError) {
-        errorMessage("Fix Error")
+
+    // 获取表头（排除操作列）
+    const headers = columns.filter(col => col.key !== 'action').map(col => col.title);
+
+    // 获取数据行
+    const rows = data.map(row => {
+        return columns
+            .filter(col => col.key !== 'action')
+            .map(col => {
+                const value = row[col.dataIndex] || '';
+                // 如果值包含逗号、换行符或双引号，需要用双引号包围并转义内部的双引号
+                if (value.toString().includes(',') || value.toString().includes('\n') || value.toString().includes('"')) {
+                    return `"${value.toString().replace(/"/g, '""')}"`;
+                }
+                return value.toString();
+            });
+    });
+
+    // 组合表头和数据行
+    const csvLines = [headers.join(','), ...rows.map(row => row.join(','))];
+    return csvLines.join('\n');
+};
+
+const confirmTaskCreated = () => {
+    console.log('==================>')
+    if (!validateForm()) {
+        console.log("confirmTaskCreated failed")
         return
     }
-    // TODO 判断资源是否足够
-    apiGet(
-        `/task/check_multi_create_task?task_count=${datas.length}`,
-        (res) => {
-            infoMessage("Creating Tasks")
-            let created = 0;
-            let nameIndex = 0
-            for (const item of datas) {
-                nameIndex += 1
-                let data = new FormData()
-                data.append("flow_id", props.flowDetail.id)
-                data.append("project_id", props.projectDetail.id)
-                data.append("samples", item.samples)
-                data.append("parameter", item.parameter)
-                data.append("name", `${item.name}-${nameIndex}`)
-                if (item.taskSamplesFirst != "") {
-                    data.append("task_samples_first", item.taskSamplesFirst)
-                }
-                if (item.taskSamplesSecond != "") {
-                    data.append("task_samples_second", item.taskSamplesSecond)
-                }
 
-                for (const file of item.uploadFiles) {
-                    data.append(file[0], file[1])
-                }
-                console.log(data)
-                //TODO 创建任务
-                apiPost(
-                    "/task",
-                    (res) => {
-                        created += 1
-                        infoMessage(`Success Created ${created}/${datas.length} Tasks`)
-                        if (created == datas.length) {
-                            emit('taskCreated')
-                        }
-                    },
-                    data,
-                    (res) => {
-                        created += 1;
-                        errorMessage(`Fail Created ${created}/${data.length} Tasks, Reason ${res.msg}`)
-                    },
-                )
 
-            }
-        },
-        {}, (res) => {
-            errorMessage(res.msg)
+    // 生成表格数据的CSV字符串
+    const hostMapDbInfo = convertTableDataToCsv(hostSequenceData.value, hostSequenceColumns.value);
+    const spMapDbInfo = convertTableDataToCsv(pathogenSequenceData.value, pathogenSequenceColumns.value);
+
+    // 添加序列选择参数
+    taskParameter.push(
+        { key: 'virusName', value: Array.isArray(taskParam.virusName) ? taskParam.virusName : [taskParam.virusName] },
+        { key: 'virusType', value: Array.isArray(taskParam.virusType) ? taskParam.virusType : [taskParam.virusType] },
+        { key: 'host', value: taskParam.host },
+        { key: 'hostGenomeVersion', value: taskParam.hostGenomeVersion },
+        { key: 'customDatabase', value: taskParam.customDatabase }
+    )
+
+    console.log('==============>taskParameter', taskParameter)
+
+    // 添加自建参考基因组参数
+    taskParameter.push({
+        key: '自建参考基因组',
+        value: {
+            virusName: Array.isArray(taskParam.virusName) ? taskParam.virusName : [taskParam.virusName],
+            virusType: Array.isArray(taskParam.virusType) ? taskParam.virusType : [taskParam.virusType],
+            host: taskParam.host,
+            hostGenomeVersion: taskParam.hostGenomeVersion,
+            customDatabase: taskParam.customDatabase,
+            hostMapDbInfo: hostMapDbInfo,
+            spMapDbInfo: spMapDbInfo
         }
+    })
+
+    //TODO 创建任务
+    apiPost(
+        "/task",
+        (res) => {
+            infoMessage("Success Created Task")
+            emit('taskCreated')
+        },
+        data,
+        (res) => {
+            errorMessage(`Fail Created Task, Reason ${res.msg}`)
+        },
     )
 }
+
 const sampleTypetrans = (flow) => {
     switch (flow.sample_type) {
         case "single":
