@@ -69,7 +69,7 @@
                         </div>
                     </div>
                 </div>
-                <q-separator />
+                <q-separator/>
                 <div class="q-pa-md">
                     <div class="row">
                         <q-input
@@ -170,7 +170,7 @@
                             <q-tooltip>{{ $t('CustomDatabaseTooltip') }}</q-tooltip>
                         </q-input>
                         <div class="content-center">
-                            <q-btn color="purple" label="信息汇总" @click="showInformationSummary" />
+                            <q-btn color="purple" label="信息汇总" @click="showInformationSummary"/>
                         </div>
                     </div>
 
@@ -197,7 +197,8 @@
                             <template #bodyCell="{ column, index }">
                                 <template v-if="column.key === 'action'">
                                     <a-button type="link" size="small" danger @click="deleteHostSequence(index)"
-                                        >删除</a-button
+                                    >删除
+                                    </a-button
                                     >
                                 </template>
                             </template>
@@ -227,7 +228,8 @@
                             <template #bodyCell="{ column, index }">
                                 <template v-if="column.key === 'action'">
                                     <a-button type="link" size="small" danger @click="deletePathogenSequence(index)"
-                                        >删除</a-button
+                                    >删除
+                                    </a-button
                                     >
                                 </template>
                             </template>
@@ -236,33 +238,33 @@
                 </div>
             </template>
             <template v-slot:contentFooter>
-                <q-btn :label="$t('Cancel')" v-close-popup />
-                <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()" />
+                <q-btn :label="$t('Cancel')" v-close-popup/>
+                <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()"/>
             </template>
         </PopupContentScroll>
 
         <q-dialog persistent v-model="openDataSelectorSingle">
-            <TaskDataSelectSingle :projectDetail="props.projectDetail" @refresh="singleSelected($event)" />
+            <TaskDataSelectSingle :projectDetail="props.projectDetail" @refresh="singleSelected($event)"/>
         </q-dialog>
         <q-dialog persistent v-model="openDataSelectorMulti">
-            <TaskDataSelectMulti :projectDetail="props.projectDetail" @refresh="multiSelected($event)" />
+            <TaskDataSelectMulti :projectDetail="props.projectDetail" @refresh="multiSelected($event)"/>
         </q-dialog>
     </q-card>
 </template>
 
 <script setup>
-import { ref, toRefs, onMounted } from "vue";
+import {ref, toRefs, onMounted} from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
 import TaskDataSelectMulti from "./TaskDataSelectMulti.vue";
 import TaskDataSelectSingle from "./TaskDataSelectSingle.vue";
-import { useApi } from "src/api/apiBase";
-import { errorMessage, infoMessage } from "src/utils/notify";
-import { useI18n } from "vue-i18n";
-import { readFileFromDatabaseDir } from "src/api/file";
-import { collectInformation } from "src/api/cdc";
+import {useApi} from "src/api/apiBase";
+import {errorMessage, infoMessage} from "src/utils/notify";
+import {useI18n} from "vue-i18n";
+import {readFileFromDatabaseDir} from "src/api/file";
+import {collectInformation} from "src/api/cdc";
 
-const { t } = useI18n();
-const { apiPost, apiGet } = useApi();
+const {t} = useI18n();
+const {apiPost, apiGet} = useApi();
 const openDataSelectorSingle = ref(false);
 const openDataSelectorMulti = ref(false);
 const paramsDefine = ref([]);
@@ -289,13 +291,13 @@ const hostSequenceColumns = ref([
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
-        customRender: ({ text }) => text
+        customRender: ({text}) => text
     },
-    { title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 80 },
-    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 100 },
-    { title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 60 },
-    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 100 },
-    { title: '操作', key: 'action', width: 30 }
+    {title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 80},
+    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
+    {title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
+    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 100},
+    {title: '操作', key: 'action', width: 30}
 ]);
 
 const hostSequenceData = ref([]);
@@ -307,13 +309,13 @@ const pathogenSequenceColumns = ref([
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
-        customRender: ({ text }) => text
+        customRender: ({text}) => text
     },
-    { title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 80 },
-    { title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 80 },
-    { title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80 },
-    { title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 200 },
-    { title: '操作', key: 'action', width: 30 }
+    {title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 80},
+    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
+    {title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
+    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 200},
+    {title: '操作', key: 'action', width: 30}
 ]);
 
 const pathogenSequenceData = ref([]);
@@ -330,6 +332,9 @@ const pathogenPagination = ref({
 });
 
 const formData = ref({
+    name: '',
+    nameError: false,
+
     virusName: [],
     virusNameError: false,
 
@@ -337,7 +342,7 @@ const formData = ref({
     virusTypeError: false,
 
     host: '',
-    hostError:false,
+    hostError: false,
 
     hostGenomeVersion: '',
     hostGenomeVersionError: false,
@@ -348,8 +353,8 @@ const formData = ref({
 
 const emit = defineEmits(["taskCreated"])
 const props = defineProps({
-    flowDetail: { type: Object, required: true },
-    projectDetail: { type: Object, required: true },
+    flowDetail: {type: Object, required: true},
+    projectDetail: {type: Object, required: true},
 })
 
 // 加载病毒种名和病毒分型数据
@@ -370,7 +375,7 @@ const loadVirusData = async () => {
         for (const line of lines) {
             if (line.trim()) {
                 const [virusName, virusType] = line.split('\t').map(item => item.trim())
-                data.push({ virusName, virusType })
+                data.push({virusName, virusType})
             }
         }
 
@@ -403,7 +408,7 @@ const loadHostData = async () => {
             if (line.trim()) {
                 const [hostName, hostGenomeVersion] = line.split('\t').map(item => item.trim())
                 hostData.value.push(hostName)
-                data.push({ hostName, hostGenomeVersion })
+                data.push({hostName, hostGenomeVersion})
             }
         }
 
@@ -435,7 +440,7 @@ const loadCustomDatabasePaths = async () => {
         for (const line of lines) {
             if (line.trim()) {
                 const [dbName, dbFullName, dbPath] = line.split('\t').map(item => item.trim())
-                data.push({ dbName, dbFullName, dbPath })
+                data.push({dbName, dbFullName, dbPath})
             }
         }
 
@@ -475,7 +480,7 @@ onMounted(() => {
             error: t('Required'),
             isError: false,
         });
-        params[param.key] = { value: null, isError: false }
+        params[param.key] = {value: null, isError: false}
     }
 
     // 加载病毒种名和病毒分型数据
@@ -487,22 +492,29 @@ onMounted(() => {
 
     let file = []
     switch (props.flowDetail.sample_type) {
-        case 'single': { file = { sampleFirst: {}, sampleFirstError: false }; break; };
+        case 'single': {
+            file = {sampleFirst: {}, sampleFirstError: false};
+            break;
+        }
+            ;
         case 'double': {
             file = {
                 sampleFirst: {},
                 sampleSecond: {},
                 sampleFirstError: false,
                 sampleSecondError: false,
-            }; break
-        };
+            };
+            break
+        }
+            ;
         case 'multiple': {
             file = {
                 samples: [],
                 samplesError: false,
             };
             break
-        };
+        }
+            ;
         case 'double_multiple': {
             file = {
                 samplesFirst: [],
@@ -515,12 +527,10 @@ onMounted(() => {
 
     }
     newTabParamFiles.value = file
-    newTabParams.value = { params: params, files: [file], name: "", isError: false };
+    newTabParams.value = {params: params, files: [file], name: "", isError: false};
 
 });
 // 移除了addParamTab和deleteParamTab函数，因为只允许创建一个任务
-
-
 
 
 // 过滤病毒种名
@@ -735,11 +745,11 @@ const showInformationSummary = async () => {
 
         /**
          const data = await collectInformation(requestData) 返回如下内容
-          {
-                "host_mapdb_info": "/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr1/human.chr1.hg19.fasta\thuman\tchr1\thg19\tchr1\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr10/human.chr10.hg19.fasta\thuman\tchr10\thg19\tchr10\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr11/human.chr11.hg19.fasta\thuman\tchr11\thg19\tchr11\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr11_gl000202_random/human.chr11_gl000202_random.hg19.fasta\thuman\tchr11_gl000202_random\thg19\tchr11_gl000202_random\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr12/human.chr12.hg19.fasta\thuman\tchr12\thg19\tchr12\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr13/human.chr13.hg19.fasta\thuman\tchr13\thg19\tchr13\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr14/human.chr14.hg19.fasta\thuman\tchr14\thg19\tchr14\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr15/human.chr15.hg19.fasta\thuman\tchr15\thg19\tchr15\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr16/human.chr16.hg19.fasta\thuman\tchr16\thg19\tchr16\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17/human.chr17.hg19.fasta\thuman\tchr17\thg19\tchr17\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17_ctg5_hap1/human.chr17_ctg5_hap1.hg19.fasta\thuman\tchr17_ctg5_hap1\thg19\tchr17_ctg5_hap1\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17_gl000203_random/human.chr17_gl000203_random.hg19.fasta\thuman\tchr17_gl000203_random\thg19\tchr17_gl000203_random",
-                "sp_mapdb_info": "/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/Norovirus/GI/2014-USA/KX907730.1/2014-USA.KX907730.1.GI_P7.fasta\t2014-USA\tKX907730.1\tGI_P7\tKX907730.1 Norovirus Hu/USA/2014/GI.P7_GI.7/GA5043, partial genome\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/Norovirus/GI/2015-China/KY934262.1/2015-China.KY934262.1.GI_P3.fasta\t2015-China\tKY934262.1\tGI_P3\tKY934262.1 Norovirus GI isolate 0304-19, complete genome"
-            }
-        将host_mapdb_info 和 sp_mapdb_info 分别解析后渲染到2个表格中
+         {
+         "host_mapdb_info": "/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr1/human.chr1.hg19.fasta\thuman\tchr1\thg19\tchr1\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr10/human.chr10.hg19.fasta\thuman\tchr10\thg19\tchr10\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr11/human.chr11.hg19.fasta\thuman\tchr11\thg19\tchr11\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr11_gl000202_random/human.chr11_gl000202_random.hg19.fasta\thuman\tchr11_gl000202_random\thg19\tchr11_gl000202_random\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr12/human.chr12.hg19.fasta\thuman\tchr12\thg19\tchr12\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr13/human.chr13.hg19.fasta\thuman\tchr13\thg19\tchr13\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr14/human.chr14.hg19.fasta\thuman\tchr14\thg19\tchr14\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr15/human.chr15.hg19.fasta\thuman\tchr15\thg19\tchr15\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr16/human.chr16.hg19.fasta\thuman\tchr16\thg19\tchr16\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17/human.chr17.hg19.fasta\thuman\tchr17\thg19\tchr17\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17_ctg5_hap1/human.chr17_ctg5_hap1.hg19.fasta\thuman\tchr17_ctg5_hap1\thg19\tchr17_ctg5_hap1\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/human/hg19/chr17_gl000203_random/human.chr17_gl000203_random.hg19.fasta\thuman\tchr17_gl000203_random\thg19\tchr17_gl000203_random",
+         "sp_mapdb_info": "/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/Norovirus/GI/2014-USA/KX907730.1/2014-USA.KX907730.1.GI_P7.fasta\t2014-USA\tKX907730.1\tGI_P7\tKX907730.1 Norovirus Hu/USA/2014/GI.P7_GI.7/GA5043, partial genome\n/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/species/Norovirus/GI/2015-China/KY934262.1/2015-China.KY934262.1.GI_P3.fasta\t2015-China\tKY934262.1\tGI_P3\tKY934262.1 Norovirus GI isolate 0304-19, complete genome"
+         }
+         将host_mapdb_info 和 sp_mapdb_info 分别解析后渲染到2个表格中
          */
 
         if (data) {
@@ -829,30 +839,26 @@ const confirmTaskCreated = () => {
     const hostMapDbInfo = convertTableDataToCsv(hostSequenceData.value, hostSequenceColumns.value);
     const spMapDbInfo = convertTableDataToCsv(pathogenSequenceData.value, pathogenSequenceColumns.value);
 
-    // 添加序列选择参数
-    taskParameter.push(
-        { key: 'virusName', value: Array.isArray(taskParam.virusName) ? taskParam.virusName : [taskParam.virusName] },
-        { key: 'virusType', value: Array.isArray(taskParam.virusType) ? taskParam.virusType : [taskParam.virusType] },
-        { key: 'host', value: taskParam.host },
-        { key: 'hostGenomeVersion', value: taskParam.hostGenomeVersion },
-        { key: 'customDatabase', value: taskParam.customDatabase }
-    )
+    const data = {
+        flow_id: props.flowDetail.id,
+        project_id: props.projectDetail.id,
+        samples: [],
+        parameter: [],
+        name: `${formData.value.name}`,
 
-    console.log('==============>taskParameter', taskParameter)
-
-    // 添加自建参考基因组参数
-    taskParameter.push({
-        key: '自建参考基因组',
-        value: {
-            virusName: Array.isArray(taskParam.virusName) ? taskParam.virusName : [taskParam.virusName],
-            virusType: Array.isArray(taskParam.virusType) ? taskParam.virusType : [taskParam.virusType],
-            host: taskParam.host,
-            hostGenomeVersion: taskParam.hostGenomeVersion,
-            customDatabase: taskParam.customDatabase,
-            hostMapDbInfo: hostMapDbInfo,
-            spMapDbInfo: spMapDbInfo
+        // 自建参考基因组参数
+        refGenomeData: {
+            virusName: formData.value.virusName,
+            virusType: formData.value.virusType,
+            host: formData.value.host,
+            hostGenomeVersion: formData.value.hostGenomeVersion,
+            customDatabase: formData.value.customDatabase,
+            hostMapDbInfo,
+            spMapDbInfo
         }
-    })
+    }
+
+    console.log('==============>taskParameter', data)
 
     //TODO 创建任务
     apiPost(
