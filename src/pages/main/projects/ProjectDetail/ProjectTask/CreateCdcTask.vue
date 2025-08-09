@@ -331,23 +331,20 @@ const pathogenPagination = ref({
 
 const formData = ref({
     virusName: [],
-    virusNameError:'',
+    virusNameError: false,
 
-    viruasType: [],
-    viruasTypeError: '',
+    virusType: [],
+    virusTypeError: false,
 
     host: '',
-    hostError:'',
+    hostError:false,
 
     hostGenomeVersion: '',
-    hostGenomeVersionError: '',
+    hostGenomeVersionError: false,
 
     customDatabase: '',
-    customDatabaseError: '',
+    customDatabaseError: false,
 })
-const activeParamFileIndex = ref(0)
-
-const currentSample = ref("first");
 
 const emit = defineEmits(["taskCreated"])
 const props = defineProps({
@@ -380,19 +377,10 @@ const loadVirusData = async () => {
         virusData.value = data
 
         // 提取唯一的病毒种名
-        const uniqueVirusNames = [...new Set(data.map(item => item.virusName))]
-        virusNameOptions.value = uniqueVirusNames
+        virusNameOptions.value = [...new Set(data.map(item => item.virusName))]
+        console.log('======> virusdata', virusData.value)
     } catch (error) {
         console.error('加载病毒数据失败:', error)
-        // 使用示例数据
-        virusData.value = [
-            { virusName: 'ALL', virusType: 'ALL' },
-            { virusName: 'Adenoviridae', virusType: 'ALL' },
-            { virusName: 'Adenoviridae', virusType: 'HAdVF' },
-            { virusName: 'Adenoviridae', virusType: 'HadV40' },
-            { virusName: 'Adenoviridae', virusType: 'HadV41' }
-        ]
-        virusNameOptions.value = ['ALL', 'Adenoviridae']
     }
 }
 
@@ -414,6 +402,7 @@ const loadHostData = async () => {
         for (const line of lines) {
             if (line.trim()) {
                 const [hostName, hostGenomeVersion] = line.split('\t').map(item => item.trim())
+                hostData.value.push(hostName)
                 data.push({ hostName, hostGenomeVersion })
             }
         }
@@ -425,13 +414,6 @@ const loadHostData = async () => {
         hostOptions.value = uniqueHostNames
     } catch (error) {
         console.error('加载宿主数据失败:', error)
-        // 使用示例数据
-        hostData.value = [
-            { hostName: 'ALL', hostGenomeVersion: 'ALL' },
-            { hostName: 'human', hostGenomeVersion: 'ALL' },
-            { hostName: 'human', hostGenomeVersion: 'hg19' }
-        ]
-        hostOptions.value = ['ALL', 'human']
     }
 }
 
@@ -460,14 +442,6 @@ const loadCustomDatabasePaths = async () => {
         customDatabasePaths.value = data
     } catch (error) {
         console.error('加载自定义数据库路径失败:', error)
-        // 使用示例数据
-        customDatabasePaths.value = [
-            {
-                dbName: 'hg19_Adenoviridae',
-                dbFullName: 'human_hg19.Adenoviridae_ALL',
-                dbPath: '/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/hg19_Adenoviridae/hg19_Adenoviridae.fasta'
-            }
-        ]
     }
 }
 
@@ -570,7 +544,7 @@ const filterVirusName = (val, update) => {
 const filterVirusType = (val, update) => {
     if (val === '') {
         update(() => {
-            const selectedVirusName = paramTabs.value[0].virusName
+            const selectedVirusName = formData.value.virusName
             if (Array.isArray(selectedVirusName) && selectedVirusName.length > 1) {
                 virusTypeOptions.value = ['ALL']
             } else {
@@ -610,7 +584,7 @@ const filterHost = (val, update) => {
 const filterHostGenomeVersion = (val, update) => {
     if (val === '') {
         update(() => {
-            const hostName = paramTabs.value[0].host
+            const hostName = formData.value.host
             hostGenomeVersionOptions.value = hostData.value
                 .filter(item => item.hostName === hostName)
                 .map(item => item.hostGenomeVersion)
@@ -631,19 +605,20 @@ const onVirusNameChange = (value) => {
     // 如果选择了多个病毒种名，则病毒分型固定为ALL
     if (Array.isArray(value) && value.length > 1) {
         item.virusType = ['ALL']
+        return
     }
 
     // 更新病毒分型选项
     if (!value) {
         virusTypeOptions.value = []
-    } else if (Array.isArray(value) && value.length > 1) {
-        virusTypeOptions.value = ['ALL']
-    } else {
-        const selectedVirusName = Array.isArray(value) ? value[0] : value
-        virusTypeOptions.value = virusData.value
-            .filter(item => item.virusName === selectedVirusName)
-            .map(item => item.virusType)
+        return
     }
+
+    const selectedVirusName = Array.isArray(value) ? value[0] : value
+    virusTypeOptions.value = virusData.value
+        .filter(item => item.virusName === selectedVirusName)
+        .map(item => item.virusType)
+    console.log('========================>>>>virusTypeOptions.value', virusTypeOptions.value)
 }
 
 // 当宿主变化时的处理函数
@@ -747,11 +722,11 @@ const showInformationSummary = async () => {
     try {
         // 收集表单信息
         const requestData = {
-            virusName: virusName.value,
-            virusType: virusType.value,
-            host: host.value,
-            hostGenomeVersion: hostGenomeVersion.value,
-            customDatabase: customDatabase.value
+            virusName: formData.value.virusName,
+            virusType: formData.value.virusType,
+            host: formData.value.host,
+            hostGenomeVersion: formData.value.hostGenomeVersion,
+            customDatabase: formData.value.customDatabase
         }
 
         // 调用API获取数据
