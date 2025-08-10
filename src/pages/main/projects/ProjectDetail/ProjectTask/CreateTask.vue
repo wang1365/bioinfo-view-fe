@@ -14,7 +14,7 @@
                         <q-input stack-label :model-value="props.flowDetail.details" :label="$t('Detail')" label-color="primary" readonly flat/>
                     </div>
                 </div>
-                <q-separator class="q-my-xs"/>
+                <q-separator class="q-my-sm"/>
                 <div>
                     <q-splitter v-model="splitterModel">
                         <template v-slot:before>
@@ -37,7 +37,7 @@
 
                         <template v-slot:after>
                             <div v-for="(item, index) in paramTabs" :key="index">
-                                <div class="q-pa-md" v-if="activeParamTab === index">
+                                <div class="q-pa-sm" v-if="activeParamTab === index">
                                     <div class="text-h6">{{ $t('CustomParameters') }}:</div>
                                     <div class="row">
                                         <q-input class="col-5" v-model="item.name" stack-label
@@ -47,13 +47,14 @@
                                         </q-input>
                                         <template v-if="props.flowDetail.code === '多样本组装及比对流程'">
                                             <q-select label="GENOME"
-                                                      :options="['111', '222']" stack-label
+                                                      :options="genomeOptions" stack-label
                                                       label-color="purple" filled
                                                       class="col q-px-sm"
-                                                      v-model="item.needAssembly"/>
+                                                      v-model="item.genome"/>
                                             <q-checkbox model-value="needAssembly" val="needAssembly"
                                                         left-label filled
                                                         color="purple"
+                                                        v-model="item.needAssembly"
                                                         label="是否进行组装" class="col"/>
                                         </template>
                                     </div>
@@ -300,7 +301,12 @@ const newTabParams = ref({})
 const newTabParamFiles = ref([])
 const params = ref({});
 
-const paramTabs = ref([])
+const paramTabs = ref([
+    {
+        genome: '',
+        needAssembly: false
+    }
+])
 const activeParamTab = ref(0)
 const activeParamFileIndex = ref(0)
 
@@ -321,6 +327,8 @@ const { flowId } = toRefs(props)
 
 const currentFocusSelectKey = ref('')
 const currentFocusSelectParam = ref({})
+const genomeOptions = ref(['genome1', 'genome2', 'genome3'])
+
 const focusSelect = (key, param) => {
     currentFocusSelectKey.value = key
     currentFocusSelectParam.value = param
