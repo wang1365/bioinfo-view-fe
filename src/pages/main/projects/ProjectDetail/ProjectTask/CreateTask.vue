@@ -46,13 +46,12 @@
                                             <q-select label="GENOME"
                                                       :options="genomeOptions" stack-label
                                                       label-color="purple" filled
-                                                      class="col q-px-sm"
+                                                      class="col-3 q-px-sm"
                                                       v-model="item.genome"/>
-                                            <q-checkbox model-value="needAssembly" val="needAssembly"
-                                                        left-label filled
+                                            <q-checkbox left-label filled
                                                         color="purple"
                                                         v-model="item.needAssembly"
-                                                        label="是否进行组装" class="col"/>
+                                                        label="是否进行组装" class="col-2"/>
                                         </template>
                                     </div>
 
