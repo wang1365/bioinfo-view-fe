@@ -12,7 +12,7 @@
                 <slot name="contentBody"></slot>
             </div>
 
-            <q-separator></q-separator>
+            <q-separator color="primary"></q-separator>
             <div>
                 <q-card-actions align="right" class="bg-white text-teal">
                     <q-list>

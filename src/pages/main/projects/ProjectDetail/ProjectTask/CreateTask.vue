@@ -2,21 +2,18 @@
     <q-card style="width: 80vw; max-width: 80vw">
         <PopupContentScroll :title="$t('ProjectDetailPageCreateTask')">
             <template v-slot:contentBody>
-                <div>
-                    <div class="row q-col-gutter-md">
-                        <q-input stack-label :model-value="props.flowDetail.name" :label="$t('FlowName')" label-color="primary" readonly flat/>
-                        <q-input stack-label :model-value="props.flowDetail.code" :label="$t('Code')" label-color="primary" readonly flat/>
-                        <q-input stack-label :model-value="sampleTypetrans(props.flowDetail)" :label="$t('Sample')" label-color="primary" readonly flat/>
-                        <q-input stack-label :model-value="props.flowDetail.allow_nonstandard_samples
-                                    ? $t('Yes')
-                                    : $t('No')" :label="$t('SupportNonStandardSample')" label-color="primary" readonly flat/>
-                        <q-input stack-label :model-value="props.flowDetail.desc" :label="$t('FlowDetail')" label-color="primary" readonly flat/>
-                        <q-input stack-label :model-value="props.flowDetail.details" :label="$t('Detail')" label-color="primary" readonly flat/>
-                    </div>
+                <div class="row q-col-gutter-md q-pl-sm">
+                    <q-input stack-label :model-value="props.flowDetail.name" :label="$t('FlowName')" label-color="primary" readonly flat/>
+                    <q-input stack-label :model-value="props.flowDetail.code" :label="$t('Code')" label-color="primary" readonly flat/>
+                    <q-input stack-label :model-value="sampleTypetrans(props.flowDetail)" :label="$t('Sample')" label-color="primary" readonly flat/>
+                    <q-input stack-label :model-value="props.flowDetail.allow_nonstandard_samples
+                                ? $t('Yes')
+                                : $t('No')" :label="$t('SupportNonStandardSample')" label-color="primary" readonly flat/>
+                    <q-input stack-label :model-value="props.flowDetail.desc" :label="$t('FlowDetail')" label-color="primary" readonly flat/>
+                    <q-input stack-label :model-value="props.flowDetail.details" :label="$t('Detail')" label-color="primary" readonly flat/>
                 </div>
-                <q-separator class="q-my-sm"/>
                 <div>
-                    <q-splitter v-model="splitterModel">
+                    <q-splitter v-model="splitterModel" class="q-mt-sm">
                         <template v-slot:before>
                             <q-list bordered separator dense>
                                 <q-item v-ripple v-for="item, index in paramTabs" :key="index" :name="item.name"
@@ -39,7 +36,7 @@
                             <div v-for="(item, index) in paramTabs" :key="index">
                                 <div class="q-pa-sm" v-if="activeParamTab === index">
                                     <div class="text-h6">{{ $t('CustomParameters') }}:</div>
-                                    <div class="row">
+                                    <div class="row q-mb-md">
                                         <q-input class="col-5" v-model="item.name" stack-label
                                                  label-color="purple" filled
                                                  :label="$t('Task')" :error="item.nameError"
@@ -59,34 +56,30 @@
                                         </template>
                                     </div>
 
-
                                     <div class="row">
                                         <template v-for="param of paramsDefine" :key="param.key">
                                             <div class="col-6 q-pr-sm" v-if="param.type === 'file'">
                                                 <q-file :error="item.params[param.key].isError"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
+                                                        stack-label label-color="purple" filled
                                                     :label="param.key">
-                                                    <q-tooltip>{{
-                                                        param.description
-                                                    }}</q-tooltip>
+                                                    <q-tooltip>{{param.description}}</q-tooltip>
                                                 </q-file>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type === 'string'">
                                                 <q-input :error="item.params[param.key].isError"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
+                                                         stack-label label-color="purple" filled
                                                     :label="param.key">
-                                                    <q-tooltip>{{
-                                                        param.description
-                                                    }}</q-tooltip>
+                                                    <q-tooltip>{{param.description}}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type === 'number'">
                                                 <q-input :error="item.params[param.key].isError"
                                                     :error-message="param.error" type="number"
+                                                         stack-label label-color="purple" filled
                                                     v-model="item.params[param.key].value" :label="param.key">
-                                                    <q-tooltip>{{
-                                                        param.description
-                                                    }}</q-tooltip>
+                                                    <q-tooltip>{{param.description}}</q-tooltip>
                                                 </q-input>
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type === 'select'">
@@ -94,11 +87,10 @@
                                                     @focus="focusSelect(param.key, param)" @filter="filterFn"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
                                                     :options="param.choices" :label="param.key"
+                                                          stack-label label-color="purple" filled
                                                     :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
                                                     option-value="'value'">
-                                                    <q-tooltip>{{
-                                                        param.description
-                                                    }}</q-tooltip>
+                                                    <q-tooltip>{{param.description}}</q-tooltip>
                                                 </q-select>
                                                 <!-- <q-select v-if="!param.choices[0].enLabel"
                                                     :error="item.params[param.key].isError" :error-message="param.error"
@@ -114,11 +106,10 @@
                                                     @focus="focusSelect(param.key, param)" @filter="filterFn"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
                                                     :options="param.choices" :label="param.key"
+                                                          stack-label label-color="purple" filled
                                                     :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
                                                     option-value="'value'" multiple use-chips>
-                                                    <q-tooltip>{{
-                                                        param.description
-                                                    }}</q-tooltip>
+                                                    <q-tooltip>{{ param.description }}</q-tooltip>
                                                 </q-select>
                                                 <!-- <q-select v-if="!param.choices[0].enLabel"
                                                     :error="item.params[param.key].isError" :error-message="param.error"
@@ -132,9 +123,9 @@
                                         </template>
                                     </div>
 
-                                    <div class="text-h6 q-py-md">{{ $t('Data') }}</div>
+                                    <div class="text-h6 q-py-sm">{{ $t('Data') }}</div>
                                     <div v-if="props.flowDetail.sample_type === 'single'">
-                                        <div class="row q-my-md q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                        <div class="row q-mb-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="`${$t('Select')}${$t('Data')}-1: ` + file.sampleFirst?.identifier
@@ -146,13 +137,12 @@
                                                     @click="deleteParamTabFiles(index, file_index)"></q-btn>
                                             </div>
                                             <div class="col-5" v-if="file.sampleFirstError">
-                                                <span class="text-red text-bold">{{ `${$t('Data')}
-                                                    ${$t('Required')}` }}</span>
+                                                <span class="text-red text-bold">{{ `${$t('Data')} ${$t('Required')}` }}</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-if="props.flowDetail.sample_type == 'double'">
-                                        <div class="row q-my-md q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                    <div v-if="props.flowDetail.sample_type === 'double'">
+                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="`${$t('Select')}${$t('Data')}-1: ` + file.sampleFirst?.identifier
@@ -170,21 +160,19 @@
                                                     @click="deleteParamTabFiles(index, file_index)"></q-btn>
                                             </div>
                                             <div class="col-6">
-                                                <span v-if="file.sampleFirstError" class="text-red text-bold">{{
-                                                    `${$t('Data')}
-                                                    ${$t('Required')}` }}
-                                                    {{ file.sampleFirstError }}</span>
+                                                <span v-if="file.sampleFirstError" class="text-red text-bold">
+                                                    {{ `${$t('Data')} ${$t('Required')}` }} { file.sampleFirstError }}
+                                                </span>
                                             </div>
                                             <div class="col-6">
-                                                <span v-if="file.sampleSecondError" class="text-red text-bold">{{
-                                                    `${$t('Data')}
-                                                    ${$t('Required')}` }}
-                                                    {{ file.sampleSecondError }}</span>
+                                                <span v-if="file.sampleSecondError" class="text-red text-bold">
+                                                    {{ `${$t('Data')} ${$t('Required')}` }} {{ file.sampleSecondError }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-if="props.flowDetail.sample_type == 'multiple'" class="">
-                                        <div class="row q-my-md q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                    <div v-if="props.flowDetail.sample_type === 'multiple'" class="">
+                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="$t('Select') + $t('Data')" color="primary"
@@ -195,8 +183,7 @@
                                                     @click="deleteParamTabFiles(index, file_index)"></q-btn>
                                             </div>
                                             <div class="col-5" v-if="file.samplesError">
-                                                <span class="text-red text-bold">{{ `${$t('Data')}
-                                                    ${$t('Required')}` }}</span>
+                                                <span class="text-red text-bold">{{ `${$t('Data')} ${$t('Required')}` }}</span>
                                             </div>
 
                                             <div class="col-12">
@@ -207,8 +194,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div v-if="props.flowDetail.sample_type == 'double_multiple'">
-                                        <div class="row q-my-md q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                    <div v-if="props.flowDetail.sample_type === 'double_multiple'">
+                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="$t('Select') + $t('Data')" color="primary"
@@ -223,14 +210,12 @@
                                                     @click="deleteParamTabFiles(index, file_index)"></q-btn>
                                             </div>
                                             <div class="col-5">
-                                                <span v-if="file.samplesFirstError" class="text-red text-bold">{{
-                                                    `${$t('Data')}
-                                                    ${$t('Required')}` }}</span>
+                                                <span v-if="file.samplesFirstError" class="text-red text-bold">
+                                                    {{ `${$t('Data')} ${$t('Required')}` }}</span>
                                             </div>
                                             <div class="col-5">
-                                                <span v-if="file.samplesSecondError" class="text-red text-bold">{{
-                                                    `${$t('Data')}
-                                                    ${$t('Required')}` }}</span>
+                                                <span v-if="file.samplesSecondError" class="text-red text-bold">
+                                                    {{ `${$t('Data')} ${$t('Required')}` }}</span>
                                             </div>
                                             <div class="col-5">
                                                 <q-chip v-for="sample of file.samplesFirst" :key="sample.id"
@@ -246,11 +231,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="q-my-md">
+                                    <div class="q-my-sm">
                                         <q-btn icon="add" color="primary" style="width: 100%"
-                                            @click="addParamTabFiles(index)">{{ $t('Add') }}
-                                            {{ $t('Data')
-                                            }}</q-btn>
+                                            @click="addParamTabFiles(index)">{{ $t('Add') }} {{ $t('Data') }}</q-btn>
                                     </div>
                                 </div>
                             </div>
@@ -301,12 +284,7 @@ const newTabParams = ref({})
 const newTabParamFiles = ref([])
 const params = ref({});
 
-const paramTabs = ref([
-    {
-        genome: '',
-        needAssembly: false
-    }
-])
+const paramTabs = ref([])
 const activeParamTab = ref(0)
 const activeParamFileIndex = ref(0)
 
@@ -422,7 +400,14 @@ onMounted(() => {
 
     }
     newTabParamFiles.value = file
-    newTabParams.value = { params: params, files: [file], name: "", isError: false };
+    newTabParams.value = {
+        params: params,
+        files: [file],
+        name: "",
+        isError: false,
+        genome: '',
+        needAssembly: false
+    };
     paramTabs.value.push(
         JSON.parse(JSON.stringify(newTabParams.value))
     )
