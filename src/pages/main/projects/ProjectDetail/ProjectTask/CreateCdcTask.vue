@@ -845,6 +845,7 @@ const confirmTaskCreated = () => {
         samples: [],
         parameter: [],
         name: `${formData.value.name}`,
+        flow_code: props.flowDetail.code,
 
         // 自建参考基因组参数
         refGenomeData: {
