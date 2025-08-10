@@ -2,72 +2,66 @@
     <q-card style="width: 80vw; max-width: 80vw">
         <PopupContentScroll :title="$t('ProjectDetailPageCreateTask')">
             <template v-slot:contentBody>
-                <div class="text-h6 q-py-md">{{ $t('Flow') }}:</div>
                 <div>
                     <div class="row q-col-gutter-md">
-                        <div class="col">{{ $t('FlowName') }}: {{ props.flowDetail.name }}</div>
-                        <div class="col">{{ $t('Code') }}: {{ props.flowDetail.code }}</div>
-                    </div>
-                    <div class="row q-col-gutter-md">
-                        <div class="col">
-                            {{ $t('Sample') }}:
-                            {{ sampleTypetrans(props.flowDetail) }}
-                        </div>
-                        <div class="col">
-                            {{ $t('SupportNonStandardSample') }}:
-                            {{
-                                props.flowDetail.allow_nonstandard_samples
+                        <q-input stack-label :model-value="props.flowDetail.name" :label="$t('FlowName')" label-color="primary" readonly flat/>
+                        <q-input stack-label :model-value="props.flowDetail.code" :label="$t('Code')" label-color="primary" readonly flat/>
+                        <q-input stack-label :model-value="sampleTypetrans(props.flowDetail)" :label="$t('Sample')" label-color="primary" readonly flat/>
+                        <q-input stack-label :model-value="props.flowDetail.allow_nonstandard_samples
                                     ? $t('Yes')
-                                    : $t('No')
-                            }}
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col">{{ $t('FlowDetail') }}: {{ props.flowDetail.desc }}</div>
-                    </div>
-                    <div class="row">
-                        <div class="col">{{ $t('Detail') }}: {{ props.flowDetail.details }}</div>
+                                    : $t('No')" :label="$t('SupportNonStandardSample')" label-color="primary" readonly flat/>
+                        <q-input stack-label :model-value="props.flowDetail.desc" :label="$t('FlowDetail')" label-color="primary" readonly flat/>
+                        <q-input stack-label :model-value="props.flowDetail.details" :label="$t('Detail')" label-color="primary" readonly flat/>
                     </div>
                 </div>
-                <q-separator />
+                <q-separator class="q-my-xs"/>
                 <div>
                     <q-splitter v-model="splitterModel">
                         <template v-slot:before>
-                            <q-list bordered separator>
+                            <q-list bordered separator dense>
                                 <q-item v-ripple v-for="item, index in paramTabs" :key="index" :name="item.name"
-                                    :class="{ 'bg-primary': index == activeParamTab, 'text-white': index == activeParamTab }">
-                                    <span class="cursor-pointer" @click="activeParamTab = index">{{
-                                            $t('Task')
-
-
-                                        }}&nbsp;{{ index + 1
-                                        }}
+                                    :class="{ 'bg-primary': index === activeParamTab, 'text-white': index === activeParamTab }">
+                                    <span class="cursor-pointer" @click="activeParamTab = index">
+                                        {{t('Task')}}&nbsp;{{ index + 1}}
                                     </span>
                                     <q-icon name="delete" color="red" class="q-ml-md cursor-pointer"
-
                                         @click="deleteParamTab(index)"></q-icon>
                                     <q-icon name="error" color="red" style="float:right;top:0px;right:-10px"
                                         v-if="item.isError"></q-icon>
                                 </q-item>
                                 <q-item clickable class="center" @click="addParamTab()">
-                                    <q-btn icon="add" color="primary" outline></q-btn>
+                                    <q-btn icon="add" color="primary" outline dense></q-btn>
                                 </q-item>
                             </q-list>
                         </template>
 
                         <template v-slot:after>
-                            <div v-for="item, index in paramTabs" :key="index">
+                            <div v-for="(item, index) in paramTabs" :key="index">
                                 <div class="q-pa-md" v-if="activeParamTab === index">
                                     <div class="text-h6">{{ $t('CustomParameters') }}:</div>
-                                    <div>
-                                        <q-input v-model="item.name" :label="$t('Task')" :error="item.nameError"
+                                    <div class="row">
+                                        <q-input class="col-5" v-model="item.name" stack-label
+                                                 label-color="purple" filled
+                                                 :label="$t('Task')" :error="item.nameError"
                                             :error-message="$t('Required')">
                                         </q-input>
+                                        <template v-if="props.flowDetail.code === '多样本组装及比对流程'">
+                                            <q-select label="GENOME"
+                                                      :options="['111', '222']" stack-label
+                                                      label-color="purple" filled
+                                                      class="col q-px-sm"
+                                                      v-model="item.needAssembly"/>
+                                            <q-checkbox model-value="needAssembly" val="needAssembly"
+                                                        left-label filled
+                                                        color="purple"
+                                                        label="是否进行组装" class="col"/>
+                                        </template>
                                     </div>
+
+
                                     <div class="row">
                                         <template v-for="param of paramsDefine" :key="param.key">
-                                            <div class="col-6 q-pr-sm" v-if="param.type == 'file'">
+                                            <div class="col-6 q-pr-sm" v-if="param.type === 'file'">
                                                 <q-file :error="item.params[param.key].isError"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
                                                     :label="param.key">
@@ -76,7 +70,7 @@
                                                     }}</q-tooltip>
                                                 </q-file>
                                             </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type == 'string'">
+                                            <div class="col-6 q-pr-sm" v-if="param.type === 'string'">
                                                 <q-input :error="item.params[param.key].isError"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
                                                     :label="param.key">
@@ -85,7 +79,7 @@
                                                     }}</q-tooltip>
                                                 </q-input>
                                             </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type == 'number'">
+                                            <div class="col-6 q-pr-sm" v-if="param.type === 'number'">
                                                 <q-input :error="item.params[param.key].isError"
                                                     :error-message="param.error" type="number"
                                                     v-model="item.params[param.key].value" :label="param.key">
@@ -94,12 +88,12 @@
                                                     }}</q-tooltip>
                                                 </q-input>
                                             </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type == 'select'">
+                                            <div class="col-6 q-pr-sm" v-if="param.type === 'select'">
                                                 <q-select :error="item.params[param.key].isError" use-input
                                                     @focus="focusSelect(param.key, param)" @filter="filterFn"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
                                                     :options="param.choices" :label="param.key"
-                                                    :option-label="langConfig.lang == 'cn' ? 'cnLabel' : 'enLabel'"
+                                                    :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
                                                     option-value="'value'">
                                                     <q-tooltip>{{
                                                         param.description
@@ -114,12 +108,12 @@
                                                     }}</q-tooltip>
                                                 </q-select> -->
                                             </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type == 'multiSelect'">
+                                            <div class="col-6 q-pr-sm" v-if="param.type === 'multiSelect'">
                                                 <q-select :error="item.params[param.key].isError" use-input
                                                     @focus="focusSelect(param.key, param)" @filter="filterFn"
                                                     :error-message="param.error" v-model="item.params[param.key].value"
                                                     :options="param.choices" :label="param.key"
-                                                    :option-label="langConfig.lang == 'cn' ? 'cnLabel' : 'enLabel'"
+                                                    :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
                                                     option-value="'value'" multiple use-chips>
                                                     <q-tooltip>{{
                                                         param.description
@@ -136,8 +130,9 @@
                                             </div>
                                         </template>
                                     </div>
+
                                     <div class="text-h6 q-py-md">{{ $t('Data') }}</div>
-                                    <div v-if="props.flowDetail.sample_type == 'single'">
+                                    <div v-if="props.flowDetail.sample_type === 'single'">
                                         <div class="row q-my-md q-pa-sm shadow-1" v-for="file, file_index in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">

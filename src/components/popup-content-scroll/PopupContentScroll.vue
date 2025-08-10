@@ -7,7 +7,7 @@
                     <q-btn flat round dense icon="close" v-close-popup />
                 </q-toolbar>
             </div>
-            <q-separator></q-separator>
+            <q-separator color="primary"></q-separator>
             <div class="bio-data-table popup-content-table-container">
                 <slot name="contentBody"></slot>
             </div>

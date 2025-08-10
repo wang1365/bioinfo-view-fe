@@ -64,8 +64,8 @@
         <FlowSelect @flowSelected="flowSelected" />
     </q-dialog>
     <q-dialog persistent v-model="openCreateTask">
-        <CreateTask v-if="flowDetail.flow_category !== 'CDC'" :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
         <CreateCdcTask v-if="flowDetail.code === '自建参考基因组'" :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
+        <CreateTask v-else :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
     </q-dialog>
 </template>
 <script setup>
