@@ -16,114 +16,95 @@
             <q-separator />
 
             <q-card-section class="q-pa-lg">
-                <div class="row q-gutter-lg">
-                    <!-- 基本信息 -->
-                    <div class="col-12">
-                        <div class="text-h6 q-mb-sm text-primary">{{ $t('BasicInfo') }}</div>
-                        <div class="row q-gutter-sm">
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('CustomDatabase')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :model-value="detailData.custom_database"
-                                />
-                            </div>
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('CreatedAt')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :model-value="formatDate(detailData.create_time)"
-                                />
-                            </div>
-                        </div>
+                <!-- 基本信息 -->
+                <div class="text-h6 q-mb-sm">{{ $t('BasicInfo') }}</div>
 
-                        <div class="row q-gutter-sm q-mt-sm">
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('Host')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :model-value="detailData.host"
-                                />
-                            </div>
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('HostGenomeVersion')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :model-value="detailData.host_genome_version"
-                                />
-                            </div>
-                        </div>
+                <div class="row q-col-gutter-sm">
+                    <q-input
+                        :label="$t('CustomDatabase')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        readonly
+                        class="col-3"
+                        :model-value="detailData.custom_database"
+                    />
+                    <q-input
+                        :label="$t('CreatedAt')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        readonly
+                        class="col-3"
+                        :model-value="formatDate(detailData.create_time)"
+                    />
+                </div>
+                <div class="row q-col-gutter-sm q-my-md">
+                    <q-input
+                        :label="$t('Host')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        readonly
+                        class="col-3"
+                        :model-value="detailData.host"
+                    />
+                    <q-input
+                        :label="$t('HostGenomeVersion')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        readonly
+                        class="col-3"
+                        :model-value="detailData.host_genome_version"
+                    />
 
-                        <div class="row q-gutter-sm q-mt-sm">
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('VirusName')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :model-value="formatJson(detailData.virus_name)"
-                                />
-                            </div>
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('VirusType')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :model-value="formatJson(detailData.virus_type)"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                    <q-input
+                        :label="$t('VirusName')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        readonly
+                        class="col-3"
+                        :model-value="formatJson(detailData.virus_name)"
+                    />
+                    <q-input
+                        :label="$t('VirusType')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        readonly
+                        class="col-3"
+                        :model-value="formatJson(detailData.virus_type)"
+                    />
                 </div>
 
                 <!-- 文件信息 -->
-                <div class="row q-gutter-lg q-mt-lg">
-                    <div class="col-12">
-                        <div class="text-h6 q-mb-sm text-primary">{{ $t('FileInfo') }}</div>
-                        <div class="row q-gutter-sm">
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('HostSeqFile')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :value="detailData.host_seq_file"
-                                />
-                            </div>
-                            <div class="col-5">
-                                <q-input
-                                    :label="$t('VirusSeqFile')"
-                                    label-color="primary"
-                                    stack-label
-                                    outlined
-                                    readonly
-                                    :value="detailData.virus_seq_file"
-                                />
-                            </div>
-                        </div>
-                    </div>
+                <div class="row q-col-gutter-sm">
+                    <q-input
+                        :label="$t('HostSeqFile')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        class="col-6"
+                        readonly
+                        :model-value="detailData.host_seq_file"
+                    />
+                    <q-input
+                        :label="$t('VirusSeqFile')"
+                        label-color="primary"
+                        stack-label
+                        outlined
+                        readonly
+                        class="col-6"
+                        :model-value="detailData.virus_seq_file"
+                    />
                 </div>
 
                 <!-- 序列信息 -->
                 <div class="row q-gutter-lg q-mt-sm">
                     <div class="col-12">
-                        <div class="text-h6 q-mb-sm text-primary">{{ $t('SequenceInfo') }}</div>
+                        <div class="text-h6 q-mb-sm">{{ $t('SequenceInfo') }}</div>
 
                         <!-- 宿主原序列信息表格 -->
                         <div class="q-mb-md">
