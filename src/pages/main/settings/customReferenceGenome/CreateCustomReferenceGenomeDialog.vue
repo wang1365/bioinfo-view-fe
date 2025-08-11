@@ -65,6 +65,7 @@
                             @filter="filterVirusType"
                             :error="!!formErrors.virusType"
                             :error-message="formErrors.virusType"
+                            :disable="formData.virusName && formData.virusName.length > 1"
                         />
                     </div>
 
@@ -164,9 +165,9 @@ import { ref, onMounted, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { readFileFromDatabaseDir } from 'src/api/file';
-import { collectInformation } from 'src/api/cdc';
 import { errorMessage, infoMessage } from "src/utils/notify";
-import {createCustomReferenceGenome} from "src/api/customReferenceGenome";
+import { createCustomReferenceGenome, collectInformation } from "src/api/customReferenceGenome";
+
 
 const { t } = useI18n();
 const $q = useQuasar();
@@ -386,10 +387,10 @@ const loadCustomDatabasePaths = async () => {
 const filterVirusName = (val, update) => {
     update(() => {
         if (val === '') {
-            virusNameOptions.value = ['ALL', ...Array.from(new Set(virusData.value.map(item => item.virusName)))];
+            virusNameOptions.value = [...Array.from(new Set(virusData.value.map(item => item.virusName)))];
         } else {
             const needle = val.toLowerCase();
-            const allOptions = ['ALL', ...Array.from(new Set(virusData.value.map(item => item.virusName)))];
+            const allOptions = [...Array.from(new Set(virusData.value.map(item => item.virusName)))];
             virusNameOptions.value = allOptions.filter(v => v.toLowerCase().includes(needle));
         }
     });
@@ -431,46 +432,52 @@ const filterHostGenomeVersion = (val, update) => {
 
 // 事件处理函数
 const onVirusNameChange = (value) => {
-    if (value && value.length > 0) {
-        if (value.includes('ALL')) {
-            formData.value.virus_name = ['ALL'];
-            virusTypeOptions.value = ['ALL'];
-            formData.value.virus_type = ['ALL'];
-        } else {
-            const filteredTypes = virusData.value
-                .filter(item => value.includes(item.virusName))
-                .map(item => item.virusType);
-            const uniqueTypes = [...new Set(filteredTypes)];
-            virusTypeOptions.value = uniqueTypes.length > 1 ? ['ALL', ...uniqueTypes] : uniqueTypes;
+    const item = formData.value
 
-            if (uniqueTypes.length === 1) {
-                formData.value.virus_type = uniqueTypes;
-            } else {
-                formData.value.virus_type = [];
-            }
-        }
-    } else {
-        virusTypeOptions.value = [];
-        formData.value.virus_type = [];
+    // 如果选择了多个病毒种名，则病毒分型固定为ALL
+    if (Array.isArray(value) && value.length > 1) {
+        item.virusType = ['ALL']
+        return
     }
+
+    // 更新病毒分型选项
+    if (!value) {
+        virusTypeOptions.value = []
+        return
+    }
+
+    const selectedVirusName = Array.isArray(value) ? value[0] : value
+    virusTypeOptions.value = virusData.value
+        .filter(item => item.virusName === selectedVirusName)
+        .map(item => item.virusType)
 };
 
 const onHostChange = (value) => {
-    if (value) {
-        const filteredVersions = hostData.value
-            .filter(item => item.hostName === value)
-            .map(item => item.hostGenomeVersion);
-        const uniqueVersions = [...new Set(filteredVersions)];
-        hostGenomeVersionOptions.value = uniqueVersions.length > 1 ? ['ALL', ...uniqueVersions] : uniqueVersions;
+    const item = formData.value
 
-        if (uniqueVersions.length === 1) {
-            formData.value.host_genome_version = uniqueVersions[0];
-        } else {
-            formData.value.host_genome_version = '';
-        }
+    // 更新宿主基因组版本选项
+    if (!value) {
+        hostGenomeVersionOptions.value = []
+        item.hostGenomeVersion = null
     } else {
-        hostGenomeVersionOptions.value = [];
-        formData.value.host_genome_version = '';
+        hostGenomeVersionOptions.value = hostData.value
+            .filter(item => item.hostName === value)
+            .map(item => item.hostGenomeVersion)
+
+        // 如果只有一个选项，自动选择
+        if (hostGenomeVersionOptions.value.length === 1) {
+            item.hostGenomeVersion = hostGenomeVersionOptions.value[0]
+        } else if (hostGenomeVersionOptions.value.includes('ALL')) {
+            item.hostGenomeVersion = 'ALL'
+        } else {
+            item.hostGenomeVersion = null
+        }
+    }
+
+    // 重置自定义数据库错误状态
+    if (item.customDatabaseError) {
+        item.customDatabaseError = false
+        item.customDatabaseErrorMsg = ''
     }
 };
 
@@ -500,29 +507,42 @@ const checkCustomDatabase = () => {
 // 验证表单
 const validateForm = () => {
     const errors = {};
-
     if (!formData.value.customDatabase) {
         errors.customDatabase = '自定义数据库名称不能为空';
     }
 
-    if (!formData.value.virusName || formData.value.virus_name.length === 0) {
-        errors.virusName = '病毒种名不能为空';
-    }
-
-    if (!formData.value.virusType || formData.value.virusType.length === 0) {
-        errors.virusType = '病毒分型不能为空';
-    }
-
-    if (!formData.value.host) {
-        errors.host = '宿主不能为空';
-    }
-
-    if (!formData.value.hostGenomeVersion) {
-        errors.hostGenomeVersion = '宿主基因组版本不能为空';
-    }
-
-    formErrors.value = errors;
     return Object.keys(errors).length === 0;
+
+    // if (formData.value.virusName.length === 0
+    //     && formData.value.virusType.length === 0
+    //     && formData.value.host === ''
+    //     && formData.value.hostGenomeVersion === ''
+
+    // ) {
+    //     // 允许病毒名、病毒分型、宿主、宿主基因组版本为空
+    //     return true;
+    // }
+
+
+
+    // if (!formData.value.virusName || formData.value.virusName.length === 0) {
+    //     errors.virusName = '病毒种名不能为空';
+    // }
+
+    // if (!formData.value.virusType || formData.value.virusType.length === 0) {
+    //     errors.virusType = '病毒分型不能为空';
+    // }
+
+    // if (!formData.value.host) {
+    //     errors.host = '宿主不能为空';
+    // }
+
+    // if (!formData.value.hostGenomeVersion) {
+    //     errors.hostGenomeVersion = '宿主基因组版本不能为空';
+    // }
+
+    // formErrors.value = errors;
+    // return Object.keys(errors).length === 0;
 };
 
 // 显示信息摘要
@@ -663,12 +683,11 @@ const handleSave = () => {
     const spMapDbInfo = convertTableDataToCsv(pathogenSequenceData.value, pathogenSequenceColumns.value);
 
     const data = {
-        custom_database: formData.value.name,
-        virus_name: formData.value.virusName,
-        virus_type: formData.value.virusType,
-        host: formData.value.host,
-        host_genome_version: formData.value.hostGenomeVersion,
         custom_database: formData.value.customDatabase,
+        virus_name: formData.value.virusName || [],
+        virus_type: formData.value.virusType || [],
+        host: formData.value.host || '',
+        host_genome_version: formData.value.hostGenomeVersion || '',
         host_map_db: hostMapDbInfo,
         sp_map_db: spMapDbInfo
     }
@@ -683,8 +702,6 @@ const handleSave = () => {
     }).catch((error) => {
         errorMessage('创建失败: ' + (error.message || '未知错误'))
     });
-
-    emit('save', data);
 };
 
 // 处理取消

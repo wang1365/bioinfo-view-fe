@@ -4,7 +4,7 @@
         <q-card>
             <q-card-section>
                 <q-toolbar class="q-gutter-x-sm">
-                    <q-icon size="md" color="primary" name="biotech" />
+                    <q-icon size="md" color="primary" name="ballot" />
                     <q-toolbar-title class="text-h6">
                         {{ $t('CustomReferenceGenomeList') }}
                     </q-toolbar-title>
@@ -72,10 +72,8 @@ import { useQuasar } from 'quasar';
 import { onMounted, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { EyeOutlined, DeleteOutlined } from '@ant-design/icons-vue';
 import {
     getCustomReferenceGenomeList,
-    createCustomReferenceGenome,
     deleteCustomReferenceGenome
 } from 'src/api/customReferenceGenome';
 import { infoMessage, errorMessage } from 'src/utils/notify';
@@ -163,7 +161,6 @@ const paginationConfig = computed(() => ({
 const openNewDialog = ref(false);
 
 
-
 onMounted(() => {
     loadPage();
 });
@@ -184,8 +181,6 @@ const formatJsonField = (jsonData) => {
     }
 };
 
-
-
 // 加载列表数据
 const loadPage = async () => {
     try {
@@ -196,7 +191,7 @@ const loadPage = async () => {
         };
 
         if (search.value) {
-            params.search = search.value;
+            params.custom_database = search.value;
         }
 
         const data = await getCustomReferenceGenomeList(params);
@@ -237,16 +232,9 @@ const gotoDetail = (item) => {
     router.push(`/main/settings/customReferenceGenome/${item.id}`);
 };
 
-
-
-
-
 // 处理对话框保存事件
 const handleDialogSave = async (formData) => {
     try {
-        await createCustomReferenceGenome(formData);
-        infoMessage(t('CreateSuccess') || '创建成功');
-
         openNewDialog.value = false;
         loadPage();
     } catch (error) {
@@ -263,8 +251,8 @@ const handleDialogCancel = () => {
 // 确认删除
 const confirmDelete = (item) => {
     $q.dialog({
-        title: t('ConfirmDelete') || '确认删除',
-        message: `${t('ConfirmDeleteCustomReferenceGenome') || '确定要删除此自建参考基因组吗？'} "${item.custom_database}"`,
+        title: '确认删除',
+        message: `'确定要删除此自建参考基因组吗？' "${item.custom_database}"`,
         cancel: true,
         persistent: true
     }).onOk(async () => {

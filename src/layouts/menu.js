@@ -95,7 +95,7 @@ const menu = [
         roles: ['super', 'admin'],
         children: [
             {
-                icon: 'biotech',
+                icon: 'ballot',
                 label: 'CustomReferenceGenome',
                 separator: false,
                 path: '/main/settings/customReferenceGenome',

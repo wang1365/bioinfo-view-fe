@@ -69,7 +69,7 @@
                         </div>
                     </div>
                 </div>
-                <q-separator/>
+                <q-separator />
                 <div class="q-pa-md">
                     <div class="row">
                         <q-input
@@ -170,7 +170,7 @@
                             <q-tooltip>{{ $t('CustomDatabaseTooltip') }}</q-tooltip>
                         </q-input>
                         <div class="content-center">
-                            <q-btn color="purple" label="信息汇总" @click="showInformationSummary"/>
+                            <q-btn color="purple" label="信息汇总" @click="showInformationSummary" />
                         </div>
                     </div>
 
@@ -197,9 +197,8 @@
                             <template #bodyCell="{ column, index }">
                                 <template v-if="column.key === 'action'">
                                     <a-button type="link" size="small" danger @click="deleteHostSequence(index)"
-                                    >删除
-                                    </a-button
-                                    >
+                                        >删除
+                                    </a-button>
                                 </template>
                             </template>
                         </a-table>
@@ -228,9 +227,8 @@
                             <template #bodyCell="{ column, index }">
                                 <template v-if="column.key === 'action'">
                                     <a-button type="link" size="small" danger @click="deletePathogenSequence(index)"
-                                    >删除
-                                    </a-button
-                                    >
+                                        >删除
+                                    </a-button>
                                 </template>
                             </template>
                         </a-table>
@@ -238,16 +236,16 @@
                 </div>
             </template>
             <template v-slot:contentFooter>
-                <q-btn :label="$t('Cancel')" v-close-popup/>
-                <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()"/>
+                <q-btn :label="$t('Cancel')" v-close-popup />
+                <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()" />
             </template>
         </PopupContentScroll>
 
         <q-dialog persistent v-model="openDataSelectorSingle">
-            <TaskDataSelectSingle :projectDetail="props.projectDetail" @refresh="singleSelected($event)"/>
+            <TaskDataSelectSingle :projectDetail="props.projectDetail" @refresh="singleSelected($event)" />
         </q-dialog>
         <q-dialog persistent v-model="openDataSelectorMulti">
-            <TaskDataSelectMulti :projectDetail="props.projectDetail" @refresh="multiSelected($event)"/>
+            <TaskDataSelectMulti :projectDetail="props.projectDetail" @refresh="multiSelected($event)" />
         </q-dialog>
     </q-card>
 </template>
@@ -261,7 +259,8 @@ import {useApi} from "src/api/apiBase";
 import {errorMessage, infoMessage} from "src/utils/notify";
 import {useI18n} from "vue-i18n";
 import {readFileFromDatabaseDir} from "src/api/file";
-import {collectInformation} from "src/api/cdc";
+import {collectInformation} from "src/api/customReferenceGenome";
+
 
 const {t} = useI18n();
 const {apiPost, apiGet} = useApi();
