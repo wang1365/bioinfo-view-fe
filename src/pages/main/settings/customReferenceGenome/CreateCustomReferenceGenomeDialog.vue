@@ -35,7 +35,7 @@
                         <q-select
                             v-model="formData.virusName"
                             :options="virusNameOptions"
-                            :label="$t('VirusName') + ' *'"
+                            :label="$t('VirusName')"
                             outlined
                             stack-label
                             multiple
@@ -54,7 +54,7 @@
                         <q-select
                             v-model="formData.virusType"
                             :options="virusTypeOptions"
-                            :label="$t('VirusType') + ' *'"
+                            :label="$t('VirusType')"
                             outlined
                             stack-label
                             multiple
@@ -73,7 +73,7 @@
                         <q-select
                             v-model="formData.host"
                             :options="hostOptions"
-                            :label="$t('Host') + ' *'"
+                            :label="$t('Host')"
                             outlined
                             stack-label
                             label-color="purple"
@@ -90,7 +90,7 @@
                         <q-select
                             v-model="formData.hostGenomeVersion"
                             :options="hostGenomeVersionOptions"
-                            :label="$t('HostGenomeVersion') + ' *'"
+                            :label="$t('HostGenomeVersion')"
                             outlined
                             stack-label
                             label-color="purple"
