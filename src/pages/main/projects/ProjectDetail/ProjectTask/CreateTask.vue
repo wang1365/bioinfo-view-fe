@@ -16,7 +16,7 @@
                     <q-splitter v-model="splitterModel" class="q-mt-sm">
                         <template v-slot:before>
                             <q-list bordered separator dense>
-                                <q-item v-ripple v-for="item, index in paramTabs" :key="index" :name="item.name"
+                                <q-item v-ripple v-for="(item, index) in paramTabs" :key="index" :name="item.name"
                                     :class="{ 'bg-primary': index === activeParamTab, 'text-white': index === activeParamTab }">
                                     <span class="cursor-pointer" @click="activeParamTab = index">
                                         {{t('Task')}}&nbsp;{{ index + 1}}
@@ -35,8 +35,8 @@
                         <template v-slot:after>
                             <div v-for="(item, index) in paramTabs" :key="index">
                                 <div class="q-pa-sm" v-if="activeParamTab === index">
-                                    <div class="text-h6">{{ $t('CustomParameters') }}:</div>
-                                    <div class="row q-mb-md">
+                                    <div class="text-subtitle2">{{ $t('CustomParameters') }}:</div>
+                                    <div class="row q-my-md">
                                         <q-input class="col-5" v-model="item.name" stack-label
                                                  label-color="purple" filled
                                                  :label="$t('Task')" :error="item.nameError"
@@ -122,9 +122,9 @@
                                         </template>
                                     </div>
 
-                                    <div class="text-h6 q-py-sm">{{ $t('Data') }}</div>
+                                    <div class="text-subtitle2 q-py-sm">{{ $t('Data') + ":" }}</div>
                                     <div v-if="props.flowDetail.sample_type === 'single'">
-                                        <div class="row q-mb-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                        <div class="row q-mb-sm q-pa-sm shadow-1" v-for="(file, file_index) in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="`${$t('Select')}${$t('Data')}-1: ` + file.sampleFirst?.identifier
@@ -141,7 +141,7 @@
                                         </div>
                                     </div>
                                     <div v-if="props.flowDetail.sample_type === 'double'">
-                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="(file, file_index) in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="`${$t('Select')}${$t('Data')}-1: ` + file.sampleFirst?.identifier
@@ -171,7 +171,7 @@
                                         </div>
                                     </div>
                                     <div v-if="props.flowDetail.sample_type === 'multiple'" class="">
-                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="(file, file_index) in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="$t('Select') + $t('Data')" color="primary"
@@ -194,7 +194,7 @@
                                         </div>
                                     </div>
                                     <div v-if="props.flowDetail.sample_type === 'double_multiple'">
-                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="file, file_index in item.files"
+                                        <div class="row q-my-sm q-pa-sm shadow-1" v-for="(file, file_index) in item.files"
                                             :key="`${index}_${file_index}`" :id="`${index}_${file_index}`">
                                             <div class="col-5">
                                                 <q-btn :label="$t('Select') + $t('Data')" color="primary"
