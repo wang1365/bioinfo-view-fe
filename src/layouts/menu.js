@@ -95,6 +95,13 @@ const menu = [
         roles: ['super', 'admin'],
         children: [
             {
+                icon: 'biotech',
+                label: 'CustomReferenceGenome',
+                separator: false,
+                path: '/main/settings/customReferenceGenome',
+                roles: ['super', 'admin'],
+            },
+            {
                 icon: 'mediation',
                 label: 'FlowManage',
                 separator: false,

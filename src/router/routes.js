@@ -79,6 +79,14 @@ const routes = [
                 component: () => import('pages/main/settings/SettingBlank'),
                 children: [
                     {
+                        path: 'customReferenceGenome',
+                        component: () => import('pages/main/settings/customReferenceGenome/index'),
+                    },
+                    {
+                        path: 'customReferenceGenome/:id',
+                        component: () => import('pages/main/settings/customReferenceGenome/detail'),
+                    },
+                    {
                         path: 'flowManagement',
                         component: () => import('pages/main/settings/flow'),
                     },
