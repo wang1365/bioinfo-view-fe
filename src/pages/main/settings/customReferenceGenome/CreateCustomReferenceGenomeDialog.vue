@@ -24,7 +24,7 @@
                         outlined
                         label-color="purple"
                         stack-label
-                        class="col-6"
+                        class="col-12"
                         @blur="checkCustomDatabase"
                         :error="!!formErrors.customDatabase"
                         :error-message="formErrors.customDatabase"
@@ -103,7 +103,7 @@
                     </div>
 
                     <div class="col-12">
-                        <q-btn color="primary" @click="showInformationSummary" :label="'获取序列信息'" />
+                        <q-btn color="primary" @click="showInformationSummary" :label="'信息汇总'" />
                     </div>
                 </div>
 
@@ -119,7 +119,13 @@
                     >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.key === 'action'">
-                                <q-btn color="negative" size="sm" @click="deleteHostSequence(record)" label="删除" />
+                                <q-btn
+                                    color="negative"
+                                    size="12px"
+                                    flat
+                                    @click="deleteHostSequence(record)"
+                                    label="删除"
+                                />
                             </template>
                         </template>
                     </a-table>
@@ -139,7 +145,8 @@
                             <template v-if="column.key === 'action'">
                                 <q-btn
                                     color="negative"
-                                    size="sm"
+                                    size="12px"
+                                    flat
                                     @click="deletePathogenSequence(record)"
                                     label="删除"
                                 />
@@ -317,7 +324,6 @@ const loadVirusData = async () => {
 
         // 提取唯一的病毒种名
         virusNameOptions.value = [...new Set(data.map(item => item.virusName))]
-        console.log('======> virusdata', virusData.value)
     } catch (error) {
         console.error('加载病毒数据失败:', error)
     }
@@ -328,7 +334,6 @@ const loadHostData = async () => {
     try {
         // 使用文件API从服务器路径读取：/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/host_mapdb.species.class
         const response = await readFileFromDatabaseDir('Pathogen_database/ref_seq_db/host/host_mapdb.species.class')
-        console.log('-------------------------->', response)
         // 检查响应数据是否存在
         if (!response) {
             throw new Error('API响应数据为空')
@@ -349,8 +354,7 @@ const loadHostData = async () => {
         hostData.value = data
 
         // 提取唯一的宿主名称
-        const uniqueHostNames = [...new Set(data.map(item => item.hostName))]
-        hostOptions.value = uniqueHostNames
+        hostOptions.value = [...new Set(data.map(item => item.hostName))]
     } catch (error) {
         console.error('加载宿主数据失败:', error)
     }
@@ -379,6 +383,7 @@ const loadCustomDatabasePaths = async () => {
         }
 
         customDatabasePaths.value = data
+        console.log('=====> Pathogen_database/customize_ref_db/all.ref.path: ', data)
     } catch (error) {
         console.error('加载自定义数据库路径失败:', error)
     }
@@ -486,33 +491,31 @@ const checkCustomDatabase = () => {
     const dbName = formData.value.customDatabase;
 
     if (!dbName) {
-        formErrors.value.customDatabase = t('Required');
-        return;
+        formErrors.value.customDatabase = '自定义数据库名称不能为空';
+        return false;
     }
 
     const regex = /^[a-zA-Z0-9_]+$/;
     if (!regex.test(dbName)) {
         formErrors.value.customDatabase = t('OnlyAllowAlphanumericAndUnderscore');
-        return;
+        return false;
     }
 
-    const exists = customDatabasePaths.value.some(item => item.dbName === dbName);
-    if (exists) {
-        formErrors.value.customDatabase = '该自定义数据库名称已存在';
-        return;
+
+    // customDatabasePaths.value 查找第一个匹配项
+    const existingDb = customDatabasePaths.value.find(item => item.dbName === dbName);
+    if (existingDb) {
+        formErrors.value.customDatabase = '该自定义数据库名称已存在，路径为：' + existingDb.dbPath;
+        return false;
     }
 
     formErrors.value.customDatabase = '';
+    return true;
 };
 
 // 验证表单
 const validateForm = () => {
-    const errors = {};
-    if (!formData.value.customDatabase || formData.value.customDatabase.length === 0) {
-        errors.customDatabase = '自定义数据库名称不能为空';
-    }
-    formErrors.value = errors;
-    return Object.keys(errors).length === 0;
+    return checkCustomDatabase();
 
     // if (formData.value.virusName.length === 0
     //     && formData.value.virusType.length === 0
@@ -684,9 +687,7 @@ const handleSave = () => {
         sp_map_db: spMapDbInfo
     }
 
-    console.log('==============>taskParameter', data)
 
-    //TODO 创建任务
     createCustomReferenceGenome(data).then((resp) => {
         infoMessage('创建成功')
         dialogVisible.value = false;

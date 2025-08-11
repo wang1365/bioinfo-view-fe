@@ -226,9 +226,13 @@
                         >
                             <template #bodyCell="{ column, index }">
                                 <template v-if="column.key === 'action'">
-                                    <a-button type="link" size="small" danger @click="deletePathogenSequence(index)"
-                                        >删除
-                                    </a-button>
+                                    <q-btn
+                                        color="red"
+                                        size="small"
+                                        outline
+                                        label="删除"
+                                        @click="deletePathogenSequence(index)"
+                                    />
                                 </template>
                             </template>
                         </a-table>
@@ -382,7 +386,6 @@ const loadVirusData = async () => {
 
         // 提取唯一的病毒种名
         virusNameOptions.value = [...new Set(data.map(item => item.virusName))]
-        console.log('======> virusdata', virusData.value)
     } catch (error) {
         console.error('加载病毒数据失败:', error)
     }
@@ -393,7 +396,6 @@ const loadHostData = async () => {
     try {
         // 使用文件API从服务器路径读取：/data/bioinfo/database_dir/Pathogen_database/ref_seq_db/host/host_mapdb.species.class
         const response = await readFileFromDatabaseDir('Pathogen_database/ref_seq_db/host/host_mapdb.species.class')
-        console.log('-------------------------->', response)
         // 检查响应数据是否存在
         if (!response) {
             throw new Error('API响应数据为空')
