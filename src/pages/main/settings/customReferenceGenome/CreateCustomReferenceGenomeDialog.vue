@@ -166,7 +166,7 @@ import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { readFileFromDatabaseDir } from 'src/api/file';
 import { errorMessage, infoMessage } from "src/utils/notify";
-import { createCustomReferenceGenome, collectInformation } from "src/api/customReferenceGenome";
+import { createCustomReferenceGenome, collectInformation, checkFile } from 'src/api/customReferenceGenome'
 
 
 const { t } = useI18n();
@@ -507,10 +507,10 @@ const checkCustomDatabase = () => {
 // 验证表单
 const validateForm = () => {
     const errors = {};
-    if (!formData.value.customDatabase) {
+    if (!formData.value.customDatabase || formData.value.customDatabase.length === 0) {
         errors.customDatabase = '自定义数据库名称不能为空';
     }
-
+    formErrors.value = errors;
     return Object.keys(errors).length === 0;
 
     // if (formData.value.virusName.length === 0
@@ -548,6 +548,12 @@ const validateForm = () => {
 // 显示信息摘要
 const showInformationSummary = async () => {
     if (!validateForm()) {
+        return;
+    }
+
+    const result = await checkFile(formData.value.customDatabase)
+    if (!result.ok) {
+        formErrors.value.customDatabase = result.msg;
         return;
     }
 

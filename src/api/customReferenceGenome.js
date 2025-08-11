@@ -27,3 +27,13 @@ export function collectInformation(data) {
         data,
     })
 }
+
+export function checkFile(custom_database) {
+    return api({
+        url: `/reference_genomes/check_file`,
+        method: 'get',
+        params: {
+            custom_database,
+        },
+    })
+}

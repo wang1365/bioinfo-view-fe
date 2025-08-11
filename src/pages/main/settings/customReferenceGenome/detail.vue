@@ -5,7 +5,7 @@
         <q-card v-if="detailData">
             <q-card-section>
                 <q-toolbar class="q-gutter-x-sm">
-                    <q-icon size="md" color="primary" name="biotech" />
+                    <q-icon size="md" color="primary" name="ballot" />
                     <q-toolbar-title class="text-h6">
                         {{ detailData.custom_database }}
                     </q-toolbar-title>
@@ -19,122 +19,134 @@
                 <div class="row q-gutter-lg">
                     <!-- 基本信息 -->
                     <div class="col-12">
-                        <div class="text-h6 q-mb-sm text-purple">{{ $t('BasicInfo') }}</div>
+                        <div class="text-h6 q-mb-sm text-primary">{{ $t('BasicInfo') }}</div>
                         <div class="row q-gutter-sm">
                             <div class="col-5">
-                                <q-field :label="$t('CustomDatabase')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            {{ detailData.custom_database }}
-                                        </div>
-                                    </template>
-                                </q-field>
+                                <q-input
+                                    :label="$t('CustomDatabase')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :model-value="detailData.custom_database"
+                                />
                             </div>
                             <div class="col-5">
-                                <q-field :label="$t('Host')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            {{ detailData.host }}
-                                        </div>
-                                    </template>
-                                </q-field>
-                            </div>
-                        </div>
-
-                        <div class="row q-gutter-sm q-mt-sm">
-                            <div class="col-5">
-                                <q-field :label="$t('HostGenomeVersion')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            {{ detailData.host_genome_version }}
-                                        </div>
-                                    </template>
-                                </q-field>
-                            </div>
-                            <div class="col-5">
-                                <q-field :label="$t('CreatedAt')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            {{ formatDate(detailData.create_time) }}
-                                        </div>
-                                    </template>
-                                </q-field>
+                                <q-input
+                                    :label="$t('CreatedAt')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :model-value="formatDate(detailData.create_time)"
+                                />
                             </div>
                         </div>
 
                         <div class="row q-gutter-sm q-mt-sm">
                             <div class="col-5">
-                                <q-field :label="$t('VirusName')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            <pre>{{ formatJson(detailData.virus_name) }}</pre>
-                                        </div>
-                                    </template>
-                                </q-field>
+                                <q-input
+                                    :label="$t('Host')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :model-value="detailData.host"
+                                />
                             </div>
                             <div class="col-5">
-                                <q-field :label="$t('VirusType')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            <pre>{{ formatJson(detailData.virus_type) }}</pre>
-                                        </div>
-                                    </template>
-                                </q-field>
+                                <q-input
+                                    :label="$t('HostGenomeVersion')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :model-value="detailData.host_genome_version"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="row q-gutter-sm q-mt-sm">
+                            <div class="col-5">
+                                <q-input
+                                    :label="$t('VirusName')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :model-value="formatJson(detailData.virus_name)"
+                                />
+                            </div>
+                            <div class="col-5">
+                                <q-input
+                                    :label="$t('VirusType')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :model-value="formatJson(detailData.virus_type)"
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 文件信息 -->
-                <div class="row q-gutter-lg q-mt-lg" v-if="detailData.host_seq_file || detailData.virus_seq_file">
+                <div class="row q-gutter-lg q-mt-lg">
                     <div class="col-12">
-                        <div class="text-h6 q-mb-sm text-purple">{{ $t('FileInfo') }}</div>
+                        <div class="text-h6 q-mb-sm text-primary">{{ $t('FileInfo') }}</div>
                         <div class="row q-gutter-sm">
-                            <div class="col-5" v-if="detailData.host_seq_file">
-                                <q-field :label="$t('HostSeqFile')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            {{ detailData.host_seq_file }}
-                                        </div>
-                                    </template>
-                                </q-field>
+                            <div class="col-5">
+                                <q-input
+                                    :label="$t('HostSeqFile')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :value="detailData.host_seq_file"
+                                />
                             </div>
-                            <div class="col-5" v-if="detailData.virus_seq_file">
-                                <q-field :label="$t('VirusSeqFile')" stack-label outlined readonly>
-                                    <template v-slot:control>
-                                        <div class="self-center full-width no-outline">
-                                            {{ detailData.virus_seq_file }}
-                                        </div>
-                                    </template>
-                                </q-field>
+                            <div class="col-5">
+                                <q-input
+                                    :label="$t('VirusSeqFile')"
+                                    label-color="primary"
+                                    stack-label
+                                    outlined
+                                    readonly
+                                    :value="detailData.virus_seq_file"
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 序列信息 -->
-                <div class="row q-gutter-lg q-mt-sm" v-if="detailData.host_info || detailData.virus_info">
+                <div class="row q-gutter-lg q-mt-sm">
                     <div class="col-12">
-                        <div class="text-h6 q-mb-sm text-purple">{{ $t('SequenceInfo') }}</div>
+                        <div class="text-h6 q-mb-sm text-primary">{{ $t('SequenceInfo') }}</div>
 
-                        <!-- 宿主原序列信息 -->
-                        <div v-if="detailData.host_info" class="q-mb-sm">
-                            <div class="text-subtitle1 q-mb-sm text-grey-8">{{ $t('HostSequenceInfo') }}</div>
-                            <q-card flat bordered>
-                                <q-card-section>
-                                    <pre class="sequence-info">{{ formatJsonDisplay(detailData.host_info) }}</pre>
-                                </q-card-section>
-                            </q-card>
+                        <!-- 宿主原序列信息表格 -->
+                        <div class="q-mb-md">
+                            <a-table
+                                :columns="hostSequenceColumns"
+                                :data-source="hostSequenceData"
+                                :pagination="hostPagination"
+                                row-key="key"
+                                @change="handleHostPageChange"
+                                size="small"
+                            />
                         </div>
 
-                        <!-- 病原原序列信息 -->
-                        <div v-if="detailData.virus_info">
-                            <div class="text-subtitle1 q-mb-sm text-grey-8">{{ $t('VirusSequenceInfo') }}</div>
-                            <q-card flat bordered>
-                                <q-card-section>
-                                    <pre class="sequence-info">{{ formatJsonDisplay(detailData.virus_info) }}</pre>
-                                </q-card-section>
-                            </q-card>
+                        <!-- 病原原序列信息表格 -->
+                        <div class="q-mb-md">
+                            <a-table
+                                :columns="pathogenSequenceColumns"
+                                :data-source="pathogenSequenceData"
+                                :pagination="pathogenPagination"
+                                row-key="key"
+                                @change="handlePathogenPageChange"
+                                size="small"
+                            />
                         </div>
                     </div>
                 </div>
@@ -166,6 +178,42 @@ const { t } = useI18n();
 
 const detailData = ref(null);
 
+// 宿主原序列表格数据
+const hostSequenceColumns = ref([
+    {
+        title: '宿主原序列路径',
+        dataIndex: 'sequencePath',
+        key: 'sequencePath',
+        width: 200,
+        customRender: ({text}) => text
+    },
+    {title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 80},
+    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
+    {title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
+    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 100}
+]);
+
+const hostSequenceData = ref([]);
+const hostPagination = ref({ current: 1, pageSize: 10 });
+
+// 病原原序列表格数据
+const pathogenSequenceColumns = ref([
+    {
+        title: '病原原序列路径',
+        dataIndex: 'sequencePath',
+        key: 'sequencePath',
+        width: 200,
+        customRender: ({text}) => text
+    },
+    {title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 80},
+    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
+    {title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
+    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 200}
+]);
+
+const pathogenSequenceData = ref([]);
+const pathogenPagination = ref({ current: 1, pageSize: 10 });
+
 onMounted(() => {
     loadDetail();
 });
@@ -196,18 +244,44 @@ const formatJson = (jsonData) => {
     }
 };
 
-// 格式化JSON显示（用于序列信息）
-const formatJsonDisplay = (jsonData) => {
-    if (!jsonData) return '';
+
+
+// 表格分页处理方法
+const handleHostPageChange = (pagination) => {
+    hostPagination.value = pagination;
+};
+
+const handlePathogenPageChange = (pagination) => {
+    pathogenPagination.value = pagination;
+};
+
+// 处理序列数据转换为表格格式
+const processSequenceData = (sequenceInfo) => {
+    if (!sequenceInfo) return [];
+
     try {
-        if (typeof jsonData === 'string') {
-            return JSON.stringify(JSON.parse(jsonData), null, 2);
-        } else if (typeof jsonData === 'object') {
-            return JSON.stringify(jsonData, null, 2);
+        let data = sequenceInfo;
+        if (typeof sequenceInfo === 'string') {
+            data = JSON.parse(sequenceInfo);
         }
-        return String(jsonData);
-    } catch (e) {
-        return String(jsonData);
+
+        if (Array.isArray(data)) {
+            return data.map((item, index) => ({
+                key: index,
+                ...item
+            }));
+        } else if (typeof data === 'object') {
+            return Object.entries(data).map(([key, value], index) => ({
+                key: index,
+                sequencePath: key,
+                ...value
+            }));
+        }
+
+        return [];
+    } catch (error) {
+        console.error('处理序列数据失败:', error);
+        return [];
     }
 };
 
@@ -215,22 +289,13 @@ const formatJsonDisplay = (jsonData) => {
 const loadDetail = async () => {
     try {
         const id = route.params.id;
-        // 模拟数据，替换实际API调用
-        detailData.value = {
-            id: id,
-            custom_database: 'test_database_' + id,
-            host: 'Human',
-            host_genome_version: 'GRCh38',
-            create_time: new Date().toISOString(),
-            virus_name: { "SARS-CoV-2": "新型冠状病毒" },
-            virus_type: { "RNA": "RNA病毒" },
-            host_seq_file: 'host_genome.fasta',
-            virus_seq_file: 'virus_genome.fasta',
-            host_info: { "chromosomes": 23, "size": "3.2GB" },
-            virus_info: { "genome_length": 29903, "type": "single-strand RNA" }
-        };
-        // const response = await getCustomReferenceGenomeDetail(id);
-        // detailData.value = response.data;
+        detailData.value = await getCustomReferenceGenomeDetail(id);
+
+        // 处理表格数据
+        if (detailData.value) {
+            hostSequenceData.value = processSequenceData(detailData.value.host_info);
+            pathogenSequenceData.value = processSequenceData(detailData.value.virus_info);
+        }
     } catch (error) {
         errorMessage(t('LoadDataFailed') || '加载详情失败');
         console.error('加载详情失败:', error);
@@ -244,20 +309,6 @@ const goBack = () => {
 </script>
 
 <style lang="scss" scoped>
-.sequence-info {
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    line-height: 1.4;
-    white-space: pre-wrap;
-    word-break: break-all;
-    max-height: 300px;
-    overflow-y: auto;
-    margin: 0;
-    padding: 8px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-}
-
 .q-field--readonly .q-field__control {
     opacity: 1;
 }
