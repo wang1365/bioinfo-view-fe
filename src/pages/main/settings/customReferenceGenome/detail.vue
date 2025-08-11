@@ -170,6 +170,7 @@ import { useI18n } from 'vue-i18n';
 import { getCustomReferenceGenomeDetail } from 'src/api/customReferenceGenome';
 import { errorMessage } from 'src/utils/notify';
 import { toLocalString } from 'src/utils/time';
+import { parseHostMapdbInfo, parseSpMapdbInfo } from './mapDb';
 import PageTitle from "components/page-title/PageTitle.vue";
 
 const route = useRoute();
@@ -255,23 +256,24 @@ const handlePathogenPageChange = (pagination) => {
     pathogenPagination.value = pagination;
 };
 
-// 处理序列数据转换为表格格式
-const processSequenceData = (sequenceInfo) => {
-    if (!sequenceInfo) return [];
+// 处理宿主序列数据转换为表格格式
+const processHostSequenceData = (hostInfo) => {
+    if (!hostInfo) return [];
 
     try {
-        let data = sequenceInfo;
-        if (typeof sequenceInfo === 'string') {
-            data = JSON.parse(sequenceInfo);
+        // 如果是字符串格式（类似host_mapdb_info），使用解析函数
+        if (typeof hostInfo === 'string') {
+            return parseHostMapdbInfo(hostInfo);
         }
 
-        if (Array.isArray(data)) {
-            return data.map((item, index) => ({
+        // 如果是其他格式，保持原有逻辑
+        if (Array.isArray(hostInfo)) {
+            return hostInfo.map((item, index) => ({
                 key: index,
                 ...item
             }));
-        } else if (typeof data === 'object') {
-            return Object.entries(data).map(([key, value], index) => ({
+        } else if (typeof hostInfo === 'object') {
+            return Object.entries(hostInfo).map(([key, value], index) => ({
                 key: index,
                 sequencePath: key,
                 ...value
@@ -280,7 +282,38 @@ const processSequenceData = (sequenceInfo) => {
 
         return [];
     } catch (error) {
-        console.error('处理序列数据失败:', error);
+        console.error('处理宿主序列数据失败:', error);
+        return [];
+    }
+};
+
+// 处理病原序列数据转换为表格格式
+const processPathogenSequenceData = (virusInfo) => {
+    if (!virusInfo) return [];
+
+    try {
+        // 如果是字符串格式（类似sp_mapdb_info），使用解析函数
+        if (typeof virusInfo === 'string') {
+            return parseSpMapdbInfo(virusInfo);
+        }
+
+        // 如果是其他格式，保持原有逻辑
+        if (Array.isArray(virusInfo)) {
+            return virusInfo.map((item, index) => ({
+                key: index,
+                ...item
+            }));
+        } else if (typeof virusInfo === 'object') {
+            return Object.entries(virusInfo).map(([key, value], index) => ({
+                key: index,
+                sequencePath: key,
+                ...value
+            }));
+        }
+
+        return [];
+    } catch (error) {
+        console.error('处理病原序列数据失败:', error);
         return [];
     }
 };
@@ -293,8 +326,8 @@ const loadDetail = async () => {
 
         // 处理表格数据
         if (detailData.value) {
-            hostSequenceData.value = processSequenceData(detailData.value.host_info);
-            pathogenSequenceData.value = processSequenceData(detailData.value.virus_info);
+            hostSequenceData.value = parseHostMapdbInfo(detailData.value.host_map_db);
+            pathogenSequenceData.value = parseSpMapdbInfo(detailData.value.sp_map_db);
         }
     } catch (error) {
         errorMessage(t('LoadDataFailed') || '加载详情失败');
@@ -316,5 +349,21 @@ const goBack = () => {
 .q-field--readonly .q-field__control .q-field__control-container {
     padding-top: 8px;
     padding-bottom: 8px;
+}
+
+/* 支持表格单元格自动换行 */
+:deep(.ant-table-tbody > tr > td) {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+}
+
+/* 特别针对路径列的样式 */
+:deep(.ant-table-tbody > tr > td:first-child) {
+    word-wrap: break-word;
+    word-break: break-all;
+    white-space: normal;
+    line-height: 1.4;
+    padding: 8px 16px;
 }
 </style>

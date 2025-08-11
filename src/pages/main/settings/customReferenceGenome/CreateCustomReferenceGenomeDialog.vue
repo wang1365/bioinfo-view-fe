@@ -167,6 +167,7 @@ import { useQuasar } from 'quasar';
 import { readFileFromDatabaseDir } from 'src/api/file';
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { createCustomReferenceGenome, collectInformation, checkFile } from 'src/api/customReferenceGenome'
+import { parseHostMapdbInfo, parseSpMapdbInfo } from "./mapDb";
 
 
 const { t } = useI18n();
@@ -583,36 +584,14 @@ const showInformationSummary = async () => {
         if (data) {
             // 解析宿主原序列信息 (host_mapdb_info)
             if (data.host_mapdb_info) {
-                const hostLines = data.host_mapdb_info.split('\n').filter(line => line.trim())
-                hostSequenceData.value = hostLines.map((line, index) => {
-                    const parts = line.split('\t')
-                    return {
-                        key: (index + 1).toString(),
-                        sequencePath: parts[0] || '',
-                        speciesName: parts[1] || '',
-                        sequenceId: parts[2] || '',
-                        versionInfo: parts[3] || '',
-                        originalName: parts[4] || ''
-                    }
-                })
+                hostSequenceData.value = parseHostMapdbInfo(data.host_mapdb_info);
                 // 重置宿主表格分页状态
                 hostPagination.value.current = 1;
             }
 
             // 解析病原原序列信息 (sp_mapdb_info)
             if (data.sp_mapdb_info) {
-                const pathogenLines = data.sp_mapdb_info.split('\n').filter(line => line.trim())
-                pathogenSequenceData.value = pathogenLines.map((line, index) => {
-                    const parts = line.split('\t')
-                    return {
-                        key: (index + 1).toString(),
-                        sequencePath: parts[0] || '',
-                        strainName: parts[1] || '',
-                        sequenceId: parts[2] || '',
-                        classificationInfo: parts[3] || '',
-                        originalName: parts[4] || ''
-                    }
-                })
+                pathogenSequenceData.value = parseSpMapdbInfo(data.sp_mapdb_info);
                 // 重置病原表格分页状态
                 pathogenPagination.value.current = 1;
             }
@@ -654,25 +633,18 @@ const handlePathogenPageChange = (pagination) => {
 };
 
 // 将表格数据转换为CSV格式
-const convertTableDataToCsv = (data) => {
+const convertTableDataToCsv = (data, headers) => {
     if (!data || data.length === 0) {
         return '';
     }
 
-    const headers = ['seq_id', 'seq_name', 'seq_length', 'seq_description'];
+    // headers中过滤掉操作列
+    const filteredHeaders = headers.filter(header => header.dataIndex !== 'action');
     const csvRows = [];
 
-    csvRows.push(headers.join(','));
-
     data.forEach(row => {
-        const values = headers.map(header => {
-            const value = row[header] || '';
-            if (value.includes(',') || value.includes('"') || value.includes('\n')) {
-                return `"${value.replace(/"/g, '""')}"`;
-            }
-            return value;
-        });
-        csvRows.push(values.join(','));
+        const values = filteredHeaders.map(header => row[header.dataIndex] || '');
+        csvRows.push(values.join('\t'));
     });
 
     return csvRows.join('\n');
