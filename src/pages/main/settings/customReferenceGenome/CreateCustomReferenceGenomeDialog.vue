@@ -548,6 +548,10 @@ const validateForm = () => {
 
 // 显示信息摘要
 const showInformationSummary = async () => {
+    // 清除2个表格数据
+    hostSequenceData.value = [];
+    pathogenSequenceData.value = [];
+
     if (!validateForm()) {
         return;
     }
@@ -654,6 +658,16 @@ const convertTableDataToCsv = (data, headers) => {
 const handleSave = () => {
     if (!validateForm()) {
         return;
+    }
+
+    // 2个表格数据不能为空
+    if (hostSequenceData.value.length === 0) {
+        errorMessage('宿主原序列信息不能为空')
+        return
+    }
+    if (pathogenSequenceData.value.length === 0) {
+        errorMessage('病原原序列信息不能为空')
+        return
     }
 
     // 生成表格数据的CSV字符串
