@@ -7,25 +7,21 @@ const api = axios.create({
 
 // 获取自建参考基因组列表
 export const getCustomReferenceGenomeList = (params) => {
-    return api.get('/custom-reference-genome/', { params });
+    return api.get('/reference-genomes/', { params });
 };
 
 // 获取自建参考基因组详情
 export const getCustomReferenceGenomeDetail = (id) => {
-    return api.get(`/custom-reference-genome/${id}/`);
+    return api.get(`/reference-genomes/${id}/`);
 };
 
 // 创建自建参考基因组
 export const createCustomReferenceGenome = (data) => {
-    return api.post('/custom-reference-genome/', data);
+    return api.post('/reference-genomes/', data);
 };
 
-// 更新自建参考基因组
-export const updateCustomReferenceGenome = (id, data) => {
-    return api.put(`/custom-reference-genome/${id}/`, data);
-};
 
 // 删除自建参考基因组
 export const deleteCustomReferenceGenome = (id) => {
-    return api.delete(`/custom-reference-genome/${id}/`);
+    return api.delete(`/reference-genomes/${id}/`);
 };

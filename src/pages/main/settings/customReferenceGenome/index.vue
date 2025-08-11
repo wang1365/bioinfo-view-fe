@@ -196,29 +196,9 @@ const loadPage = async () => {
             params.search = search.value;
         }
 
-        const response = await getCustomReferenceGenomeList(params);
-        // 模拟数据，因为后端API可能还没有实现
-        dataItems.value = [
-            {
-                id: 1,
-                custom_database: 'custom_db_1',
-                virus_name: { name: 'SARS-CoV-2' },
-                virus_type: { type: 'Beta' },
-                host: 'Human',
-                host_genome_version: 'GRCh38',
-                create_time: new Date().toISOString()
-            },
-            {
-                id: 2,
-                custom_database: 'custom_db_2',
-                virus_name: { name: 'Influenza A' },
-                virus_type: { type: 'H1N1' },
-                host: 'Human',
-                host_genome_version: 'GRCh37',
-                create_time: new Date().toISOString()
-            }
-        ];
-        total.value = 2;
+        const data = await getCustomReferenceGenomeList(params);
+        dataItems.value = data.results;
+        total.value = data.count;
     } catch (error) {
         errorMessage(t('LoadDataFailed') || '加载数据失败');
         console.error('加载数据失败:', error);
