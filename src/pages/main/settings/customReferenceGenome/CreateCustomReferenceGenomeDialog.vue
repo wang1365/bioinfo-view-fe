@@ -166,6 +166,7 @@ import { useQuasar } from 'quasar';
 import { readFileFromDatabaseDir } from 'src/api/file';
 import { collectInformation } from 'src/api/cdc';
 import { errorMessage, infoMessage } from "src/utils/notify";
+import {createCustomReferenceGenome} from "src/api/customReferenceGenome";
 
 const { t } = useI18n();
 const $q = useQuasar();
@@ -198,7 +199,7 @@ const formData = ref({
     virusName: [],
     virusType: [],
     host: '',
-    hostGenomeVersion: ''
+    hostGenomeVersion: '',
 });
 
 // 表单错误
@@ -657,13 +658,33 @@ const handleSave = () => {
         return;
     }
 
-    const submitData = {
-        ...formData.value,
-        host_sequence_csv: convertTableDataToCsv(hostSequenceData.value),
-        pathogen_sequence_csv: convertTableDataToCsv(pathogenSequenceData.value)
-    };
+    // 生成表格数据的CSV字符串
+    const hostMapDbInfo = convertTableDataToCsv(hostSequenceData.value, hostSequenceColumns.value);
+    const spMapDbInfo = convertTableDataToCsv(pathogenSequenceData.value, pathogenSequenceColumns.value);
 
-    emit('save', submitData);
+    const data = {
+        custom_database: formData.value.name,
+        virus_name: formData.value.virusName,
+        virus_type: formData.value.virusType,
+        host: formData.value.host,
+        host_genome_version: formData.value.hostGenomeVersion,
+        custom_database: formData.value.customDatabase,
+        host_map_db: hostMapDbInfo,
+        sp_map_db: spMapDbInfo
+    }
+
+    console.log('==============>taskParameter', data)
+
+    //TODO 创建任务
+    createCustomReferenceGenome(data).then((resp) => {
+        infoMessage('创建成功')
+        dialogVisible.value = false;
+        emit('save', resp.data);
+    }).catch((error) => {
+        errorMessage('创建失败: ' + (error.message || '未知错误'))
+    });
+
+    emit('save', data);
 };
 
 // 处理取消

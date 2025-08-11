@@ -79,7 +79,7 @@ import {
     deleteCustomReferenceGenome
 } from 'src/api/customReferenceGenome';
 import { infoMessage, errorMessage } from 'src/utils/notify';
-import { toLocalString } from 'src/utils/time';
+import {format, toLocalString} from 'src/utils/time';
 import PageTitle from "components/page-title/PageTitle.vue";
 import CreateCustomReferenceGenomeDialog from './CreateCustomReferenceGenomeDialog.vue';
 
@@ -136,6 +136,9 @@ const columns = computed(() => [
         dataIndex: 'create_time',
         key: 'create_time',
         width: 180,
+        customRender: (text) => {
+            return format(text);
+        },
     },
     {
         title: t('Actions'),
@@ -199,6 +202,8 @@ const loadPage = async () => {
         const data = await getCustomReferenceGenomeList(params);
         dataItems.value = data.results;
         total.value = data.count;
+        console.log('加载数据成功data:', data);
+        console.log('加载数据成功dataItems:', dataItems.value);
     } catch (error) {
         errorMessage(t('LoadDataFailed') || '加载数据失败');
         console.error('加载数据失败:', error);

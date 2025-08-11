@@ -1,9 +1,5 @@
-import axios from 'axios';
+import { api } from 'src/boot/axios'
 
-// 创建axios实例
-const api = axios.create({
-    baseURL: '/api',
-});
 
 // 获取自建参考基因组列表
 export const getCustomReferenceGenomeList = (params) => {
