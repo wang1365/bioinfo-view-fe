@@ -507,6 +507,7 @@ export default {
 
     // Sequence Selection Parameters
     SequenceSelection: 'Sequence Selection',
+    ReferenceGenome: 'Reference Genome',
     VirusName: 'Virus Name',
     VirusType: 'Virus Type',
     Host: 'Host',

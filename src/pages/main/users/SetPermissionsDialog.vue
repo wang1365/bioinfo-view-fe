@@ -11,19 +11,19 @@
             <q-card-section>
                 <q-separator color="primary" />
                 <div class="q-ml-lg row items-center">
-                    <span class="text-primary col-1">{{$t('Project')+':'}}</span>
+                    <span class="text-primary col-2">{{$t('Project')+':'}}</span>
                     <q-checkbox class="col-4" v-model="permissions.createProject" :label="$t('Add')+$t('Project')" />
                     <q-checkbox class="col" v-model="permissions.deleteProject" :label="$t('Delete')+$t('Project')" />
                 </div>
                 <q-separator />
                 <div class="q-ml-lg row items-center q-mt-sm">
-                    <span class="text-primary col-1">{{$t('Report')+':'}}</span>
+                    <span class="text-primary col-2">{{$t('Report')+':'}}</span>
                     <q-checkbox class="col-4" v-model="permissions.createReport" :label="$t('Add')+$t('Report')" />
                     <q-checkbox class="col" v-model="permissions.deleteReport" :label="$t('Delete')+$t('Report')" />
                 </div>
                 <q-separator />
                 <div class="q-ml-lg row items-center q-mt-sm">
-                    <span class="text-primary col-1">{{$t('Task')+':'}}</span>
+                    <span class="text-primary col-2">{{$t('Task')+':'}}</span>
                     <q-checkbox class="col-4" v-model="permissions.createTask" :label="$t('Add')+$t('Task')" />
                     <q-checkbox class="col" v-model="permissions.deleteTask" :label="$t('Delete')+$t('Task')" />
                     <q-checkbox
@@ -34,28 +34,35 @@
                 </div>
                 <q-separator />
                 <div class="q-ml-lg row items-center q-mt-sm">
-                    <span class="text-primary col-1">{{$t('Sample')+':'}}</span>
+                    <span class="text-primary col-2">{{$t('Sample')+':'}}</span>
                     <q-checkbox class="col-4" v-model="permissions.createSample" :label="$t('Add')+$t('Sample')" />
                     <q-checkbox class="col" v-model="permissions.deleteSample" :label="$t('Delete')+$t('Sample')" />
                 </div>
                 <q-separator />
                 <div class="q-ml-lg row items-center q-mt-sm">
-                    <span class="text-primary col-1">{{$t('Data')+':'}}</span>
+                    <span class="text-primary col-2">{{$t('Data')+':'}}</span>
                     <q-checkbox class="col-4" v-model="permissions.createData" :label="$t('Add')+$t('Data')" />
                     <q-checkbox class="col" v-model="permissions.deleteData" :label="$t('Delete')+$t('Data')" />
                 </div>
                 <q-separator />
                 <div class="q-ml-lg row items-center q-mt-sm">
-                    <span class="text-primary col-1">{{$t('Patient')+':'}}</span>
+                    <span class="text-primary col-2 right">{{$t('Patient')+':'}}</span>
                     <q-checkbox class="col-4" v-model="permissions.createPatient" :label="$t('Add')+$t('Patient')" />
                     <q-checkbox class="col" v-model="permissions.deletePatient" :label="$t('Delete')+$t('Patient')" />
                 </div>
                 <q-separator />
                 <div class="q-ml-lg row items-center q-mt-sm">
-                    <span class="text-primary col-1">{{$t('User')+':'}}</span>
+                    <span class="text-primary col-2">{{$t('User')+':'}}</span>
                     <q-checkbox class="col-4" v-model="permissions.createUser" :label="$t('Add')+$t('User')" />
                     <q-checkbox class="col" v-model="permissions.deleteUser" :label="$t('Delete')+$t('User')" />
                     <q-checkbox class="col" v-model="permissions.resetPassword" :label="$t('ResetPassword')" />
+                </div>
+                <q-separator />
+                <div class="q-ml-lg row items-center q-mt-sm">
+                    <span class="text-primary col-2">{{$t('ReferenceGenome')+':'}}</span>
+                    <q-checkbox class="col-4" v-model="permissions.viewReferenceGenome" :label="$t('View')" />
+                    <q-checkbox class="col" v-model="permissions.createReferenceGenome" :label="$t('Add')" />
+                    <q-checkbox class="col" v-model="permissions.deleteReferenceGenome" :label="$t('Delete')" />
                 </div>
                 <q-separator color="primary" />
             </q-card-section>
@@ -107,6 +114,9 @@ const defaultPermissions = {
     createUser: false,
     deleteUser: false,
     resetPassword: false,
+    viewReferenceGenome: false,
+    createReferenceGenome: false,
+    deleteReferenceGenome: false,
 };
 
 const permissions = ref({...defaultPermissions, ...props?.user?.permissions});

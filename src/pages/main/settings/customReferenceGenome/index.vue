@@ -17,7 +17,13 @@
                         @clear="refreshPage()"
                     />
                     <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
-                    <q-btn color="primary" :label="$t('Add')" icon="add" @click="openNewDialog = true" />
+                    <q-btn 
+                        v-if="canCreate"
+                        color="primary" 
+                        :label="$t('Add')" 
+                        icon="add" 
+                        @click="openNewDialog = true" 
+                    />
                 </q-toolbar>
             </q-card-section>
             <q-card-section>
@@ -48,7 +54,13 @@
                                         </template>
                                         {{ $t('Detail') }}
                                     </a-button>
-                                    <a-button type="primary" danger size="small" @click="confirmDelete(record)">
+                                    <a-button 
+                                        v-if="canDelete"
+                                        type="primary" 
+                                        danger 
+                                        size="small" 
+                                        @click="confirmDelete(record)"
+                                    >
                                         <template #icon>
                                             <DeleteOutlined />
                                         </template>
@@ -78,12 +90,21 @@ import {
 } from 'src/api/customReferenceGenome'
 import { infoMessage, errorMessage } from 'src/utils/notify'
 import { format, toLocalString } from 'src/utils/time'
+import { getCurrentUser } from 'src/utils/user'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import CreateCustomReferenceGenomeDialog from './CreateCustomReferenceGenomeDialog.vue'
+import { EyeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const $q = useQuasar()
 const { t } = useI18n()
+
+// 获取当前用户权限
+const currentUser = getCurrentUser()
+const userPermissions = computed(() => currentUser?.permissions || {})
+const isSuper = computed(() => currentUser?.role_list?.includes('super') || false)
+const canCreate = computed(() => isSuper.value || userPermissions.value.createReferenceGenome)
+const canDelete = computed(() => isSuper.value || userPermissions.value.deleteReferenceGenome)
 
 // 列表相关
 const search = ref('')
@@ -255,6 +276,12 @@ const confirmDelete = (item) => {
             console.error('删除失败:', error)
         }
     })
+}
+
+// 注册组件
+const components = {
+    EyeOutlined,
+    DeleteOutlined
 }
 </script>
 

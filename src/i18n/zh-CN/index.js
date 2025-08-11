@@ -200,6 +200,7 @@ export default {
     CloseOther: '关闭其他',
     
     // 自建参考基因组
+    ReferenceGenome: '参考基因组',
     CustomReferenceGenome: '自建参考基因组',
     CustomDatabase: '自定义数据库名',
     VirusName: '病毒种名',

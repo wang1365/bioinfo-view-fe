@@ -88,19 +88,20 @@ const menu = [
         path: '/main/tools/browse',
     },
     {
+        icon: 'ballot',
+        label: 'CustomReferenceGenome',
+        separator: false,
+        path: '/main/settings/customReferenceGenome',
+        roles: ['super'],
+        permissions: ['viewReferenceGenome'],
+    },
+    {
         icon: 'settings',
         label: 'SystemSetting',
         separator: false,
         path: '/main/settings',
         roles: ['super', 'admin'],
         children: [
-            {
-                icon: 'ballot',
-                label: 'CustomReferenceGenome',
-                separator: false,
-                path: '/main/settings/customReferenceGenome',
-                roles: ['super', 'admin'],
-            },
             {
                 icon: 'mediation',
                 label: 'FlowManage',
@@ -142,18 +143,33 @@ export const getAuthMenu = (currentUser) => {
         return []
     }
     const currentRoles = currentUser.role_list || []
+    const userPermissions = currentUser.permissions || {}
+
+    console.log('xxxxxxxxxxxxxxx', userPermissions)
+
     function filter(items) {
         return items.filter((item) => {
             let result = false
-            if (!item.roles) {
-                result = true
-            } else {
+
+            // 检查角色权限
+            if (item.roles) {
                 for (let role of item.roles) {
                     if (currentRoles.includes(role)) {
                         result = true
-                        break
                     }
                 }
+            }
+
+            if (item.permissions) {
+                for (let p of item.permissions) {
+                    if (userPermissions[p]) {
+                        result = true
+                    }
+                }
+            }
+
+            if (!item.roles && !item.permissions) {
+                result = true
             }
 
             if (result && item.children) {
