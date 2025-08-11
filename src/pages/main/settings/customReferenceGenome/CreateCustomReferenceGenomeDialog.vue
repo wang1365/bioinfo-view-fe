@@ -1,27 +1,37 @@
 <template>
     <q-dialog v-model="dialogVisible" persistent>
-        <q-card style="min-width: 800px; max-width: 1200px;">
-            <q-card-section>
+        <q-card
+            style="min-width: 800px; max-width: 1200px; min-height: 600px; max-height: 80vh; display: flex; flex-direction: column;"
+        >
+            <!-- 固定标题栏 -->
+            <q-card-section
+                class="q-pb-sm"
+                style="flex-shrink: 0; position: sticky; top: 0; background: white; z-index: 1;"
+            >
                 <div class="text-h6">
                     {{ isEdit ? $t('EditCustomReferenceGenome') : $t('CreateCustomReferenceGenome') }}
                 </div>
             </q-card-section>
-            <q-card-section class="q-pt-none">
-                <div class="row q-gutter-sm">
-                    <div class="col-10">
-                        <q-input
-                            v-model="formData.customDatabase"
-                            :label="$t('CustomDatabase') + ' *'"
-                            outlined
-                            label-color="purple"
-                            stack-label
-                            @blur="checkCustomDatabase"
-                            :error="!!formErrors.customDatabase"
-                            :error-message="formErrors.customDatabase"
-                        />
-                    </div>
 
-                    <div class="col-5">
+            <q-separator />
+
+            <!-- 可滚动内容区域 -->
+            <q-card-section class="q-pt-md flex-1" style="overflow-y: auto; min-height: 0;">
+                <div class="row">
+                    <q-input
+                        v-model="formData.customDatabase"
+                        :label="$t('CustomDatabase') + ' *'"
+                        outlined
+                        label-color="purple"
+                        stack-label
+                        class="col-6"
+                        @blur="checkCustomDatabase"
+                        :error="!!formErrors.customDatabase"
+                        :error-message="formErrors.customDatabase"
+                    />
+                </div>
+                <div class="row q-col-gutter-sm">
+                    <div class="col-3">
                         <q-select
                             v-model="formData.virusName"
                             :options="virusNameOptions"
@@ -40,7 +50,7 @@
                         />
                     </div>
 
-                    <div class="col-5">
+                    <div class="col-3">
                         <q-select
                             v-model="formData.virusType"
                             :options="virusTypeOptions"
@@ -58,7 +68,7 @@
                         />
                     </div>
 
-                    <div class="col-5">
+                    <div class="col-3">
                         <q-select
                             v-model="formData.host"
                             :options="hostOptions"
@@ -75,7 +85,7 @@
                         />
                     </div>
 
-                    <div class="col-5">
+                    <div class="col-3">
                         <q-select
                             v-model="formData.hostGenomeVersion"
                             :options="hostGenomeVersionOptions"
@@ -97,8 +107,7 @@
                 </div>
 
                 <!-- 宿主原序列信息表格 -->
-                <div v-if="hostSequenceData.length > 0" class="q-mt-md">
-                    <h6>宿主原序列信息</h6>
+                <div class="q-mt-md">
                     <a-table
                         :columns="hostSequenceColumns"
                         :data-source="hostSequenceData"
@@ -116,8 +125,7 @@
                 </div>
 
                 <!-- 病原原序列信息表格 -->
-                <div v-if="pathogenSequenceData.length > 0" class="q-mt-md">
-                    <h6>病原原序列信息</h6>
+                <div class="q-mt-md">
                     <a-table
                         :columns="pathogenSequenceColumns"
                         :data-source="pathogenSequenceData"
@@ -139,7 +147,11 @@
                     </a-table>
                 </div>
             </q-card-section>
-            <q-card-actions align="right" class="bg-white text-teal">
+
+            <q-separator />
+
+            <!-- 固定按钮栏 -->
+            <q-card-actions align="right" class="bg-white text-teal q-pa-md" style="flex-shrink: 0;">
                 <q-btn :label="$t('Cancel')" @click="handleCancel" />
                 <q-btn color="primary" :label="$t('Save')" @click="handleSave" />
             </q-card-actions>
@@ -462,26 +474,26 @@ const onHostChange = (value) => {
 };
 
 const checkCustomDatabase = () => {
-    const dbName = formData.value.custom_database;
+    const dbName = formData.value.customDatabase;
 
     if (!dbName) {
-        formErrors.value.custom_database = '';
+        formErrors.value.customDatabase = t('Required');
         return;
     }
 
     const regex = /^[a-zA-Z0-9_]+$/;
     if (!regex.test(dbName)) {
-        formErrors.value.custom_database = '自定义数据库名称只能包含字母、数字和下划线';
+        formErrors.value.customDatabase = t('OnlyAllowAlphanumericAndUnderscore');
         return;
     }
 
     const exists = customDatabasePaths.value.some(item => item.dbName === dbName);
     if (exists) {
-        formErrors.value.custom_database = '该自定义数据库名称已存在';
+        formErrors.value.customDatabase = '该自定义数据库名称已存在';
         return;
     }
 
-    formErrors.value.custom_database = '';
+    formErrors.value.customDatabase = '';
 };
 
 // 验证表单
