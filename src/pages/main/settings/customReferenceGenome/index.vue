@@ -43,11 +43,15 @@
                             <template v-if="column.key === 'actions'">
                                 <a-space>
                                     <a-button type="primary" size="small" @click="gotoDetail(record)">
-                                        <template #icon><EyeOutlined /></template>
+                                        <template #icon>
+                                            <EyeOutlined />
+                                        </template>
                                         {{ $t('Detail') }}
                                     </a-button>
                                     <a-button type="primary" danger size="small" @click="confirmDelete(record)">
-                                        <template #icon><DeleteOutlined /></template>
+                                        <template #icon>
+                                            <DeleteOutlined />
+                                        </template>
                                         {{ $t('Delete') }}
                                     </a-button>
                                 </a-space>
@@ -59,39 +63,35 @@
         </q-card>
 
         <!-- 新建对话框 -->
-        <CreateCustomReferenceGenomeDialog
-            v-model:visible="openNewDialog"
-            @save="handleDialogSave"
-            @cancel="handleDialogCancel"
-        />
+        <CreateCustomReferenceGenomeDialog v-model:visible="openNewDialog" @save="handleDialogSave" />
     </q-page>
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar';
-import { onMounted, ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar'
+import { onMounted, ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import {
     getCustomReferenceGenomeList,
-    deleteCustomReferenceGenome
-} from 'src/api/customReferenceGenome';
-import { infoMessage, errorMessage } from 'src/utils/notify';
-import {format, toLocalString} from 'src/utils/time';
-import PageTitle from "components/page-title/PageTitle.vue";
-import CreateCustomReferenceGenomeDialog from './CreateCustomReferenceGenomeDialog.vue';
+    deleteCustomReferenceGenome,
+} from 'src/api/customReferenceGenome'
+import { infoMessage, errorMessage } from 'src/utils/notify'
+import { format, toLocalString } from 'src/utils/time'
+import PageTitle from 'components/page-title/PageTitle.vue'
+import CreateCustomReferenceGenomeDialog from './CreateCustomReferenceGenomeDialog.vue'
 
-const router = useRouter();
-const $q = useQuasar();
-const { t } = useI18n();
+const router = useRouter()
+const $q = useQuasar()
+const { t } = useI18n()
 
 // 列表相关
-const search = ref('');
-const currentPage = ref(1);
-const pageSize = ref(10);
-const total = ref(0);
-const dataItems = ref([]);
-const loading = ref(false);
+const search = ref('')
+const currentPage = ref(1)
+const pageSize = ref(10)
+const total = ref(0)
+const dataItems = ref([])
+const loading = ref(false)
 
 // 表格列定义
 const columns = computed(() => [
@@ -135,7 +135,7 @@ const columns = computed(() => [
         key: 'create_time',
         width: 180,
         customRender: (text) => {
-            return format(text);
+            return format(text)
         },
     },
     {
@@ -144,7 +144,7 @@ const columns = computed(() => [
         width: 150,
         fixed: 'right',
     },
-]);
+])
 
 // 分页配置
 const paginationConfig = computed(() => ({
@@ -155,98 +155,88 @@ const paginationConfig = computed(() => ({
     showQuickJumper: true,
     showTotal: (total, range) => `${range[0]}-${range[1]} / ${total}`,
     pageSizeOptions: ['10', '20', '50', '100'],
-}));
+}))
 
 // 对话框相关
-const openNewDialog = ref(false);
+const openNewDialog = ref(false)
 
 
 onMounted(() => {
-    loadPage();
-});
+    loadPage()
+})
 
 // 格式化JSON字段显示
 const formatJsonField = (jsonData) => {
-    if (!jsonData) return '';
+    if (!jsonData) return ''
     try {
         if (typeof jsonData === 'string') {
-            const parsed = JSON.parse(jsonData);
-            return Object.values(parsed).join(', ');
+            const parsed = JSON.parse(jsonData)
+            return Object.values(parsed).join(', ')
         } else if (typeof jsonData === 'object') {
-            return Object.values(jsonData).join(', ');
+            return Object.values(jsonData).join(', ')
         }
-        return String(jsonData);
+        return String(jsonData)
     } catch (e) {
-        return String(jsonData);
+        return String(jsonData)
     }
-};
+}
 
 // 加载列表数据
 const loadPage = async () => {
     try {
-        loading.value = true;
+        loading.value = true
         const params = {
             page: currentPage.value,
-            page_size: pageSize.value
-        };
-
-        if (search.value) {
-            params.custom_database = search.value;
+            page_size: pageSize.value,
         }
 
-        const data = await getCustomReferenceGenomeList(params);
-        dataItems.value = data.results;
-        total.value = data.count;
-        console.log('加载数据成功data:', data);
-        console.log('加载数据成功dataItems:', dataItems.value);
+        if (search.value) {
+            params.custom_database = search.value
+        }
+
+        const data = await getCustomReferenceGenomeList(params)
+        dataItems.value = data.results
+        total.value = data.count
+        console.log('加载数据成功data:', data)
+        console.log('加载数据成功dataItems:', dataItems.value)
     } catch (error) {
-        errorMessage(t('LoadDataFailed') || '加载数据失败');
-        console.error('加载数据失败:', error);
+        errorMessage(t('LoadDataFailed') || '加载数据失败')
+        console.error('加载数据失败:', error)
     } finally {
-        loading.value = false;
+        loading.value = false
     }
-};
+}
 
 // 刷新页面
 const refreshPage = () => {
-    currentPage.value = 1;
-    loadPage();
-};
+    currentPage.value = 1
+    loadPage()
+}
 
 // 处理表格变化（分页、排序、筛选）
 const handleTableChange = (pagination, filters, sorter) => {
-    currentPage.value = pagination.current;
-    pageSize.value = pagination.pageSize;
-    loadPage();
-};
+    currentPage.value = pagination.current
+    pageSize.value = pagination.pageSize
+    loadPage()
+}
 
 // 分页变化（保留兼容性）
 const pageChange = async (event) => {
-    currentPage.value = event.currentPage;
-    pageSize.value = event.pageSize;
-    loadPage();
-};
+    currentPage.value = event.currentPage
+    pageSize.value = event.pageSize
+    loadPage()
+}
 
 // 跳转到详情页
 const gotoDetail = (item) => {
-    router.push(`/main/settings/customReferenceGenome/${item.id}`);
-};
+    router.push(`/main/settings/customReferenceGenome/${item.id}`)
+}
 
 // 处理对话框保存事件
-const handleDialogSave = async (formData) => {
-    try {
-        openNewDialog.value = false;
-        loadPage();
-    } catch (error) {
-        errorMessage(t('CreateFailed') || '创建失败');
-        console.error('保存失败:', error);
-    }
-};
+const handleDialogSave = async () => {
+    loadPage()
+}
 
-// 处理对话框取消事件
-const handleDialogCancel = () => {
-    openNewDialog.value = false;
-};
 
 // 确认删除
 const confirmDelete = (item) => {
@@ -254,18 +244,18 @@ const confirmDelete = (item) => {
         title: '确认删除',
         message: `'确定要删除此自建参考基因组吗？' "${item.custom_database}"`,
         cancel: true,
-        persistent: true
+        persistent: true,
     }).onOk(async () => {
         try {
-            await deleteCustomReferenceGenome(item.id);
-            infoMessage(t('DeleteSuccess') || '删除成功');
-            loadPage();
+            await deleteCustomReferenceGenome(item.id)
+            infoMessage(t('DeleteSuccess') || '删除成功')
+            loadPage()
         } catch (error) {
-            errorMessage(t('DeleteFailed') || '删除失败');
-            console.error('删除失败:', error);
+            errorMessage(t('DeleteFailed') || '删除失败')
+            console.error('删除失败:', error)
         }
-    });
-};
+    })
+}
 </script>
 
 <style lang="scss" scoped>
