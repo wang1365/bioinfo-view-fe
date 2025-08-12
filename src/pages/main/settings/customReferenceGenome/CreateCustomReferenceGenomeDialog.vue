@@ -102,8 +102,20 @@
                         />
                     </div>
 
-                    <div class="col-12">
-                        <q-btn color="primary" @click="showInformationSummary" :label="'信息汇总'" />
+                    <div class="row col-12 justify-between">
+                        <q-input
+                            v-model="formData.dockerImage"
+                            label="Docker Image"
+                            outlined
+                            label-color="purple"
+                            stack-label
+                            class="col-6"
+                            :error="!!formErrors.dockerImage"
+                            :error-message="formErrors.dockerImage"
+                        />
+                        <div class="col-1 q-pt-md">
+                            <q-btn color="primary" @click="showInformationSummary" :label="'信息汇总'" />
+                        </div>
                     </div>
                 </div>
 
@@ -161,7 +173,7 @@
             <!-- 固定按钮栏 -->
             <q-card-actions align="right" class="bg-white text-teal q-pa-md" style="flex-shrink: 0;">
                 <q-btn :label="$t('Cancel')" @click="handleCancel" />
-                <q-btn color="primary" :label="$t('Save')" @click="handleSave" />
+                <q-btn color="primary" class="q-mx-md" :label="$t('Create')" @click="handleSave" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -209,6 +221,7 @@ const formData = ref({
     virusType: [],
     host: '',
     hostGenomeVersion: '',
+    dockerImage: 'MakeCustomReferenceGenome:latest',
 });
 
 // 表单错误
@@ -283,11 +296,12 @@ watch(dialogVisible, (newVal) => {
 // 重置表单
 const resetForm = () => {
     formData.value = {
-        custom_database: '',
-        virus_name: [],
-        virus_type: [],
+        customDatabase: '',
+        virusName: [],
+        virusType: [],
         host: '',
-        host_genome_version: ''
+        hostGenomeVersion: '',
+        dockerImage: 'MakeCustomReferenceGenome:latest',
     };
     formErrors.value = {};
     hostSequenceData.value = [];
@@ -547,6 +561,11 @@ const validateForm = () => {
         errors.hostGenomeVersion = '宿主基因组版本不能为空';
     }
 
+    if (!formData.value.dockerImage) {
+        errors.dockerImage = '请填写Docker镜像名称';
+    }
+
+
     formErrors.value = errors;
     return Object.keys(errors).length === 0;
 };
@@ -686,7 +705,8 @@ const handleSave = () => {
         host: formData.value.host || '',
         host_genome_version: formData.value.hostGenomeVersion || '',
         host_map_db: hostMapDbInfo,
-        sp_map_db: spMapDbInfo
+        sp_map_db: spMapDbInfo,
+        docker_image: formData.value.dockerImage,
     }
 
 

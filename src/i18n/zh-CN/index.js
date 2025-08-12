@@ -198,7 +198,7 @@ export default {
     SelectSingle: '单选',
     SelectMultiple: '多选',
     CloseOther: '关闭其他',
-    
+
     // 自建参考基因组
     ReferenceGenome: '参考基因组',
     CustomReferenceGenome: '自建参考基因组',
@@ -316,6 +316,7 @@ export default {
     Memory: '内存',
     DockerArchive: 'Docker存档',
     DockerImageName: 'Docker镜像名称',
+    Create: '创建',
     CreateTime: '创建时间',
     AnalysisModule: '分析模块',
     ModuleName: '模块名称',
