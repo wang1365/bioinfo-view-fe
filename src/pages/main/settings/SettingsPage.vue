@@ -41,115 +41,96 @@
 
                 <q-expansion-item expand-separator default-opened icon="auto_mode" :label="$t('ServerResourceSetting')">
                     <q-card>
-                        <q-card-section row>
-                            <div class="row">
-                                <div class="col-5">
-                                    <q-form ref="form" @submit="submit">
-                                        <q-item>
-                                            <q-input
-                                                type="number"
-                                                v-model.number="max_task.value"
-                                                :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
-                                            >
-                                                <template v-slot:before>
-                                                    <span class="text-bold" style="font-size: 16px"
-                                                        >{{$t('ParallelTaskLimit')}}:</span
-                                                    >
-                                                </template>
-                                                <template v-slot:after>
-                                                    <q-icon name="help_outline">
-                                                        <q-tooltip>{{ $t('TaskSettingTip') }}</q-tooltip>
-                                                    </q-icon>
-                                                </template>
-                                            </q-input>
-                                        </q-item>
-                                        <q-item>
-                                            <q-input
-                                                type="number"
-                                                v-model.number="memory_rate.value"
-                                                :rules="[(val) => (val !== null && val > 0 && val <=1) || $t('InvalidValue')]"
-                                            >
-                                                <template v-slot:before>
-                                                    <span class="text-bold" style="font-size: 16px"
-                                                        >{{$t('MemoryUsageLimit')}}:</span
-                                                    >
-                                                </template>
-                                                <template v-slot:after>
-                                                    <q-icon name="help_outline">
-                                                        <q-tooltip>{{ $t('MemorySettingTip') }}</q-tooltip>
-                                                    </q-icon>
-                                                </template>
-                                            </q-input>
-                                        </q-item>
-                                        <q-item>
-                                            <q-input
-                                                type="number"
-                                                v-model.number="disk.value"
-                                                :rules="[(val) => (val !== null && val > 0) || $t('InvalidValue')]"
-                                            >
-                                                <template v-slot:before>
-                                                    <span class="text-bold" style="font-size: 16px"
-                                                        >{{$t('DiskUsageLimit')}}:</span
-                                                    >
-                                                </template>
-                                                <template v-slot:after>
-                                                    <q-icon name="help_outline">
-                                                        <q-tooltip>{{ $t('DiskSettingTip') }}</q-tooltip>
-                                                    </q-icon>
-                                                </template>
-                                            </q-input>
-                                        </q-item>
-                                        <q-item v-if="amISuper()">
-                                            <div class="row">
-                                                <q-input
-                                                    type="number"
-                                                    class="col-10"
-                                                    v-model.number="allowedRunningDays.value"
-                                                    :rules="[(val) => (val !== null && val > 0) || $t('InvalidValue')]"
-                                                >
-                                                    <template v-slot:before>
-                                                        <span class="text-bold" style="font-size: 16px"
-                                                            >{{$t('AllowedRunningTime')}}:</span
-                                                        >
-                                                    </template>
-                                                    <template v-slot:after>
-                                                        <span class="q-ml-sm text-grey" style="font-size: 14px"
-                                                            >{{$t('AlreadyRun')}}:
-                                                            {{allowedRunningDays.used + $t('Days')}}
-                                                        </span>
-                                                    </template>
-                                                </q-input>
-                                            </div>
-                                        </q-item>
-                                        <q-item v-if="amISuper()">
-                                            <q-input
-                                                type="number"
-                                                v-model.number="max_manager_user.value"
-                                                :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
-                                            >
-                                                <template v-slot:before>
-                                                    <span class="text-bold" style="font-size: 16px"
-                                                        >{{$t('ParallelManagerUser')}}:</span
-                                                    >
-                                                </template>
-                                            </q-input>
-                                        </q-item>
-                                        <q-item v-if="amISuper()">
-                                            <q-input
-                                                type="number"
-                                                v-model.number="max_normal_user.value"
-                                                :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
-                                            >
-                                                <template v-slot:before>
-                                                    <span class="text-bold" style="font-size: 16px"
-                                                        >{{$t('ParallelNormalUser')}}:</span
-                                                    >
-                                                </template>
-                                            </q-input>
-                                        </q-item>
-                                    </q-form>
-                                </div>
-                            </div>
+                        <q-card-section>
+                            <q-form ref="form" class="row" @submit="submit">
+                                <q-item class="col-4">
+                                    <q-input
+                                        type="number"
+                                        stack-label
+                                        label-color="primary"
+                                        :label="$t('ParallelTaskLimit')"
+                                        v-model.number="max_task.value"
+                                        :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
+                                    >
+                                        <template v-slot:after>
+                                            <q-icon name="help_outline">
+                                                <q-tooltip>{{ $t('TaskSettingTip') }}</q-tooltip>
+                                            </q-icon>
+                                        </template>
+                                    </q-input>
+                                </q-item>
+                                <q-item class="col-4">
+                                    <q-input
+                                        type="number"
+                                        stack-label
+                                        label-color="primary"
+                                        :label="$t('MemoryUsageLimit')"
+                                        v-model.number="memory_rate.value"
+                                        :rules="[(val) => (val !== null && val > 0 && val <=1) || $t('InvalidValue')]"
+                                    >
+                                        <template v-slot:after>
+                                            <q-icon name="help_outline">
+                                                <q-tooltip>{{ $t('MemorySettingTip') }}</q-tooltip>
+                                            </q-icon>
+                                        </template>
+                                    </q-input>
+                                </q-item>
+                                <q-item class="col-4">
+                                    <q-input
+                                        type="number"
+                                        stack-label
+                                        label-color="primary"
+                                        :label="$t('DiskUsageLimit')"
+                                        v-model.number="disk.value"
+                                        :rules="[(val) => (val !== null && val > 0) || $t('InvalidValue')]"
+                                    >
+                                        <template v-slot:after>
+                                            <q-icon name="help_outline">
+                                                <q-tooltip>{{ $t('DiskSettingTip') }}</q-tooltip>
+                                            </q-icon>
+                                        </template>
+                                    </q-input>
+                                </q-item>
+                                <q-item v-if="amISuper()" class="col-4">
+                                    <q-input
+                                        type="number"
+                                        stack-label
+                                        label-color="primary"
+                                        :label="$t('AllowedRunningTime')"
+                                        v-model.number="allowedRunningDays.value"
+                                        :rules="[(val) => (val !== null && val > 0) || $t('InvalidValue')]"
+                                    >
+                                        <template v-slot:after>
+                                            <span class="q-ml-sm text-grey" style="font-size: 14px"
+                                                >{{$t('AlreadyRun')}}:
+                                                {{allowedRunningDays.used + $t('Days')}}
+                                            </span>
+                                        </template>
+                                    </q-input>
+                                </q-item>
+                                <q-item v-if="amISuper()" class="col-4">
+                                    <q-input
+                                        type="number"
+                                        stack-label
+                                        label-color="primary"
+                                        :label="$t('ParallelManagerUser')"
+                                        v-model.number="max_manager_user.value"
+                                        :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
+                                    >
+                                    </q-input>
+                                </q-item>
+                                <q-item v-if="amISuper()" class="col-4">
+                                    <q-input
+                                        type="number"
+                                        stack-label
+                                        label-color="primary"
+                                        :label="$t('ParallelNormalUser')"
+                                        v-model.number="max_normal_user.value"
+                                        :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
+                                    >
+                                    </q-input>
+                                </q-item>
+                            </q-form>
                         </q-card-section>
                         <q-card-actions>
                             <q-btn
