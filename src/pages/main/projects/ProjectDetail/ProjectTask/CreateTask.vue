@@ -88,8 +88,8 @@
                                                     :options="param.choices" :label="param.key"
                                                           stack-label label-color="purple" filled
                                                     :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
+                                                          :placeholder="param.description"
                                                     option-value="'value'">
-                                                    <q-tooltip>{{param.description}}</q-tooltip>
                                                 </q-select>
                                                 <!-- <q-select v-if="!param.choices[0].enLabel"
                                                     :error="item.params[param.key].isError" :error-message="param.error"
@@ -118,6 +118,17 @@
                                                         param.description
                                                     }}</q-tooltip>
                                                 </q-select> -->
+                                            </div>
+                                            <div class="col-6 q-pr-sm" v-if="param.type === 'select-from-csv'">
+                                                <q-select :error="item.params[param.key].isError"
+                                                          @focus="focusSelect(param.key, param)" @filter="filterFn"
+                                                          :error-message="param.error" v-model="item.params[param.key].value"
+                                                          :options="csvOptions[param.key]" :label="param.key"
+                                                          stack-label label-color="purple" filled
+                                                          :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
+                                                          option-value="'value'"  use-chips>
+                                                    <q-tooltip>{{ param.description }}</q-tooltip>
+                                                </q-select>
                                             </div>
                                         </template>
                                     </div>
@@ -271,6 +282,8 @@ import { useI18n } from "vue-i18n";
 import { event } from "quasar";
 import { globalStore } from "src/stores/global";
 import { update } from "lodash";
+import { readFile } from "src/api/file";
+
 const { langConfig } = globalStore()
 const { t } = useI18n();
 const { apiPost, apiGet } = useApi();
@@ -294,6 +307,8 @@ const currentSample = ref("first");
 const sampleFirstError = ref(false);
 const sampleSecondError = ref(false);
 const samplesError = ref(false);
+
+const csvOptions = ref({});
 
 const emit = defineEmits(["taskCreated"])
 const props = defineProps({
@@ -339,7 +354,7 @@ onMounted(() => {
     let flowParams = JSON.parse(props.flowDetail.parameter_schema);
     let params = {}
     for (let param of flowParams) {
-        if (param.type == 'select' || param.type == 'multiSelect') {
+        if (param.type === 'select' || param.type === 'multiSelect') {
             let choices = []
             for (let item of param.choices) {
                 if (!item.cnLabel || !item.enLabel) {
@@ -354,6 +369,14 @@ onMounted(() => {
             }
             param.choices = choices
             selectParams.value[param.key] = JSON.parse(JSON.stringify(choices))
+        }
+
+        if (param.type === 'select-from-csv') {
+            readFile(param.csvPath).then((res) => {
+                const items = res.split('\n').map(line => line.trim()).filter(line => line);
+                csvOptions.value[param.key] = items.map(item => item.split('\t')[0]);
+                console.log("add csv options", param, csvOptions)
+            });
         }
 
         paramsDefine.value.push({
@@ -803,4 +826,5 @@ const sampleTypetrans = (flow) => {
             return t('MultipleSample')
     }
 }
+
 </script>

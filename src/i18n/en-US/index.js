@@ -287,6 +287,7 @@ export default {
     Memory: 'Memory',
     DockerArchive: 'Docker Archive',
     DockerImageName: 'Docker Image',
+    Create: 'Create',
     CreateTime: 'Create Time',
     AnalysisModule: 'Analysis Module',
     ModuleName: 'Module Name',
