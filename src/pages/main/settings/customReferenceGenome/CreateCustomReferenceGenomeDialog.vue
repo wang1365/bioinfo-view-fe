@@ -515,7 +515,9 @@ const checkCustomDatabase = () => {
 
 // 验证表单
 const validateForm = () => {
-    return checkCustomDatabase();
+    if (!checkCustomDatabase()) {
+        return false;
+    }
 
     // if (formData.value.virusName.length === 0
     //     && formData.value.virusType.length === 0
@@ -529,24 +531,24 @@ const validateForm = () => {
 
 
 
-    // if (!formData.value.virusName || formData.value.virusName.length === 0) {
-    //     errors.virusName = '病毒种名不能为空';
-    // }
+    if (!formData.value.virusName || formData.value.virusName.length === 0) {
+        errors.virusName = '病毒种名不能为空';
+    }
 
-    // if (!formData.value.virusType || formData.value.virusType.length === 0) {
-    //     errors.virusType = '病毒分型不能为空';
-    // }
+    if (!formData.value.virusType || formData.value.virusType.length === 0) {
+        errors.virusType = '病毒分型不能为空';
+    }
 
-    // if (!formData.value.host) {
-    //     errors.host = '宿主不能为空';
-    // }
+    if (!formData.value.host) {
+        errors.host = '宿主不能为空';
+    }
 
-    // if (!formData.value.hostGenomeVersion) {
-    //     errors.hostGenomeVersion = '宿主基因组版本不能为空';
-    // }
+    if (!formData.value.hostGenomeVersion) {
+        errors.hostGenomeVersion = '宿主基因组版本不能为空';
+    }
 
-    // formErrors.value = errors;
-    // return Object.keys(errors).length === 0;
+    formErrors.value = errors;
+    return Object.keys(errors).length === 0;
 };
 
 // 显示信息摘要
@@ -559,11 +561,11 @@ const showInformationSummary = async () => {
         return;
     }
 
-    const result = await checkFile(formData.value.customDatabase)
-    if (!result.ok) {
-        formErrors.value.customDatabase = result.msg;
-        return;
-    }
+    // const result = await checkFile(formData.value.customDatabase)
+    // if (!result.ok) {
+    //     formErrors.value.customDatabase = result.msg;
+    //     return;
+    // }
 
     try {
         // 收集表单信息
