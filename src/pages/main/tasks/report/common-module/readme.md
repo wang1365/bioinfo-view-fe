@@ -21,7 +21,7 @@
                     // 表格配置
                     "columns": [ {
                         "name": "HLA allele", // 列标题
-                        "type": "image",      // 列类型, image: 图片, file: 文件, text: 文字
+                        "type": "image",      // 列类型, image: 图片, file: 文件, text: 文字, link: 链接
                     }]
                 }, 
                 // 第二个表格

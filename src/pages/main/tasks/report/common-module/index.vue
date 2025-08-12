@@ -117,13 +117,19 @@
                             />
                             <q-btn
                                 v-if="column.config.type === 'file'"
-                                :href="table.url"
+                                :href="`igv${record[column.dataIndex]}`"
                                 :download="`igv${record[column.dataIndex]}`"
                                 :label="$t('Download')"
                                 icon="south"
                                 size="sm"
                                 flat
                             />
+                            <a
+                                v-if="column.config.type === 'link'"
+                                :href="record[column.dataIndex]"
+                                target="_blank"
+                                >{{$t('View')}}</a
+                            >
                             <template
                                 v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
                             >
