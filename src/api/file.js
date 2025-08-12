@@ -9,3 +9,14 @@ export function readFileFromDatabaseDir(path) {
         },
     })
 }
+
+export function readFile(path) {
+    return api({
+        url: `/file/read`,
+        method: 'get',
+        params: {
+            path,
+        },
+    })
+}
+
