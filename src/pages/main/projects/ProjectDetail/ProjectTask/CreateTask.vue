@@ -88,8 +88,8 @@
                                                     :options="param.choices" :label="param.key"
                                                           stack-label label-color="purple" filled
                                                     :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
+                                                          :placeholder="param.description"
                                                     option-value="'value'">
-                                                    <q-tooltip>{{param.description}}</q-tooltip>
                                                 </q-select>
                                                 <!-- <q-select v-if="!param.choices[0].enLabel"
                                                     :error="item.params[param.key].isError" :error-message="param.error"
