@@ -32,7 +32,7 @@
                                 stack-label
                                 dense
                                 v-model="props.row.type"
-                                :options="['string', 'number', 'file', 'select', 'multiSelect']"
+                                :options="['string', 'number', 'file', 'select', 'multiSelect', 'select-from-csv']"
                             />
                         </q-td>
                         <q-td align="center">
@@ -119,13 +119,16 @@
                             </template>
 
                             <q-btn
-                                v-if="!readonly"
+                                v-if="!readonly && (props.row.type!=='select-from-csv')"
                                 size="xs"
                                 label="+"
                                 color="purple"
                                 @click="clickAddChoice(props.row)"
-                            >
-                            </q-btn>
+                            />
+                            <q-input v-model="props.row.csvPath" dense label="File" stack-label
+                                     v-if="!readonly && props.row.type==='select-from-csv'"
+                            />
+
                             <q-file
                                 ref="fileInput"
                                 v-model="file"
@@ -140,7 +143,7 @@
                                 class="q-ml-sm"
                                 @click="triggerFileSelect(props.row)"
                                 size="sm"
-                                outline=""
+                                outline
                                 dense
                                 icon="attach_file"
                                 label="批量上传"
@@ -149,13 +152,13 @@
                         <q-td>
                             <q-input v-model="props.row.description" :readonly="readonly" dense />
                         </q-td>
-                        <q-td v-if="!readonly" align="center">
+                        <q-td v-if="!readonly">
                             <q-btn
                                 v-if="!readonly"
                                 :label="$t('Delete')"
-                                size="xs"
+                                size="12px"
                                 color="red"
-                                glossy
+                                flat
                                 @click="clickDeleteRow(props.row, props.rowIndex)"
                             />
                         </q-td>
@@ -235,7 +238,7 @@
 </template>
 
 <script setup>
-import { computed, defineExpose, ref, toRefs, onMounted, onBeforeMount } from "vue"
+import { computed, defineExpose, ref, toRefs } from "vue"
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { api } from "src/boot/axios";
@@ -330,7 +333,6 @@ const isCreateMode = computed(() => {
     return props.action === "create";
 })
 
-const valueTypes = ["string", "file"]
 const params = ref(props.data)
 const currentRow = ref(null)
 const choice = ref('')
@@ -340,9 +342,7 @@ const cnLabel = ref('')
 const choiceDlgVisible = ref(false)
 const choiceDlg = ref(null)
 
-const validateChoice = (v) => {
-    return v !== null && v !== ''
-}
+
 const setData = (data) => {
     console.log('set params data', data)
     params.value = [...data]
@@ -356,7 +356,8 @@ defineExpose({ setData, getData })
 const addParameter = () => {
     // this.$set(params, params.value.length, { choices: [] });
     params.value.push({
-        key: '', type: '', required: false, choices: [], description: ''
+        key: '', type: '', required: false, choices: [], description: '',
+        csvPath: '/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/all.ref.path'
     })
 }
 const clickDeleteRow = (row, index) => {
@@ -395,9 +396,7 @@ const confirmAddChoice = (value, initValue) => {
 const resetFields = () => {
     params.value = []
 }
-const joinChoices = (choices) => {
-    return choices.join("; ")
-}
+
 </script>
 
 <style lang="scss" scoped>

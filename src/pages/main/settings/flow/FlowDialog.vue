@@ -213,7 +213,7 @@
                                 class="col"
                                 v-model="form.desp"
                                 type="textarea"
-                                filled
+                                filled dense
                                 :label="$t('Describe')"
                                 label-color="primary"
                                 stack-label
@@ -227,8 +227,8 @@
                                 v-model="form.details"
                                 :readonly="isInfoMode"
                                 type="textarea"
-                                filled
-                                :autosize="{ minRows: 18, maxRows: 380 }"
+                                filled dense
+                                :autosize="{ minRows: 5, maxRows: 100 }"
                                 :label="$t('Comment')"
                                 label-color="primary"
                                 stack-label
