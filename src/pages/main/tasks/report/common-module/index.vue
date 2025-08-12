@@ -107,6 +107,23 @@
                         :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }"
                     >
                         <template #bodyCell="{ column, record }">
+                            <q-btn
+                                v-if="column.config.type === 'image'"
+                                size="xs"
+                                outline
+                                color="primary"
+                                :label="$t('View')"
+                                @click="clickView(record,column.title)"
+                            />
+                            <q-btn
+                                v-if="column.config.type === 'file'"
+                                :href="table.url"
+                                :download="`igv${record[column.dataIndex]}`"
+                                :label="$t('Download')"
+                                icon="south"
+                                size="sm"
+                                flat
+                            />
                             <template
                                 v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
                             >
@@ -248,7 +265,7 @@ watch(() => props.viewConfig,
 // ctr
 const showImage = ref(false)
 const imageUrl = ref('')
-const clickView = (record,title) => {
+const clickView = (record, title) => {
     showImage.value = true
     imageUrl.value = `/igv${record[title]}`
 }
@@ -273,6 +290,12 @@ const initTable = () => {
     // const tmpTables = []
     tableList.forEach((table, i) => {
         tableData.value[table.title] = {}
+        const configs = table.columns || []
+        const configMap = {}
+        configs.forEach((config) => {
+            configMap[config.name] = config
+        })
+
 
         readTaskFile(props.task.id, table.file).then((res) => {
             const colNames = getCsvHeader(res)
@@ -290,6 +313,7 @@ const initTable = () => {
                         return { text: v, value: v }
                     }),
                     onFilter: (value, record) => record[name].indexOf(value) === 0,
+                    config: configMap[name] || {} // 列配置
                 }
             })
             // 添加表格定义
@@ -310,8 +334,6 @@ const initTable = () => {
             }
             console.log(stepData.value)
             if (stepData.value && stepData.value.tables) {
-                let selectedRows = []
-
                 for (const item of stepData.value.tables) {
                     if (item.name === table.name) {
                         data.keyword = item.searchParam
