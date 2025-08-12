@@ -530,7 +530,7 @@ const validateForm = () => {
     // }
 
 
-
+    const errors = {};
     if (!formData.value.virusName || formData.value.virusName.length === 0) {
         errors.virusName = '病毒种名不能为空';
     }
