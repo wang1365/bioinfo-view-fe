@@ -760,6 +760,8 @@ export default {
     PairMultipleSample: '配对多样本',
     SupportNonStandardSample: '支持非标准样本',
     SupportDefineReport: '支持定制报告',
+    SupportCustomSampleName: '支持自定义样本名称',
+    SupportSampleRatio: '支持样本采样率',
 
     // 样本数据
     SampleDataSearch: '样本数据检索',

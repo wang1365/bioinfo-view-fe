@@ -277,6 +277,7 @@ const showCreateTaskDlg = (row) => {
 }
 
 const addFlow = () => {
+    dlgFlowCreate.value.reset()
     dlgFlowCreate.value.setData({
         name: '',
         location: '',
@@ -287,8 +288,11 @@ const addFlow = () => {
         parameters: [],
         builtin_parameters: [],
         sample_type: 'multiple',
+        allow_nonstandard_samples: true,
+        allow_define_report:true,
+        support_custom_sample_name: false,
+        support_sample_ratio: false,
     })
-    dlgFlowCreate.value.reset()
     dlgFlowCreate.value.show()
     // isCreateDlgShow.value = true
 }

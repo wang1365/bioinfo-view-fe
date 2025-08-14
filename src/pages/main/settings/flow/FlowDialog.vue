@@ -5,7 +5,6 @@
         transition-hide="fade"
         v-model="dlgVisible"
         :title="title"
-        :content-style="{ width: '800px' }"
         @hide="close()"
     >
         <q-card class="my-card">
@@ -114,14 +113,14 @@
                             :readonly="isInfoMode"
                             :rules="[(val) => (val && val !== '') || $t('NotAllowEmpty')]"
                         />
-                        <div class="col-12 row q-gutter-sm justify-around">
+                        <div class="col-12 row q-gutter-sm justify-start">
                             <q-expansion-item
                                 dense
                                 default-opened
                                 icon="perm_identity"
                                 header-class="bg-blue-5 text-white"
                                 :label="$t('SampleCount')"
-                                class="col shadow-1 bg-grey-3"
+                                class="col-4 shadow-1 bg-grey-3"
                             >
                                 <q-radio
                                     v-model="form.sample_type"
@@ -157,63 +156,42 @@
                                 />
                             </q-expansion-item>
 
-                            <q-expansion-item
-                                default-opened
-                                dense
-                                icon="perm_identity"
+                            <q-checkbox
+                                v-model="form.allow_nonstandard_samples"
                                 :label="$t('SupportNonStandardSample')"
-                                header-class="bg-blue-5 text-white"
-                                class="col shadow-1 bg-grey-3"
-                            >
-                                <q-radio
-                                    v-model="form.allow_nonstandard_samples"
-                                    :val="true"
-                                    :label="$t('Yes')"
-                                    color="teal"
-                                    keep-color
-                                    :disable="isInfoMode"
-                                />
-                                <q-radio
-                                    v-model="form.allow_nonstandard_samples"
-                                    :val="false"
-                                    :label="$t('No')"
-                                    color="orange"
-                                    keep-color
-                                    :disable="isInfoMode"
-                                />
-                            </q-expansion-item>
-                            <q-expansion-item
-                                default-opened
-                                dense
-                                icon="perm_identity"
+                                :disable="isInfoMode"
+                                color="primary"
+                                keep-color
+                            />
+                            <q-checkbox
+                                v-model="form.allow_define_report"
                                 :label="$t('SupportDefineReport')"
-                                header-class="bg-blue-5 text-white"
-                                class="col shadow-1 bg-grey-3"
-                            >
-                                <q-radio
-                                    v-model="form.allow_define_report"
-                                    :val="true"
-                                    :label="$t('Yes')"
-                                    color="teal"
-                                    keep-color
-                                    :disable="isInfoMode"
-                                />
-                                <q-radio
-                                    v-model="form.allow_define_report"
-                                    :val="false"
-                                    :label="$t('No')"
-                                    color="orange"
-                                    keep-color
-                                    :disable="isInfoMode"
-                                />
-                            </q-expansion-item>
+                                :disable="isInfoMode"
+                                color="primary"
+                                keep-color
+                            />
+                            <q-checkbox
+                                v-model="form.support_custom_sample_name"
+                                :label="$t('SupportCustomSampleName')"
+                                :disable="isInfoMode"
+                                color="primary"
+                                keep-color
+                            />
+                            <q-checkbox
+                                v-model="form.support_sample_ratio"
+                                :label="$t('SupportSampleRatio')"
+                                :disable="isInfoMode"
+                                color="primary"
+                                keep-color
+                            />
                         </div>
                         <div class="col-12 q-mt-sm row q-gutter-sm justify-around">
                             <q-input
                                 class="col"
                                 v-model="form.desp"
                                 type="textarea"
-                                filled dense
+                                filled
+                                dense
                                 :label="$t('Describe')"
                                 label-color="primary"
                                 stack-label
@@ -227,7 +205,8 @@
                                 v-model="form.details"
                                 :readonly="isInfoMode"
                                 type="textarea"
-                                filled dense
+                                filled
+                                dense
                                 :autosize="{ minRows: 5, maxRows: 100 }"
                                 :label="$t('Comment')"
                                 label-color="primary"
@@ -315,7 +294,7 @@ const title = computed(() => {
 })
 
 const valueTypes = ['string', 'file']
-const form = ref(null)
+const form = ref({})
 onMounted(() => {
     form.value = {
         id: -1,
@@ -324,6 +303,8 @@ onMounted(() => {
         panel: null,
         allow_nonstandard_samples: true,
         allow_define_report:true,
+        support_custom_sample_name: false,
+        support_sample_ratio: false,
         tar_path: '',
         image_name: '',
         memory: 1024,
@@ -345,7 +326,6 @@ onMounted(() => {
 const paramsTable = ref(null)
 
 const setData = (data) => {
-    console.log('------> set data', data)
     if(typeof data.parameters =='string'){
         data.parameters = JSON.parse(data.parameters)
     }
@@ -450,7 +430,7 @@ const onSubmit = () => {
 
 <style lang="scss" scoped>
 .my-card {
-    width: 1200px;
-    max-width: 1800px;
+    width: 90vw;
+    max-width: 95vw;
 }
 </style>
