@@ -2,7 +2,7 @@
     <q-card class="compact-card">
         <q-card-section class="compact-header">
             <q-toolbar class="q-gutter-x-sm q-py-xs">
-                <q-icon size="md" color="primary" name="auto_mode"/>
+                <q-icon size="md" color="primary" name="auto_mode" />
                 <q-toolbar-title class="text-h6">
                     {{ props.projectDetail.name }}-
                     <span class="text-subtitle1">{{
@@ -64,8 +64,7 @@
         <FlowSelect @flowSelected="flowSelected" />
     </q-dialog>
     <q-dialog persistent v-model="openCreateTask">
-        <CreateCdcTask v-if="flowDetail.code === '自建参考基因组'" :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
-        <CreateTask v-else :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
+        <CreateTask :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
     </q-dialog>
 </template>
 <script setup>
