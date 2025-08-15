@@ -440,9 +440,14 @@ const refreshPie = () => {
         (t) => t.name
     )
     chrs.value.forEach((t, idx) => {
+
         const variant = extra_variant[t.name]
-        const p = partition(t, variant)
-        result1.push(...p)
+
+        if (variant !== undefined) {
+            const p = partition(t, variant)
+            result1.push(...p)
+        }
+
         // if (variant && variant.length > 0) {
         //     variant.forEach( (vi, i) => {
         //         if (i === 0) {
@@ -471,10 +476,14 @@ const refreshPie = () => {
         variants.value.filter((t) => t.ratio < pieParams.value.missing),
         (t) => t.name
     )
+
     chrs.value.forEach((t, idx) => {
         const variant = missing_variant[t.name]
-        const p = partition(t, variant)
-        result2.push(...p)
+        if (variant !== undefined) {
+            const p = partition(t, variant)
+            result2.push(...p)
+        }
+
         // if (variant) {
         //     result2.push({ name: `${t.name}`, value: variant.start })
         //     result2.push({
