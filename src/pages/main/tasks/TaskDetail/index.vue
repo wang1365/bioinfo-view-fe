@@ -127,7 +127,7 @@ const columns = computed(() => {
             dataIndex: 'k1',
             align: 'center',
             customRender: ({text, record, index, column}) => {
-                return record.sample_meta?.patient?.gender == '男' ? t('Male') : t('Female')
+                return record.sample_meta?.patient?.gender === '男' ? t('Male') : t('Female')
             }
         },
         {
@@ -194,7 +194,7 @@ const getItemStatusColor = (item) => {
 
 const buildTaskStageAndLog = (task) => {
     let log = langCode.value === 'en' ? task.log_EN : task.log_CN
-    if (log.length >= 0) {
+    if (log.length > 0) {
         stages.value = log[0].stages
 
         if (log.length > 1) {
