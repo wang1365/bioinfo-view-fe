@@ -7,23 +7,35 @@
         </div>
         <q-card>
             <q-card-section>
-                <div class="row">
-                    <div class="text-h6 q-pa-xs col-3">
-                        <span class="text-primary text-weight-bolder">{{ $t('Project') + ": " }}</span>
-                        <span class="text-h6 bg-grey-3 q-pa-sm">{{ taskDetail.project?.name }}</span>
-                    </div>
-                    <div class="text-h6 q-pa-xs col-3">
-                        <span class="text-primary text-weight-bolder">{{ `${$t('Task')}${$t('Name')}` + ": " }}</span>
-                        <span class="text-h6 bg-grey-3 q-pa-sm">{{ taskDetail.name }}</span>
-                    </div>
-                    <div class="text-h6 q-pa-xs col-3">
-                        <span class="text-primary text-weight-bolder">{{ `${$t('Task')}${$t('Status')}` + ": " }}</span>
-                        <span
-                            class="q-px-md brand-color text-center row inline flex-center text-white rounded-borders"
-                            :class="getItemStatusColor(taskDetail)"
-                            >{{ getItemStatus(taskDetail) }}</span
-                        >
-                    </div>
+                <div class="row q-gutter-md">
+                    <q-input
+                        :model-value="taskDetail.project?.name"
+                        :label="$t('Project')"
+                        stack-label
+                        label-color="primary"
+                        readonly
+                        filled
+                        class="col-2"
+                    />
+                    <q-input
+                        :model-value="taskDetail.name"
+                        :label="`${$t('Task')}${$t('Name')}`"
+                        stack-label
+                        label-color="primary"
+                        readonly
+                        filled
+                        class="col-2"
+                    />
+                    <q-input
+                        :model-value="getItemStatus(taskDetail)"
+                        :label="`${$t('Task')}${$t('Status')}`"
+                        stack-label
+                        label-color="white"
+                        readonly
+                        filled
+                        class="col-2"
+                        :bg-color="getItemStatusColor(taskDetail)"
+                    />
                 </div>
             </q-card-section>
             <q-separator></q-separator>
@@ -36,9 +48,7 @@
             <q-separator></q-separator>
             <q-card-section>
                 <div class="text-h6 q-pa-xs">
-                    <span class="text-primary text-weight-bolder">{{
-                        $t('ShellEnvs') + ": "
-                    }}</span>
+                    <span class="text-primary text-weight-bolder">{{ $t('ShellEnvs') + ": " }}</span>
                 </div>
                 <div class="text-body q-px-md q-py-xs" v-for="item of taskEnvs" :key="item.key">
                     <span class="text-bold">{{ item.key }} : </span> {{ item.value }}
@@ -47,9 +57,7 @@
             <q-separator></q-separator>
             <q-card-section>
                 <div class="text-h6 q-pa-xs">
-                    <span class="text-primary text-weight-bolder">{{
-                        $t('Progress') + ": "
-                    }}</span>
+                    <span class="text-primary text-weight-bolder">{{ $t('Progress') + ": " }}</span>
                 </div>
                 <div id="task-step" class="text-body q-px-md q-py-md">
                     <q-stepper v-model="lastStageIndex" color="primary">
@@ -91,7 +99,6 @@
 </template>
 
 <script setup>
-import PageTitle from "components/page-title/PageTitle.vue";
 import {useApi} from "src/api/apiBase";
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
@@ -116,7 +123,7 @@ const lastStageIndex = ref(0)
 const taskEnvs = ref([])
 
 const columns = computed(() => {
-    return [
+    const base = [
         {title: `No.`, dataIndex: 'index', align: 'center', customRender: ({index}) => index + 1}, //item.sample_meta?.patient?.name
         {
             title: `${t('Patient')}${t('Name')}`, dataIndex: ['sample_meta', 'patient', 'name'], align: 'center',
@@ -156,6 +163,25 @@ const columns = computed(() => {
         {title: t('DataListTableColumnDataNameOfR1'), dataIndex: 'fastq1_path', align: 'center'},
         {title: t('DataListTableColumnDataNameOfR2'), dataIndex: 'fastq2_path', align: 'center'},
     ]
+
+    if (taskDetail.value.flow?.support_custom_sample_name) {
+        base.push({
+            title: t('Sample') + t('Name'),
+            dataIndex: 'custom_sample_name',
+            align: 'center',
+            sorter: (a, b) => a.sample_meta.name.localeCompare(b.sample_meta.name),
+        })
+    }
+
+    if (taskDetail.value.flow?.support_sample_ratio) {
+        base.push({
+            title: t('SampleListTableColumnSampleRatio'),
+            dataIndex: 'sample_ratio',
+            align: 'center',
+            sorter: (a, b) => a.sample_meta.ratio.localeCompare(b.sample_meta.ratio),
+        })
+    }
+    return base
 })
 
 
@@ -178,15 +204,15 @@ const getItemStatus = (item) => {
 const getItemStatusColor = (item) => {
     switch (item.status) {
         case "PENDING":
-            return "bg-secondary";
+            return "secondary";
         case "RUNNING":
-            return "bg-primary";
+            return "primary";
         case "FINISHED":
-            return "bg-positive";
+            return "positive";
         case "FAILURED":
-            return "bg-red";
+            return "red";
         case "CANCELED":
-            return "bg-warning";
+            return "warning";
         default:
             return item.status;
     }
