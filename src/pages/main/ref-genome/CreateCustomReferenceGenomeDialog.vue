@@ -102,20 +102,8 @@
                         />
                     </div>
 
-                    <div class="row col-12 justify-between">
-                        <q-input
-                            v-model="formData.dockerImage"
-                            label="Docker Image"
-                            outlined
-                            label-color="purple"
-                            stack-label
-                            class="col-6"
-                            :error="!!formErrors.dockerImage"
-                            :error-message="formErrors.dockerImage"
-                        />
-                        <div class="col-1 q-pt-md">
-                            <q-btn color="primary" @click="showInformationSummary" :label="'信息汇总'" />
-                        </div>
+                    <div class="q-pt-md">
+                        <q-btn color="primary" @click="showInformationSummary" :label="'信息汇总'" />
                     </div>
                 </div>
 
@@ -221,7 +209,6 @@ const formData = ref({
     virusType: [],
     host: '',
     hostGenomeVersion: '',
-    dockerImage: 'MakeCustomReferenceGenome:latest',
 });
 
 // 表单错误
@@ -301,7 +288,6 @@ const resetForm = () => {
         virusType: [],
         host: '',
         hostGenomeVersion: '',
-        dockerImage: 'MakeCustomReferenceGenome:latest',
     };
     formErrors.value = {};
     hostSequenceData.value = [];
@@ -561,11 +547,6 @@ const validateForm = () => {
         errors.hostGenomeVersion = '宿主基因组版本不能为空';
     }
 
-    if (!formData.value.dockerImage) {
-        errors.dockerImage = '请填写Docker镜像名称';
-    }
-
-
     formErrors.value = errors;
     return Object.keys(errors).length === 0;
 };
@@ -706,7 +687,6 @@ const handleSave = () => {
         host_genome_version: formData.value.hostGenomeVersion || '',
         host_map_db: hostMapDbInfo,
         sp_map_db: spMapDbInfo,
-        docker_image: formData.value.dockerImage,
     }
 
 

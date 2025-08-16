@@ -80,11 +80,11 @@ const routes = [
                 children: [
                     {
                         path: 'customReferenceGenome',
-                        component: () => import('pages/main/settings/customReferenceGenome/index'),
+                        component: () => import('pages/main/ref-genome/index'),
                     },
                     {
                         path: 'customReferenceGenome/:id',
-                        component: () => import('pages/main/settings/customReferenceGenome/detail'),
+                        component: () => import('pages/main/ref-genome/detail'),
                     },
                     {
                         path: 'flowManagement',

@@ -11,8 +11,7 @@
                 @clear="refreshFlows"
                 @keypress.enter="refreshFlows"
                 class="col-2 q-pb-sm"
-            >
-            </q-input>
+            />
             <div class="col">
                 <q-btn
                     color="primary"
@@ -25,7 +24,7 @@
                 <q-btn color="primary" icon="add" size="md" :label="$t('Add')" @click="addFlow" />
             </div>
         </div>
-        <a-table :columns="columns" :data-source="flows" size="middle" sticky :scroll="{ x:500, y: 450 }">
+        <a-table :columns="columns" :data-source="flows" size="middle" sticky :scroll="{ x:500, y: 450 }" :loading="loading">
             <template v-slot:bodyCell="{column, record}">
                 <template v-if="column.key === 'task_count'">
                     <span v-if="record.task_count >= record?.config?.taskLimit" class="text-red text-weight-bolder">
@@ -170,20 +169,8 @@ const props = defineProps({
     }
 })
 
-const flows = ref([
-    {
-        name: 'WGS',
-        location: 'first.sh',
-        alignment_tool: 'bioinfo',
-        parameters: [
-            {key: 'INPUT_DIR', type: 'array', required: true, blank: false},
-            {key: 'REPORT_OUTPUT_DIR', type: 'array', required: true, blank: false},
-        ],
-        desp: 'xxx',
-    },
-])
+const flows = ref([])
 const selectedFlow = ref({})
-const mode = ref('info')
 const page = ref(1)
 const total = ref(0)
 const pageSize = ref(10)
@@ -201,18 +188,6 @@ const refreshFlows = () => {
         })
         .finally(stopLoading)
 }
-
-const getTagType = (row) => {
-    const cat = row.flow_category
-    const data = {
-        DNA: 'success',
-        RNA: 'primary',
-        AMP: 'info',
-    }
-
-    return data[cat] || 'info'
-}
-
 
 const startLoading = () => {
     loading.value = true
@@ -271,7 +246,6 @@ const showDeleteDlg = (row) => {
 }
 
 const showCreateTaskDlg = (row) => {
-    console.log('showCreateTaskDlg', row.id)
     dlgCreateTask.value.show()
     dlgCreateTask.value.setData(row)
 }
