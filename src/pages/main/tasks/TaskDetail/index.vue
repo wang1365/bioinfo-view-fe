@@ -9,6 +9,15 @@
             <q-card-section>
                 <div class="row q-gutter-md">
                     <q-input
+                        :model-value="taskDetail.name"
+                        :label="`${$t('Task')}${$t('Name')}`"
+                        stack-label
+                        label-color="primary"
+                        readonly
+                        filled
+                        class="col-2"
+                    />
+                    <q-input
                         :model-value="taskDetail.project?.name"
                         :label="$t('Project')"
                         stack-label
@@ -18,8 +27,17 @@
                         class="col-2"
                     />
                     <q-input
-                        :model-value="taskDetail.name"
-                        :label="`${$t('Task')}${$t('Name')}`"
+                        :model-value="taskDetail.flow?.name"
+                        :label="`${$t('Flow')}${$t('Name')}`"
+                        stack-label
+                        label-color="primary"
+                        readonly
+                        filled
+                        class="col-2"
+                    />
+                    <q-input
+                        :model-value="format(taskDetail.create_time)"
+                        :label="`${$t('CreateTime')}`"
                         stack-label
                         label-color="primary"
                         readonly
@@ -38,7 +56,7 @@
                     />
                 </div>
             </q-card-section>
-            <q-separator></q-separator>
+            <q-separator />
             <q-card-section>
                 <div class="text-h6 q-pa-xs">
                     <span class="text-primary text-weight-bolder">{{ $t('Sample') + ": " }}</span>
@@ -50,8 +68,19 @@
                 <div class="text-h6 q-pa-xs">
                     <span class="text-primary text-weight-bolder">{{ $t('ShellEnvs') + ": " }}</span>
                 </div>
-                <div class="text-body q-px-md q-py-xs" v-for="item of taskEnvs" :key="item.key">
-                    <span class="text-bold">{{ item.key }} : </span> {{ item.value }}
+                <div class="row q-gutter-sm">
+                    <q-input
+                        v-for="item of taskEnvs"
+                        :key="item.key"
+                        :model-value="item.value"
+                        :label="item.key"
+                        label-color="primary"
+                        outlined
+                        filled
+                        stack-label
+                        readonly
+                        class="col-2"
+                    />
                 </div>
             </q-card-section>
             <q-separator></q-separator>
@@ -105,7 +134,7 @@ import {useRoute, useRouter} from "vue-router";
 import {globalStore} from 'src/stores/global'
 import {useI18n} from "vue-i18n";
 import {storeToRefs} from 'pinia'
-import {toLocalString} from "src/utils/time"
+import { format, toLocalString} from "src/utils/time"
 
 const store = globalStore()
 const {langCode} = storeToRefs(store)
