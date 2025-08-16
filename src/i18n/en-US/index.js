@@ -804,4 +804,6 @@ export default {
     InputGene: 'Input Gene',
     NotInGeneList: 'not in Gene List',
     NoValidData: 'No valid Gene Data',
+
+    SampleRatio: 'Sample Ratio',
 }

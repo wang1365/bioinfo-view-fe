@@ -662,6 +662,7 @@ const confirmTaskCreated = () => {
             data.name = taskParam.name
             data.parameter = JSON.stringify(taskParameter)
             data.samples = taskSamples
+            data.sampleDetails = JSON.stringify(file.sampleDetails || [])
             if (taskSamplesFirst !== "") {
                 data.taskSamplesFirst = taskSamplesFirst
             }
@@ -692,6 +693,7 @@ const confirmTaskCreated = () => {
                 data.append("flow_id", props.flowDetail.id)
                 data.append("project_id", props.projectDetail.id)
                 data.append("samples", item.samples)
+                data.append("sample_details", item.sampleDetails)
                 data.append("parameter", item.parameter)
                 data.append("name", `${item.name}-${nameIndex}`)
                 if (item.taskSamplesFirst !== "") {

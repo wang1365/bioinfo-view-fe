@@ -167,7 +167,7 @@ const columns = computed(() => {
     if (taskDetail.value.flow?.support_custom_sample_name) {
         base.push({
             title: t('Sample') + t('Name'),
-            dataIndex: 'custom_sample_name',
+            dataIndex: 'custom_name',
             align: 'center',
             sorter: (a, b) => a.sample_meta.name.localeCompare(b.sample_meta.name),
         })
@@ -175,7 +175,7 @@ const columns = computed(() => {
 
     if (taskDetail.value.flow?.support_sample_ratio) {
         base.push({
-            title: t('SampleListTableColumnSampleRatio'),
+            title: t('SampleRatio'),
             dataIndex: 'sample_ratio',
             align: 'center',
             sorter: (a, b) => a.sample_meta.ratio.localeCompare(b.sample_meta.ratio),
@@ -270,7 +270,12 @@ const getTaskDetail = () => {
 const getTaskSamples = (sampleIds) => {
     apiGetByIds('sample', sampleIds, (res) => {
         taskSamples.value = []
+        const sampleDetails = taskDetail.value.sample_details || []
         for (const iterator of res.data.results) {
+            // 从sample_details找到sample_id相同的sample
+            const sampleDetail = sampleDetails.find(item => item.sample === iterator.id) || {}
+            iterator.custom_name = sampleDetail.custom_name
+            iterator.sample_ratio = sampleDetail.sample_ratio
             taskSamples.value.push(iterator)
         }
     });
