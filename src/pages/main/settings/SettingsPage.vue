@@ -39,7 +39,14 @@
                     </q-card>
                 </q-expansion-item> -->
 
-                <q-expansion-item expand-separator default-opened icon="auto_mode" :label="$t('ServerResourceSetting')">
+                <q-expansion-item
+                    expand-separator
+                    default-opened
+                    dense
+                    icon="auto_mode"
+                    :label="$t('ServerResourceSetting')"
+                    header-class="bg-primary text-white"
+                >
                     <q-card>
                         <q-card-section>
                             <q-form ref="form" class="row" @submit="submit">
@@ -47,6 +54,7 @@
                                     <q-input
                                         type="number"
                                         stack-label
+                                        filled
                                         label-color="primary"
                                         :label="$t('ParallelTaskLimit')"
                                         v-model.number="max_task.value"
@@ -63,6 +71,7 @@
                                     <q-input
                                         type="number"
                                         stack-label
+                                        filled
                                         label-color="primary"
                                         :label="$t('MemoryUsageLimit')"
                                         v-model.number="memory_rate.value"
@@ -79,6 +88,7 @@
                                     <q-input
                                         type="number"
                                         stack-label
+                                        filled
                                         label-color="primary"
                                         :label="$t('DiskUsageLimit')"
                                         v-model.number="disk.value"
@@ -95,6 +105,7 @@
                                     <q-input
                                         type="number"
                                         stack-label
+                                        filled
                                         label-color="primary"
                                         :label="$t('AllowedRunningTime')"
                                         v-model.number="allowedRunningDays.value"
@@ -112,36 +123,69 @@
                                     <q-input
                                         type="number"
                                         stack-label
+                                        filled
                                         label-color="primary"
                                         :label="$t('ParallelManagerUser')"
                                         v-model.number="max_manager_user.value"
                                         :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
-                                    >
-                                    </q-input>
+                                    />
                                 </q-item>
                                 <q-item v-if="amISuper()" class="col-4">
                                     <q-input
                                         type="number"
                                         stack-label
+                                        filled
                                         label-color="primary"
                                         :label="$t('ParallelNormalUser')"
                                         v-model.number="max_normal_user.value"
                                         :rules="[(val) => (val !== null && val > 0 && val%1 === 0) || $t('InvalidValue')]"
-                                    >
-                                    </q-input>
+                                    />
                                 </q-item>
                             </q-form>
                         </q-card-section>
-                        <q-card-actions>
+                        <q-card-actions align="right">
                             <q-btn
-                                class="q-ml-lg"
+                                class="q-mr-lg"
                                 color="primary"
                                 type="submit"
                                 icon="save_as"
-                                :label="$t('Confirm')"
+                                :label="$t('Save')"
                                 @click="submit"
                             />
                         </q-card-actions>
+                    </q-card>
+                </q-expansion-item>
+                <q-expansion-item
+                    expand-separator
+                    default-opened
+                    dense
+                    icon="auto_mode"
+                    label="自建参考基因组配置"
+                    class="q-mt-md"
+                    header-class="bg-primary text-white"
+                >
+                    <q-card>
+                        <q-form @submit="submitRefGenome">
+                            <div class="row q-pa-md">
+                                <q-input
+                                    stack-label
+                                    filled
+                                    label-color="primary"
+                                    :label="$t('DockerImageName')"
+                                    v-model="refGenomeDockerImage.data"
+                                    :rules="[(val) => val !== null && val !== '' || 'Please type your age'|| $t('Required')]"
+                                />
+                            </div>
+                            <q-card-actions align="right">
+                                <q-btn
+                                    class="q-mr-lg"
+                                    color="primary"
+                                    type="submit"
+                                    icon="save_as"
+                                    :label="$t('Save')"
+                                />
+                            </q-card-actions>
+                        </q-form>
                     </q-card>
                 </q-expansion-item>
             </q-list>
@@ -178,6 +222,11 @@ const max_normal_user = ref({
 const memory_rate = ref({})
 const disk = ref({})
 const allowedRunningDays = ref({})
+const refGenomeDockerImage = ref({
+    id: null,
+    name: 'ref_genome_docker_image',
+    data: '',
+})
 
 const $q = useQuasar()
 
@@ -201,6 +250,14 @@ const submit = () => {
     })
 }
 
+const submitRefGenome = () => {
+    if (!refGenomeDockerImage.value.id) {
+        createConfig(refGenomeDockerImage.value)
+    } else {
+        updateConfig(refGenomeDockerImage.value)
+    }
+}
+
 const refresh = () => {
     listConfig().then(res => {
         for (let cfg of res.results) {
@@ -221,6 +278,9 @@ const refresh = () => {
             }
             if (cfg.name === 'allowed_running_days') {
                 allowedRunningDays.value = cfg
+            }
+            if (cfg.name === 'ref_genome_docker_image') {
+                refGenomeDockerImage.value = cfg
             }
         }
     })
