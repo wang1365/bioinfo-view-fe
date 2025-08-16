@@ -495,11 +495,11 @@ const checkCustomDatabase = () => {
         return false;
     }
 
-    const regex = /^[a-zA-Z0-9_]+$/;
-    if (!regex.test(dbName)) {
-        formErrors.value.customDatabase = t('OnlyAllowAlphanumericAndUnderscore');
-        return false;
-    }
+    // const regex = /^[a-zA-Z0-9_]+$/;
+    // if (!regex.test(dbName)) {
+    //     formErrors.value.customDatabase = t('OnlyAllowAlphanumericAndUnderscore');
+    //     return false;
+    // }
 
 
     // customDatabasePaths.value 查找第一个匹配项
