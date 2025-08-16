@@ -168,8 +168,7 @@ const columns = computed(() => {
         base.push({
             title: t('Sample') + t('Name'),
             dataIndex: 'custom_name',
-            align: 'center',
-            sorter: (a, b) => a.sample_meta.name.localeCompare(b.sample_meta.name),
+            align: 'left'
         })
     }
 
@@ -177,8 +176,7 @@ const columns = computed(() => {
         base.push({
             title: t('SampleRatio'),
             dataIndex: 'sample_ratio',
-            align: 'center',
-            sorter: (a, b) => a.sample_meta.ratio.localeCompare(b.sample_meta.ratio),
+            align: 'center'
         })
     }
     return base
