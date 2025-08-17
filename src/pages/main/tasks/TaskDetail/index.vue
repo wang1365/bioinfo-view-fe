@@ -3,7 +3,7 @@
         <div class="row items-center q-py-sm">
             <h6>{{ `${$t('Task')}${$t('Info')}` }}</h6>
             <q-space />
-            <q-btn :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
+            <q-btn :label="$t('Back')" icon="arrow_back" color="primary" flat @click="router.back()" />
         </div>
         <q-card>
             <q-card-section>

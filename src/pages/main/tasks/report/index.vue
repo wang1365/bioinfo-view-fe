@@ -3,7 +3,7 @@
         <div class="row items-center">
             <h6>{{ $t('TaskResult') }}</h6>
             <q-space />
-            <q-btn size="sm" :label="$t('Back')" icon="arrow_back" color="primary" @click="router.back()" />
+            <q-btn :label="$t('Back')" icon="arrow_back" class="q-mr-lg" color="primary" flat @click="router.back()" />
         </div>
         <div class="q-pt-xs">
             <q-tabs
