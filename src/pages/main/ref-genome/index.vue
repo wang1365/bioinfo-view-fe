@@ -17,12 +17,12 @@
                         @clear="refreshPage()"
                     />
                     <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
-                    <q-btn 
+                    <q-btn
                         v-if="canCreate"
-                        color="primary" 
-                        :label="$t('Add')" 
-                        icon="add" 
-                        @click="openNewDialog = true" 
+                        color="primary"
+                        :label="$t('Add')"
+                        icon="add"
+                        @click="openNewDialog = true"
                     />
                 </q-toolbar>
             </q-card-section>
@@ -54,11 +54,11 @@
                                         </template>
                                         {{ $t('Detail') }}
                                     </a-button>
-                                    <a-button 
+                                    <a-button
                                         v-if="canDelete"
-                                        type="primary" 
-                                        danger 
-                                        size="small" 
+                                        type="primary"
+                                        danger
+                                        size="small"
                                         @click="confirmDelete(record)"
                                     >
                                         <template #icon>
@@ -145,11 +145,8 @@ const columns = computed(() => [
         dataIndex: 'host',
         key: 'host',
     },
-    {
-        title: t('HostGenomeVersion'),
-        dataIndex: 'host_genome_version',
-        key: 'host_genome_version',
-    },
+    { title: t('HostGenomeVersion'), dataIndex: 'host_genome_version', key: 'host_genome_version', },
+    { title: t('Status'), dataIndex: 'status', key: 'status', },
     {
         title: t('CreatedAt'),
         dataIndex: 'create_time',
