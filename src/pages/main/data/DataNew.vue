@@ -4,10 +4,10 @@
             <q-toolbar-title>{{ $t('DataNewFormTitle') }}</q-toolbar-title>
             <q-btn flat round icon="close" v-close-popup />
         </q-toolbar>
-        <q-separator></q-separator>
+        <q-separator color="primary"></q-separator>
         <q-form @submit="save">
             <q-card-section>
-                <q-list>
+                <q-list dense>
                     <q-item>
                         <div class="row full-width justify-between">
                             <div class="col q-mx-sm">
@@ -17,9 +17,8 @@
                                     filled
                                     label-color="primary"
                                     :label="$t('DataNewFormDataDetails')"
-                                     :error="errors.project_index.error"
-                                :error-message="errors.project_index.message"
-
+                                    :error="errors.project_index.error"
+                                    :error-message="errors.project_index.message"
                                 />
                             </div>
                             <div class="col q-mx-sm">
@@ -29,8 +28,8 @@
                                     filled
                                     label-color="primary"
                                     :label="$t('DataNewFormLibraryNumber')"
-                                     :error="errors.library_number.error"
-                                :error-message="errors.library_number.message"
+                                    :error="errors.library_number.error"
+                                    :error-message="errors.library_number.message"
                                 />
                             </div>
                             <div class="col q-mx-sm">
@@ -40,9 +39,8 @@
                                     label-color="primary"
                                     v-model="form.reagent_box"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
-                                     :error="errors.reagent_box.error"
-                                :error-message="errors.reagent_box.message"
-
+                                    :error="errors.reagent_box.error"
+                                    :error-message="errors.reagent_box.message"
                                 />
                             </div>
                         </div>
@@ -58,8 +56,8 @@
                                     v-model="form.library_input"
                                     :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                     :label="'*'+$t('DataNewFormLibraryConstructionInput')"
-                                     :error="errors.library_input.error"
-                                :error-message="errors.library_input.message"
+                                    :error="errors.library_input.error"
+                                    :error-message="errors.library_input.message"
                                 />
                             </div>
                             <div class="col q-pf-sm">
@@ -69,8 +67,8 @@
                                     filled
                                     label-color="primary"
                                     :label="$t('DataNewFormIndexType')"
-                                     :error="errors.index_type.error"
-                                :error-message="errors.index_type.message"
+                                    :error="errors.index_type.error"
+                                    :error-message="errors.index_type.message"
                                 />
                             </div>
                             <div class="col q-mx-sm">
@@ -80,9 +78,8 @@
                                     filled
                                     label-color="primary"
                                     :label="$t('DataNewFormIndexNumber')"
-                                     :error="errors.index_number.error"
-                                :error-message="errors.index_number.message"
-
+                                    :error="errors.index_number.error"
+                                    :error-message="errors.index_number.message"
                                 />
                             </div>
                         </div>
@@ -97,8 +94,8 @@
                                     label-color="primary"
                                     v-model="form.hybrid_input"
                                     :label="$t('DataNewFormHybridInput')"
-                                     :error="errors.hybrid_input.error"
-                                :error-message="errors.hybrid_input.message"
+                                    :error="errors.hybrid_input.error"
+                                    :error-message="errors.hybrid_input.message"
                                 />
                             </div>
                             <div class="col q-mx-sm">
@@ -109,8 +106,8 @@
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="'*'+$t('DataNewFormNucleicAcidFragmentationMethod')"
-                                     :error="errors.nucleic_break_type.error"
-                                :error-message="errors.nucleic_break_type.message"
+                                    :error="errors.nucleic_break_type.error"
+                                    :error-message="errors.nucleic_break_type.message"
                                 />
                             </div>
 
@@ -123,8 +120,8 @@
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="$t('DataNewFormDataIdentificationNumber')"
                                     :readonly="true"
-                                     :error="errors.identifier.error"
-                                :error-message="errors.identifier.message"
+                                    :error="errors.identifier.error"
+                                    :error-message="errors.identifier.message"
                                 />
                             </div>
                         </div>
@@ -139,8 +136,8 @@
                                     label-color="primary"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="'*'+$t('DataNewFormSubmissionUnit')"
-                                     :error="errors.company.error"
-                                :error-message="errors.company.message"
+                                    :error="errors.company.error"
+                                    :error-message="errors.company.message"
                                 />
                             </div>
                             <div class="col q-mx-sm">
@@ -152,8 +149,8 @@
                                     label-color="primary"
                                     :options="nucleic_type_options"
                                     :label="$t('DataNewFormTypeOfNucleicAcids')"
-                                      :error="errors.nucleic_type.error"
-                                :error-message="errors.nucleic_type.message"
+                                    :error="errors.nucleic_type.error"
+                                    :error-message="errors.nucleic_type.message"
                                 />
                             </div>
                             <div class="col q-mx-sm">
@@ -165,15 +162,15 @@
                                     label-color="primary"
                                     :options="nucleic_level_options"
                                     :label="$t('DataNewFormDegradationGradeOfNucleicAcids')"
-                                     :error="errors.nucleic_level.error"
-                                :error-message="errors.nucleic_level.message"
+                                    :error="errors.nucleic_level.error"
+                                    :error-message="errors.nucleic_level.message"
                                 />
                             </div>
                         </div>
                     </q-item>
                     <q-item>
-                        <div class="row full-width justify-between">
-                            <div class="col q-mx-sm">
+                        <div class="row full-width justify-between q-col-gutter-sm">
+                            <div class="col-2">
                                 <q-checkbox
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     v-model="form.risk"
@@ -182,11 +179,14 @@
                                     filled
                                     stack-label
                                     label-color="primary"
-                                     :error="errors.risk.error"
-                                :error-message="errors.risk.message"
+                                    :error="errors.risk.error"
+                                    :error-message="errors.risk.message"
                                 />
                             </div>
-                            <div class="col q-mx-sm">
+                            <div class="col-2">
+                                <q-checkbox v-model="form.msre" label="MSRE" color="primary" />
+                            </div>
+                            <div class="col-4">
                                 <q-input
                                     @click="showLinkSample = true"
                                     readonly
@@ -196,11 +196,11 @@
                                     v-model="form.sample_identifier"
                                     :rules="[ val => val.length > 0 || $t('NotAllowEmpty') ]"
                                     :label="'*'+$t('DataNewFormSampleIdentificationNumber')"
-                                     :error="errors.sample_identifier.error"
-                                :error-message="errors.sample_identifier.message"
+                                    :error="errors.sample_identifier.error"
+                                    :error-message="errors.sample_identifier.message"
                                 />
                             </div>
-                            <div class="col q-mx-sm">
+                            <div class="col-4">
                                 <q-input
                                     @click="showLinkSample = true"
                                     readonly
@@ -210,12 +210,13 @@
                                     v-model="form.sample_meta_id"
                                     :rules="[ val => val > 0 || $t('NotAllowEmpty') ]"
                                     :label="'*'+$t('DataNewFormSampleID')"
-                                     :error="errors.sample_meta_id.error"
-                                :error-message="errors.sample_meta_id.message"
+                                    :error="errors.sample_meta_id.error"
+                                    :error-message="errors.sample_meta_id.message"
                                 />
                             </div>
                         </div>
                     </q-item>
+                    <q-separator color="primary" />
                     <q-item>
                         <div class="row full-width justify-between">
                             <q-checkbox
@@ -234,8 +235,8 @@
                                     stack-label
                                     filled
                                     label-color="primary"
-                                     :error="errors.fastq1_path.error"
-                                :error-message="errors.fastq1_path.message"
+                                    :error="errors.fastq1_path.error"
+                                    :error-message="errors.fastq1_path.message"
                                 ></q-input>
                             </div>
                             <div class="col q-mx-sm">
@@ -246,8 +247,8 @@
                                     stack-label
                                     filled
                                     label-color="primary"
-                                     :error="errors.fastq2_path.error"
-                                :error-message="errors.fastq2_path.message"
+                                    :error="errors.fastq2_path.error"
+                                    :error-message="errors.fastq2_path.message"
                                 ></q-input>
                             </div>
                         </div>
@@ -376,6 +377,7 @@ const form = ref(use_test_data ? test_data :
     identifier: '',
     company: '',
     nucleic_type: 'gDNA',
+    msre: false,
     fastq_merge_required: false, // 是否需要进行fastq文件合并
     fastq1_path_list: '', // 合并前的fastq1文件列表，逗号分割
     fastq2_path_list: '', // 合并前的fastq2文件列表，逗号分割

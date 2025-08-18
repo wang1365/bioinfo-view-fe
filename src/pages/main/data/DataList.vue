@@ -94,6 +94,7 @@
                             <td>{{$t('DataListTableColumnDataIdentificationNumber')}}</td>
                             <td>{{$t('DataListTableColumnDataNameOfR1')}}</td>
                             <td>{{$t('DataListTableColumnDataNameOfR2')}}</td>
+                            <td>MSRE</td>
                             <td>{{$t('DataListTableColumnOperations')}}</td>
                         </tr>
                     </thead>
@@ -114,6 +115,7 @@
                             <td>{{ item.identifier }}</td>
                             <td>{{ item.fastq1_path }}</td>
                             <td>{{ item.fastq2_path }}</td>
+                            <td>{{ item.msre ? $t('Yes') : $t('No') }}</td>
                             <td class="q-gutter-xs">
                                 <q-btn
                                     color="primary"
