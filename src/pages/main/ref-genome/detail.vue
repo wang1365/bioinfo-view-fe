@@ -9,6 +9,7 @@
                     <q-toolbar-title class="text-h6">
                         {{ detailData.custom_database }}
                     </q-toolbar-title>
+                    <q-btn color="secondary" label="查看日志" icon="description" @click="showLog" flat />
                     <q-btn color="primary" :label="$t('BackToList')" icon="arrow_back" @click="goBack()" flat />
                 </q-toolbar>
             </q-card-section>
@@ -141,6 +142,40 @@
                 <div class="q-mt-md">加载中...</div>
             </q-card-section>
         </q-card>
+
+        <!-- 任务运行日志弹窗 -->
+        <q-dialog v-model="showLogDialog" maximized>
+            <q-card>
+                <q-card-section class="row items-center q-pb-none">
+                    <div class="text-h6">任务运行日志</div>
+                    <q-space />
+                    <q-btn icon="close" flat round dense v-close-popup />
+                </q-card-section>
+
+                <q-card-section class="q-pt-none" style="height: calc(100vh - 100px); overflow: hidden;">
+                    <div v-if="logLoading" class="text-center q-pa-lg">
+                        <q-spinner-dots size="50px" color="primary" />
+                        <div class="q-mt-md">加载日志中...</div>
+                    </div>
+                    <div v-else-if="logError" class="text-center q-pa-lg text-negative">
+                        <q-icon name="error" size="50px" />
+                        <div class="q-mt-md">{{ logError }}</div>
+                        <q-btn color="primary" label="重试" @click="loadTaskLog" class="q-mt-md" />
+                    </div>
+                    <div
+                        v-else
+                        style="height: 100%; overflow-y: auto; background: #1e1e1e; color: #ffffff; font-family: 'Courier New', monospace; padding: 16px; border-radius: 4px;"
+                    >
+                        <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">{{ logContent }}</pre>
+                    </div>
+                </q-card-section>
+
+                <q-card-actions align="right">
+                    <q-btn color="primary" label="刷新" @click="loadTaskLog" :loading="logLoading" />
+                    <q-btn color="grey" label="关闭" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </q-page>
 </template>
 
@@ -148,17 +183,24 @@
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { getCustomReferenceGenomeDetail } from 'src/api/customReferenceGenome';
+import { getCustomReferenceGenomeDetail, getTaskLog } from 'src/api/customReferenceGenome';
 import { errorMessage } from 'src/utils/notify';
 import { toLocalString } from 'src/utils/time';
 import { parseHostMapdbInfo, parseSpMapdbInfo } from './mapDb';
 import PageTitle from "components/page-title/PageTitle.vue";
+import { readFile } from 'src/api/file';
 
 const route = useRoute();
 const router = useRouter();
 const { t } = useI18n();
 
 const detailData = ref(null);
+
+// 日志弹窗相关
+const showLogDialog = ref(false);
+const logContent = ref('');
+const logLoading = ref(false);
+const logError = ref('');
 
 // 宿主原序列表格数据
 const hostSequenceColumns = ref([
@@ -314,6 +356,33 @@ const loadDetail = async () => {
         errorMessage(t('LoadDataFailed') || '加载详情失败');
         console.error('加载详情失败:', error);
     }
+};
+
+// 加载任务日志
+const loadTaskLog = async () => {
+    if (!detailData.value?.custom_database) {
+        logError.value = '无法获取数据库名称';
+        return;
+    }
+
+    logLoading.value = true;
+    logError.value = '';
+
+    try {
+        const data = await readFile(`/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/${detailData.value.custom_database}/log.txt`);
+        logContent.value = data || '暂无日志内容';
+    } catch (error) {
+        console.error('加载日志失败:', error);
+        logError.value = error.response?.data?.message || '加载日志失败，请稍后重试';
+    } finally {
+        logLoading.value = false;
+    }
+};
+
+// 显示日志弹窗
+const showLog = () => {
+    showLogDialog.value = true;
+    loadTaskLog();
 };
 
 // 返回列表
