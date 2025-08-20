@@ -137,6 +137,7 @@ export default {
     Setting: '设置',
     Notice: '消息',
     Done: '已完成',
+    Running: '运行中',
     Size: '大小',
     Progress: '进度',
     Upload: '上传',

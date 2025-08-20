@@ -139,6 +139,7 @@ export default {
     Setting: 'Setting',
     Notice: 'Notice',
     Done: 'Done',
+    Running: 'Running',
     Size: 'Size',
     Progress: 'Progress',
     Upload: 'Upload',

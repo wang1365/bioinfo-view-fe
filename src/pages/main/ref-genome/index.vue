@@ -43,6 +43,9 @@
                             <template v-else-if="column.key === 'virus_type'">
                                 {{ formatJsonField(record.virus_type) }}
                             </template>
+                            <template v-else-if="column.key === 'status'">
+                                {{ formatStatus(record.status) }}
+                            </template>
                             <template v-else-if="column.key === 'create_time'">
                                 {{ toLocalString(record.create_time) }}
                             </template>
@@ -196,6 +199,19 @@ const formatJsonField = (jsonData) => {
         return String(jsonData)
     } catch (e) {
         return String(jsonData)
+    }
+}
+
+// 格式化状态显示
+const formatStatus = (status) => {
+    if (!status) return ''
+    switch (status.toUpperCase()) {
+        case 'RUNNING':
+            return t('Running')
+        case 'DONE':
+            return t('Done')
+        default:
+            return status
     }
 }
 
