@@ -80,7 +80,7 @@
                         :href="table.url"
                         :download="table.fileName"
                         :label="$t('Download')"
-                        icon="south"
+                        icon="download"
                         size="sm"
                         flat
                     />
@@ -120,7 +120,8 @@
                                 :href="`igv${record[column.dataIndex]}`"
                                 :download="`igv${record[column.dataIndex]}`"
                                 :label="$t('Download')"
-                                icon="south"
+                                icon="download"
+                                text-color="primary"
                                 size="sm"
                                 flat
                             />
@@ -156,6 +157,17 @@
                             </template>
                         </template>
                     </a-table>
+                    <template v-for="file in files" :key="file.buttonName">
+                        <q-btn
+                            :label="file.buttonName"
+                            color="primary"
+                            icon="download"
+                            type="href"
+                            :href="`/igv${file.filePath}`"
+                            target="_blank"
+                        >
+                        </q-btn>
+                    </template>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -229,6 +241,8 @@ const tables = computed( () => {
     })
     return sortedTables.map(t => t.data)
 })
+
+const files = computed(() => props.viewConfig.files || [])
 
 const clearKeyword = (table) => {
     table.filteredRows = table.rows
