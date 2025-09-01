@@ -5,7 +5,7 @@
             style="width:300px" :disable="showSticky && stickDone" />
         <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword1"
             :disable="showSticky && stickDone"></q-btn>
-        <q-btn :href="props.qt.url" :label="$t('Download')" size="small" icon="south" color="primary" target="_blank"
+        <q-btn :href="props.qt.url" :label="$t('Download')" size="small" icon="download" color="primary" target="_blank"
             class="q-ml-sm" />
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
@@ -39,7 +39,7 @@
                 style="width:300px" :disable="showSticky && stickDone" />
             <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword2"
                 :disable="showSticky && stickDone" />
-            <q-btn :href="props.qn.url" :label="$t('Download')" size="small" icon="south" color="primary" target="_blank"
+            <q-btn :href="props.qn.url" :label="$t('Download')" size="small" icon="download" color="primary" target="_blank"
                 class="q-ml-sm" />
         </q-toolbar>
         <div style="position:relative">

@@ -182,7 +182,7 @@
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn icon="south" color="primary" :label="$t('Download')">
+                        <q-btn icon="download" color="primary" :label="$t('Download')">
                             <q-menu>
                                 <q-list>
                                     <q-item clickable

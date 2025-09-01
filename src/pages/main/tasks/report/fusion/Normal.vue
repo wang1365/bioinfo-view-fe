@@ -5,7 +5,7 @@
                 style="width:300px" :disable="showSticky && stickDone" />
             <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword"
                 :disable="showSticky && stickDone" />
-            <q-btn :href="props.url" :label="$t('Download')" size="small" icon="south" color="primary" target="_blank"
+            <q-btn :href="props.url" :label="$t('Download')" size="small" icon="download" color="primary" target="_blank"
                 class="q-ml-sm" />
         </q-toolbar>
         <div class="bio-data-table q-py-sm">

@@ -13,7 +13,7 @@
         <q-btn
             :href="tableFileUrl1"
             :label="$t('Download')"
-            icon="south" padding="sm"
+            icon="download" padding="sm"
             color="primary"
             target="_blank"
             class="q-ml-sm q-mb-xs"
@@ -37,7 +37,7 @@
         <q-btn
             :href="tableFileUrl2"
             :label="$t('Download')"
-            icon="south" padding="sm"
+            icon="download" padding="sm"
             color="primary"
             target="_blank"
             class="q-ml-sm q-mb-xs"

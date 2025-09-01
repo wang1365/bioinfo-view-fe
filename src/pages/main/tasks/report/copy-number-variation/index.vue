@@ -168,7 +168,7 @@
                 <q-btn
                     :href="tableFileUrl"
                     :label="$t('Download')"
-                    icon="south"
+                    icon="download"
                     color="primary"
                     target="_blank"
                     class="q-ml-sm"

@@ -212,7 +212,7 @@
                                 :label="$t('Download')"
                                 padding="sm"
                                 dense
-                                icon="south"
+                                icon="download"
                                 color="primary"
                                 target="_blank"
                                 size="md"
