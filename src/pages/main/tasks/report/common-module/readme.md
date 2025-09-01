@@ -23,9 +23,16 @@
                         "name": "HLA allele", // 列标题
                         "type": "image",      // 列类型, image: 图片, file: 文件, text: 文字, link: 链接
                     }]
-                }, 
+                },
                 // 第二个表格
                 { }
+            ],
+            "files": [ // 下载文件列表
+                {
+                    "buttonName": "突变总览表下载", // 下载Button名称
+                    "fileName": "all.snp.stat.tab.all", // 文件名称
+                    "filePath": "/data/bioinfo/xxxx/xxx/result/all.snp.stat.tab.all" // 文件路径
+                }
             ],
             // 图片, 多个
             "images": [
