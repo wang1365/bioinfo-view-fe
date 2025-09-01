@@ -157,20 +157,22 @@
                             </template>
                         </template>
                     </a-table>
-                    <template v-for="file in files" :key="file.buttonName">
-                        <q-btn
-                            :label="file.buttonName"
-                            color="primary"
-                            icon="download"
-                            type="href"
-                            :href="`/igv${file.filePath}`"
-                            target="_blank"
-                        >
-                        </q-btn>
-                    </template>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
+
+        <template v-for="file in files" :key="file.buttonName">
+            <q-btn
+                :label="file.buttonName"
+                color="primary"
+                icon="download"
+                type="href"
+                :href="`/igv${file.filePath}`"
+                target="_blank"
+                class="q-mb-sm"
+            >
+            </q-btn>
+        </template>
         <q-dialog v-model="showImage">
             <q-card style="width:80%;max-width:1000px;height:550px;align-items: center">
                 <q-card-section>
