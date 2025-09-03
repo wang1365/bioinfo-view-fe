@@ -492,11 +492,11 @@ const singleSelected = (event) => {
     if (currentSample.value === "first") {
         file.sampleFirst = event
         sampleFirst.value = event;
-        file.sampleDetails[0] = {  customName: event.sample_identifier, sampleRatio: null, }
+        file.sampleDetails[0] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
     } else {
         file.sampleSecond = event
         sampleSecond.value = event;
-        file.sampleDetails[1] = {  customName: event.sample_identifier, sampleRatio: null, }
+        file.sampleDetails[1] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
     }
 }
 
@@ -506,14 +506,14 @@ const multiSelected = (event) => {
 
     if (currentSample.value === "multi") {
         file.samples = event
-        file.sampleDetails = event.map(sample => ({  customName: sample.sample_identifier, sampleRatio: null, }))
+        file.sampleDetails = event.map(sample => ({  customName: sample.sample_identifier, sampleRatio: null, id: sample.id}))
     } else if (currentSample.value === "first-multi") {
         file.samplesFirst = event
         // 将file.sampleDetails 第0个元素设置为{  customName: sample.identifier, sampleRatio: null, }
-        file.sampleDetails[0] = {  customName: event.sample_identifier, sampleRatio: null, }
+        file.sampleDetails[0] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
     } else {
         file.samplesSecond = event
-        file.sampleDetails[1] = {  customName: event.sample_identifier, sampleRatio: null, }
+        file.sampleDetails[1] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
     }
     samples.value = event;
     console.log(event);
