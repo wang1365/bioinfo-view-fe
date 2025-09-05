@@ -855,5 +855,16 @@ export default {
     Close: '关闭',
     CannotGetDatabaseName: '无法获取数据库名称',
     NoLogContent: '暂无日志内容',
-    LoadLogFailed: '加载日志失败，请稍后重试'
+    LoadLogFailed: '加载日志失败，请稍后重试',
+    InformationSummary: '信息汇总',
+    CustomDatabaseRequired: '自定义数据库名称不能为空',
+    CustomDatabaseExists: '该自定义数据库名称已存在，路径为：',
+    VirusNameRequired: '病毒种名不能为空',
+    VirusTypeRequired: '病毒分型不能为空',
+    HostRequired: '宿主不能为空',
+    HostGenomeVersionRequired: '宿主基因组版本不能为空',
+    SequenceInfoSuccess: '序列信息获取成功',
+    SequenceInfoFormatError: '获取序列信息失败：响应数据格式错误',
+    SequenceInfoFailed: '获取序列信息失败',
+    UnknownError: '未知错误'
 }

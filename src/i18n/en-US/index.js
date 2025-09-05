@@ -853,5 +853,16 @@ export default {
   BackToList: 'Back to List',
   HostSeqFile: 'Host Sequence File',
   VirusSeqFile: 'Virus Sequence File',
-  SequenceInfo: 'Sequence Info'
+  SequenceInfo: 'Sequence Info',
+  InformationSummary: 'Information Summary',
+    CustomDatabaseRequired: 'Custom database name is required',
+    CustomDatabaseExists: 'This custom database name already exists, path: ',
+    VirusNameRequired: 'Virus name is required',
+    VirusTypeRequired: 'Virus type is required',
+    HostRequired: 'Host is required',
+    HostGenomeVersionRequired: 'Host genome version is required',
+    SequenceInfoSuccess: 'Sequence information retrieved successfully',
+    SequenceInfoFormatError: 'Failed to retrieve sequence information: response data format error',
+    SequenceInfoFailed: 'Failed to retrieve sequence information',
+    UnknownError: 'Unknown error'
 }

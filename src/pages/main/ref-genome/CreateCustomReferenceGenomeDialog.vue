@@ -103,7 +103,7 @@
                     </div>
 
                     <div class="q-pt-md">
-                        <q-btn color="primary" @click="showInformationSummary" :label="'信息汇总'" />
+                        <q-btn color="primary" @click="showInformationSummary" :label="$t('InformationSummary')" />
                     </div>
                 </div>
 
@@ -148,7 +148,7 @@
                                     size="12px"
                                     flat
                                     @click="deletePathogenSequence(record)"
-                                    label="删除"
+                                    :label="$t('Delete')"
                                 />
                             </template>
                         </template>
@@ -491,7 +491,7 @@ const checkCustomDatabase = () => {
     const dbName = formData.value.customDatabase;
 
     if (!dbName) {
-        formErrors.value.customDatabase = '自定义数据库名称不能为空';
+        formErrors.value.customDatabase = t('CustomDatabaseRequired');
         return false;
     }
 
@@ -505,7 +505,7 @@ const checkCustomDatabase = () => {
     // customDatabasePaths.value 查找第一个匹配项
     const existingDb = customDatabasePaths.value.find(item => item.dbName === dbName);
     if (existingDb) {
-        formErrors.value.customDatabase = '该自定义数据库名称已存在，路径为：' + existingDb.dbPath;
+        formErrors.value.customDatabase = t('CustomDatabaseExists') + existingDb.dbPath;
         return false;
     }
 
@@ -532,19 +532,19 @@ const validateForm = () => {
 
     const errors = {};
     if (!formData.value.virusName || formData.value.virusName.length === 0) {
-        errors.virusName = '病毒种名不能为空';
+        errors.virusName = t('VirusNameRequired');
     }
 
     if (!formData.value.virusType || formData.value.virusType.length === 0) {
-        errors.virusType = '病毒分型不能为空';
+        errors.virusType = t('VirusTypeRequired');
     }
 
     if (!formData.value.host) {
-        errors.host = '宿主不能为空';
+        errors.host = t('HostRequired');
     }
 
     if (!formData.value.hostGenomeVersion) {
-        errors.hostGenomeVersion = '宿主基因组版本不能为空';
+        errors.hostGenomeVersion = t('HostGenomeVersionRequired');
     }
 
     formErrors.value = errors;
@@ -605,15 +605,15 @@ const showInformationSummary = async () => {
                 pathogenPagination.value.current = 1;
             }
 
-            infoMessage('序列信息获取成功')
+            infoMessage(t('SequenceInfoSuccess'))
         } else {
-            errorMessage('获取序列信息失败：响应数据格式错误')
+            errorMessage(t('SequenceInfoFormatError'))
         }
     } catch (error) {
-        console.error('获取序列信息失败:', error);
+        console.error(t('SequenceInfoFailed'), error);
         $q.notify({
             type: 'negative',
-            message: '获取序列信息失败: ' + (error.message || '未知错误')
+            message: t('SequenceInfoFailed') + ': ' + (error.message || t('UnknownError'))
         });
     }
 };
