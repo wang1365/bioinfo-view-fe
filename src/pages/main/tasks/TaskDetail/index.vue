@@ -191,12 +191,6 @@ const columns = computed(() => {
         },
         {title: t('DataListTableColumnDataNameOfR1'), dataIndex: 'fastq1_path', align: 'center'},
         {title: t('DataListTableColumnDataNameOfR2'), dataIndex: 'fastq2_path', align: 'center'},
-        {
-            title: 'MSRE', dataIndex: 'msre', align: 'center',
-            customRender: ({text, record, index, column}) => {
-                return record.msre ? '是' : '否'
-            }
-        },
     ]
 
     if (taskDetail.value.flow?.support_custom_sample_name) {

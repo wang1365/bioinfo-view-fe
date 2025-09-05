@@ -833,4 +833,17 @@ export default {
     NoValidData: '没有输入有效基因数据',
 
     SampleRatio: '抽样比例',
+    
+    // Custom Reference Genome related
+    ConfirmDeleteReferenceGenome: '确定要删除此参考基因组吗？',
+    ReferenceGenomeDeleteSuccess: '参考基因组删除成功',
+    ViewLog: '查看日志',
+    HostSequencePath: '宿主原序列路径',
+    SpeciesName: '物种名',
+    SequenceId: '序列ID',
+    VersionInfo: '版本信息',
+    OriginalName: '序列原名',
+    PathogenSequencePath: '病原原序列路径',
+    StrainName: '株系名',
+    ClassificationInfo: '分类信息'
 }

@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="自建参考基因组详情" />
+        <PageTitle :title="$t('CustomReferenceGenome') + ' ' + $t('Detail')" />
 
         <q-card v-if="detailData">
             <q-card-section>
@@ -9,7 +9,7 @@
                     <q-toolbar-title class="text-h6">
                         {{ detailData.custom_database }}
                     </q-toolbar-title>
-                    <q-btn color="secondary" label="查看日志" icon="description" @click="showLog" flat />
+                    <q-btn color="secondary" :label="$t('ViewLog')" icon="description" @click="showLog" flat />
                     <q-btn color="primary" :label="$t('BackToList')" icon="arrow_back" @click="goBack()" flat />
                 </q-toolbar>
             </q-card-section>
@@ -180,7 +180,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { getCustomReferenceGenomeDetail, getTaskLog } from 'src/api/customReferenceGenome';
@@ -203,36 +203,36 @@ const logLoading = ref(false);
 const logError = ref('');
 
 // 宿主原序列表格数据
-const hostSequenceColumns = ref([
+const hostSequenceColumns = computed(() =>[
     {
-        title: '宿主原序列路径',
+        title: t('HostSequencePath'),
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
         customRender: ({text}) => text
     },
-    {title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 80},
-    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
-    {title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
-    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 100}
+    {title: t('SpeciesName'), dataIndex: 'speciesName', key: 'speciesName', width: 80},
+    {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
+    {title: t('VersionInfo'), dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
+    {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 100}
 ]);
 
 const hostSequenceData = ref([]);
 const hostPagination = ref({ current: 1, pageSize: 10 });
 
 // 病原原序列表格数据
-const pathogenSequenceColumns = ref([
+const pathogenSequenceColumns = computed(() =>[
     {
-        title: '病原原序列路径',
+        title: t('PathogenSequencePath'),
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
         customRender: ({text}) => text
     },
-    {title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 80},
-    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
-    {title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
-    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 200}
+    {title: t('StrainName'), dataIndex: 'strainName', key: 'strainName', width: 80},
+    {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
+    {title: t('ClassificationInfo'), dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
+    {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 200}
 ]);
 
 const pathogenSequenceData = ref([]);

@@ -1,6 +1,6 @@
 <template>
     <q-page padding style="overflow-x: hidden">
-        <PageTitle title="自建参考基因组" />
+        <PageTitle :title="$t('CustomReferenceGenome')" />
         <q-card>
             <q-card-section>
                 <q-toolbar class="q-gutter-x-sm">
@@ -275,17 +275,17 @@ const handleDialogSave = async () => {
 // 确认删除
 const confirmDelete = (item) => {
     $q.dialog({
-        title: '确认删除',
-        message: `'确定要删除此自建参考基因组吗？' "${item.custom_database}"`,
+        title: t('ConfirmToDelete'),
+        message: `${t('ConfirmDeleteReferenceGenome')} "${item.custom_database}"`,
         cancel: true,
         persistent: true,
     }).onOk(async () => {
         try {
             await deleteCustomReferenceGenome(item.id)
-            infoMessage(t('DeleteSuccess') || '删除成功')
+            infoMessage(t('ReferenceGenomeDeleteSuccess'))
             loadPage()
         } catch (error) {
-            errorMessage(t('DeleteFailed') || '删除失败')
+            errorMessage(t('Failed'))
             console.error('删除失败:', error)
         }
     })

@@ -124,7 +124,7 @@
                                     size="12px"
                                     flat
                                     @click="deleteHostSequence(record)"
-                                    label="删除"
+                                    :label="$t('Delete')"
                                 />
                             </template>
                         </template>
@@ -230,17 +230,17 @@ const customDatabasePaths = ref([]);
 // 宿主原序列表格数据
 const hostSequenceColumns = ref([
     {
-        title: '宿主原序列路径',
+        title: t('HostSequencePath'),
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
         customRender: ({text}) => text
     },
-    {title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 80},
-    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
-    {title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
-    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 100},
-    {title: '操作', key: 'action', width: 30}
+    {title: t('SpeciesName'), dataIndex: 'speciesName', key: 'speciesName', width: 80},
+    {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
+    {title: t('VersionInfo'), dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
+    {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 100},
+    {title: t('Actions'), key: 'action', width: 30}
 ]);
 
 const hostSequenceData = ref([]);
@@ -249,17 +249,17 @@ const hostPagination = ref({ current: 1, pageSize: 10 });
 // 病原原序列表格数据
 const pathogenSequenceColumns = ref([
     {
-        title: '病原原序列路径',
+        title: t('PathogenSequencePath'),
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
         customRender: ({text}) => text
     },
-    {title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 80},
-    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
-    {title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
-    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 200},
-    {title: '操作', key: 'action', width: 30}
+    {title: t('StrainName'), dataIndex: 'strainName', key: 'strainName', width: 80},
+    {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
+    {title: t('ClassificationInfo'), dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
+    {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 200},
+    {title: t('Actions'), key: 'action', width: 30}
 ]);
 
 const pathogenSequenceData = ref([]);
