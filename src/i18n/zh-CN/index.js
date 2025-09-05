@@ -845,5 +845,15 @@ export default {
     OriginalName: '序列原名',
     PathogenSequencePath: '病原原序列路径',
     StrainName: '株系名',
-    ClassificationInfo: '分类信息'
+    ClassificationInfo: '分类信息',
+    OriginalName: '原始名称',
+    Loading: '加载中...',
+    TaskRunLog: '任务运行日志',
+    LoadingLog: '加载日志中...',
+    Retry: '重试',
+    Refresh: '刷新',
+    Close: '关闭',
+    CannotGetDatabaseName: '无法获取数据库名称',
+    NoLogContent: '暂无日志内容',
+    LoadLogFailed: '加载日志失败，请稍后重试'
 }

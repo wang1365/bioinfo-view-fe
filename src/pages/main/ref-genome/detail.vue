@@ -139,7 +139,7 @@
         <q-card v-else>
             <q-card-section class="text-center">
                 <q-spinner-dots size="50px" color="primary" />
-                <div class="q-mt-md">加载中...</div>
+                <div class="q-mt-md">{{ $t('Loading') }}</div>
             </q-card-section>
         </q-card>
 
@@ -147,7 +147,7 @@
         <q-dialog v-model="showLogDialog" maximized>
             <q-card>
                 <q-card-section class="row items-center q-pb-none">
-                    <div class="text-h6">任务运行日志</div>
+                    <div class="text-h6">{{ $t('TaskRunLog') }}</div>
                     <q-space />
                     <q-btn icon="close" flat round dense v-close-popup />
                 </q-card-section>
@@ -155,12 +155,12 @@
                 <q-card-section class="q-pt-none" style="height: calc(100vh - 100px); overflow: hidden;">
                     <div v-if="logLoading" class="text-center q-pa-lg">
                         <q-spinner-dots size="50px" color="primary" />
-                        <div class="q-mt-md">加载日志中...</div>
+                        <div class="q-mt-md">{{ $t('LoadingLog') }}</div>
                     </div>
                     <div v-else-if="logError" class="text-center q-pa-lg text-negative">
                         <q-icon name="error" size="50px" />
                         <div class="q-mt-md">{{ logError }}</div>
-                        <q-btn color="primary" label="重试" @click="loadTaskLog" class="q-mt-md" />
+                        <q-btn color="primary" :label="$t('Retry')" @click="loadTaskLog" class="q-mt-md" />
                     </div>
                     <div
                         v-else
@@ -171,8 +171,8 @@
                 </q-card-section>
 
                 <q-card-actions align="right">
-                    <q-btn color="primary" label="刷新" @click="loadTaskLog" :loading="logLoading" />
-                    <q-btn color="grey" label="关闭" v-close-popup />
+                    <q-btn color="primary" :label="$t('Refresh')" @click="loadTaskLog" :loading="logLoading" />
+                    <q-btn color="grey" :label="$t('Close')" v-close-popup />
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -353,7 +353,7 @@ const loadDetail = async () => {
             pathogenSequenceData.value = parseSpMapdbInfo(detailData.value.sp_map_db);
         }
     } catch (error) {
-        errorMessage(t('LoadDataFailed') || '加载详情失败');
+        errorMessage(t('LoadDataFailed'));
         console.error('加载详情失败:', error);
     }
 };
@@ -361,7 +361,7 @@ const loadDetail = async () => {
 // 加载任务日志
 const loadTaskLog = async () => {
     if (!detailData.value?.custom_database) {
-        logError.value = '无法获取数据库名称';
+        logError.value = t('CannotGetDatabaseName');
         return;
     }
 
@@ -370,10 +370,10 @@ const loadTaskLog = async () => {
 
     try {
         const data = await readFile(`/data/bioinfo/database_dir/Pathogen_database/customize_ref_db/${detailData.value.custom_database}/log.txt`);
-        logContent.value = data || '暂无日志内容';
+        logContent.value = data || t('NoLogContent');
     } catch (error) {
         console.error('加载日志失败:', error);
-        logError.value = error.response?.data?.message || '加载日志失败，请稍后重试';
+        logError.value = error.response?.data?.message || t('LoadLogFailed');
     } finally {
         logLoading.value = false;
     }
