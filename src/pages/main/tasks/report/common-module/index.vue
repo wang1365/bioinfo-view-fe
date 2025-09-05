@@ -182,17 +182,40 @@
         </q-dialog>
 
         <!-- <a-table :columns="columns" :data-source="rows" @change="onChange" /> -->
-        <q-separator color="primary" />
         <div>
-            <template v-for="image in images" :key="image">
-                <q-img
-                    class="q-mt-lg text-primary"
-                    :src="image.url"
-                    fit="contain"
-                    style="max-width: 85%"
-                    position="0 20px"
-                />
-                <div class="text-primary">{{ image.description }}</div>
+            <template v-for="(image, index) in images" :key="image">
+                <q-separator color="primary" class="q-my-sm" />
+                <div class="items-start">
+                    <div class="q-ml-sm q-mt-lg">
+                        <q-btn
+                            icon="add"
+                            size="sm"
+                            color="primary"
+                            outline
+                            round
+                            class="q-mx-sm"
+                            @click="zoomIn(index)"
+                            :title="$t('ZoomIn')"
+                        />
+                        <q-btn
+                            icon="remove"
+                            size="sm"
+                            color="primary"
+                            outline
+                            round
+                            @click="zoomOut(index)"
+                            :title="$t('ZoomOut')"
+                        />
+                    </div>
+                    <q-img
+                        class="text-primary"
+                        :src="image.url"
+                        fit="contain"
+                        :style="`max-width: ${imageScales[index] || 85}%; transition: all 0.3s ease;`"
+                        position="0 20px"
+                    />
+                </div>
+                <div class="text-primary q-mt-sm">{{ image.description }}</div>
             </template>
         </div>
     </div>
@@ -210,6 +233,7 @@ const store = globalStore()
 const { langCode } = storeToRefs(store)
 const $q = useQuasar()
 const dlgVisible = ref(false)
+const imageScales = ref({}) // 存储每个图片的缩放比例
 const props = defineProps({
     viewConfig: {
         type: Object,
@@ -426,6 +450,19 @@ const unstick = () => {
         table.keyword = ''
         table.filteredRows = table.rows
     }
+}
+
+// 图片缩放方法
+const zoomIn = (index) => {
+    const currentScale = imageScales.value[index] || 85
+    const newScale = Math.min(currentScale + 15, 200) // 最大200%
+    imageScales.value[index] = newScale
+}
+
+const zoomOut = (index) => {
+    const currentScale = imageScales.value[index] || 85
+    const newScale = Math.max(currentScale - 15, 30) // 最小30%
+    imageScales.value[index] = newScale
 }
 </script>
 
