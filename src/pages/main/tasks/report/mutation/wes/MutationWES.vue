@@ -428,11 +428,13 @@ import { setVerdictResult } from 'src/api/verdict'
 import { getCurrentUsername } from 'src/utils/user'
 import GenesetDialog from 'pages/main/tasks/report/common-module/GenesetDialog.vue'
 import SearchControl from 'pages/main/tasks/report/mutation/wes/SearchControl.vue'
+import { useCustomCell } from '../index'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
 const splitterModel = ref(300)
 const emit = defineEmits(['filterChange'])
+const customCell = useCustomCell('Report')
 
 
 const props = defineProps({
@@ -540,7 +542,7 @@ const scrollX = computed(() => {
 })
 
 const columns = computed(() => {
-    return [
+    const result = [
         { title: '', dataIndex: 'expand', width: 30, align: 'left', fixed: 'left' },
         { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true },
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true,
@@ -556,6 +558,10 @@ const columns = computed(() => {
         { title: 'Software Prediction', dataIndex: `Software_Prediction_result`, width: 220, ellipsis: true },
         { title: 'IGV', dataIndex: `operation`, width: 80, ellipsis: true },
     ]
+    result.forEach((item) => {
+        item.customCell = customCell
+    })
+    return result
 })
 
 function showVerdictDlg(record) {
