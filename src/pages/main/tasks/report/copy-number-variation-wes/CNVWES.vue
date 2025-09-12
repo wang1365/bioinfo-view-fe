@@ -572,6 +572,7 @@ const geneSetInput = ref("")
 const geneSetOkValue = ref([])
 const geneSetErrValue = ref([])
 const verdictMap = ref({})
+const customCell = useCustomCell('Report')
 const verdictData = ref({
     visible: false,
     record: null,
@@ -913,19 +914,25 @@ const customRow = (record, index) => {
         // }
     }
 }
-const columns = ref([
-    { title: '', dataIndex: 'expand', width: 50, align: 'left', fixed: 'left' },
-    { title: 'Gene Info', dataIndex: 'geneInfo', key: 'geneInfo', width: 200, align: 'left' },
-    { title: 'Copy Number', dataIndex: 'copyNumber', key: 'copyNumber', width: 200, align: 'left' },
-    { title: 'Gene Related Diseases', dataIndex: 'geneRelatedDiseases', key: 'geneRelatedDiseases', width: 200, align: 'left' },
-    { title: 'User Verdict', dataIndex: 'userVerdict', key: 'userVerdict', width: 200, align: 'left' },
-    { title: 'ACMG', dataIndex: 'acmg', key: 'acmg', width: 200, align: 'left' },
-    { title: 'Related HPOs', dataIndex: 'relatedHPOs', key: 'relatedHPOs', width: 300, align: 'left' },
-    { title: 'DGV', dataIndex: 'dgv', key: 'dgv', width: 200, align: 'left' },
-    { title: 'Clinvar', dataIndex: 'clinvar', key: 'clinvar', width: 300, align: 'left' },
-    { title: 'Plot', dataIndex: 'plot', key: 'plot', width: 200, align: 'left' },
-    //{ title: 'Operation', dataIndex: 'operation', key: 'operation', width: 200, align: 'left' },
-])
+const columns = computed(() => {
+    const result = [
+        { title: '', dataIndex: 'expand', width: 50, align: 'left', fixed: 'left' },
+        { title: 'Gene Info', dataIndex: 'geneInfo', key: 'geneInfo', width: 200, align: 'left' },
+        { title: 'Copy Number', dataIndex: 'copyNumber', key: 'copyNumber', width: 200, align: 'left' },
+        { title: 'Gene Related Diseases', dataIndex: 'geneRelatedDiseases', key: 'geneRelatedDiseases', width: 200, align: 'left' },
+        { title: 'User Verdict', dataIndex: 'userVerdict', key: 'userVerdict', width: 200, align: 'left' },
+        { title: 'ACMG', dataIndex: 'acmg', key: 'acmg', width: 200, align: 'left' },
+        { title: 'Related HPOs', dataIndex: 'relatedHPOs', key: 'relatedHPOs', width: 300, align: 'left' },
+        { title: 'DGV', dataIndex: 'dgv', key: 'dgv', width: 200, align: 'left' },
+        { title: 'Clinvar', dataIndex: 'clinvar', key: 'clinvar', width: 300, align: 'left' },
+        { title: 'Plot', dataIndex: 'plot', key: 'plot', width: 200, align: 'left' },
+        //{ title: 'Operation', dataIndex: 'operation', key: 'operation', width: 200, align: 'left' },
+    ]
+    result.forEach((item) => {
+        item.customCell = customCell
+    })
+    return result;
+})
 
 
 
