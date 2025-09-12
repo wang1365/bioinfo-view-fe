@@ -103,7 +103,7 @@
                     </div>
 
                     <div class="q-pt-md">
-                        <q-btn color="primary" @click="showInformationSummary" :label="'信息汇总'" />
+                        <q-btn color="primary" @click="showInformationSummary" :label="$t('InformationSummary')" />
                     </div>
                 </div>
 
@@ -124,7 +124,7 @@
                                     size="12px"
                                     flat
                                     @click="deleteHostSequence(record)"
-                                    label="删除"
+                                    :label="$t('Delete')"
                                 />
                             </template>
                         </template>
@@ -148,7 +148,7 @@
                                     size="12px"
                                     flat
                                     @click="deletePathogenSequence(record)"
-                                    label="删除"
+                                    :label="$t('Delete')"
                                 />
                             </template>
                         </template>
@@ -230,17 +230,17 @@ const customDatabasePaths = ref([]);
 // 宿主原序列表格数据
 const hostSequenceColumns = ref([
     {
-        title: '宿主原序列路径',
+        title: t('HostSequencePath'),
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
         customRender: ({text}) => text
     },
-    {title: '物种名', dataIndex: 'speciesName', key: 'speciesName', width: 80},
-    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
-    {title: '版本信息', dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
-    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 100},
-    {title: '操作', key: 'action', width: 30}
+    {title: t('SpeciesName'), dataIndex: 'speciesName', key: 'speciesName', width: 80},
+    {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
+    {title: t('VersionInfo'), dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
+    {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 100},
+    {title: t('Actions'), key: 'action', width: 30}
 ]);
 
 const hostSequenceData = ref([]);
@@ -249,17 +249,17 @@ const hostPagination = ref({ current: 1, pageSize: 10 });
 // 病原原序列表格数据
 const pathogenSequenceColumns = ref([
     {
-        title: '病原原序列路径',
+        title: t('PathogenSequencePath'),
         dataIndex: 'sequencePath',
         key: 'sequencePath',
         width: 200,
         customRender: ({text}) => text
     },
-    {title: '株系名', dataIndex: 'strainName', key: 'strainName', width: 80},
-    {title: '序列ID', dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
-    {title: '分类信息', dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
-    {title: '序列原名', dataIndex: 'originalName', key: 'originalName', width: 200},
-    {title: '操作', key: 'action', width: 30}
+    {title: t('StrainName'), dataIndex: 'strainName', key: 'strainName', width: 80},
+    {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
+    {title: t('ClassificationInfo'), dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
+    {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 200},
+    {title: t('Actions'), key: 'action', width: 30}
 ]);
 
 const pathogenSequenceData = ref([]);
@@ -491,7 +491,7 @@ const checkCustomDatabase = () => {
     const dbName = formData.value.customDatabase;
 
     if (!dbName) {
-        formErrors.value.customDatabase = '自定义数据库名称不能为空';
+        formErrors.value.customDatabase = t('CustomDatabaseRequired');
         return false;
     }
 
@@ -505,7 +505,7 @@ const checkCustomDatabase = () => {
     // customDatabasePaths.value 查找第一个匹配项
     const existingDb = customDatabasePaths.value.find(item => item.dbName === dbName);
     if (existingDb) {
-        formErrors.value.customDatabase = '该自定义数据库名称已存在，路径为：' + existingDb.dbPath;
+        formErrors.value.customDatabase = t('CustomDatabaseExists') + existingDb.dbPath;
         return false;
     }
 
@@ -532,19 +532,19 @@ const validateForm = () => {
 
     const errors = {};
     if (!formData.value.virusName || formData.value.virusName.length === 0) {
-        errors.virusName = '病毒种名不能为空';
+        errors.virusName = t('VirusNameRequired');
     }
 
     if (!formData.value.virusType || formData.value.virusType.length === 0) {
-        errors.virusType = '病毒分型不能为空';
+        errors.virusType = t('VirusTypeRequired');
     }
 
     if (!formData.value.host) {
-        errors.host = '宿主不能为空';
+        errors.host = t('HostRequired');
     }
 
     if (!formData.value.hostGenomeVersion) {
-        errors.hostGenomeVersion = '宿主基因组版本不能为空';
+        errors.hostGenomeVersion = t('HostGenomeVersionRequired');
     }
 
     formErrors.value = errors;
@@ -605,15 +605,15 @@ const showInformationSummary = async () => {
                 pathogenPagination.value.current = 1;
             }
 
-            infoMessage('序列信息获取成功')
+            infoMessage(t('SequenceInfoSuccess'))
         } else {
-            errorMessage('获取序列信息失败：响应数据格式错误')
+            errorMessage(t('SequenceInfoFormatError'))
         }
     } catch (error) {
-        console.error('获取序列信息失败:', error);
+        console.error(t('SequenceInfoFailed'), error);
         $q.notify({
             type: 'negative',
-            message: '获取序列信息失败: ' + (error.message || '未知错误')
+            message: t('SequenceInfoFailed') + ': ' + (error.message || t('UnknownError'))
         });
     }
 };
