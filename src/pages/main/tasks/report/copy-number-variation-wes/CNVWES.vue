@@ -401,6 +401,7 @@
                                     <img
                                         :src="'/igv' + record.Plot.replace('//', '/')"
                                         alt="."
+                                        class="cursor-pointer"
                                         style="width: 100px;height: 100px;"
                                         @click="clickDetail(record)"
                                     />
