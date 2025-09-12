@@ -1,6 +1,28 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle :title="$t('SystemSetting')" />
+
+        <!-- 系统版本信息 -->
+        <div class="q-mb-sm">
+            <q-card class="bg-grey-1">
+                <q-card-section class="row items-center q-pa-md">
+                    <q-icon name="info" color="primary" size="md" class="q-mr-md" />
+                    <div>
+                        <div class="text-h6 text-primary">系统版本信息</div>
+                        <div class="text-body2 text-grey-7 q-mt-xs">
+                            当前分支: <span class="text-weight-bold text-primary">{{ gitBranch }}</span>
+                            <span class="q-mx-sm">|</span>
+                            提交版本: <span class="text-caption text-grey-6">{{ gitCommit.substring(0, 8) }}</span>
+                            <span class="q-mx-sm">|</span>
+                            提交时间: <span class="text-caption text-grey-6">{{ formatDateTime(gitCommitDate) }}</span>
+                            <span class="q-mx-sm">|</span>
+                            构建时间: <span class="text-caption text-grey-6">{{ formatDateTime(buildTime) }}</span>
+                        </div>
+                    </div>
+                </q-card-section>
+            </q-card>
+        </div>
+
         <div class="q-py-md">
             <q-list bordered class="rounded-borders">
                 <q-expansion-item
@@ -159,7 +181,7 @@
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import {useQuasar} from 'quasar'
 import {createConfig, listConfig, updateConfig} from 'src/api/config'
 import { amISuper } from 'src/utils/user'
@@ -189,6 +211,49 @@ const refGenomeDockerImage = ref({
 
 const $q = useQuasar()
 
+// Git版本信息
+const gitBranch = computed(() => {
+    return typeof __GIT_BRANCH__ !== 'undefined' ? __GIT_BRANCH__ : 'unknown'
+})
+
+const gitCommit = computed(() => {
+    return typeof __GIT_COMMIT__ !== 'undefined' ? __GIT_COMMIT__ : 'unknown'
+})
+
+const gitVersion = computed(() => {
+    return typeof __GIT_VERSION__ !== 'undefined' ? __GIT_VERSION__ : 'unknown'
+})
+
+const gitCommitDate = computed(() => {
+    return typeof __GIT_COMMIT_DATE__ !== 'undefined' ? __GIT_COMMIT_DATE__ : '未知时间'
+})
+
+const buildTime = computed(() => {
+    return typeof __BUILD_TIME__ !== 'undefined' ? __BUILD_TIME__ : '未知时间'
+})
+
+// 时间格式化函数
+const formatDateTime = (dateTimeStr) => {
+    if (!dateTimeStr || dateTimeStr === '未知时间') {
+        return '未知时间'
+    }
+    try {
+        const date = new Date(dateTimeStr)
+        if (isNaN(date.getTime())) {
+            return dateTimeStr
+        }
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        const hours = String(date.getHours()).padStart(2, '0')
+        const minutes = String(date.getMinutes()).padStart(2, '0')
+        const seconds = String(date.getSeconds()).padStart(2, '0')
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+    } catch (error) {
+        return dateTimeStr
+    }
+}
+
 onMounted(() => {
     refresh()
 })
@@ -203,7 +268,7 @@ const submit = () => {
     }
     updateConfig(disk.value).then(res => {
         $q.notify({
-            message: t('Success'),
+            message: 'Success',
             type: 'positive'
         })
     })

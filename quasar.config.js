@@ -9,9 +9,13 @@
 // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js
 
 const ESLintPlugin = require('eslint-webpack-plugin')
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
+const webpack = require('webpack')
 
 const { configure } = require('quasar/wrappers')
 const { SocksProxyAgent } = require('socks-proxy-agent')
+
+const gitRevisionPlugin = new GitRevisionPlugin()
 
 console.log('ENV:', process.env)
 module.exports = configure(function (ctx) {
@@ -70,6 +74,22 @@ module.exports = configure(function (ctx) {
 
             chainWebpack(chain) {
                 chain.plugin('eslint-webpack-plugin').use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
+                
+                // 注入git分支信息和环境变量
+                chain.plugin('define').use(webpack.DefinePlugin, [{
+                    __GIT_BRANCH__: JSON.stringify(gitRevisionPlugin.branch()),
+                    __GIT_COMMIT__: JSON.stringify(gitRevisionPlugin.commithash()),
+                    __GIT_VERSION__: JSON.stringify(gitRevisionPlugin.version()),
+                    __GIT_COMMIT_DATE__: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+                    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+                    __QUASAR_SSR_SERVER__: false,
+                    __QUASAR_SSR_CLIENT__: false,
+                    __QUASAR_SSR_PWA__: false,
+                    __QUASAR_SSR__: false,
+                    __QUASAR_VERSION__: JSON.stringify(require('quasar/package.json').version),
+                    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+                    'process': JSON.stringify({ env: { NODE_ENV: process.env.NODE_ENV || 'development' } })
+                }])
             },
         },
 
