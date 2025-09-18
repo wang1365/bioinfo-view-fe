@@ -92,7 +92,7 @@
                         :model-value="detailData.host_seq_file"
                     />
                     <q-input
-                        :label="$t('VirusSeqFile')"
+                        :label="$t('SpeciesSeqFile')"
                         label-color="primary"
                         stack-label
                         outlined

@@ -204,13 +204,13 @@ export default {
     // 自建参考基因组
     ReferenceGenome: '参考基因组',
     CustomReferenceGenome: '自建参考基因组',
-    CustomDatabase: '自定义数据库名',
+    CustomDatabase: '自定义数据库',
     VirusName: '病毒种名',
     VirusType: '病毒分型',
     Host: '宿主',
     HostGenomeVersion: '宿主基因组版本',
     HostSeqFile: '宿主原序列文件',
-    VirusSeqFile: '病原原序列文件',
+    SpeciesSeqFile: '病原原序列文件',
     HostInfo: '宿主原序列信息',
     VirusInfo: '病原原序列信息',
     CustomReferenceGenomeList: '自建参考基因组列表',
@@ -537,11 +537,6 @@ export default {
 
     // 序列选择参数
     SequenceSelection: '序列选择',
-    VirusName: '病毒种名',
-    VirusType: '病毒分型',
-    Host: '宿主',
-    HostGenomeVersion: '宿主基因组版本',
-    CustomDatabase: '自定义数据库',
     CustomDatabaseTooltip: '仅支持字母、数字和下划线',
     OnlyAllowAlphanumericAndUnderscore: '仅允许字母、数字和下划线',
     DatabaseAlreadyExists: '数据库已存在',
@@ -860,5 +855,5 @@ export default {
     SequenceInfoSuccess: '序列信息获取成功',
     SequenceInfoFormatError: '获取序列信息失败：响应数据格式错误',
     SequenceInfoFailed: '获取序列信息失败',
-    UnknownError: '未知错误'
+    UnknownError: '未知错误',
 }
