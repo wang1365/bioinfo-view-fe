@@ -61,7 +61,7 @@
                     />
 
                     <q-input
-                        :label="$t('VirusName')"
+                        :label="$t('SpeciesName2')"
                         label-color="primary"
                         stack-label
                         outlined
@@ -70,7 +70,7 @@
                         :model-value="formatJson(detailData.virus_name)"
                     />
                     <q-input
-                        :label="$t('VirusType')"
+                        :label="$t('SubTypes')"
                         label-color="primary"
                         stack-label
                         outlined
