@@ -334,6 +334,7 @@ const initTable = () => {
       $q.loading.show({ delay: 100 })
     }
     unsortedTables.value = []
+
     // const tmpTables = []
     tableList.forEach((table, i) => {
         tableData.value[table.title] = {}
@@ -343,24 +344,67 @@ const initTable = () => {
             configMap[config.name] = config
         })
 
+        const comparator = (a, b) => {
+            if (a < b) {
+                return -1
+            }
+            if (a > b) {
+                return 1
+            }
+            return 0
+        }
+
+
+
+        const compare_obj = (a, b) => {
+            if (a < b) {
+                return -1
+            }
+            if (a > b) {
+                return 1
+            }
+            return 0
+        }
+
+        const compare_number = (a, b) => {
+            return compare_obj(Number(a), Number(b))
+        }
 
         readTaskFile(props.task.id, table.file).then((res) => {
             const colNames = getCsvHeader(res)
             const rows = getCsvDataAndSetLineNumber(res, { fields: colNames })
             const columns = colNames.map((name) => {
+                const columnConfig = configMap[name] || {}
                 // 当前列所有数据去重，作为筛选项
                 const values = [...new Set(rows.map((t) => t[name]))]
+
+                let sorter = null;
+                if (columnConfig.sorter === 'number') {
+                    sorter = (a, b) => {
+                        return compare_number(a[name], b[name])
+                    }
+                } else if (columnConfig.sorter === 'string') {
+                    sorter = (a, b) => {
+                        return compare_obj(a[name], b[name])
+                    }
+                }
+
+                const filtered = columnConfig.filtered !== false
+
+                console.log('=============================> sorter', name, columnConfig)
                 return {
                     title: name,
                     dataIndex: name,
                     width: 200,
                     ellipsis: true,
                     align: 'center',
-                    filters: values.map((v) => {
+                    filters: !filtered ? null : values.map((v) => {
                         return { text: v, value: v }
                     }),
                     onFilter: (value, record) => record[name].indexOf(value) === 0,
-                    config: configMap[name] || {} // 列配置
+                    // sorter: columnConfig.sorted ? sorter : null,
+                    sorter,
+                    config: columnConfig // 列配置
                 }
             })
             // 添加表格定义

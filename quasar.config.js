@@ -74,22 +74,24 @@ module.exports = configure(function (ctx) {
 
             chainWebpack(chain) {
                 chain.plugin('eslint-webpack-plugin').use(ESLintPlugin, [{ extensions: ['js', 'vue'] }])
-                
+
                 // 注入git分支信息和环境变量
-                chain.plugin('define').use(webpack.DefinePlugin, [{
-                    __GIT_BRANCH__: JSON.stringify(gitRevisionPlugin.branch()),
-                    __GIT_COMMIT__: JSON.stringify(gitRevisionPlugin.commithash()),
-                    __GIT_VERSION__: JSON.stringify(gitRevisionPlugin.version()),
-                    __GIT_COMMIT_DATE__: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
-                    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
-                    __QUASAR_SSR_SERVER__: false,
-                    __QUASAR_SSR_CLIENT__: false,
-                    __QUASAR_SSR_PWA__: false,
-                    __QUASAR_SSR__: false,
-                    __QUASAR_VERSION__: JSON.stringify(require('quasar/package.json').version),
-                    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-                    'process': JSON.stringify({ env: { NODE_ENV: process.env.NODE_ENV || 'development' } })
-                }])
+                chain.plugin('define').use(webpack.DefinePlugin, [
+                    {
+                        __GIT_BRANCH__: JSON.stringify(gitRevisionPlugin.branch()),
+                        __GIT_COMMIT__: JSON.stringify(gitRevisionPlugin.commithash()),
+                        __GIT_VERSION__: JSON.stringify(gitRevisionPlugin.version()),
+                        __GIT_COMMIT_DATE__: JSON.stringify(gitRevisionPlugin.lastcommitdatetime()),
+                        __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+                        __QUASAR_SSR_SERVER__: false,
+                        __QUASAR_SSR_CLIENT__: false,
+                        __QUASAR_SSR_PWA__: false,
+                        __QUASAR_SSR__: false,
+                        __QUASAR_VERSION__: JSON.stringify(require('quasar/package.json').version),
+                        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+                        process: JSON.stringify({ env: { NODE_ENV: process.env.NODE_ENV || 'development' } }),
+                    },
+                ])
             },
         },
 
@@ -103,8 +105,8 @@ module.exports = configure(function (ctx) {
             proxy: {
                 '/api': {
                     changeOrigin: true,
-                    target: process.env.host || 'http://10.10.0.208:8080',
-                    // target: process.env.host || 'http://localhost:8000',
+                    // target: process.env.host || 'http://10.10.0.208:8080',
+                    target: process.env.host || 'http://localhost:8000',
                     // target: process.env.host || 'http://10.10.2.196:8080',
                     // target: process.env.host || 'http://192.168.100.97:8080', // 王晓川开发用
                     pathRewrite: {
@@ -114,8 +116,8 @@ module.exports = configure(function (ctx) {
                 },
                 '/igv': {
                     changeOrigin: true,
-                    target: process.env.igv || 'http://10.10.0.208',
-                    // target: process.env.igv || 'http://localhost:8000',
+                    // target: process.env.igv || 'http://10.10.0.208',
+                    target: process.env.igv || 'http://localhost:8000',
                     // agent: new SocksProxyAgent('socks5://192.168.31.102:1080'),
                 },
             },

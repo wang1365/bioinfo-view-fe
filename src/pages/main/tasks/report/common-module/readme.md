@@ -22,6 +22,11 @@
                     "columns": [ {
                         "name": "HLA allele", // 列标题
                         "type": "image",      // 列类型, image: 图片, file: 文件, text: 文字, link: 链接
+                    },
+                    {
+                        "name": "整体匹配read数",
+                        "sorter": "number", // 排序类型, number: 数字排序, string: 字符串排序；默认没有排序
+                        "filtered": false   // 是否可以过滤, true: 可以过滤, false: 不可以过滤； 默认为 true
                     }]
                 },
                 // 第二个表格
