@@ -168,7 +168,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
 import { readFileFromDatabaseDir } from 'src/api/file';
@@ -228,7 +228,7 @@ const hostGenomeVersionOptions = ref([]);
 const customDatabasePaths = ref([]);
 
 // 宿主原序列表格数据
-const hostSequenceColumns = ref([
+const hostSequenceColumns = computed(() =>[
     {
         title: t('HostSequencePath'),
         dataIndex: 'sequencePath',
@@ -240,14 +240,14 @@ const hostSequenceColumns = ref([
     {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 100},
     {title: t('VersionInfo'), dataIndex: 'versionInfo', key: 'versionInfo', width: 60},
     {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 100},
-    {title: t('Actions'), key: 'action', width: 30}
+    {title: t('Operation'), key: 'action', width: 30}
 ]);
 
 const hostSequenceData = ref([]);
 const hostPagination = ref({ current: 1, pageSize: 10 });
 
 // 病原原序列表格数据
-const pathogenSequenceColumns = ref([
+const pathogenSequenceColumns = computed(() => [
     {
         title: t('PathogenSequencePath'),
         dataIndex: 'sequencePath',
@@ -259,7 +259,7 @@ const pathogenSequenceColumns = ref([
     {title: t('SequenceId'), dataIndex: 'sequenceId', key: 'sequenceId', width: 80},
     {title: t('ClassificationInfo'), dataIndex: 'classificationInfo', key: 'classificationInfo', width: 80},
     {title: t('OriginalName'), dataIndex: 'originalName', key: 'originalName', width: 200},
-    {title: t('Actions'), key: 'action', width: 30}
+    {title: t('Operation'), key: 'action', width: 30}
 ]);
 
 const pathogenSequenceData = ref([]);

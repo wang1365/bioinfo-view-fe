@@ -160,7 +160,7 @@ const columns = computed(() => [
         },
     },
     {
-        title: t('Actions'),
+        title: t('Operation'),
         key: 'actions',
         width: 150,
         fixed: 'right',
