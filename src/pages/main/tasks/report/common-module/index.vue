@@ -109,8 +109,8 @@
                         <template #bodyCell="{ column, record }">
                             <q-btn
                                 v-if="column.config.type === 'image'"
-                                size="xs"
-                                outline
+                                size="sm"
+                                flat
                                 color="primary"
                                 :label="$t('View')"
                                 @click="clickView(record,column.title)"
@@ -135,8 +135,8 @@
                                 v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
                             >
                                 <q-btn
-                                    size="xs"
-                                    outline
+                                    size="sm"
+                                    flat
                                     color="primary"
                                     :label="$t('View')"
                                     @click="clickView(record,column.title)"
@@ -147,11 +147,12 @@
                                     v-if="record[column.dataIndex].endsWith('.png') || record[column.dataIndex].endsWith('.jpeg')"
                                 >
                                     <q-img
-                                        class="q-mt-lg text-primary"
+                                        class="q-mt-sm cursor-pointer"
                                         :src="'/igv'+ record[column.dataIndex]"
-                                        style="max-height: 30px; padding: 0; margin: 0;"
+                                        style="max-height: 30px; max-width: 60px; padding: 0; margin: 0;"
                                         fit="contain"
-                                        position="top"
+                                        position="left"
+                                        @click="clickView(record,column.title)"
                                     />
                                 </template>
                             </template>
