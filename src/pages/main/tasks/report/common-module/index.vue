@@ -81,7 +81,7 @@
                         :download="table.fileName"
                         :label="$t('Download')"
                         icon="download"
-                        size="sm"
+                        size="12px"
                         flat
                     />
                 </q-toolbar>
@@ -109,7 +109,7 @@
                         <template #bodyCell="{ column, record }">
                             <q-btn
                                 v-if="column.config.type === 'image'"
-                                size="sm"
+                                size="12px"
                                 flat
                                 color="primary"
                                 :label="$t('View')"
@@ -135,7 +135,7 @@
                                 v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
                             >
                                 <q-btn
-                                    size="sm"
+                                    size="12px"
                                     flat
                                     color="primary"
                                     :label="$t('View')"
