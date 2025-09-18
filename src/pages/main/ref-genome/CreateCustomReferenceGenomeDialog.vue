@@ -35,7 +35,7 @@
                         <q-select
                             v-model="formData.virusName"
                             :options="virusNameOptions"
-                            :label="$t('VirusName')"
+                            :label="$t('SpeciesName2') + ' *'"
                             outlined
                             stack-label
                             multiple
@@ -54,7 +54,7 @@
                         <q-select
                             v-model="formData.virusType"
                             :options="virusTypeOptions"
-                            :label="$t('VirusType')"
+                            :label="$t('SubTypes')"
                             outlined
                             stack-label
                             multiple
