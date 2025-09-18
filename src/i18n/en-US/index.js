@@ -788,6 +788,7 @@ export default {
     Zhong: 'Species',
     Species: 'Species',
     GenusName: 'Genus Name',
+    SpeciesName2: 'Species',
     RelativeAbundance: 'Relative Abundance',
     ReadsCount: 'Reads Count',
     SpeciesName: 'Species Name',
@@ -831,6 +832,7 @@ export default {
     ReferenceGenomeDeleteSuccess: 'Reference genome deleted successfully',
     ReferenceGenomeCreateSuccess: 'Reference genome created successfully',
     ReferenceGenomeUpdateSuccess: 'Reference genome updated successfully',
+    SearchCustomDatabase: 'Search Custom Database',
     ViewLog: 'View Log',
     HostSequencePath: 'Host Sequence Path',
     SequenceId: 'Sequence ID',
@@ -860,5 +862,5 @@ export default {
     SequenceInfoSuccess: 'Sequence information retrieved successfully',
     SequenceInfoFormatError: 'Failed to retrieve sequence information: response data format error',
     SequenceInfoFailed: 'Failed to retrieve sequence information',
-    UnknownError: 'Unknown error'
+    UnknownError: 'Unknown error',
 }

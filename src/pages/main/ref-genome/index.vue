@@ -132,7 +132,7 @@ const columns = computed(() => [
         ellipsis: true,
     },
     {
-        title: t('Species'),
+        title: t('SpeciesName2'),
         dataIndex: 'virus_name',
         key: 'virus_name',
         ellipsis: true,
