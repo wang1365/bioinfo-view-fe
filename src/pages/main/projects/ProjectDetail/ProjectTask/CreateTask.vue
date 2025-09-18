@@ -192,9 +192,9 @@
                                                             <q-input class="col-2" stack-label :label="$t('DataIdentifier')" dense
                                                                      readonly outlined v-model="sample.identifier"/>
                                                         </div>
-                                                        <q-input class="col-2" stack-label label='样本名' label-color='purple' dense filled
+                                                        <q-input class="col-2" stack-label :label="t('SampleName')" label-color='purple' dense filled
                                                                  v-model="file.sampleDetails[i].customName"/>
-                                                        <q-input class="col-2" stack-label label='采样比例' label-color='purple' dense filled
+                                                        <q-input class="col-2" stack-label :label="t('SampleRatio')" label-color='purple' dense filled
                                                                  v-model.number="file.sampleDetails[i].sampleRatio"
                                                                  v-if='flowDetail.support_sample_ratio'
                                                         />

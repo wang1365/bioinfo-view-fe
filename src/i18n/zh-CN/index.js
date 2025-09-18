@@ -762,6 +762,7 @@ export default {
     PairMultipleSample: '配对多样本',
     SupportNonStandardSample: '支持非标准样本',
     SupportDefineReport: '支持定制报告',
+    SampleName: '样本名称',
     SupportCustomSampleName: '支持自定义样本名称',
     SupportSampleRatio: '支持样本采样率',
 
@@ -832,7 +833,7 @@ export default {
     NotInGeneList: '不在基因列表中',
     NoValidData: '没有输入有效基因数据',
 
-    SampleRatio: '抽样比例',
+    SampleRatio: '采样比例',
 
     // Custom Reference Genome related
     ConfirmDeleteReferenceGenome: '确定要删除此参考基因组吗？',

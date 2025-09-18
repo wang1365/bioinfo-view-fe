@@ -737,6 +737,7 @@ export default {
     PairMultipleSample: 'Pair Multiple Sample',
     SupportNonStandardSample: 'Support Non Standard Sample',
     SupportDefineReport: 'Support Custome Report',
+    SampleName: 'Sample Name',
     SupportCustomSampleName: 'Support Custom Sample Name',
     SupportSampleRatio: 'Support Sample Ratio',
 
