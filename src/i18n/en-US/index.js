@@ -342,7 +342,7 @@ export default {
     TumorMutationLoadAnalysis: 'Tumor Mutation Load Analysis',
     HomologousRecombinationDefectAnalysis: 'Homologous Recombination Defect Analysis',
     CopyNumberVariationAnalysis: 'Copy Number Variation Analysis',
-    CopyNumberVariationWes: 'Copy Number Variation WES',
+    CopyNumberVariationWes: 'Copy Number Variation',
     CopyNumberVariationGeneAnalysis: 'Copy Number Variation Gene Analysis',
     MicroSatelliteInstability: 'Micro-satellite Status',
 
@@ -372,7 +372,7 @@ export default {
     // 突变分析
     GermlineMutationAnalysis: 'Germline Mutation Analysis',
     SomaticMutationAnalysis: 'Somatic Mutation Analysis',
-    WESMutationAnalysis: 'WES Mutation Analysis',
+    WESMutationAnalysis: 'Mutation Analysis',
     Depth: 'Depth',
     TumorFrequency: 'Tumor Frequency',
     ControlFrequency: 'Control Frequency',

@@ -367,7 +367,7 @@ export default {
     TumorMutationLoadAnalysis: '肿瘤突变负荷分析',
     HomologousRecombinationDefectAnalysis: '同源重组缺陷分析',
     CopyNumberVariationAnalysis: '拷贝数变异分析',
-    CopyNumberVariationWes: 'WES CNV分析',
+    CopyNumberVariationWes: 'CNV分析',
     CopyNumberVariationGeneAnalysis: '拷贝数变异基因分析',
     MicroSatelliteInstability: '微卫星状态',
 
@@ -397,7 +397,7 @@ export default {
     // 突变分析
     GermlineMutationAnalysis: '胚系突变分析',
     SomaticMutationAnalysis: '体细胞突变分析',
-    WESMutationAnalysis: 'WES突变分析',
+    WESMutationAnalysis: '突变分析',
     Depth: '深度',
     TumorFrequency: '肿瘤频率',
     ControlFrequency: '对照频率',
