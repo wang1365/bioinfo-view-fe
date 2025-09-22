@@ -183,7 +183,7 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { getCustomReferenceGenomeDetail, getTaskLog } from 'src/api/customReferenceGenome';
+import { getCustomReferenceGenomeDetail } from 'src/api/customReferenceGenome';
 import { errorMessage } from 'src/utils/notify';
 import { toLocalString } from 'src/utils/time';
 import { parseHostMapdbInfo, parseSpMapdbInfo } from './mapDb';

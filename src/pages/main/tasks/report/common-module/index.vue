@@ -122,7 +122,7 @@
                                 :label="$t('Download')"
                                 icon="download"
                                 text-color="primary"
-                                size="sm"
+                                size="12px"
                                 flat
                             />
                             <a
@@ -154,6 +154,15 @@
                                         position="left"
                                         @click="clickView(record,column.title)"
                                     />
+                                </template>
+                                <template v-else>
+                                    <!-- 默认文本内容，添加tooltip支持 -->
+                                    <div
+                                        class="text-ellipsis"
+                                        style="max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
+                                    >
+                                        {{ record[column.dataIndex] }}
+                                    </div>
                                 </template>
                             </template>
                         </template>
@@ -391,7 +400,6 @@ const initTable = () => {
 
                 const filtered = columnConfig.filtered !== false
 
-                console.log('=============================> sorter', name, columnConfig)
                 return {
                     title: name,
                     dataIndex: name,
