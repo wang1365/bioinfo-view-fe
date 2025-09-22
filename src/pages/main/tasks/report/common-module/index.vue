@@ -132,7 +132,12 @@
                                     target="_blank"
                                     >{{$t('View')}}</a
                                 >
-                                <q-btn :label="$t('View')" flat text-color="primary" @click="showHtmlDialg" />
+                                <q-btn
+                                    :label="$t('View')"
+                                    flat
+                                    text-color="primary"
+                                    @click="showHtmlDialg(record, column)"
+                                />
                             </template>
                             <template
                                 v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
@@ -158,15 +163,6 @@
                                         @click="clickView(record,column.title)"
                                     />
                                 </template>
-                                <template v-else>
-                                    <!-- 默认文本内容，添加tooltip支持 -->
-                                    <div
-                                        class="text-ellipsis"
-                                        style="max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
-                                    >
-                                        {{ record[column.dataIndex] }}
-                                    </div>
-                                </template>
                             </template>
                         </template>
                     </a-table>
@@ -190,6 +186,26 @@
             <q-card style="width:80%;max-width:1000px;height:550px;align-items: center">
                 <q-card-section>
                     <img :src="imageUrl" alt="" style="height:500px;background-color:white" />
+                </q-card-section>
+            </q-card>
+        </q-dialog>
+
+        <!-- HTML内容弹窗 -->
+        <q-dialog v-model="showHtmlDialog" maximized>
+            <q-card style="width: 100vw; height: 100vh;">
+                <q-bar class="bg-primary text-white">
+                    {{ $t('View') }}
+                    <q-space />
+                    <q-btn dense flat icon="close" v-close-popup>
+                        <q-tooltip>{{ $t('Close') }}</q-tooltip>
+                    </q-btn>
+                </q-bar>
+                <q-card-section class="q-pa-none" style="height: calc(100vh - 50px);">
+                    <iframe
+                        :src="htmlContent"
+                        style="width: 100%; height: 100%; border: none;"
+                        sandbox="allow-scripts allow-same-origin"
+                    ></iframe>
                 </q-card-section>
             </q-card>
         </q-dialog>
@@ -248,6 +264,8 @@ const { langCode } = storeToRefs(store)
 const $q = useQuasar()
 const dlgVisible = ref(false)
 const imageScales = ref({}) // 存储每个图片的缩放比例
+const showHtmlDialog = ref(false) // HTML弹窗显示状态
+const htmlContent = ref('') // HTML内容
 const props = defineProps({
     viewConfig: {
         type: Object,
@@ -520,6 +538,14 @@ const zoomOut = (index) => {
     const currentScale = imageScales.value[index] || 85
     const newScale = Math.max(currentScale - 15, 30) // 最小30%
     imageScales.value[index] = newScale
+}
+
+// HTML弹窗方法
+const showHtmlDialg = (record, column) => {
+    const htmlFilePath = record[column.dataIndex]
+    // 直接设置文件路径，让iframe加载
+    htmlContent.value = `/igv${htmlFilePath}`
+    showHtmlDialog.value = true
 }
 </script>
 
