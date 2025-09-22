@@ -125,12 +125,15 @@
                                 size="12px"
                                 flat
                             />
-                            <a
-                                v-if="column.config.type === 'link'"
-                                :href="record[column.dataIndex]"
-                                target="_blank"
-                                >{{$t('View')}}</a
-                            >
+                            <template v-if="column.config.type === 'link'">
+                                <a
+                                    v-if="record[column.dataIndex].startsWith('http')"
+                                    :href="record[column.dataIndex]"
+                                    target="_blank"
+                                    >{{$t('View')}}</a
+                                >
+                                <q-btn :label="$t('View')" flat text-color="primary" @click="showHtmlDialg" />
+                            </template>
                             <template
                                 v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
                             >
@@ -238,6 +241,7 @@ import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/
 import { useQuasar } from "quasar"
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'
+import { template } from 'lodash'
 
 const store = globalStore()
 const { langCode } = storeToRefs(store)
