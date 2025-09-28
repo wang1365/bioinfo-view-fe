@@ -512,6 +512,11 @@ const doRequest = (showLoading = true) => {
     );
 };
 
+// 兼容模板中调用的刷新方法
+const refreshPage = () => {
+    doRequest();
+};
+
 const showTaskError = (item) => {
     showError.value = true;
     currentTaskError.value = langCode.value === 'en' ? item.error_message_EN : item.error_message_CN;
