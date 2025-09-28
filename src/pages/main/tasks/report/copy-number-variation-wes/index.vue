@@ -47,7 +47,7 @@
         <q-splitter v-model="splitterModel" unit="px" before-class="">
             <template v-slot:before>
                 <div
-                    :class="['column', 'q-gutter-y-xs', 'q-pr-sm', { dimmed: showSticky && stickDone }]"
+                    :class="['column', 'q-gutter-y-xs', 'q-pr-sm', { dimmed: viewConfig.stickDone }]"
                     style="width:100%"
                 >
                     <q-input

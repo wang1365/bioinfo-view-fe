@@ -296,6 +296,19 @@
                             </q-chip>
                         </div>
                     </div>
+                    <div v-if="isStepDone('copy_number_variation_wes')">
+                        <span class="text-bold">{{ $t('CopyNumberVariationWes') }}</span>
+                        <q-chip color="primary" text-color="white">
+                            <span v-if="stepData.copy_number_variation_wes?.selected">
+                                {{ $t('ReportDefineSelected') }}</span>
+                            <span
+                                v-if="!stepData.copy_number_variation_wes?.selected && stepData.copy_number_variation_wes?.filtered"
+                            >{{ $t('ReportDefineSearched') }}</span>
+                            <span
+                                v-if="!stepData.copy_number_variation_wes?.selected && !stepData.copy_number_variation_wes?.filtered"
+                            >{{ $t('ReportDefineNoData') }}</span>
+                        </q-chip>
+                    </div>
                     <div v-if="isStepDone('copy_number_variation')">
                         <span class="text-bold">{{ $t('CopyNumberVariationAnalysis') }}</span>
                         <q-chip color="primary" text-color="white">
@@ -439,6 +452,7 @@ onMounted(() => {
 
 // 接收组件传递的过滤数据
 const stickDone = (name, data, nextstep) => {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> emit stickDone', name, data)
     stepData.value[name] = data
     viewConfig.value[name].stickDone = true
     /*     step.value = nextstep */
@@ -491,7 +505,7 @@ const createReport = () => {
             errorMessage(tabName + ': ' + t('DefineReportUnlockMessage'))
             return
         }
-        console.log(key, tabValid(key), Boolean(stepData.value[key]))
+        // console.log(key, tabValid(key), Boolean(stepData.value[key]))
     }
     if (!reportComment.value) {
         errorMessage(t('DefineReportCommentReuiredMessage'))
@@ -574,7 +588,7 @@ const loadIntros = () => {
         for (let k in raw) {
             result[dict[k]] = raw[k]
             stepData[dict[k]] = ''
-            if (dict[k] != 'qc') {
+            if (dict[k] !== 'qc') {
                 steps.push(dict[k])
             }
         }
