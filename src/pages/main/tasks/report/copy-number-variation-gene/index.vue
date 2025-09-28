@@ -402,14 +402,14 @@ const onSelectChange = (selectedRowKeys) => {
     selectedRows.value = selectedRowKeys;
     selectedDefaultRows.value = [];
     for (let item of selectedRowKeys) {
-        let finded = false;
+        let found = false;
         for (let lineNumber of defaultRows.value) {
             if (lineNumber === item) {
-                finded = true;
+                found = true;
                 break;
             }
         }
-        if (finded) {
+        if (found) {
             selectedDefaultRows.value.push(item);
         }
     }

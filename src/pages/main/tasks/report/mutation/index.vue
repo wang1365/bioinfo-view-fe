@@ -139,6 +139,7 @@ const { langCode } = storeToRefs(store)
 const { t } = useI18n()
 const germlineVue = ref(null)
 const somaticVue = ref(null)
+const wesVue = ref(null)
 const $q = useQuasar()
 const route = useRoute()
 const loaded = ref(false)
@@ -365,7 +366,17 @@ const stickFilter = () => {
             return false
         }
     }
-    console.log(filterData.value)
+
+    if (!filterData.value.wes && viewConfig.value.showMutWES) {
+        if (wesVue.value) {
+            let data = wesVue.value.getChangedData()
+            filterData.value.wes = data
+        } else {
+            errorMessage(t('DefineReportMutationSomaticUnlock'))
+            return false
+        }
+    }
+    console.log('================> mutation stickDone', filterData.value)
     emit('stickDone', filterData.value)
 }
 

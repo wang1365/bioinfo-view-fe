@@ -90,8 +90,7 @@
                                             </div>
                                             <div>{{ record['ExonicFunc.refGene'] }}</div>
                                             <div>
-                                                {{ record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt
-                                                }}
+                                                {{ record['Chr'] + ':' + record.Start + ' ' + record.Ref + '>' + record.Alt }}
                                             </div>
                                             <div>{{ record.NUChange }}</div>
                                             <div>{{ record.AAChange }}</div>
@@ -906,14 +905,14 @@ const onSelectChange = (selectedRowKeys) => {
     selectedRows.value = selectedRowKeys
     selectedDefaultRows.value = []
     for (let item of selectedRowKeys) {
-        let finded = false
+        let found = false
         for (let lineNumber of propSelectedDefaultRows.value) {
             if (lineNumber === item) {
-                finded = true
+                found = true
                 break
             }
         }
-        if (finded) {
+        if (found) {
             selectedDefaultRows.value.push(item)
         }
     }

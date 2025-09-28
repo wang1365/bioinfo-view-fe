@@ -13,7 +13,7 @@
                 :title="$t('MutationAnalysis')"
                 icon="candlestick_chart"
             >
-                <MutaionVue
+                <MutationVue
                     :viewConfig="viewConfig.mutation"
                     :intro="intros['mutation']"
                     :samples="samples"
@@ -39,6 +39,24 @@
                     :task="taskDetail"
                     @stickDone="stickDone('fusion', $event, 'copy_number_variation')"
                     @reset="stickDone('fusion', null, 'create')"
+                />
+            </q-step>
+
+            <q-step
+                v-if="tabValid('copy_number_variation_wes')"
+                :done="isStepDone('copy_number_variation_wes')"
+                name="copy_number_variation_wes"
+                :title="$t('CopyNumberVariationWes')"
+                icon="polyline"
+            >
+                <CopyNumberVariationVueWes
+                    :viewConfig="viewConfig.copy_number_variation_wes"
+                    :intro="intros['copy-number-variation']"
+                    :task="taskDetail"
+                    :samples="samples"
+                    :stepData="stepData.copy_number_variation_wes"
+                    @stickDone="stickDone('copy_number_variation_wes', $event, 'tumor_mutation_load')"
+                    @reset="stickDone('copy_number_variation_wes', null, 'create')"
                 />
             </q-step>
 
@@ -193,32 +211,33 @@
                                 {{ $t('GermlineMutationAnalysis') }}:
                                 <span
                                     v-if="stepData.mutation?.germline.selected"
-                                    >{{ $t('ReportDefineSelected') }}</span
-                                >
+                                    >{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered"
-                                    >{{
-                                        $t('ReportDefineSearched') }}</span
-                                >
+                                    >{{ $t('ReportDefineSearched') }}</span>
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && !stepData.mutation?.germline.filtered"
-                                    >{{
-                                        $t('ReportDefineNoData') }}</span
-                                >
+                                    >{{ $t('ReportDefineNoData') }}</span>
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutSomatic">
                                 {{ $t('SomaticMutationAnalysis') }}:
                                 <span v-if="stepData.mutation?.somatic.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
-                                    >{{
-                                    $t('ReportDefineSearched') }}</span
-                                >
+                                    >{{ $t('ReportDefineSearched') }}</span>
                                 <span
                                     v-if="!stepData.mutation?.somatic.selected && !stepData.mutation?.somatic.filtered"
-                                    >{{
-                                    $t('ReportDefineNoData') }}</span
-                                >
+                                >{{ $t('ReportDefineNoData') }}</span>
+                            </q-chip>
+                            <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutWES">
+                                {{ $t('MutationAnalysis') }}:
+                                <span v-if="stepData.mutation?.wes.selected">{{ $t('ReportDefineSelected') }}</span>
+                                <span
+                                    v-if="!stepData.mutation?.wes.selected && stepData.mutation?.wes.filtered"
+                                >{{ $t('ReportDefineSearched') }}</span>
+                                <span
+                                    v-if="!stepData.mutation?.wes.selected && !stepData.mutation?.wes.filtered"
+                                >{{ $t('ReportDefineNoData') }}</span>
                             </q-chip>
                         </div>
                     </div>
@@ -234,14 +253,10 @@
                                 <span v-if="stepData.fusion?.single.qt.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >{{
-                                    $t('ReportDefineSearched') }}</span
-                                >
+                                    >{{ $t('ReportDefineSearched') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >{{
-                                    $t('ReportDefineNoData') }}</span
-                                >
+                                    >{{ $t('ReportDefineNoData') }}</span>
                             </q-chip>
                             <q-chip
                                 color="primary"
@@ -252,14 +267,10 @@
                                 <span v-if="stepData.fusion?.single.qt.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >{{
-                                    $t('ReportDefineSearched') }}</span
-                                >
-                                <span
+                                    >{{$t('ReportDefineSearched') }}</span>
+                                <spa
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >{{
-                                    $t('ReportDefineNoData') }}</span
-                                >
+                                    >{{ $t('ReportDefineNoData') }}</spa>
                             </q-chip>
                             <q-chip
                                 color="primary"
@@ -270,40 +281,32 @@
                                 <span v-if="stepData.fusion?.single.qn.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
-                                    >{{
-                                    $t('ReportDefineSearched') }}</span
-                                >
+                                    >{{ $t('ReportDefineSearched') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered"
-                                    >{{
-                                    $t('ReportDefineNoData') }}</span
-                                >
+                                    >{{ $t('ReportDefineNoData') }}</span>
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionSomatic">
                                 {{ $t('SomaticCellFusionAnalysis') }}:
                                 <span v-if="stepData.fusion?.normal?.selected">{{ $t('ReportDefineSelected') }}</span>
-                                <span v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered">{{
-                                    $t('ReportDefineSearched') }}</span>
-                                <span v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered">{{
-                                    $t('ReportDefineNoData') }}</span>
+                                <span v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered">
+                                    {{ $t('ReportDefineSearched') }}</span>
+                                <span v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered">
+                                    {{ $t('ReportDefineNoData') }}</span>
                             </q-chip>
                         </div>
                     </div>
                     <div v-if="isStepDone('copy_number_variation')">
                         <span class="text-bold">{{ $t('CopyNumberVariationAnalysis') }}</span>
                         <q-chip color="primary" text-color="white">
-                            <span v-if="stepData.copy_number_variation?.table.selected">{{ $t('ReportDefineSelected')
-                            }}</span>
+                            <span v-if="stepData.copy_number_variation?.table.selected">
+                                {{ $t('ReportDefineSelected') }}</span>
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered"
-                                >{{
-                                    $t('ReportDefineSearched') }}</span
-                            >
+                                >{{ $t('ReportDefineSearched') }}</span>
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered"
-                                >{{
-                                    $t('ReportDefineNoData') }}</span
-                            >
+                                >{{ $t('ReportDefineNoData') }}</span>
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('bacteria')">
@@ -380,9 +383,10 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import CommonModuleVue from 'src/pages/main/tasks/report/common-module/index.vue'
 import QcVue from '../report/qc/index.vue'
-import MutaionVue from '../report/mutation/index.vue'
+import MutationVue from '../report/mutation/index.vue'
 import FusionVue from '../report/fusion/index.vue'
 import CopyNumberVariationVue from '../report/copy-number-variation/index.vue'
+import CopyNumberVariationVueWes from "../report/copy-number-variation-wes/index.vue";
 import MicrosatelliteInstabilityVue from '../report/microsatellite-instability/index.vue'
 import TumorMutationLoadVue from '../report/tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from '../report/homologous-recombination-defect/index.vue'
@@ -395,6 +399,7 @@ import { globalStore } from 'src/stores/global'
 import Pathogen from '../report/pathogen/index'
 import SpecificPathogen from '../report/pathogen/SpecificPathogen.vue'
 import PathogenVirus from '../report/pathogen-virus/index'
+
 const { t } = useI18n();
 const store = globalStore()
 const { langCode } = storeToRefs(store)
@@ -445,7 +450,7 @@ const stickDone = (name, data, nextstep) => {
     return true
 }
 const tabValid = (name) => {
-    return intros.value[name]
+    return name in viewConfig.value
 }
 const isStepDone = (name) => {
     return Boolean(stepData.value[name])
@@ -623,6 +628,11 @@ const loadViewConfig = () => {
                 config[dict[k]] = data[k]
                 config[dict[k]].showStick = true
                 config[dict[k]].stickDone = false
+
+                if (k === '拷贝数变异分析' && data[k].showCNVWES) {
+                    console.log('MMMMMMMMMMMMMMMMMMM', k, data[k])
+                    config['copy_number_variation_wes'] = { showCNVWES: true, showStick: true, stickDone: false }
+                }
                 keys.push(k)
             }
             if (data.commonModules) {

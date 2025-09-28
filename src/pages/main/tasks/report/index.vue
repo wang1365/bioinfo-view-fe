@@ -396,7 +396,7 @@ const readResultAndModuleJson = async () => {
 }
 
 const tabValid = (name) => {
-    if (name=='copy-number-variation-wes'){
+    if (name === 'copy-number-variation-wes') {
         if (module.value.copy_number_variation && module.value.copy_number_variation.showCNVWES)
         return true
     }
