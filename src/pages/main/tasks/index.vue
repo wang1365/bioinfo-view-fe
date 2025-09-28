@@ -39,16 +39,9 @@
             </div>
         </div>
         <div class="row q-gutter-sm q-my-sm">
-            <q-input
-                style="width:120px"
-                filled
-                dense
-                clearable
-                v-model="taskId"
-                :label="'ID'"
-            />
+            <q-input style="width:120px" filled dense clearable v-model="taskId" :label="'ID'" />
             <q-select
-                style="width:200px"
+                style="width:150px"
                 v-model="status"
                 :options="options"
                 stack-label
@@ -79,7 +72,7 @@
             />
             <q-input style="width:150px" filled dense clearable v-model="taskName" :label="$t('Task') + $t('Name')" />
             <q-input
-                style="width:300px"
+                style="width:250px"
                 readonly
                 filled
                 dense
