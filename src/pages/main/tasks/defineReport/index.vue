@@ -625,13 +625,23 @@ const loadViewConfig = () => {
             let keys = []
             for (let k in data) {
                 if (k === '质控') continue;
-                config[dict[k]] = data[k]
-                config[dict[k]].showStick = true
-                config[dict[k]].stickDone = false
-
-                if (k === '拷贝数变异分析' && data[k].showCNVWES) {
-                    console.log('MMMMMMMMMMMMMMMMMMM', k, data[k])
-                    config['copy_number_variation_wes'] = { showCNVWES: true, showStick: true, stickDone: false }
+                if (k === '拷贝数变异分析') {
+                    if (data[k].showCNVcircos) {
+                        const key = 'copy_number_variation'
+                        config[key] = data[k]
+                        config[key].showStick = true
+                        config[key].stickDone = false
+                    }
+                    if (data[k].showCNVWES) {
+                        const key = 'copy_number_variation_wes'
+                        config[key] = data[k]
+                        config[key].showStick = true
+                        config[key].stickDone = false
+                    }
+                } else {
+                    config[dict[k]] = data[k]
+                    config[dict[k]].showStick = true
+                    config[dict[k]].stickDone = false
                 }
                 keys.push(k)
             }
