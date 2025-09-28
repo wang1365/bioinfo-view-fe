@@ -3,7 +3,7 @@
         <PageTitle :title="$t('ReportPageTitle')" />
         <q-separator />
         <q-card class="q-mt-xs">
-            <q-card-section >
+            <q-card-section>
                 <div class="q-gutter-md row items-start q-pa-md">
                     <q-input
                         style="width:350px"
@@ -11,25 +11,25 @@
                         dense
                         :label="$t('Task') + ' ' + $t('Name')"
                         clearable
-                    ></q-input>
+                    />
                     <q-input
                         v-model="searchParams.patient_identifier"
                         dense
                         :label="$t('PatientNewFormPatientIdentificationNumber')"
                         clearable
-                    ></q-input>
+                    />
                     <q-input
                         v-model="searchParams.sample_meta_identifier"
                         dense
                         :label="$t('SampleListTableColumnSampleIdentificationNumber')"
                         clearable
-                    ></q-input>
+                    />
                     <q-input
                         v-model="searchParams.sample_identifier"
                         dense
                         :label="$t('DataNewFormDataIdentificationNumber')"
                         clearable
-                    ></q-input>
+                    />
                     <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                     <q-btn color="primary" :label="$t('Reset')" icon="close" @click="reset()" />
                 </div>
@@ -89,6 +89,7 @@ import { globalStore } from 'src/stores/global'
 const store = globalStore()
 const { langCode } = storeToRefs(store)
 const { t } = useI18n();
+import { format } from 'src/utils/time'
 
 const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
 const { apiGet, apiDelete, apiPost } = useApi()
@@ -185,6 +186,14 @@ const columns = computed(() => [
         align: 'left',
         field: (row) => row.comment,
         format: (val) => `${val}`,
+    },
+    {
+        name: 'comment',
+        required: true,
+        label: t('CreateTime'),
+        align: 'left',
+        field: (row) => row.create_time,
+        format: (val) => format(val),
     },
     {
         name: 'status',
