@@ -39,6 +39,14 @@
             </div>
         </div>
         <div class="row q-gutter-sm q-my-sm">
+            <q-input
+                style="width:120px"
+                filled
+                dense
+                clearable
+                v-model="taskId"
+                :label="'ID'"
+            />
             <q-select
                 style="width:200px"
                 v-model="status"
@@ -446,6 +454,7 @@ const statusKey = {
 };
 
 const status = ref('ALL');
+const taskId = ref('');
 const showProjectSelect = ref(false);
 const showError = ref(false);
 const currentTaskError = ref('');
@@ -491,6 +500,8 @@ const doRequest = (showLoading = true) => {
     const pageSize = pagination.value.pageSize;
     let params = `?page=${current}&size=${pageSize}`;
 
+    // 先加入ID查询条件
+    if (taskId.value) params += `&id=${taskId.value}`;
     if (status.value !== 'ALL') params += `&status=${status.value}`;
     if (projectId.value) params += `&project_id=${projectId.value}`;
     if (patient.value) params += `&patient=${patient.value}`;
@@ -582,6 +593,7 @@ const reset = () => {
     projectId.value = '';
     patient.value = '';
     libraryNumber.value = '';
+    taskId.value = '';
     status.value = 'ALL';
     doRequest();
 };
@@ -591,6 +603,7 @@ const backupSearch = () => {
     let data = {
         page: pagination.value.current,
         size: pagination.value.pageSize,
+        id: taskId.value,
         status: status.value,
         projectId: projectId.value,
         projectName: projectName.value,
