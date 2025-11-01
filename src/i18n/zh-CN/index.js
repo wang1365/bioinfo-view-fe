@@ -856,4 +856,13 @@ export default {
     SequenceInfoFormatError: '获取序列信息失败：响应数据格式错误',
     SequenceInfoFailed: '获取序列信息失败',
     UnknownError: '未知错误',
+    BatchSelect: '批量选择',
+    BatchSelectDialog: '批量选择对话框',
+    BatchInputPlaceholder: '请输入多个选项，用逗号分隔',
+    BatchMatchResults: '匹配结果',
+    Match: '匹配',
+    NoMatchFound: '未找到匹配项',
+    InputItems: '输入项目',
+    InputItemsPlaceholder: '请输入多个选项，用逗号分隔',
+    MatchResults: '匹配结果',
 }

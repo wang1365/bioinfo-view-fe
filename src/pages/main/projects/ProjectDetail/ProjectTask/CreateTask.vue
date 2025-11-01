@@ -175,35 +175,50 @@
                                                 </q-select> -->
                                             </div>
                                             <div class="col-6 q-pr-sm" v-if="param.type === 'multiSelect'">
-                                                <q-select
-                                                    :error="item.params[param.key].isError"
-                                                    use-input
-                                                    @focus="focusSelect(param.key, param)"
-                                                    @filter="filterFn"
-                                                    :error-message="param.error"
-                                                    v-model="item.params[param.key].value"
-                                                    :options="param.choices"
-                                                    :label="param.key"
-                                                    stack-label
-                                                    label-color="purple"
-                                                    filled
-                                                    option-value="'value'"
-                                                    multiple
-                                                    use-chips
-                                                >
-                                                    <q-tooltip>{{ param.description }}</q-tooltip>
-                                                    <template v-slot:option="scope">
-                                                        <q-item v-bind="scope.itemProps">
-                                                            <span
-                                                                >{{ langConfig.lang === 'cn' ? scope.opt.cnLabel : scope.opt.enLabel }}</span
-                                                            >
-                                                            <span
-                                                                class="q-ml-sm text-grey-6"
-                                                                >{{ scope.opt.value }}</span
-                                                            >
-                                                        </q-item>
-                                                    </template>
-                                                </q-select>
+                                                <div class="row">
+                                                    <div class="col-10">
+                                                        <q-select
+                                                            :error="item.params[param.key].isError"
+                                                            use-input
+                                                            @focus="focusSelect(param.key, param)"
+                                                            @filter="filterFn"
+                                                            :error-message="param.error"
+                                                            v-model="item.params[param.key].value"
+                                                            :options="param.choices"
+                                                            :label="param.key"
+                                                            stack-label
+                                                            label-color="purple"
+                                                            filled
+                                                            option-value="value"
+                                                            :option-label="(opt) => langConfig.lang === 'cn' ? opt.cnLabel : opt.enLabel"
+                                                            multiple
+                                                            use-chips
+                                                        >
+                                                            <q-tooltip>{{ param.description }}</q-tooltip>
+                                                            <template v-slot:option="scope">
+                                                                <q-item v-bind="scope.itemProps">
+                                                                    <span
+                                                                        >{{ langConfig.lang === 'cn' ? scope.opt.cnLabel : scope.opt.enLabel }}</span
+                                                                    >
+                                                                    <span
+                                                                        class="q-ml-sm text-grey-6"
+                                                                        >{{ scope.opt.value }}</span
+                                                                    >
+                                                                </q-item>
+                                                            </template>
+                                                        </q-select>
+                                                    </div>
+                                                    <div class="col-2 q-pl-xs">
+                                                        <q-btn
+                                                            icon="list_alt"
+                                                            color="primary"
+                                                            size="md"
+                                                            dense
+                                                            @click="openBatchSelectDialog(param.key, param)"
+                                                            :title="$t('BatchSelect')"
+                                                        />
+                                                    </div>
+                                                </div>
                                                 <!-- <q-select v-if="!param.choices[0].enLabel"
                                                     :error="item.params[param.key].isError" :error-message="param.error"
                                                     v-model="item.params[param.key].value" :options="param.choices"
@@ -485,6 +500,14 @@
         <q-dialog persistent v-model="openDataSelectorMulti">
             <TaskDataSelectMulti :projectDetail="props.projectDetail" @refresh="multiSelected($event)" />
         </q-dialog>
+
+        <!-- 批量选择对话框 -->
+        <BatchSelectDialog
+            v-model="batchSelectDialog"
+            :options="currentBatchSelectParam.choices || []"
+            :current-value="getCurrentBatchSelectValue()"
+            @confirm="handleBatchSelectConfirm"
+        />
     </q-card>
 </template>
 
@@ -493,6 +516,7 @@ import { ref, toRefs, onMounted } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
 import TaskDataSelectMulti from "./TaskDataSelectMulti.vue";
 import TaskDataSelectSingle from "./TaskDataSelectSingle.vue";
+import BatchSelectDialog from "./BatchSelectDialog.vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
@@ -526,6 +550,11 @@ const sampleSecondError = ref(false);
 const samplesError = ref(false);
 
 const csvOptions = ref({});
+
+// 批量选择相关变量
+const batchSelectDialog = ref(false);
+const currentBatchSelectKey = ref('');
+const currentBatchSelectParam = ref({});
 
 const emit = defineEmits(["taskCreated"])
 const props = defineProps({
@@ -735,6 +764,27 @@ const multiSelected = (event) => {
     }
     samples.value = event;
     console.log(event);
+};
+
+// 批量选择相关方法
+const openBatchSelectDialog = (key, param) => {
+    currentBatchSelectKey.value = key;
+    currentBatchSelectParam.value = param;
+    batchSelectDialog.value = true;
+};
+
+const getCurrentBatchSelectValue = () => {
+    if (!currentBatchSelectKey.value || !paramTabs.value[activeParamTab.value]) {
+        return [];
+    }
+    return paramTabs.value[activeParamTab.value].params[currentBatchSelectKey.value].value || [];
+};
+
+const handleBatchSelectConfirm = (data) => {
+    if (data.allItems && data.allItems.length > 0) {
+        // 更新multiSelect的值
+        paramTabs.value[activeParamTab.value].params[currentBatchSelectKey.value].value = data.allItems;
+    }
 };
 
 const confirmTaskCreated = () => {

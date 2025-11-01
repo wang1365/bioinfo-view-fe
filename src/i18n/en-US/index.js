@@ -864,4 +864,13 @@ export default {
     SequenceInfoFormatError: 'Failed to retrieve sequence information: response data format error',
     SequenceInfoFailed: 'Failed to retrieve sequence information',
     UnknownError: 'Unknown error',
+    BatchSelect: 'Batch Select',
+    BatchSelectDialog: 'Batch Selection Dialog',
+    BatchInputPlaceholder: 'Please enter multiple options, separated by commas',
+    BatchMatchResults: 'Match Results',
+    Match: 'Match',
+    NoMatchFound: 'No matches found',
+    InputItems: 'Input Items',
+    InputItemsPlaceholder: 'Please enter multiple options, separated by commas',
+    MatchResults: 'Match Results',
 }
