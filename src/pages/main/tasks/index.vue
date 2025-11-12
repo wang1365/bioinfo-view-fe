@@ -579,6 +579,7 @@ onUnmounted(() => {
     if (intId.value) {
         clearInterval(intId.value);
     }
+    backupSearch();
 });
 
 const reset = () => {
@@ -592,7 +593,6 @@ const reset = () => {
 };
 
 const backupSearch = () => {
-    // const { page, rowsPerPage } = props.pagination
     let data = {
         page: pagination.value.current,
         size: pagination.value.pageSize,
@@ -601,10 +601,10 @@ const backupSearch = () => {
         projectId: projectId.value,
         projectName: projectName.value,
         patient: patient.value,
-        libraryNumber: libraryNumber.value
+        libraryNumber: libraryNumber.value,
+        taskName: taskName.value
     };
-    sessionStorage.setItem('task-search', JSON.stringify(data));
-    console.log('backup', data);
+    sessionStorage.setItem('task-search-v2', JSON.stringify(data));
 };
 
 const loadBackup = () => {
@@ -618,7 +618,8 @@ const loadBackup = () => {
         projectName.value = data.projectName;
         patient.value = data.patient;
         libraryNumber.value = data.libraryNumber;
-        console.log('load', data);
+        taskId.value = data.id || '';
+        taskName.value = data.taskName || '';
     }
 };
 
