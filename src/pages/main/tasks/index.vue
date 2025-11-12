@@ -1,6 +1,5 @@
 <template>
-    <q-page class="q-px-sm q-pt-sm" style="overflow-x: hidden">
-        <PageTitle :title="$t('TaskPageListTitle')" />
+    <q-page class="q-px-sm q-pt-lg" style="overflow-x: hidden">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="task-cards">
                 <q-btn
@@ -23,7 +22,9 @@
                     @click="clickCard(options[1].value)"
                 >
                     <div class="task-card-content text-white">
-                        <div class="task-card-text">{{ $t('TaskPageListStatusRun') }} ({{ taskSummary.running_task_count }})</div>
+                        <div class="task-card-text">
+                            {{ $t('TaskPageListStatusRun') }} ({{ taskSummary.running_task_count }})
+                        </div>
                     </div>
                 </q-btn>
                 <q-btn
@@ -34,7 +35,9 @@
                     @click="clickCard(options[3].value)"
                 >
                     <div class="task-card-content text-white">
-                        <div class="task-card-text">{{ $t('TaskPageListStatusFail') }} ({{ taskSummary.failured_task_count }})</div>
+                        <div class="task-card-text">
+                            {{ $t('TaskPageListStatusFail') }} ({{ taskSummary.failured_task_count }})
+                        </div>
                     </div>
                 </q-btn>
                 <q-btn
@@ -45,7 +48,9 @@
                     @click="clickCard(options[2].value)"
                 >
                     <div class="task-card-content text-white">
-                        <div class="task-card-text">{{ $t('TaskPageListStatusQueue') }} ({{ taskSummary.pending_task_count }})</div>
+                        <div class="task-card-text">
+                            {{ $t('TaskPageListStatusQueue') }} ({{ taskSummary.pending_task_count }})
+                        </div>
                     </div>
                 </q-btn>
                 <q-btn
@@ -56,7 +61,9 @@
                     @click="clickCard(options[4].value)"
                 >
                     <div class="task-card-content text-white">
-                        <div class="task-card-text">{{ $t('TaskPageListStatusFinish') }} ({{ taskSummary.finished_task_count }})</div>
+                        <div class="task-card-text">
+                            {{ $t('TaskPageListStatusFinish') }} ({{ taskSummary.finished_task_count }})
+                        </div>
                     </div>
                 </q-btn>
             </div>
@@ -110,7 +117,13 @@
             <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
         </div>
         <div class="q-px-sm">
-            <a-table :columns="columns" :data-source="rows" :pagination="pagination" :scroll="{ x: 1800, y: 520 }" :loading="tableLoading">
+            <a-table
+                :columns="columns"
+                :data-source="rows"
+                :pagination="pagination"
+                :scroll="{ x: 1800, y: 550 }"
+                :loading="tableLoading"
+            >
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.dataIndex ==='name'">
                         <span class="text-weight-bolder" style="font-size: 14px" v-if="record.status !== 'FINISHED'">
@@ -717,6 +730,7 @@ const summary = async () => {
   gap: 8px
   padding: 6px 0
   align-items: stretch
+
 
 .task-card
   width: 100%
