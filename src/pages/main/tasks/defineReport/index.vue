@@ -13,15 +13,45 @@
                 :title="$t('MutationAnalysis')"
                 icon="candlestick_chart"
             >
-                <MutationVue
-                    :viewConfig="viewConfig.mutation"
-                    :intro="intros['mutation']"
-                    :samples="samples"
-                    :task="taskDetail"
-                    :stepData="stepData.mutation"
-                    @stickDone="stickDone('mutation', $event, 'fusion')"
-                    @reset="stickDone('mutation', null, 'create')"
-                />
+                <div>
+                    <SelectedWesMutationTable
+                        :selected-keys="stepData.mutation?.wes?.selectedRows || []"
+                        @openAdd="mutationWesDlg = true"
+                        @remove="onRemoveMutationWes"
+                        @bulkRemove="onBulkRemoveMutationWes"
+                    />
+                    <q-dialog v-model="mutationWesDlg" maximized>
+                        <q-card>
+                            <q-card-section class="row items-center q-pb-none">
+                                <div class="text-h6">{{ $t('WESMutationAnalysis') }}</div>
+                                <q-space />
+                                <q-btn icon="close" flat round dense v-close-popup />
+                            </q-card-section>
+                            <q-card-section>
+                                <MutationWES
+                                    ref="mutationWesRef"
+                                    :samples="samples"
+                                    :task="taskDetail"
+                                    :rows="wesData.rows"
+                                    :options="wesData.options"
+                                    :searchParams="wesData.searchParams"
+                                    :selectedRows="wesData.selectedRows"
+                                    :selectedDefaultRows="wesData.selectedDefaultRows"
+                                    :defaultReportRows="wesData.defaultReportRows"
+                                    :showSticky="false"
+                                    :stickDone="false"
+                                    v-model:loading="wesLoading"
+                                    @filterChange="onWesFilterChange"
+                                />
+                            </q-card-section>
+                            <q-separator />
+                            <q-card-actions align="right">
+                                <q-btn flat :label="$t('Cancel')" v-close-popup />
+                                <q-btn color="primary" :label="$t('Confirm')" @click="onConfirmMutationWes()" />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+                </div>
             </q-step>
 
             <q-step
@@ -49,15 +79,32 @@
                 :title="$t('CopyNumberVariationWes')"
                 icon="polyline"
             >
-                <CopyNumberVariationVueWes
-                    :viewConfig="viewConfig.copy_number_variation_wes"
-                    :intro="intros['copy-number-variation']"
-                    :task="taskDetail"
-                    :samples="samples"
-                    :stepData="stepData.copy_number_variation_wes"
-                    @stickDone="stickDone('copy_number_variation_wes', $event, 'tumor_mutation_load')"
-                    @reset="stickDone('copy_number_variation_wes', null, 'create')"
-                />
+                <div>
+                    <SelectedWesCnvTable
+                        :selected-keys="stepData.copy_number_variation_wes?.selectedRows || []"
+                        :samples="samples"
+                        @openAdd="cnvWesDlg = true"
+                        @remove="onRemoveCnvWes"
+                        @bulkRemove="onBulkRemoveCnvWes"
+                    />
+                    <q-dialog v-model="cnvWesDlg" maximized>
+                        <q-card>
+                            <q-card-section class="row items-center q-pb-none">
+                                <div class="text-h6">{{ $t('CopyNumberVariationWes') }}</div>
+                                <q-space />
+                                <q-btn icon="close" flat round dense v-close-popup />
+                            </q-card-section>
+                            <q-card-section>
+                                <CopyNumberVariationVueWes ref="cnvWesRef" :samples="samples" :task="taskDetail" />
+                            </q-card-section>
+                            <q-separator />
+                            <q-card-actions align="right">
+                                <q-btn flat :label="$t('Cancel')" v-close-popup />
+                                <q-btn color="primary" :label="$t('Confirm')" @click="onConfirmCnvWes()" />
+                            </q-card-actions>
+                        </q-card>
+                    </q-dialog>
+                </div>
             </q-step>
 
             <q-step
@@ -211,33 +258,40 @@
                                 {{ $t('GermlineMutationAnalysis') }}:
                                 <span
                                     v-if="stepData.mutation?.germline.selected"
-                                    >{{ $t('ReportDefineSelected') }}</span>
+                                    >{{ $t('ReportDefineSelected') }}</span
+                                >
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && stepData.mutation?.germline.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span>
+                                    >{{ $t('ReportDefineSearched') }}</span
+                                >
                                 <span
                                     v-if="!stepData.mutation?.germline.selected && !stepData.mutation?.germline.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span>
+                                    >{{ $t('ReportDefineNoData') }}</span
+                                >
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutSomatic">
                                 {{ $t('SomaticMutationAnalysis') }}:
                                 <span v-if="stepData.mutation?.somatic.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.mutation?.somatic.selected && stepData.mutation?.somatic.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span>
+                                    >{{ $t('ReportDefineSearched') }}</span
+                                >
                                 <span
                                     v-if="!stepData.mutation?.somatic.selected && !stepData.mutation?.somatic.filtered"
-                                >{{ $t('ReportDefineNoData') }}</span>
+                                    >{{ $t('ReportDefineNoData') }}</span
+                                >
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.mutation.showMutWES">
                                 {{ $t('MutationAnalysis') }}:
                                 <span v-if="stepData.mutation?.wes.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.mutation?.wes.selected && stepData.mutation?.wes.filtered"
-                                >{{ $t('ReportDefineSearched') }}</span>
+                                    >{{ $t('ReportDefineSearched') }}</span
+                                >
                                 <span
                                     v-if="!stepData.mutation?.wes.selected && !stepData.mutation?.wes.filtered"
-                                >{{ $t('ReportDefineNoData') }}</span>
+                                    >{{ $t('ReportDefineNoData') }}</span
+                                >
                             </q-chip>
                         </div>
                     </div>
@@ -253,10 +307,12 @@
                                 <span v-if="stepData.fusion?.single.qt.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span>
+                                    >{{ $t('ReportDefineSearched') }}</span
+                                >
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span>
+                                    >{{ $t('ReportDefineNoData') }}</span
+                                >
                             </q-chip>
                             <q-chip
                                 color="primary"
@@ -267,10 +323,12 @@
                                 <span v-if="stepData.fusion?.single.qt.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qt.selected && stepData.fusion?.single.qt.filtered"
-                                    >{{$t('ReportDefineSearched') }}</span>
+                                    >{{$t('ReportDefineSearched') }}</span
+                                >
                                 <spa
                                     v-if="!stepData.fusion?.single.qt.selected && !stepData.fusion?.single.qt.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</spa>
+                                    >{{ $t('ReportDefineNoData') }}</spa
+                                >
                             </q-chip>
                             <q-chip
                                 color="primary"
@@ -281,18 +339,22 @@
                                 <span v-if="stepData.fusion?.single.qn.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span
                                     v-if="!stepData.fusion?.single.qn.selected && stepData.fusion?.single.qn.filtered"
-                                    >{{ $t('ReportDefineSearched') }}</span>
+                                    >{{ $t('ReportDefineSearched') }}</span
+                                >
                                 <span
                                     v-if="!stepData.fusion?.single.qn.selected && !stepData.fusion?.single.qn.filtered"
-                                    >{{ $t('ReportDefineNoData') }}</span>
+                                    >{{ $t('ReportDefineNoData') }}</span
+                                >
                             </q-chip>
                             <q-chip color="primary" text-color="white" v-if="viewConfig.fusion.showFusionSomatic">
                                 {{ $t('SomaticCellFusionAnalysis') }}:
                                 <span v-if="stepData.fusion?.normal?.selected">{{ $t('ReportDefineSelected') }}</span>
                                 <span v-if="!stepData.fusion?.normal?.selected && stepData.fusion?.normal?.filtered">
-                                    {{ $t('ReportDefineSearched') }}</span>
+                                    {{ $t('ReportDefineSearched') }}</span
+                                >
                                 <span v-if="!stepData.fusion?.normal?.selected && !stepData.fusion?.normal?.filtered">
-                                    {{ $t('ReportDefineNoData') }}</span>
+                                    {{ $t('ReportDefineNoData') }}</span
+                                >
                             </q-chip>
                         </div>
                     </div>
@@ -300,26 +362,32 @@
                         <span class="text-bold">{{ $t('CopyNumberVariationWes') }}</span>
                         <q-chip color="primary" text-color="white">
                             <span v-if="stepData.copy_number_variation_wes?.selected">
-                                {{ $t('ReportDefineSelected') }}</span>
+                                {{ $t('ReportDefineSelected') }}</span
+                            >
                             <span
                                 v-if="!stepData.copy_number_variation_wes?.selected && stepData.copy_number_variation_wes?.filtered"
-                            >{{ $t('ReportDefineSearched') }}</span>
+                                >{{ $t('ReportDefineSearched') }}</span
+                            >
                             <span
                                 v-if="!stepData.copy_number_variation_wes?.selected && !stepData.copy_number_variation_wes?.filtered"
-                            >{{ $t('ReportDefineNoData') }}</span>
+                                >{{ $t('ReportDefineNoData') }}</span
+                            >
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('copy_number_variation')">
                         <span class="text-bold">{{ $t('CopyNumberVariationAnalysis') }}</span>
                         <q-chip color="primary" text-color="white">
                             <span v-if="stepData.copy_number_variation?.table.selected">
-                                {{ $t('ReportDefineSelected') }}</span>
+                                {{ $t('ReportDefineSelected') }}</span
+                            >
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && stepData.copy_number_variation?.table.filtered"
-                                >{{ $t('ReportDefineSearched') }}</span>
+                                >{{ $t('ReportDefineSearched') }}</span
+                            >
                             <span
                                 v-if="!stepData.copy_number_variation?.table.selected && !stepData.copy_number_variation?.table.filtered"
-                                >{{ $t('ReportDefineNoData') }}</span>
+                                >{{ $t('ReportDefineNoData') }}</span
+                            >
                         </q-chip>
                     </div>
                     <div v-if="isStepDone('bacteria')">
@@ -397,9 +465,12 @@ import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import CommonModuleVue from 'src/pages/main/tasks/report/common-module/index.vue'
 import QcVue from '../report/qc/index.vue'
 import MutationVue from '../report/mutation/index.vue'
+import MutationWES from '../report/mutation/wes/MutationWES.vue'
 import FusionVue from '../report/fusion/index.vue'
 import CopyNumberVariationVue from '../report/copy-number-variation/index.vue'
 import CopyNumberVariationVueWes from "../report/copy-number-variation-wes/index.vue";
+import SelectedWesMutationTable from './components/SelectedWesMutationTable.vue'
+import SelectedWesCnvTable from './components/SelectedWesCnvTable.vue'
 import MicrosatelliteInstabilityVue from '../report/microsatellite-instability/index.vue'
 import TumorMutationLoadVue from '../report/tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from '../report/homologous-recombination-defect/index.vue'
@@ -409,6 +480,11 @@ import { useI18n } from "vue-i18n";
 import { computed, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'
+import { getCsvHeader, getCsvDataAndSetLineNumber } from 'src/utils/csv'
+import { readTaskMuFile } from 'src/api/task'
+import { listVerdictByPatient } from 'src/api/verdict'
+import { getCohortStatus } from 'src/api/report'
+import { populations } from '../report/mutation/index'
 import Pathogen from '../report/pathogen/index'
 import SpecificPathogen from '../report/pathogen/SpecificPathogen.vue'
 import PathogenVirus from '../report/pathogen-virus/index'
@@ -443,6 +519,160 @@ const viewConfig = ref({
     specificPathogen: { showStick: true, stickDone: false },
 })
 const commonTabs = ref([])
+
+const mutationWesDlg = ref(false)
+const cnvWesDlg = ref(false)
+const mutationWesRef = ref(null)
+const cnvWesRef = ref(null)
+const wesLoading = ref(false)
+const wesData = ref({
+  rows: [],
+  options: {},
+  searchParams: {},
+  selectedRows: [],
+  selectedDefaultRows: [],
+  defaultReportRows: [],
+})
+
+const onConfirmMutationWes = () => {
+  if (mutationWesRef.value && mutationWesRef.value.getChangedData) {
+    const data = mutationWesRef.value.getChangedData()
+    const prev = stepData.value.mutation?.wes?.selectedRows || []
+    const merged = Array.from(new Set([...(prev || []), ...(data.selectedRows || [])]))
+    const mergedDefault = Array.from(new Set([...(stepData.value.mutation?.wes?.selectedDefaultRows || []), ...(data.selectedDefaultRows || [])]))
+    const payload = { wes: { ...data, selectedRows: merged, selectedDefaultRows: mergedDefault } }
+    stickDone('mutation', payload)
+    mutationWesDlg.value = false
+  }
+}
+
+const onConfirmCnvWes = () => {
+  if (cnvWesRef.value && cnvWesRef.value.getChangedData) {
+    const data = cnvWesRef.value.getChangedData()
+    const prev = stepData.value.copy_number_variation_wes?.selectedRows || []
+    const merged = Array.from(new Set([...(prev || []), ...(data.selectedRows || [])]))
+    const mergedDefault = Array.from(new Set([...(stepData.value.copy_number_variation_wes?.selectedDefaultRows || []), ...(data.selectedDefaultRows || [])]))
+    const payload = { ...data, selectedRows: merged, selectedDefaultRows: mergedDefault }
+    stickDone('copy_number_variation_wes', payload)
+    cnvWesDlg.value = false
+  }
+}
+
+const onWesFilterChange = (data) => {
+  wesData.value.searchParams = data.searchParams
+  wesData.value.selectedRows = data.selectedRows
+  wesData.value.selectedDefaultRows = data.selectedDefaultRows
+}
+
+watch(mutationWesDlg, async (visible) => {
+  if (visible) {
+    await loadWesDataForDefineReport()
+  }
+})
+
+const loadWesDataForDefineReport = async () => {
+  wesLoading.value = true
+  const userVerdicts = await listVerdictByPatient(globalStore().currentUser.username)
+  const verdictMap = new Map()
+  userVerdicts.forEach(v => verdictMap.set(v.gene_identifier, v.result))
+
+  const cohortData = await getCohortStatus(taskDetail.value.id)
+  const cohortMap = new Map()
+  cohortData.forEach(v => cohortMap.set(v.gene_info, (v.cnt / v.total).toFixed(2)))
+
+  const res = await readTaskMuFile(route.params.id, 'Mut_WES')
+  const headNames = getCsvHeader(res, '\t').map(h => h.indexOf('(') > -1 ? h.substring(0, h.indexOf('(')) + '_' : h)
+  const csvRows = getCsvDataAndSetLineNumber(res, { splitter: '\t', hasHeaderLine: true, fields: headNames })
+  csvRows.forEach((row, i) => {
+    row.id = i
+    row.Gene_Related_Diseases = row.Gene_Related_Diseases ? row.Gene_Related_Diseases.split(';') : []
+    row.ACMG = row.ACMG ? row.ACMG.split(';') : []
+    row.HPO = row.HPO ? row.HPO.split(';') : []
+    const gene_identifier = `${row['Gene.refGene']}|${row['GeneDetail.refGene']}|${row['AAChange']}|${row.Chr}|${row.Start}|${row.End}|${row.Ref}|${row.Alt}`
+    row.geneIdentifier = gene_identifier
+    row.userVerdict = verdictMap.get(gene_identifier) || []
+    row.cohort = cohortMap.get(gene_identifier)
+  })
+
+  let phenoType = new Set(), diseases = new Set(), diseaseInheritanceModes = new Set(), gene = new Set(), prioritizationTier = new Set(), acmgPathogenicity = new Set(), clinvarPathogenicity = new Set(), genoType = new Set(), seqQuality = new Set(), chromosome = new Set()
+  csvRows.forEach(row => {
+    row.HPO.forEach(hpo => phenoType.add(hpo))
+    row.Gene_Related_Diseases.forEach(grd => diseases.add(grd.split('|')[1]))
+    row.Gene_Related_Diseases.forEach(grd => grd.split('|')[0].split('/').forEach(t => diseaseInheritanceModes.add(t)))
+    gene.add(row['Gene.refGene'])
+    prioritizationTier.add(row.Class)
+    acmgPathogenicity.add(row.ACMG_result)
+    clinvarPathogenicity.add(row.Clinvar)
+    genoType.add(row.Genotype)
+    seqQuality.add(row.Depth_Quality)
+    chromosome.add(row.Chr)
+  })
+
+  wesData.value.rows = csvRows
+  wesData.value.options = {
+    phenoType: Array.from(phenoType).sort(),
+    phenoTypeInit: Array.from(phenoType).sort(),
+    diseases: Array.from(diseases).sort(),
+    diseasesInit: Array.from(diseases).sort(),
+    diseaseInheritanceModes: Array.from(diseaseInheritanceModes).sort(),
+    diseaseInheritanceModesInit: Array.from(diseaseInheritanceModes).sort(),
+    gene: Array.from(gene).sort(),
+    geneInit: Array.from(gene).sort(),
+    prioritizationTier: Array.from(prioritizationTier).sort(),
+    prioritizationTierInit: Array.from(prioritizationTier).sort(),
+    acmgPathogenicity: Array.from(acmgPathogenicity).sort(),
+    acmgPathogenicityInit: Array.from(acmgPathogenicity).sort(),
+    clinvarPathogenicity: Array.from(clinvarPathogenicity).sort(),
+    clinvarPathogenicityInit: [],
+    genoType: Array.from(genoType).sort(),
+    genoTypeInit: Array.from(genoType).sort(),
+    seqQuality: Array.from(seqQuality).sort(),
+    seqQualityInit: Array.from(seqQuality).sort(),
+    chromosome: Array.from(chromosome).sort(),
+    chromosomeInit: Array.from(chromosome).sort(),
+    populationAlleleFrequency: Object.getOwnPropertyNames(populations),
+    populationAlleleFrequencyInit: Object.getOwnPropertyNames(populations),
+  }
+
+  wesData.value.defaultReportRows = []
+  wesData.value.selectedRows = []
+  wesData.value.selectedDefaultRows = []
+  wesData.value.searchParams = {}
+
+  wesLoading.value = false
+}
+
+const onRemoveMutationWes = (lineNumber) => {
+  const prev = stepData.value.mutation || {}
+  const cur = prev.wes || { selectedRows: [], selectedDefaultRows: [] }
+  const sr = (cur.selectedRows || []).filter(ln => ln !== lineNumber)
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => ln !== lineNumber)
+  stepData.value.mutation = { ...prev, wes: { ...cur, selectedRows: sr, selectedDefaultRows: sdr } }
+}
+
+const onBulkRemoveMutationWes = (lineNumbers) => {
+  const prev = stepData.value.mutation || {}
+  const cur = prev.wes || { selectedRows: [], selectedDefaultRows: [] }
+  const set = new Set(lineNumbers || [])
+  const sr = (cur.selectedRows || []).filter(ln => !set.has(ln))
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => !set.has(ln))
+  stepData.value.mutation = { ...prev, wes: { ...cur, selectedRows: sr, selectedDefaultRows: sdr } }
+}
+
+const onRemoveCnvWes = (lineNumber) => {
+  const cur = stepData.value.copy_number_variation_wes || { selectedRows: [], selectedDefaultRows: [] }
+  const sr = (cur.selectedRows || []).filter(ln => ln !== lineNumber)
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => ln !== lineNumber)
+  stepData.value.copy_number_variation_wes = { ...cur, selectedRows: sr, selectedDefaultRows: sdr }
+}
+
+const onBulkRemoveCnvWes = (lineNumbers) => {
+  const cur = stepData.value.copy_number_variation_wes || { selectedRows: [], selectedDefaultRows: [] }
+  const set = new Set(lineNumbers || [])
+  const sr = (cur.selectedRows || []).filter(ln => !set.has(ln))
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => !set.has(ln))
+  stepData.value.copy_number_variation_wes = { ...cur, selectedRows: sr, selectedDefaultRows: sdr }
+}
 
 onMounted(() => {
     loadTaskSamples()

@@ -131,7 +131,7 @@
                                         </div>
                                         <div class="col">
                                             <div class="text-grey">Allele Fraction</div>
-                                            <div>{{ (record.Mutation_Rate_ * 100).toFixed(2) || '-' }}%</div>
+                                            <div>{{ formatAF(record) }}%</div>
 
                                             <div class="text-grey">Depth</div>
                                             <div>{{ record.Seq_Depths_ || '-' }}</div>
@@ -144,7 +144,7 @@
                                 <template v-else>
                                     <div class="row q-gutter-x-sm">
                                         <div>{{ record.Depth_Quality }}(DP:{{ record.Seq_Depths_ }})</div>
-                                        <div>AF: {{ (record.Mutation_Rate_ * 100).toFixed(2) || '-' }}%</div>
+                                        <div>AF: {{ formatAF(record) }}%</div>
                                     </div>
                                 </template>
                             </template>
@@ -952,6 +952,15 @@ const filterChange = () => {
     emit('filterChange', getChangedData())
 }
 defineExpose({ getChangedData })
+
+function formatAF(record) {
+    const v = record?.Mutation_Rate_
+    const n = Number(v)
+    if (!isFinite(n)) {
+        return '-'
+    }
+    return (n * 100).toFixed(2)
+}
 </script>
 
 <style lang="scss" scoped>
