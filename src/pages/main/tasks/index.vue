@@ -2,38 +2,61 @@
     <q-page class="q-px-sm q-pt-sm" style="overflow-x: hidden">
         <PageTitle :title="$t('TaskPageListTitle')" />
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div
-                style="height: 70px;display: flex; padding-bottom: 5px; padding-top: 15px;justify-content: space-around;justify-items: center;align-items: center; "
-            >
-                <q-btn color="white" @click="clickCard(options[0].value)">
-                    <div class="text-black" style="width: 7vw">
-                        <div class="text-h6 text-center text-bold">{{ total_task_count }}</div>
-                        <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusAll') }}</div>
+            <div class="task-cards">
+                <q-btn
+                    class="task-card"
+                    :class="{ 'task-card--active': status === 'ALL' }"
+                    color="white"
+                    unelevated
+                    @click="clickCard(options[0].value)"
+                >
+                    <div class="task-card-content text-black">
+                        <div class="task-card-text">{{ $t('TaskPageListStatusAll') }} ({{ total_task_count }})</div>
                     </div>
                 </q-btn>
 
-                <q-btn color="primary" @click="clickCard(options[1].value)">
-                    <div class="text-white" style="width: 7vw">
-                        <div class="text-white text-h6 text-center text-bold">{{ taskSummary.running_task_count }}</div>
-                        <div class="text-white text-h6 text-center text-bold">{{ $t('TaskPageListStatusRun') }}</div>
+                <q-btn
+                    class="task-card"
+                    :class="{ 'task-card--active': status === 'RUNNING' }"
+                    color="primary"
+                    unelevated
+                    @click="clickCard(options[1].value)"
+                >
+                    <div class="task-card-content text-white">
+                        <div class="task-card-text">{{ $t('TaskPageListStatusRun') }} ({{ taskSummary.running_task_count }})</div>
                     </div>
                 </q-btn>
-                <q-btn color="negative" @click="clickCard(options[3].value)">
-                    <div class="text-white" style="width: 7vw">
-                        <div class="text-h6 text-center text-bold">{{ taskSummary.failured_task_count }}</div>
-                        <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusFail') }}</div>
+                <q-btn
+                    class="task-card"
+                    :class="{ 'task-card--active': status === 'FAILURED' }"
+                    color="negative"
+                    unelevated
+                    @click="clickCard(options[3].value)"
+                >
+                    <div class="task-card-content text-white">
+                        <div class="task-card-text">{{ $t('TaskPageListStatusFail') }} ({{ taskSummary.failured_task_count }})</div>
                     </div>
                 </q-btn>
-                <q-btn color="secondary" @click="clickCard(options[2].value)">
-                    <div class="text-white" style="width: 7vw">
-                        <div class="text-h6 text-center text-bold">{{ taskSummary.pending_task_count }}</div>
-                        <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusQueue') }}</div>
+                <q-btn
+                    class="task-card"
+                    :class="{ 'task-card--active': status === 'PENDING' }"
+                    color="secondary"
+                    unelevated
+                    @click="clickCard(options[2].value)"
+                >
+                    <div class="task-card-content text-white">
+                        <div class="task-card-text">{{ $t('TaskPageListStatusQueue') }} ({{ taskSummary.pending_task_count }})</div>
                     </div>
                 </q-btn>
-                <q-btn color="positive" @click="clickCard(options[4].value)">
-                    <div class="text-white" style="width: 7vw">
-                        <div class="text-h6 text-center text-bold">{{ taskSummary.finished_task_count }}</div>
-                        <div class="text-h6 text-center text-bold">{{ $t('TaskPageListStatusFinish') }}</div>
+                <q-btn
+                    class="task-card"
+                    :class="{ 'task-card--active': status === 'FINISHED' }"
+                    color="positive"
+                    unelevated
+                    @click="clickCard(options[4].value)"
+                >
+                    <div class="task-card-content text-white">
+                        <div class="task-card-text">{{ $t('TaskPageListStatusFinish') }} ({{ taskSummary.finished_task_count }})</div>
                     </div>
                 </q-btn>
             </div>
@@ -683,4 +706,53 @@ const summary = async () => {
     });
 };
 </script>
-<style lang="sass"></style>
+<style lang="sass">
+.task-cards
+  display: grid
+  grid-template-columns: repeat(5, minmax(0, 1fr))
+  gap: 8px
+  padding: 6px 0
+  align-items: stretch
+
+.task-card
+  width: 100%
+  height: 56px
+  border-radius: 10px
+  box-shadow: 0 2px 8px rgba(0,0,0,.08)
+  transition: transform .2s ease, box-shadow .2s ease
+  padding: 0
+  min-width: 0
+  justify-self: center
+
+.task-card-content
+  width: 100%
+  height: 100%
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 0 6px
+
+.task-card-text
+  font-size: 14px
+  font-weight: 600
+  line-height: 1
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+@media (min-width: 1280px)
+  .task-card
+    max-width: 10vw
+
+.task-card:hover
+  transform: translateY(-2px)
+  box-shadow: 0 6px 16px rgba(0,0,0,.12)
+
+.task-card--active
+  transform: translateY(-2px)
+  box-shadow: 0 8px 20px rgba(0,0,0,.18)
+  outline: 2px solid rgba(255,255,255,.6)
+
+.task-card.bg-white.task-card--active
+  outline: 2px solid #1976d2
+</style>
