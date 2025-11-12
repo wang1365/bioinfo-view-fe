@@ -4,7 +4,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="task-cards">
                 <q-btn
-                    class="task-card"
+                    class="task-card task-card--all"
                     :class="{ 'task-card--active': status === 'ALL' }"
                     color="white"
                     unelevated
@@ -16,7 +16,7 @@
                 </q-btn>
 
                 <q-btn
-                    class="task-card"
+                    class="task-card task-card--primary"
                     :class="{ 'task-card--active': status === 'RUNNING' }"
                     color="primary"
                     unelevated
@@ -27,7 +27,7 @@
                     </div>
                 </q-btn>
                 <q-btn
-                    class="task-card"
+                    class="task-card task-card--negative"
                     :class="{ 'task-card--active': status === 'FAILURED' }"
                     color="negative"
                     unelevated
@@ -38,7 +38,7 @@
                     </div>
                 </q-btn>
                 <q-btn
-                    class="task-card"
+                    class="task-card task-card--secondary"
                     :class="{ 'task-card--active': status === 'PENDING' }"
                     color="secondary"
                     unelevated
@@ -49,7 +49,7 @@
                     </div>
                 </q-btn>
                 <q-btn
-                    class="task-card"
+                    class="task-card task-card--positive"
                     :class="{ 'task-card--active': status === 'FINISHED' }"
                     color="positive"
                     unelevated
@@ -723,6 +723,7 @@ const summary = async () => {
   padding: 0
   min-width: 0
   justify-self: center
+  border: 2px solid transparent
 
 .task-card-content
   width: 100%
@@ -748,11 +749,37 @@ const summary = async () => {
   transform: translateY(-2px)
   box-shadow: 0 6px 16px rgba(0,0,0,.12)
 
-.task-card--active
-  transform: translateY(-2px)
-  box-shadow: 0 8px 20px rgba(0,0,0,.18)
-  outline: 2px solid rgba(255,255,255,.6)
+.task-card--all
+  border-color: rgba(0,0,0,.12)
 
-.task-card.bg-white.task-card--active
-  outline: 2px solid #1976d2
+.task-card--all:not(.task-card--active)
+  background: linear-gradient(0deg, #fafafa, #ffffff)
+
+.task-card--all:hover:not(.task-card--active)
+  border-color: rgba(0,0,0,.24)
+  box-shadow: 0 4px 12px rgba(0,0,0,.12)
+
+.task-card--active
+  transform: translateY(-2px) scale(1.02)
+  box-shadow: 0 8px 24px rgba(0,0,0,.22)
+
+.task-card--active.task-card--primary
+  border-color: #fff
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-primary), 0 8px 24px rgba(0,0,0,.22)
+
+.task-card--active.task-card--negative
+  border-color: #fff
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-negative), 0 8px 24px rgba(0,0,0,.22)
+
+.task-card--active.task-card--secondary
+  border-color: #fff
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-secondary), 0 8px 24px rgba(0,0,0,.22)
+
+.task-card--active.task-card--positive
+  border-color: #fff
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-positive), 0 8px 24px rgba(0,0,0,.22)
+
+.task-card--active.task-card--all
+  border-color: var(--q-primary)
+  box-shadow: 0 0 0 2px var(--q-primary), 0 8px 24px rgba(0,0,0,.22)
 </style>
