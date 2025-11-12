@@ -110,7 +110,7 @@
             <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
         </div>
         <div class="q-px-sm">
-            <a-table :columns="columns" :data-source="rows" :pagination="pagination" :scroll="{ x: 1800, y: 520 }">
+            <a-table :columns="columns" :data-source="rows" :pagination="pagination" :scroll="{ x: 1800, y: 520 }" :loading="tableLoading">
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.dataIndex ==='name'">
                         <span class="text-weight-bolder" style="font-size: 14px" v-if="record.status !== 'FINISHED'">
@@ -482,6 +482,7 @@ const taskName = ref('');
 const { apiGet, downloadData, apiDelete } = useApi();
 const router = useRouter();
 const rows = ref([]);
+const tableLoading = ref(false);
 
 const taskSummary = ref({
     canceled_task_count: 0,
@@ -510,6 +511,7 @@ const doRequest = (showLoading = true) => {
     if (showLoading) {
         $q.loading.show();
     }
+    tableLoading.value = true;
     console.log('==============> show', pagination.value);
 
     const current = pagination.value.current;
@@ -535,6 +537,7 @@ const doRequest = (showLoading = true) => {
             if (showLoading) {
                 $q.loading.hide();
             }
+            tableLoading.value = false;
         }
     );
 };
@@ -551,6 +554,7 @@ const showTaskError = (item) => {
 
 const clickCard = (v) => {
     status.value = v;
+    pagination.value.current = 1;
     doRequest();
 };
 
