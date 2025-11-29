@@ -1,19 +1,13 @@
 <template>
-    <div>
+    <div class="bg-grey-3 q-mb-xs">
         <div v-if="sampleType === 'single'">
             <div
-                class="row q-my-sm q-pa-sm shadow-1 items-center relative-position"
+                class="row q-my-xs shadow-1 items-center relative-position"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
             >
-                <q-badge
-                    class="absolute-top-right q-mr-sm q-mt-xs"
-                    color="primary"
-                    text-color="white"
-                    rounded
-                    :label="fileIndex + 1"
-                />
+                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
                 <div class="col-auto" v-if="!file.sampleFirst?.id">
                     <q-btn icon="add" color="primary" dense outline round @click="$emit('select-single', fileIndex)" />
                 </div>
@@ -53,18 +47,12 @@
 
         <div v-if="sampleType === 'double'">
             <div
-                class="row q-my-sm q-pa-sm shadow-1 items-center relative-position"
+                class="row q-my-xs shadow-1 items-center relative-position"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
             >
-                <q-badge
-                    class="absolute-top-right q-mr-sm q-mt-xs"
-                    color="primary"
-                    text-color="white"
-                    rounded
-                    :label="fileIndex + 1"
-                />
+                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
                 <div class="col-auto" v-if="!file.sampleFirst?.id">
                     <q-btn icon="add" color="primary" dense outline round @click="$emit('select-first', fileIndex)" />
                 </div>
@@ -134,18 +122,12 @@
 
         <div v-if="sampleType === 'multiple'">
             <div
-                class="row q-my-sm q-pa-sm shadow-1 items-center relative-position"
+                class="row q-my-xs shadow-1 items-center relative-position"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
             >
-                <q-badge
-                    class="absolute-top-right q-mr-sm q-mt-xs"
-                    color="primary"
-                    text-color="white"
-                    rounded
-                    :label="fileIndex + 1"
-                />
+                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
                 <div class="col-auto" v-if="!file.samples || file.samples.length === 0">
                     <q-btn icon="add" color="primary" dense outline round @click="$emit('select-multi', fileIndex)" />
                 </div>
@@ -207,18 +189,12 @@
 
         <div v-if="sampleType === 'double_multiple'">
             <div
-                class="row q-my-sm q-pa-sm shadow-1 items-center relative-position"
+                class="row q-my-xs shadow-1 items-center relative-position"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
             >
-                <q-badge
-                    class="absolute-top-right q-mr-sm q-mt-xs"
-                    color="primary"
-                    text-color="white"
-                    rounded
-                    :label="fileIndex + 1"
-                />
+                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
                 <div class="col-auto" v-if="!file.samplesFirst || file.samplesFirst.length === 0">
                     <q-btn icon="add" color="primary" dense round @click="$emit('select-first-multi', fileIndex)" />
                 </div>
