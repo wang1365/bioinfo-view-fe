@@ -141,6 +141,28 @@
             <div class="col-auto q-ml-lg">
                 <q-btn icon="add" color="primary" :label="$t('Add') + ' ' + $t('Data')" @click="$emit('add-file')" />
             </div>
+            <div class="col-auto q-ml-sm">
+                <q-btn
+                    color="primary"
+                    dense
+                    outline
+                    flat
+                    icon="download"
+                    :label="$t('PageListTableTemplate')"
+                    @click="downloadCsvTemplate"
+                />
+            </div>
+            <div class="col-auto q-ml-sm">
+                <q-file
+                    v-model="csvFile"
+                    dense
+                    outlined
+                    :label="$t('PageListTableUpload')"
+                    :display-value="''"
+                    accept=".csv,text/csv"
+                    @update:model-value="handleCsvUpload"
+                />
+            </div>
             <div class="col"></div>
         </div>
 
@@ -156,6 +178,7 @@
             @select-second-multi="selectSecondMulti"
             @delete-file="onDeleteFile"
             @add-file="$emit('add-file')"
+            @bulk-import="onBulkImport"
         />
 
         <q-dialog persistent v-model="openDataSelectorSingle">
@@ -173,6 +196,9 @@ import TaskDataSelectSingle from './TaskDataSelectSingle.vue'
 import TaskDataSelectMulti from './TaskDataSelectMulti.vue'
 import { useI18n } from 'vue-i18n'
 import { defineProps, defineEmits, ref } from 'vue'
+import { useApi } from 'src/api/apiBase'
+import { buildModelQuery } from 'src/api/modelQueryBuilder'
+import { parseCsvToList } from 'src/utils/csv'
 
 useI18n()
 
@@ -190,6 +216,8 @@ const props = defineProps({
 })
 
 const localItem = ref(props.item)
+const csvFile = ref(null)
+const { apiPost } = useApi()
 
 const openDataSelectorSingle = ref(false)
 const openDataSelectorMulti = ref(false)
@@ -292,6 +320,94 @@ const multiSelected = (event) => {
     file.sampleDetails[1] = { customName: event.sample_identifier, sampleRatio: null, id: event.id }
   }
   samples.value = event
+}
+
+const onBulkImport = (imported) => {
+  if (!Array.isArray(imported)) return
+  localItem.value.files = imported
+}
+
+const downloadCsvTemplate = () => {
+  let headers = []
+  if (props.sampleType === 'single') {
+    headers = ['Data ID']
+  } else if (props.sampleType === 'double') {
+    headers = ['Data 1 ID', 'Data 2 ID']
+  } else if (props.sampleType === 'multiple') {
+    headers = Array.from({ length: 100 }, (_, i) => `Data ${i + 1} ID`)
+  } else {
+    headers = ['Data ID']
+  }
+  const content = headers.join(',') + '\n'
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' })
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(blob)
+  a.download = `template_${props.sampleType}.csv`
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
+const handleCsvUpload = async () => {
+  if (!csvFile.value) return
+  const file = Array.isArray(csvFile.value) ? csvFile.value[0] : csvFile.value
+  if (!file) return
+  const text = await file.text()
+  const { rows } = parseCsvToList(text, ',', true)
+  const identifiers = []
+  for (const row of rows) {
+    const values = Object.values(row).filter((v) => v && v.length > 0)
+    for (const v of values) identifiers.push(v)
+  }
+  const uniqIds = Array.from(new Set(identifiers))
+  if (uniqIds.length === 0) {
+    csvFile.value = null
+    return
+  }
+
+  const query = buildModelQuery([], { identifier__in: uniqIds })
+  const params = `?page=1&size=${uniqIds.length}`
+  apiPost(`/model_query/sample${params}`, (res) => {
+    const pool = res.data.results || []
+    const byId = new Map(pool.map((item) => [item.identifier, item]))
+    const imported = []
+    for (const row of rows) {
+      const values = Object.values(row).filter((v) => v && v.length > 0)
+      if (props.sampleType === 'single') {
+        const first = byId.get(values[0]) || { identifier: values[0], notFound: true }
+        const fileItem = {
+          sampleFirst: first,
+          sampleFirstError: false,
+          sampleDetails: [{ customName: first.sample_identifier || first.identifier || '', sampleRatio: null, id: first.id }],
+        }
+        imported.push(fileItem)
+      } else if (props.sampleType === 'double') {
+        const first = byId.get(values[0]) || { identifier: values[0], notFound: true }
+        const second = byId.get(values[1]) || { identifier: values[1], notFound: true }
+        const fileItem = {
+          sampleFirst: first,
+          sampleSecond: second,
+          sampleFirstError: false,
+          sampleSecondError: false,
+          sampleDetails: [
+            { customName: first.sample_identifier || first.identifier || '', sampleRatio: null, id: first.id },
+            { customName: second.sample_identifier || second.identifier || '', sampleRatio: null, id: second.id },
+          ],
+        }
+        imported.push(fileItem)
+      } else if (props.sampleType === 'multiple') {
+        const samples = values.map((v) => byId.get(v) || { identifier: v, notFound: true })
+        const fileItem = {
+          samples,
+          samplesError: false,
+          sampleDetails: samples.map((s) => ({ customName: s.sample_identifier || s.identifier || '', sampleRatio: null, id: s.id })),
+        }
+        imported.push(fileItem)
+      }
+    }
+    localItem.value.files = imported
+    csvFile.value = null
+  }, query)
 }
 
 const emit = defineEmits([

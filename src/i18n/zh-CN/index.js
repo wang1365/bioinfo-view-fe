@@ -543,7 +543,7 @@ export default {
 
     // 表格头部的按钮
     PageListTableExport: '导出数据',
-    PageListTableUpload: '批量上传',
+    PageListTableUpload: '上传数据',
     PageListTableTemplate: '模板下载',
     // 弹出选择框翻译
     PopupSelectCurrrentSelected: '当前选择的是',

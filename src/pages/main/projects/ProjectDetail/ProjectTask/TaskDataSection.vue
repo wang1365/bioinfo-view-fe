@@ -22,8 +22,8 @@
                             outline
                             flat
                             dense
-                            color="primary"
-                            text-color="white"
+                            :color="file.sampleFirst?.notFound ? 'red' : 'primary'"
+                            :text-color="file.sampleFirst?.notFound ? 'white' : 'white'"
                         >
                             {{ file.sampleFirst?.identifier }}
                         </q-chip>
@@ -68,8 +68,8 @@
                             outline
                             flat
                             dense
-                            color="primary"
-                            text-color="white"
+                            :color="file.sampleFirst?.notFound ? 'red' : 'primary'"
+                            :text-color="file.sampleFirst?.notFound ? 'white' : 'white'"
                         >
                             {{ file.sampleFirst?.identifier }}
                         </q-chip>
@@ -97,8 +97,8 @@
                             class="glossy q-ml-sm"
                             flat
                             outline
-                            color="secondary"
-                            text-color="white"
+                            :color="file.sampleSecond?.notFound ? 'red' : 'secondary'"
+                            :text-color="file.sampleSecond?.notFound ? 'white' : 'white'"
                         >
                             {{ file.sampleSecond?.identifier}}
                         </q-chip>
@@ -143,8 +143,8 @@
                                     outline
                                     flat
                                     dense
-                                    color="primary"
-                                    text-color="white"
+                                    :color="sample.notFound ? 'red' : 'primary'"
+                                    :text-color="sample.notFound ? 'white' : 'white'"
                                 >
                                     {{ sample.identifier || sample.sample_identifier }}
                                 </q-chip>
@@ -225,7 +225,11 @@
                     <div class="row">
                         <div class="col-6">
                             <template v-for="sample in file.samplesFirst" :key="sample.id">
-                                <q-chip class="glossy q-mr-sm" color="primary" text-color="white">
+                                <q-chip
+                                    class="glossy q-mr-sm"
+                                    :color="sample.notFound ? 'red' : 'primary'"
+                                    :text-color="sample.notFound ? 'white' : 'white'"
+                                >
                                     {{ sample.identifier || sample.sample_identifier }}
                                 </q-chip>
                                 <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
@@ -238,7 +242,11 @@
                         </div>
                         <div class="col-6">
                             <template v-for="sample in file.samplesSecond" :key="sample.id">
-                                <q-chip class="glossy q-mr-sm" color="secondary" text-color="white">
+                                <q-chip
+                                    class="glossy q-mr-sm"
+                                    :color="sample.notFound ? 'red' : 'secondary'"
+                                    :text-color="sample.notFound ? 'white' : 'white'"
+                                >
                                     {{ sample.identifier || sample.sample_identifier }}
                                 </q-chip>
                                 <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
@@ -262,16 +270,16 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
-defineProps({
+const props = defineProps({
   files: { type: Array, required: true },
   sampleType: { type: String, required: true },
   supportSampleRatio: { type: Boolean, default: false }
 })
 
-defineEmits([
+const emit = defineEmits([
   'select-single',
   'select-first',
   'select-second',
@@ -279,8 +287,9 @@ defineEmits([
   'select-first-multi',
   'select-second-multi',
   'delete-file',
-  'add-file'
+  'add-file',
+  'bulk-import'
 ])
 
-useI18n()
+const { t } = useI18n()
 </script>
