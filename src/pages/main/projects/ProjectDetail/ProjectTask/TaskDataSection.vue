@@ -49,48 +49,59 @@
                 <div class="col-auto" v-if="!file.sampleFirst?.id">
                     <q-btn icon="add" color="primary" dense outline round @click="$emit('select-first', fileIndex)" />
                 </div>
-                <div class="col-auto" v-if="!file.sampleSecond?.id">
-                    <q-btn icon="add" color="secondary" dense outline @click="$emit('select-second', fileIndex)" />
-                </div>
+
                 <div class="col-auto" v-if="file.sampleFirst?.id || file.sampleSecond?.id">
                     <q-btn icon="delete" color="red" dense round @click="$emit('delete-file', fileIndex)" />
                 </div>
-                <div class="col">
-                    <q-chip
-                        v-if="file.sampleFirst?.identifier"
-                        class="glossy q-mr-sm"
-                        outline
-                        dense
-                        color="primary"
-                        text-color="white"
-                    >
-                        {{ file.sampleFirst?.identifier }}
-                    </q-chip>
-                    <div v-if="file.sampleFirst?.fastq1_path" class="q-ml-xs text-grey-7">
-                        {{ file.sampleFirst.fastq1_path }}
+                <div class="col row q-gutter-xs">
+                    <div class="col bg-grey-3">
+                        <q-chip
+                            v-if="file.sampleFirst?.identifier"
+                            class="col glossy q-mr-sm"
+                            outline
+                            dense
+                            color="primary"
+                            text-color="white"
+                        >
+                            {{ file.sampleFirst?.identifier }}
+                        </q-chip>
+                        <div v-if="file.sampleFirst?.fastq1_path" class="col q-ml-xs text-grey-7">
+                            {{ file.sampleFirst.fastq1_path }}
+                        </div>
+                        <div v-if="file.sampleFirst?.fastq2_path" class="col q-ml-xs text-grey-7">
+                            {{ file.sampleFirst.fastq2_path }}
+                        </div>
                     </div>
-                    <div v-if="file.sampleFirst?.fastq2_path" class="q-ml-xs text-grey-7">
-                        {{ file.sampleFirst.fastq2_path }}
+                    <div class="col q-pl-xs bg-grey-3">
+                        <div class="col-auto" v-if="!file.sampleSecond?.id">
+                            <q-btn
+                                icon="add"
+                                color="secondary"
+                                dense
+                                outline
+                                @click="$emit('select-second', fileIndex)"
+                            />
+                        </div>
+                        <q-chip
+                            v-if="file.sampleSecond?.identifier "
+                            class="glossy q-ml-sm"
+                            color="secondary"
+                            text-color="white"
+                        >
+                            {{ file.sampleSecond?.identifier}}
+                        </q-chip>
+                        <div v-if="file.sampleSecond?.fastq1_path" class="q-ml-xs text-grey-7">
+                            {{ file.sampleSecond.fastq1_path }}
+                        </div>
+                        <div v-if="file.sampleSecond?.fastq2_path" class="q-ml-xs text-grey-7">
+                            {{ file.sampleSecond.fastq2_path }}
+                        </div>
+                        <span
+                            v-if="file.sampleFirstError || file.sampleSecondError"
+                            class="text-red text-bold"
+                            >{{ `${$t('Data')} ${$t('Required')}` }}</span
+                        >
                     </div>
-                    <q-chip
-                        v-if="file.sampleSecond?.identifier "
-                        class="glossy q-ml-sm"
-                        color="secondary"
-                        text-color="white"
-                    >
-                        {{ file.sampleSecond?.identifier}}
-                    </q-chip>
-                    <div v-if="file.sampleSecond?.fastq1_path" class="q-ml-xs text-grey-7">
-                        {{ file.sampleSecond.fastq1_path }}
-                    </div>
-                    <div v-if="file.sampleSecond?.fastq2_path" class="q-ml-xs text-grey-7">
-                        {{ file.sampleSecond.fastq2_path }}
-                    </div>
-                    <span
-                        v-if="file.sampleFirstError || file.sampleSecondError"
-                        class="text-red text-bold"
-                        >{{ `${$t('Data')} ${$t('Required')}` }}</span
-                    >
                 </div>
             </div>
         </div>
