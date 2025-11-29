@@ -154,7 +154,7 @@
             @select-multi="selectMulti"
             @select-first-multi="selectFirstMulti"
             @select-second-multi="selectSecondMulti"
-            @delete-file="$emit('delete-file', $event)"
+            @delete-file="onDeleteFile"
             @add-file="$emit('add-file')"
         />
 
@@ -196,6 +196,44 @@ const openDataSelectorMulti = ref(false)
 const activeParamFileIndex = ref(0)
 const currentSample = ref('first')
 const samples = ref([])
+
+const onDeleteFile = (fileIndex) => {
+  const files = localItem.value.files
+  if (files.length > 1) {
+    // 删除整行由父级处理
+    emit('delete-file', fileIndex)
+    return
+  }
+  // 仅一行时，清空当前行的数据
+  const file = files[fileIndex]
+  switch (props.sampleType) {
+    case 'single': {
+      file.sampleFirst = {}
+      file.sampleFirstError = false
+      break
+    }
+    case 'double': {
+      file.sampleFirst = {}
+      file.sampleSecond = {}
+      file.sampleFirstError = false
+      file.sampleSecondError = false
+      break
+    }
+    case 'multiple': {
+      file.samples = []
+      file.samplesError = false
+      break
+    }
+    case 'double_multiple': {
+      file.samplesFirst = []
+      file.samplesSecond = []
+      file.samplesFirstError = false
+      file.samplesSecondError = false
+      break
+    }
+  }
+  file.sampleDetails = [{ customName: '', sampleRatio: null }]
+}
 
 const selectSingle = (index) => {
   activeParamFileIndex.value = index
@@ -256,7 +294,7 @@ const multiSelected = (event) => {
   samples.value = event
 }
 
-defineEmits([
+const emit = defineEmits([
   'delete-file',
   'add-file'
 ])
