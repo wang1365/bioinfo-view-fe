@@ -76,7 +76,6 @@ import {globalStore} from 'src/stores/global'
 import {errorMessage} from 'src/utils/notify'
 import {useI18n} from 'vue-i18n'
 import {toLocalString} from "src/utils/time"
-import CreateCdcTask from "pages/main/projects/ProjectDetail/ProjectTask/CreateCdcTask.vue";
 
 const {t} = useI18n()
 const store = globalStore()
