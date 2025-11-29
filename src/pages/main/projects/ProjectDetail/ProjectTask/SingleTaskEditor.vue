@@ -139,9 +139,21 @@
         <div class="row items-center q-my-sm">
             <div class="col-auto text-subtitle2">{{ $t('Data') + ':' }}</div>
             <div class="col-auto q-ml-lg">
-                <q-btn icon="add" color="primary" :label="$t('Add') + ' ' + $t('Data')" @click="$emit('add-file')" />
+                <q-btn icon="add" color="primary" flat :label="$t('Add') + $t('Data')" @click="$emit('add-file')" />
             </div>
             <div class="col-auto q-ml-sm">
+                <div class="relative-position inline-block">
+                    <q-btn color="primary" dense outline flat icon="upload" :label="$t('PageListTableUpload')" />
+                    <q-file
+                        v-model="csvFile"
+                        class="absolute-full"
+                        style="opacity:0;"
+                        accept=".csv,text/csv"
+                        @update:model-value="handleCsvUpload"
+                    />
+                </div>
+            </div>
+            <div class="col-auto q-mx-lg">
                 <q-btn
                     color="primary"
                     dense
@@ -152,18 +164,6 @@
                     @click="downloadCsvTemplate"
                 />
             </div>
-            <div class="col-auto q-ml-sm">
-                <q-file
-                    v-model="csvFile"
-                    dense
-                    outlined
-                    :label="$t('PageListTableUpload')"
-                    :display-value="''"
-                    accept=".csv,text/csv"
-                    @update:model-value="handleCsvUpload"
-                />
-            </div>
-            <div class="col"></div>
         </div>
 
         <TaskDataSection

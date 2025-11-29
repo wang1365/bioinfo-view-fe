@@ -810,6 +810,7 @@ export default {
     NoValidData: 'No valid Gene Data',
 
     SampleRatio: 'Sample Ratio',
+    DataIdentifierNotFound: 'Data identifier not found',
 
     // Custom Reference Genome
     CustomReferenceGenomeList: 'Custom Reference Genome List',

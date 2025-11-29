@@ -829,6 +829,7 @@ export default {
     NoValidData: '没有输入有效基因数据',
 
     SampleRatio: '采样比例',
+    DataIdentifierNotFound: '数据识别号不存在',
 
     // Custom Reference Genome related
     ConfirmDeleteReferenceGenome: '确定要删除此参考基因组吗？',

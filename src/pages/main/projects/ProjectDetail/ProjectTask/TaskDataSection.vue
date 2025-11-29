@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-grey-3 q-mb-xs">
+    <div class="q-mb-xs">
         <div v-if="sampleType === 'single'">
             <div
-                class="row q-my-xs shadow-1 items-center relative-position"
+                class="row q-my-sm items-center relative-position bg-grey-3"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
@@ -27,6 +27,11 @@
                         >
                             {{ file.sampleFirst?.identifier }}
                         </q-chip>
+                        <span
+                            v-if="file.sampleFirst?.notFound"
+                            class="text-red text-bold"
+                            >{{ $t('DataIdentifierNotFound') }}</span
+                        >
                         <div class="col q-ml-xs">
                             <div v-if="file.sampleFirst?.fastq1_path" class="text-grey-7">
                                 {{ file.sampleFirst.fastq1_path }}
@@ -47,17 +52,14 @@
 
         <div v-if="sampleType === 'double'">
             <div
-                class="row q-my-xs shadow-1 items-center relative-position"
+                class="row q-my-sm items-center relative-position bg-grey-3"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
             >
                 <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
-                <div class="col-auto" v-if="!file.sampleFirst?.id">
+                <div class="col-auto">
                     <q-btn icon="add" color="primary" dense outline flat @click="$emit('select-first', fileIndex)" />
-                </div>
-
-                <div class="col-auto" v-if="file.sampleFirst?.id || file.sampleSecond?.id">
                     <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
                 </div>
                 <div class="col row q-gutter-xs">
@@ -73,6 +75,11 @@
                         >
                             {{ file.sampleFirst?.identifier }}
                         </q-chip>
+                        <span
+                            v-if="file.sampleFirst?.notFound"
+                            class="text-red text-bold"
+                            >{{ $t('DataIdentifierNotFound') }}</span
+                        >
                         <div class="col q-ml-xs">
                             <div v-if="file.sampleFirst?.fastq1_path" class="text-grey-7">
                                 {{ file.sampleFirst.fastq1_path }}
@@ -83,18 +90,11 @@
                         </div>
                     </div>
                     <div class="col row q-pl-xs bg-grey-3">
-                        <div class="col-1" v-if="!file.sampleSecond?.id">
-                            <q-btn
-                                icon="add"
-                                color="secondary"
-                                dense
-                                outline
-                                @click="$emit('select-second', fileIndex)"
-                            />
+                        <div class="col-1">
+                            <q-btn icon="add" color="primary" dense flat @click="$emit('select-second', fileIndex)" />
                         </div>
                         <q-chip
                             v-if="file.sampleSecond?.identifier "
-                            class="glossy q-ml-sm"
                             flat
                             outline
                             :color="file.sampleSecond?.notFound ? 'red' : 'secondary'"
@@ -102,11 +102,16 @@
                         >
                             {{ file.sampleSecond?.identifier}}
                         </q-chip>
-                        <div class="col q-ml-xs">
-                            <div v-if="file.sampleSecond?.fastq1_path" class="q-ml-xs text-grey-7">
+                        <span
+                            v-if="file.sampleSecond?.notFound"
+                            class="text-red text-bold"
+                            >{{ $t('DataIdentifierNotFound') }}</span
+                        >
+                        <div class="col q-ml-xs  text-grey-7">
+                            <div v-if="file.sampleSecond?.fastq1_path">
                                 {{ file.sampleSecond.fastq1_path }}
                             </div>
-                            <div v-if="file.sampleSecond?.fastq2_path" class="q-ml-xs text-grey-7">
+                            <div v-if="file.sampleSecond?.fastq2_path">
                                 {{ file.sampleSecond.fastq2_path }}
                             </div>
                         </div>
@@ -122,24 +127,22 @@
 
         <div v-if="sampleType === 'multiple'">
             <div
-                class="row q-my-xs shadow-1 items-center relative-position"
+                class="row q-my-sm items-center relative-position bg-grey-3"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
             >
                 <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
-                <div class="col-auto" v-if="!file.samples || file.samples.length === 0">
-                    <q-btn icon="add" color="primary" dense outline flat @click="$emit('select-multi', fileIndex)" />
-                </div>
-                <div class="col-auto" v-if="file.samples && file.samples.length > 0">
-                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
+                <div class="col-auto">
+                    <q-btn icon="add" color="primary" dense flat @click="$emit('select-multi', fileIndex)" />
+                    <q-btn icon="delete" color="red" dense flat @click="$emit('delete-file', fileIndex)" />
                 </div>
                 <div class="col">
                     <template v-for="(sample, i) in file.samples" :key="sample.id">
-                        <div class="row q-gutter-sm items-center q-mb-sm">
+                        <div class="row q-gutter-xs items-center">
                             <div class="col row bg-grey-3">
                                 <q-chip
-                                    class="col-2 glossy q-mr-sm"
+                                    class="col-2"
                                     outline
                                     flat
                                     dense
@@ -148,6 +151,11 @@
                                 >
                                     {{ sample.identifier || sample.sample_identifier }}
                                 </q-chip>
+                                <span
+                                    v-if="sample.notFound"
+                                    class="text-red text-bold"
+                                    >{{ $t('DataIdentifierNotFound') }}</span
+                                >
                                 <div class="col q-ml-xs">
                                     <div v-if="sample.fastq1_path" class="text-grey-7">
                                         {{ sample.fastq1_path }}
@@ -189,7 +197,7 @@
 
         <div v-if="sampleType === 'double_multiple'">
             <div
-                class="row q-my-xs shadow-1 items-center relative-position"
+                class="row q-my-sm shadow-1 items-center bg-grey-3 relative-position"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
@@ -232,6 +240,11 @@
                                 >
                                     {{ sample.identifier || sample.sample_identifier }}
                                 </q-chip>
+                                <span
+                                    v-if="sample.notFound"
+                                    class="text-red text-bold"
+                                    >{{ $t('DataIdentifierNotFound') }}</span
+                                >
                                 <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
                                     {{ sample.fastq1_path }}
                                 </div>
@@ -249,6 +262,11 @@
                                 >
                                     {{ sample.identifier || sample.sample_identifier }}
                                 </q-chip>
+                                <span
+                                    v-if="sample.notFound"
+                                    class="text-red text-bold"
+                                    >{{ $t('DataIdentifierNotFound') }}</span
+                                >
                                 <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
                                     {{ sample.fastq1_path }}
                                 </div>
