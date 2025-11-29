@@ -63,7 +63,7 @@
     <q-dialog v-model="openFlowSelector">
         <FlowSelect @flowSelected="flowSelected" />
     </q-dialog>
-    <q-dialog persistent v-model="openCreateTask">
+    <q-dialog persistent maximized v-model="openCreateTask">
         <CreateTask :flowDetail="flowDetail" :projectDetail="props.projectDetail" @taskCreated="taskCreated($event)" />
     </q-dialog>
 </template>

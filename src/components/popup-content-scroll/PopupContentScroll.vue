@@ -1,5 +1,5 @@
 <template>
-    <q-card class="popup-selector">
+    <q-card :class="['popup-selector', { fullscreen: props.fullscreen }]">
         <div class="popup-content">
             <div class="popup-content-header">
                 <q-toolbar>
@@ -33,5 +33,6 @@
 <script setup>
 const props = defineProps({
     title: { require: true, type: String },
+    fullscreen: { type: Boolean, default: false },
 });
 </script>

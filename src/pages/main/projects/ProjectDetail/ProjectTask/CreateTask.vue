@@ -1,6 +1,6 @@
 <template>
-    <q-card style="width: 80vw; max-width: 80vw">
-        <PopupContentScroll :title="$t('ProjectDetailPageCreateTask')">
+    <q-card style="width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh">
+        <PopupContentScroll :title="$t('ProjectDetailPageCreateTask')" :fullscreen="true">
             <template v-slot:contentBody>
                 <div class="row q-col-gutter-md q-pl-sm">
                     <q-input

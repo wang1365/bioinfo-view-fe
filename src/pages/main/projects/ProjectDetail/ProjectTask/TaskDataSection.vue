@@ -1,7 +1,5 @@
 <template>
     <div>
-        <div class="text-subtitle2">{{ $t('Data') + ':' }}</div>
-
         <div v-if="sampleType === 'single'">
             <div
                 class="row q-mb-sm q-px-sm shadow-1 items-center"
@@ -24,8 +22,14 @@
                         color="primary"
                         text-color="white"
                     >
-                        {{ file.sampleFirst.identifier }}
+                        {{ file.sampleFirst?.identifier }}
                     </q-chip>
+                    <div v-if="file.sampleFirst?.fastq1_path" class="q-ml-xs text-grey-7">
+                        {{ file.sampleFirst.fastq1_path }}
+                    </div>
+                    <div v-if="file.sampleFirst?.fastq2_path" class="q-ml-xs text-grey-7">
+                        {{ file.sampleFirst.fastq2_path }}
+                    </div>
                     <span
                         v-if="file.sampleFirstError"
                         class="text-red text-bold"
@@ -60,11 +64,28 @@
                         color="primary"
                         text-color="white"
                     >
-                        {{ file.sampleFirst.identifier }}
+                        {{ file.sampleFirst?.identifier }}
                     </q-chip>
-                    <q-chip v-if="file.sampleSecond?.identifier" class="glossy" color="secondary" text-color="white">
-                        {{ file.sampleSecond.identifier }}
+                    <div v-if="file.sampleFirst?.fastq1_path" class="q-ml-xs text-grey-7">
+                        {{ file.sampleFirst.fastq1_path }}
+                    </div>
+                    <div v-if="file.sampleFirst?.fastq2_path" class="q-ml-xs text-grey-7">
+                        {{ file.sampleFirst.fastq2_path }}
+                    </div>
+                    <q-chip
+                        v-if="file.sampleSecond?.identifier "
+                        class="glossy q-ml-sm"
+                        color="secondary"
+                        text-color="white"
+                    >
+                        {{ file.sampleSecond?.identifier}}
                     </q-chip>
+                    <div v-if="file.sampleSecond?.fastq1_path" class="q-ml-xs text-grey-7">
+                        {{ file.sampleSecond.fastq1_path }}
+                    </div>
+                    <div v-if="file.sampleSecond?.fastq2_path" class="q-ml-xs text-grey-7">
+                        {{ file.sampleSecond.fastq2_path }}
+                    </div>
                     <span
                         v-if="file.sampleFirstError || file.sampleSecondError"
                         class="text-red text-bold"
@@ -91,14 +112,15 @@
                     <template v-for="(sample, i) in file.samples" :key="sample.id">
                         <div class="row q-gutter-sm content-center q-mb-sm">
                             <div class="col-auto">
-                                <q-chip
-                                    class="glossy"
-                                    outline
-                                    dense
-                                    color="primary"
-                                    text-color="white"
-                                    >{{ sample.identifier }}</q-chip
-                                >
+                                <q-chip class="glossy" outline dense color="primary" text-color="white">
+                                    {{ sample.identifier }}
+                                </q-chip>
+                                <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
+                                    {{ sample.fastq1_path }}
+                                </div>
+                                <div v-if="sample.fastq2_path" class="q-ml-xs text-grey-7">
+                                    {{ sample.fastq2_path }}
+                                </div>
                             </div>
                             <q-input
                                 class="col-3"
@@ -152,26 +174,30 @@
                 <div class="col">
                     <div class="row">
                         <div class="col-6">
-                            <q-chip
-                                v-for="sample in file.samplesFirst"
-                                :key="sample.id"
-                                class="glossy q-mr-sm"
-                                color="primary"
-                                text-color="white"
-                            >
-                                {{ sample.identifier }}
-                            </q-chip>
+                            <template v-for="sample in file.samplesFirst" :key="sample.id">
+                                <q-chip class="glossy q-mr-sm" color="primary" text-color="white">
+                                    {{ sample.identifier || sample.sample_identifier }}
+                                </q-chip>
+                                <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
+                                    {{ sample.fastq1_path }}
+                                </div>
+                                <div v-if="sample.fastq2_path" class="q-ml-xs text-grey-7">
+                                    {{ sample.fastq2_path }}
+                                </div>
+                            </template>
                         </div>
                         <div class="col-6">
-                            <q-chip
-                                v-for="sample in file.samplesSecond"
-                                :key="sample.id"
-                                class="glossy q-mr-sm"
-                                color="secondary"
-                                text-color="white"
-                            >
-                                {{ sample.identifier }}
-                            </q-chip>
+                            <template v-for="sample in file.samplesSecond" :key="sample.id">
+                                <q-chip class="glossy q-mr-sm" color="secondary" text-color="white">
+                                    {{ sample.identifier || sample.sample_identifier }}
+                                </q-chip>
+                                <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
+                                    {{ sample.fastq1_path }}
+                                </div>
+                                <div v-if="sample.fastq2_path" class="q-ml-xs text-grey-7">
+                                    {{ sample.fastq2_path }}
+                                </div>
+                            </template>
                         </div>
                     </div>
                     <span
@@ -181,12 +207,6 @@
                     >
                 </div>
             </div>
-        </div>
-
-        <div class="q-my-sm">
-            <q-btn icon="add" color="primary" style="width: 100%" @click="$emit('add-file')"
-                >{{ $t('Add') }} {{ $t('Data') }}</q-btn
-            >
         </div>
     </div>
 </template>

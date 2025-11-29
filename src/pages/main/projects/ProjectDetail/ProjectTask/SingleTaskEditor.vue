@@ -1,9 +1,9 @@
 <template>
     <div class="q-pa-sm">
         <div class="text-subtitle2">{{ $t('CustomParameters') }}:</div>
-        <div class="row q-my-md">
+        <div class="row">
             <q-input
-                class="col-5"
+                class="col q-pr-sm"
                 v-model="localItem.name"
                 stack-label
                 label-color="purple"
@@ -12,11 +12,8 @@
                 :error="item.nameError"
                 :error-message="$t('Required')"
             />
-        </div>
-
-        <div class="row">
             <template v-for="param in paramsDefine" :key="param.key">
-                <div class="col-6 q-pr-sm" v-if="param.type === 'file'">
+                <div class="col q-pr-sm" v-if="param.type === 'file'">
                     <q-file
                         :error="localItem.params[param.key].isError"
                         :error-message="param.error"
@@ -29,7 +26,7 @@
                         <q-tooltip>{{ param.description }}</q-tooltip>
                     </q-file>
                 </div>
-                <div class="col-6 q-pr-sm" v-if="param.type === 'string'">
+                <div class="col q-pr-sm" v-if="param.type === 'string'">
                     <q-input
                         :error="localItem.params[param.key].isError"
                         :error-message="param.error"
@@ -42,7 +39,7 @@
                         <q-tooltip>{{ param.description }}</q-tooltip>
                     </q-input>
                 </div>
-                <div class="col-6 q-pr-sm" v-if="param.type === 'number'">
+                <div class="col q-pr-sm" v-if="param.type === 'number'">
                     <q-input
                         :error="localItem.params[param.key].isError"
                         :error-message="param.error"
@@ -56,7 +53,7 @@
                         <q-tooltip>{{ param.description }}</q-tooltip>
                     </q-input>
                 </div>
-                <div class="col-6 q-pr-sm" v-if="param.type === 'select'">
+                <div class="col q-pr-sm" v-if="param.type === 'select'">
                     <q-select
                         :error="localItem.params[param.key].isError"
                         use-input
@@ -74,7 +71,7 @@
                         option-value="'value'"
                     />
                 </div>
-                <div class="col-6 q-pr-sm" v-if="param.type === 'multiSelect'">
+                <div class="col q-pr-sm" v-if="param.type === 'multiSelect'">
                     <div class="row">
                         <div class="col-10">
                             <q-select
@@ -117,7 +114,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6 q-pr-sm" v-if="param.type === 'select-from-csv'">
+                <div class="col q-pr-sm" v-if="param.type === 'select-from-csv'">
                     <q-select
                         :error="localItem.params[param.key].isError"
                         @focus="focusSelect(param.key, param)"
@@ -137,6 +134,14 @@
                     </q-select>
                 </div>
             </template>
+        </div>
+
+        <div class="row items-center q-my-sm">
+            <div class="col-auto text-subtitle2">{{ $t('Data') + ':' }}</div>
+            <div class="col-auto q-ml-lg">
+                <q-btn icon="add" color="primary" :label="$t('Add') + ' ' + $t('Data')" @click="$emit('add-file')" />
+            </div>
+            <div class="col"></div>
         </div>
 
         <TaskDataSection
