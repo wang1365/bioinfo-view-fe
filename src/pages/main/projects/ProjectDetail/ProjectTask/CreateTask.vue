@@ -89,177 +89,18 @@
 
                         <template v-slot:after>
                             <div v-for="(item, index) in paramTabs" :key="index">
-                                <div class="q-pa-sm" v-if="activeParamTab === index">
-                                    <div class="text-subtitle2">{{ $t('CustomParameters') }}:</div>
-                                    <div class="row q-my-md">
-                                        <q-input
-                                            class="col-5"
-                                            v-model="item.name"
-                                            stack-label
-                                            label-color="purple"
-                                            filled
-                                            :label="$t('Task')"
-                                            :error="item.nameError"
-                                            :error-message="$t('Required')"
-                                        >
-                                        </q-input>
-                                    </div>
-
-                                    <div class="row">
-                                        <template v-for="param of paramsDefine" :key="param.key">
-                                            <div class="col-6 q-pr-sm" v-if="param.type === 'file'">
-                                                <q-file
-                                                    :error="item.params[param.key].isError"
-                                                    :error-message="param.error"
-                                                    v-model="item.params[param.key].value"
-                                                    stack-label
-                                                    label-color="purple"
-                                                    filled
-                                                    :label="param.key"
-                                                >
-                                                    <q-tooltip>{{param.description}}</q-tooltip>
-                                                </q-file>
-                                            </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type === 'string'">
-                                                <q-input
-                                                    :error="item.params[param.key].isError"
-                                                    :error-message="param.error"
-                                                    v-model="item.params[param.key].value"
-                                                    stack-label
-                                                    label-color="purple"
-                                                    filled
-                                                    :label="param.key"
-                                                >
-                                                    <q-tooltip>{{param.description}}</q-tooltip>
-                                                </q-input>
-                                            </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type === 'number'">
-                                                <q-input
-                                                    :error="item.params[param.key].isError"
-                                                    :error-message="param.error"
-                                                    type="number"
-                                                    stack-label
-                                                    label-color="purple"
-                                                    filled
-                                                    v-model="item.params[param.key].value"
-                                                    :label="param.key"
-                                                >
-                                                    <q-tooltip>{{param.description}}</q-tooltip>
-                                                </q-input>
-                                            </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type === 'select'">
-                                                <q-select
-                                                    :error="item.params[param.key].isError"
-                                                    use-input
-                                                    @focus="focusSelect(param.key, param)"
-                                                    @filter="filterFn"
-                                                    :error-message="param.error"
-                                                    v-model="item.params[param.key].value"
-                                                    :options="param.choices"
-                                                    :label="param.key"
-                                                    stack-label
-                                                    label-color="purple"
-                                                    filled
-                                                    :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
-                                                    :placeholder="param.description"
-                                                    option-value="'value'"
-                                                >
-                                                </q-select>
-                                                <!-- <q-select v-if="!param.choices[0].enLabel"
-                                                    :error="item.params[param.key].isError" :error-message="param.error"
-                                                    v-model="item.params[param.key].value" :options="param.choices"
-                                                    :label="param.key">
-                                                    <q-tooltip>{{
-                                                        param.description
-                                                    }}</q-tooltip>
-                                                </q-select> -->
-                                            </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type === 'multiSelect'">
-                                                <div class="row">
-                                                    <div class="col-10">
-                                                        <q-select
-                                                            :error="item.params[param.key].isError"
-                                                            use-input
-                                                            @focus="focusSelect(param.key, param)"
-                                                            @filter="filterFn"
-                                                            :error-message="param.error"
-                                                            v-model="item.params[param.key].value"
-                                                            :options="param.choices"
-                                                            :label="param.key"
-                                                            stack-label
-                                                            label-color="purple"
-                                                            filled
-                                                            option-value="value"
-                                                            :option-label="(opt) => langConfig.lang === 'cn' ? opt.cnLabel : opt.enLabel"
-                                                            multiple
-                                                            use-chips
-                                                        >
-                                                            <q-tooltip>{{ param.description }}</q-tooltip>
-                                                            <template v-slot:option="scope">
-                                                                <q-item v-bind="scope.itemProps">
-                                                                    <span
-                                                                        >{{ langConfig.lang === 'cn' ? scope.opt.cnLabel : scope.opt.enLabel }}</span
-                                                                    >
-                                                                    <span
-                                                                        class="q-ml-sm text-grey-6"
-                                                                        >{{ scope.opt.value }}</span
-                                                                    >
-                                                                </q-item>
-                                                            </template>
-                                                        </q-select>
-                                                    </div>
-                                                    <div class="col-2 q-pl-xs">
-                                                        <q-btn
-                                                            icon="list_alt"
-                                                            color="primary"
-                                                            size="md"
-                                                            dense
-                                                            @click="openBatchSelectDialog(param.key, param)"
-                                                            :title="$t('BatchSelect')"
-                                                        />
-                                                    </div>
-                                                </div>
-                                                <!-- <q-select v-if="!param.choices[0].enLabel"
-                                                    :error="item.params[param.key].isError" :error-message="param.error"
-                                                    v-model="item.params[param.key].value" :options="param.choices"
-                                                    :label="param.key" multiple use-chips>
-                                                    <q-tooltip>{{
-                                                        param.description
-                                                    }}</q-tooltip>
-                                                </q-select> -->
-                                            </div>
-                                            <div class="col-6 q-pr-sm" v-if="param.type === 'select-from-csv'">
-                                                <q-select
-                                                    :error="item.params[param.key].isError"
-                                                    @focus="focusSelect(param.key, param)"
-                                                    @filter="filterFn"
-                                                    :error-message="param.error"
-                                                    v-model="item.params[param.key].value"
-                                                    :options="csvOptions[param.key]"
-                                                    :label="param.key"
-                                                    stack-label
-                                                    label-color="purple"
-                                                    filled
-                                                    :option-label="langConfig.lang === 'cn' ? 'cnLabel' : 'enLabel'"
-                                                    option-value="'value'"
-                                                    use-chips
-                                                >
-                                                    <q-tooltip>{{ param.description }}</q-tooltip>
-                                                </q-select>
-                                            </div>
-                                        </template>
-                                    </div>
-
-                                    <TaskDataSection
-                                        :files="item.files"
+                                <div v-if="activeParamTab === index">
+                                    <SingleTaskEditor
+                                        :item="item"
+                                        :paramsDefine="paramsDefine"
+                                        :csvOptions="csvOptions"
+                                        :langConfig="langConfig"
                                         :sampleType="props.flowDetail.sample_type"
                                         :supportSampleRatio="props.flowDetail.support_sample_ratio"
-                                        @select-single="selectSingle"
-                                        @select-first="selectFirst"
-                                        @select-second="selectSecond"
-                                        @select-multi="selectMulti"
-                                        @select-first-multi="selectFirstMulti"
-                                        @select-second-multi="selectSecondMulti"
+                                        :focusSelect="focusSelect"
+                                        :filterFn="filterFn"
+                                        :openBatchSelectDialog="openBatchSelectDialog"
+                                        :projectDetail="props.projectDetail"
                                         @delete-file="(file_index) => deleteParamTabFiles(index, file_index)"
                                         @add-file="() => addParamTabFiles(index)"
                                     />
@@ -280,12 +121,6 @@
         <q-dialog persistent v-model="openDataSelectorMulti">
             <TaskDataSelect :multi-select="true" :projectDetail="props.projectDetail" @select="onSelectMulti($event)" />
         </q-dialog> -->
-        <q-dialog persistent v-model="openDataSelectorSingle">
-            <TaskDataSelectSingle :projectDetail="props.projectDetail" @refresh="singleSelected($event)" />
-        </q-dialog>
-        <q-dialog persistent v-model="openDataSelectorMulti">
-            <TaskDataSelectMulti :projectDetail="props.projectDetail" @refresh="multiSelected($event)" />
-        </q-dialog>
 
         <!-- 批量选择对话框 -->
         <BatchSelectDialog
@@ -300,10 +135,10 @@
 <script setup>
 import { ref, toRefs, onMounted } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
-import TaskDataSelectMulti from "./TaskDataSelectMulti.vue";
-import TaskDataSelectSingle from "./TaskDataSelectSingle.vue";
+// selection dialogs handled in SingleTaskEditor
 import BatchSelectDialog from "./BatchSelectDialog.vue";
 import TaskDataSection from "./TaskDataSection.vue";
+import SingleTaskEditor from "./SingleTaskEditor.vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
@@ -315,8 +150,6 @@ import { readFile } from "src/api/file";
 const { langConfig } = globalStore()
 const { t } = useI18n();
 const { apiPost, apiGet } = useApi();
-const openDataSelectorSingle = ref(false);
-const openDataSelectorMulti = ref(false);
 const newTaskName = ref("");
 const newTaskNameError = ref(false);
 const paramsDefine = ref([]);
@@ -326,15 +159,6 @@ const params = ref({});
 
 const paramTabs = ref([])
 const activeParamTab = ref(0)
-const activeParamFileIndex = ref(0)
-
-const samples = ref([]);
-const sampleFirst = ref({});
-const sampleSecond = ref({});
-const currentSample = ref("first");
-const sampleFirstError = ref(false);
-const sampleSecondError = ref(false);
-const samplesError = ref(false);
 
 const csvOptions = ref({});
 
@@ -488,70 +312,6 @@ const deleteParamTabFiles = (index, file_index) => {
     if (paramTabs.value[index].files.length > 1)
         paramTabs.value[index].files.splice(file_index, 1)
 }
-const selectSingle = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "first";
-    openDataSelectorSingle.value = true;
-};
-const selectFirst = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "first";
-    openDataSelectorSingle.value = true;
-};
-const selectSecond = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "second";
-    openDataSelectorSingle.value = true;
-};
-const selectMulti = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "multi";
-    openDataSelectorMulti.value = true;
-};
-const selectFirstMulti = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "first-multi";
-    openDataSelectorMulti.value = true;
-};
-const selectSecondMulti = (index) => {
-    activeParamFileIndex.value = index
-    currentSample.value = "second-multi";
-    openDataSelectorMulti.value = true;
-};
-
-const singleSelected = (event) => {
-    openDataSelectorSingle.value = false;
-    const file = paramTabs.value[activeParamTab.value].files[activeParamFileIndex.value];
-
-    if (currentSample.value === "first") {
-        file.sampleFirst = event
-        sampleFirst.value = event;
-        file.sampleDetails[0] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
-    } else {
-        file.sampleSecond = event
-        sampleSecond.value = event;
-        file.sampleDetails[1] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
-    }
-}
-
-const multiSelected = (event) => {
-    openDataSelectorMulti.value = false;
-    const file = paramTabs.value[activeParamTab.value].files[activeParamFileIndex.value];
-
-    if (currentSample.value === "multi") {
-        file.samples = event
-        file.sampleDetails = event.map(sample => ({  customName: sample.sample_identifier, sampleRatio: null, id: sample.id}))
-    } else if (currentSample.value === "first-multi") {
-        file.samplesFirst = event
-        // 将file.sampleDetails 第0个元素设置为{  customName: sample.identifier, sampleRatio: null, }
-        file.sampleDetails[0] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
-    } else {
-        file.samplesSecond = event
-        file.sampleDetails[1] = {  customName: event.sample_identifier, sampleRatio: null, id: event.id}
-    }
-    samples.value = event;
-    console.log(event);
-};
 
 // 批量选择相关方法
 const openBatchSelectDialog = (key, param) => {
