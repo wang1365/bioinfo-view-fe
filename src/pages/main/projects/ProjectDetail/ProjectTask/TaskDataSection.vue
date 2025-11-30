@@ -8,11 +8,11 @@
                 :id="`${fileIndex}`"
             >
                 <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
+                <div class="col-auto">
+                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
+                </div>
                 <div class="col-auto" v-if="!file.sampleFirst?.id">
                     <q-btn icon="add" color="primary" dense outline flat @click="$emit('select-single', fileIndex)" />
-                </div>
-                <div class="col-auto" v-if="file.sampleFirst?.id">
-                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
                 </div>
                 <div class="col row q-gutter-xs">
                     <div class="col row items-center bg-grey-3">
@@ -118,8 +118,10 @@
             >
                 <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
                 <div class="col-auto">
-                    <q-btn icon="add" color="primary" dense outline flat @click="$emit('select-first', fileIndex)" />
                     <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
+                </div>
+                <div class="col-auto">
+                    <q-btn icon="add" color="primary" dense outline flat @click="$emit('select-first', fileIndex)" />
                 </div>
                 <div class="col row q-gutter-xs">
                     <div class="col row items-center bg-grey-3">
@@ -314,8 +316,10 @@
             >
                 <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
                 <div class="col-auto">
-                    <q-btn icon="add" color="primary" dense flat @click="$emit('select-multi', fileIndex)" />
                     <q-btn icon="delete" color="red" dense flat @click="$emit('delete-file', fileIndex)" />
+                </div>
+                <div class="col-auto">
+                    <q-btn icon="add" color="primary" dense flat @click="$emit('select-multi', fileIndex)" />
                 </div>
                 <div class="col">
                     <template v-for="(sample, i) in file.samples" :key="sample.id">
@@ -437,6 +441,9 @@
                 :id="`${fileIndex}`"
             >
                 <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
+                <div class="col-auto">
+                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
+                </div>
                 <div class="col-auto" v-if="!file.samplesFirst || file.samplesFirst.length === 0">
                     <q-btn
                         icon="add"
@@ -456,12 +463,6 @@
                         flat
                         @click="$emit('select-second-multi', fileIndex)"
                     />
-                </div>
-                <div
-                    class="col-auto"
-                    v-if="(file.samplesFirst && file.samplesFirst.length > 0) || (file.samplesSecond && file.samplesSecond.length > 0)"
-                >
-                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
                 </div>
                 <div class="col">
                     <div class="row">
