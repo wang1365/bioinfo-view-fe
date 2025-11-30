@@ -141,28 +141,50 @@
             <div class="col-auto q-ml-lg">
                 <q-btn icon="add" color="primary" flat :label="$t('Add') + $t('Data')" @click="$emit('add-file')" />
             </div>
-            <div class="col-auto q-ml-sm">
-                <div class="relative-position inline-block">
-                    <q-btn color="primary" dense outline flat icon="upload" :label="$t('PageListTableUpload')" />
-                    <q-file
-                        v-model="csvFile"
-                        class="absolute-full"
-                        style="opacity:0;"
-                        accept=".csv,text/csv"
-                        @update:model-value="handleCsvUpload"
-                    />
+            <div class="col flex flex-center">
+                <div class="row q-gutter-sm items-center">
+                    <div class="col-auto">
+                        <div class="relative-position inline-block">
+                            <q-btn
+                                color="primary"
+                                dense
+                                outline
+                                flat
+                                icon="upload"
+                                :label="$t('PageListTableUpload')"
+                            />
+                            <q-file
+                                v-model="csvFile"
+                                class="absolute-full"
+                                style="opacity:0;"
+                                accept=".csv,text/csv"
+                                @update:model-value="handleCsvUpload"
+                            />
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <q-btn
+                            color="primary"
+                            dense
+                            outline
+                            flat
+                            icon="download"
+                            :label="$t('PageListTableTemplate')"
+                            @click="downloadCsvTemplate"
+                        />
+                    </div>
+                    <div class="col-auto">
+                        <q-btn
+                            color="orange"
+                            dense
+                            outline
+                            flat
+                            icon="rule"
+                            :label="$t('DataCheck')"
+                            @click="checkFastqFiles"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="col-auto q-mx-lg">
-                <q-btn
-                    color="primary"
-                    dense
-                    outline
-                    flat
-                    icon="download"
-                    :label="$t('PageListTableTemplate')"
-                    @click="downloadCsvTemplate"
-                />
             </div>
         </div>
 
@@ -200,7 +222,7 @@ import { useApi } from 'src/api/apiBase'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import { parseCsvToList } from 'src/utils/csv'
 
-useI18n()
+const { t } = useI18n()
 
 const props = defineProps({
   item: { type: Object, required: true },
@@ -304,6 +326,7 @@ const singleSelected = (event) => {
     file.sampleSecond = event
     file.sampleDetails[1] = { customName: event.sample_identifier, sampleRatio: null, id: event.id }
   }
+  checkFastqFiles()
 }
 
 const multiSelected = (event) => {
@@ -320,11 +343,13 @@ const multiSelected = (event) => {
     file.sampleDetails[1] = { customName: event.sample_identifier, sampleRatio: null, id: event.id }
   }
   samples.value = event
+  checkFastqFiles()
 }
 
 const onBulkImport = (imported) => {
   if (!Array.isArray(imported)) return
   localItem.value.files = imported
+  checkFastqFiles()
 }
 
 const downloadCsvTemplate = () => {
@@ -346,6 +371,108 @@ const downloadCsvTemplate = () => {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
+}
+
+const collectDataIds = () => {
+  const ids = []
+  for (const file of localItem.value.files || []) {
+    if (props.sampleType === 'single') {
+      if (file.sampleFirst?.identifier) ids.push(file.sampleFirst.identifier)
+    } else if (props.sampleType === 'double') {
+      if (file.sampleFirst?.identifier) ids.push(file.sampleFirst.identifier)
+      if (file.sampleSecond?.identifier) ids.push(file.sampleSecond.identifier)
+    } else if (props.sampleType === 'multiple') {
+      for (const s of file.samples || []) {
+        if (s?.identifier || s?.sample_identifier) ids.push(s.identifier || s.sample_identifier)
+      }
+    } else if (props.sampleType === 'double_multiple') {
+      for (const s of file.samplesFirst || []) {
+        if (s?.identifier || s?.sample_identifier) ids.push(s.identifier || s.sample_identifier)
+      }
+      for (const s of file.samplesSecond || []) {
+        if (s?.identifier || s?.sample_identifier) ids.push(s.identifier || s.sample_identifier)
+      }
+    }
+  }
+  return Array.from(new Set(ids))
+}
+
+const checkFastqFiles = () => {
+  const ids = collectDataIds()
+  if (ids.length === 0) return
+  apiPost('/sample/samples/check_fastq', (res) => {
+    const results = res.data || res
+    const badPaths = new Map()
+    const infoByKey = new Map()
+
+    const processInfo = (key, info) => {
+      if (!info) return
+      const exists = info.exists === true
+      const ready = info.ready !== false
+      if (info.path) infoByKey.set(info.path, info)
+      if (key && typeof key === 'string') infoByKey.set(key, info)
+
+      let errorMsg = ''
+      if (!exists) {
+        errorMsg = t('FileNotExist')
+      } else if (!ready) {
+        errorMsg = t('FileNotReady')
+      }
+
+      if (errorMsg) {
+        if (info.path) badPaths.set(info.path, errorMsg)
+        if (key && typeof key === 'string') badPaths.set(key, errorMsg)
+      }
+    }
+
+    if (Array.isArray(results)) {
+      results.forEach((info) => processInfo(null, info))
+    } else {
+      Object.entries(results || {}).forEach(([key, info]) => processInfo(key, info))
+    }
+
+    for (const file of localItem.value.files || []) {
+      const markWarn = (sample) => {
+        if (!sample) return
+
+        const checkPath = (p) => {
+          if (!p) return ''
+          if (badPaths.has(p)) return badPaths.get(p)
+          const filename = p.split(/[/\\]/).pop()
+          if (badPaths.has(filename)) return badPaths.get(filename)
+          return ''
+        }
+        const findInfo = (p) => {
+          if (!p) return null
+          if (infoByKey.has(p)) return infoByKey.get(p)
+          const filename = p.split(/[/\\]/).pop()
+          if (infoByKey.has(filename)) return infoByKey.get(filename)
+          return null
+        }
+
+        const warn1 = checkPath(sample.fastq1_path)
+        sample.fastq1_warn = warn1
+        sample.fastq1_ok = !!sample.fastq1_path && !warn1
+        sample.fastq1_info = findInfo(sample.fastq1_path)
+
+        const warn2 = checkPath(sample.fastq2_path)
+        sample.fastq2_warn = warn2
+        sample.fastq2_ok = !!sample.fastq2_path && !warn2
+        sample.fastq2_info = findInfo(sample.fastq2_path)
+      }
+      if (props.sampleType === 'single') {
+        markWarn(file.sampleFirst)
+      } else if (props.sampleType === 'double') {
+        markWarn(file.sampleFirst)
+        markWarn(file.sampleSecond)
+      } else if (props.sampleType === 'multiple') {
+        for (const s of file.samples || []) markWarn(s)
+      } else if (props.sampleType === 'double_multiple') {
+        for (const s of file.samplesFirst || []) markWarn(s)
+        for (const s of file.samplesSecond || []) markWarn(s)
+      }
+    }
+  }, ids)
 }
 
 const handleCsvUpload = async () => {
@@ -371,10 +498,16 @@ const handleCsvUpload = async () => {
     const pool = res.data.results || []
     const byId = new Map(pool.map((item) => [item.identifier, item]))
     const imported = []
+    const getSample = (v) => {
+      if (v && v.length > 0) {
+        return byId.get(v) || { identifier: v, notFound: true }
+      }
+      return { identifier: '', notFound: false }
+    }
     for (const row of rows) {
       const values = Object.values(row).filter((v) => v && v.length > 0)
       if (props.sampleType === 'single') {
-        const first = byId.get(values[0]) || { identifier: values[0], notFound: true }
+        const first = getSample(values[0])
         const fileItem = {
           sampleFirst: first,
           sampleFirstError: false,
@@ -382,8 +515,8 @@ const handleCsvUpload = async () => {
         }
         imported.push(fileItem)
       } else if (props.sampleType === 'double') {
-        const first = byId.get(values[0]) || { identifier: values[0], notFound: true }
-        const second = byId.get(values[1]) || { identifier: values[1], notFound: true }
+        const first = getSample(values[0])
+        const second = getSample(values[1])
         const fileItem = {
           sampleFirst: first,
           sampleSecond: second,
@@ -396,7 +529,7 @@ const handleCsvUpload = async () => {
         }
         imported.push(fileItem)
       } else if (props.sampleType === 'multiple') {
-        const samples = values.map((v) => byId.get(v) || { identifier: v, notFound: true })
+        const samples = values.map((v) => getSample(v))
         const fileItem = {
           samples,
           samplesError: false,
@@ -407,6 +540,7 @@ const handleCsvUpload = async () => {
     }
     localItem.value.files = imported
     csvFile.value = null
+    checkFastqFiles()
   }, query)
 }
 

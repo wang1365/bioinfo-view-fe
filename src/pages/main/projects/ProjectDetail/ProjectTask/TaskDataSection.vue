@@ -32,13 +32,39 @@
                             class="text-red text-bold"
                             >{{ $t('DataIdentifierNotFound') }}</span
                         >
-                        <div class="col q-ml-xs">
-                            <div v-if="file.sampleFirst?.fastq1_path" class="text-grey-7">
-                                {{ file.sampleFirst.fastq1_path }}
-                            </div>
-                            <div v-if="file.sampleFirst?.fastq2_path" class="text-grey-7">
-                                {{ file.sampleFirst.fastq2_path }}
-                            </div>
+                        <div class="col q-ml-xs column items-start">
+                            <q-btn
+                                v-if="file.sampleFirst?.fastq1_path"
+                                dense
+                                flat
+                                outline
+                                size="12px"
+                                class="fastq-btn"
+                                :label="file.sampleFirst.fastq1_path"
+                                :color="file.sampleFirst?.fastq1_warn ? 'orange' : (file.sampleFirst?.fastq1_ok ? 'green-8' : 'grey-7')"
+                                :icon="file.sampleFirst?.fastq1_warn ? 'warning' : (file.sampleFirst?.fastq1_ok ? 'check_circle' : '')"
+                            >
+                                <FastqTooltip
+                                    :info="file.sampleFirst?.fastq1_info"
+                                    :warn="file.sampleFirst?.fastq1_warn"
+                                />
+                            </q-btn>
+                            <q-btn
+                                v-if="file.sampleFirst?.fastq2_path"
+                                dense
+                                flat
+                                outline
+                                size="12px"
+                                class="fastq-btn q-mt-xs"
+                                :label="file.sampleFirst.fastq2_path"
+                                :color="file.sampleFirst?.fastq2_warn ? 'orange' : (file.sampleFirst?.fastq2_ok ? 'green-8' : 'grey-7')"
+                                :icon="file.sampleFirst?.fastq2_warn ? 'warning' : (file.sampleFirst?.fastq2_ok ? 'check_circle' : '')"
+                            >
+                                <FastqTooltip
+                                    :info="file.sampleFirst?.fastq2_info"
+                                    :warn="file.sampleFirst?.fastq2_warn"
+                                />
+                            </q-btn>
                         </div>
                         <span
                             v-if="file.sampleFirstError"
@@ -80,13 +106,39 @@
                             class="text-red text-bold"
                             >{{ $t('DataIdentifierNotFound') }}</span
                         >
-                        <div class="col q-ml-xs">
-                            <div v-if="file.sampleFirst?.fastq1_path" class="text-grey-7">
-                                {{ file.sampleFirst.fastq1_path }}
-                            </div>
-                            <div v-if="file.sampleFirst?.fastq2_path" class="text-grey-7">
-                                {{ file.sampleFirst.fastq2_path }}
-                            </div>
+                        <div class="col q-ml-xs column items-start">
+                            <q-btn
+                                v-if="file.sampleFirst?.fastq1_path"
+                                dense
+                                flat
+                                outline
+                                size="12px"
+                                class="fastq-btn"
+                                :label="file.sampleFirst.fastq1_path"
+                                :color="file.sampleFirst?.fastq1_warn ? 'orange' : (file.sampleFirst?.fastq1_ok ? 'green-8' : 'grey-7')"
+                                :icon="file.sampleFirst?.fastq1_warn ? 'warning' : (file.sampleFirst?.fastq1_ok ? 'check_circle' : '')"
+                            >
+                                <FastqTooltip
+                                    :info="file.sampleFirst?.fastq1_info"
+                                    :warn="file.sampleFirst?.fastq1_warn"
+                                />
+                            </q-btn>
+                            <q-btn
+                                v-if="file.sampleFirst?.fastq2_path"
+                                dense
+                                flat
+                                outline
+                                size="12px"
+                                class="fastq-btn q-mt-xs"
+                                :label="file.sampleFirst.fastq2_path"
+                                :color="file.sampleFirst?.fastq2_warn ? 'orange' : (file.sampleFirst?.fastq2_ok ? 'green-8' : 'grey-7')"
+                                :icon="file.sampleFirst?.fastq2_warn ? 'warning' : (file.sampleFirst?.fastq2_ok ? 'check_circle' : '')"
+                            >
+                                <FastqTooltip
+                                    :info="file.sampleFirst?.fastq2_info"
+                                    :warn="file.sampleFirst?.fastq2_warn"
+                                />
+                            </q-btn>
                         </div>
                     </div>
                     <div class="col row q-pl-xs bg-grey-3">
@@ -107,13 +159,39 @@
                             class="text-red text-bold"
                             >{{ $t('DataIdentifierNotFound') }}</span
                         >
-                        <div class="col q-ml-xs  text-grey-7">
-                            <div v-if="file.sampleSecond?.fastq1_path">
-                                {{ file.sampleSecond.fastq1_path }}
-                            </div>
-                            <div v-if="file.sampleSecond?.fastq2_path">
-                                {{ file.sampleSecond.fastq2_path }}
-                            </div>
+                        <div class="col q-ml-xs column items-start">
+                            <q-btn
+                                v-if="file.sampleSecond?.fastq1_path"
+                                dense
+                                flat
+                                outline
+                                size="12px"
+                                class="fastq-btn"
+                                :label="file.sampleSecond.fastq1_path"
+                                :color="file.sampleSecond?.fastq1_warn ? 'orange' : (file.sampleSecond?.fastq1_ok ? 'green-8' : 'grey-7')"
+                                :icon="file.sampleSecond?.fastq1_warn ? 'warning' : (file.sampleSecond?.fastq1_ok ? 'check_circle' : '')"
+                            >
+                                <FastqTooltip
+                                    :info="file.sampleSecond?.fastq1_info"
+                                    :warn="file.sampleSecond?.fastq1_warn"
+                                />
+                            </q-btn>
+                            <q-btn
+                                v-if="file.sampleSecond?.fastq2_path"
+                                dense
+                                flat
+                                outline
+                                size="12px"
+                                class="fastq-btn q-mt-xs"
+                                :label="file.sampleSecond.fastq2_path"
+                                :color="file.sampleSecond?.fastq2_warn ? 'orange' : (file.sampleSecond?.fastq2_ok ? 'green-8' : 'grey-7')"
+                                :icon="file.sampleSecond?.fastq2_warn ? 'warning' : (file.sampleSecond?.fastq2_ok ? 'check_circle' : '')"
+                            >
+                                <FastqTooltip
+                                    :info="file.sampleSecond?.fastq2_info"
+                                    :warn="file.sampleSecond?.fastq2_warn"
+                                />
+                            </q-btn>
                         </div>
                         <span
                             v-if="file.sampleFirstError || file.sampleSecondError"
@@ -127,7 +205,7 @@
 
         <div v-if="sampleType === 'multiple'">
             <div
-                class="row q-my-sm items-center relative-position bg-grey-3"
+                class="row q-my-sm items-center relative-position bg-blue-grey-2"
                 v-for="(file, fileIndex) in files"
                 :key="fileIndex"
                 :id="`${fileIndex}`"
@@ -139,51 +217,73 @@
                 </div>
                 <div class="col">
                     <template v-for="(sample, i) in file.samples" :key="sample.id">
-                        <div class="row q-gutter-xs items-center">
-                            <div class="col row bg-grey-3">
+                        <div class="row q-gutter-xs items-center bg-blue-grey-1 q-mt-xs">
+                            <div class="col row">
                                 <q-chip
-                                    class="col-2"
+                                    class="col-1"
                                     outline
                                     flat
                                     dense
+                                    padding="1px"
                                     :color="sample.notFound ? 'red' : 'primary'"
                                     :text-color="sample.notFound ? 'white' : 'white'"
                                 >
                                     {{ sample.identifier || sample.sample_identifier }}
                                 </q-chip>
+                                <q-input
+                                    class="col-1"
+                                    stack-label
+                                    :label="$t('SampleName')"
+                                    label-color="purple"
+                                    dense
+                                    filled
+                                    padding="1px"
+                                    v-model="file.sampleDetails[i].customName"
+                                />
+                                <q-input
+                                    class="col-1"
+                                    stack-label
+                                    :label="$t('SampleRatio')"
+                                    label-color="purple"
+                                    dense
+                                    filled
+                                    v-model.number="file.sampleDetails[i].sampleRatio"
+                                    v-if="supportSampleRatio"
+                                />
                                 <span
                                     v-if="sample.notFound"
                                     class="text-red text-bold"
                                     >{{ $t('DataIdentifierNotFound') }}</span
                                 >
-                                <div class="col q-ml-xs">
-                                    <div v-if="sample.fastq1_path" class="text-grey-7">
-                                        {{ sample.fastq1_path }}
-                                    </div>
-                                    <div v-if="sample.fastq2_path" class="text-grey-7">
-                                        {{ sample.fastq2_path }}
-                                    </div>
+                                <div class="col q-ml-xs column items-start">
+                                    <q-btn
+                                        v-if="sample.fastq1_path"
+                                        dense
+                                        flat
+                                        outline
+                                        size="12px"
+                                        class="fastq-btn"
+                                        :label="sample.fastq1_path"
+                                        :color="sample.fastq1_warn ? 'orange' : (sample.fastq1_ok ? 'green-8' : 'grey-7')"
+                                        :icon="sample.fastq1_warn ? 'warning' : (sample.fastq1_ok ? 'check_circle' : '')"
+                                    >
+                                        <FastqTooltip :info="sample.fastq1_info" :warn="sample.fastq1_warn" />
+                                    </q-btn>
+                                    <q-btn
+                                        v-if="sample.fastq2_path"
+                                        dense
+                                        flat
+                                        outline
+                                        size="12px"
+                                        class="fastq-btn q-mt-xs"
+                                        :label="sample.fastq2_path"
+                                        :color="sample.fastq2_warn ? 'orange' : (sample.fastq2_ok ? 'green-8' : 'grey-7')"
+                                        :icon="sample.fastq2_warn ? 'warning' : (sample.fastq2_ok ? 'check_circle' : '')"
+                                    >
+                                        <FastqTooltip :info="sample.fastq2_info" :warn="sample.fastq2_warn" />
+                                    </q-btn>
                                 </div>
                             </div>
-                            <q-input
-                                class="col-3"
-                                stack-label
-                                :label="$t('SampleName')"
-                                label-color="purple"
-                                dense
-                                filled
-                                v-model="file.sampleDetails[i].customName"
-                            />
-                            <q-input
-                                class="col-3"
-                                stack-label
-                                :label="$t('SampleRatio')"
-                                label-color="purple"
-                                dense
-                                filled
-                                v-model.number="file.sampleDetails[i].sampleRatio"
-                                v-if="supportSampleRatio"
-                            />
                         </div>
                     </template>
                     <span
@@ -245,11 +345,31 @@
                                     class="text-red text-bold"
                                     >{{ $t('DataIdentifierNotFound') }}</span
                                 >
-                                <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
-                                    {{ sample.fastq1_path }}
-                                </div>
-                                <div v-if="sample.fastq2_path" class="q-ml-xs text-grey-7">
-                                    {{ sample.fastq2_path }}
+                                <div class="col q-ml-xs column items-start">
+                                    <q-btn
+                                        v-if="sample.fastq1_path"
+                                        dense
+                                        flat
+                                        outline
+                                        size="xs"
+                                        :label="sample.fastq1_path"
+                                        :color="sample.fastq1_warn ? 'orange' : (sample.fastq1_ok ? 'green-8' : 'grey-7')"
+                                        :icon="sample.fastq1_warn ? 'warning' : (sample.fastq1_ok ? 'check_circle' : '')"
+                                    >
+                                        <FastqTooltip :info="sample.fastq1_info" :warn="sample.fastq1_warn" />
+                                    </q-btn>
+                                    <q-btn
+                                        v-if="sample.fastq2_path"
+                                        dense
+                                        flat
+                                        outline
+                                        size="xs"
+                                        :label="sample.fastq2_path"
+                                        :color="sample.fastq2_warn ? 'orange' : (sample.fastq2_ok ? 'green-8' : 'grey-7')"
+                                        :icon="sample.fastq2_warn ? 'warning' : (sample.fastq2_ok ? 'check_circle' : '')"
+                                    >
+                                        <FastqTooltip :info="sample.fastq2_info" :warn="sample.fastq2_warn" />
+                                    </q-btn>
                                 </div>
                             </template>
                         </div>
@@ -267,11 +387,33 @@
                                     class="text-red text-bold"
                                     >{{ $t('DataIdentifierNotFound') }}</span
                                 >
-                                <div v-if="sample.fastq1_path" class="q-ml-xs text-grey-7">
-                                    {{ sample.fastq1_path }}
-                                </div>
-                                <div v-if="sample.fastq2_path" class="q-ml-xs text-grey-7">
-                                    {{ sample.fastq2_path }}
+                                <div class="col q-ml-xs column">
+                                    <q-btn
+                                        v-if="sample.fastq1_path"
+                                        dense
+                                        flat
+                                        outline
+                                        size="xs"
+                                        class="fastq-btn"
+                                        :label="sample.fastq1_path"
+                                        :color="sample.fastq1_warn ? 'orange' : (sample.fastq1_ok ? 'green-8' : 'grey-7')"
+                                        :icon="sample.fastq1_warn ? 'warning' : (sample.fastq1_ok ? 'check_circle' : '')"
+                                    >
+                                        <FastqTooltip :info="sample.fastq1_info" :warn="sample.fastq1_warn" />
+                                    </q-btn>
+                                    <q-btn
+                                        v-if="sample.fastq2_path"
+                                        dense
+                                        flat
+                                        outline
+                                        size="xs"
+                                        class="fastq-btn q-mt-xs"
+                                        :label="sample.fastq2_path"
+                                        :color="sample.fastq2_warn ? 'orange' : (sample.fastq2_ok ? 'green-8' : 'grey-7')"
+                                        :icon="sample.fastq2_warn ? 'warning' : (sample.fastq2_ok ? 'check_circle' : '')"
+                                    >
+                                        <FastqTooltip :info="sample.fastq2_info" :warn="sample.fastq2_warn" />
+                                    </q-btn>
                                 </div>
                             </template>
                         </div>
@@ -290,6 +432,7 @@
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import FastqTooltip from './FastqTooltip.vue'
 
 const props = defineProps({
   files: { type: Array, required: true },
@@ -311,3 +454,9 @@ const emit = defineEmits([
 
 const { t } = useI18n()
 </script>
+
+<style scoped>
+.fastq-btn {
+  font-size: 12px;
+}
+</style>
