@@ -150,13 +150,14 @@ import SingleTaskEditor from "./SingleTaskEditor.vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
-import { event } from "quasar";
+import { useQuasar } from "quasar";
 import { globalStore } from "src/stores/global";
 import { update } from "lodash";
 import { readFile } from "src/api/file";
 
 const { langConfig } = globalStore()
 const { t } = useI18n();
+const $q = useQuasar();
 const { apiPost, apiGet } = useApi();
 const newTaskName = ref("");
 const newTaskNameError = ref(false);
@@ -342,9 +343,59 @@ const handleBatchSelectConfirm = (data) => {
     }
 };
 
+const createTasks = (datas) => {
+    apiGet(
+        `/task/check_multi_create_task?task_count=${datas.length}`,
+        (res) => {
+            infoMessage("Creating Tasks")
+            let created = 0;
+            let nameIndex = 0
+            for (const item of datas) {
+                nameIndex += 1
+                let data = new FormData()
+                data.append("flow_id", props.flowDetail.id)
+                data.append("project_id", props.projectDetail.id)
+                data.append("samples", item.samples)
+                data.append("sample_details", item.sampleDetails)
+                data.append("parameter", item.parameter)
+                data.append("name", `${item.name}-${nameIndex}`)
+                if (item.taskSamplesFirst !== "") {
+                    data.append("task_samples_first", item.taskSamplesFirst)
+                }
+                if (item.taskSamplesSecond !== "") {
+                    data.append("task_samples_second", item.taskSamplesSecond)
+                }
+                for (const file of item.uploadFiles) {
+                    data.append(file[0], file[1])
+                }
+                apiPost(
+                    "/task",
+                    (res) => {
+                        created += 1
+                        infoMessage(`Success Created ${created}/${datas.length} Tasks`)
+                        if (created === datas.length) {
+                            emit('taskCreated')
+                        }
+                    },
+                    data,
+                    (res) => {
+                        created += 1;
+                        errorMessage(`Fail Created ${created}/${data.length} Tasks, Reason ${res.msg}`)
+                    },
+                )
+            }
+        },
+        {}, (res) => {
+            errorMessage(res.msg)
+        }
+    )
+}
+
 const confirmTaskCreated = () => {
     console.log(paramTabs.value)
     let hasError = false;
+    let hasIdentifierMissing = false;
+    let hasFastqIssue = false;
     let datas = []
     for (let taskParam of paramTabs.value) {
         let taskParameter = [];
@@ -402,11 +453,21 @@ const confirmTaskCreated = () => {
                     let samples = []
                     if (!file.sampleFirst.id) {
                         file.sampleFirstError = true
-                        taskHasError = true
-                        hasError = true
+                        hasIdentifierMissing = true
                     } else {
                         file.sampleFirstError = false
                         samples.push(file.sampleFirst.id)
+                        if (file.sampleFirst.notFound) {
+                            hasIdentifierMissing = true
+                        }
+                        const s = file.sampleFirst
+                        const r1Missing = !s.fastq1_path
+                        const r2Missing = !s.fastq2_path
+                        const r1NotReady = !!s.fastq1_warn || (!!s.fastq1_path && !s.fastq1_ok)
+                        const r2NotReady = !!s.fastq2_warn || (!!s.fastq2_path && !s.fastq2_ok)
+                        if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
+                            hasFastqIssue = true
+                        }
                     }
                     taskSamples = samples.join(",")
 
@@ -416,19 +477,39 @@ const confirmTaskCreated = () => {
                     let samples = []
                     if (!file.sampleFirst.id) {
                         file.sampleFirstError = true
-                        taskHasError = true
-                        hasError = true
+                        hasIdentifierMissing = true
                     } else {
                         samples.push(file.sampleFirst.id)
                         file.sampleFirstError = false
+                        if (file.sampleFirst.notFound) {
+                            hasIdentifierMissing = true
+                        }
+                        const s1 = file.sampleFirst
+                        const r1Missing1 = !s1.fastq1_path
+                        const r2Missing1 = !s1.fastq2_path
+                        const r1NotReady1 = !!s1.fastq1_warn || (!!s1.fastq1_path && !s1.fastq1_ok)
+                        const r2NotReady1 = !!s1.fastq2_warn || (!!s1.fastq2_path && !s1.fastq2_ok)
+                        if (r1Missing1 || r2Missing1 || r1NotReady1 || r2NotReady1) {
+                            hasFastqIssue = true
+                        }
                     }
                     if (!file.sampleSecond.id) {
                         file.sampleSecondError = true
-                        taskHasError = true
-                        hasError = true
+                        hasIdentifierMissing = true
                     } else {
                         samples.push(file.sampleSecond.id)
                         file.sampleSecondError = false
+                        if (file.sampleSecond.notFound) {
+                            hasIdentifierMissing = true
+                        }
+                        const s2 = file.sampleSecond
+                        const r1Missing2 = !s2.fastq1_path
+                        const r2Missing2 = !s2.fastq2_path
+                        const r1NotReady2 = !!s2.fastq1_warn || (!!s2.fastq1_path && !s2.fastq1_ok)
+                        const r2NotReady2 = !!s2.fastq2_warn || (!!s2.fastq2_path && !s2.fastq2_ok)
+                        if (r1Missing2 || r2Missing2 || r1NotReady2 || r2NotReady2) {
+                            hasFastqIssue = true
+                        }
                     }
                     taskSamples = samples.join(",")
                     break
@@ -440,8 +521,19 @@ const confirmTaskCreated = () => {
                         taskHasError = true
                         hasError = true
                     } else {
+                        console.log('==================file', file)
                         for (const item of file.samples) {
                             samples.push(item.id)
+                            if (item.notFound) {
+                                hasIdentifierMissing = true
+                            }
+                            const r1Missing = !item.fastq1_path
+                            const r2Missing = !item.fastq2_path
+                            const r1NotReady = !!item.fastq1_warn || (!!item.fastq1_path && !item.fastq1_ok)
+                            const r2NotReady = !!item.fastq2_warn || (!!item.fastq2_path && !item.fastq2_ok)
+                            if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
+                                hasFastqIssue = true
+                            }
                         }
                         file.samplesError = false
                     }
@@ -460,6 +552,16 @@ const confirmTaskCreated = () => {
                     } else {
                         for (const item of file.samplesFirst) {
                             samples.first.push(item.id)
+                            if (item.notFound) {
+                                hasIdentifierMissing = true
+                            }
+                            const r1Missing = !item.fastq1_path
+                            const r2Missing = !item.fastq2_path
+                            const r1NotReady = !!item.fastq1_warn || (!!item.fastq1_path && !item.fastq1_ok)
+                            const r2NotReady = !!item.fastq2_warn || (!!item.fastq2_path && !item.fastq2_ok)
+                            if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
+                                hasFastqIssue = true
+                            }
                         }
                         file.samplesFirstError = false
                     }
@@ -470,6 +572,16 @@ const confirmTaskCreated = () => {
                     } else {
                         for (const item of file.samplesSecond) {
                             samples.second.push(item.id)
+                            if (item.notFound) {
+                                hasIdentifierMissing = true
+                            }
+                            const r1Missing = !item.fastq1_path
+                            const r2Missing = !item.fastq2_path
+                            const r1NotReady = !!item.fastq1_warn || (!!item.fastq1_path && !item.fastq1_ok)
+                            const r2NotReady = !!item.fastq2_warn || (!!item.fastq2_path && !item.fastq2_ok)
+                            if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
+                                hasFastqIssue = true
+                            }
                         }
                         file.samplesSecondError = false
                     }
@@ -503,56 +615,34 @@ const confirmTaskCreated = () => {
         errorMessage("Fix Error")
         return
     }
-    // TODO 判断资源是否足够
-    apiGet(
-        `/task/check_multi_create_task?task_count=${datas.length}`,
-        (res) => {
-            infoMessage("Creating Tasks")
-            let created = 0;
-            let nameIndex = 0
-            for (const item of datas) {
-                nameIndex += 1
-                let data = new FormData()
-                data.append("flow_id", props.flowDetail.id)
-                data.append("project_id", props.projectDetail.id)
-                data.append("samples", item.samples)
-                data.append("sample_details", item.sampleDetails)
-                data.append("parameter", item.parameter)
-                data.append("name", `${item.name}-${nameIndex}`)
-                if (item.taskSamplesFirst !== "") {
-                    data.append("task_samples_first", item.taskSamplesFirst)
-                }
-                if (item.taskSamplesSecond !== "") {
-                    data.append("task_samples_second", item.taskSamplesSecond)
-                }
-
-                for (const file of item.uploadFiles) {
-                    data.append(file[0], file[1])
-                }
-                console.log(data)
-                //TODO 创建任务
-                apiPost(
-                    "/task",
-                    (res) => {
-                        created += 1
-                        infoMessage(`Success Created ${created}/${datas.length} Tasks`)
-                        if (created === datas.length) {
-                            emit('taskCreated')
-                        }
-                    },
-                    data,
-                    (res) => {
-                        created += 1;
-                        errorMessage(`Fail Created ${created}/${data.length} Tasks, Reason ${res.msg}`)
-                    },
-                )
-
-            }
-        },
-        {}, (res) => {
-            errorMessage(res.msg)
+    const confirmFastq = () => {
+        if (hasFastqIssue) {
+            $q.dialog({
+                title: t('Confirm'),
+                message: '部分数据的fastq文件不存在或者没有上传完成，任务创建后需要等到文件上传完整后才会开始运行，是否继续？',
+                cancel: true,
+                ok: { label: t('Confirm') },
+                persistent: true
+            }).onOk(() => {
+                createTasks(datas)
+            }).onCancel(() => {})
+        } else {
+            createTasks(datas)
         }
-    )
+    }
+    if (hasIdentifierMissing) {
+        $q.dialog({
+            title: t('Confirm'),
+            message: '有数据识别号不存在，是否继续创建任务？',
+            cancel: true,
+            ok: { label: t('Confirm') },
+            persistent: true
+        }).onOk(() => {
+            confirmFastq()
+        }).onCancel(() => {})
+    } else {
+        confirmFastq()
+    }
 }
 const sampleTypetrans = (flow) => {
     switch (flow.sample_type) {
