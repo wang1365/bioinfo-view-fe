@@ -521,7 +521,6 @@ const confirmTaskCreated = () => {
                         taskHasError = true
                         hasError = true
                     } else {
-                        console.log('==================file', file)
                         for (const item of file.samples) {
                             samples.push(item.id)
                             if (item.notFound) {
@@ -619,7 +618,7 @@ const confirmTaskCreated = () => {
         if (hasFastqIssue) {
             $q.dialog({
                 title: t('Confirm'),
-                message: '部分数据的fastq文件不存在或者没有上传完成，任务创建后需要等到文件上传完整后才会开始运行，是否继续？',
+                message: t('CreateTaskFastqIncompleteConfirm'),
                 cancel: true,
                 ok: { label: t('Confirm') },
                 persistent: true
@@ -633,7 +632,7 @@ const confirmTaskCreated = () => {
     if (hasIdentifierMissing) {
         $q.dialog({
             title: t('Confirm'),
-            message: '有数据识别号不存在，是否继续创建任务？',
+            message: t('CreateTaskIdentifierMissingConfirm'),
             cancel: true,
             ok: { label: t('Confirm') },
             persistent: true

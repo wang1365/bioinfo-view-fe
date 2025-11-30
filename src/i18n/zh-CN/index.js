@@ -873,4 +873,8 @@ export default {
     InputItems: '输入项目',
     InputItemsPlaceholder: '请输入多个选项，用逗号分隔',
     MatchResults: '匹配结果',
+
+    CreateTaskFastqIncompleteConfirm: '部分数据的fastq文件不存在或者没有上传完成，任务创建后需要等到文件上传完整后才会开始运行，是否继续？',
+    CreateTaskIdentifierMissingConfirm: '有数据识别号不存在，是否继续创建任务？',
 }
+    

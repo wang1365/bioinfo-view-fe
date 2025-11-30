@@ -881,4 +881,8 @@ export default {
     InputItems: 'Input Items',
     InputItemsPlaceholder: 'Please enter multiple options, separated by commas',
     MatchResults: 'Match Results',
+
+    CreateTaskFastqIncompleteConfirm:
+        'Some data fastq files do not exist or are not fully uploaded. After creating the task, it will start only when files are fully uploaded. Continue?',
+    CreateTaskIdentifierMissingConfirm: 'Some data identifiers do not exist. Continue to create the task?',
 }
