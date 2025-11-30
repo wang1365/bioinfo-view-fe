@@ -105,8 +105,8 @@ module.exports = configure(function (ctx) {
             proxy: {
                 '/api': {
                     changeOrigin: true,
-                    // target: process.env.host || 'http://10.10.0.208:8080',
-                    target: process.env.host || 'http://localhost:8000',
+                    target: process.env.host || 'http://10.10.0.208:8080',
+                    // target: process.env.host || 'http://localhost:8000',
                     // target: process.env.host || 'http://10.10.2.196:8080',
                     // target: process.env.host || 'http://192.168.100.97:8080', // 王晓川开发用
                     pathRewrite: {
@@ -116,8 +116,8 @@ module.exports = configure(function (ctx) {
                 },
                 '/igv': {
                     changeOrigin: true,
-                    // target: process.env.igv || 'http://10.10.0.208',
-                    target: process.env.igv || 'http://localhost:8000',
+                    target: process.env.igv || 'http://10.10.0.208',
+                    // target: process.env.igv || 'http://localhost:8000',
                     // agent: new SocksProxyAgent('socks5://192.168.31.102:1080'),
                 },
             },
