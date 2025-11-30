@@ -138,52 +138,44 @@
 
         <div class="row items-center q-my-sm">
             <div class="col-auto text-subtitle2">{{ $t('Data') + ':' }}</div>
-            <div class="col-auto q-ml-lg">
-                <q-btn icon="add" color="primary" flat :label="$t('Add') + $t('Data')" @click="$emit('add-file')" />
-            </div>
-            <div class="col flex flex-center">
-                <div class="row q-gutter-sm items-center">
-                    <div class="col-auto">
-                        <div class="relative-position inline-block">
-                            <q-btn
-                                color="primary"
-                                dense
-                                outline
-                                flat
-                                icon="upload"
-                                :label="$t('PageListTableUpload')"
-                            />
-                            <q-file
-                                v-model="csvFile"
-                                class="absolute-full"
-                                style="opacity:0;"
-                                accept=".csv,text/csv"
-                                @update:model-value="handleCsvUpload"
-                            />
-                        </div>
-                    </div>
-                    <div class="col-auto">
-                        <q-btn
-                            color="primary"
-                            dense
-                            outline
-                            flat
-                            icon="download"
-                            :label="$t('PageListTableTemplate')"
-                            @click="downloadCsvTemplate"
+            <div class="col row items-center q-gutter-sm">
+                <div class="col-auto">
+                    <q-btn icon="add" color="primary" flat :label="$t('Add') + $t('Data')" @click="$emit('add-file')" />
+                </div>
+                <div class="col-auto">
+                    <div class="relative-position inline-block">
+                        <q-btn color="primary" dense outline flat icon="upload" :label="$t('PageListTableUpload')" />
+                        <q-file
+                            v-model="csvFile"
+                            class="absolute-full"
+                            style="opacity:0;"
+                            accept=".csv,text/csv"
+                            @update:model-value="handleCsvUpload"
                         />
                     </div>
-                    <div class="col-auto">
-                        <q-btn
-                            color="orange"
-                            dense
-                            outline
-                            flat
-                            icon="rule"
-                            :label="$t('DataCheck')"
-                            @click="checkFastqFiles"
-                        />
-                    </div>
+                </div>
+                <div class="col-auto">
+                    <q-btn
+                        color="primary"
+                        dense
+                        outline
+                        flat
+                        icon="download"
+                        :label="$t('PageListTableTemplate')"
+                        @click="downloadCsvTemplate"
+                    />
+                </div>
+                <div class="col"></div>
+                <div class="col-auto">
+                    <q-btn
+                        color="orange"
+                        dense
+                        outline
+                        flat
+                        icon="rule"
+                        :label="$t('DataCheck')"
+                        @click="checkFastqFiles"
+                    />
                 </div>
             </div>
         </div>

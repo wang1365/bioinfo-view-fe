@@ -111,8 +111,16 @@
                 </div>
             </template>
             <template v-slot:contentFooter>
-                <q-btn :label="$t('Cancel')" v-close-popup />
-                <q-btn color="primary" :label="$t('Confirm')" @click="confirmTaskCreated()" />
+                <div class="row justify-center q-gutter-md q-my-md">
+                    <q-btn :label="$t('Cancel')" v-close-popup class="q-px-xl" style="min-width: 160px" />
+                    <q-btn
+                        color="primary"
+                        :label="$t('Confirm')"
+                        @click="confirmTaskCreated()"
+                        class="q-px-xl"
+                        style="min-width: 160px"
+                    />
+                </div>
             </template>
         </PopupContentScroll>
         <!-- <q-dialog persistent v-model="openDataSelectorSingle">
