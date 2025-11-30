@@ -1,327 +1,350 @@
 <template>
     <div class="q-mb-xs">
-        <div v-if="sampleType === 'single'">
-            <div
-                class="row q-my-sm items-center relative-position bg-grey-3"
-                v-for="(file, fileIndex) in files"
-                :key="fileIndex"
-                :id="`${fileIndex}`"
-            >
-                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
-                <div class="col-auto">
-                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
-                </div>
-                <div class="col-auto" v-if="!file.sampleFirst?.id">
-                    <q-btn icon="add" color="primary" dense outline flat @click="$emit('select-single', fileIndex)" />
-                </div>
-                <div class="col row q-gutter-xs">
-                    <div class="col row items-center bg-grey-3">
-                        <q-input
-                            v-if="file.sampleFirst?.identifier || file.sampleFirst?.notFound"
-                            class="col-2 q-mr-sm self-center"
-                            stack-label
-                            :label="$t('DataNewFormDataIdentificationNumber')"
-                            label-color="purple"
-                            dense
-                            filled
-                            padding="1px"
-                            readonly
-                            :model-value="file.sampleFirst?.identifier || ''"
-                            :error="file.sampleFirst?.notFound"
-                            :error-message="$t('DataIdentifierNotFound')"
-                        />
-
-                        <div class="col q-ml-xs column items-start">
-                            <span
-                                v-if="file.sampleFirst?.fastq1_path"
-                                class="fastq-text"
-                                :class="fastqTextClass(file.sampleFirst?.fastq1_warn, file.sampleFirst?.fastq1_ok)"
-                            >
-                                <q-chip
-                                    label="R1"
-                                    dense
-                                    color="primary"
-                                    text-color="white"
-                                    size="12px"
-                                    class="q-mr-xs"
-                                />
-                                {{ file.sampleFirst.fastq1_path }}
-                                <q-icon
-                                    v-if="file.sampleFirst?.fastq1_warn"
-                                    name="warning"
-                                    color="orange"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <q-icon
-                                    v-else-if="file.sampleFirst?.fastq1_ok"
-                                    name="check_circle"
-                                    color="green-8"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <FastqTooltip
-                                    :info="file.sampleFirst?.fastq1_info"
-                                    :warn="file.sampleFirst?.fastq1_warn"
-                                />
-                            </span>
-                            <span
-                                v-if="file.sampleFirst?.fastq2_path"
-                                class="fastq-text q-mt-xs"
-                                :class="fastqTextClass(file.sampleFirst?.fastq2_warn, file.sampleFirst?.fastq2_ok)"
-                            >
-                                <q-chip
-                                    label="R2"
-                                    dense
-                                    color="primary"
-                                    size="12px"
-                                    text-color="white"
-                                    class="q-mr-xs"
-                                />
-                                {{ file.sampleFirst.fastq2_path }}
-                                <q-icon
-                                    v-if="file.sampleFirst?.fastq2_warn"
-                                    name="warning"
-                                    color="orange"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <q-icon
-                                    v-else-if="file.sampleFirst?.fastq2_ok"
-                                    name="check_circle"
-                                    color="green-8"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <FastqTooltip
-                                    :info="file.sampleFirst?.fastq2_info"
-                                    :warn="file.sampleFirst?.fastq2_warn"
-                                />
-                            </span>
-                        </div>
-                        <span
-                            v-if="file.sampleFirstError"
-                            class="text-red text-bold"
-                            >{{ `${$t('Data')} ${$t('Required')}` }}</span
-                        >
-                    </div>
-                </div>
+        <div
+            class="row q-my-sm items-center relative-position"
+            :class="rowClass"
+            v-for="(file, fileIndex) in files"
+            :key="fileIndex"
+            :id="`${fileIndex}`"
+        >
+            <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
+            <div class="col-auto">
+                <q-btn icon="delete" color="red" dense :outline="true" flat @click="$emit('delete-file', fileIndex)" />
             </div>
-        </div>
-
-        <div v-if="sampleType === 'double'">
-            <div
-                class="row q-my-sm items-center relative-position bg-grey-3"
-                v-for="(file, fileIndex) in files"
-                :key="fileIndex"
-                :id="`${fileIndex}`"
-            >
-                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
-                <div class="col-auto">
-                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
-                </div>
-                <div class="col-auto">
-                    <q-btn icon="add" color="primary" dense outline flat @click="$emit('select-first', fileIndex)" />
-                </div>
-                <div class="col row q-gutter-xs">
-                    <div class="col row items-center bg-grey-3">
-                        <q-input
-                            v-if="file.sampleFirst?.identifier || file.sampleFirst?.notFound"
-                            class="col-2 q-mr-sm"
-                            stack-label
-                            :label="$t('DataNewFormDataIdentificationNumber')"
-                            label-color="purple"
-                            dense
-                            filled
-                            padding="1px"
-                            readonly
-                            :model-value="file.sampleFirst?.identifier || ''"
-                            :error="file.sampleFirst?.notFound"
-                            :error-message="$t('DataIdentifierNotFound')"
-                        />
-
-                        <div class="col q-ml-xs column items-start">
-                            <span
-                                v-if="file.sampleFirst?.fastq1_path"
-                                class="fastq-text"
-                                :class="fastqTextClass(file.sampleFirst?.fastq1_warn, file.sampleFirst?.fastq1_ok)"
-                            >
-                                <q-chip
-                                    label="R1"
-                                    dense
-                                    color="primary"
-                                    size="12px"
-                                    text-color="white"
-                                    class="q-mr-xs"
-                                />
-                                {{ file.sampleFirst.fastq1_path }}
-                                <q-icon
-                                    v-if="file.sampleFirst?.fastq1_warn"
-                                    name="warning"
-                                    color="orange"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <q-icon
-                                    v-else-if="file.sampleFirst?.fastq1_ok"
-                                    name="check_circle"
-                                    color="green-8"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <FastqTooltip
-                                    :info="file.sampleFirst?.fastq1_info"
-                                    :warn="file.sampleFirst?.fastq1_warn"
-                                />
-                            </span>
-                            <span
-                                v-if="file.sampleFirst?.fastq2_path"
-                                class="fastq-text q-mt-xs"
-                                :class="fastqTextClass(file.sampleFirst?.fastq2_warn, file.sampleFirst?.fastq2_ok)"
-                            >
-                                <q-chip
-                                    label="R2"
-                                    dense
-                                    color="primary"
-                                    size="12px"
-                                    text-color="white"
-                                    class="q-mr-xs"
-                                />
-                                {{ file.sampleFirst.fastq2_path }}
-                                <q-icon
-                                    v-if="file.sampleFirst?.fastq2_warn"
-                                    name="warning"
-                                    color="orange"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <q-icon
-                                    v-else-if="file.sampleFirst?.fastq2_ok"
-                                    name="check_circle"
-                                    color="green-8"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <FastqTooltip
-                                    :info="file.sampleFirst?.fastq2_info"
-                                    :warn="file.sampleFirst?.fastq2_warn"
-                                />
-                            </span>
-                        </div>
-                    </div>
-                    <q-separator vertical class="q-my-xs" />
-                    <div class="col row items-center bg-grey-3">
-                        <div class="col-1">
-                            <q-btn icon="add" color="primary" dense flat @click="$emit('select-second', fileIndex)" />
-                        </div>
-                        <q-input
-                            v-if="file.sampleSecond?.identifier || file.sampleSecond?.notFound"
-                            class="col-2 q-ml-sm"
-                            stack-label
-                            :label="$t('DataNewFormDataIdentificationNumber')"
-                            label-color="purple"
-                            dense
-                            filled
-                            padding="1px"
-                            readonly
-                            :model-value="file.sampleSecond?.identifier || ''"
-                            :error="file.sampleSecond?.notFound"
-                            :error-message="$t('DataIdentifierNotFound')"
-                        />
-
-                        <div class="col q-ml-xs column items-start">
-                            <span
-                                v-if="file.sampleSecond?.fastq1_path"
-                                class="fastq-text"
-                                :class="fastqTextClass(file.sampleSecond?.fastq1_warn, file.sampleSecond?.fastq1_ok)"
-                            >
-                                <q-chip
-                                    label="R1"
-                                    dense
-                                    color="primary"
-                                    size="12px"
-                                    text-color="white"
-                                    class="q-mr-xs"
-                                />
-                                {{ file.sampleSecond.fastq1_path }}
-                                <q-icon
-                                    v-if="file.sampleSecond?.fastq1_warn"
-                                    name="warning"
-                                    color="orange"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <q-icon
-                                    v-else-if="file.sampleSecond?.fastq1_ok"
-                                    name="check_circle"
-                                    color="green-8"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <FastqTooltip
-                                    :info="file.sampleSecond?.fastq1_info"
-                                    :warn="file.sampleSecond?.fastq1_warn"
-                                />
-                            </span>
-                            <span
-                                v-if="file.sampleSecond?.fastq2_path"
-                                class="fastq-text q-mt-xs"
-                                :class="fastqTextClass(file.sampleSecond?.fastq2_warn, file.sampleSecond?.fastq2_ok)"
-                            >
-                                <q-chip
-                                    label="R2"
-                                    dense
-                                    color="primary"
-                                    size="12px"
-                                    text-color="white"
-                                    class="q-mr-xs"
-                                />
-                                {{ file.sampleSecond.fastq2_path }}
-                                <q-icon
-                                    v-if="file.sampleSecond?.fastq2_warn"
-                                    name="warning"
-                                    color="orange"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <q-icon
-                                    v-else-if="file.sampleSecond?.fastq2_ok"
-                                    name="check_circle"
-                                    color="green-8"
-                                    size="14px"
-                                    class="q-mr-xs"
-                                />
-                                <FastqTooltip
-                                    :info="file.sampleSecond?.fastq2_info"
-                                    :warn="file.sampleSecond?.fastq2_warn"
-                                />
-                            </span>
-                        </div>
-                        <span
-                            v-if="file.sampleFirstError || file.sampleSecondError"
-                            class="text-red text-bold"
-                            >{{ `${$t('Data')} ${$t('Required')}` }}</span
-                        >
-                    </div>
-                </div>
+            <div class="col-auto" v-if="sampleType === 'single' && !file.sampleFirst?.id">
+                <q-btn
+                    icon="add"
+                    color="primary"
+                    dense
+                    :outline="true"
+                    flat
+                    @click="$emit('select-single', fileIndex)"
+                />
             </div>
-        </div>
-
-        <div v-if="sampleType === 'multiple'">
+            <div class="col-auto" v-if="sampleType === 'double'">
+                <q-btn
+                    icon="add"
+                    color="primary"
+                    dense
+                    :outline="true"
+                    flat
+                    @click="$emit('select-first', fileIndex)"
+                />
+            </div>
+            <div class="col-auto" v-if="sampleType === 'multiple'">
+                <q-btn icon="add" color="primary" dense flat @click="$emit('select-multi', fileIndex)" />
+            </div>
             <div
-                class="row q-my-sm items-center relative-position bg-blue-grey-2"
-                v-for="(file, fileIndex) in files"
-                :key="fileIndex"
-                :id="`${fileIndex}`"
+                class="col-auto"
+                v-if="sampleType === 'double_multiple' && (!file.samplesFirst || file.samplesFirst.length === 0)"
             >
-                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
-                <div class="col-auto">
-                    <q-btn icon="delete" color="red" dense flat @click="$emit('delete-file', fileIndex)" />
-                </div>
-                <div class="col-auto">
-                    <q-btn icon="add" color="primary" dense flat @click="$emit('select-multi', fileIndex)" />
-                </div>
-                <div class="col">
+                <q-btn
+                    icon="add"
+                    color="primary"
+                    dense
+                    :outline="true"
+                    flat
+                    @click="$emit('select-first-multi', fileIndex)"
+                />
+            </div>
+            <div
+                class="col-auto"
+                v-if="sampleType === 'double_multiple' && (!file.samplesSecond || file.samplesSecond.length === 0)"
+            >
+                <q-btn
+                    icon="add"
+                    color="secondary"
+                    dense
+                    :outline="true"
+                    flat
+                    @click="$emit('select-second-multi', fileIndex)"
+                />
+            </div>
+
+            <div class="col">
+                <template v-if="sampleType === 'single'">
+                    <div class="row q-gutter-xs">
+                        <div class="col row items-center">
+                            <q-input
+                                v-if="file.sampleFirst?.identifier || file.sampleFirst?.notFound"
+                                class="col-2 q-mr-sm self-center"
+                                stack-label
+                                :label="$t('DataNewFormDataIdentificationNumber')"
+                                label-color="purple"
+                                dense
+                                filled
+                                padding="1px"
+                                readonly
+                                :model-value="file.sampleFirst?.identifier || ''"
+                                :error="file.sampleFirst?.notFound"
+                                :error-message="$t('DataIdentifierNotFound')"
+                            />
+                            <div class="col q-ml-xs column items-start">
+                                <span
+                                    v-if="file.sampleFirst?.fastq1_path"
+                                    class="fastq-text"
+                                    :class="fastqTextClass(file.sampleFirst?.fastq1_warn, file.sampleFirst?.fastq1_ok)"
+                                >
+                                    <q-chip
+                                        label="R1"
+                                        dense
+                                        color="primary"
+                                        text-color="white"
+                                        size="12px"
+                                        class="q-mr-xs"
+                                    />
+                                    {{ file.sampleFirst.fastq1_path }}
+                                    <q-icon
+                                        v-if="file.sampleFirst?.fastq1_warn"
+                                        name="warning"
+                                        color="orange"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <q-icon
+                                        v-else-if="file.sampleFirst?.fastq1_ok"
+                                        name="check_circle"
+                                        color="green-8"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <FastqTooltip
+                                        :info="file.sampleFirst?.fastq1_info"
+                                        :warn="file.sampleFirst?.fastq1_warn"
+                                    />
+                                </span>
+                                <span
+                                    v-if="file.sampleFirst?.fastq2_path"
+                                    class="fastq-text q-mt-xs"
+                                    :class="fastqTextClass(file.sampleFirst?.fastq2_warn, file.sampleFirst?.fastq2_ok)"
+                                >
+                                    <q-chip
+                                        label="R2"
+                                        dense
+                                        color="primary"
+                                        size="12px"
+                                        text-color="white"
+                                        class="q-mr-xs"
+                                    />
+                                    {{ file.sampleFirst.fastq2_path }}
+                                    <q-icon
+                                        v-if="file.sampleFirst?.fastq2_warn"
+                                        name="warning"
+                                        color="orange"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <q-icon
+                                        v-else-if="file.sampleFirst?.fastq2_ok"
+                                        name="check_circle"
+                                        color="green-8"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <FastqTooltip
+                                        :info="file.sampleFirst?.fastq2_info"
+                                        :warn="file.sampleFirst?.fastq2_warn"
+                                    />
+                                </span>
+                            </div>
+                            <span
+                                v-if="file.sampleFirstError"
+                                class="text-red text-bold"
+                                >{{ `${$t('Data')} ${$t('Required')}` }}</span
+                            >
+                        </div>
+                    </div>
+                </template>
+
+                <template v-else-if="sampleType === 'double'">
+                    <div class="row q-gutter-xs">
+                        <div class="col row items-center">
+                            <q-input
+                                v-if="file.sampleFirst?.identifier || file.sampleFirst?.notFound"
+                                class="col-2 q-mr-sm"
+                                stack-label
+                                :label="$t('DataNewFormDataIdentificationNumber')"
+                                label-color="purple"
+                                dense
+                                filled
+                                padding="1px"
+                                readonly
+                                :model-value="file.sampleFirst?.identifier || ''"
+                                :error="file.sampleFirst?.notFound"
+                                :error-message="$t('DataIdentifierNotFound')"
+                            />
+                            <div class="col q-ml-xs column items-start">
+                                <span
+                                    v-if="file.sampleFirst?.fastq1_path"
+                                    class="fastq-text"
+                                    :class="fastqTextClass(file.sampleFirst?.fastq1_warn, file.sampleFirst?.fastq1_ok)"
+                                >
+                                    <q-chip
+                                        label="R1"
+                                        dense
+                                        color="primary"
+                                        size="12px"
+                                        text-color="white"
+                                        class="q-mr-xs"
+                                    />
+                                    {{ file.sampleFirst.fastq1_path }}
+                                    <q-icon
+                                        v-if="file.sampleFirst?.fastq1_warn"
+                                        name="warning"
+                                        color="orange"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <q-icon
+                                        v-else-if="file.sampleFirst?.fastq1_ok"
+                                        name="check_circle"
+                                        color="green-8"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <FastqTooltip
+                                        :info="file.sampleFirst?.fastq1_info"
+                                        :warn="file.sampleFirst?.fastq1_warn"
+                                    />
+                                </span>
+                                <span
+                                    v-if="file.sampleFirst?.fastq2_path"
+                                    class="fastq-text q-mt-xs"
+                                    :class="fastqTextClass(file.sampleFirst?.fastq2_warn, file.sampleFirst?.fastq2_ok)"
+                                >
+                                    <q-chip
+                                        label="R2"
+                                        dense
+                                        color="primary"
+                                        size="12px"
+                                        text-color="white"
+                                        class="q-mr-xs"
+                                    />
+                                    {{ file.sampleFirst.fastq2_path }}
+                                    <q-icon
+                                        v-if="file.sampleFirst?.fastq2_warn"
+                                        name="warning"
+                                        color="orange"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <q-icon
+                                        v-else-if="file.sampleFirst?.fastq2_ok"
+                                        name="check_circle"
+                                        color="green-8"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <FastqTooltip
+                                        :info="file.sampleFirst?.fastq2_info"
+                                        :warn="file.sampleFirst?.fastq2_warn"
+                                    />
+                                </span>
+                            </div>
+                        </div>
+                        <q-separator vertical class="q-my-xs" />
+                        <div class="col row items-center">
+                            <div class="col-1">
+                                <q-btn
+                                    icon="add"
+                                    color="primary"
+                                    dense
+                                    flat
+                                    @click="$emit('select-second', fileIndex)"
+                                />
+                            </div>
+                            <q-input
+                                v-if="file.sampleSecond?.identifier || file.sampleSecond?.notFound"
+                                class="col-2 q-ml-sm"
+                                stack-label
+                                :label="$t('DataNewFormDataIdentificationNumber')"
+                                label-color="purple"
+                                dense
+                                filled
+                                padding="1px"
+                                readonly
+                                :model-value="file.sampleSecond?.identifier || ''"
+                                :error="file.sampleSecond?.notFound"
+                                :error-message="$t('DataIdentifierNotFound')"
+                            />
+                            <div class="col q-ml-xs column items-start">
+                                <span
+                                    v-if="file.sampleSecond?.fastq1_path"
+                                    class="fastq-text"
+                                    :class="fastqTextClass(file.sampleSecond?.fastq1_warn, file.sampleSecond?.fastq1_ok)"
+                                >
+                                    <q-chip
+                                        label="R1"
+                                        dense
+                                        color="primary"
+                                        size="12px"
+                                        text-color="white"
+                                        class="q-mr-xs"
+                                    />
+                                    {{ file.sampleSecond.fastq1_path }}
+                                    <q-icon
+                                        v-if="file.sampleSecond?.fastq1_warn"
+                                        name="warning"
+                                        color="orange"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <q-icon
+                                        v-else-if="file.sampleSecond?.fastq1_ok"
+                                        name="check_circle"
+                                        color="green-8"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <FastqTooltip
+                                        :info="file.sampleSecond?.fastq1_info"
+                                        :warn="file.sampleSecond?.fastq1_warn"
+                                    />
+                                </span>
+                                <span
+                                    v-if="file.sampleSecond?.fastq2_path"
+                                    class="fastq-text q-mt-xs"
+                                    :class="fastqTextClass(file.sampleSecond?.fastq2_warn, file.sampleSecond?.fastq2_ok)"
+                                >
+                                    <q-chip
+                                        label="R2"
+                                        dense
+                                        color="primary"
+                                        size="12px"
+                                        text-color="white"
+                                        class="q-mr-xs"
+                                    />
+                                    {{ file.sampleSecond.fastq2_path }}
+                                    <q-icon
+                                        v-if="file.sampleSecond?.fastq2_warn"
+                                        name="warning"
+                                        color="orange"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <q-icon
+                                        v-else-if="file.sampleSecond?.fastq2_ok"
+                                        name="check_circle"
+                                        color="green-8"
+                                        size="14px"
+                                        class="q-mr-xs"
+                                    />
+                                    <FastqTooltip
+                                        :info="file.sampleSecond?.fastq2_info"
+                                        :warn="file.sampleSecond?.fastq2_warn"
+                                    />
+                                </span>
+                            </div>
+                            <span
+                                v-if="file.sampleFirstError || file.sampleSecondError"
+                                class="text-red text-bold"
+                                >{{ `${$t('Data')} ${$t('Required')}` }}</span
+                            >
+                        </div>
+                    </div>
+                </template>
+
+                <template v-else-if="sampleType === 'multiple'">
                     <template v-for="(sample, i) in file.samples" :key="sample.id">
                         <div class="row q-gutter-xs items-center bg-blue-grey-1 q-mt-xs">
                             <div class="col row">
@@ -358,7 +381,6 @@
                                     v-model.number="file.sampleDetails[i].sampleRatio"
                                     v-if="supportSampleRatio"
                                 />
-
                                 <div class="col q-ml-xs column items-start">
                                     <span
                                         v-if="sample.fastq1_path"
@@ -429,42 +451,9 @@
                         class="text-red text-bold"
                         >{{ `${$t('Data')} ${$t('Required')}` }}</span
                     >
-                </div>
-            </div>
-        </div>
+                </template>
 
-        <div v-if="sampleType === 'double_multiple'">
-            <div
-                class="row q-my-sm shadow-1 items-center bg-grey-3 relative-position"
-                v-for="(file, fileIndex) in files"
-                :key="fileIndex"
-                :id="`${fileIndex}`"
-            >
-                <q-badge class="absolute-top-right" color="primary" text-color="white" rounded :label="fileIndex + 1" />
-                <div class="col-auto">
-                    <q-btn icon="delete" color="red" dense outline flat @click="$emit('delete-file', fileIndex)" />
-                </div>
-                <div class="col-auto" v-if="!file.samplesFirst || file.samplesFirst.length === 0">
-                    <q-btn
-                        icon="add"
-                        color="primary"
-                        dense
-                        outline
-                        flat
-                        @click="$emit('select-first-multi', fileIndex)"
-                    />
-                </div>
-                <div class="col-auto" v-if="!file.samplesSecond || file.samplesSecond.length === 0">
-                    <q-btn
-                        icon="add"
-                        color="secondary"
-                        dense
-                        outline
-                        flat
-                        @click="$emit('select-second-multi', fileIndex)"
-                    />
-                </div>
-                <div class="col">
+                <template v-else>
                     <div class="row">
                         <div class="col-6">
                             <template v-for="sample in file.samplesFirst" :key="sample.id">
@@ -482,7 +471,6 @@
                                         :error="sample.notFound"
                                         :error-message="$t('DataIdentifierNotFound')"
                                     />
-
                                     <div class="col q-ml-xs column items-start">
                                         <q-btn
                                             v-if="sample.fastq1_path"
@@ -570,7 +558,6 @@
                                         :error="sample.notFound"
                                         :error-message="$t('DataIdentifierNotFound')"
                                     />
-
                                     <div class="col q-ml-xs column items-start">
                                         <span
                                             v-if="sample.fastq1_path"
@@ -640,14 +627,14 @@
                         class="text-red text-bold"
                         >{{ `${$t('Data')} ${$t('Required')}` }}</span
                     >
-                </div>
+                </template>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FastqTooltip from './FastqTooltip.vue'
 
@@ -675,6 +662,10 @@ const fastqTextClass = (warn, ok) => {
   if (ok) return 'text-black'
   return 'text-grey-7'
 }
+const rowClass = computed(() => {
+  if (props.sampleType === 'multiple') return 'bg-blue-grey-2'
+  return 'bg-grey-3'
+})
 </script>
 
 <style scoped>
