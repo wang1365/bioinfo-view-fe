@@ -81,7 +81,7 @@
                 filled
                 @clear="clearSelect()"
                 dense
-                @update:model-value="refreshPage()"
+                @update:model-value="search()"
             />
 
             <q-input
@@ -113,7 +113,7 @@
                     <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                 </template>
             </q-input>
-            <q-btn color="primary" size="md" :label="$t('Search')" icon="search" @click="refreshPage()" />
+            <q-btn color="primary" size="md" :label="$t('Search')" icon="search" @click="search()" />
             <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
         </div>
         <div class="q-px-sm">
@@ -560,6 +560,11 @@ const refreshPage = () => {
     doRequest();
 };
 
+const search = () => {
+    pagination.value.current = 1;
+    doRequest();
+};
+
 const showTaskError = (item) => {
     showError.value = true;
     currentTaskError.value = langCode.value === 'en' ? item.error_message_EN : item.error_message_CN;
@@ -584,6 +589,7 @@ const raisePriority = (row, priority) => {
 
 const clearSelect = () => {
     status.value = 'ALL';
+    pagination.value.current = 1;
     doRequest();
 };
 const projectSelected = (event) => {
@@ -592,6 +598,7 @@ const projectSelected = (event) => {
     projectId.value = event.id;
     showProjectSelect.value = false;
     console.log(projectId.value);
+    pagination.value.current = 1;
     doRequest();
 };
 const gotoDetail = (item) => {
@@ -629,6 +636,7 @@ const reset = () => {
     libraryNumber.value = '';
     taskId.value = '';
     status.value = 'ALL';
+    pagination.value.current = 1;
     doRequest();
 };
 
