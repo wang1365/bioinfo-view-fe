@@ -281,7 +281,7 @@
         <q-separator class="q-my-lg" size="2px" color="primary" />
     </q-page>
 
-    <div class="q-my-sm">
+    <div class="q-my-sm" v-if="!isDefineReport">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
                 <PieChartVue :data="filteredRows" :titleKey="chartTitles.type" />
@@ -643,9 +643,9 @@ const fixedColumns = computed(() => {
     const operationColumn = result.pop() // 移除操作列
     result.push(...additionalColumns) // 添加额外的列
     result.push(operationColumn) // 重新添加操作列
-
     return result
 })
+
 
 const scrollX = computed(() => {
     return 2200 + (fixedColumns.value.length - 33) * 100

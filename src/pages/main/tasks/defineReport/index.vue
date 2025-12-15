@@ -13,7 +13,7 @@
                 :title="$t('MutationAnalysis')"
                 icon="candlestick_chart"
             >
-                <div>
+                <div v-if="viewConfig.showMutationWes">
                     <SelectedWesMutationTable
                         :selected-keys="stepData.mutation?.wes?.selectedRows || []"
                         @openAdd="mutationWesDlg = true"
@@ -51,6 +51,21 @@
                             </q-card-actions>
                         </q-card>
                     </q-dialog>
+                </div>
+                <div v-else>
+                    <SelectedMutationTable
+                        :samples="samples"
+                        :task="taskDetail"
+                        :mutation-step-data="stepData.mutation"
+                        :intro="intros['mutation']"
+                        :showMutGermline="viewConfig.mutation?.showMutGermline"
+                        :showMutSomatic="viewConfig.mutation?.showMutSomatic"
+                        @confirm="onConfirmMutation"
+                        @removeGermline="onRemoveMutationGermline"
+                        @bulkRemoveGermline="onBulkRemoveMutationGermline"
+                        @removeSomatic="onRemoveMutationSomatic"
+                        @bulkRemoveSomatic="onBulkRemoveMutationSomatic"
+                    />
                 </div>
             </q-step>
 
@@ -464,13 +479,13 @@ import { errorMessage, infoMessage } from 'src/utils/notify'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import CommonModuleVue from 'src/pages/main/tasks/report/common-module/index.vue'
 import QcVue from '../report/qc/index.vue'
-import MutationVue from '../report/mutation/index.vue'
 import MutationWES from '../report/mutation/wes/MutationWES.vue'
 import FusionVue from '../report/fusion/index.vue'
 import CopyNumberVariationVue from '../report/copy-number-variation/index.vue'
 import CopyNumberVariationVueWes from "../report/copy-number-variation-wes/index.vue";
 import SelectedWesMutationTable from './components/SelectedWesMutationTable.vue'
 import SelectedWesCnvTable from './components/SelectedWesCnvTable.vue'
+import SelectedMutationTable from './components/SelectedMutationTable.vue'
 import MicrosatelliteInstabilityVue from '../report/microsatellite-instability/index.vue'
 import TumorMutationLoadVue from '../report/tumor-mutation-load/index.vue'
 import HomologousRecombinationDefectVue from '../report/homologous-recombination-defect/index.vue'
@@ -488,6 +503,7 @@ import { populations } from '../report/mutation/index'
 import Pathogen from '../report/pathogen/index'
 import SpecificPathogen from '../report/pathogen/SpecificPathogen.vue'
 import PathogenVirus from '../report/pathogen-virus/index'
+import _ from 'lodash'
 
 const { t } = useI18n();
 const store = globalStore()
@@ -640,6 +656,54 @@ const loadWesDataForDefineReport = async () => {
   wesData.value.searchParams = {}
 
   wesLoading.value = false
+}
+
+
+const onRemoveMutationGermline = (lineNumber) => {
+  const prev = stepData.value.mutation || {}
+  const cur = prev.germline || { selectedRows: [], selectedDefaultRows: [] }
+  const sr = (cur.selectedRows || []).filter(ln => ln !== lineNumber)
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => ln !== lineNumber)
+  stepData.value.mutation = { ...prev, germline: { ...cur, selectedRows: sr, selectedDefaultRows: sdr } }
+}
+const onRemoveMutationSomatic = (lineNumber) => {
+  const prev = stepData.value.mutation || {}
+  const cur = prev.somatic || { selectedRows: [], selectedDefaultRows: [] }
+  const sr = (cur.selectedRows || []).filter(ln => ln !== lineNumber)
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => ln !== lineNumber)
+  stepData.value.mutation = { ...prev, somatic: { ...cur, selectedRows: sr, selectedDefaultRows: sdr } }
+}
+const onBulkRemoveMutationGermline = (lineNumbers) => {
+  const prev = stepData.value.mutation || {}
+  const cur = prev.germline || { selectedRows: [], selectedDefaultRows: [] }
+  const set = new Set(lineNumbers || [])
+  const sr = (cur.selectedRows || []).filter(ln => !set.has(ln))
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => !set.has(ln))
+  stepData.value.mutation = { ...prev, germline: { ...cur, selectedRows: sr, selectedDefaultRows: sdr } }
+}
+const onBulkRemoveMutationSomatic = (lineNumbers) => {
+  const prev = stepData.value.mutation || {}
+  const cur = prev.somatic || { selectedRows: [], selectedDefaultRows: [] }
+  const set = new Set(lineNumbers || [])
+  const sr = (cur.selectedRows || []).filter(ln => !set.has(ln))
+  const sdr = (cur.selectedDefaultRows || []).filter(ln => !set.has(ln))
+  stepData.value.mutation = { ...prev, somatic: { ...cur, selectedRows: sr, selectedDefaultRows: sdr } }
+}
+
+const onConfirmMutation = (data) => {
+  const prev = stepData.value.mutation || {}
+  const payload = { ...prev }
+  if (data?.germline) {
+    const merged = Array.from(new Set([...(prev.germline?.selectedRows || []), ...(data.germline.selectedRows || [])]))
+    const mergedDefault = Array.from(new Set([...(prev.germline?.selectedDefaultRows || []), ...(data.germline.selectedDefaultRows || [])]))
+    payload.germline = { ...data.germline, selectedRows: merged, selectedDefaultRows: mergedDefault }
+  }
+  if (data?.somatic) {
+    const merged = Array.from(new Set([...(prev.somatic?.selectedRows || []), ...(data.somatic.selectedRows || [])]))
+    const mergedDefault = Array.from(new Set([...(prev.somatic?.selectedDefaultRows || []), ...(data.somatic.selectedDefaultRows || [])]))
+    payload.somatic = { ...data.somatic, selectedRows: merged, selectedDefaultRows: mergedDefault }
+  }
+  stickDone('mutation', payload)
 }
 
 const onRemoveMutationWes = (lineNumber) => {

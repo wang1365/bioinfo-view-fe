@@ -396,6 +396,33 @@ const reset = () => {
 
 }
 
+const getChangedData = () => {
+    const result = {}
+    if (!filterData.value.germline && viewConfig.value.showMutGermline) {
+        if (germlineVue.value && germlineVue.value.getChangedData) {
+            result.germline = germlineVue.value.getChangedData()
+        }
+    } else if (filterData.value.germline) {
+        result.germline = filterData.value.germline
+    }
+    if (!filterData.value.somatic && viewConfig.value.showMutSomatic) {
+        if (somaticVue.value && somaticVue.value.getChangedData) {
+            result.somatic = somaticVue.value.getChangedData()
+        }
+    } else if (filterData.value.somatic) {
+        result.somatic = filterData.value.somatic
+    }
+    if (!filterData.value.wes && viewConfig.value.showMutWES) {
+        if (wesVue.value && wesVue.value.getChangedData) {
+            result.wes = wesVue.value.getChangedData()
+        }
+    } else if (filterData.value.wes) {
+        result.wes = filterData.value.wes
+    }
+    return result
+}
+defineExpose({ getChangedData })
+
 
 const loadGermlineData = () => {
     $q.loading.show({ delay: 100 })

@@ -327,7 +327,7 @@
         <q-separator class="q-my-lg" size="2px" color="primary" />
     </div>
 
-    <div class="q-my-sm" v-if="!showColumn">
+    <div class="q-my-sm" v-if="!isDefineReport">
         <div class="row q-mb-sm">
             <div class="col q-px-xs">
                 <PieChartVue :data="filteredRows" :titleKey="chartTitles.type" />
