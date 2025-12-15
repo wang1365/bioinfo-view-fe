@@ -68,14 +68,6 @@
                                     <div>{{ $t('TumorFrequency') }}: {{ formatAF(record.col9) }}%</div>
                                 </div>
                             </template>
-                            <template v-if="column.dataIndex === 'operation'">
-                                <q-btn
-                                    color="negative"
-                                    size="sm"
-                                    :label="$t('Delete')"
-                                    @click="$emit('removeGermline', record.lineNumber)"
-                                />
-                            </template>
                         </template>
                     </a-table>
                     <div v-if="!germlineLoading && germlineDisplayRows.length === 0" class="text-grey q-mt-sm">
@@ -130,14 +122,6 @@
                                     <div>{{ $t('TumorFrequency') }}: {{ formatAF(record.tumorRatio) }}%</div>
                                     <div>{{ $t('ControlFrequency') }}: {{ formatAF(record.compareRatio) }}%</div>
                                 </div>
-                            </template>
-                            <template v-if="column.dataIndex === 'operation'">
-                                <q-btn
-                                    color="negative"
-                                    size="sm"
-                                    :label="$t('Delete')"
-                                    @click="$emit('removeSomatic', record.lineNumber)"
-                                />
                             </template>
                         </template>
                     </a-table>
@@ -230,7 +214,6 @@ const germlineBaseFixedColumns = [
   { i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100 },
   { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 120 },
   { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
-  { title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 100 },
 ]
 const germlineColumns = computed(() => {
   const targetColumnNames = [
@@ -263,9 +246,7 @@ const germlineColumns = computed(() => {
     }
   })
   const result = [...germlineBaseFixedColumns]
-  const operationColumn = result.pop()
   result.push(...additional)
-  result.push(operationColumn)
   result.forEach(col => {
     if ((col.title === '' || col.title == null) && col.i) {
       col.title = germlineHeader.value[col.i - 1] || ''
@@ -304,11 +285,9 @@ const somaticBaseFixedColumns = [
   { i: 42, title: '', dataIndex: 'col42', align: 'center', width: 100 },
   { i: 43, title: '', dataIndex: 'col43', align: 'center', width: 100 },
   { i: 64, title: '', dataIndex: 'col64', align: 'center', width: 100 },
-  { title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 100 },
 ]
 const somaticColumns = computed(() => {
   const result = [...somaticBaseFixedColumns]
-  const operationColumn = result.pop()
   const targetColumnNames = [
     'Strand_Bias(ref_f,ref_r,alt_f,alt_r)',
     'Hot',
@@ -333,7 +312,6 @@ const somaticColumns = computed(() => {
       }
     }
   })
-  result.push(operationColumn)
   result.forEach(col => {
     if ((col.title === '' || col.title == null) && col.i) {
       col.title = somaticHeader.value[col.i - 1] || ''

@@ -8,6 +8,7 @@
             </q-card-section>
             <q-card-section class="dialog-content">
                 <MutationVue
+                    :key="mutationKey"
                     ref="mutationRef"
                     :viewConfig="innerViewConfig"
                     :intro="intro"
@@ -27,7 +28,7 @@
     </q-dialog>
 </template>
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import MutationVue from '../../report/mutation/index.vue'
 
 const visible = defineModel('visible', { type: Boolean, default: false })
@@ -58,6 +59,12 @@ const onReset = () => {
 }
 
 const mutationRef = ref(null)
+const mutationKey = ref(0)
+watch(visible, (v) => {
+  if (v) {
+    mutationKey.value++
+  }
+})
 const confirmByRef = () => {
   if (mutationRef.value && mutationRef.value.getChangedData) {
     const data = mutationRef.value.getChangedData()
