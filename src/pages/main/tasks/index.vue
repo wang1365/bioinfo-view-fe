@@ -262,7 +262,7 @@
                                 color="primary"
                                 :label="$t('Detail')"
                                 icon="visibility"
-                                @click="gotoDetail(record)"
+                                :to="`/main/tasks/${record.id}`"
                                 size="md"
                                 dense
                                 flat
@@ -274,7 +274,7 @@
                                 :color="record.status !== 'FINISHED' ? 'grey' : 'primary'"
                                 :label="$t('Result')"
                                 icon="query_stats"
-                                @click="gotoReport(record)"
+                                :to="`/main/tasks/${record.id}/report`"
                                 size="md"
                                 dense
                                 flat
@@ -287,7 +287,7 @@
                                     :color="(record.status !== 'FINISHED' || !record.flow.allow_define_report) ? 'grey': 'primary'"
                                     :label="$t('TaskPageBtnCustomReport')"
                                     icon="query_stats"
-                                    @click="gotoDefineReport(record)"
+                                    :to="`/main/tasks/${record.id}/define-report`"
                                     size="md"
                                     dense
                                     flat
