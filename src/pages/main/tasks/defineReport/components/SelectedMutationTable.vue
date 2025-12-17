@@ -10,11 +10,11 @@
                 :breakpoint="0"
                 dense
             >
-                <q-tab name="胚系突变分析" :label="$t('GermlineMutationAnalysis')" v-if="showMutGermline" />
-                <q-tab name="体细胞突变分析" :label="$t('SomaticMutationAnalysis')" v-if="showMutSomatic" />
+                <q-tab name="胚系突变分析" :label="$t('GermlineMutationAnalysis')" v-if="config.showMutGermline" />
+                <q-tab name="体细胞突变分析" :label="$t('SomaticMutationAnalysis')" v-if="config.showMutSomatic" />
             </q-tabs>
             <q-tab-panels v-model="tab" animated>
-                <q-tab-panel name="胚系突变分析" v-if="showMutGermline">
+                <q-tab-panel name="胚系突变分析" v-if="config.showMutGermline">
                     <div class="row items-center q-pb-sm q-gutter-sm">
                         <q-btn color="primary" :label="$t('Add')" icon="add" @click="openDialog('germline')" />
                         <q-btn
@@ -74,7 +74,7 @@
                         {{$t('NoData')}}
                     </div>
                 </q-tab-panel>
-                <q-tab-panel name="体细胞突变分析" v-if="showMutSomatic">
+                <q-tab-panel name="体细胞突变分析" v-if="config.showMutSomatic">
                     <div class="row items-center q-pb-sm q-gutter-sm">
                         <q-btn color="primary" :label="$t('Add')" icon="add" @click="openDialog('somatic')" />
                         <q-btn
@@ -137,8 +137,8 @@
             :task="task"
             :stepData="mutationStepData"
             :intro="intro"
-            :showMutGermline="dlgShowGermline"
-            :showMutSomatic="dlgShowSomatic"
+            :showMutGermline="dlgShowMutGermline"
+            :showMutSomatic="dlgShowMutSomatic"
             @confirm="onConfirm"
         />
     </div>
@@ -157,25 +157,25 @@ const props = defineProps({
   task: { type: Object, default: () => ({}) },
   mutationStepData: { type: Object, default: () => ({}) },
   intro: { type: String, default: '' },
-  showMutGermline: { type: Boolean, default: true },
-  showMutSomatic: { type: Boolean, default: true },
+  config: { type: Object, default: () => ({}) },
 })
 
 const route = useRoute()
-const tab = ref(props.showMutGermline ? '胚系突变分析' : '体细胞突变分析')
-watch(() => [props.showMutGermline, props.showMutSomatic], () => {
-  if (props.showMutGermline) tab.value = '胚系突变分析'
-  else if (props.showMutSomatic) tab.value = '体细胞突变分析'
+const tab = ref(props.config.showMutGermline ? '胚系突变分析' : '体细胞突变分析')
+watch(() => [props.config], () => {
+  if (props.config.showMutGermline) tab.value = '胚系突变分析'
+  else if (props.config.showMutSomatic) tab.value = '体细胞突变分析'
+
 }, { immediate: true })
 
 const dlgVisible = ref(false)
-const dlgMode = ref(props.showMutGermline ? 'germline' : 'somatic')
+const dlgShowMutGermline = ref(false)
+const dlgshowMutSomatic = ref(false)
 const openDialog = (mode) => {
-  dlgMode.value = mode
+    dlgShowMutGermline.value = mode === 'germline'
+    dlgshowMutSomatic.value = mode === 'somatic'
   dlgVisible.value = true
 }
-const dlgShowGermline = computed(() => props.showMutGermline && dlgMode.value === 'germline')
-const dlgShowSomatic = computed(() => props.showMutSomatic && dlgMode.value === 'somatic')
 
 const germlineLoading = ref(false)
 const somaticLoading = ref(false)
@@ -321,7 +321,7 @@ const somaticColumns = computed(() => {
 })
 
 const loadGermlineSelectedRows = async () => {
-  if (!props.showMutGermline) return
+  if (!props.config.showMutGermline) return
 
   germlineLoading.value = true
   const res = await readTaskMuFile(route.params.id, 'Mut_germline')
@@ -342,7 +342,7 @@ const loadGermlineSelectedRows = async () => {
   console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', headNames)
 }
 const loadSomaticSelectedRows = async () => {
-  if (!props.showMutSomatic) return
+  if (!props.config.showMutSomatic) return
   somaticLoading.value = true
   const res = await readTaskMuFile(route.params.id, 'Mut_somatic')
   const headNames = getCsvHeader(res, '\t')

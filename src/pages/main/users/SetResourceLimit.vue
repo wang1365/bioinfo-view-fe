@@ -66,7 +66,7 @@ const password = ref('')
 const password_again = ref('')
 
 const clickOk = () => {
-    resetPassword(user.id, password.value).then(() => {
+    resetPassword(user.value.id, password.value).then(() => {
         $q.notify({message: '修改密码用户成功', type: 'positive'})
     })
 }

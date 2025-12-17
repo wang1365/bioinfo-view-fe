@@ -60,6 +60,7 @@
                         :intro="intros['mutation']"
                         :showMutGermline="viewConfig.mutation?.showMutGermline"
                         :showMutSomatic="viewConfig.mutation?.showMutSomatic"
+                        :config="viewConfig.mutation"
                         @confirm="onConfirmMutation"
                         @removeGermline="onRemoveMutationGermline"
                         @bulkRemoveGermline="onBulkRemoveMutationGermline"
@@ -962,7 +963,7 @@ const loadViewConfig = () => {
                 }
                 commonTabs.value = data.commonModules
             }
-            viewConfig.value = config
+            viewConfig.value = {...config}
             viewConfigLoaded.value = true
             if (keys.length === 1 && keys[0] === 'commonModules') {
                 step.value = data.commonModules[0].title
