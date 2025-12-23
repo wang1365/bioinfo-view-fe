@@ -287,6 +287,7 @@ onMounted(() => {
         }
     }
     file.sampleDetails = [{ customName: '', sampleRatio: null }]
+    file.taskName = ''
     newTabParamFiles.value = file
     newTabParams.value = {
         params: params,
@@ -312,9 +313,12 @@ const deleteParamTab = (index) => {
 }
 
 const addParamTabFiles = (index) => {
-    paramTabs.value[index].files.push(
-        JSON.parse(JSON.stringify(newTabParamFiles.value))
-    )
+    let newFile = JSON.parse(JSON.stringify(newTabParamFiles.value))
+    const currentTab = paramTabs.value[index]
+    if (currentTab.name) {
+        newFile.taskName = `${currentTab.name}-${currentTab.files.length + 1}`
+    }
+    paramTabs.value[index].files.push(newFile)
     console.log(paramTabs.value)
 }
 const deleteParamTabFiles = (index, file_index) => {
@@ -358,7 +362,7 @@ const createTasks = (datas) => {
                 data.append("samples", item.samples)
                 data.append("sample_details", item.sampleDetails)
                 data.append("parameter", item.parameter)
-                data.append("name", `${item.name}-${nameIndex}`)
+                data.append("name", item.finalName)
                 if (item.taskSamplesFirst !== "") {
                     data.append("task_samples_first", item.taskSamplesFirst)
                 }
@@ -398,6 +402,7 @@ const confirmTaskCreated = () => {
     let hasFastqIssue = false;
     let datas = []
     for (let taskParam of paramTabs.value) {
+        let autoNameIndex = 0
         let taskParameter = [];
         let taskHasError = false
         if (!taskParam.name) {
@@ -594,6 +599,12 @@ const confirmTaskCreated = () => {
             let data = {}
             data.uploadFiles = uploadFiles
             data.name = taskParam.name
+            if (file.taskName) {
+                data.finalName = file.taskName
+            } else {
+                autoNameIndex += 1
+                data.finalName = `${taskParam.name}-${autoNameIndex}`
+            }
             data.parameter = JSON.stringify(taskParameter)
             data.samples = taskSamples
             data.sampleDetails = JSON.stringify(file.sampleDetails || [])

@@ -346,14 +346,15 @@ const onBulkImport = (imported) => {
 
 const downloadCsvTemplate = () => {
   let headers = []
+  const taskNameHeader = 'Task Name'
   if (props.sampleType === 'single') {
-    headers = ['Data ID']
+    headers = [taskNameHeader, 'Data ID']
   } else if (props.sampleType === 'double') {
-    headers = ['Data 1 ID', 'Data 2 ID']
+    headers = [taskNameHeader, 'Data 1 ID', 'Data 2 ID']
   } else if (props.sampleType === 'multiple') {
-    headers = Array.from({ length: 100 }, (_, i) => `Data ${i + 1} ID`)
+    headers = [taskNameHeader, ...Array.from({ length: 100 }, (_, i) => `Data ${i + 1} ID`)]
   } else {
-    headers = ['Data ID']
+    headers = [taskNameHeader, 'Data ID']
   }
   const content = headers.join(',') + '\n'
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' })
@@ -474,9 +475,13 @@ const handleCsvUpload = async () => {
   const text = await file.text()
   const { rows } = parseCsvToList(text, ',', true)
   const identifiers = []
+  const parsedRows = []
   for (const row of rows) {
-    const values = Object.values(row).filter((v) => v && v.length > 0)
-    for (const v of values) identifiers.push(v)
+    const values = Object.values(row)
+    const taskName = values[0] || ''
+    const sampleValues = values.slice(1).filter((v) => v && v.length > 0)
+    parsedRows.push({ taskName, sampleValues })
+    for (const v of sampleValues) identifiers.push(v)
   }
   const uniqIds = Array.from(new Set(identifiers))
   if (uniqIds.length === 0) {
@@ -496,20 +501,21 @@ const handleCsvUpload = async () => {
       }
       return { identifier: '', notFound: false }
     }
-    for (const row of rows) {
-      const values = Object.values(row).filter((v) => v && v.length > 0)
+    for (const { taskName, sampleValues } of parsedRows) {
       if (props.sampleType === 'single') {
-        const first = getSample(values[0])
+        const first = getSample(sampleValues[0])
         const fileItem = {
+          taskName,
           sampleFirst: first,
           sampleFirstError: false,
           sampleDetails: [{ customName: first.sample_identifier || first.identifier || '', sampleRatio: null, id: first.id }],
         }
         imported.push(fileItem)
       } else if (props.sampleType === 'double') {
-        const first = getSample(values[0])
-        const second = getSample(values[1])
+        const first = getSample(sampleValues[0])
+        const second = getSample(sampleValues[1])
         const fileItem = {
+          taskName,
           sampleFirst: first,
           sampleSecond: second,
           sampleFirstError: false,
@@ -521,8 +527,9 @@ const handleCsvUpload = async () => {
         }
         imported.push(fileItem)
       } else if (props.sampleType === 'multiple') {
-        const samples = values.map((v) => getSample(v))
+        const samples = sampleValues.map((v) => getSample(v))
         const fileItem = {
+          taskName,
           samples,
           samplesError: false,
           sampleDetails: samples.map((s) => ({ customName: s.sample_identifier || s.identifier || '', sampleRatio: null, id: s.id })),

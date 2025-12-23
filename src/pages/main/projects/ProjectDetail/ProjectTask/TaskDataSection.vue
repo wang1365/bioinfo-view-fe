@@ -13,7 +13,7 @@
             </div>
             <div class="col-auto" v-if="sampleType === 'single' && !file.sampleFirst?.id">
                 <q-btn
-                    icon="add"
+                    icon="ads_click"
                     color="primary"
                     dense
                     :outline="true"
@@ -23,7 +23,7 @@
             </div>
             <div class="col-auto" v-if="sampleType === 'double'">
                 <q-btn
-                    icon="add"
+                    icon="ads_click"
                     color="primary"
                     dense
                     :outline="true"
@@ -32,14 +32,14 @@
                 />
             </div>
             <div class="col-auto" v-if="sampleType === 'multiple'">
-                <q-btn icon="add" color="primary" dense flat @click="$emit('select-multi', fileIndex)" />
+                <q-btn icon="ads_click" color="primary" dense flat @click="$emit('select-multi', fileIndex)" />
             </div>
             <div
                 class="col-auto"
                 v-if="sampleType === 'double_multiple' && (!file.samplesFirst || file.samplesFirst.length === 0)"
             >
                 <q-btn
-                    icon="add"
+                    icon="ads_click"
                     color="primary"
                     dense
                     :outline="true"
@@ -52,7 +52,7 @@
                 v-if="sampleType === 'double_multiple' && (!file.samplesSecond || file.samplesSecond.length === 0)"
             >
                 <q-btn
-                    icon="add"
+                    icon="ads_click"
                     color="secondary"
                     dense
                     :outline="true"
@@ -65,6 +65,15 @@
                 <template v-if="sampleType === 'single'">
                     <div class="row q-gutter-xs">
                         <div class="col row items-center">
+                            <q-input
+                                v-model="file.taskName"
+                                class="col-2 q-mr-sm self-center"
+                                stack-label
+                                :label="$t('Task') + $t('Name')"
+                                label-color="purple"
+                                dense
+                                filled
+                            />
                             <q-input
                                 v-if="file.sampleFirst?.identifier || file.sampleFirst?.notFound"
                                 class="col-2 q-mr-sm self-center"
@@ -160,6 +169,15 @@
                     <div class="row q-gutter-xs">
                         <div class="col row items-center">
                             <q-input
+                                v-model="file.taskName"
+                                class="col-2 q-mr-sm self-center"
+                                stack-label
+                                :label="$t('Task') + $t('Name')"
+                                label-color="purple"
+                                dense
+                                filled
+                            />
+                            <q-input
                                 v-if="file.sampleFirst?.identifier || file.sampleFirst?.notFound"
                                 class="col-2 q-mr-sm"
                                 stack-label
@@ -246,7 +264,7 @@
                         <div class="col row items-center">
                             <div class="col-1">
                                 <q-btn
-                                    icon="add"
+                                    icon="ads_click"
                                     color="primary"
                                     dense
                                     flat
@@ -345,6 +363,17 @@
                 </template>
 
                 <template v-else-if="sampleType === 'multiple'">
+                    <div class="row q-mb-sm">
+                        <q-input
+                            v-model="file.taskName"
+                            class="col-3"
+                            stack-label
+                            :label="$t('Task') + $t('Name')"
+                            label-color="purple"
+                            dense
+                            filled
+                        />
+                    </div>
                     <template v-for="(sample, i) in file.samples" :key="sample.id">
                         <div class="row q-gutter-xs items-center bg-blue-grey-1 q-mt-xs">
                             <div class="col row">
