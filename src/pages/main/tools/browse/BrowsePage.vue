@@ -43,8 +43,10 @@
                 />
                 <q-btn
                     :label="$t('Back')"
-                    color="primary" icon="arrow_back"
-                    size="sm" class="q-ml-sm"
+                    color="primary"
+                    icon="arrow_back"
+                    size="sm"
+                    class="q-ml-sm"
                     @click="router.back()"
                 />
                 <q-dialog v-model="inputDlgVisible">
@@ -102,7 +104,7 @@ import {errorMessage} from "src/utils/notify"
 import {useQuasar, QSpinnerFacebook} from 'quasar'
 import SampleCard from './components/SampleCard'
 import {buildModelQuery, queryModel} from 'src/api/modelQueryBuilder'
-import igv from 'igv'
+import igv from 'igv/dist/igv.esm.js'
 import * as refGenomes from 'src/utils/refGenome'
 import { hasAnyRole } from 'src/utils/user'
 import {hg38} from "src/utils/refGenome";

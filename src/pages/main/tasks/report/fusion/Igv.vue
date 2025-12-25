@@ -18,7 +18,7 @@ import {ref, onMounted, onUpdated, nextTick, onUnmounted } from 'vue'
 import {readTaskFile} from "src/api/task"
 import { uid } from 'quasar'
 import * as hg from 'src/utils/refGenome'
-import igv from "igv"
+import igv from 'igv/dist/igv.esm.js'
 
 const props = defineProps({
     taskId: {
