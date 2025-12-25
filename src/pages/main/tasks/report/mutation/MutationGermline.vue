@@ -325,7 +325,7 @@
     </q-dialog>
     <q-dialog v-model="igvVisible">
         <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
-            <Igv :taskId="props.task.id" :file="igvFile" />
+            <Igv :taskId="props.task.id" :file="igvFile" :chr="igvChr" :position="igvPosition"/>
         </q-card>
     </q-dialog>
 </template>
@@ -474,6 +474,8 @@ const props = defineProps({
 const route = useRoute()
 const igvVisible = ref(false)
 const igvFile = ref(null)
+const igvChr = ref(null)
+const igvPosition = ref(null)
 const dialogVisible = ref(false)
 const searchParamsInit = {
     gene: null,
@@ -710,9 +712,14 @@ function clickDetail (record) {
 }
 
 function clickIgv (record) {
+
     currentRow.value = record
     igvFile.value = `Mut_germline/${record.col1}-${record.col2}.igv`
+    igvChr.value = record.col1
+    igvPosition.value = Number(record.col3)
     igvVisible.value = true
+
+    console.log('xxxxxxxxxxxxxxxxx click igv germiline', record, igvChr.value, igvPosition.value)
 }
 
 const customRow = (record, index) => {

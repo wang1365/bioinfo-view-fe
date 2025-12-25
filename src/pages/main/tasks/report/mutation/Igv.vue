@@ -18,7 +18,7 @@ import { ref, onMounted, onUpdated } from 'vue'
 import { readTaskFile } from "src/api/task"
 import { uid } from 'quasar'
 import * as hg from 'src/utils/refGenome'
-import igv from "igv"
+import igv from 'igv'
 
 const props = defineProps({
     taskId: {
@@ -28,7 +28,15 @@ const props = defineProps({
     file: {
         type: [String, null],
         required: true
-    }
+    },
+    chr: {
+        type: [String, null],
+        required: true
+    },
+    position: {
+        type: [Number, null],
+        required: true
+    },
 })
 
 const options = ref([])
@@ -56,6 +64,13 @@ onMounted(() => {
                 if (indexURL) {
                     track['indexURL'] = '/igv' + indexURL
                 }
+
+                track['sort'] = {
+                    chr: props.chr,
+                    position: props.position,
+                    option: "BASE",
+                    direction: "ASC",
+                }
             }
             return option
         })
@@ -64,8 +79,14 @@ onMounted(() => {
         setTimeout(() => {
             options.value.forEach(option => {
                 refreshIgvBrowser(option.uid, option)
+                // option.tracks.forEach(track => track.sort({
+                //     "chr": props.chr,
+                //     "position": props.position,
+                //     "option": "BASE",
+                //     "direction": "DESC"
+                // })})
             })
-        }, 1000)
+        }, 2000)
     })
 })
 

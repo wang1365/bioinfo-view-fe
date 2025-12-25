@@ -374,7 +374,7 @@
     </q-dialog>
     <q-dialog v-model="igvVisible">
         <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
-            <Igv :taskId="props.task.id" :file="igvFile" />
+            <Igv :taskId="props.task.id" :file="igvFile" :chr="igvChr" :position="igvPosition"/>
         </q-card>
     </q-dialog>
 </template>
@@ -562,6 +562,8 @@ const innerSearchParams = ref({
 
 const igvVisible = ref(false)
 const igvFile = ref(null)
+const igvChr = ref(null)
+const igvPosition = ref(null)
 const loading = ref(false)
 const filteredRows = ref([])
 const { rows, drugRows, header } = toRefs(props)
@@ -826,7 +828,10 @@ function clickDetail(record) {
 }
 
 function clickIgv(record) {
+    console.log('xxxxxxxxxxxxxxxxx click igv somatic', record)
     currentRow.value = record
+    igvChr.value = record.col1
+    igvPosition.value = Number(record.col3)
     igvFile.value = `Mut_somatic/${record.col1}-${record.col2}.igv`
     igvVisible.value = true
 }
