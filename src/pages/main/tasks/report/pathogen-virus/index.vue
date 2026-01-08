@@ -138,22 +138,6 @@ import CompareDialog from '../pathogen/components/CompareDialog.vue'
 import { fillCompareData } from '../pathogen/components/compare'
 
 
-const store = globalStore()
-const { langCode } = storeToRefs(store)
-const { t } = useI18n()
-const $q = useQuasar()
-const route = useRoute()
-const dlgVisible = ref(false)
-const emit = defineEmits(['stickDone', 'reset'])
-const viewConfig = toRef(props, 'viewConfig')
-const rows = ref([])
-const dlgCmpVisible = ref(false)
-const cmpRecord = ref()
-
-const isDefineReport = computed(() => useRoute().name === 'defineReport')
-let selectedDefaultRows = ref([])
-let defaultRows = ref([])
-
 const props = defineProps({
     intro: {
         type: String,
@@ -181,6 +165,22 @@ const props = defineProps({
         }
     },
 })
+
+const store = globalStore()
+const { langCode } = storeToRefs(store)
+const { t } = useI18n()
+const $q = useQuasar()
+const route = useRoute()
+const dlgVisible = ref(false)
+const emit = defineEmits(['stickDone', 'reset'])
+const viewConfig = toRef(props, 'viewConfig')
+const rows = ref([])
+const dlgCmpVisible = ref(false)
+const cmpRecord = ref()
+
+const isDefineReport = computed(() => useRoute().name === 'defineReport')
+let selectedDefaultRows = ref([])
+let defaultRows = ref([])
 const stepData = toRef(props, 'stepData')
 
 const customCell = useCustomCell('report')
