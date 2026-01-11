@@ -93,7 +93,7 @@ const pagination = ref({
     current: 1,
     pageSize: 10,
     showSizeChanger: true,
-    showTotal: total => `${t('TotalCount')}: ${total}`,
+    showTotal: (total) => t('PaginationTotal', { total }),
     pageSizeOptions: [10, 20, 50, 100]
 })
 

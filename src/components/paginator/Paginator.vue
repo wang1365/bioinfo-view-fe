@@ -19,14 +19,7 @@ export default {
     },
     computed: {
         currentItems() {
-            return (
-                (this.currentPage - 1) * this.pageSize +
-                1 +
-                " - " +
-                this.currentPage * this.pageSize +
-                " of " +
-                this.total
-            );
+            return this.$t('PaginationTotal', { total: this.total })
         },
     },
 

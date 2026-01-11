@@ -244,6 +244,7 @@ export default {
     Back: 'Back',
     TaskResult: 'Task Result',
     TotalCount: 'Total Count',
+    PaginationTotal: 'Total {total} items',
 
     // 菜单
     PlatformMonitoring: 'Platform Monitoring',
@@ -772,7 +773,7 @@ export default {
     SelectFileFormat: 'Select file format',
     SelectTrackType: 'Select track type',
 
-    // HRD: 同源数据重组
+    // HRD: 同源数据信息重组
     HRDStatistics: 'HRD Statistics',
     OnlyForResearch: 'For research use only, not for clinical diagnosis.',
     X1Comment: 'Abscissa: Chromosome, ordinate: A(red) and B(blue) alleles copy number',

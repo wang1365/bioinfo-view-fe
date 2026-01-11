@@ -273,6 +273,7 @@ export default {
     Back: '返回',
     TaskResult: '任务结果',
     TotalCount: '总数',
+    PaginationTotal: '共 {total} 条',
 
     // 菜单
     PlatformMonitoring: '平台监控',
@@ -361,7 +362,7 @@ export default {
     AlreadyRun: '已运行',
     Days: '天',
     TaskSettingTip: '该参数与内存实际大小、测序数据量、捕获试剂盒有关，建议100G内存服务器填写3',
-    MemorySettingTip: '该参数为本系统使用的内存大小占服务器的比例，防止部分任务内存超过预计，建议填写0.85',
+    MemorySettingTip: '该参数为本系统使用的内存大小占服务器的比例，防止部分任务内存超过预期，建议填写0.85',
     DiskSettingTip: '该参数限制本账号使用空间大小，防止超出服务器存储空间，建议填写扣除预留后的磁盘可用空间',
 
     // 任务结果
@@ -370,9 +371,9 @@ export default {
     FusionAnalysis: '融合分析',
     TumorMutationLoadAnalysis: '肿瘤突变负荷分析',
     HomologousRecombinationDefectAnalysis: '同源重组缺陷分析',
-    CopyNumberVariationAnalysis: '拷贝数变异分析',
+    CopyNumberVariationAnalysis: '拷贝数变异常分析',
     CopyNumberVariationWes: 'CNV分析',
-    CopyNumberVariationGeneAnalysis: '拷贝数变异基因分析',
+    CopyNumberVariationGeneAnalysis: '拷贝数变异常基因分析',
     MicroSatelliteInstability: '微卫星状态',
 
     // QC
@@ -410,7 +411,7 @@ export default {
     MutationType: '突变类型',
     MutationPosition: '突变位置',
     MutationMeaning: '突变意义',
-    MutationRisk: '突变危险',
+    MutationRisk: '突变风险',
     Population: '人群',
     CrowdFrequency: '人群频率',
     RelatedToDrugs: '是否关联药物',
@@ -419,7 +420,7 @@ export default {
     MutationTypeStatistics: '突变类型统计',
     MutationPositionStatistics: '突变位置统计',
     MutationMeaningStatistics: '突变意义统计',
-    MutationRiskStatistics: '突变危险统计',
+    MutationRiskStatistics: '突变风险统计',
     CrowdFrequencyStatistics: '人群频率统计',
     SnpStatistics: 'SNP统计',
     MutationInfo: '突变信息',
@@ -427,15 +428,15 @@ export default {
     NonsynonymousMutationTest: '蛋白质风险预测',
 
     // 融合分析
-    SingleSampleFusionAnalysis: '单样品融合分析',
+    SingleSampleFusionAnalysis: '单样本融合分析',
     SomaticCellFusionAnalysis: '体细胞融合分析',
-    ControlSingleSampleFusion: '对照单样品融合',
-    TumorSingleSampleFusion: '肿瘤单样品融合',
+    ControlSingleSampleFusion: '对照单样本融合',
+    TumorSingleSampleFusion: '肿瘤单样本融合',
 
     // 拷贝变异分析
     CopyNumberAmplificationThreshold: '拷贝数扩增阈值',
     CopyNumberDeletionThreshold: '拷贝数缺失阈值',
-    CopyNumberVariationClassification: '拷贝数变异分类',
+    CopyNumberVariationClassification: '拷贝数变异常分类',
     DrugTarget: '药物靶点',
     MedicationLevel: '用药等级',
     OriginalFile: '原始文件',
@@ -449,7 +450,7 @@ export default {
     TumorMutationFrequency: '肿瘤突变频数',
     FilterRepeatRegionFalseMutations: '过滤重复区假突变',
     TmlTip1: '仅限研究使用，不用于临床诊断',
-    TmlTip2: '警示：随意过滤造成结果不准确',
+    TmlTip2: '警告：随意过滤造成结果不准确',
     TmlTip3: 'TMB-low\\暂无推荐药物信息',
 
     // 看板
@@ -792,7 +793,7 @@ export default {
     SelectFileFormat: '选择文件格式',
     SelectTrackType: '选择Track类型',
 
-    // HRD: 同源数据重组
+    // HRD: 同源数据信息重组
     HRDStatistics: 'HRD 统计表',
     OnlyForResearch: '仅限研究使用，不用于临床诊断',
     X1Comment: '横坐标：染色体，纵坐标：A(红色)和B(蓝色)等位基因的拷贝数',
@@ -874,7 +875,7 @@ export default {
     InputItemsPlaceholder: '请输入多个选项，用逗号分隔',
     MatchResults: '匹配结果',
 
-    CreateTaskFastqIncompleteConfirm: '部分数据的fastq文件不存在或者没有上传完成，任务创建后需要等到文件上传完整后才会开始运行，是否继续？',
+    CreateTaskFastqIncompleteConfirm:
+        '部分数据的fastq文件不存在或者没有上传完成，任务创建后需要等到文件上传完整后才会开始运行，是否继续？',
     CreateTaskIdentifierMissingConfirm: '有数据识别号不存在，是否继续创建任务？',
 }
-    

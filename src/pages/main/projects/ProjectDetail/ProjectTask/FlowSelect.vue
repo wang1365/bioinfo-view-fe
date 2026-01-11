@@ -13,7 +13,7 @@
                     total,
                     current,
                     pageSize,
-                    showTotal: total => `${t('TotalCount')}: ${total}`,
+                    showTotal: (total) => t('PaginationTotal', { total }),
                     showQuickJumper: true,
                     showSizeChanger: true,
                     pageSizeOptions: ['10', '15', '30', '50', '100'],
