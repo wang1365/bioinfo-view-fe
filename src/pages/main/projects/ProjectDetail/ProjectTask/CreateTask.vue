@@ -102,7 +102,7 @@
                                         :openBatchSelectDialog="openBatchSelectDialog"
                                         :projectDetail="props.projectDetail"
                                         @delete-file="(file_index) => deleteParamTabFiles(index, file_index)"
-                                        @add-file="() => addParamTabFiles(index)"
+                                        @add-file="(params) => addParamTabFiles(index, params)"
                                     />
                                 </div>
                             </div>
@@ -284,6 +284,7 @@ const initParams = () => {
 
     fileStructure.sampleDetails = [{ customName: '', sampleRatio: null }];
     fileStructure.taskName = '';
+    fileStructure.params = cloneDeep(initialParams);
 
     newTabParamFiles.value = fileStructure;
     newTabParams.value = {
@@ -307,11 +308,16 @@ const deleteParamTab = (index) => {
     activeParamTab.value = 0
 }
 
-const addParamTabFiles = (index) => {
+const addParamTabFiles = (index, params) => {
     let newFile = cloneDeep(newTabParamFiles.value)
     const currentTab = paramTabs.value[index]
     if (currentTab.name) {
         newFile.taskName = `${currentTab.name}-${currentTab.files.length + 1}`
+    }
+    // Inherit params from top-level
+    const paramsToInherit = params || currentTab.params
+    if (paramsToInherit) {
+        newFile.params = cloneDeep(paramsToInherit)
     }
     paramTabs.value[index].files.push(newFile)
 }
@@ -390,49 +396,58 @@ const createTasks = (datas) => {
     )
 }
 
-const validateTaskParams = (taskParam) => {
+const validateParams = (params, checkRequired = true) => {
     let hasError = false;
     const uploadFiles = [];
     const taskParameter = [];
 
-    if (!taskParam.name) {
-        taskParam.nameError = true;
-        hasError = true;
-    } else {
-        taskParam.nameError = false;
-    }
-
     for (let param of paramsDefine.value) {
-        const pValue = taskParam.params[param.key].value;
-        // Check for null/undefined or empty array for multiSelect
+        const paramItem = params[param.key];
+        const pValue = paramItem ? paramItem.value : null;
         const isEmpty = !pValue || (Array.isArray(pValue) && pValue.length === 0);
 
-        if (isEmpty && param.required) {
-            taskParam.params[param.key].isError = true;
+        if (checkRequired && isEmpty && param.required) {
+            if (paramItem) paramItem.isError = true;
             hasError = true;
         } else {
-            taskParam.params[param.key].isError = false;
-            if (param.type === 'file') {
-                uploadFiles.push([param.key, pValue]);
-            } else if (param.type === 'select') {
-                taskParameter.push({
-                    key: param.key,
-                    value: pValue.value,
-                });
-            } else if (param.type === 'multiSelect') {
-                taskParameter.push({
-                    key: param.key,
-                    value: pValue.map(v => v.value),
-                });
-            } else {
-                taskParameter.push({
-                    key: param.key,
-                    value: pValue,
-                });
+            if (paramItem) paramItem.isError = false;
+
+            if (!isEmpty) {
+                if (param.type === 'file') {
+                    uploadFiles.push([param.key, pValue]);
+                } else if (param.type === 'select') {
+                    taskParameter.push({
+                        key: param.key,
+                        value: pValue?.value || pValue,
+                    });
+                } else if (param.type === 'multiSelect') {
+                    taskParameter.push({
+                        key: param.key,
+                        value: Array.isArray(pValue) ? pValue.map(v => v.value) : [],
+                    });
+                } else {
+                    taskParameter.push({
+                        key: param.key,
+                        value: pValue,
+                    });
+                }
             }
         }
     }
     return { hasError, uploadFiles, taskParameter };
+}
+
+const validateTaskParams = (taskParam) => {
+    let hasError = false;
+
+    // Top-level task name is optional (only required if row names are missing, which is checked per-row)
+    taskParam.nameError = false;
+
+    // Validate top-level custom params (Skip required check)
+    const { hasError: paramsError } = validateParams(taskParam.params, false);
+    if (paramsError) hasError = true;
+
+    return { hasError };
 }
 
 const checkSampleFastq = (sample) => {
@@ -450,7 +465,7 @@ const confirmTaskCreated = () => {
     let datas = [];
 
     for (let taskParam of paramTabs.value) {
-        let { hasError: taskHasError, uploadFiles, taskParameter } = validateTaskParams(taskParam);
+        let { hasError: taskHasError } = validateTaskParams(taskParam);
         if (taskHasError) hasError = true;
 
         let autoNameIndex = 0;
@@ -460,6 +475,25 @@ const confirmTaskCreated = () => {
             let taskSamplesFirst = "";
             let taskSamplesSecond = "";
             let currentSampleError = false;
+
+            // Validate file-level params
+            const { hasError: fileParamsError, uploadFiles, taskParameter } = validateParams(file.params);
+            if (fileParamsError) {
+                taskHasError = true;
+                currentSampleError = true; // Mark file as having error
+            }
+
+            if (!file.taskName) {
+                if (!taskParam.name) {
+                    file.taskNameError = true
+                    taskHasError = true
+                    currentSampleError = true
+                } else {
+                    file.taskNameError = false
+                }
+            } else {
+                file.taskNameError = false
+            }
 
             const checkSingleSample = (sample, errorKey) => {
                  if (!sample.id) {
@@ -555,6 +589,11 @@ const confirmTaskCreated = () => {
             datas.push(data);
         }
         taskParam.isError = taskHasError;
+    }
+
+    if (datas.length === 0) {
+        if (!hasError) errorMessage(t('NoDataToSubmit') || 'Please add at least one sample');
+        return;
     }
 
     if (hasError) {

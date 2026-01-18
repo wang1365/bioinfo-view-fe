@@ -140,7 +140,13 @@
             <div class="col-auto text-subtitle2">{{ $t('Data') + ':' }}</div>
             <div class="col row items-center q-gutter-sm">
                 <div class="col-auto">
-                    <q-btn icon="add" color="primary" flat :label="$t('Add') + $t('Data')" @click="$emit('add-file')" />
+                    <q-btn
+                        icon="add"
+                        color="primary"
+                        flat
+                        :label="$t('Add') + $t('Data')"
+                        @click="$emit('add-file', localItem.params)"
+                    />
                 </div>
                 <div class="col-auto">
                     <div class="relative-position inline-block">
@@ -184,6 +190,12 @@
             :files="localItem.files"
             :sampleType="sampleType"
             :supportSampleRatio="supportSampleRatio"
+            :paramsDefine="paramsDefine"
+            :csvOptions="csvOptions"
+            :langConfig="langConfig"
+            :focusSelect="focusSelect"
+            :filterFn="filterFn"
+            :openBatchSelectDialog="openBatchSelectDialog"
             @select-single="selectSingle"
             @select-first="selectFirst"
             @select-second="selectSecond"
@@ -191,7 +203,7 @@
             @select-first-multi="selectFirstMulti"
             @select-second-multi="selectSecondMulti"
             @delete-file="onDeleteFile"
-            @add-file="$emit('add-file')"
+            @add-file="$emit('add-file', localItem.params)"
             @bulk-import="onBulkImport"
         />
 
@@ -209,7 +221,7 @@ import TaskDataSection from './TaskDataSection.vue'
 import TaskDataSelectSingle from './TaskDataSelectSingle.vue'
 import TaskDataSelectMulti from './TaskDataSelectMulti.vue'
 import { useI18n } from 'vue-i18n'
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, watch } from 'vue'
 import { useApi } from 'src/api/apiBase'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import { parseCsvToList } from 'src/utils/csv'
@@ -347,14 +359,16 @@ const onBulkImport = (imported) => {
 const downloadCsvTemplate = () => {
   let headers = []
   const taskNameHeader = 'Task Name'
+  const paramHeaders = props.paramsDefine.map((p) => p.key)
+
   if (props.sampleType === 'single') {
-    headers = [taskNameHeader, 'Data ID']
+    headers = [taskNameHeader, ...paramHeaders, 'Data ID']
   } else if (props.sampleType === 'double') {
-    headers = [taskNameHeader, 'Data 1 ID', 'Data 2 ID']
+    headers = [taskNameHeader, ...paramHeaders, 'Data 1 ID', 'Data 2 ID']
   } else if (props.sampleType === 'multiple') {
-    headers = [taskNameHeader, ...Array.from({ length: 100 }, (_, i) => `Data ${i + 1} ID`)]
+    headers = [taskNameHeader, ...paramHeaders, ...Array.from({ length: 100 }, (_, i) => `Data ${i + 1} ID`)]
   } else {
-    headers = [taskNameHeader, 'Data ID']
+    headers = [taskNameHeader, ...paramHeaders, 'Data ID']
   }
   const content = headers.join(',') + '\n'
   const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' })
@@ -468,6 +482,15 @@ const checkFastqFiles = () => {
   }, ids)
 }
 
+const createParams = (initialValues = {}) => {
+  const params = {}
+  for (const param of props.paramsDefine) {
+    const val = initialValues[param.key] !== undefined ? initialValues[param.key] : null
+    params[param.key] = { value: val, isError: false }
+  }
+  return params
+}
+
 const handleCsvUpload = async () => {
   if (!csvFile.value) return
   const file = Array.isArray(csvFile.value) ? csvFile.value[0] : csvFile.value
@@ -476,11 +499,23 @@ const handleCsvUpload = async () => {
   const { rows } = parseCsvToList(text, ',', true)
   const identifiers = []
   const parsedRows = []
+  const paramCount = props.paramsDefine ? props.paramsDefine.length : 0
+
   for (const row of rows) {
     const values = Object.values(row)
     const taskName = values[0] || ''
-    const sampleValues = values.slice(1).filter((v) => v && v.length > 0)
-    parsedRows.push({ taskName, sampleValues })
+
+    const importedParams = {}
+    if (paramCount > 0) {
+      props.paramsDefine.forEach((param, idx) => {
+        const val = values[1 + idx]
+        importedParams[param.key] = val
+      })
+    }
+
+    const sampleStartIndex = 1 + paramCount
+    const sampleValues = values.slice(sampleStartIndex).filter((v) => v && v.length > 0)
+    parsedRows.push({ taskName, sampleValues, importedParams })
     for (const v of sampleValues) identifiers.push(v)
   }
   const uniqIds = Array.from(new Set(identifiers))
@@ -501,7 +536,7 @@ const handleCsvUpload = async () => {
       }
       return { identifier: '', notFound: false }
     }
-    for (const { taskName, sampleValues } of parsedRows) {
+    for (const { taskName, sampleValues, importedParams } of parsedRows) {
       if (props.sampleType === 'single') {
         const first = getSample(sampleValues[0])
         const fileItem = {
@@ -509,6 +544,8 @@ const handleCsvUpload = async () => {
           sampleFirst: first,
           sampleFirstError: false,
           sampleDetails: [{ customName: first.sample_identifier || first.identifier || '', sampleRatio: null, id: first.id }],
+          params: createParams(importedParams),
+          isCsvImported: true,
         }
         imported.push(fileItem)
       } else if (props.sampleType === 'double') {
@@ -524,6 +561,8 @@ const handleCsvUpload = async () => {
             { customName: first.sample_identifier || first.identifier || '', sampleRatio: null, id: first.id },
             { customName: second.sample_identifier || second.identifier || '', sampleRatio: null, id: second.id },
           ],
+          params: createParams(importedParams),
+          isCsvImported: true,
         }
         imported.push(fileItem)
       } else if (props.sampleType === 'multiple') {
@@ -533,6 +572,8 @@ const handleCsvUpload = async () => {
           samples,
           samplesError: false,
           sampleDetails: samples.map((s) => ({ customName: s.sample_identifier || s.identifier || '', sampleRatio: null, id: s.id })),
+          params: createParams(importedParams),
+          isCsvImported: true,
         }
         imported.push(fileItem)
       }
