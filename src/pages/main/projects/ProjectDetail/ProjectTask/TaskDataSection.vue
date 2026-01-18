@@ -890,14 +890,15 @@ const columns = computed(() => {
                 title: param.key,
                 key: param.key,
                 width: 100,
-                paramDef: param
+                paramDef: param,
+                customCell: () => ({ style: { verticalAlign: 'middle' } })
             })
         })
     }
 
     cols.push(
-        { title: t('DataNewFormDataIdentificationNumber'), dataIndex: 'sampleIdentifier', width: 250 },
-        { title: t('File'), dataIndex: 'fastqData', width: 400 }
+        { title: t('DataNewFormDataIdentificationNumber'), dataIndex: 'sampleIdentifier', width: 250, customCell: () => ({ style: { verticalAlign: 'middle' } }) },
+        { title: t('File'), dataIndex: 'fastqData', width: 400, customCell: () => ({ style: { verticalAlign: 'middle' } }) }
     )
     return cols
 })
