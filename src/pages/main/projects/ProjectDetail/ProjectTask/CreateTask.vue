@@ -145,31 +145,35 @@ import { ref, toRefs, onMounted } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
 // selection dialogs handled in SingleTaskEditor
 import BatchSelectDialog from "./BatchSelectDialog.vue";
-import TaskDataSection from "./TaskDataSection.vue";
 import SingleTaskEditor from "./SingleTaskEditor.vue";
 import { useApi } from "src/api/apiBase";
 import { errorMessage, infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
 import { useQuasar } from "quasar";
 import { globalStore } from "src/stores/global";
-import { update } from "lodash";
 import { readFile } from "src/api/file";
+
+const SAMPLE_TYPES = {
+    SINGLE: 'single',
+    DOUBLE: 'double',
+    MULTIPLE: 'multiple',
+    DOUBLE_MULTIPLE: 'double_multiple'
+};
 
 const { langConfig } = globalStore()
 const { t } = useI18n();
 const $q = useQuasar();
 const { apiPost, apiGet } = useApi();
-const newTaskName = ref("");
-const newTaskNameError = ref(false);
+
 const paramsDefine = ref([]);
 const newTabParams = ref({})
 const newTabParamFiles = ref([])
-const params = ref({});
 
 const paramTabs = ref([])
 const activeParamTab = ref(0)
 
 const csvOptions = ref({});
+const selectParams = ref({})
 
 // 批量选择相关变量
 const batchSelectDialog = ref(false);
@@ -181,67 +185,62 @@ const props = defineProps({
     flowDetail: { type: Object, required: true },
     projectDetail: { type: Object, required: true },
 })
-const { flowId } = toRefs(props)
 
 const currentFocusSelectKey = ref('')
 const currentFocusSelectParam = ref({})
-const genomeOptions = ref(['genome1', 'genome2', 'genome3'])
+
+// Helper for deep cloning
+const cloneDeep = (obj) => JSON.parse(JSON.stringify(obj));
 
 const focusSelect = (key, param) => {
     currentFocusSelectKey.value = key
     currentFocusSelectParam.value = param
-    console.log(key)
 }
+
 const filterFn = (val, update) => {
-    console.log('fileter', val)
     if (val === '') {
         update(() => {
             currentFocusSelectParam.value.choices = selectParams.value[currentFocusSelectKey.value]
         });
         return;
-    } else {
-
-        let choices = []
-        let re = new RegExp(val, 'i')
-        for (const item of selectParams.value[currentFocusSelectKey.value]) {
-            if (re.test(item.value) || re.test(item.enLabel) || re.test(item.cnLabel)) {
-                choices.push(item)
-            }
-        }
-        update(() => {
-            currentFocusSelectParam.value.choices = choices
-        });
     }
 
+    const needle = val.toLowerCase();
+    const choices = selectParams.value[currentFocusSelectKey.value].filter(v => {
+         return (v.value && v.value.toLowerCase().indexOf(needle) > -1) ||
+                (v.enLabel && v.enLabel.toLowerCase().indexOf(needle) > -1) ||
+                (v.cnLabel && v.cnLabel.toLowerCase().indexOf(needle) > -1);
+    });
+
+    update(() => {
+        currentFocusSelectParam.value.choices = choices
+    });
 }
-const selectParams = ref({})
 
 onMounted(() => {
-    let flowParams = JSON.parse(props.flowDetail.parameter_schema);
-    let params = {}
-    for (let param of flowParams) {
-        if (param.type === 'select' || param.type === 'multiSelect') {
-            let choices = []
-            for (let item of param.choices) {
+    initParams();
+});
+
+const initParams = () => {
+    const flowParams = JSON.parse(props.flowDetail.parameter_schema);
+    const initialParams = {};
+
+    for (const param of flowParams) {
+        if (['select', 'multiSelect'].includes(param.type)) {
+            const choices = param.choices.map(item => {
                 if (!item.cnLabel || !item.enLabel) {
-                    choices.push({
-                        value: item,
-                        cnLabel: item,
-                        enLabel: item
-                    })
-                } else {
-                    choices.push(item)
+                    return { value: item, cnLabel: item, enLabel: item };
                 }
-            }
-            param.choices = choices
-            selectParams.value[param.key] = JSON.parse(JSON.stringify(choices))
+                return item;
+            });
+            param.choices = choices;
+            selectParams.value[param.key] = cloneDeep(choices);
         }
 
         if (param.type === 'select-from-csv') {
             readFile(param.csvPath).then((res) => {
                 const items = res.split('\n').map(line => line.trim()).filter(line => line);
                 csvOptions.value[param.key] = items.map(item => item.split('\t')[0]);
-                console.log("add csv options", param, csvOptions)
             });
         }
 
@@ -254,58 +253,54 @@ onMounted(() => {
             error: t('Required'),
             isError: false,
         });
-        params[param.key] = { value: null, isError: false }
+        initialParams[param.key] = { value: null, isError: false };
     }
-    console.log(paramsDefine)
 
-    let file = []
+    let fileStructure = {};
     switch (props.flowDetail.sample_type) {
-        case 'single': { file = { sampleFirst: {}, sampleFirstError: false }; break; };
-        case 'double': {
-            file = {
+        case SAMPLE_TYPES.SINGLE:
+            fileStructure = { sampleFirst: {}, sampleFirstError: false };
+            break;
+        case SAMPLE_TYPES.DOUBLE:
+            fileStructure = {
                 sampleFirst: {},
                 sampleSecond: {},
                 sampleFirstError: false,
                 sampleSecondError: false,
-            }; break
-        };
-        case 'multiple': {
-            file = {
-                samples: [],
-                samplesError: false,
             };
-            break
-        };
-        case 'double_multiple': {
-            file = {
+            break;
+        case SAMPLE_TYPES.MULTIPLE:
+            fileStructure = { samples: [], samplesError: false };
+            break;
+        case SAMPLE_TYPES.DOUBLE_MULTIPLE:
+            fileStructure = {
                 samplesFirst: [],
                 samplesSecond: [],
                 samplesFirstError: false,
                 samplesSecondError: false,
             };
-            break
-        }
+            break;
     }
-    file.sampleDetails = [{ customName: '', sampleRatio: null }]
-    file.taskName = ''
-    newTabParamFiles.value = file
+
+    fileStructure.sampleDetails = [{ customName: '', sampleRatio: null }];
+    fileStructure.taskName = '';
+
+    newTabParamFiles.value = fileStructure;
     newTabParams.value = {
-        params: params,
-        files: [file],
+        params: initialParams,
+        files: [fileStructure],
         name: "",
         isError: false,
     };
-    paramTabs.value.push(
-        JSON.parse(JSON.stringify(newTabParams.value))
-    )
-});
+
+    addParamTab();
+};
+
 const addParamTab = () => {
-    paramTabs.value.push(
-        JSON.parse(JSON.stringify(newTabParams.value))
-    )
+    paramTabs.value.push(cloneDeep(newTabParams.value))
     activeParamTab.value = paramTabs.value.length - 1
-    console.log(paramTabs.value)
 }
+
 const deleteParamTab = (index) => {
     if (paramTabs.value.length > 1)
         paramTabs.value.splice(index, 1)
@@ -313,14 +308,14 @@ const deleteParamTab = (index) => {
 }
 
 const addParamTabFiles = (index) => {
-    let newFile = JSON.parse(JSON.stringify(newTabParamFiles.value))
+    let newFile = cloneDeep(newTabParamFiles.value)
     const currentTab = paramTabs.value[index]
     if (currentTab.name) {
         newFile.taskName = `${currentTab.name}-${currentTab.files.length + 1}`
     }
     paramTabs.value[index].files.push(newFile)
-    console.log(paramTabs.value)
 }
+
 const deleteParamTabFiles = (index, file_index) => {
     if (paramTabs.value[index].files.length > 1)
         paramTabs.value[index].files.splice(file_index, 1)
@@ -395,251 +390,194 @@ const createTasks = (datas) => {
     )
 }
 
+const validateTaskParams = (taskParam) => {
+    let hasError = false;
+    const uploadFiles = [];
+    const taskParameter = [];
+
+    if (!taskParam.name) {
+        taskParam.nameError = true;
+        hasError = true;
+    } else {
+        taskParam.nameError = false;
+    }
+
+    for (let param of paramsDefine.value) {
+        const pValue = taskParam.params[param.key].value;
+        // Check for null/undefined or empty array for multiSelect
+        const isEmpty = !pValue || (Array.isArray(pValue) && pValue.length === 0);
+
+        if (isEmpty && param.required) {
+            taskParam.params[param.key].isError = true;
+            hasError = true;
+        } else {
+            taskParam.params[param.key].isError = false;
+            if (param.type === 'file') {
+                uploadFiles.push([param.key, pValue]);
+            } else if (param.type === 'select') {
+                taskParameter.push({
+                    key: param.key,
+                    value: pValue.value,
+                });
+            } else if (param.type === 'multiSelect') {
+                taskParameter.push({
+                    key: param.key,
+                    value: pValue.map(v => v.value),
+                });
+            } else {
+                taskParameter.push({
+                    key: param.key,
+                    value: pValue,
+                });
+            }
+        }
+    }
+    return { hasError, uploadFiles, taskParameter };
+}
+
+const checkSampleFastq = (sample) => {
+    const r1Missing = !sample.fastq1_path;
+    const r2Missing = !sample.fastq2_path;
+    const r1NotReady = !!sample.fastq1_warn || (!!sample.fastq1_path && !sample.fastq1_ok);
+    const r2NotReady = !!sample.fastq2_warn || (!!sample.fastq2_path && !sample.fastq2_ok);
+    return r1Missing || r2Missing || r1NotReady || r2NotReady;
+}
+
 const confirmTaskCreated = () => {
-    console.log(paramTabs.value)
     let hasError = false;
     let hasIdentifierMissing = false;
     let hasFastqIssue = false;
-    let datas = []
+    let datas = [];
+
     for (let taskParam of paramTabs.value) {
-        let autoNameIndex = 0
-        let taskParameter = [];
-        let taskHasError = false
-        if (!taskParam.name) {
-            taskParam.nameError = true;
-            hasError = true
-            taskHasError = true
-        } else {
-            taskParam.nameError = false;
-        }
-        let uploadFiles = []
-        for (let param of paramsDefine.value) {
-            if (!taskParam.params[param.key].value && param.required) {
-                taskParam.params[param.key].isError = true
-                hasError = true
-                taskHasError = true
-            } else {
-                if (param.type === 'file') {
-                    uploadFiles.push([param.key, taskParam.params[param.key].value])
-                }
-                else if (param.type === 'select') {
-                    taskParameter.push({
-                        key: param.key,
-                        value: taskParam.params[param.key].value.value,
-                    });
-                }
-                else if (param.type === 'multiSelect') {
-                    let values = []
-                    for (const item of taskParam.params[param.key].value) {
-                        values.push(item.value)
-                    }
-                    taskParameter.push({
-                        key: param.key,
-                        value: values,
-                    });
-                }
-                else {
-                    taskParameter.push({
-                        key: param.key,
-                        value: taskParam.params[param.key].value,
-                    });
-                }
-                taskParam.params[param.key].isError = false
-            }
-        }
+        let { hasError: taskHasError, uploadFiles, taskParameter } = validateTaskParams(taskParam);
+        if (taskHasError) hasError = true;
+
+        let autoNameIndex = 0;
 
         for (let file of taskParam.files) {
+            let taskSamples = "";
+            let taskSamplesFirst = "";
+            let taskSamplesSecond = "";
+            let currentSampleError = false;
 
-            let taskSamples = ""
-            let taskSamplesFirst = ""
-            let taskSamplesSecond = ""
+            const checkSingleSample = (sample, errorKey) => {
+                 if (!sample.id) {
+                    file[errorKey] = true;
+                    currentSampleError = true;
+                    hasIdentifierMissing = true;
+                    return null;
+                }
+                file[errorKey] = false;
+                if (sample.notFound) hasIdentifierMissing = true;
+                if (checkSampleFastq(sample)) hasFastqIssue = true;
+                return sample.id;
+            }
+
             switch (props.flowDetail.sample_type) {
-                case "single": {
-                    let samples = []
-                    if (!file.sampleFirst.id) {
-                        file.sampleFirstError = true
-                        hasIdentifierMissing = true
-                    } else {
-                        file.sampleFirstError = false
-                        samples.push(file.sampleFirst.id)
-                        if (file.sampleFirst.notFound) {
-                            hasIdentifierMissing = true
-                        }
-                        const s = file.sampleFirst
-                        const r1Missing = !s.fastq1_path
-                        const r2Missing = !s.fastq2_path
-                        const r1NotReady = !!s.fastq1_warn || (!!s.fastq1_path && !s.fastq1_ok)
-                        const r2NotReady = !!s.fastq2_warn || (!!s.fastq2_path && !s.fastq2_ok)
-                        if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
-                            hasFastqIssue = true
-                        }
-                    }
-                    taskSamples = samples.join(",")
-
-                    break
+                case SAMPLE_TYPES.SINGLE: {
+                    const id = checkSingleSample(file.sampleFirst, 'sampleFirstError');
+                    if (id) taskSamples = id;
+                    break;
                 }
-                case "double": {
-                    let samples = []
-                    if (!file.sampleFirst.id) {
-                        file.sampleFirstError = true
-                        hasIdentifierMissing = true
-                    } else {
-                        samples.push(file.sampleFirst.id)
-                        file.sampleFirstError = false
-                        if (file.sampleFirst.notFound) {
-                            hasIdentifierMissing = true
-                        }
-                        const s1 = file.sampleFirst
-                        const r1Missing1 = !s1.fastq1_path
-                        const r2Missing1 = !s1.fastq2_path
-                        const r1NotReady1 = !!s1.fastq1_warn || (!!s1.fastq1_path && !s1.fastq1_ok)
-                        const r2NotReady1 = !!s1.fastq2_warn || (!!s1.fastq2_path && !s1.fastq2_ok)
-                        if (r1Missing1 || r2Missing1 || r1NotReady1 || r2NotReady1) {
-                            hasFastqIssue = true
-                        }
-                    }
-                    if (!file.sampleSecond.id) {
-                        file.sampleSecondError = true
-                        hasIdentifierMissing = true
-                    } else {
-                        samples.push(file.sampleSecond.id)
-                        file.sampleSecondError = false
-                        if (file.sampleSecond.notFound) {
-                            hasIdentifierMissing = true
-                        }
-                        const s2 = file.sampleSecond
-                        const r1Missing2 = !s2.fastq1_path
-                        const r2Missing2 = !s2.fastq2_path
-                        const r1NotReady2 = !!s2.fastq1_warn || (!!s2.fastq1_path && !s2.fastq1_ok)
-                        const r2NotReady2 = !!s2.fastq2_warn || (!!s2.fastq2_path && !s2.fastq2_ok)
-                        if (r1Missing2 || r2Missing2 || r1NotReady2 || r2NotReady2) {
-                            hasFastqIssue = true
-                        }
-                    }
-                    taskSamples = samples.join(",")
-                    break
+                case SAMPLE_TYPES.DOUBLE: {
+                    const id1 = checkSingleSample(file.sampleFirst, 'sampleFirstError');
+                    const id2 = checkSingleSample(file.sampleSecond, 'sampleSecondError');
+                    if (id1 && id2) taskSamples = `${id1},${id2}`;
+                    break;
                 }
-                case "multiple": {
-                    let samples = []
+                case SAMPLE_TYPES.MULTIPLE: {
                     if (file.samples.length === 0) {
-                        file.samplesError = true
-                        taskHasError = true
-                        hasError = true
+                        file.samplesError = true;
+                        currentSampleError = true;
+                        hasError = true;
                     } else {
-                        for (const item of file.samples) {
-                            samples.push(item.id)
-                            if (item.notFound) {
-                                hasIdentifierMissing = true
-                            }
-                            const r1Missing = !item.fastq1_path
-                            const r2Missing = !item.fastq2_path
-                            const r1NotReady = !!item.fastq1_warn || (!!item.fastq1_path && !item.fastq1_ok)
-                            const r2NotReady = !!item.fastq2_warn || (!!item.fastq2_path && !item.fastq2_ok)
-                            if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
-                                hasFastqIssue = true
-                            }
-                        }
-                        file.samplesError = false
+                        file.samplesError = false;
+                        const ids = [];
+                        file.samples.forEach(s => {
+                            if (s.notFound) hasIdentifierMissing = true;
+                            if (checkSampleFastq(s)) hasFastqIssue = true;
+                            ids.push(s.id);
+                        });
+                        taskSamples = ids.join(",");
                     }
-                    taskSamples = samples.join(",")
-                    break
+                    break;
                 }
-                case "double_multiple": {
-                    let samples = {
-                        first: [],
-                        second: []
-                    }
-                    if (file.samplesFirst.length === 0) {
-                        file.samplesFirstError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        for (const item of file.samplesFirst) {
-                            samples.first.push(item.id)
-                            if (item.notFound) {
-                                hasIdentifierMissing = true
-                            }
-                            const r1Missing = !item.fastq1_path
-                            const r2Missing = !item.fastq2_path
-                            const r1NotReady = !!item.fastq1_warn || (!!item.fastq1_path && !item.fastq1_ok)
-                            const r2NotReady = !!item.fastq2_warn || (!!item.fastq2_path && !item.fastq2_ok)
-                            if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
-                                hasFastqIssue = true
-                            }
+                case SAMPLE_TYPES.DOUBLE_MULTIPLE: {
+                    const processList = (list, errorKey) => {
+                         if (list.length === 0) {
+                            file[errorKey] = true;
+                            currentSampleError = true;
+                            hasError = true;
+                            return [];
                         }
-                        file.samplesFirstError = false
+                        file[errorKey] = false;
+                        const ids = [];
+                        list.forEach(s => {
+                            if (s.notFound) hasIdentifierMissing = true;
+                            if (checkSampleFastq(s)) hasFastqIssue = true;
+                            ids.push(s.id);
+                        });
+                        return ids;
                     }
-                    if (file.samplesSecond.length === 0) {
-                        file.samplesSecondError = true
-                        taskHasError = true
-                        hasError = true
-                    } else {
-                        for (const item of file.samplesSecond) {
-                            samples.second.push(item.id)
-                            if (item.notFound) {
-                                hasIdentifierMissing = true
-                            }
-                            const r1Missing = !item.fastq1_path
-                            const r2Missing = !item.fastq2_path
-                            const r1NotReady = !!item.fastq1_warn || (!!item.fastq1_path && !item.fastq1_ok)
-                            const r2NotReady = !!item.fastq2_warn || (!!item.fastq2_path && !item.fastq2_ok)
-                            if (r1Missing || r2Missing || r1NotReady || r2NotReady) {
-                                hasFastqIssue = true
-                            }
-                        }
-                        file.samplesSecondError = false
-                    }
-                    taskSamples = samples.first.join(',') + ',' + samples.second.join(',')
-                    taskSamplesFirst = samples.first.join(',')
-                    taskSamplesSecond = samples.second.join(',')
 
-                    break
+                    const firstIds = processList(file.samplesFirst, 'samplesFirstError');
+                    const secondIds = processList(file.samplesSecond, 'samplesSecondError');
+
+                    taskSamplesFirst = firstIds.join(',');
+                    taskSamplesSecond = secondIds.join(',');
+                    taskSamples = `${taskSamplesFirst},${taskSamplesSecond}`;
+                    break;
                 }
             }
-            let data = {}
-            data.uploadFiles = uploadFiles
-            data.name = taskParam.name
+
+            if (currentSampleError) {
+                taskHasError = true;
+                hasError = true;
+            }
+
+            // Create Data Object
+            let data = {};
+            data.uploadFiles = uploadFiles;
+            data.name = taskParam.name;
             if (file.taskName) {
-                data.finalName = file.taskName
+                data.finalName = file.taskName;
             } else {
-                autoNameIndex += 1
-                data.finalName = `${taskParam.name}-${autoNameIndex}`
+                autoNameIndex += 1;
+                data.finalName = `${taskParam.name}-${autoNameIndex}`;
             }
-            data.parameter = JSON.stringify(taskParameter)
-            data.samples = taskSamples
-            data.sampleDetails = JSON.stringify(file.sampleDetails || [])
-            if (taskSamplesFirst !== "") {
-                data.taskSamplesFirst = taskSamplesFirst
-            }
-            if (taskSamplesSecond !== "") {
-                data.taskSamplesSecond = taskSamplesSecond
-            }
+            data.parameter = JSON.stringify(taskParameter);
+            data.samples = taskSamples;
+            data.sampleDetails = JSON.stringify(file.sampleDetails || []);
+            if (taskSamplesFirst) data.taskSamplesFirst = taskSamplesFirst;
+            if (taskSamplesSecond) data.taskSamplesSecond = taskSamplesSecond;
 
-            datas.push(data)
-            console.log(data)
+            datas.push(data);
         }
-        taskParam.isError = taskHasError
+        taskParam.isError = taskHasError;
     }
-    console.log(datas)
+
     if (hasError) {
-        errorMessage("Fix Error")
-        return
+        errorMessage("Fix Error");
+        return;
     }
+
+    const runCreate = () => createTasks(datas);
+
     const confirmFastq = () => {
         if (hasFastqIssue) {
-            $q.dialog({
+             $q.dialog({
                 title: t('Confirm'),
                 message: t('CreateTaskFastqIncompleteConfirm'),
                 cancel: true,
                 ok: { label: t('Confirm') },
                 persistent: true
-            }).onOk(() => {
-                createTasks(datas)
-            }).onCancel(() => {})
+            }).onOk(runCreate).onCancel(() => {});
         } else {
-            createTasks(datas)
+            runCreate();
         }
-    }
+    };
+
     if (hasIdentifierMissing) {
         $q.dialog({
             title: t('Confirm'),
@@ -647,21 +585,19 @@ const confirmTaskCreated = () => {
             cancel: true,
             ok: { label: t('Confirm') },
             persistent: true
-        }).onOk(() => {
-            confirmFastq()
-        }).onCancel(() => {})
+        }).onOk(confirmFastq).onCancel(() => {});
     } else {
-        confirmFastq()
+        confirmFastq();
     }
 }
+
 const sampleTypetrans = (flow) => {
     switch (flow.sample_type) {
-        case "single":
-            return t('SingleSample')
-        case "double":
-            return t('PairSample')
-        case "multiple":
-            return t('MultipleSample')
+        case SAMPLE_TYPES.SINGLE: return t('SingleSample');
+        case SAMPLE_TYPES.DOUBLE: return t('PairSample');
+        case SAMPLE_TYPES.MULTIPLE: return t('MultipleSample');
+        case SAMPLE_TYPES.DOUBLE_MULTIPLE: return 'Double Multiple';
+        default: return '';
     }
 }
 </script>
