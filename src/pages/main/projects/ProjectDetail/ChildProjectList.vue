@@ -1,15 +1,15 @@
 <template>
-    <q-card class="q-mt-md">
-        <q-card-section>
-            <q-toolbar class="q-gutter-x-sm">
+    <q-card class="q-mt-sm">
+        <q-card-section class="q-py-xs">
+            <q-toolbar class="q-gutter-x-sm" style="min-height: 48px">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6"> {{ $t('ProjectDetailPageChildTitle') }} </q-toolbar-title>
                 <q-btn color="primary" :label="$t('ProjectDetailPageCreateChildProject')" icon="folder"
                     @click="openNewProject = true" />
             </q-toolbar>
         </q-card-section>
-        <q-card-section>
-            <div class="q-pa-md bio-data-table">
+        <q-card-section class="q-pt-none">
+            <div class="q-pa-sm bio-data-table">
                 <table>
                     <thead>
                         <tr>
@@ -44,13 +44,12 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="row q-mt-md">
+                <div class="row q-mt-sm">
                     <q-space></q-space>
                     <PaginatorVue :total="total" :currentPage="currentPage" @pageChange="pageChange($event)" />
                 </div>
             </div>
         </q-card-section>
-        <q-card-section class="q-pd-md"> </q-card-section>
     </q-card>
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">

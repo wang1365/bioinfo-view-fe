@@ -22,39 +22,51 @@
         <q-card-section class="compact-stats">
             <div class="row items-start q-gutter-sm justify-around">
                 <q-card class="my-card compact">
-                    <q-card-section class="text-primary text-center text-h6 text-bold compact-section">
-                        <div class="count">{{ props.projectDetail.running_task_count }}</div>
-                        <div class="desc">{{ $t('TaskPageListStatusRun') }}</div>
+                    <q-card-section class="text-primary compact-section">
+                        <div class="row items-center justify-center q-gutter-x-md">
+                            <div class="desc">{{ $t('TaskPageListStatusRun') }}</div>
+                            <div class="count">{{ props.projectDetail.running_task_count }}</div>
+                        </div>
                     </q-card-section>
                 </q-card>
                 <q-card class="my-card compact">
-                    <q-card-section class="text-secondary text-center text-h6 text-bold compact-section">
-                        <div class="count">{{ props.projectDetail.pending_task_count }}</div>
-                        <div class="desc">{{ $t('TaskPageListStatusQueue') }}</div>
+                    <q-card-section class="text-secondary compact-section">
+                        <div class="row items-center justify-center q-gutter-x-md">
+                            <div class="desc">{{ $t('TaskPageListStatusQueue') }}</div>
+                            <div class="count">{{ props.projectDetail.pending_task_count }}</div>
+                        </div>
                     </q-card-section>
                 </q-card>
                 <q-card class="my-card compact">
-                    <q-card-section class="text-negative text-center text-h6 text-bold compact-section">
-                        <div class="count">{{ props.projectDetail.failured_task_count }}</div>
-                        <div class="desc">{{ $t('TaskPageListStatusFail') }}</div>
+                    <q-card-section class="text-negative compact-section">
+                        <div class="row items-center justify-center q-gutter-x-md">
+                            <div class="desc">{{ $t('TaskPageListStatusFail') }}</div>
+                            <div class="count">{{ props.projectDetail.failured_task_count }}</div>
+                        </div>
                     </q-card-section>
                 </q-card>
                 <q-card class="my-card compact">
-                    <q-card-section class="text-grey text-center text-h6 text-bold compact-section">
-                        <div class="count">{{ props.projectDetail.canceled_task_count }}</div>
-                        <div class="desc">{{ $t('TaskPageListStatusCancel') }}</div>
+                    <q-card-section class="text-grey compact-section">
+                        <div class="row items-center justify-center q-gutter-x-md">
+                            <div class="desc">{{ $t('TaskPageListStatusCancel') }}</div>
+                            <div class="count">{{ props.projectDetail.canceled_task_count }}</div>
+                        </div>
                     </q-card-section>
                 </q-card>
                 <q-card class="my-card compact">
-                    <q-card-section class="text-info text-center text-h6 text-bold compact-section">
-                        <div class="count">{{ props.projectDetail.finished_task_count }}</div>
-                        <div class="desc">{{ $t('TaskPageListStatusFinish') }}</div>
+                    <q-card-section class="text-info compact-section">
+                        <div class="row items-center justify-center q-gutter-x-md">
+                            <div class="desc">{{ $t('TaskPageListStatusFinish') }}</div>
+                            <div class="count">{{ props.projectDetail.finished_task_count }}</div>
+                        </div>
                     </q-card-section>
                 </q-card>
                 <q-card class="my-card compact">
-                    <q-card-section class="text-positive text-center text-h6 text-bold compact-section">
-                        <div class="count">{{ props.projectDetail.total_task_count }}</div>
-                        <div class="desc">{{ $t('TaskPageListStatusAll') }}</div>
+                    <q-card-section class="text-positive compact-section">
+                        <div class="row items-center justify-center q-gutter-x-md">
+                            <div class="desc">{{ $t('TaskPageListStatusAll') }}</div>
+                            <div class="count">{{ props.projectDetail.total_task_count }}</div>
+                        </div>
                     </q-card-section>
                 </q-card>
             </div>
@@ -130,7 +142,7 @@ const getFlowDetail = (flowId) => {
 }
 
 .compact-stats {
-    padding: 8px 16px 16px 16px;
+    padding: 8px 16px 8px 16px;
 }
 
 .my-card {
@@ -142,14 +154,13 @@ const getFlowDetail = (flowId) => {
     }
 
     .compact-section {
-        padding: 8px 12px;
+        padding: 4px 12px;
     }
 
     .count {
-        font-size: 1.8em;
+        font-size: 1.4em;
         font-weight: bold;
         line-height: 1.2;
-        margin-bottom: 2px;
     }
 
     .title {
@@ -159,8 +170,9 @@ const getFlowDetail = (flowId) => {
 
     .desc {
         color: gray;
-        font-size: 0.75em;
+        font-size: 0.9em;
         line-height: 1.1;
+        font-weight: bold;
     }
 }
 </style>

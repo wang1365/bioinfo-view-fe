@@ -1,7 +1,7 @@
 <template>
-    <q-card class="q-mt-md">
-        <q-card-section>
-            <q-toolbar class="q-gutter-x-sm">
+    <q-card class="q-mt-sm">
+        <q-card-section class="q-py-xs">
+            <q-toolbar class="q-gutter-x-sm" style="min-height: 48px">
                 <q-icon size="md" color="primary" name="description" />
                 <q-toolbar-title class="text-h6">
                     {{ $t('Data') }}
@@ -20,8 +20,8 @@
                 />
             </q-toolbar>
         </q-card-section>
-        <q-card-section>
-            <div class="q-pa-md bio-data-table">
+        <q-card-section class="q-pt-none">
+            <div class="q-pa-sm bio-data-table">
                 <a-table
                     :columns="columns"
                     :data-source="dataItems"
