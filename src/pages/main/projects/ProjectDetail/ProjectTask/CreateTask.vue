@@ -289,7 +289,7 @@ const initParams = () => {
     newTabParamFiles.value = fileStructure;
     newTabParams.value = {
         params: initialParams,
-        files: [fileStructure],
+        files: [],
         name: "",
         isError: false,
     };
@@ -323,8 +323,14 @@ const addParamTabFiles = (index, params) => {
 }
 
 const deleteParamTabFiles = (index, file_index) => {
-    if (paramTabs.value[index].files.length > 1)
-        paramTabs.value[index].files.splice(file_index, 1)
+    const files = paramTabs.value?.[index]?.files
+    if (!Array.isArray(files)) {
+        return
+    }
+    if (file_index < 0 || file_index >= files.length) {
+        return
+    }
+    files.splice(file_index, 1)
 }
 
 // 批量选择相关方法

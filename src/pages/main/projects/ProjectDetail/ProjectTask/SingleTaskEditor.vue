@@ -221,7 +221,7 @@ import TaskDataSection from './TaskDataSection.vue'
 import TaskDataSelectSingle from './TaskDataSelectSingle.vue'
 import TaskDataSelectMulti from './TaskDataSelectMulti.vue'
 import { useI18n } from 'vue-i18n'
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { defineProps, defineEmits, nextTick, ref, watch } from 'vue'
 import { useApi } from 'src/api/apiBase'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import { parseCsvToList } from 'src/utils/csv'
@@ -252,41 +252,11 @@ const currentSample = ref('first')
 const samples = ref([])
 
 const onDeleteFile = (fileIndex) => {
-  const files = localItem.value.files
-  if (files.length > 1) {
-    // 删除整行由父级处理
-    emit('delete-file', fileIndex)
-    return
-  }
-  // 仅一行时，清空当前行的数据
-  const file = files[fileIndex]
-  switch (props.sampleType) {
-    case 'single': {
-      file.sampleFirst = {}
-      file.sampleFirstError = false
-      break
-    }
-    case 'double': {
-      file.sampleFirst = {}
-      file.sampleSecond = {}
-      file.sampleFirstError = false
-      file.sampleSecondError = false
-      break
-    }
-    case 'multiple': {
-      file.samples = []
-      file.samplesError = false
-      break
-    }
-    case 'double_multiple': {
-      file.samplesFirst = []
-      file.samplesSecond = []
-      file.samplesFirstError = false
-      file.samplesSecondError = false
-      break
-    }
-  }
-  file.sampleDetails = [{ customName: '', sampleRatio: null }]
+  emit('delete-file', fileIndex)
+  nextTick(() => {
+    const nextLen = localItem.value.files?.length || 0
+    activeParamFileIndex.value = Math.max(0, Math.min(activeParamFileIndex.value, nextLen - 1))
+  })
 }
 
 const selectSingle = (index) => {
