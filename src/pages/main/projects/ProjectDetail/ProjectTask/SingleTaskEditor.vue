@@ -377,8 +377,10 @@ const collectDataIds = () => {
 const checkFastqFiles = () => {
   const ids = collectDataIds()
   if (ids.length === 0) return
+  console.log('checkFastqFiles start, ids:', ids)
   apiPost('/sample/samples/check_fastq', (res) => {
     const results = res.data || res
+    console.log('checkFastqFiles res:', results)
     const badPaths = new Map()
     const infoByKey = new Map()
 
@@ -436,6 +438,16 @@ const checkFastqFiles = () => {
         sample.fastq2_warn = warn2
         sample.fastq2_ok = !!sample.fastq2_path && !warn2
         sample.fastq2_info = findInfo(sample.fastq2_path)
+
+        console.log('Sample marked:', {
+            id: sample.identifier || sample.sample_identifier,
+            path1: sample.fastq1_path,
+            ok1: sample.fastq1_ok,
+            warn1,
+            path2: sample.fastq2_path,
+            ok2: sample.fastq2_ok,
+            warn2
+        })
       }
       if (props.sampleType === 'single') {
         markWarn(file.sampleFirst)

@@ -457,11 +457,13 @@ const validateTaskParams = (taskParam) => {
 }
 
 const checkSampleFastq = (sample) => {
-    const r1Missing = !sample.fastq1_path;
-    const r2Missing = !sample.fastq2_path;
-    const r1NotReady = !!sample.fastq1_warn || (!!sample.fastq1_path && !sample.fastq1_ok);
-    const r2NotReady = !!sample.fastq2_warn || (!!sample.fastq2_path && !sample.fastq2_ok);
-    return r1Missing || r2Missing || r1NotReady || r2NotReady;
+    if (!sample) {
+        return false
+    }
+    const r1NotReady = sample.fastq1_path && sample.fastq1_ok === false
+    const r2NotReady = sample.fastq2_path && sample.fastq2_ok === false
+    const hasWarn = !!sample.fastq1_warn || !!sample.fastq2_warn
+    return hasWarn || r1NotReady || r2NotReady
 }
 
 const confirmTaskCreated = () => {
