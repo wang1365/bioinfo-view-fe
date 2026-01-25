@@ -1,13 +1,29 @@
 <template>
     <q-card style="width: 1200px; max-width:90vw; height: 80vh; display: flex; flex-direction: column;" class="q-px-sm">
-        <q-card-section class="q-pb-none">
+        <q-card-section class="q-pb-none row items-center justify-between">
             <div class="text-h6">{{$t('ProjectSelectFlowTitle')}}</div>
+            <q-input
+                dense
+                outlined
+                v-model="keyword"
+                :placeholder="$t('Search')"
+                @keyup.enter="onSearch"
+                class="q-ml-md"
+                style="width: 300px"
+                clearable
+                @clear="onSearch"
+            >
+                <template v-slot:append>
+                    <q-icon name="search" class="cursor-pointer" @click="onSearch" />
+                </template>
+            </q-input>
         </q-card-section>
         <q-card-section class="flex-1 q-pt-sm" style="overflow: hidden; display: flex; flex-direction: column;">
             <a-table
                 :data-source="dataItems"
                 :columns="columns"
                 :scroll="{ y: tableScrollHeight }"
+                :loading="loading"
                 row-key="id"
                 :pagination="{
                     total,
@@ -81,6 +97,8 @@ const total = ref(0)
 const dataItems = ref([])
 const selectedRowKeys = ref([])
 const selectedRows = ref([])
+const keyword = ref('')
+const loading = ref(false)
 
 
 onMounted(() => {
@@ -88,8 +106,12 @@ onMounted(() => {
 })
 
 const loadPage = () => {
+    loading.value = true
     dataItems.value = []
     let params = `page=${current.value}&size=${pageSize.value}`
+    if (keyword.value) {
+        params += `&keyword=${encodeURIComponent(keyword.value)}`
+    }
     apiGet(`/flow/flows/?${params}`, (res) => {
         total.value = res.data.count
         for (const item of res.data.results) {
@@ -97,7 +119,14 @@ const loadPage = () => {
             dataItems.value.push(item)
         }
         console.log(total.value)
+    }, {}, null, null, () => {
+        loading.value = false
     })
+}
+
+const onSearch = () => {
+    current.value = 1
+    loadPage()
 }
 
 const pageChange = (page, size) => {
