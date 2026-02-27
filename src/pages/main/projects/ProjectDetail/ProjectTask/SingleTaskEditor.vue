@@ -224,7 +224,7 @@ import { useI18n } from 'vue-i18n'
 import { defineProps, defineEmits, nextTick, ref, watch } from 'vue'
 import { useApi } from 'src/api/apiBase'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
-import { parseCsvToList } from 'src/utils/csv'
+import { decodeCsvArrayBuffer, parseCsvTextWithPapa } from 'src/utils/csv'
 
 const { t } = useI18n()
 
@@ -341,7 +341,8 @@ const downloadCsvTemplate = () => {
     headers = [taskNameHeader, ...paramHeaders, 'Data ID']
   }
   const content = headers.join(',') + '\n'
-  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' })
+  const bom = '\ufeff'
+  const blob = new Blob([bom + content], { type: 'text/csv;charset=utf-8;' })
   const a = document.createElement('a')
   a.href = URL.createObjectURL(blob)
   a.download = `template_${props.sampleType}.csv`
@@ -477,8 +478,13 @@ const handleCsvUpload = async () => {
   if (!csvFile.value) return
   const file = Array.isArray(csvFile.value) ? csvFile.value[0] : csvFile.value
   if (!file) return
-  const text = await file.text()
-  const { rows } = parseCsvToList(text, ',', true)
+  // Manual verification: upload UTF-8 BOM or GBK CSV with Chinese (e.g., 任务一, 样本A)
+  const buffer = await file.arrayBuffer()
+  const text = decodeCsvArrayBuffer(buffer, { detectEncoding: true })
+  const { rows, errors } = parseCsvTextWithPapa(text, { delimiter: ',' })
+  if (errors?.length) {
+    console.warn('PapaParse errors:', errors)
+  }
   const identifiers = []
   const parsedRows = []
   const paramCount = props.paramsDefine ? props.paramsDefine.length : 0
