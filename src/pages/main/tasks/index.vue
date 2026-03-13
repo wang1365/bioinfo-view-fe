@@ -283,8 +283,8 @@
                             <q-separator vertical />
                             <div v-permission="'createReport'">
                                 <q-btn
-                                    :disable="record.status !== 'FINISHED' || !record.flow.allow_define_report"
-                                    :color="(record.status !== 'FINISHED' || !record.flow.allow_define_report) ? 'grey': 'primary'"
+                                    :disable="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report"
+                                    :color="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report ? 'grey': 'primary'"
                                     :label="$t('TaskPageBtnCustomReport')"
                                     icon="query_stats"
                                     :to="`/main/tasks/${record.id}/define-report`"
@@ -400,6 +400,7 @@
 </template>
 
 <script setup>
+import { isRP2Flow } from 'src/utils/flow'
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useApi } from 'src/api/apiBase';
 import PageTitle from 'components/page-title/PageTitle.vue';
@@ -605,7 +606,8 @@ const gotoDetail = (item) => {
     router.push(`/main/tasks/${item.id}`);
 };
 const gotoReport = (item) => {
-    router.push(`/main/tasks/${item.id}/report`);
+  const target = isRP2Flow(item) ? `/main/tasks/${item.id}/rp2` : `/main/tasks/${item.id}/report`;
+  router.push(target);
 };
 const gotoDefineReport = (item) => {
     router.push(`/main/tasks/${item.id}/define-report`);

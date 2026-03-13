@@ -878,4 +878,17 @@ export default {
     CreateTaskFastqIncompleteConfirm:
         '部分数据的fastq文件不存在或者没有上传完成，任务创建后需要等到文件上传完整后才会开始运行，是否继续？',
     CreateTaskIdentifierMissingConfirm: '有数据识别号不存在，是否继续创建任务？',
+    // RP2 Panel
+    Rp2PageTitle: 'RP Panel v2.0 结果',
+    Rp2SampleList: '样本列表',
+    Rp2Contamination: '污染评估',
+    Rp2ViewResult: '查看结果',
+    Rp2ConfigReport: '配置报告',
+    Rp2DownloadReport: '下载报告',
+    Rp2SampleName: '样本名',
+    Rp2Xijun: '细菌',
+    Rp2Zhenjun: '真菌',
+    Rp2Bingdu: '病毒',
+    Rp2Operation: '操作',
+    Rp2ContaminationPlaceholder: '污染评估',
 }

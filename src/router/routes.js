@@ -70,6 +70,18 @@ const routes = [
                 component: () => import('pages/main/tasks/defineReport/index.vue'),
             },
             {
+                path: 'tasks/:id/rp2',
+                component: () => import('pages/main/tasks/rp2/index.vue'),
+            },
+            {
+                path: 'tasks/:id/sample/:sampleId/report',
+                component: () => import('pages/main/tasks/sample/Report/index.vue'),
+            },
+            {
+                path: 'tasks/:id/sample/:sampleId/define-report',
+                component: () => import('pages/main/tasks/sample/DefineReport/index.vue'),
+            },
+            {
                 path: 'reports',
                 component: () => import('pages/main/reports/index.vue'),
             },

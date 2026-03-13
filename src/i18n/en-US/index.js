@@ -886,4 +886,17 @@ export default {
     CreateTaskFastqIncompleteConfirm:
         'Some data fastq files do not exist or are not fully uploaded. After creating the task, it will start only when files are fully uploaded. Continue?',
     CreateTaskIdentifierMissingConfirm: 'Some data identifiers do not exist. Continue to create the task?',
+    // RP2 Panel
+    Rp2PageTitle: 'RP Panel v2.0 Results',
+    Rp2SampleList: 'Sample List',
+    Rp2Contamination: 'Contamination Assessment',
+    Rp2ViewResult: 'View Result',
+    Rp2ConfigReport: 'Configure Report',
+    Rp2DownloadReport: 'Download Report',
+    Rp2SampleName: 'Sample Name',
+    Rp2Xijun: 'Bacteria',
+    Rp2Zhenjun: 'Fungi',
+    Rp2Bingdu: 'Virus',
+    Rp2Operation: 'Operation',
+    Rp2ContaminationPlaceholder: 'Contamination Assessment',
 }

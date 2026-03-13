@@ -94,18 +94,19 @@
                     >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
-                    <a-table
-                        style="z-index:1"
-                        class="col-5"
-                        size="middle"
-                        rowKey="lineNumber"
-                        bordered
-                        :scroll="{ x: table.columns.length * 100, y: 600 }"
-                        :data-source="table.filteredRows"
-                        :columns="table.columns"
-                        :sticky="true"
-                        :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }"
-                    >
+<a-table
+  style="z-index:1"
+  class="col-5"
+  size="middle"
+  rowKey="lineNumber"
+  bordered
+  :scroll="{ x: table.columns.length * 100, y: 600 }"
+  :data-source="table.filteredRows"
+  :columns="table.columns"
+  :sticky="true"
+  :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }"
+  :pagination="paginationConfig"
+>
                         <template #bodyCell="{ column, record }">
                             <q-btn
                                 v-if="column.config.type === 'image'"
@@ -252,6 +253,7 @@
 
 <script setup>
 import {computed, onMounted, ref, toRef, watch} from 'vue'
+import { useI18n } from 'vue-i18n'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { useQuasar } from "quasar"
@@ -260,6 +262,7 @@ import { globalStore } from 'src/stores/global'
 import { template } from 'lodash'
 
 const store = globalStore()
+const { t } = useI18n()
 const { langCode } = storeToRefs(store)
 const $q = useQuasar()
 const dlgVisible = ref(false)
@@ -276,6 +279,10 @@ const props = defineProps({
             }
         },
     },
+    enablePagination: {
+        type: Boolean,
+        default: false
+    },
     task: {
         required: true,
         default: () => { },
@@ -284,6 +291,18 @@ const props = defineProps({
         type: Object,
         default: () => { }
     }
+})
+
+// Pagination config for RP2 usage: bind only when enabled
+const paginationConfig = computed(() => {
+  if (props.enablePagination) {
+    return {
+      pageSize: 10,
+      showSizeChanger: true,
+      showTotal: (total) => t('PaginationTotal', { total })
+    }
+  }
+  return undefined
 })
 
 const tab = ref('')

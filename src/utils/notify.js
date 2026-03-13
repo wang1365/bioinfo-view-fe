@@ -18,3 +18,10 @@ export function errorMessage(message = '发生错误') {
         message: message,
     })
 }
+
+export function successMessage(message = '成功') {
+    Notify.create({
+        type: 'positive',
+        message: message,
+    })
+}
