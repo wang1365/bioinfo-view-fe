@@ -891,4 +891,9 @@ export default {
     Rp2Bingdu: '病毒',
     Rp2Operation: '操作',
     Rp2ContaminationPlaceholder: '污染评估',
+    SampleListTableColumnNCSample: 'NC样本',
+    SampleListTableColumnTagLabel: 'Tag标签',
+    SampleNewFormNCSample: 'NC样本',
+    SampleNewFormTagLabel: 'Tag标签',
+    NotSpecified: '未填写',
 }

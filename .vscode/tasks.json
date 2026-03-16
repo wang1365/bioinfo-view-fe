@@ -2,18 +2,47 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "npm: dev",
-            "type": "npm",
-            "script": "dev",
+            "label": "npm: dev (backend local 8000)",
+            "type": "shell",
+            "command": "npm run dev",
             "isBackground": true,
+            "options": {
+                "env": {
+                    "host": "http://localhost:8000",
+                    "igv": "http://localhost:8000"
+                }
+            },
             "problemMatcher": {
                 "background": {
                     "activeOnStart": true,
-                    "beginsPattern": ".*",  // 匹配任何输出作为任务开始的信号
-                    "endsPattern": ".*"     // 匹配任何输出作为任务结束的信号
+                    "beginsPattern": ".*",
+                    "endsPattern": ".*"
                 },
                 "pattern": {
-                    "regexp": "^(.*)$",     // 匹配所有输出
+                    "regexp": "^(.*)$",
+                    "message": 1
+                }
+            }
+        },
+        {
+            "label": "npm: dev (backend 10.10.0.208:8080)",
+            "type": "shell",
+            "command": "npm run dev",
+            "isBackground": true,
+            "options": {
+                "env": {
+                    "host": "http://10.10.0.208:8080",
+                    "igv": "http://10.10.0.208"
+                }
+            },
+            "problemMatcher": {
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".*",
+                    "endsPattern": ".*"
+                },
+                "pattern": {
+                    "regexp": "^(.*)$",
                     "message": 1
                 }
             }

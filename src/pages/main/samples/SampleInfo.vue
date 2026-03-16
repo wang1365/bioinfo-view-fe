@@ -24,6 +24,10 @@
             <div class="row q-my-sm">
                 <div class="col-4 q-pa-sm">{{$t('SamplingTubeBrand')}}: {{ form.sampling_tube_brand }}</div>
                 <div class="col-4 q-pa-sm">{{$t('SpecimenType')}}: {{ form.specimen_type }}</div>
+                <div class="col-4 q-pa-sm">{{$t('SampleNewFormNCSample')}}: {{ displayNcSample(form.is_nc_sample) }}</div>
+            </div>
+            <div class="row q-my-sm">
+                <div class="col-4 q-pa-sm">{{$t('SampleNewFormTagLabel')}}: {{ form.tag_label || '-' }}</div>
             </div>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
@@ -40,9 +44,11 @@
 <script setup>
 import { ref, defineEmits, onMounted } from "vue";
 import { useApi } from "src/api/apiBase";
+import { useI18n } from "vue-i18n";
 
 const { apiGet } = useApi();
 const emit = defineEmits(["refresh"]);
+const { t } = useI18n();
 
 const props = defineProps({
     id: {
@@ -62,8 +68,16 @@ const form = ref({
     patient_identifier: "patient_identifier",
     identifier: "identifier",
     sampling_tube_brand: '',
-    specimen_type: ''
+    specimen_type: '',
+    is_nc_sample: null,
+    tag_label: '',
 });
+
+const displayNcSample = (value) => {
+    if (value === true) return t('Yes');
+    if (value === false) return t('No');
+    return '-';
+};
 onMounted(() => {
     apiGet(`/sample/sampledatas/${props.id}/`, (res) => {
         console.log(res);

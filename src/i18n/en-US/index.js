@@ -640,6 +640,8 @@ export default {
     SampleListTableColumnSampleType: 'Sample Type',
     SampleListTableColumnTumorContent: 'Tumor Content',
     SampleListTableColumnTumorSample: 'Tumor Sample',
+    SampleListTableColumnNCSample: 'NC Sample',
+    SampleListTableColumnTagLabel: 'Tag Label',
     SampleListTableColumnPatientIdentificationNumber: 'Patient ID',
     SampleListTableColumnSampleIdentificationNumber: 'Sample ID',
     SampleListTableColumnOperations: 'Operate',
@@ -662,6 +664,8 @@ export default {
     SampleNewFormSampleType: 'Sample Type',
     SampleNewFormTumorContent: 'Tumor Content',
     SampleNewFormTumorSample: 'Tumor Sample',
+    SampleNewFormNCSample: 'NC Sample',
+    SampleNewFormTagLabel: 'Tag Label',
     SampleNewFormSampleIdentificationNumber: 'Sample ID',
     SampleNewFormPatientID: 'Patient ID',
     SampleNewFormPatientIdentificationNumber: 'Patient ID',
@@ -673,6 +677,7 @@ export default {
     SampleEditFormTitle: 'Sample Information Editing',
     // 样本详情
     SampleInfoPageTitle: 'Sample Information',
+    NotSpecified: 'Not specified',
 
     // 数据
     // 数据列表页面

@@ -139,6 +139,31 @@
                                          :label="$t('SpecimenType')"
                                 ></q-input>
                             </div>
+                            <div class="col-4 q-pr-sm">
+                                <q-select
+                                    v-model="form.is_nc_sample"
+                                    outlined
+                                    clearable
+                                    label-color="primary"
+                                    emit-value
+                                    map-options
+                                    :options="ncSampleOptions"
+                                    :label="$t('SampleNewFormNCSample')"
+                                />
+                            </div>
+                        </div>
+                    </q-item>
+                    <q-item>
+                        <div class="row full-width justify-start">
+                            <div class="col-4 q-pr-sm">
+                                <q-input
+                                    outlined
+                                    label-color="primary"
+                                    stack-label
+                                    v-model="form.tag_label"
+                                    :label="$t('SampleNewFormTagLabel')"
+                                />
+                            </div>
                         </div>
                     </q-item>
                 </q-list>
@@ -185,6 +210,10 @@ const linkPatient = (event) => {
     form.value.patient_identifier = event.identifier;
 };
 const sampleTypeOptions = computed(() => [t('SampleFormTypeFFPE'), t('SampleFormTypeFreshTissue'), t('SampleFormTypeBlood'), t('SampleFormTypeCerebrospinal'), t('SampleFormTypePleuralEffusion'), t('SampleFormTypeOtherBodyFluids'), t('SampleFormTypeBoneMarrow')]);
+const ncSampleOptions = computed(() => [
+    { label: t('Yes'), value: true },
+    { label: t('No'), value: false },
+]);
 const createValue = (val, done) => {
     if (val.length > 0) {
         if (!sampleTypeOptions.value.includes(val)) {
@@ -215,7 +244,9 @@ const form = ref({
     patient_identifier: '',
     identifier: '',
     sampling_tube_brand: '',
-    specimen_type: ''
+    specimen_type: '',
+    is_nc_sample: null,
+    tag_label: '',
 });
 
 onMounted(() => {
@@ -239,7 +270,9 @@ const save = async () => {
         patient_identifier: form.value.patient_identifier,
         identifier: form.value.identifier,
         sampling_tube_brand: form.value.sampling_tube_brand,
-        specimen_type: form.value.specimen_type
+        specimen_type: form.value.specimen_type,
+        is_nc_sample: form.value.is_nc_sample,
+        tag_label: form.value.tag_label || null,
     }
 
     apiPut(

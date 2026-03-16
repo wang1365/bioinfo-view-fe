@@ -139,6 +139,7 @@
                             <td>{{$t('SampleListTableColumnSampleType')}}</td>
                             <td>{{$t('SampleListTableColumnTumorContent')}}</td>
                             <td>{{$t('SampleListTableColumnTumorSample')}}</td>
+                            <td>{{$t('SampleListTableColumnNCSample')}}</td>
                             <td>{{$t('SampleListTableColumnPatientIdentificationNumber')}}</td>
                             <td>{{$t('SampleListTableColumnSampleIdentificationNumber')}}</td>
                             <td>{{$t('SampleListTableColumnOperations')}}</td>
@@ -163,6 +164,7 @@
                                 {{ item.panel_proportion }}
                             </td>
                             <td>{{ item.is_panel }}</td>
+                            <td>{{ displayNcSample(item.is_nc_sample) }}</td>
                             <td>{{ item.patient?.identifier }}</td>
                             <td>{{ item.identifier }}</td>
                             <td class="q-gutter-xs">
@@ -286,6 +288,12 @@ const searchParams = ref({
 })
 
 const $q = useQuasar();
+
+const displayNcSample = (value) => {
+    if (value === true) return t('Yes');
+    if (value === false) return t('No');
+    return '-';
+};
 
 const edit = async (item) => {
     editId.value = item.id;
