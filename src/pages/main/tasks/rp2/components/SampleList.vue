@@ -1,67 +1,81 @@
 <template>
     <div class="sample-list">
-        <!-- Search Bar -->
-        <div class="search-bar q-mb-md">
-            <a-input-search
-                v-model:value="searchKeyword"
-                :placeholder="$t('Search')"
-                allow-clear
-                @search="handleSearch"
-                @change="handleSearchChange"
-                style="width: 300px"
+        <div class="q-mb-md">
+            <q-input
+                class="search-input"
+                v-model="searchKeyword"
+                dense
+                outlined
+                clearable
+                :label="t('Search')"
+                :placeholder="t('Rp2SampleSearchPlaceholder')"
             />
         </div>
 
-        <!-- Data Table -->
         <a-table
             :data-source="filteredRows"
             :columns="columns"
             :pagination="paginationConfig"
             :loading="loading"
-            row-key="sample_id"
+            row-key="sampleName"
             bordered
-            size="middle"
+            size="small"
         >
             <template #bodyCell="{ record, column }">
+                <template v-if="column.dataIndex === 'sampleName'">
+                    <span
+                        :class="record.isNC ? 'text-red text-weight-medium' : ''"
+                        >{{ record.displaySampleName }}</span
+                    >
+                </template>
+
                 <template v-if="column.dataIndex === 'operation'">
                     <div class="operation-buttons">
                         <q-btn
                             flat
                             size="sm"
                             color="primary"
-                            :label="$t('Rp2ViewResult')"
+                            style="font-size: 12px;"
+                            :label="t('Rp2ViewResult')"
                             @click="viewResult(record)"
                         />
                         <q-btn
                             flat
                             size="sm"
                             color="secondary"
-                            :label="$t('Rp2ConfigReport')"
-                            @click="configReport(record)"
+                            style="font-size: 12px;"
+                            :label="t('Rp2ConfigReport')"
+                            @click="showPending"
                         />
                         <q-btn
                             flat
                             size="sm"
                             color="positive"
-                            :label="$t('Rp2DownloadReport')"
-                            @click="downloadReport(record)"
+                            style="font-size: 12px;"
+                            :label="t('Rp2DownloadReport')"
+                            @click="showPending"
                         />
                     </div>
                 </template>
             </template>
         </a-table>
+
+        <div class="q-mt-md chart-wrapper">
+            <div ref="summaryChartRef" class="summary-chart"></div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import * as echarts from 'echarts'
+import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useQuasar } from 'quasar'
-import { readTaskFile } from 'src/api/task'
-import { errorMessage, successMessage } from 'src/utils/notify'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
+import { readTaskFile } from 'src/api/task'
+import { infoMessage } from 'src/utils/notify'
+import { getRp2LangSuffix, isDetected, parseTabText } from './rp2File'
 
 const props = defineProps({
     taskId: {
@@ -70,180 +84,251 @@ const props = defineProps({
     }
 })
 
-const route = useRoute()
 const router = useRouter()
 const { t } = useI18n()
-const $q = useQuasar()
 const store = globalStore()
 const { langCode } = storeToRefs(store)
 
-// Data states
 const rows = ref([])
 const loading = ref(false)
 const searchKeyword = ref('')
+const summaryChartRef = ref(null)
+let summaryChart = null
 
-// Pagination config
-const paginationConfig = computed(() => ({
-    pageSize: 10,
-    showSizeChanger: true,
-    showTotal: (total) => t('PaginationTotal', { total }),
-    pageSizeOptions: ['10', '20', '50', '100'],
-    showQuickJumper: true
-}))
-
-// Table columns definition
 const columns = computed(() => [
     {
         title: t('Rp2SampleName'),
-        dataIndex: 'sample_name',
-        key: 'sample_name',
-        width: 200,
-        sorter: (a, b) => a.sample_name.localeCompare(b.sample_name)
+        dataIndex: 'sampleName',
+        key: 'sampleName',
+        width: 160,
+        sorter: (a, b) => a.sampleName.localeCompare(b.sampleName)
     },
     {
         title: t('Rp2Xijun'),
-        dataIndex: 'xijun',
-        key: 'xijun',
-        width: 150,
-        sorter: (a, b) => (a.xijun || '').localeCompare(b.xijun || '')
+        dataIndex: 'bacteria',
+        key: 'bacteria',
+        customCell: () => ({
+            style: {
+                whiteSpace: 'normal',
+                wordBreak: 'break-all'
+            }
+        })
     },
     {
         title: t('Rp2Zhenjun'),
-        dataIndex: 'zhenjun',
-        key: 'zhenjun',
-        width: 150,
-        sorter: (a, b) => (a.zhenjun || '').localeCompare(b.zhenjun || '')
+        dataIndex: 'fungus',
+        key: 'fungus',
+        customCell: () => ({
+            style: {
+                whiteSpace: 'normal',
+                wordBreak: 'break-all'
+            }
+        })
     },
     {
         title: t('Rp2Bingdu'),
-        dataIndex: 'bingdu',
-        key: 'bingdu',
-        width: 150,
-        sorter: (a, b) => (a.bingdu || '').localeCompare(b.bingdu || '')
+        dataIndex: 'virus',
+        key: 'virus',
+        customCell: () => ({
+            style: {
+                whiteSpace: 'normal',
+                wordBreak: 'break-all'
+            }
+        })
     },
     {
         title: t('Rp2Operation'),
         dataIndex: 'operation',
         key: 'operation',
-        width: 280,
-        align: 'center',
-        fixed: 'right'
+        width: 360,
+        align: 'center'
     }
 ])
 
-// Filtered rows based on search keyword
+const paginationConfig = computed(() => ({
+    pageSize: 10,
+    showLessItems: false,
+    showSizeChanger: true,
+    pageSizeOptions: ['10', '20', '50', '100'],
+    showQuickJumper: true,
+    showTotal: (total) => t('PaginationTotal', { total })
+}))
+
 const filteredRows = computed(() => {
     if (!searchKeyword.value) {
         return rows.value
     }
+
     const keyword = searchKeyword.value.toLowerCase()
-    return rows.value.filter(row => {
-        return (
-            (row.sample_name && row.sample_name.toLowerCase().includes(keyword)) ||
-            (row.xijun && row.xijun.toLowerCase().includes(keyword)) ||
-            (row.zhenjun && row.zhenjun.toLowerCase().includes(keyword)) ||
-            (row.bingdu && row.bingdu.toLowerCase().includes(keyword))
-        )
+    return rows.value.filter((row) => {
+        return [row.displaySampleName, row.bacteria, row.fungus, row.virus]
+            .filter(Boolean)
+            .some((field) => String(field).toLowerCase().includes(keyword))
     })
 })
 
-// Load data from API
+const summaryCounts = computed(() => {
+    let bacteria = 0
+    let fungus = 0
+    let virus = 0
+
+    filteredRows.value.forEach((row) => {
+        if (isDetected(row.bacteria)) {
+            bacteria += 1
+        }
+        if (isDetected(row.fungus)) {
+            fungus += 1
+        }
+        if (isDetected(row.virus)) {
+            virus += 1
+        }
+    })
+
+    return { bacteria, fungus, virus }
+})
+
 const loadData = async () => {
     loading.value = true
-    try {
-        const suffix = langCode.value === 'cn' ? 'CN' : 'EN'
-        const fileName = `rp2_sample_list_${suffix}.json`
-        const res = await readTaskFile(props.taskId, fileName, true)
 
-        // Parse JSON data
-        if (typeof res === 'string') {
-            rows.value = JSON.parse(res)
-        } else {
-            rows.value = res || []
+    try {
+        const suffix = getRp2LangSuffix(langCode.value)
+        const filePath = `menu/merged_results.${suffix}.txt`
+        const response = await readTaskFile(props.taskId, filePath, true, true)
+        const text = typeof response === 'string' ? response : ''
+
+        if (!text) {
+            rows.value = []
+            renderSummaryChart()
+            return
         }
-    } catch (err) {
-        console.error('Failed to load sample list:', err)
-        errorMessage(t('FailedToLoadData'))
+
+        const { headers, rows: parsedRows } = parseTabText(text, { hasHeader: true })
+        rows.value = parsedRows.map((row) => {
+            const byIndex = (index) => {
+                const key = headers[index]
+                return key ? row[key] : ''
+            }
+
+            const sampleName = row['样本'] || row['Sample'] || byIndex(0) || ''
+            const ncValue = row['是否NC'] || row['IsNC'] || byIndex(1) || '0'
+            const bacteria = row['细菌'] || row['Bacteria'] || byIndex(2) || ''
+            const fungus = row['真菌'] || row['Fungus'] || byIndex(3) || ''
+            const virus = row['病毒'] || row['Virus'] || byIndex(4) || ''
+
+            const isNC = String(ncValue).trim() === '1'
+
+            return {
+                sampleName,
+                displaySampleName: isNC ? `${sampleName}(NC)` : sampleName,
+                isNC,
+                bacteria,
+                fungus,
+                virus
+            }
+        })
+
+        renderSummaryChart()
+    } catch (error) {
         rows.value = []
+        renderSummaryChart()
     } finally {
         loading.value = false
     }
 }
 
-// Search handlers
-const handleSearch = () => {
-    // Search is handled reactively by filteredRows computed property
-}
-
-const handleSearchChange = () => {
-    // Search is handled reactively by filteredRows computed property
-}
-
-// Action handlers
 const viewResult = (record) => {
-    router.push(`/main/tasks/${props.taskId}/sample/${record.sample_id}/report`)
+    const encoded = encodeURIComponent(record.sampleName)
+    router.push(`/main/tasks/${props.taskId}/sample/${encoded}/report`)
 }
 
-const configReport = (record) => {
-    router.push(`/main/tasks/${props.taskId}/sample/${record.sample_id}/define-report`)
+const showPending = () => {
+    infoMessage(t('Rp2PendingFeature'))
 }
 
-const downloadReport = async (record) => {
-    try {
-        $q.loading.show({ message: t('Downloading') })
+const renderSummaryChart = async () => {
+    await nextTick()
 
-        // Get report path from API
-        const { getReportBySample } = await import('src/api/report')
-        const res = await getReportBySample({
-            task_id: props.taskId,
-            sample_id: record.sample_id
-        })
-
-        if (res && res.report_path) {
-            // Trigger file download
-            const link = document.createElement('a')
-            link.href = res.report_path
-            link.download = res.report_name || `${record.sample_name}_report.pdf`
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-            successMessage(t('DownloadSuccess'))
-        } else {
-            errorMessage(t('ReportNotFound'))
-        }
-    } catch (err) {
-        console.error('Failed to download report:', err)
-        errorMessage(t('DownloadFailed'))
-    } finally {
-        $q.loading.hide()
+    if (!summaryChartRef.value) {
+        return
     }
+
+    if (!summaryChart) {
+        summaryChart = echarts.init(summaryChartRef.value)
+    }
+
+    const data = summaryCounts.value
+    summaryChart.setOption({
+        animation: false,
+        tooltip: { trigger: 'axis' },
+        xAxis: {
+            type: 'category',
+            data: [t('Rp2Xijun'), t('Rp2Zhenjun'), t('Rp2Bingdu')]
+        },
+        yAxis: { type: 'value' },
+        series: [
+            {
+                name: t('Rp2PositiveSampleCount'),
+                type: 'bar',
+                data: [data.bacteria, data.fungus, data.virus],
+                barWidth: 36,
+                itemStyle: {
+                    color: '#1890ff'
+                }
+            }
+        ],
+        grid: {
+            top: 20,
+            right: 16,
+            bottom: 30,
+            left: 40
+        }
+    })
 }
 
-// Watch for language changes
-watch(langCode, () => {
-    loadData()
+watch(
+    () => [props.taskId, langCode.value],
+    loadData,
+    { immediate: true }
+)
+
+watch(filteredRows, () => {
+    renderSummaryChart()
 })
 
-// Load data on mount
-onMounted(() => {
-    loadData()
+onBeforeUnmount(() => {
+    if (summaryChart) {
+        summaryChart.dispose()
+        summaryChart = null
+    }
 })
 </script>
 
 <style lang="scss" scoped>
 .sample-list {
-    padding: 16px;
+    padding: 8px;
 }
 
-.search-bar {
-    display: flex;
-    justify-content: flex-start;
+.search-input {
+    width: 33.3333%;
+    min-width: 280px;
 }
 
 .operation-buttons {
     display: flex;
-    gap: 8px;
+    gap: 0;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+}
+
+.chart-wrapper {
+    width: 50%;
+    min-width: 320px;
+}
+
+.summary-chart {
+    width: 100%;
+    height: 180px;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
 }
 </style>

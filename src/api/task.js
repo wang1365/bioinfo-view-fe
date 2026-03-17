@@ -8,13 +8,14 @@ export function getTask(id) {
     })
 }
 
-export function readTaskFile(id, path, ignore_not_existed) {
+export function readTaskFile(id, path, ignore_not_existed, from_task_root = false) {
     return api({
         url: `/task/${id}/file/`,
         method: 'get',
         params: {
             path,
-            ignore_not_existed: ignore_not_existed || false
+            ignore_not_existed: ignore_not_existed || false,
+            from_task_root: from_task_root ? 1 : 0
         },
     })
 }

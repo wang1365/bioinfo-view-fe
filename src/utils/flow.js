@@ -1,3 +1,4 @@
 export function isRP2Flow(record) {
-  return record?.flow?.code === 'rp2';
+    const code = record?.flow?.code
+    return ['rp2', 'RIApanelv1multi'].includes(code)
 }

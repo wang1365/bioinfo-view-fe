@@ -274,7 +274,7 @@
                                 :color="record.status !== 'FINISHED' ? 'grey' : 'primary'"
                                 :label="$t('Result')"
                                 icon="query_stats"
-                                :to="`/main/tasks/${record.id}/report`"
+                                :to="getResultRoute(record)"
                                 size="md"
                                 dense
                                 flat
@@ -606,8 +606,12 @@ const gotoDetail = (item) => {
     router.push(`/main/tasks/${item.id}`);
 };
 const gotoReport = (item) => {
-  const target = isRP2Flow(item) ? `/main/tasks/${item.id}/rp2` : `/main/tasks/${item.id}/report`;
-  router.push(target);
+    const target = isRP2Flow(item) ? `/main/tasks/${item.id}/rp2` : `/main/tasks/${item.id}/report`;
+    router.push(target);
+};
+
+const getResultRoute = (item) => {
+    return isRP2Flow(item) ? `/main/tasks/${item.id}/rp2` : `/main/tasks/${item.id}/report`;
 };
 const gotoDefineReport = (item) => {
     router.push(`/main/tasks/${item.id}/define-report`);
