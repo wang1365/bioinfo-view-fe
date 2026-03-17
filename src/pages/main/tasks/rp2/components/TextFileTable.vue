@@ -13,6 +13,7 @@
             :data-source="rows"
             :loading="loading"
             :pagination="pagination"
+            :table-layout="compactFirstTwoColumns || hasColumnWidths ? 'fixed' : undefined"
             row-key="__rowKey"
             bordered
             size="middle"
@@ -48,6 +49,14 @@ const props = defineProps({
     hasHeader: {
         type: Boolean,
         default: true
+    },
+    compactFirstTwoColumns: {
+        type: Boolean,
+        default: false
+    },
+    columnWidths: {
+        type: Array,
+        default: () => []
     }
 })
 
@@ -59,6 +68,7 @@ const loading = ref(false)
 const rows = ref([])
 const columns = ref([])
 const errorText = ref('')
+const hasColumnWidths = computed(() => Array.isArray(props.columnWidths) && props.columnWidths.length > 0)
 
 const pagination = computed(() => ({
     pageSize: 10,
@@ -91,12 +101,29 @@ const loadTable = async () => {
         const { headers, rows: parsedRows } = parseTabText(text, { hasHeader: props.hasHeader })
 
         rows.value = parsedRows
-        columns.value = headers.map((header, index) => ({
-            title: header,
-            dataIndex: header,
-            key: `${header}-${index}`,
-            ellipsis: true
-        }))
+        columns.value = headers.map((header, index) => {
+            const column = {
+                title: header,
+                dataIndex: header,
+                key: `${header}-${index}`,
+                ellipsis: true
+            }
+
+            if (props.compactFirstTwoColumns) {
+                if (index === 0) {
+                    column.width = 120
+                }
+                if (index === 1) {
+                    column.width = 90
+                }
+            }
+
+            if (hasColumnWidths.value && props.columnWidths[index]) {
+                column.width = props.columnWidths[index]
+            }
+
+            return column
+        })
     } catch (error) {
         errorText.value = `${t('Rp2FailedToReadFile')}: ${filePath.value}`
     } finally {

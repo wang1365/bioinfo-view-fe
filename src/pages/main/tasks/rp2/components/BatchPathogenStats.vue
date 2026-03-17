@@ -17,10 +17,10 @@
                 />
                 <div class="row q-col-gutter-md q-mt-sm">
                     <div class="col-12 col-md-6">
-                        <ImageCard :src="imagePath('menu/plots/cn_positive_negative_bar.png')" :title="t('Rp2BarChart')" />
+                        <ImageCard :src="plotImage('positive_negative_bar')" :title="t('Rp2BarChart')" />
                     </div>
                     <div class="col-12 col-md-6">
-                        <ImageCard :src="imagePath('menu/plots/cn_positive_negative_pie.png')" :title="t('Rp2PieChart')" />
+                        <ImageCard :src="plotImage('positive_negative_pie')" :title="t('Rp2PieChart')" />
                     </div>
                 </div>
             </q-tab-panel>
@@ -33,10 +33,10 @@
                 />
                 <div class="row q-col-gutter-md q-mt-sm">
                     <div class="col-12 col-md-6">
-                        <ImageCard :src="imagePath('menu/plots/cn_pathogen_pie.png')" :title="t('Rp2PieChart')" />
+                        <ImageCard :src="plotImage('pathogen_pie')" :title="t('Rp2PieChart')" />
                     </div>
                     <div class="col-12 col-md-6">
-                        <ImageCard :src="imagePath('menu/plots/cn_pathogen_bar.png')" :title="t('Rp2BarChart')" />
+                        <ImageCard :src="plotImage('pathogen_bar')" :title="t('Rp2BarChart')" />
                     </div>
                 </div>
             </q-tab-panel>
@@ -49,7 +49,7 @@
                 />
                 <div class="row q-col-gutter-md q-mt-sm">
                     <div class="col-12 col-md-6">
-                        <ImageCard :src="imagePath('menu/plots/cn_by_type_bar.png')" :title="t('Rp2BarChart')" />
+                        <ImageCard :src="plotImage('by_type_bar')" :title="t('Rp2BarChart')" />
                     </div>
                 </div>
             </q-tab-panel>
@@ -79,7 +79,7 @@
                 />
                 <div class="row q-col-gutter-md q-mt-sm">
                     <div class="col-12 col-md-8">
-                        <ImageCard :src="imagePath('menu/plots/similarity_heatmap.png')" :title="t('Rp2Heatmap')" />
+                        <ImageCard :src="plotImage('similarity_heatmap')" :title="t('Rp2Heatmap')" />
                     </div>
                 </div>
             </q-tab-panel>
@@ -88,8 +88,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 import TextFileTable from './TextFileTable.vue'
 import ImageCard from './imageCard.vue'
 
@@ -105,13 +107,19 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 const tab = ref('positive')
+const imagePrefix = computed(() => (langCode.value === 'en' ? 'en' : 'cn'))
 
 const imagePath = (relativePath) => {
     if (!props.taskRootDir) {
         return ''
     }
 
-    return `/igv${props.taskRootDir}/${relativePath}`
+    const root = String(props.taskRootDir).replace(/\\/g, '/').replace(/\/+$/, '')
+    return `/igv${root}/${relativePath}`.replace(/\/{2,}/g, '/')
 }
+
+const plotImage = (name) => imagePath(`menu/plots/${imagePrefix.value}_${name}.png`)
 </script>
