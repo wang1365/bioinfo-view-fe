@@ -1,7 +1,11 @@
 <template>
     <q-page style="padding: 10px; overflow: auto; height: 90vh">
         <div class="row items-center">
-            <h6>{{ $t('Rp2PageTitle') }} - {{ sampleName }}</h6>
+            <h6 class="q-my-none">
+                <span class="task-link" @click="goBack">{{ taskName || '-' }}</span>
+                <span class="q-mx-sm">/</span>
+                <span>{{ sampleName }}</span>
+            </h6>
             <q-space />
             <q-btn :label="$t('Back')" icon="arrow_back" class="q-mr-lg" color="primary" flat @click="goBack" />
         </div>
@@ -37,8 +41,9 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getTask } from 'src/api/task'
 import SamplePathogenTable from '../../rp2/components/SamplePathogenTable.vue'
 
 const route = useRoute()
@@ -47,8 +52,29 @@ const router = useRouter()
 const tab = ref('bacteria')
 const taskId = computed(() => route.params.id)
 const sampleName = computed(() => decodeURIComponent(route.params.sampleId || ''))
+const taskName = ref('')
 
 const goBack = () => {
     router.push(`/main/tasks/${taskId.value}/rp2`)
 }
+
+onMounted(async () => {
+    try {
+        const task = await getTask(taskId.value)
+        taskName.value = task?.name || ''
+    } catch (error) {
+        taskName.value = ''
+    }
+})
 </script>
+
+<style scoped>
+.task-link {
+    color: var(--q-primary);
+    cursor: pointer;
+}
+
+.task-link:hover {
+    text-decoration: underline;
+}
+</style>

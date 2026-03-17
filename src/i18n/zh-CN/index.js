@@ -921,6 +921,8 @@ export default {
     Rp2NcMarkTableTitle: '标黄NC污染的病原检测样本信息',
     Rp2TagContaminationTableTitle: '防污染tag列表',
     Rp2InternalControlTableTitle: '假病毒检测列表',
+    Rp2GenusGroupTitle: '属水平',
+    Rp2SpeciesGroupTitle: '种水平',
     SampleListTableColumnNCSample: 'NC样本',
     SampleListTableColumnTagLabel: 'Tag标签',
     SampleNewFormNCSample: 'NC样本',

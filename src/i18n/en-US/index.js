@@ -934,4 +934,6 @@ export default {
     Rp2NcMarkTableTitle: 'NC Marked Pathogen Samples',
     Rp2TagContaminationTableTitle: 'Tag-based Contamination List',
     Rp2InternalControlTableTitle: 'Internal Control (Pseudo Virus) List',
+    Rp2GenusGroupTitle: 'Genus Level',
+    Rp2SpeciesGroupTitle: 'Species Level',
 }

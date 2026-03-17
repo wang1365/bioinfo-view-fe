@@ -1,4 +1,4 @@
-<template>
+﻿<template>
     <div>
         <q-banner v-if="errorText" dense class="bg-orange-1 text-orange-9 q-mb-sm">
             {{ errorText }}
@@ -64,6 +64,9 @@ const pagination = computed(() => ({
 const filePath = computed(() => {
     const suffix = getRp2LangSuffix(langCode.value)
     const dir = categoryDirMap[props.category]
+    if (props.category === 'virus') {
+        return `${props.sampleName}/final_result/${dir}/${dir}_${suffix}_report.RPM.txt`
+    }
     return `${props.sampleName}/final_result/${dir}/${dir}_${suffix}_pintai.RPM.txt`
 })
 
@@ -74,6 +77,127 @@ const shouldRemoveColumn = (header) => {
 
     const normalized = header.toLowerCase()
     return header.includes('去重后序列数') || normalized.includes('uniq')
+}
+
+const displayHeader = (header) => {
+    const normalized = normalizeHeader(header)
+    const map = {
+        '中文属名': '属名',
+        '中文病毒名': '属名',
+        '占比': '相对丰度',
+        '属count': '序列数',
+        'count': '序列数',
+        '中文种名': '种名',
+        '属中占比': '占比',
+        '种count': '序列数'
+    }
+
+    for (const [from, to] of Object.entries(map)) {
+        if (normalized === normalizeHeader(from)) {
+            return to
+        }
+    }
+
+    return header
+}
+
+const normalizeHeader = (header) => String(header || '').replace(/\s+/g, '').toLowerCase()
+
+const findHeaderByAliases = (headers, aliases, used) => {
+    for (const header of headers) {
+        if (used.has(header)) {
+            continue
+        }
+        const normalized = normalizeHeader(header)
+        for (const alias of aliases) {
+            if (normalized === normalizeHeader(alias)) {
+                used.add(header)
+                return header
+            }
+        }
+    }
+    return ''
+}
+
+const getGroupedHeaders = (headers) => {
+    const used = new Set()
+
+    const genusHeaders = [
+        findHeaderByAliases(headers, ['中文属名', '中文病毒名', '属名', 'genusname', 'virusname', 'genus'], used),
+        findHeaderByAliases(headers, ['占比', '相对丰度', 'proportion', 'relativeabundance'], used),
+        findHeaderByAliases(headers, ['属count', '属_count', 'genuscount', 'count', 'readscount'], used)
+    ].filter(Boolean)
+
+    const speciesHeaders = [
+        findHeaderByAliases(headers, ['中文种名', '种名', 'speciesname', 'species', 'virusspeciesname'], used),
+        findHeaderByAliases(headers, ['属中占比', 'speciesproportion', 'proportioningenus'], used),
+        findHeaderByAliases(headers, ['种count', '种_count', 'speciescount', 'count', 'readscount'], used),
+        findHeaderByAliases(headers, ['rpm'], used),
+        findHeaderByAliases(headers, ['致病等级', 'pathogeniclevel', 'pathogenicity'], used)
+    ].filter(Boolean)
+
+    // Fallback by column order when header aliases are not stable.
+    const fallbackLength = props.category === 'virus' ? 6 : 8
+    if ((genusHeaders.length < 3 || speciesHeaders.length < 3) && headers.length >= fallbackLength) {
+        return {
+            genusHeaders: headers.slice(0, 3),
+            speciesHeaders: props.category === 'virus' ? headers.slice(3, 6) : headers.slice(3, 8)
+        }
+    }
+
+    return {
+        genusHeaders,
+        speciesHeaders
+    }
+}
+
+const buildColumns = (headers) => {
+    const leafColumns = headers.map((header, index) => ({
+        title: displayHeader(header),
+        dataIndex: header,
+        key: `${header}-${index}`,
+        ellipsis: true
+    }))
+
+    if (!['bacteria', 'fungus', 'virus'].includes(props.category)) {
+        return leafColumns
+    }
+
+    const { genusHeaders, speciesHeaders } = getGroupedHeaders(headers)
+    const leafMap = new Map(leafColumns.map((column) => [column.dataIndex, column]))
+    const groupedColumns = []
+    const groupedSet = new Set()
+
+    const genusChildren = genusHeaders.map((header) => leafMap.get(header)).filter(Boolean)
+    if (genusChildren.length > 0) {
+        genusChildren.forEach((column) => groupedSet.add(column.dataIndex))
+        groupedColumns.push({
+            title: t('Rp2GenusGroupTitle'),
+            key: 'rp2-genus-group',
+            children: genusChildren
+        })
+    }
+
+    const speciesChildren = speciesHeaders.map((header) => leafMap.get(header)).filter(Boolean)
+    if (speciesChildren.length > 0) {
+        speciesChildren.forEach((column) => groupedSet.add(column.dataIndex))
+        groupedColumns.push({
+            title: t('Rp2SpeciesGroupTitle'),
+            key: 'rp2-species-group',
+            children: speciesChildren
+        })
+    }
+
+    headers.forEach((header) => {
+        if (!groupedSet.has(header)) {
+            const leaf = leafMap.get(header)
+            if (leaf) {
+                groupedColumns.push(leaf)
+            }
+        }
+    })
+
+    return groupedColumns
 }
 
 const loadData = async () => {
@@ -106,12 +230,7 @@ const loadData = async () => {
             return mapped
         })
 
-        columns.value = keptHeaders.map((header, index) => ({
-            title: header,
-            dataIndex: header,
-            key: `${header}-${index}`,
-            ellipsis: true
-        }))
+        columns.value = buildColumns(keptHeaders)
     } catch (error) {
         rows.value = []
         columns.value = []
