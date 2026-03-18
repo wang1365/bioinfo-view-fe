@@ -57,6 +57,10 @@ const props = defineProps({
     columnWidths: {
         type: Array,
         default: () => []
+    },
+    hiddenHeaderAliases: {
+        type: Array,
+        default: () => []
     }
 })
 
@@ -69,6 +73,40 @@ const rows = ref([])
 const columns = ref([])
 const errorText = ref('')
 const hasColumnWidths = computed(() => Array.isArray(props.columnWidths) && props.columnWidths.length > 0)
+const hiddenHeaderSet = computed(() => new Set((props.hiddenHeaderAliases || []).map((item) => String(item || '').trim().toLowerCase())))
+
+const normalizeSortValue = (value) => {
+    const text = String(value ?? '').trim()
+    if (!text) {
+        return { type: 'empty', value: '' }
+    }
+
+    const numericText = text.replace(/,/g, '')
+    if (/^-?\d+(\.\d+)?$/.test(numericText)) {
+        return { type: 'number', value: Number(numericText) }
+    }
+
+    return { type: 'string', value: text.toLowerCase() }
+}
+
+const compareCellValue = (left, right) => {
+    const a = normalizeSortValue(left)
+    const b = normalizeSortValue(right)
+
+    if (a.type === 'empty' && b.type === 'empty') {
+        return 0
+    }
+    if (a.type === 'empty') {
+        return -1
+    }
+    if (b.type === 'empty') {
+        return 1
+    }
+    if (a.type === 'number' && b.type === 'number') {
+        return a.value - b.value
+    }
+    return String(a.value).localeCompare(String(b.value), undefined, { numeric: true })
+}
 
 const pagination = computed(() => ({
     pageSize: 10,
@@ -99,14 +137,22 @@ const loadTable = async () => {
         }
 
         const { headers, rows: parsedRows } = parseTabText(text, { hasHeader: props.hasHeader })
+        const visibleHeaders = headers.filter((header) => !hiddenHeaderSet.value.has(String(header || '').trim().toLowerCase()))
 
-        rows.value = parsedRows
-        columns.value = headers.map((header, index) => {
+        rows.value = parsedRows.map((row) => {
+            const next = { __rowKey: row.__rowKey }
+            visibleHeaders.forEach((header) => {
+                next[header] = row[header]
+            })
+            return next
+        })
+        columns.value = visibleHeaders.map((header, index) => {
             const column = {
                 title: header,
                 dataIndex: header,
                 key: `${header}-${index}`,
-                ellipsis: true
+                ellipsis: true,
+                sorter: (a, b) => compareCellValue(a?.[header], b?.[header])
             }
 
             if (props.compactFirstTwoColumns) {

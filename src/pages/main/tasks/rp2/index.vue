@@ -32,8 +32,8 @@
                 <TextFileTable
                     :task-id="taskId"
                     :title="$t('Rp2BasicQcTableTitle')"
-                    cn-file="menu/ALL.QC.base.CN.txt"
-                    en-file="menu/ALL.QC.base.CN.txt"
+                    cn-file="menu/ALL.QC.base.CN.add.txt"
+                    en-file="menu/ALL.QC.base.EN.add.txt"
                 />
             </q-tab-panel>
             <q-tab-panel name="ncQc">
@@ -48,28 +48,38 @@
                     <TextFileTable
                         :task-id="taskId"
                         :title="$t('Rp2NcMarkTableTitle')"
-                        cn-file="menu/merged_results.NCmark.CN.txt"
-                        en-file="menu/merged_results.NCmark.CN.txt"
+                        cn-file="menu/merged_results.NCmark.CN.add.txt"
+                        en-file="menu/merged_results.NCmark.EN.add.txt"
                         :compact-first-two-columns="true"
+                        :column-widths="[160, 170]"
+                        :hidden-header-aliases="['是否NC', 'isnc', '耐药基因', 'drug resistance genes', 'resistance genes']"
                     />
                 </div>
             </q-tab-panel>
             <q-tab-panel name="contaminationQc">
-                <TextFileTable
-                    :task-id="taskId"
-                    :title="$t('Rp2TagContaminationTableTitle')"
-                    cn-file="menu/Contamination.CN.txt"
-                    en-file="menu/Contamination.CN.txt"
-                    :column-widths="[160, null, null, null, 110]"
-                />
-                <div class="q-mt-md">
-                    <TextFileTable
-                        :task-id="taskId"
-                        :title="$t('Rp2InternalControlTableTitle')"
-                        cn-file="menu/InternalControl.CN.txt"
-                        en-file="menu/InternalControl.CN.txt"
-                    />
-                </div>
+                <q-tabs v-model="contaminationTab" dense active-color="primary" align="left" indicator-color="primary">
+                    <q-tab name="contaminationTag" :label="$t('Rp2TagContaminationTableTitle')" />
+                    <q-tab name="internalControl" :label="$t('Rp2InternalControlTableTitle')" />
+                </q-tabs>
+                <q-tab-panels v-model="contaminationTab" animated>
+                    <q-tab-panel name="contaminationTag" class="q-px-none">
+                        <TextFileTable
+                            :task-id="taskId"
+                            :title="$t('Rp2TagContaminationTableTitle')"
+                            cn-file="menu/Contamination.CN.add.txt"
+                            en-file="menu/Contamination.EN.add.txt"
+                            :column-widths="[160, null, null, null, 110]"
+                        />
+                    </q-tab-panel>
+                    <q-tab-panel name="internalControl" class="q-px-none">
+                        <TextFileTable
+                            :task-id="taskId"
+                            :title="$t('Rp2InternalControlTableTitle')"
+                            cn-file="menu/InternalControl.CN.add.txt"
+                            en-file="menu/InternalControl.EN.add.txt"
+                        />
+                    </q-tab-panel>
+                </q-tab-panels>
             </q-tab-panel>
             <q-tab-panel name="batchStats">
                 <BatchPathogenStats :task-id="taskId" :task-root-dir="taskRootDir" />
@@ -95,6 +105,7 @@ const taskId = route.params.id
 const taskRootDir = ref('')
 const taskName = ref('')
 const tab = ref('sampleList')
+const contaminationTab = ref('contaminationTag')
 const pageTitle = computed(() => {
     return taskName.value ? `"${taskName.value}" ${t('Rp2SummaryTitleSuffix')}` : t('Rp2PageTitle')
 })

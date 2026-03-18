@@ -107,6 +107,7 @@ const columns = computed(() => [
         title: t('Rp2Xijun'),
         dataIndex: 'bacteria',
         key: 'bacteria',
+        sorter: (a, b) => String(a.bacteria || '').localeCompare(String(b.bacteria || '')),
         customCell: () => ({
             style: {
                 whiteSpace: 'normal',
@@ -118,6 +119,7 @@ const columns = computed(() => [
         title: t('Rp2Zhenjun'),
         dataIndex: 'fungus',
         key: 'fungus',
+        sorter: (a, b) => String(a.fungus || '').localeCompare(String(b.fungus || '')),
         customCell: () => ({
             style: {
                 whiteSpace: 'normal',
@@ -129,6 +131,7 @@ const columns = computed(() => [
         title: t('Rp2Bingdu'),
         dataIndex: 'virus',
         key: 'virus',
+        sorter: (a, b) => String(a.virus || '').localeCompare(String(b.virus || '')),
         customCell: () => ({
             style: {
                 whiteSpace: 'normal',
@@ -192,7 +195,7 @@ const loadData = async () => {
 
     try {
         const suffix = getRp2LangSuffix(langCode.value)
-        const filePath = `menu/merged_results.${suffix}.txt`
+        const filePath = `menu/merged_results.${suffix}.add.txt`
         const response = await readTaskFile(props.taskId, filePath, true, true)
         const text = typeof response === 'string' ? response : ''
 

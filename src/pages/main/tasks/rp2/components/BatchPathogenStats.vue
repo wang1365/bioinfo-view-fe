@@ -57,25 +57,17 @@
             <q-tab-panel name="ncOverlap">
                 <TextFileTable
                     :task-id="taskId"
-                    :title="t('Rp2TableOne')"
+                    :title="t('Rp2NcOverlapTab')"
                     cn-file="menu/analysis_NC_overlap_stats.CN.add.txt"
                     en-file="menu/analysis_NC_overlap_stats.EN.add.txt"
                 />
-                <div class="q-mt-md">
-                    <TextFileTable
-                        :task-id="taskId"
-                        :title="t('Rp2TableTwo')"
-                        cn-file="menu/analysis_NC_overlap_stats.CN.txt"
-                        en-file="menu/analysis_NC_overlap_stats.EN.txt"
-                    />
-                </div>
             </q-tab-panel>
 
             <q-tab-panel name="similarity">
                 <TextFileTable
                     :task-id="taskId"
-                    cn-file="menu/analysis_sample_similarity.CN.txt"
-                    en-file="menu/analysis_sample_similarity.EN.txt"
+                    cn-file="menu/analysis_sample_similarity.CN.add.txt"
+                    en-file="menu/analysis_sample_similarity.EN.add.txt"
                 />
                 <div class="row q-col-gutter-md q-mt-sm">
                     <div class="col-12 col-md-8">
