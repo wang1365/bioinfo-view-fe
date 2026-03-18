@@ -18,9 +18,13 @@
             dense
         >
             <q-tab name="sampleList" :label="$t('Rp2SampleList')" icon="list" />
-            <q-tab name="basicQc" :label="$t('Rp2BasicQcTab')" icon="fact_check" />
-            <q-tab name="ncQc" :label="$t('Rp2NcQcTab')" icon="science" />
-            <q-tab name="contaminationQc" :label="$t('Rp2ContaminationQcTab')" icon="biotech" />
+            <q-tab
+                v-for="(moduleItem, index) in customModules"
+                :key="`rp2-custom-tab-${index}`"
+                :name="customTabName(index)"
+                :label="moduleItem.title || `Module ${index + 1}`"
+                icon="widgets"
+            />
             <q-tab name="batchStats" :label="$t('Rp2BatchStats')" icon="analytics" />
         </q-tabs>
 
@@ -29,61 +33,12 @@
                 <IntroHelpButton :title="$t('Rp2SampleList')" />
                 <SampleList :task-id="taskId" />
             </q-tab-panel>
-            <q-tab-panel name="basicQc">
-                <IntroHelpButton :title="$t('Rp2BasicQcTab')" />
-                <TextFileTable
-                    :task-id="taskId"
-                    :title="$t('Rp2BasicQcTableTitle')"
-                    cn-file="menu/ALL.QC.base.CN.add.txt"
-                    en-file="menu/ALL.QC.base.EN.add.txt"
-                />
-            </q-tab-panel>
-            <q-tab-panel name="ncQc">
-                <IntroHelpButton :title="$t('Rp2NcQcTab')" />
-                <TextFileTable
-                    :task-id="taskId"
-                    :title="$t('Rp2NcResultTableTitle')"
-                    cn-file="menu/NC.CN.info"
-                    en-file="menu/NC.CN.info"
-                    :column-widths="[160]"
-                />
-                <div class="q-mt-md">
-                    <TextFileTable
-                        :task-id="taskId"
-                        :title="$t('Rp2NcMarkTableTitle')"
-                        cn-file="menu/merged_results.NCmark.CN.add.txt"
-                        en-file="menu/merged_results.NCmark.EN.add.txt"
-                        :compact-first-two-columns="true"
-                        :column-widths="[160, 170]"
-                        :hidden-header-aliases="['是否NC', 'isnc', '耐药基因', 'drug resistance genes', 'resistance genes']"
-                    />
-                </div>
-            </q-tab-panel>
-            <q-tab-panel name="contaminationQc">
-                <IntroHelpButton :title="$t('Rp2ContaminationQcTab')" />
-                <q-tabs v-model="contaminationTab" dense active-color="primary" align="left" indicator-color="primary">
-                    <q-tab name="contaminationTag" :label="$t('Rp2TagContaminationTableTitle')" />
-                    <q-tab name="internalControl" :label="$t('Rp2InternalControlTableTitle')" />
-                </q-tabs>
-                <q-tab-panels v-model="contaminationTab" animated>
-                    <q-tab-panel name="contaminationTag" class="q-px-none">
-                        <TextFileTable
-                            :task-id="taskId"
-                            :title="$t('Rp2TagContaminationTableTitle')"
-                            cn-file="menu/Contamination.CN.add.txt"
-                            en-file="menu/Contamination.EN.add.txt"
-                            :column-widths="[160, null, null, null, 110]"
-                        />
-                    </q-tab-panel>
-                    <q-tab-panel name="internalControl" class="q-px-none">
-                        <TextFileTable
-                            :task-id="taskId"
-                            :title="$t('Rp2InternalControlTableTitle')"
-                            cn-file="menu/InternalControl.CN.add.txt"
-                            en-file="menu/InternalControl.EN.add.txt"
-                        />
-                    </q-tab-panel>
-                </q-tab-panels>
+            <q-tab-panel
+                v-for="(moduleItem, index) in customModules"
+                :key="`rp2-custom-panel-${index}`"
+                :name="customTabName(index)"
+            >
+                <CommonModuleVue :view-config="moduleItem" :task="taskForCommonModule" :enable-pagination="true" />
             </q-tab-panel>
             <q-tab-panel name="batchStats">
                 <IntroHelpButton :title="$t('Rp2BatchStats')" />
@@ -94,36 +49,126 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { getTask } from 'src/api/task'
+import { getTask, readTaskFile } from 'src/api/task'
+import { globalStore } from 'src/stores/global'
+import { storeToRefs } from 'pinia'
 import SampleList from './components/SampleList.vue'
 import BatchPathogenStats from './components/BatchPathogenStats.vue'
-import TextFileTable from './components/TextFileTable.vue'
 import IntroHelpButton from './components/IntroHelpButton.vue'
+import CommonModuleVue from '../report/common-module/index.vue'
 
 const route = useRoute()
 const router = useRouter()
-const { t } = useI18n()
+const { t, locale } = useI18n()
+const store = globalStore()
+const { langCode } = storeToRefs(store)
 
 const taskId = route.params.id
 const taskRootDir = ref('')
 const taskName = ref('')
+const taskDetail = ref({ id: taskId })
+const customModules = ref([])
 const tab = ref('sampleList')
-const contaminationTab = ref('contaminationTag')
 const pageTitle = computed(() => {
     return taskName.value ? `"${taskName.value}" ${t('Rp2SummaryTitleSuffix')}` : t('Rp2PageTitle')
 })
+const taskForCommonModule = computed(() => ({ id: taskDetail.value?.id || taskId }))
+
+const customTabName = (index) => `rp2CustomTab${index}`
+
+const tryParseJson = (text) => {
+    if (!text) {
+        return null
+    }
+
+    try {
+        return JSON.parse(text)
+    } catch (error) {
+        try {
+            return JSON.parse(String(text).replace(/,[ \t\r\n]+}/g, '}').replace(/,[ \t\r\n]+\]/g, ']'))
+        } catch (ignored) {
+            return null
+        }
+    }
+}
+
+const extractCustomModules = (rawConfig) => {
+    if (!rawConfig) {
+        return []
+    }
+
+    if (Array.isArray(rawConfig.commonModules)) {
+        return rawConfig.commonModules
+    }
+
+    if (Array.isArray(rawConfig.modules)) {
+        return rawConfig.modules
+    }
+
+    if (Array.isArray(rawConfig.tabs)) {
+        return rawConfig.tabs
+    }
+
+    if (Array.isArray(rawConfig)) {
+        return rawConfig
+    }
+
+    const fallback = []
+    Object.entries(rawConfig).forEach(([key, value]) => {
+        if (!value || typeof value !== 'object' || Array.isArray(value)) {
+            return
+        }
+        if (value.tables || value.images || value.files || value.descriptionFile) {
+            fallback.push({
+                title: value.title || key,
+                ...value
+            })
+        }
+    })
+    return fallback
+}
+
+const loadCustomModules = async () => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
+    let configText = ''
+
+    try {
+        configText = await readTaskFile(taskId, `module_${suffix}.json`, true)
+    } catch (error) {
+        configText = ''
+    }
+
+    if (!configText && suffix !== 'CN') {
+        try {
+            configText = await readTaskFile(taskId, 'module_CN.json', true)
+        } catch (error) {
+            configText = ''
+        }
+    }
+
+    const configJson = tryParseJson(typeof configText === 'string' ? configText : '')
+    customModules.value = extractCustomModules(configJson)
+}
 
 onMounted(async () => {
     try {
         const task = await getTask(taskId)
+        taskDetail.value = task || { id: taskId }
         taskName.value = task?.name || ''
         const resultDir = (task?.result_dir || '').replace(/\\/g, '/')
         taskRootDir.value = resultDir.replace(/\/result\/?$/, '')
     } catch (error) {
         taskRootDir.value = ''
+    } finally {
+        await loadCustomModules()
     }
 })
+
+watch(
+    () => [langCode.value, locale.value],
+    loadCustomModules
+)
 </script>

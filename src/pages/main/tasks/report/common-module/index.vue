@@ -1,35 +1,5 @@
 <template>
-    <div>
-        <div style="text-align:right" class="q-py-md">
-            <q-btn
-                icon="help_outline"
-                size="small"
-                outline
-                color="orange"
-                class="q-mr-md"
-                @click="dlgVisible = !dlgVisible"
-                >{{$t('Intro')}}</q-btn
-            >
-            <q-btn
-                v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
-                icon="bookmarks"
-                size="small"
-                color="primary"
-                class="q-mr-md"
-                :label="$t('ReportStickDone')"
-                @click="unstick()"
-            />
-            <q-btn
-                v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
-                icon="bookmarks"
-                size="small"
-                outline
-                color="primary"
-                class="q-mr-md"
-                @click="stickFilter()"
-                :label="$t('ReportStickData')"
-            />
-        </div>
+    <div class="common-module-root">
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
                 <q-bar class="bg-primary text-white">{{ viewConfig.title }}</q-bar>
@@ -42,19 +12,51 @@
             </q-card>
         </q-dialog>
 
-        <q-tabs
-            v-model="tab"
-            dense
-            align="left"
-            active-color="primary"
-            active-bg-color="grey-5"
-            class="bg-grey-2 shadow-2"
-            indicator-color="primary"
-            inline-label
-            :breakpoint="0"
-        >
-            <q-tab v-for="table in tables" :label="table.name" :name="table.name" :key="table.name" />
-        </q-tabs>
+        <div class="tabs-header bg-grey-2 shadow-2">
+            <q-tabs
+                v-model="tab"
+                dense
+                align="left"
+                active-color="primary"
+                active-bg-color="grey-5"
+                class="tabs-main"
+                indicator-color="primary"
+                inline-label
+                :breakpoint="0"
+            >
+                <q-tab v-for="table in tables" :label="table.name" :name="table.name" :key="table.name" />
+            </q-tabs>
+            <div class="intro-actions">
+                <q-btn
+                    icon="help_outline"
+                    size="small"
+                    outline
+                    color="orange"
+                    class="q-mr-md"
+                    @click="dlgVisible = !dlgVisible"
+                    >{{$t('Intro')}}</q-btn
+                >
+                <q-btn
+                    v-if="props.viewConfig.showStick && props.viewConfig.stickDone"
+                    icon="bookmarks"
+                    size="small"
+                    color="primary"
+                    class="q-mr-md"
+                    :label="$t('ReportStickDone')"
+                    @click="unstick()"
+                />
+                <q-btn
+                    v-if="props.viewConfig.showStick && !props.viewConfig.stickDone"
+                    icon="bookmarks"
+                    size="small"
+                    outline
+                    color="primary"
+                    class="q-mr-md"
+                    @click="stickFilter()"
+                    :label="$t('ReportStickData')"
+                />
+            </div>
+        </div>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel v-for="table in tables" :name="table.name" :key="table.name">
                 <q-toolbar class="text-primary">
@@ -567,5 +569,28 @@ const showHtmlDialg = (record, column) => {
     showHtmlDialog.value = true
 }
 </script>
+
+<style scoped>
+.common-module-root {
+    position: relative;
+}
+
+.tabs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tabs-main {
+    flex: 1;
+}
+
+.intro-actions {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+</style>
 
 <style scoped></style>
