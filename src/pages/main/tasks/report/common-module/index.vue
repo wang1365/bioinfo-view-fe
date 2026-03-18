@@ -373,10 +373,28 @@ const clickView = (record, title) => {
 
 const initIntro = () => {
     const { descriptionFile } = props.viewConfig
+    intro.value = ''
     if (descriptionFile) {
-        readTaskFile(props.task.id, descriptionFile).then((res) => {
-            intro.value = res
-        })
+        readTaskFile(props.task.id, descriptionFile, true)
+            .then((res) => {
+                intro.value = typeof res === 'string' ? res : ''
+                if (intro.value) {
+                    return
+                }
+                // RP2 custom modules may place files under task root (non-result dir)
+                return readTaskFile(props.task.id, descriptionFile, true, true).then((fallback) => {
+                    intro.value = typeof fallback === 'string' ? fallback : ''
+                })
+            })
+            .catch(() => {
+                readTaskFile(props.task.id, descriptionFile, true, true)
+                    .then((fallback) => {
+                        intro.value = typeof fallback === 'string' ? fallback : ''
+                    })
+                    .catch(() => {
+                        intro.value = ''
+                    })
+            })
     }
 }
 const tableData = ref({})
