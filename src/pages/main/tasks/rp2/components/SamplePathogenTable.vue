@@ -1,22 +1,28 @@
 ﻿<template>
-    <div>
-        <q-banner v-if="errorText" dense class="bg-orange-1 text-orange-9 q-mb-sm">
-            {{ errorText }}
-        </q-banner>
-        <a-table
-            :columns="columns"
-            :data-source="rows"
-            :loading="loading"
-            :pagination="pagination"
-            row-key="__rowKey"
-            bordered
-            size="middle"
-        />
+    <div ref="containerRef" class="pathogen-table-container">
+        <div v-if="errorText" ref="bannerRef">
+            <q-banner dense class="bg-orange-1 text-orange-9 q-mb-sm">
+                {{ errorText }}
+            </q-banner>
+        </div>
+        <div class="table-region">
+            <a-table
+                :columns="columns"
+                :data-source="rows"
+                :loading="loading"
+                :pagination="pagination"
+                :row-selection="rowSelection"
+                :scroll="tableScroll"
+                row-key="__rowKey"
+                bordered
+                size="middle"
+            />
+        </div>
     </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
@@ -35,6 +41,10 @@ const props = defineProps({
     category: {
         type: String,
         required: true
+    },
+    selectable: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -46,6 +56,11 @@ const rows = ref([])
 const columns = ref([])
 const loading = ref(false)
 const errorText = ref('')
+const selectedRowKeys = ref([])
+const containerRef = ref(null)
+const bannerRef = ref(null)
+const tableScrollY = ref(420)
+let resizeObserver = null
 
 const categoryDirMap = {
     bacteria: 'Bacteria',
@@ -53,13 +68,41 @@ const categoryDirMap = {
     virus: 'Virus'
 }
 
-const pagination = computed(() => ({
-    pageSize: 10,
-    showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '50', '100'],
-    showQuickJumper: true,
-    showTotal: (total) => t('PaginationTotal', { total })
-}))
+const pagination = computed(() => {
+    if (props.selectable) {
+        return false
+    }
+    return {
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        showQuickJumper: true,
+        showTotal: (total) => t('PaginationTotal', { total })
+    }
+})
+
+const rowSelection = computed(() => {
+    if (!props.selectable) {
+        return null
+    }
+    return {
+        selectedRowKeys: selectedRowKeys.value,
+        onChange: (keys) => {
+            selectedRowKeys.value = keys
+            emitSelectionChange()
+        },
+        columnWidth: 32
+    }
+})
+
+const tableScroll = computed(() => {
+    if (!props.selectable) {
+        return null
+    }
+    return {
+        y: tableScrollY.value
+    }
+})
 
 const filePath = computed(() => {
     const suffix = getRp2LangSuffix(langCode.value)
@@ -77,6 +120,17 @@ const shouldRemoveColumn = (header) => {
 
     const normalized = header.toLowerCase()
     return header.includes('去重后序列数') || normalized.includes('uniq')
+}
+
+const findReportedHeader = (headers) => {
+    const aliases = ['是否报出', 'isreported', 'reported', 'report']
+    for (const header of headers) {
+        const normalized = normalizeHeader(header)
+        if (aliases.some((alias) => normalized === normalizeHeader(alias))) {
+            return header
+        }
+    }
+    return ''
 }
 
 const displayHeader = (header) => {
@@ -136,7 +190,6 @@ const getGroupedHeaders = (headers) => {
         findHeaderByAliases(headers, ['致病等级', 'pathogeniclevel', 'pathogenicity'], used)
     ].filter(Boolean)
 
-    // Fallback by column order when header aliases are not stable.
     const fallbackLength = props.category === 'virus' ? 6 : 8
     if ((genusHeaders.length < 3 || speciesHeaders.length < 3) && headers.length >= fallbackLength) {
         return {
@@ -200,6 +253,25 @@ const buildColumns = (headers) => {
     return groupedColumns
 }
 
+const updateTableScrollHeight = () => {
+    if (!props.selectable || !containerRef.value) {
+        return
+    }
+    const containerHeight = containerRef.value.clientHeight || 0
+    const bannerHeight = bannerRef.value?.offsetHeight || 0
+    const reserved = bannerHeight + 16
+    tableScrollY.value = Math.max(220, containerHeight - reserved)
+}
+
+const emit = defineEmits(['selection-change'])
+
+const emitSelectionChange = () => {
+    emit('selection-change', {
+        category: props.category,
+        selectedCount: selectedRowKeys.value.length
+    })
+}
+
 const loadData = async () => {
     loading.value = true
     errorText.value = ''
@@ -211,6 +283,8 @@ const loadData = async () => {
         if (!text) {
             rows.value = []
             columns.value = []
+            selectedRowKeys.value = []
+            emitSelectionChange()
             errorText.value = `${t('Rp2DataFileMissing')}: ${filePath.value}`
             return
         }
@@ -230,6 +304,16 @@ const loadData = async () => {
             return mapped
         })
 
+        const reportedHeader = findReportedHeader(headers)
+        if (reportedHeader) {
+            selectedRowKeys.value = rows.value
+                .filter((row) => String(row[reportedHeader] ?? '').trim().toUpperCase() === 'Y')
+                .map((row) => row.__rowKey)
+        } else {
+            selectedRowKeys.value = []
+        }
+        emitSelectionChange()
+
         columns.value = buildColumns(keptHeaders)
     } catch (error) {
         rows.value = []
@@ -237,12 +321,72 @@ const loadData = async () => {
         errorText.value = `${t('Rp2FailedToReadFile')}: ${filePath.value}`
     } finally {
         loading.value = false
+        await nextTick()
+        updateTableScrollHeight()
     }
 }
+
+const getSelectionPayload = () => ({
+    category: props.category,
+    file_path: filePath.value,
+    row_numbers: selectedRowKeys.value
+        .map((item) => Number(item))
+        .filter((item) => Number.isInteger(item) && item > 0),
+})
+
+defineExpose({
+    getSelectionPayload
+})
+
+onMounted(async () => {
+    await nextTick()
+    updateTableScrollHeight()
+    if (containerRef.value) {
+        resizeObserver = new ResizeObserver(() => {
+            updateTableScrollHeight()
+        })
+        resizeObserver.observe(containerRef.value)
+    }
+})
+
+onBeforeUnmount(() => {
+    if (resizeObserver) {
+        resizeObserver.disconnect()
+        resizeObserver = null
+    }
+})
 
 watch(
     () => [props.taskId, props.sampleName, props.category, langCode.value],
     loadData,
     { immediate: true }
 )
+
+watch(
+    () => [props.selectable, errorText.value],
+    async () => {
+        await nextTick()
+        updateTableScrollHeight()
+    }
+)
 </script>
+
+<style scoped>
+.pathogen-table-container {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-region {
+    flex: 1;
+    min-height: 0;
+}
+
+.table-region :deep(.ant-spin-nested-loading),
+.table-region :deep(.ant-spin-container),
+.table-region :deep(.ant-table) {
+    height: 100%;
+}
+</style>

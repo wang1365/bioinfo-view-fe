@@ -937,4 +937,9 @@ export default {
     Rp2InternalControlTableTitle: 'Internal Control (Pseudo Virus) List',
     Rp2GenusGroupTitle: 'Genus Level',
     Rp2SpeciesGroupTitle: 'Species Level',
+    Rp2CustomReportTitle: '{sample} Custom Report',
+    Rp2GenerateReport: 'Generate Report',
+    Rp2CustomReportSelectAtLeastOne: 'Please select at least one row to generate report',
+    Rp2CustomReportSubmitSuccess: 'Custom report request submitted',
+    Rp2SelectedRowsCount: 'Selected {total} rows',
 }

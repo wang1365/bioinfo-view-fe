@@ -17,7 +17,7 @@
             :columns="columns"
             :pagination="paginationConfig"
             :loading="loading"
-            row-key="sampleName"
+            row-key="dataIdentifier"
             bordered
             size="small"
         >
@@ -45,7 +45,7 @@
                             color="secondary"
                             style="font-size: 12px;"
                             :label="t('Rp2ConfigReport')"
-                            @click="showPending"
+                            @click="openCustomReportDialog(record)"
                         />
                         <q-btn
                             flat
@@ -63,6 +63,12 @@
         <div class="q-mt-md chart-wrapper">
             <div ref="summaryChartRef" class="summary-chart"></div>
         </div>
+
+        <CustomReportDialog
+            v-model="customReportVisible"
+            :task-id="taskId"
+            :sample-name="customReportSampleName"
+        />
     </div>
 </template>
 
@@ -76,6 +82,7 @@ import { storeToRefs } from 'pinia'
 import { readTaskFile } from 'src/api/task'
 import { infoMessage } from 'src/utils/notify'
 import { getRp2LangSuffix, isDetected, parseTabText } from './rp2File'
+import CustomReportDialog from './CustomReportDialog.vue'
 
 const props = defineProps({
     taskId: {
@@ -93,6 +100,8 @@ const rows = ref([])
 const loading = ref(false)
 const searchKeyword = ref('')
 const summaryChartRef = ref(null)
+const customReportVisible = ref(false)
+const customReportSampleName = ref('')
 let summaryChart = null
 
 const columns = computed(() => [
@@ -212,7 +221,13 @@ const loadData = async () => {
                 return key ? row[key] : ''
             }
 
-            const sampleName = row['样本'] || row['Sample'] || byIndex(0) || ''
+            const dataIdentifier =
+                row['数据识别号'] ||
+                row['Data Identifier'] ||
+                row['DataIdentifier'] ||
+                row['Data ID'] ||
+                ''
+            const sampleName = dataIdentifier || row['样本'] || row['Sample'] || byIndex(0) || ''
             const ncValue = row['是否NC'] || row['IsNC'] || byIndex(1) || '0'
             const bacteria = row['细菌'] || row['Bacteria'] || byIndex(2) || ''
             const fungus = row['真菌'] || row['Fungus'] || byIndex(3) || ''
@@ -221,6 +236,7 @@ const loadData = async () => {
             const isNC = String(ncValue).trim() === '1'
 
             return {
+                dataIdentifier: sampleName,
                 sampleName,
                 displaySampleName: isNC ? `${sampleName}(NC)` : sampleName,
                 isNC,
@@ -240,12 +256,17 @@ const loadData = async () => {
 }
 
 const viewResult = (record) => {
-    const encoded = encodeURIComponent(record.sampleName)
+    const encoded = encodeURIComponent(record.dataIdentifier || record.sampleName)
     router.push(`/main/tasks/${props.taskId}/sample/${encoded}/report`)
 }
 
 const showPending = () => {
     infoMessage(t('Rp2PendingFeature'))
+}
+
+const openCustomReportDialog = (record) => {
+    customReportSampleName.value = record.dataIdentifier || record.sampleName || ''
+    customReportVisible.value = true
 }
 
 const renderSummaryChart = async () => {

@@ -63,3 +63,11 @@ export function updateTask(id, data) {
         data,
     })
 }
+
+export function createRp2CustomReport(id, data) {
+    return api({
+        url: `/task/${id}/rp2_custom_report/`,
+        method: 'post',
+        data
+    })
+}
