@@ -159,7 +159,7 @@ onMounted(() => {
     fileUrl2.value = `/igv/${props.task.result_dir}/QC/${qn}.depth`
 
     loading2.value = true
-    readTaskFile(route.params.id, `QC/${qt}.depth`, {}, fields).then(res => {
+    readTaskFile(route.params.id, `QC/${qt}.depth`).then(res => {
         rows2.value = getCsvData(res, { fields: fields, hasHeaderLine: false })
         filteredRows2.value = rows2.value
     }).finally(() => {

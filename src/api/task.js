@@ -9,13 +9,20 @@ export function getTask(id) {
 }
 
 export function readTaskFile(id, path, ignore_not_existed, from_task_root = false) {
+    const ignoreNotExistedFlag = typeof ignore_not_existed === 'boolean' ? ignore_not_existed : false
+    const fromTaskRootFlag =
+        from_task_root === true ||
+        from_task_root === 1 ||
+        from_task_root === '1' ||
+        from_task_root === 'true'
+
     return api({
         url: `/task/${id}/file/`,
         method: 'get',
         params: {
             path,
-            ignore_not_existed: ignore_not_existed || false,
-            from_task_root: from_task_root ? 1 : 0
+            ignore_not_existed: ignoreNotExistedFlag,
+            from_task_root: fromTaskRootFlag ? 1 : 0
         },
     })
 }
