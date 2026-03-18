@@ -125,7 +125,7 @@ onMounted(() => {
 
 const refreshRows = () => {
     startLoading()
-    getPanelGroups()
+    getPanelGroups({ panel_brief: 1 })
         .then((data) => {
             rows.value = data
         })

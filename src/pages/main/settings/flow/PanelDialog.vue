@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-import {ref, defineExpose, defineEmits, onMounted} from 'vue'
+import {ref, defineExpose, defineEmits} from 'vue'
 import {createPanel, updatePanel} from 'src/api/panel'
 import {useQuasar} from 'quasar'
 import {getPanelGroups} from "src/api/panelGroup";
@@ -125,16 +125,25 @@ const props = defineProps({
 
 const form = ref({ detail: '' })
 
-onMounted(() => {
-    getPanelGroups().then(res => {
-        panelGroups.value = res.map(t => {
-            return {
-                label: t.name,
-                value: t.id
-            }
-        })
-    })
-})
+let panelGroupsPromise = null
+const ensurePanelGroupsLoaded = async () => {
+    if (panelGroups.value.length > 0) {
+        return
+    }
+    if (!panelGroupsPromise) {
+        panelGroupsPromise = getPanelGroups({ simple: 1 })
+            .then(res => {
+                panelGroups.value = res.map(t => ({
+                    label: t.name,
+                    value: t.id
+                }))
+            })
+            .finally(() => {
+                panelGroupsPromise = null
+            })
+    }
+    await panelGroupsPromise
+}
 
 const setData = (data) => {
     form.value = data
@@ -151,6 +160,7 @@ const close = () => {
 
 const show = () => {
     dlgVisible.value = true
+    ensurePanelGroupsLoaded()
 }
 defineExpose({setData, reset, show})
 const emit = defineEmits(['success'])

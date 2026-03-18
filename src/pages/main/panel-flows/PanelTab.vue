@@ -54,6 +54,7 @@ const refreshRows = () => {
             panel_group_id: props.panelGroupId
         }
     }
+    params.simple = 1
     getPanels(params).then(res => {
         rows.value = res
         if (res.length > 0) {

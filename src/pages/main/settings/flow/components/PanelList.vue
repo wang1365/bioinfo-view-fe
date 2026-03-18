@@ -41,9 +41,10 @@ onMounted(() => {
 })
 
 const refresh = () => {
-    getPanels()
+    getPanels({ simple: 1 })
         .then((data) => {
             panels.value = data
+            filteredPanels.value = data
         })
 }
 

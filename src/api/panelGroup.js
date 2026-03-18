@@ -1,9 +1,10 @@
 import { api } from 'src/boot/axios'
 
-export function getPanelGroups() {
+export function getPanelGroups(params) {
     return api({
         url: `/flow/panelGroups/`,
         method: 'get',
+        params,
     })
 }
 

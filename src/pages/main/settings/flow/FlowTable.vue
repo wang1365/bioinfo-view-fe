@@ -58,7 +58,6 @@
             </template>
         </a-table>
         <flow-dialog ref="dlgFlow" :action="action" :id="currentFlow?.id" @success="refreshFlows" />
-        <flow-dialog ref="dlgFlowCreate" action="create" @success="refreshFlows" />
         <q-dialog v-model="taskLimitDlgVisible">
             <q-card>
                 <q-card-section>
@@ -93,7 +92,6 @@ const loading = ref(false)
 const dlgFlow = ref(null)
 const dlgTaskLimit = ref(null)
 const taskLimitDlgVisible = ref(false)
-const dlgFlowCreate = ref(null)
 const dlgCreateTask = ref(null)
 const currentFlow = ref({ config: { taskLimit: 0 }})
 const keyword = ref('')
@@ -251,8 +249,10 @@ const showCreateTaskDlg = (row) => {
 }
 
 const addFlow = () => {
-    dlgFlowCreate.value.reset()
-    dlgFlowCreate.value.setData({
+    action.value = 'create'
+    currentFlow.value = null
+    dlgFlow.value.reset()
+    dlgFlow.value.setData({
         name: '',
         location: '',
         alignment_tool: '',
@@ -267,7 +267,7 @@ const addFlow = () => {
         support_custom_sample_name: false,
         support_sample_ratio: false,
     })
-    dlgFlowCreate.value.show()
+    dlgFlow.value.show()
     // isCreateDlgShow.value = true
 }
 

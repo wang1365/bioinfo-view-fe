@@ -241,7 +241,7 @@
 import ParamTable from './components/ParamTable'
 import { getFlowDetail, createFlow, updateFlow } from 'src/api/flow'
 import { getPanels } from "src/api/panel"
-import { computed, ref, toRefs, onMounted, watch } from 'vue'
+import { computed, ref, toRefs, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 
@@ -295,33 +295,48 @@ const title = computed(() => {
 
 const valueTypes = ['string', 'file']
 const form = ref({})
-onMounted(() => {
-    form.value = {
-        id: -1,
-        name: '',
-        code: '',
-        panel: null,
-        allow_nonstandard_samples: true,
-        allow_define_report:true,
-        support_custom_sample_name: false,
-        support_sample_ratio: false,
-        tar_path: '',
-        image_name: '',
-        memory: 1024,
-        alignment_tool: '',
-        desp: '',
-        flow_category: '',
-        details: '',
-        parameters: [],
-        builtin_parameters: [],
-        sample_type: 'multiple',
-        config: { taskLimit: -1 }
-    }
-
-    getPanels().then(res => {
-        panels.value = res
-    })
+const defaultForm = () => ({
+    id: -1,
+    name: '',
+    code: '',
+    panel: null,
+    allow_nonstandard_samples: true,
+    allow_define_report:true,
+    support_custom_sample_name: false,
+    support_sample_ratio: false,
+    tar_path: '',
+    image_name: '',
+    memory: 1024,
+    alignment_tool: '',
+    desp: '',
+    flow_category: '',
+    details: '',
+    parameters: [],
+    builtin_parameters: [],
+    sample_type: 'multiple',
+    config: { taskLimit: -1 }
 })
+
+form.value = defaultForm()
+
+let cachedPanels = null
+let loadingPanelsPromise = null
+
+const ensurePanelsLoaded = async () => {
+    if (cachedPanels) {
+        panels.value = cachedPanels
+        return
+    }
+    if (!loadingPanelsPromise) {
+        loadingPanelsPromise = getPanels({ simple: 1 }).then((res) => {
+            cachedPanels = res
+            return res
+        }).finally(() => {
+            loadingPanelsPromise = null
+        })
+    }
+    panels.value = await loadingPanelsPromise
+}
 
 const paramsTable = ref(null)
 
@@ -338,13 +353,12 @@ const setData = (data) => {
 }
 
 const reset = () => {
-    form.value = {
-        parameters: []
-    }
+    form.value = defaultForm()
 }
 
 const show = () => {
     dlgVisible.value = true
+    ensurePanelsLoaded()
     console.log('dlg data is:', form.value)
 }
 

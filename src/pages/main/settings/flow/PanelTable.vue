@@ -55,9 +55,7 @@
             </template>
         </q-table>
 
-        <panel-dialog ref="dlgCreate" mode="create" @success="refreshRows" />
-        <panel-dialog ref="dlgEdit" mode="edit" @success="refreshRows" />
-        <panel-dialog ref="dlgInfo" mode="info" />
+        <panel-dialog ref="dlgPanel" :mode="dialogMode" @success="refreshRows" />
     </q-page>
 </template>
 
@@ -71,9 +69,8 @@ import { useI18n }from 'vue-i18n'
 
 const { t } = useI18n()
 const loading = ref(false)
-const dlgCreate = ref(null)
-const dlgEdit = ref(null)
-const dlgInfo = ref(null)
+const dlgPanel = ref(null)
+const dialogMode = ref('info')
 const currentFlowId = ref(null)
 const keyword = ref('')
 
@@ -133,6 +130,7 @@ const refreshRows = () => {
     if (keyword.value && keyword.value !== '') {
         params.keyword = keyword.value
     }
+    params.flow_brief = 1
     getPanels(params)
         .then((data) => {
             rows.value = data
@@ -142,12 +140,13 @@ const refreshRows = () => {
 
 
 const showEditDlg = (row) => {
-    dlgEdit.value.show()
+    dialogMode.value = 'edit'
+    dlgPanel.value.show()
     // const data = { ...row, panel_group_id: row.panel_group.id}
     // const data = { id: row.id, name: row.name, panel_group_id: row.panel_group.id }
     // Reflect.deleteProperty(data, 'panel_group')
     // delete data.panel_group
-    dlgEdit.value.setData(row)
+    dlgPanel.value.setData(row)
 }
 
 const startLoading = () => {
@@ -176,15 +175,17 @@ const showDeleteDlg = (row) => {
 
 
 const showInfoDlg = (row) => {
-    dlgInfo.value.show()
-    dlgInfo.value.setData(row)
+    dialogMode.value = 'info'
+    dlgPanel.value.show()
+    dlgPanel.value.setData(row)
 }
 
 const addRow = () => {
-    dlgCreate.value.setData({
+    dialogMode.value = 'create'
+    dlgPanel.value.setData({
     })
-    dlgCreate.value.reset()
-    dlgCreate.value.show()
+    dlgPanel.value.reset()
+    dlgPanel.value.show()
     // isCreateDlgShow.value = true
 }
 </script>
