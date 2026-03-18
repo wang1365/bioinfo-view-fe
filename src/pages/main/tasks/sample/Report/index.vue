@@ -28,12 +28,15 @@
 
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="bacteria">
+                <IntroHelpButton :title="$t('Bacteria')" />
                 <SamplePathogenTable :task-id="taskId" :sample-name="sampleName" category="bacteria" />
             </q-tab-panel>
             <q-tab-panel name="fungus">
+                <IntroHelpButton :title="$t('Fungus')" />
                 <SamplePathogenTable :task-id="taskId" :sample-name="sampleName" category="fungus" />
             </q-tab-panel>
             <q-tab-panel name="virus">
+                <IntroHelpButton :title="$t('Virus')" />
                 <SamplePathogenTable :task-id="taskId" :sample-name="sampleName" category="virus" />
             </q-tab-panel>
         </q-tab-panels>
@@ -45,6 +48,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getTask } from 'src/api/task'
 import SamplePathogenTable from '../../rp2/components/SamplePathogenTable.vue'
+import IntroHelpButton from '../../rp2/components/IntroHelpButton.vue'
 
 const route = useRoute()
 const router = useRouter()

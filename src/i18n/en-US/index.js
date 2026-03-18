@@ -925,6 +925,7 @@ export default {
     Rp2ZoomOut: 'Zoom Out',
     Rp2ZoomReset: 'Reset',
     Rp2PendingFeature: 'Pending product confirmation',
+    Rp2HelpPlaceholder: 'Description content is TBD and will be integrated from files later.',
     Rp2SampleSearchPlaceholder: 'Filter by sample name / bacteria / fungus / virus',
     Rp2DataFileMissing: 'Data file missing',
     Rp2FailedToReadFile: 'Failed to read file',

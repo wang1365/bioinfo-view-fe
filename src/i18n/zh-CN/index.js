@@ -912,6 +912,7 @@ export default {
     Rp2ZoomOut: '缩小',
     Rp2ZoomReset: '重置',
     Rp2PendingFeature: '功能待产品确认',
+    Rp2HelpPlaceholder: '说明内容待定，后续将集成文件读取。',
     Rp2SampleSearchPlaceholder: '根据样本名、细菌、真菌、病毒关键字过滤',
     Rp2DataFileMissing: '数据文件缺失',
     Rp2FailedToReadFile: '读取文件失败',

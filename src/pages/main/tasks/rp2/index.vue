@@ -26,9 +26,11 @@
 
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="sampleList">
+                <IntroHelpButton :title="$t('Rp2SampleList')" />
                 <SampleList :task-id="taskId" />
             </q-tab-panel>
             <q-tab-panel name="basicQc">
+                <IntroHelpButton :title="$t('Rp2BasicQcTab')" />
                 <TextFileTable
                     :task-id="taskId"
                     :title="$t('Rp2BasicQcTableTitle')"
@@ -37,6 +39,7 @@
                 />
             </q-tab-panel>
             <q-tab-panel name="ncQc">
+                <IntroHelpButton :title="$t('Rp2NcQcTab')" />
                 <TextFileTable
                     :task-id="taskId"
                     :title="$t('Rp2NcResultTableTitle')"
@@ -57,6 +60,7 @@
                 </div>
             </q-tab-panel>
             <q-tab-panel name="contaminationQc">
+                <IntroHelpButton :title="$t('Rp2ContaminationQcTab')" />
                 <q-tabs v-model="contaminationTab" dense active-color="primary" align="left" indicator-color="primary">
                     <q-tab name="contaminationTag" :label="$t('Rp2TagContaminationTableTitle')" />
                     <q-tab name="internalControl" :label="$t('Rp2InternalControlTableTitle')" />
@@ -82,6 +86,7 @@
                 </q-tab-panels>
             </q-tab-panel>
             <q-tab-panel name="batchStats">
+                <IntroHelpButton :title="$t('Rp2BatchStats')" />
                 <BatchPathogenStats :task-id="taskId" :task-root-dir="taskRootDir" />
             </q-tab-panel>
         </q-tab-panels>
@@ -96,6 +101,7 @@ import { getTask } from 'src/api/task'
 import SampleList from './components/SampleList.vue'
 import BatchPathogenStats from './components/BatchPathogenStats.vue'
 import TextFileTable from './components/TextFileTable.vue'
+import IntroHelpButton from './components/IntroHelpButton.vue'
 
 const route = useRoute()
 const router = useRouter()
