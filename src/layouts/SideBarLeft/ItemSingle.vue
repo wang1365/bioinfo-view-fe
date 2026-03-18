@@ -1,5 +1,27 @@
 <template>
-    <q-item clickable exact @click="toPath(addRoutesItem)" :inset-level="initLevel" :active="checkActive">
+    <q-item
+        v-if="isExternal"
+        clickable
+        exact
+        tag="a"
+        :href="addRoutesItem.path"
+        target="_blank"
+        rel="noopener noreferrer"
+        :inset-level="initLevel"
+    >
+        <q-item-section avatar>
+            <q-icon :name="addRoutesItem.icon" />
+        </q-item-section>
+        <q-item-section>{{ $t(addRoutesItem.label) }}</q-item-section>
+    </q-item>
+    <q-item
+        v-else
+        clickable
+        exact
+        :to="addRoutesItem.path"
+        :inset-level="initLevel"
+        :active="checkActive"
+    >
         <!--        :active-class="darkThemeSelect">-->
         <q-item-section avatar>
             <q-icon :name="addRoutesItem.icon" />
@@ -10,11 +32,10 @@
 
 <script setup>
 import { computed, toRefs } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 // import useDarkTheme from 'src/composables/useDarkTheme';
 //
 // const { darkThemeSelect } = useDarkTheme()
-const router = useRouter();
 const route = useRoute();
 const props = defineProps({
     addRoutesItem: {
@@ -29,15 +50,7 @@ const props = defineProps({
     },
 });
 const { addRoutesItem, initLevel } = toRefs(props);
-
-const toPath = (addRoutesItem) => {
-    if (addRoutesItem.is_link === "yes") {
-        window.open(addRoutesItem.path);
-    } else {
-        console.log('Menu click => ', addRoutesItem.path)
-        router.push(addRoutesItem.path);
-    }
-};
+const isExternal = computed(() => addRoutesItem.value?.is_link === "yes");
 
 const checkActive = computed(() => {
     if (route.path === addRoutesItem.value.path) {

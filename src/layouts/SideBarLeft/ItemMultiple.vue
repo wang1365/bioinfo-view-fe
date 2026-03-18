@@ -1,5 +1,11 @@
 <template>
-    <q-expansion-item :group="addRoutesItem.name" v-model="itemOpen" :header-inset-level="initLevel">
+    <q-expansion-item
+        :group="addRoutesItem.name"
+        v-model="itemOpen"
+        :header-inset-level="initLevel"
+        :to="itemTo"
+        expand-icon-toggle
+    >
         <template v-slot:header>
             <q-item-section avatar>
                 <q-icon :name="addRoutesItem.icon" />
@@ -11,7 +17,7 @@
 </template>
 
 <script setup>
-import { watch, onMounted, ref, toRefs } from "vue";
+import { watch, onMounted, ref, toRefs, computed } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -28,6 +34,12 @@ const props = defineProps({
     },
 });
 const { addRoutesItem, initLevel } = toRefs(props);
+const itemTo = computed(() => {
+    if (addRoutesItem.value?.is_link === "yes") {
+        return null;
+    }
+    return addRoutesItem.value?.path || null;
+});
 watch(route, () => {
     changeOpen();
 });
