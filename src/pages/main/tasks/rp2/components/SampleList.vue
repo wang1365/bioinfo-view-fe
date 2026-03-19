@@ -93,12 +93,14 @@
         <CustomReportDialog v-model="customReportVisible" :task-id="taskId" :sample-name="customReportSampleName" />
 
         <q-dialog v-model="showPatientInfo">
-            <q-card v-if="!patientInfoId" style="width: 420px; max-width: 70vw">
-                <q-card-section class="text-center q-py-xl">
-                    <q-spinner color="primary" size="32px" />
-                </q-card-section>
-            </q-card>
-            <PatientInfo v-else :key="`rp2-patient-${patientInfoId}`" :id="String(patientInfoId)" />
+            <div class="rp2-patient-dialog-wrap">
+                <q-card v-if="!patientInfoId" style="width: 100%">
+                    <q-card-section class="text-center q-py-xl">
+                        <q-spinner color="primary" size="32px" />
+                    </q-card-section>
+                </q-card>
+                <PatientInfo v-else :key="`rp2-patient-${patientInfoId}`" :id="String(patientInfoId)" />
+            </div>
         </q-dialog>
         <q-dialog v-model="showSampleInfo">
             <q-card v-if="!sampleInfoId" style="width: 420px; max-width: 70vw">
@@ -427,7 +429,7 @@ const fetchIdByIdentifierApi = async (url, identifier) => {
         return 0
     }
     const response = await api.get(url, { params: { identifier: target } })
-    const item = response?.data || {}
+    const item = response || {}
     return toPositiveInt(item.id)
 }
 
@@ -656,5 +658,14 @@ onBeforeUnmount(() => {
 .sample-list :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),
 .sample-list :deep(.rp2-grid-table .ant-table-tbody > tr > td:last-child) {
     border-right: 0 !important;
+}
+
+.rp2-patient-dialog-wrap {
+    width: 1180px;
+    max-width: 94vw;
+}
+
+.rp2-patient-dialog-wrap :deep(.q-card) {
+    width: 100%;
 }
 </style>
