@@ -9,7 +9,11 @@
                 clearable
                 :label="t('Search')"
                 :placeholder="t('Rp2SampleSearchPlaceholder')"
-            />
+            >
+                <template #prepend>
+                    <q-icon name="search" />
+                </template>
+            </q-input>
         </div>
 
         <a-table

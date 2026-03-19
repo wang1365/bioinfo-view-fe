@@ -62,14 +62,18 @@
                 <q-toolbar class="text-primary">
                     <q-input
                         v-model="table.keyword"
-                        class="q-mr-sm"
+                        class="q-mr-sm search-input"
                         dense
-                        :label="$t('Search') + ':'"
+                        outlined
                         clearable
+                        :label="$t('Search')"
                         @clear="clearKeyword(table)"
-                        style="width:300px"
                         :disable="props.viewConfig.showStick && props.viewConfig.stickDone"
-                    />
+                    >
+                        <template #prepend>
+                            <q-icon name="search" />
+                        </template>
+                    </q-input>
                     <q-btn
                         size="small"
                         color="primary"
@@ -89,6 +93,7 @@
                 </q-toolbar>
                 <div style="position:relative">
                     <q-icon
+                        v-if="showRowSelection"
                         color="accent"
                         name="question_mark"
                         size="xs"
@@ -106,7 +111,7 @@
   :data-source="table.filteredRows"
   :columns="table.columns"
   :sticky="true"
-  :row-selection="{ selectedRowKeys: getTableSelectedRows(table), onChange: onSelectChange, columnWidth: 35, getCheckboxProps: getCheckboxProps }"
+  :row-selection="rowSelectionConfig(table)"
   :pagination="paginationConfig"
 >
                         <template #bodyCell="{ column, record }">
@@ -285,6 +290,10 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    showRowSelection: {
+        type: Boolean,
+        default: true
+    },
     task: {
         required: true,
         default: () => { },
@@ -294,6 +303,8 @@ const props = defineProps({
         default: () => { }
     }
 })
+
+const showRowSelection = computed(() => props.showRowSelection)
 
 // Pagination config for RP2 usage: bind only when enabled
 const paginationConfig = computed(() => {
@@ -524,6 +535,17 @@ const getTableSelectedRows = (table) => {
     }
     return []
 }
+const rowSelectionConfig = (table) => {
+    if (!showRowSelection.value) {
+        return undefined
+    }
+    return {
+        selectedRowKeys: getTableSelectedRows(table),
+        onChange: onSelectChange,
+        columnWidth: 35,
+        getCheckboxProps: getCheckboxProps
+    }
+}
 const onSelectChange = (selectedRowKeys) => {
     if (tableData.value[tab.value]) { tableData.value[tab.value].selectedRows = selectedRowKeys }
     else {
@@ -608,6 +630,11 @@ const showHtmlDialg = (record, column) => {
     align-items: center;
     margin-right: 8px;
     white-space: nowrap;
+}
+
+.search-input {
+    width: 33.3333%;
+    min-width: 280px;
 }
 </style>
 

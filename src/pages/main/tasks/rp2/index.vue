@@ -38,7 +38,12 @@
                 :key="`rp2-custom-panel-${index}`"
                 :name="customTabName(index)"
             >
-                <CommonModuleVue :view-config="moduleItem" :task="taskForCommonModule" :enable-pagination="true" />
+                <CommonModuleVue
+                    :view-config="moduleItem"
+                    :task="taskForCommonModule"
+                    :enable-pagination="true"
+                    :show-row-selection="false"
+                />
             </q-tab-panel>
             <q-tab-panel name="batchStats">
                 <IntroHelpButton :title="$t('Rp2BatchStats')" />
