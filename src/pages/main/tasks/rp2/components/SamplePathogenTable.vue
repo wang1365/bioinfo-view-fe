@@ -7,17 +7,72 @@
         </div>
         <div class="table-region">
             <a-table
+                class="rp2-grid-table"
                 :columns="columns"
                 :data-source="rows"
                 :loading="loading"
                 :pagination="pagination"
                 :row-selection="rowSelection"
                 :scroll="tableScroll"
+                :row-class-name="rowClassName"
                 row-key="__rowKey"
                 bordered
                 size="middle"
-            />
+            >
+                <template #bodyCell="{ column, record }">
+                    <template v-if="column.dataIndex === '__verification'">
+                        <div class="verification-actions">
+                            <a
+                                v-if="record.__readPath"
+                                class="verify-link"
+                                :href="toIgvPath(record.__readPath)"
+                                :download="getFileName(record.__readPath)"
+                                target="_blank"
+                            >
+                                read
+                            </a>
+                            <span v-else class="verify-link disabled">read</span>
+                            <span class="verify-separator">|</span>
+                            <a
+                                class="verify-link"
+                                href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"
+                                target="_blank"
+                            >
+                                Blast
+                            </a>
+                            <span class="verify-separator">|</span>
+                            <a class="verify-link" @click.prevent="showCompareDialog(record)">
+                                Compare({{ record.__compareCount || 0 }})
+                            </a>
+                        </div>
+                    </template>
+                </template>
+            </a-table>
         </div>
+
+        <q-dialog v-model="compareDialogVisible">
+            <q-card style="width: 75%; max-width: 980px">
+                <q-bar class="bg-primary text-white">{{ compareDialogTitle }}</q-bar>
+                <q-card-section>
+                    <a-table
+                        class="rp2-grid-table"
+                        row-key="sample"
+                        :columns="compareColumns"
+                        :data-source="compareRows"
+                        :pagination="{
+                            pageSize: 10,
+                            showSizeChanger: true,
+                            showTotal: (total) => t('PaginationTotal', { total })
+                        }"
+                        bordered
+                        size="small"
+                    />
+                </q-card-section>
+                <q-card-actions align="center">
+                    <q-btn color="primary" :label="t('Close')" v-close-popup />
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
     </div>
 </template>
 
@@ -45,6 +100,14 @@ const props = defineProps({
     selectable: {
         type: Boolean,
         default: false
+    },
+    showVerification: {
+        type: Boolean,
+        default: true
+    },
+    showReadPath: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -57,6 +120,9 @@ const columns = ref([])
 const loading = ref(false)
 const errorText = ref('')
 const selectedRowKeys = ref([])
+const compareDialogVisible = ref(false)
+const compareDialogTitle = ref('')
+const compareRows = ref([])
 const containerRef = ref(null)
 const bannerRef = ref(null)
 const tableScrollY = ref(420)
@@ -113,13 +179,24 @@ const filePath = computed(() => {
     return `${props.sampleName}/final_result/${dir}/${dir}_${suffix}_pintai.RPM.txt`
 })
 
+const compareColumns = computed(() => [
+    { title: t('Sample'), dataIndex: 'sample', key: 'sample', width: 180 },
+    { title: t('Detail'), dataIndex: 'pathogen', key: 'pathogen' }
+])
+
 const shouldRemoveColumn = (header) => {
     if (!header) {
         return false
     }
 
     const normalized = header.toLowerCase()
-    return header.includes('去重后序列数') || normalized.includes('uniq')
+    const normalizedHeader = normalizeHeader(header)
+    return (
+        header.includes('去重后序列数') ||
+        normalized.includes('uniq') ||
+        ['是否报出', 'isreported', 'reported', 'report'].includes(normalizedHeader) ||
+        (!props.showReadPath && ['read路径', 'readpath', 'read path', 'file', 'readsfile'].includes(normalizedHeader))
+    )
 }
 
 const findReportedHeader = (headers) => {
@@ -131,6 +208,81 @@ const findReportedHeader = (headers) => {
         }
     }
     return ''
+}
+
+const findHeaderByAliasList = (headers, aliases) => {
+    for (const header of headers) {
+        const normalized = normalizeHeader(header)
+        for (const alias of aliases) {
+            if (normalized === normalizeHeader(alias)) {
+                return header
+            }
+        }
+    }
+    return ''
+}
+
+const getPathogenKeyword = (row) => {
+    const speciesKey = findHeaderByAliasList(Object.keys(row || {}), ['中文种名', '种名', 'speciesname', 'species'])
+    const genusKey = findHeaderByAliasList(Object.keys(row || {}), ['中文属名', '中文病毒名', '属名', 'genusname', 'virusname'])
+    return String((speciesKey && row?.[speciesKey]) || (genusKey && row?.[genusKey]) || '').trim()
+}
+
+const toIgvPath = (rawPath) => {
+    const path = String(rawPath || '').trim()
+    if (!path) {
+        return '#'
+    }
+    return path.startsWith('/igv') ? path : `/igv${path}`
+}
+
+const getFileName = (rawPath) => {
+    const path = String(rawPath || '').trim()
+    if (!path) {
+        return ''
+    }
+    const normalized = path.replace(/\\/g, '/')
+    return normalized.substring(normalized.lastIndexOf('/') + 1)
+}
+
+const buildCompareResultFromSummary = (summaryRows, summaryHeaders) => {
+    const sampleKey =
+        findHeaderByAliasList(summaryHeaders, ['数据识别号', 'Data Identifier', 'Data ID']) ||
+        findHeaderByAliasList(summaryHeaders, ['样本', 'Sample']) ||
+        summaryHeaders[0]
+    const targetColumnMap = {
+        bacteria: findHeaderByAliasList(summaryHeaders, ['细菌', 'Bacteria']),
+        fungus: findHeaderByAliasList(summaryHeaders, ['真菌', 'Fungus']),
+        virus: findHeaderByAliasList(summaryHeaders, ['病毒', 'Virus'])
+    }
+    const targetColumn = targetColumnMap[props.category]
+    if (!targetColumn) {
+        rows.value.forEach((row) => {
+            row.__compareResult = []
+            row.__compareCount = 0
+        })
+        return
+    }
+
+    rows.value.forEach((row) => {
+        const keyword = getPathogenKeyword(row)
+        if (!keyword) {
+            row.__compareResult = []
+            row.__compareCount = 0
+            return
+        }
+
+        const keywordLower = keyword.toLowerCase()
+        const matches = summaryRows
+            .filter((item) => String(item?.[targetColumn] || '').toLowerCase().includes(keywordLower))
+            .map((item) => ({
+                sample: item?.[sampleKey] || '-',
+                pathogen: item?.[targetColumn] || '-'
+            }))
+
+        row.__compareResult = matches
+        row.__compareCount = matches.length
+    })
 }
 
 const displayHeader = (header) => {
@@ -156,6 +308,46 @@ const displayHeader = (header) => {
 }
 
 const normalizeHeader = (header) => String(header || '').replace(/\s+/g, '').toLowerCase()
+
+const isSequenceHeader = (header) => {
+    const normalized = normalizeHeader(header)
+    return ['序列数', '属count', '属_count', '种count', '种_count', 'count', 'genuscount', 'speciescount', 'readscount'].includes(
+        normalized
+    )
+}
+
+const isProportionHeader = (header) => {
+    const normalized = normalizeHeader(header)
+    return ['占比', '属中占比', '相对丰度', 'proportion', 'relativeabundance', 'speciesproportion', 'proportioningenus'].includes(
+        normalized
+    )
+}
+
+const isRelativeAbundanceHeader = (header) => {
+    const normalized = normalizeHeader(header)
+    return ['相对丰度', 'relativeabundance'].includes(normalized)
+}
+
+const isPathogenicityHeader = (header) => {
+    const normalized = normalizeHeader(header)
+    return ['致病等级', 'pathogeniclevel', 'pathogenicity'].includes(normalized)
+}
+
+const getColumnWidth = (header) => {
+    if (isRelativeAbundanceHeader(header)) {
+        return 50
+    }
+    if (isPathogenicityHeader(header)) {
+        return 90
+    }
+    if (isSequenceHeader(header)) {
+        return 90
+    }
+    if (isProportionHeader(header)) {
+        return 100
+    }
+    return undefined
+}
 
 const findHeaderByAliases = (headers, aliases, used) => {
     for (const header of headers) {
@@ -205,12 +397,19 @@ const getGroupedHeaders = (headers) => {
 }
 
 const buildColumns = (headers) => {
-    const leafColumns = headers.map((header, index) => ({
-        title: displayHeader(header),
-        dataIndex: header,
-        key: `${header}-${index}`,
-        ellipsis: true
-    }))
+    const leafColumns = headers.map((header, index) => {
+        const column = {
+            title: displayHeader(header),
+            dataIndex: header,
+            key: `${header}-${index}`,
+            ellipsis: true
+        }
+        const width = getColumnWidth(header)
+        if (width) {
+            column.width = width
+        }
+        return column
+    })
 
     if (!['bacteria', 'fungus', 'virus'].includes(props.category)) {
         return leafColumns
@@ -249,6 +448,16 @@ const buildColumns = (headers) => {
             }
         }
     })
+
+    if (props.showVerification) {
+        groupedColumns.push({
+            title: t('Verification'),
+            dataIndex: '__verification',
+            key: '__verification',
+            align: 'center',
+            width: 180
+        })
+    }
 
     return groupedColumns
 }
@@ -290,11 +499,27 @@ const loadData = async () => {
         }
 
         const { headers, rows: parsedRows } = parseTabText(text, { hasHeader: true })
+        const reportedHeader = findReportedHeader(headers)
+        const readPathHeader = findHeaderByAliasList(headers, [
+            'read路径',
+            'read path',
+            'readpath',
+            'file',
+            'readsfile'
+        ])
         const keptHeaders = headers.filter((header) => !shouldRemoveColumn(header))
 
         rows.value = parsedRows.map((row) => {
             const mapped = {
-                __rowKey: row.__rowKey
+                __rowKey: row.__rowKey,
+                __reported: reportedHeader
+                    ? String(row[reportedHeader] ?? '')
+                          .trim()
+                          .toUpperCase() === 'Y'
+                    : false,
+                __readPath: readPathHeader ? String(row[readPathHeader] || '').trim() : '',
+                __compareResult: [],
+                __compareCount: 0
             }
 
             keptHeaders.forEach((header) => {
@@ -304,10 +529,9 @@ const loadData = async () => {
             return mapped
         })
 
-        const reportedHeader = findReportedHeader(headers)
         if (reportedHeader) {
             selectedRowKeys.value = rows.value
-                .filter((row) => String(row[reportedHeader] ?? '').trim().toUpperCase() === 'Y')
+                .filter((row) => row.__reported)
                 .map((row) => row.__rowKey)
         } else {
             selectedRowKeys.value = []
@@ -315,6 +539,14 @@ const loadData = async () => {
         emitSelectionChange()
 
         columns.value = buildColumns(keptHeaders)
+
+        if (props.showVerification) {
+            const suffix = getRp2LangSuffix(langCode.value)
+            const summaryPath = `menu/merged_results.${suffix}.add.txt`
+            const summaryText = await readTaskFile(props.taskId, summaryPath, true, true)
+            const parsedSummary = parseTabText(typeof summaryText === 'string' ? summaryText : '', { hasHeader: true })
+            buildCompareResultFromSummary(parsedSummary.rows || [], parsedSummary.headers || [])
+        }
     } catch (error) {
         rows.value = []
         columns.value = []
@@ -325,6 +557,15 @@ const loadData = async () => {
         updateTableScrollHeight()
     }
 }
+
+const showCompareDialog = (record) => {
+    const compareResult = Array.isArray(record?.__compareResult) ? record.__compareResult : []
+    compareRows.value = compareResult
+    compareDialogTitle.value = `${t('Verification')} - ${getPathogenKeyword(record) || '-'}`
+    compareDialogVisible.value = true
+}
+
+const rowClassName = (record) => (record?.__reported ? 'rp2-reported-row' : '')
 
 const getSelectionPayload = () => ({
     category: props.category,
@@ -388,5 +629,56 @@ watch(
 .table-region :deep(.ant-spin-container),
 .table-region :deep(.ant-table) {
     height: 100%;
+}
+
+.pathogen-table-container :deep(.rp2-reported-row > td) {
+    background-color: #fff7e6;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-container) {
+    border-color: #c7cfdb !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th) {
+    border-bottom: 1px solid #c7cfdb !important;
+    border-right: 1px solid #cfd7e3 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    line-height: 1.2 !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-tbody > tr > td) {
+    border-bottom: 1px solid #d4dbe6 !important;
+    border-right: 1px solid #d9e0ea !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-tbody > tr > td:last-child) {
+    border-right: 0 !important;
+}
+
+.verification-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.verify-link {
+    color: #1976d2;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.verify-link.disabled {
+    color: #9e9e9e;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.verify-separator {
+    color: #7d7d7d;
+    font-size: 13px;
 }
 </style>

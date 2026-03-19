@@ -1,5 +1,5 @@
 <template>
-    <div class="intro-help-float">
+    <div :class="wrapperClass">
         <q-btn
             icon="help_outline"
             size="small"
@@ -38,6 +38,10 @@ const props = defineProps({
     content: {
         type: String,
         default: ''
+    },
+    disableFloat: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -46,6 +50,7 @@ const visible = ref(false)
 
 const displayTitle = computed(() => props.title || t('Intro'))
 const displayContent = computed(() => props.content || t('Rp2HelpPlaceholder'))
+const wrapperClass = computed(() => (props.disableFloat ? 'intro-help-inline' : 'intro-help-float'))
 </script>
 
 <style scoped>
@@ -53,5 +58,9 @@ const displayContent = computed(() => props.content || t('Rp2HelpPlaceholder'))
     float: right;
     margin-left: 12px;
     margin-bottom: 8px;
+}
+
+.intro-help-inline {
+    margin: 0;
 }
 </style>

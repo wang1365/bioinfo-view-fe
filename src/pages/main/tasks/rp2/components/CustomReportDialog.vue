@@ -33,6 +33,8 @@
                             :sample-name="sampleName"
                             category="bacteria"
                             selectable
+                            :show-verification="false"
+                            :show-read-path="false"
                             @selection-change="onSelectionChange"
                         />
                     </div>
@@ -43,6 +45,8 @@
                             :sample-name="sampleName"
                             category="fungus"
                             selectable
+                            :show-verification="false"
+                            :show-read-path="false"
                             @selection-change="onSelectionChange"
                         />
                     </div>
@@ -53,6 +57,8 @@
                             :sample-name="sampleName"
                             category="virus"
                             selectable
+                            :show-verification="false"
+                            :show-read-path="false"
                             @selection-change="onSelectionChange"
                         />
                     </div>

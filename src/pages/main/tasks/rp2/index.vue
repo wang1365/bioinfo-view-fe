@@ -30,8 +30,9 @@
 
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="sampleList">
-                <IntroHelpButton :title="$t('Rp2SampleList')" />
-                <SampleList :task-id="taskId" />
+                <div class="rp2-tab-wrap rp2-tab-wrap--no-intro">
+                    <SampleList :task-id="taskId" />
+                </div>
             </q-tab-panel>
             <q-tab-panel
                 v-for="(moduleItem, index) in customModules"
@@ -43,11 +44,16 @@
                     :task="taskForCommonModule"
                     :enable-pagination="true"
                     :show-row-selection="false"
+                    :enhanced-table-border="true"
                 />
             </q-tab-panel>
             <q-tab-panel name="batchStats">
-                <IntroHelpButton :title="$t('Rp2BatchStats')" />
-                <BatchPathogenStats :task-id="taskId" :task-root-dir="taskRootDir" />
+                <div class="rp2-tab-wrap">
+                    <div class="rp2-tab-intro">
+                        <IntroHelpButton :title="$t('Rp2BatchStats')" :disable-float="true" />
+                    </div>
+                    <BatchPathogenStats :task-id="taskId" :task-root-dir="taskRootDir" />
+                </div>
             </q-tab-panel>
         </q-tab-panels>
     </q-page>
@@ -177,3 +183,26 @@ watch(
     loadCustomModules
 )
 </script>
+
+<style scoped>
+.rp2-tab-wrap {
+    position: relative;
+    padding-top: 36px;
+}
+
+.rp2-tab-wrap--no-intro {
+    padding-top: 0;
+}
+
+.rp2-tab-intro {
+    position: absolute;
+    top: 6px;
+    right: 12px;
+    z-index: 5;
+}
+
+.rp2-tab-wrap :deep(.ant-table-wrapper),
+.rp2-tab-wrap :deep(.ant-table) {
+    width: 100%;
+}
+</style>

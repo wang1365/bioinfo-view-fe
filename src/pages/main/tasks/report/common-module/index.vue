@@ -102,6 +102,7 @@
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
 <a-table
+  :class="{ 'rp2-grid-table': enhancedTableBorder }"
   style="z-index:1"
   class="col-5"
   size="middle"
@@ -184,7 +185,7 @@
                 color="primary"
                 icon="download"
                 type="href"
-                :href="`/igv${file.filePath}`"
+                :href="`/igv${resolveFilePath(file.filePath)}`"
                 target="_blank"
                 class="q-mb-sm"
             >
@@ -301,10 +302,36 @@ const props = defineProps({
     stepData: {
         type: Object,
         default: () => { }
+    },
+    fileBaseDir: {
+        type: String,
+        default: ''
+    },
+    fromTaskRoot: {
+        type: Boolean,
+        default: false
+    },
+    enhancedTableBorder: {
+        type: Boolean,
+        default: false
     }
 })
 
 const showRowSelection = computed(() => props.showRowSelection)
+const enhancedTableBorder = computed(() => props.enhancedTableBorder)
+const resolveFilePath = (filePath) => {
+    const normalized = String(filePath || '').trim()
+    if (!normalized) {
+        return ''
+    }
+    if (!props.fileBaseDir || normalized.startsWith('/')) {
+        return normalized
+    }
+    return `${props.fileBaseDir.replace(/\/+$/, '')}/${normalized.replace(/^\/+/, '')}`
+}
+
+const readTextFile = (filePath, includeErrors = true) =>
+    readTaskFile(props.task.id, resolveFilePath(filePath), includeErrors, props.fromTaskRoot)
 
 // Pagination config for RP2 usage: bind only when enabled
 const paginationConfig = computed(() => {
@@ -386,25 +413,12 @@ const initIntro = () => {
     const { descriptionFile } = props.viewConfig
     intro.value = ''
     if (descriptionFile) {
-        readTaskFile(props.task.id, descriptionFile, true)
+        readTextFile(descriptionFile, true)
             .then((res) => {
                 intro.value = typeof res === 'string' ? res : ''
-                if (intro.value) {
-                    return
-                }
-                // RP2 custom modules may place files under task root (non-result dir)
-                return readTaskFile(props.task.id, descriptionFile, true, true).then((fallback) => {
-                    intro.value = typeof fallback === 'string' ? fallback : ''
-                })
             })
             .catch(() => {
-                readTaskFile(props.task.id, descriptionFile, true, true)
-                    .then((fallback) => {
-                        intro.value = typeof fallback === 'string' ? fallback : ''
-                    })
-                    .catch(() => {
-                        intro.value = ''
-                    })
+                intro.value = ''
             })
     }
 }
@@ -451,7 +465,7 @@ const initTable = () => {
             return compare_obj(Number(a), Number(b))
         }
 
-        readTaskFile(props.task.id, table.file).then((res) => {
+        readTextFile(table.file).then((res) => {
             const colNames = getCsvHeader(res)
             const rows = getCsvDataAndSetLineNumber(res, { fields: colNames })
             const columns = colNames.map((name) => {
@@ -493,8 +507,8 @@ const initTable = () => {
                 rows,                       // 表格全量数据
                 columns,                    // 表格表头
                 filteredRows: rows,         // 表格过滤后数据
-                url: '/igv' + table.file,   // 下载链接
-                fileName: table.file.substring(table.file.lastIndexOf('/') + 1),
+                url: '/igv' + resolveFilePath(table.file),   // 下载链接
+                fileName: resolveFilePath(table.file).substring(resolveFilePath(table.file).lastIndexOf('/') + 1),
                 keyword: ''                 // 检索关键字
             }
             // tables.value[i] = data
@@ -522,8 +536,8 @@ const initTable = () => {
 const initImages = () => {
     images.value = props.viewConfig.images || []
     images.value.forEach((img) => {
-        img.url = '/igv' + img.file
-        readTaskFile(props.task.id, img.descriptionFile).then((res) => {
+        img.url = '/igv' + resolveFilePath(img.file)
+        readTextFile(img.descriptionFile).then((res) => {
             img.description = res
         })
     })
@@ -635,6 +649,28 @@ const showHtmlDialg = (record, column) => {
 .search-input {
     width: 33.3333%;
     min-width: 280px;
+}
+
+.common-module-root :deep(.rp2-grid-table .ant-table-container) {
+    border-color: #c7cfdb !important;
+}
+
+.common-module-root :deep(.rp2-grid-table .ant-table-thead > tr > th) {
+    border-bottom: 1px solid #c7cfdb !important;
+    border-right: 1px solid #cfd7e3 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    line-height: 1.2 !important;
+}
+
+.common-module-root :deep(.rp2-grid-table .ant-table-tbody > tr > td) {
+    border-bottom: 1px solid #d4dbe6 !important;
+    border-right: 1px solid #d9e0ea !important;
+}
+
+.common-module-root :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),
+.common-module-root :deep(.rp2-grid-table .ant-table-tbody > tr > td:last-child) {
+    border-right: 0 !important;
 }
 </style>
 

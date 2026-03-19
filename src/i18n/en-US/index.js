@@ -903,6 +903,8 @@ export default {
     Rp2ConfigReport: 'Configure Report',
     Rp2DownloadReport: 'Download Report',
     Rp2SampleName: 'Sample Name',
+    Rp2PatientInfo: 'Patient Info',
+    Rp2SampleAndData: 'Sample/Data',
     Rp2Xijun: 'Bacteria',
     Rp2Zhenjun: 'Fungi',
     Rp2Bingdu: 'Virus',

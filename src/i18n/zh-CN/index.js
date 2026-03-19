@@ -890,6 +890,8 @@ export default {
     Rp2ConfigReport: '配置报告',
     Rp2DownloadReport: '下载报告',
     Rp2SampleName: '样本名',
+    Rp2PatientInfo: '患者信息',
+    Rp2SampleAndData: '样本/数据',
     Rp2Xijun: '细菌',
     Rp2Zhenjun: '真菌',
     Rp2Bingdu: '病毒',

@@ -9,6 +9,7 @@
         </q-banner>
 
         <a-table
+            class="rp2-grid-table"
             :columns="columns"
             :data-source="rows"
             :loading="loading"
@@ -183,3 +184,28 @@ watch(
     { immediate: true }
 )
 </script>
+
+<style scoped>
+.table-region :deep(.rp2-grid-table .ant-table-container),
+div :deep(.rp2-grid-table .ant-table-container) {
+    border-color: #c7cfdb !important;
+}
+
+div :deep(.rp2-grid-table .ant-table-thead > tr > th) {
+    border-bottom: 1px solid #c7cfdb !important;
+    border-right: 1px solid #cfd7e3 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    line-height: 1.2 !important;
+}
+
+div :deep(.rp2-grid-table .ant-table-tbody > tr > td) {
+    border-bottom: 1px solid #d4dbe6 !important;
+    border-right: 1px solid #d9e0ea !important;
+}
+
+div :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),
+div :deep(.rp2-grid-table .ant-table-tbody > tr > td:last-child) {
+    border-right: 0 !important;
+}
+</style>
