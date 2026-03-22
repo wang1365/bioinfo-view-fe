@@ -16,23 +16,23 @@
                     en-file="menu/analysis_positive_negative_stats.EN.txt"
                 />
                 <div class="row q-col-gutter-md q-mt-sm">
-                    <div class="col-12 col-md-6">
-                        <q-card flat bordered class="rp2-chart-card">
+                    <div class="col-12 col-md-4">
+                        <q-card flat bordered class="rp2-chart-card rp2-chart-card--positive">
                             <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
                                 {{ t('Rp2SamplePosNegStatTitle') }}
                             </q-card-section>
                             <q-card-section>
-                                <div ref="positiveBarRef" class="rp2-chart"></div>
+                                <div ref="positiveBarRef" class="rp2-chart rp2-chart--positive"></div>
                             </q-card-section>
                         </q-card>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <q-card flat bordered class="rp2-chart-card">
+                    <div class="col-12 col-md-4">
+                        <q-card flat bordered class="rp2-chart-card rp2-chart-card--positive">
                             <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
                                 {{ t('Rp2SamplePosNegDistTitle') }}
                             </q-card-section>
                             <q-card-section>
-                                <div ref="positivePieRef" class="rp2-chart"></div>
+                                <div ref="positivePieRef" class="rp2-chart rp2-chart--positive"></div>
                             </q-card-section>
                         </q-card>
                     </div>
@@ -82,8 +82,14 @@
                             <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
                                 {{ t('Rp2PathogenTypeDistTitle') }}
                             </q-card-section>
-                            <q-card-section>
-                                <div ref="pathogenTypeStackRef" class="rp2-chart"></div>
+                            <q-card-section class="rp2-pathogen-type-chart-section">
+                                <div class="rp2-pathogen-type-chart-wrap">
+                                    <div
+                                        ref="pathogenTypeStackRef"
+                                        class="rp2-chart rp2-chart--pathogen-type"
+                                        :style="pathogenTypeChartStyle"
+                                    ></div>
+                                </div>
                             </q-card-section>
                         </q-card>
                     </div>
@@ -170,6 +176,11 @@ let speciesRenderTimer = null
 let pathogenTypeRenderTimer = null
 let similarityRenderTimer = null
 let similarityHoverPosition = null
+const pathogenTypeChartWidth = ref(0)
+const pathogenTypeChartStyle = computed(() => {
+    const width = Number(pathogenTypeChartWidth.value)
+    return width > 0 ? { width: `${width}px` } : {}
+})
 
 const normalize = (text) => String(text ?? '').trim().replace(/\s+/g, '').toLowerCase()
 
@@ -546,6 +557,7 @@ const renderPathogenTypeStackChart = async () => {
     }
 
     const { labels, bacteria, fungus, virus } = extractPathogenTypeStack(headers, rows)
+    pathogenTypeChartWidth.value = Math.max(480, labels.length * 120)
 
     await nextTick()
     if (!pathogenTypeStackRef.value) {
@@ -582,6 +594,7 @@ const renderPathogenTypeStackChart = async () => {
                 name: t('Rp2Xijun'),
                 type: 'bar',
                 stack: 'pathogen',
+                barWidth: 30,
                 data: bacteria,
                 itemStyle: { color: '#d9534f' }
             },
@@ -589,6 +602,7 @@ const renderPathogenTypeStackChart = async () => {
                 name: t('Rp2Zhenjun'),
                 type: 'bar',
                 stack: 'pathogen',
+                barWidth: 30,
                 data: fungus,
                 itemStyle: { color: '#f6c343' }
             },
@@ -596,6 +610,7 @@ const renderPathogenTypeStackChart = async () => {
                 name: t('Rp2Bingdu'),
                 type: 'bar',
                 stack: 'pathogen',
+                barWidth: 30,
                 data: virus,
                 itemStyle: { color: '#f39c12' }
             }
@@ -925,6 +940,27 @@ onBeforeUnmount(() => {
 
 .rp2-chart {
     width: 100%;
+    height: 350px;
+}
+
+.rp2-chart-card--positive {
+    min-height: 372px;
+}
+
+.rp2-chart--positive {
+    width: 100%;
+    height: 233px;
+}
+
+.rp2-pathogen-type-chart-section {
+    overflow-x: auto;
+}
+
+.rp2-pathogen-type-chart-wrap {
+    width: 100%;
+}
+
+.rp2-chart--pathogen-type {
     height: 350px;
 }
 
