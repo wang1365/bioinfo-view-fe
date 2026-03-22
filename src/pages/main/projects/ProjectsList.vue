@@ -1,6 +1,6 @@
 <template>
     <q-card class="projects-card">
-        <q-card-section>
+        <q-card-section class="q-pb-sm">
             <q-toolbar class="q-gutter-x-sm">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6">
@@ -24,64 +24,64 @@
                 />
             </q-toolbar>
         </q-card-section>
-        <q-card-section>
-            <div class="q-pa-md bio-data-table">
-                <a-table
-                    :data-source="dataItems"
-                    :columns="columns"
-                    :loading="loading"
-                    :pagination="pagination"
-                    :scroll="tableScrollY"
-                    row-key="id"
-                    @change="handleTableChange"
-                    :locale="tableLocale"
-                    size="small"
-                    bordered
-                >
-                    <template #bodyCell="{ column, record }">
-                        <template v-if="column.key === 'create_time'">
-                            {{ toLocalString(record.create_time) }}
+        <q-card-section class="q-pt-none q-pb-sm">
+            <div class="q-px-sm q-pb-sm project-table-container">
+                <div class="project-table-shell">
+                    <a-table
+                        :data-source="dataItems"
+                        :columns="columns"
+                        :loading="loading"
+                        :pagination="pagination"
+                        row-key="id"
+                        @change="handleTableChange"
+                        :locale="tableLocale"
+                        size="small"
+                        bordered
+                    >
+                        <template #bodyCell="{ column, record }">
+                            <template v-if="column.key === 'create_time'">
+                                {{ toLocalString(record.create_time) }}
+                            </template>
+                            <template v-else-if="column.key === 'samples'">
+                                {{ (record.samples || []).length }}
+                            </template>
+                            <template v-else-if="column.key === 'operation'">
+                                <div class="q-gutter-x-sm">
+                                    <q-btn
+                                        color="primary"
+                                        :label="$t('Detail')"
+                                        icon="arrow_outward"
+                                        @click="gotoChild(record)"
+                                        size="md"
+                                        flat
+                                        dense
+                                    />
+                                    <q-btn
+                                        color="primary"
+                                        :label="$t('Edit')"
+                                        icon="edit"
+                                        @click="updateProjectName = record.name; currentProject = record; openEditProject = true;"
+                                        size="md"
+                                        flat
+                                        dense
+                                    />
+                                    <q-btn
+                                        v-permission="'deleteProject'"
+                                        color="red"
+                                        :label="$t('Delete')"
+                                        icon="delete"
+                                        @click="confirm(record)"
+                                        size="md"
+                                        flat
+                                        dense
+                                    />
+                                </div>
+                            </template>
                         </template>
-                        <template v-else-if="column.key === 'samples'">
-                            {{ (record.samples || []).length }}
-                        </template>
-                        <template v-else-if="column.key === 'operation'">
-                            <div class="q-gutter-x-sm">
-                                <q-btn
-                                    color="primary"
-                                    :label="$t('Detail')"
-                                    icon="arrow_outward"
-                                    @click="gotoChild(record)"
-                                    size="md"
-                                    flat
-                                    dense
-                                />
-                                <q-btn
-                                    color="primary"
-                                    :label="$t('Edit')"
-                                    icon="edit"
-                                    @click="updateProjectName = record.name; currentProject = record; openEditProject = true;"
-                                    size="md"
-                                    flat
-                                    dense
-                                />
-                                <q-btn
-                                    v-permission="'deleteProject'"
-                                    color="red"
-                                    :label="$t('Delete')"
-                                    icon="delete"
-                                    @click="confirm(record)"
-                                    size="md"
-                                    flat
-                                    dense
-                                />
-                            </div>
-                        </template>
-                    </template>
-                </a-table>
+                    </a-table>
+                </div>
             </div>
         </q-card-section>
-        <q-card-section class="q-pd-md"></q-card-section>
     </q-card>
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
@@ -236,10 +236,6 @@ const tableLocale = computed(() => ({
     emptyText: t('NoData'),
 }))
 
-const tableScrollY = computed(() => ({
-    y: `calc(100vh - 360px)`,
-}))
-
 onMounted(() => {
     loadBackup()
     loadPage()
@@ -372,18 +368,50 @@ const confirm = (item) => {
 </script>
 
 <style lang="scss">
-.projects-card {
-    min-height: calc(100vh - 160px);
-    display: flex;
-    flex-direction: column;
+
+.projects-card .project-table-shell {
+    overflow: hidden;
+    border: 1px solid #9aa6bf;
+    border-radius: 8px;
+    background: #fff;
 }
 
-.projects-card .bio-data-table {
-    flex: 1;
-    display: flex;
+.projects-card .project-table-shell .ant-table-wrapper {
+    border-radius: 8px;
 }
 
-.projects-card .bio-data-table .ant-table-wrapper {
-    flex: 1;
+.projects-card .project-table-shell .ant-table-thead > tr > th,
+.projects-card .project-table-shell .ant-table-tbody > tr > td {
+    padding: 10px 12px;
+}
+
+.projects-card .project-table-shell .ant-table.ant-table-bordered > .ant-table-container {
+    border-color: #aab4c8;
+}
+
+.projects-card .project-table-shell .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > thead
+    > tr
+    > th,
+.projects-card .project-table-shell .ant-table.ant-table-bordered
+    > .ant-table-container
+    > .ant-table-content
+    > table
+    > tbody
+    > tr
+    > td {
+    border-color: #c3cad9;
+}
+
+.projects-card .project-table-shell .ant-table-pagination.ant-pagination {
+    margin: 0;
+    padding: 8px 12px;
+}
+
+.projects-card .project-table-shell .ant-table-placeholder {
+    border-bottom: 0;
 }
 </style>
