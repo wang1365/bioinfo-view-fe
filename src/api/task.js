@@ -71,3 +71,13 @@ export function createRp2CustomReport(id, data) {
         data
     })
 }
+
+export function getRp2SampleReports(id, sampleNames = []) {
+    return api({
+        url: `/task/${id}/rp2_sample_reports/`,
+        method: 'get',
+        params: {
+            sample_names: Array.isArray(sampleNames) ? sampleNames.join(',') : ''
+        }
+    })
+}

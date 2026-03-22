@@ -76,8 +76,11 @@
                                 <q-item clickable v-close-popup @click="openCustomReportDialog(record)">
                                     <q-item-section>{{ t('Rp2ConfigReport') }}</q-item-section>
                                 </q-item>
-                                <q-item clickable v-close-popup @click="showPending">
-                                    <q-item-section>{{ t('Rp2DownloadReport') }}</q-item-section>
+                                <q-item clickable v-close-popup @click="downloadReport(record, 'default')">
+                                    <q-item-section>{{ t('Rp2DownloadDefaultReport') }}</q-item-section>
+                                </q-item>
+                                <q-item clickable v-close-popup :disable="!record.hasCustomReport" @click="downloadReport(record, 'custom')">
+                                    <q-item-section>{{ t('Rp2DownloadCustomReport') }}</q-item-section>
                                 </q-item>
                             </q-list>
                         </q-btn-dropdown>
@@ -90,7 +93,12 @@
             <div ref="summaryChartRef" class="summary-chart"></div>
         </div>
 
-        <CustomReportDialog v-model="customReportVisible" :task-id="taskId" :sample-name="customReportSampleName" />
+        <CustomReportDialog
+            v-model="customReportVisible"
+            :task-id="taskId"
+            :sample-name="customReportSampleName"
+            @submitted="handleCustomReportSubmitted"
+        />
 
         <q-dialog v-model="showPatientInfo">
             <div class="rp2-patient-dialog-wrap">
@@ -128,9 +136,9 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
-import { readTaskFile } from 'src/api/task'
+import { getRp2SampleReports, readTaskFile } from 'src/api/task'
 import { api } from 'src/boot/axios'
-import { infoMessage } from 'src/utils/notify'
+import { infoMessage, warnMessage } from 'src/utils/notify'
 import { getRp2LangSuffix, isDetected, parseTabText } from './rp2File'
 import CustomReportDialog from './CustomReportDialog.vue'
 import IntroHelpButton from './IntroHelpButton.vue'
@@ -174,6 +182,7 @@ const patientInfoId = ref(0)
 const sampleInfoId = ref(0)
 const dataInfoId = ref(0)
 let summaryChart = null
+const reportStateMap = ref({})
 
 const normalizeKey = (value) => String(value || '').replace(/\s+/g, '').replace(/[_-]/g, '').toLowerCase()
 
@@ -352,7 +361,7 @@ const loadData = async () => {
         fungusColumnKey.value = findHeaderByAliases(headers, ['真菌', 'Fungus']) || headers[3] || ''
         virusColumnKey.value = findHeaderByAliases(headers, ['病毒', 'Virus']) || headers[4] || ''
 
-        rows.value = parsedRows.map((row) => {
+        const baseRows = parsedRows.map((row) => {
             const sampleName = sampleColumnKey.value ? row[sampleColumnKey.value] : row.__rowKey
             const ncValue = ncColumnKey.value ? row[ncColumnKey.value] : '0'
             const isNC = String(ncValue).trim() === '1'
@@ -379,10 +388,14 @@ const loadData = async () => {
             }
         })
 
+        rows.value = mergeReportState(baseRows)
+        await loadReportStates(rows.value.map((item) => item.dataIdentifier).filter(Boolean))
+
         renderSummaryChart()
     } catch (error) {
         rows.value = []
         tableHeaders.value = []
+        reportStateMap.value = {}
         renderSummaryChart()
     } finally {
         loading.value = false
@@ -396,13 +409,116 @@ const viewResult = (record) => {
     router.push(`/main/tasks/${props.taskId}/sample/${encoded}/report`)
 }
 
-const showPending = () => {
-    infoMessage(t('Rp2PendingFeature'))
-}
-
 const openCustomReportDialog = (record) => {
     customReportSampleName.value = record.dataIdentifier || ''
     customReportVisible.value = true
+}
+
+const mergeReportState = (sourceRows) => {
+    return sourceRows.map((row) => {
+        const reportState = reportStateMap.value[row.dataIdentifier] || {}
+        return {
+            ...row,
+            hasDefaultReport: reportState.defaultAvailable ?? false,
+            hasCustomReport: reportState.customAvailable ?? false,
+            activeReportType: reportState.activeReportType || 'default',
+            customReportPath: reportState.customReportPath || { CN: '', EN: '' }
+        }
+    })
+}
+
+const loadReportStates = async (sampleNames = []) => {
+    try {
+        const response = await getRp2SampleReports(props.taskId, sampleNames)
+        const resultMap = {}
+        ;(Array.isArray(response) ? response : []).forEach((item) => {
+            if (!item?.sample_name) {
+                return
+            }
+            resultMap[item.sample_name] = {
+                defaultAvailable: Boolean(item.default_available),
+                customAvailable: Boolean(item.custom_available),
+                activeReportType: item.active_report_type || 'default',
+                customReportPath: item.custom_report_path || {}
+            }
+        })
+        reportStateMap.value = resultMap
+        rows.value = mergeReportState(rows.value)
+    } catch (error) {
+        reportStateMap.value = {}
+        rows.value = mergeReportState(rows.value)
+    }
+}
+
+const triggerBrowserDownload = (blob, filename) => {
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blob)
+    link.download = filename || 'report.docx'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.setTimeout(() => window.URL.revokeObjectURL(link.href), 1000)
+}
+
+const parseFilenameFromHeaders = (headers, fallbackName) => {
+    const disposition = headers?.['content-disposition'] || ''
+    const matchUtf8 = disposition.match(/filename\*=UTF-8''([^;]+)/i)
+    if (matchUtf8?.[1]) {
+        try {
+            return decodeURIComponent(matchUtf8[1])
+        } catch (error) {
+            return matchUtf8[1]
+        }
+    }
+    const matchPlain = disposition.match(/filename="?([^"]+)"?/i)
+    return matchPlain?.[1] || fallbackName
+}
+
+const downloadReport = async (record, reportType) => {
+    const sampleName = record?.dataIdentifier || ''
+    if (!sampleName) {
+        return
+    }
+    if (reportType === 'custom' && !record?.hasCustomReport) {
+        warnMessage(t('Rp2CustomReportUnavailable'))
+        return
+    }
+    try {
+        const response = await fetch(
+            `/api/task/${props.taskId}/rp2_report_download/?sample_name=${encodeURIComponent(sampleName)}&report_type=${encodeURIComponent(reportType)}`,
+            {
+                credentials: 'include',
+                headers: {
+                    Language: store.langConfig.lang
+                }
+            }
+        )
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`)
+        }
+        const blob = await response.blob()
+        const lang = langCode.value === 'en' ? 'EN' : 'CN'
+        const fallbackName = `${sampleName}.${lang}_RP_Panel_report.docx`
+        triggerBrowserDownload(
+            blob,
+            parseFilenameFromHeaders(
+                {
+                    'content-disposition': response.headers.get('content-disposition') || ''
+                },
+                fallbackName
+            )
+        )
+    } catch (error) {
+        infoMessage(t('Failed'))
+    }
+}
+
+const handleCustomReportSubmitted = async () => {
+    const sampleName = customReportSampleName.value
+    if (!sampleName) {
+        return
+    }
+    await loadReportStates([sampleName])
 }
 
 const toResultList = (response) => {
