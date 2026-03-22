@@ -44,6 +44,7 @@
                     :task-id="taskId"
                     cn-file="menu/analysis_pathogen_summary.CN.txt"
                     en-file="menu/analysis_pathogen_summary.EN.txt"
+                    :column-widths="[120, 120, 480]"
                 />
                 <div class="row q-col-gutter-md q-mt-sm">
                     <div class="col-12 col-md-6">

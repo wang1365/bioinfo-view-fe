@@ -28,7 +28,7 @@
             <q-tab name="batchStats" :label="$t('Rp2BatchStats')" icon="analytics" />
         </q-tabs>
 
-        <q-tab-panels v-model="tab" animated>
+        <q-tab-panels v-model="tab" animated class="rp2-tab-panels">
             <q-tab-panel name="sampleList">
                 <div class="rp2-tab-wrap rp2-tab-wrap--no-intro">
                     <SampleList :task-id="taskId" />
@@ -187,7 +187,6 @@ watch(
 <style scoped>
 .rp2-tab-wrap {
     position: relative;
-    padding-top: 36px;
 }
 
 .rp2-tab-wrap--no-intro {
@@ -196,9 +195,19 @@ watch(
 
 .rp2-tab-intro {
     position: absolute;
-    top: 6px;
-    right: 12px;
+    top: -2px;
+    right: 0;
     z-index: 5;
+}
+
+.rp2-tab-panels :deep(.q-tab-panel) {
+    padding-top: 10px;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.rp2-tab-wrap :deep(.rp2-stats-tabs) {
+    padding-right: 112px;
 }
 
 .rp2-tab-wrap :deep(.ant-table-wrapper),
