@@ -85,13 +85,12 @@
             side="left"
             class="left-navigation text-white"
             show-if-above
-            style="background-image: url('images/lake.jpg') !important"
             elevated
-            :width="225"
+            :width="208"
         >
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
-                    <q-list>
+                    <q-list class="sidebar-list">
                         <template v-for="(item, index) in menuList" :key="index">
                             <SideBarLeftItem :addRoutesItem="item" :initLevel="0" />
                         </template>
@@ -181,14 +180,10 @@ onBeforeMount(() => {
 .q-field__input {
     color: white !important;
 }
-.q-drawer {
-    /*background-image: url(https://demos.creative-tim.com/vue-material-dashboard/img/sidebar-2.32103624.jpg) !important;*/
-    background-image: url("/images/lake.jpg") !important;
-    background-size: cover !important;
-}
 
 .drawer_normal {
-    background-color: rgba(1, 1, 1, 0.75);
+    background: linear-gradient(180deg, #18222c 0%, #131c24 100%);
+    border-right: 1px solid rgba(148, 163, 184, 0.14);
 }
 
 .drawer_dark {
@@ -219,5 +214,13 @@ onBeforeMount(() => {
         rgb(61, 14, 42) 15%,
         rgb(14, 43, 78) 70%
     );
+}
+
+.sidebar-list {
+    padding: 10px 10px 18px;
+}
+
+.left-navigation :deep(.q-scrollarea__content) {
+    min-height: 100%;
 }
 </style>
