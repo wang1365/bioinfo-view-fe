@@ -12,7 +12,7 @@
         rel="noopener noreferrer"
         :inset-level="initLevel"
     >
-        <q-item-section avatar class="sidebar-item__icon">
+        <q-item-section v-if="!isNested" avatar class="sidebar-item__icon">
             <q-icon :name="addRoutesItem.icon" />
         </q-item-section>
         <q-item-section class="sidebar-item__label">{{ $t(addRoutesItem.label) }}</q-item-section>
@@ -29,7 +29,7 @@
         :active="checkActive"
         active-class="sidebar-item--active"
     >
-        <q-item-section avatar class="sidebar-item__icon">
+        <q-item-section v-if="!isNested" avatar class="sidebar-item__icon">
             <q-icon :name="addRoutesItem.icon" />
         </q-item-section>
         <q-item-section class="sidebar-item__label">{{ $t(addRoutesItem.label) }}</q-item-section>
@@ -98,8 +98,8 @@ const checkActive = computed(() => {
 .sidebar-item--nested {
     min-height: 38px;
     border-radius: 8px;
-    margin-left: 12px;
-    padding-left: 8px !important;
+    margin-left: 24px;
+    padding-left: 18px !important;
     background: transparent;
 }
 
@@ -123,6 +123,7 @@ const checkActive = computed(() => {
     font-size: 13px;
     font-weight: 500;
     color: rgba(226, 232, 240, 0.74);
+    text-align: left;
 }
 
 .sidebar-item--nested .sidebar-item__icon {
