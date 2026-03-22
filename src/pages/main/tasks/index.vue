@@ -1,5 +1,5 @@
 <template>
-    <q-page class="q-px-sm q-pt-lg" style="overflow-x: hidden">
+    <q-page class="task-list-page q-px-sm q-pt-lg">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="task-cards">
                 <q-btn
@@ -116,12 +116,12 @@
             <q-btn color="primary" size="md" :label="$t('Search')" icon="search" @click="search()" />
             <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
         </div>
-        <div class="q-px-sm">
+        <div ref="tableWrapRef" class="q-px-sm task-table-wrap">
             <a-table
                 :columns="columns"
                 :data-source="rows"
                 :pagination="pagination"
-                :scroll="{ x: 1800, y: 550 }"
+                :scroll="tableScroll"
                 :loading="tableLoading"
             >
                 <template #bodyCell="{ column, record }">
@@ -401,7 +401,7 @@
 
 <script setup>
 import { isRP2Flow } from 'src/utils/flow'
-import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { ref, onMounted, computed, onUnmounted, nextTick, watch } from 'vue';
 import { useApi } from 'src/api/apiBase';
 import PageTitle from 'components/page-title/PageTitle.vue';
 import ProjectListVue from './components/ProjectList.vue';
@@ -421,6 +421,8 @@ const { t } = useI18n();
 
 const intId = ref(null);
 const $q = useQuasar();
+const tableWrapRef = ref(null);
+const tableScrollY = ref(550);
 
 // const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable();
 const pagination = ref({
@@ -450,6 +452,11 @@ const columns = computed(() => [
     { dataIndex: 'creator', title: t('CreatedBy'), align: 'left', width: 160, },
     { dataIndex: 'operate', title: t('Operate'), align: 'center', fixed: 'right', width: langCode.value === 'en' ? 320 : 270}
 ]);
+
+const tableScroll = computed(() => ({
+    x: 1800,
+    y: tableScrollY.value
+}));
 
 // const columns = computed(() => [
 //     { dataIndex: 'id', key: '1', title: 'ID', width: 80, fixed: 'left' },
@@ -521,6 +528,26 @@ const onRequest = (props) => {
     doRequest(props.pagination);
 };
 
+const updateTableScrollY = () => {
+    const wrapEl = tableWrapRef.value?.$el || tableWrapRef.value;
+    if (!wrapEl || typeof window === 'undefined') {
+        return;
+    }
+    const availableHeight = wrapEl.clientHeight || 0;
+    const paginationEl = wrapEl.querySelector('.ant-table-pagination');
+    const headerEl = wrapEl.querySelector('.ant-table-thead');
+    const horizontalScrollbarEl = wrapEl.querySelector('.ant-table-body-horizontal-scroll');
+    const paginationHeight = paginationEl ? paginationEl.getBoundingClientRect().height : 64;
+    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 44;
+    const horizontalScrollbarHeight = horizontalScrollbarEl ? horizontalScrollbarEl.getBoundingClientRect().height : 18;
+    const extraSpacing = 14;
+    const nextHeight = Math.max(
+        180,
+        Math.floor(availableHeight - paginationHeight - headerHeight - horizontalScrollbarHeight - extraSpacing)
+    );
+    tableScrollY.value = nextHeight;
+};
+
 const doRequest = (showLoading = true) => {
     if (showLoading) {
         $q.loading.show();
@@ -547,6 +574,9 @@ const doRequest = (showLoading = true) => {
             for (let item of rows.value) {
                 item.actions = true;
             }
+            nextTick(() => {
+                updateTableScrollY();
+            });
         }, {}, null, null, () => {
             if (showLoading) {
                 $q.loading.hide();
@@ -620,6 +650,10 @@ onMounted(() => {
     loadBackup();
     // loadDataOnMount();
     doRequest(false);
+    nextTick(() => {
+        updateTableScrollY();
+    });
+    window.addEventListener('resize', updateTableScrollY);
     intId.value = setInterval(() => {
         loadBackup();
         console.log(pagination.value);
@@ -632,8 +666,18 @@ onUnmounted(() => {
     if (intId.value) {
         clearInterval(intId.value);
     }
+    window.removeEventListener('resize', updateTableScrollY);
     backupSearch();
 });
+
+watch(
+    () => [rows.value.length, pagination.value.current, pagination.value.pageSize, pagination.value.total],
+    () => {
+        nextTick(() => {
+            updateTableScrollY();
+        });
+    }
+);
 
 const reset = () => {
     projectName.value = '';
@@ -738,6 +782,24 @@ const summary = async () => {
 };
 </script>
 <style lang="sass">
+.task-list-page
+  height: 100%
+  min-height: 100%
+  display: flex
+  flex-direction: column
+  overflow: hidden
+
+.task-table-wrap
+  flex: 1 1 auto
+  min-height: 0
+
+.task-table-wrap :deep(.ant-table-pagination.ant-pagination)
+  margin-top: 10px
+  margin-bottom: 0
+
+.task-list-page > :not(.task-table-wrap)
+  flex: 0 0 auto
+
 .task-cards
   display: grid
   grid-template-columns: repeat(5, minmax(0, 1fr))
@@ -814,4 +876,20 @@ const summary = async () => {
 .task-card--active.task-card--all
   border-color: var(--q-primary)
   box-shadow: 0 0 0 2px var(--q-primary), 0 8px 24px rgba(0,0,0,.22)
+
+.ant-table-wrapper
+  .ant-table-container
+    border: 1px solid #b9c7d8 !important
+    border-radius: 4px
+
+  .ant-table-thead > tr > th
+    padding-top: 7px !important
+    padding-bottom: 7px !important
+    line-height: 1.15 !important
+    height: 38px !important
+    min-height: 38px !important
+    border-bottom: 1px solid #d5deea !important
+
+  .ant-table-tbody > tr > td
+    border-bottom: 1px solid #edf1f6 !important
 </style>

@@ -100,11 +100,10 @@
             </div>
         </q-drawer>
 
-        <q-page-container>
-<!--            <div style="height:calc(100vh - 20px);overflow-y: scroll;">-->
-                <!--            <div style="overflow-y: scroll;">-->
+        <q-page-container class="main-page-container">
+            <div class="main-page-host">
                 <router-view />
-<!--            </div>-->
+            </div>
         </q-page-container>
     </q-layout>
 </template>
@@ -157,6 +156,27 @@ onBeforeMount(() => {
 </script>
 
 <style lang="scss" scoped>
+.q-layout {
+    min-height: 100vh;
+}
+
+.q-page-container,
+.main-page-container {
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-page-host {
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-page-host :deep(.q-page) {
+    height: 100%;
+    min-height: 100%;
+}
 
 .q-field__input {
     color: white !important;
