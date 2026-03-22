@@ -1,6 +1,6 @@
 <template>
-    <q-page class="task-list-page q-px-sm q-pt-lg">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <q-page class="task-list-page q-px-sm q-pt-sm">
+        <div class="q-px-sm">
             <div class="task-cards">
                 <q-btn
                     class="task-card task-card--all"
@@ -68,53 +68,57 @@
                 </q-btn>
             </div>
         </div>
-        <div class="row q-gutter-sm q-my-sm">
-            <q-input style="width:120px" filled dense clearable v-model="taskId" :label="'ID'" />
-            <q-select
-                style="width:150px"
-                v-model="status"
-                :options="options"
-                stack-label
-                emit-value
-                map-options
-                clearable
-                filled
-                @clear="clearSelect()"
-                dense
-                @update:model-value="search()"
-            />
+        <div class="q-px-sm q-my-sm">
+            <div class="task-panel task-panel--filters">
+                <div class="task-filter-row">
+                    <q-input style="width:120px" filled dense clearable v-model="taskId" :label="'ID'" />
+                    <q-select
+                        style="width:150px"
+                        v-model="status"
+                        :options="options"
+                        stack-label
+                        emit-value
+                        map-options
+                        clearable
+                        filled
+                        @clear="clearSelect()"
+                        dense
+                        @update:model-value="search()"
+                    />
 
-            <q-input
-                style="width:150px"
-                filled
-                dense
-                clearable
-                v-model="patient"
-                :label="`${$t('Patient')} ${$t('Name')}`"
-            />
-            <q-input
-                style="width:150px"
-                filled
-                dense
-                clearable
-                v-model="libraryNumber"
-                :label="$t('DataListTableColumnLibraryNumber')"
-            />
-            <q-input style="width:150px" filled dense clearable v-model="taskName" :label="$t('Task') + $t('Name')" />
-            <q-input
-                style="width:250px"
-                readonly
-                filled
-                dense
-                @click="showProjectSelect = true"
-                :model-value="$t('Project') + ': ' + projectName"
-            >
-                <template v-slot:prepend>
-                    <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
-                </template>
-            </q-input>
-            <q-btn color="primary" size="md" :label="$t('Search')" icon="search" @click="search()" />
-            <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
+                    <q-input
+                        style="width:150px"
+                        filled
+                        dense
+                        clearable
+                        v-model="patient"
+                        :label="`${$t('Patient')} ${$t('Name')}`"
+                    />
+                    <q-input
+                        style="width:150px"
+                        filled
+                        dense
+                        clearable
+                        v-model="libraryNumber"
+                        :label="$t('DataListTableColumnLibraryNumber')"
+                    />
+                    <q-input style="width:150px" filled dense clearable v-model="taskName" :label="$t('Task') + $t('Name')" />
+                    <q-input
+                        style="width:250px"
+                        readonly
+                        filled
+                        dense
+                        @click="showProjectSelect = true"
+                        :model-value="$t('Project') + ': ' + projectName"
+                    >
+                        <template v-slot:prepend>
+                            <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
+                        </template>
+                    </q-input>
+                    <q-btn color="primary" size="md" :label="$t('Search')" icon="search" @click="search()" />
+                    <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
+                </div>
+            </div>
         </div>
         <div ref="tableWrapRef" class="q-px-sm task-table-wrap">
             <a-table
@@ -177,13 +181,6 @@
                         <q-linear-progress
                             v-if="record.status === 'PENDING'"
                             color="secondary"
-                            rounded
-                            size="10px"
-                            :value="record.progress / 100"
-                        />
-                        <q-linear-progress
-                            v-if="record.status === 'FINISHED'"
-                            color="positive"
                             rounded
                             size="10px"
                             :value="record.progress / 100"
@@ -446,8 +443,8 @@ const columns = computed(() => [
     { dataIndex: 'library_number', title: t('LibraryNumber'), align: 'left', width: 220},
     { dataIndex: ['flow', 'name'], title: t('Flow'), align: 'left', width: 200, },
     { dataIndex: 'status', title: t('Status'), align: 'center', width: 100 },
-    { dataIndex: 'task_priority', title: t('TaskPriority'), align: 'left', width: 100, },
     { dataIndex: 'creator', title: t('CreatedBy'), align: 'left', width: 160, },
+    { dataIndex: 'task_priority', title: t('TaskPriority'), align: 'left', width: 100, },
     { dataIndex: 'operate', title: t('Operate'), align: 'center', fixed: 'right', width: langCode.value === 'en' ? 190 : 180}
 ]);
 
@@ -521,6 +518,10 @@ const total_task_count = computed(() => {
         ts.running_task_count
     );
 });
+
+const hasActiveTasksOnCurrentPage = computed(() =>
+    rows.value.some((item) => ['RUNNING', 'PENDING'].includes(String(item?.status || '').toUpperCase()))
+);
 
 const onRequest = (props) => {
     doRequest(props.pagination);
@@ -653,6 +654,9 @@ onMounted(() => {
     });
     window.addEventListener('resize', updateTableScrollY);
     intId.value = setInterval(() => {
+        if (!hasActiveTasksOnCurrentPage.value) {
+            return;
+        }
         loadBackup();
         console.log(pagination.value);
         // refreshPage();
@@ -791,6 +795,21 @@ const summary = async () => {
   flex: 1 1 auto
   min-height: 0
 
+.task-panel
+  border: 1px solid #d7e1ee
+  border-radius: 8px
+  background: #fff
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .04)
+
+.task-panel--filters
+  padding: 8px 12px
+
+.task-filter-row
+  display: flex
+  align-items: center
+  flex-wrap: wrap
+  gap: 8px
+
 .task-table-wrap :deep(.ant-table-pagination.ant-pagination)
   margin-top: 10px
   margin-bottom: 0
@@ -802,13 +821,14 @@ const summary = async () => {
   display: grid
   grid-template-columns: repeat(5, minmax(0, 1fr))
   gap: 8px
-  padding: 6px 0
+  padding: 0
   align-items: stretch
+  margin-bottom: 4px
 
 
 .task-card
   width: 100%
-  height: 56px
+  height: 48px
   border-radius: 10px
   box-shadow: 0 2px 8px rgba(0,0,0,.08)
   transition: transform .2s ease, box-shadow .2s ease
@@ -826,7 +846,7 @@ const summary = async () => {
   padding: 0 6px
 
 .task-card-text
-  font-size: 14px
+  font-size: 13px
   font-weight: 600
   line-height: 1
   white-space: nowrap
