@@ -638,8 +638,13 @@ onBeforeUnmount(() => {
     border-radius: 8px;
 }
 
+.sample-list :deep(.rp2-grid-table .ant-table),
 .sample-list :deep(.rp2-grid-table .ant-table-container) {
-    border-color: #c7cfdb !important;
+    border: 1px solid #6f8098 !important;
+}
+
+.sample-list :deep(.rp2-grid-table .ant-table-container) {
+    border-color: #6f8098 !important;
 }
 
 .sample-list :deep(.rp2-grid-table .ant-table-thead > tr > th) {
@@ -653,6 +658,11 @@ onBeforeUnmount(() => {
 .sample-list :deep(.rp2-grid-table .ant-table-tbody > tr > td) {
     border-bottom: 1px solid #d4dbe6 !important;
     border-right: 1px solid #d9e0ea !important;
+}
+
+.sample-list :deep(.rp2-grid-table .ant-table-thead > tr > th:first-child),
+.sample-list :deep(.rp2-grid-table .ant-table-tbody > tr > td:first-child) {
+    border-left: 1px solid #d9e0ea !important;
 }
 
 .sample-list :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),

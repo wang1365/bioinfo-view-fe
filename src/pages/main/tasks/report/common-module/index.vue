@@ -651,21 +651,41 @@ const showHtmlDialg = (record, column) => {
     min-width: 280px;
 }
 
+.common-module-root :deep(.rp2-grid-table .ant-table),
 .common-module-root :deep(.rp2-grid-table .ant-table-container) {
-    border-color: #c7cfdb !important;
+    border: 1px solid #6f8098 !important;
+}
+
+.common-module-root :deep(.rp2-grid-table .ant-table-container) {
+    border-color: #6f8098 !important;
 }
 
 .common-module-root :deep(.rp2-grid-table .ant-table-thead > tr > th) {
     border-bottom: 1px solid #c7cfdb !important;
     border-right: 1px solid #cfd7e3 !important;
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
     line-height: 1.2 !important;
 }
 
 .common-module-root :deep(.rp2-grid-table .ant-table-tbody > tr > td) {
     border-bottom: 1px solid #d4dbe6 !important;
     border-right: 1px solid #d9e0ea !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    line-height: 1.25 !important;
+}
+
+.common-module-root :deep(.rp2-grid-table .ant-table-tbody > tr.ant-table-measure-row > td) {
+    padding: 0 !important;
+    border: 0 !important;
+    height: 0 !important;
+    line-height: 0 !important;
+}
+
+.common-module-root :deep(.rp2-grid-table .ant-table-thead > tr > th:first-child),
+.common-module-root :deep(.rp2-grid-table .ant-table-tbody > tr > td:first-child) {
+    border-left: 1px solid #d9e0ea !important;
 }
 
 .common-module-root :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),

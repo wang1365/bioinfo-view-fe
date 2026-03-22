@@ -197,5 +197,7 @@ const submitCustomReport = async () => {
 
 .panel-content {
     height: 100%;
+    padding: 12px 14px 0;
+    box-sizing: border-box;
 }
 </style>

@@ -9,8 +9,14 @@
 
             <div class="field-grid grid-4">
                 <div class="field-item" v-for="item in basicInfoFields" :key="item.label">
-                    <div class="field-label">{{ item.label }}</div>
-                    <div class="field-value">{{ item.value }}</div>
+                    <q-input
+                        dense
+                        outlined
+                        readonly
+                        :label="item.label"
+                        :model-value="item.value"
+                        class="info-input"
+                    />
                 </div>
             </div>
 
@@ -18,8 +24,14 @@
             <q-separator size="2px" class="bg-primary q-mb-sm" />
             <div class="field-grid grid-4">
                 <div class="field-item" v-for="item in clinicalInfoFields" :key="item.label">
-                    <div class="field-label">{{ item.label }}</div>
-                    <div class="field-value">{{ item.value }}</div>
+                    <q-input
+                        dense
+                        outlined
+                        readonly
+                        :label="item.label"
+                        :model-value="item.value"
+                        class="info-input"
+                    />
                 </div>
             </div>
 
@@ -27,8 +39,14 @@
             <q-separator size="2px" class="bg-primary q-mb-sm" />
             <div class="field-grid grid-4">
                 <div class="field-item" v-for="item in otherInfoFields" :key="item.label">
-                    <div class="field-label">{{ item.label }}</div>
-                    <div class="field-value">{{ item.value }}</div>
+                    <q-input
+                        dense
+                        outlined
+                        readonly
+                        :label="item.label"
+                        :model-value="item.value"
+                        class="info-input"
+                    />
                 </div>
             </div>
         </q-card-section>
@@ -126,10 +144,10 @@ const norm = (value) => String(value ?? '').trim().toLowerCase()
 
 const boolText = (value) => {
     const v = norm(value)
-    if (['1', 'true', 'yes', 'y', '鏄?', '是'].includes(v) || value === true) {
+    if (['1', 'true', 'yes', 'y', '是'].includes(v) || value === true) {
         return t('Yes')
     }
-    if (['0', 'false', 'no', 'n', '鍚?', '否'].includes(v) || value === false) {
+    if (['0', 'false', 'no', 'n', '否'].includes(v) || value === false) {
         return t('No')
     }
     return '-'
@@ -137,10 +155,10 @@ const boolText = (value) => {
 
 const genderText = computed(() => {
     const v = norm(patient.value.gender)
-    if (['male', 'm', '男', '鐢?'].includes(v)) {
+    if (['male', 'm', '男'].includes(v)) {
         return t('Male')
     }
-    if (['female', 'f', '女', '濂?'].includes(v)) {
+    if (['female', 'f', '女'].includes(v)) {
         return t('Female')
     }
     return patient.value.gender || '-'
@@ -246,25 +264,17 @@ onMounted(() => {
 }
 
 .field-item {
-    border: 1px solid #d9e0ea;
-    border-radius: 6px;
-    background: #fafbfd;
-    padding: 6px 8px;
-    min-height: 50px;
+    min-height: 0;
 }
 
-.field-label {
-    color: #5f6b7a;
-    font-size: 11px;
-    line-height: 1.2;
-    margin-bottom: 3px;
+.info-input :deep(.q-field__control) {
+    min-height: 34px;
 }
 
-.field-value {
-    color: #1f2d3d;
+.info-input :deep(.q-field__native),
+.info-input :deep(.q-field__input) {
     font-size: 13px;
-    line-height: 1.35;
-    word-break: break-word;
+    line-height: 1.25;
 }
 
 @media (max-width: 1400px) {

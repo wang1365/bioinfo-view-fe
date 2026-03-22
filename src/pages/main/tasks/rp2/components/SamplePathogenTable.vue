@@ -1,5 +1,5 @@
 ﻿<template>
-    <div ref="containerRef" class="pathogen-table-container">
+    <div ref="containerRef" :class="['pathogen-table-container', { 'selectable-mode': selectable }]">
         <div v-if="errorText" ref="bannerRef">
             <q-banner dense class="bg-orange-1 text-orange-9 q-mb-sm">
                 {{ errorText }}
@@ -7,7 +7,7 @@
         </div>
         <div class="table-region">
             <a-table
-                class="rp2-grid-table"
+                :class="['rp2-grid-table', { 'rp2-grid-table-selectable': selectable }]"
                 :columns="columns"
                 :data-source="rows"
                 :loading="loading"
@@ -165,9 +165,7 @@ const tableScroll = computed(() => {
     if (!props.selectable) {
         return null
     }
-    return {
-        y: tableScrollY.value
-    }
+    return null
 })
 
 const filePath = computed(() => {
@@ -440,23 +438,43 @@ const buildColumns = (headers) => {
         })
     }
 
+    const hasGroupedHeader = genusChildren.length > 0 || speciesChildren.length > 0
+
     headers.forEach((header) => {
         if (!groupedSet.has(header)) {
             const leaf = leafMap.get(header)
             if (leaf) {
-                groupedColumns.push(leaf)
+                const leafColumn = { ...leaf }
+                if (hasGroupedHeader) {
+                    leafColumn.onHeaderCell = () => ({
+                        rowSpan: 2,
+                        style: {
+                            borderLeft: '1px solid #cfd7e3'
+                        }
+                    })
+                }
+                groupedColumns.push(leafColumn)
             }
         }
     })
 
     if (props.showVerification) {
-        groupedColumns.push({
+        const verificationColumn = {
             title: t('Verification'),
             dataIndex: '__verification',
             key: '__verification',
             align: 'center',
             width: 180
-        })
+        }
+        if (hasGroupedHeader) {
+            verificationColumn.onHeaderCell = () => ({
+                rowSpan: 2,
+                style: {
+                    borderLeft: '1px solid #cfd7e3'
+                }
+            })
+        }
+        groupedColumns.push(verificationColumn)
     }
 
     return groupedColumns
@@ -625,10 +643,19 @@ watch(
     min-height: 0;
 }
 
+.selectable-mode .table-region {
+    overflow: auto;
+}
+
 .table-region :deep(.ant-spin-nested-loading),
-.table-region :deep(.ant-spin-container),
-.table-region :deep(.ant-table) {
+.table-region :deep(.ant-spin-container) {
     height: 100%;
+}
+
+.selectable-mode .table-region :deep(.ant-table),
+.selectable-mode .table-region :deep(.ant-table-container),
+.selectable-mode .table-region :deep(.ant-table-content) {
+    overflow: visible !important;
 }
 
 .pathogen-table-container :deep(.rp2-reported-row > td) {
@@ -636,25 +663,84 @@ watch(
 }
 
 .pathogen-table-container :deep(.rp2-grid-table .ant-table-container) {
-    border-color: #c7cfdb !important;
+    border: 1px solid #6f8098 !important;
+    border-color: #6f8098 !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table) {
+    border: 1px solid #6f8098 !important;
 }
 
 .pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th) {
     border-bottom: 1px solid #c7cfdb !important;
     border-right: 1px solid #cfd7e3 !important;
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    height: 36px !important;
+    min-height: 36px !important;
     line-height: 1.2 !important;
+    vertical-align: middle !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th .ant-table-column-sorters) {
+    align-items: center !important;
+    min-height: 22px !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th .ant-table-column-title) {
+    line-height: 1.2 !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table-selectable .ant-table-thead > tr) {
+    height: 36px !important;
+}
+
+.selectable-mode :deep(.rp2-grid-table .ant-table-thead > tr:nth-child(1) > th) {
+    position: sticky;
+    top: 0;
+    z-index: 6;
+    background: #fff !important;
+}
+
+.selectable-mode :deep(.rp2-grid-table .ant-table-thead > tr:nth-child(2) > th) {
+    position: sticky;
+    top: 36px;
+    z-index: 6;
+    background: #fff !important;
 }
 
 .pathogen-table-container :deep(.rp2-grid-table .ant-table-tbody > tr > td) {
     border-bottom: 1px solid #d4dbe6 !important;
     border-right: 1px solid #d9e0ea !important;
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+    line-height: 1.25 !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th:first-child),
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-tbody > tr > td:first-child) {
+    border-left: 1px solid #d9e0ea !important;
 }
 
 .pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),
 .pathogen-table-container :deep(.rp2-grid-table .ant-table-tbody > tr > td:last-child) {
     border-right: 0 !important;
+}
+
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-measure-row),
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-measure-row > td),
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-measure-row > th),
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr.ant-table-measure-row),
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr.ant-table-measure-row > th),
+.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr.ant-table-measure-row > td) {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    line-height: 0 !important;
+    font-size: 0 !important;
+    background: transparent !important;
 }
 
 .verification-actions {
