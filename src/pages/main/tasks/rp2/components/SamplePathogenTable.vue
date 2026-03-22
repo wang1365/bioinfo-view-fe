@@ -409,6 +409,19 @@ const buildColumns = (headers) => {
         return column
     })
 
+    if (props.selectable) {
+        if (props.showVerification) {
+            leafColumns.push({
+                title: t('Verification'),
+                dataIndex: '__verification',
+                key: '__verification',
+                align: 'center',
+                width: 180
+            })
+        }
+        return leafColumns
+    }
+
     if (!['bacteria', 'fungus', 'virus'].includes(props.category)) {
         return leafColumns
     }
