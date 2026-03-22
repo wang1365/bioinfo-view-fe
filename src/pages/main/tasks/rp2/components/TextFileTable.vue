@@ -91,6 +91,10 @@ const props = defineProps({
     fixedColumnWidths: {
         type: Array,
         default: () => []
+    },
+    sortable: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -271,7 +275,6 @@ const columns = computed(() =>
             dataIndex: header,
             key: `${header}-${index}`,
             ellipsis: true,
-            sorter: (a, b) => compareCellValue(a?.[header], b?.[header]),
             customHeaderCell: () => {
                 const classNames = []
                 if (matrixColumn && hoveredColumnKey.value === header) {
@@ -341,6 +344,10 @@ const columns = computed(() =>
         const width = getColumnWidth(index)
         if (width) {
             column.width = width
+        }
+
+        if (props.sortable) {
+            column.sorter = (a, b) => compareCellValue(a?.[header], b?.[header])
         }
 
         return column

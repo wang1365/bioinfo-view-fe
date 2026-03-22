@@ -206,6 +206,11 @@ const isLongTextColumn = (header) => {
     ].includes(normalized)
 }
 
+const isSortableColumn = (header) => {
+    const normalized = normalizeKey(header)
+    return !['耐药基因', 'resistancegene', 'amr'].includes(normalized)
+}
+
 const columns = computed(() => {
     const hiddenHeaders = new Set(
         [
@@ -223,8 +228,11 @@ const columns = computed(() => {
         const col = {
             title: header,
             dataIndex: header,
-            key: `${header}-${index}`,
-            sorter: (a, b) => String(a?.[header] || '').localeCompare(String(b?.[header] || ''))
+            key: `${header}-${index}`
+        }
+
+        if (isSortableColumn(header)) {
+            col.sorter = (a, b) => String(a?.[header] || '').localeCompare(String(b?.[header] || ''))
         }
 
         if (header === fungusColumnKey.value) {
