@@ -257,48 +257,46 @@
                     </template>
 
                     <template v-if="column.dataIndex === 'operate'">
-                        <div class="row q-gutter-xs">
+                        <div class="task-operate-row">
                             <q-btn
                                 color="primary"
                                 :label="$t('Detail')"
-                                icon="visibility"
                                 :to="`/main/tasks/${record.id}`"
                                 size="md"
                                 dense
                                 flat
-                                padding="0"
+                                padding="3px 8px"
                             />
-                            <q-separator vertical />
                             <q-btn
                                 :disable="record.status !== 'FINISHED'"
-                                :color="record.status !== 'FINISHED' ? 'grey' : 'primary'"
+                                :color="record.status !== 'FINISHED' ? 'grey' : 'green-9'"
                                 :label="$t('Result')"
-                                icon="query_stats"
                                 :to="getResultRoute(record)"
                                 size="md"
                                 dense
                                 flat
-                                padding="0"
+                                padding="3px 8px"
                             />
-                            <q-separator vertical />
-                            <div v-permission="'createReport'">
-                                <q-btn
-                                    :disable="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report"
-                                    :color="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report ? 'grey': 'primary'"
-                                    :label="$t('TaskPageBtnCustomReport')"
-                                    icon="query_stats"
-                                    :to="`/main/tasks/${record.id}/define-report`"
-                                    size="md"
-                                    dense
-                                    flat
-                                    padding="0"
-                                />
-                                <q-separator vertical />
-                            </div>
 
-                            <q-btn label="" color="primary" size="md" padding="0" dense outline flat icon="more_horiz">
+                            <q-btn label="" color="primary" size="md" padding="3px 8px" dense outline flat icon="more_horiz">
                                 <q-menu>
                                     <q-list style="min-width: 100px" dense>
+                                        <q-item v-permission="'createReport'" clickable>
+                                            <q-item-section>
+                                                <q-btn
+                                                    :disable="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report"
+                                                    :color="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report ? 'grey': 'primary'"
+                                                    :label="$t('TaskPageBtnCustomReport')"
+                                                    :to="`/main/tasks/${record.id}/define-report`"
+                                                    size="md"
+                                                    dense
+                                                    align="left"
+                                                    flat
+                                                    padding="xs sm"
+                                                />
+                                            </q-item-section>
+                                        </q-item>
+                                        <q-separator v-permission="'createReport'" />
                                         <q-item clickable>
                                             <q-item-section>
                                                 <q-btn
@@ -450,7 +448,7 @@ const columns = computed(() => [
     { dataIndex: 'status', title: t('Status'), align: 'center', width: 100 },
     { dataIndex: 'task_priority', title: t('TaskPriority'), align: 'left', width: 100, },
     { dataIndex: 'creator', title: t('CreatedBy'), align: 'left', width: 160, },
-    { dataIndex: 'operate', title: t('Operate'), align: 'center', fixed: 'right', width: langCode.value === 'en' ? 320 : 270}
+    { dataIndex: 'operate', title: t('Operate'), align: 'center', fixed: 'right', width: langCode.value === 'en' ? 190 : 180}
 ]);
 
 const tableScroll = computed(() => ({
@@ -892,4 +890,24 @@ const summary = async () => {
 
   .ant-table-tbody > tr > td
     border-bottom: 1px solid #edf1f6 !important
+
+  .ant-table-tbody > tr > td:last-child
+    text-align: center
+
+    .task-operate-row
+      display: flex
+      justify-content: center
+      align-items: center
+      flex-wrap: nowrap
+      white-space: nowrap
+
+      .q-btn
+        white-space: nowrap
+        min-width: auto
+        margin-left: 2px
+        margin-right: 2px
+
+      .q-btn__content
+        flex-wrap: nowrap
+        white-space: nowrap
 </style>
