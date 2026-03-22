@@ -1,8 +1,8 @@
 <template>
     <div
-        class="q-ml-md bg-grey-2 rounded-borders q-px-sm q-py-xs"
+        class="sample-info-display q-ml-md bg-grey-2 rounded-borders q-px-sm q-py-xs"
         v-if="sampleInfoList.length > 0"
-        style="max-width: 80%; overflow-x: auto"
+        style="overflow-x: auto"
     >
         <!-- Single Sample: Full Info -->
         <div
@@ -250,3 +250,11 @@ const showData = (id) => {
     showDataInfo.value = true
 }
 </script>
+
+<style scoped>
+.sample-info-display {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+}
+</style>
