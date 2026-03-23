@@ -735,7 +735,6 @@ watch(
     border-left: 1px solid #d9e0ea !important;
 }
 
-.pathogen-table-container :deep(.rp2-grid-table .ant-table-thead > tr > th:last-child),
 .pathogen-table-container :deep(.rp2-grid-table .ant-table-tbody > tr > td:last-child) {
     border-right: 0 !important;
 }
