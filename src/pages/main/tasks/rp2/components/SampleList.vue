@@ -356,12 +356,12 @@ const loadData = async () => {
         tableHeaders.value = headers
 
         sampleColumnKey.value =
-            findHeaderByAliases(headers, ['数据识别号', 'Data Identifier', 'Data ID']) ||
+            findHeaderByAliases(headers, ['数据识别号', 'Data Identifier', 'Data ID', 'Data_ID']) ||
             findHeaderByAliases(headers, ['样本', 'Sample']) ||
             headers[0] || ''
 
-        patientIdentifierKey.value = findHeaderByAliases(headers, ['患者识别号', 'Patient Identifier'])
-        sampleIdentifierKey.value = findHeaderByAliases(headers, ['样本识别号', 'Sample Identifier'])
+        patientIdentifierKey.value = findHeaderByAliases(headers, ['患者识别号', 'Patient Identifier', 'Patient_ID'])
+        sampleIdentifierKey.value = findHeaderByAliases(headers, ['样本识别号', 'Sample Identifier', 'Sample_ID'])
         patientIdKey.value = findHeaderByAliases(headers, ['患者ID', 'Patient ID'])
         patientNameKey.value = findHeaderByAliases(headers, ['姓名', 'Name'])
         ncColumnKey.value = findHeaderByAliases(headers, ['是否NC', 'IsNC', 'NC'])
