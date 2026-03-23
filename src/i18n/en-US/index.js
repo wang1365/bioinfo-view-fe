@@ -430,6 +430,11 @@ export default {
 
     // 看板
     DashboardTitle: 'DashBoard',
+    DashboardOverviewTitle: 'Platform Monitoring Overview',
+    DashboardMemoryUsageTitle: 'Memory Usage',
+    DashboardDiskUsageTitle: 'Disk Usage',
+    DashboardTotalLabel: 'Total',
+    DashboardTaskPanelSubtitle: 'Task status and platform concurrency capacity',
     DashboardDiskUseWeek: 'Disk Usage(This Week)',
     DashboardTaskWeek: 'Tasks(This Week)(Complete/Total)',
     DashboardNewTask: 'New Samples(This Week)/ Total',

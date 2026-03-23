@@ -952,4 +952,9 @@ export default {
     SampleNewFormNCSample: 'NC样本',
     SampleNewFormTagLabel: 'Tag标签',
     NotSpecified: '未填写',
+    DashboardOverviewTitle: '平台监控概览',
+    DashboardMemoryUsageTitle: '内存使用情况',
+    DashboardDiskUsageTitle: '磁盘使用情况',
+    DashboardTotalLabel: '总量',
+    DashboardTaskPanelSubtitle: '任务运行状态与平台并发能力',
 }

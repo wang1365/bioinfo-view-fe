@@ -1,100 +1,151 @@
 <template>
-    <q-table
-        class="my-sticky-header-column-table"
-        :title="$t('DashboardUsers')"
-        :rows="rows"
-        :columns="columns"
-        row-key="id"
-        ref="tableRef"
-        v-model:pagination="pagination"
-        @request="onRequest"
-    />
+    <div class="dashboard-user-table">
+        <div class="dashboard-user-table__header">{{ $t('DashboardUsers') }}</div>
+        <a-table
+            class="dashboard-user-table__inner"
+            :columns="columns"
+            :data-source="rows"
+            :pagination="false"
+            :loading="loading"
+            row-key="id"
+            size="small"
+            :scroll="{ y: 252 }"
+        />
+        <div class="dashboard-user-table__footer">
+            <a-pagination
+                size="small"
+                :current="pagination.page"
+                :page-size="pagination.rowsPerPage"
+                :total="pagination.rowsNumber"
+                :show-size-changer="false"
+                @change="onPageChange"
+            />
+        </div>
+    </div>
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useApi } from 'src/api/apiBase'
-import { onMounted, ref ,computed} from 'vue'
-import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+
+const { t } = useI18n()
 const { apiGet } = useApi()
 
-const tableRef = ref({})
+const loading = ref(false)
 const pagination = ref({
     page: 1,
     rowsPerPage: 5,
     rowsNumber: 0,
 })
-onMounted(() => {
-    tableRef.value.requestServerInteraction()
-})
-const onRequest = (props) => {
-    const { page, rowsPerPage } = props.pagination
-    console.log(page, rowsPerPage)
-    apiGet(`/account/?page=${page}&size=${rowsPerPage}`, (res) => {
+const rows = ref([])
+
+const columns = computed(() => [
+    {
+        title: t('User'),
+        dataIndex: 'nickname',
+        key: 'nickname',
+        width: '34%',
+        ellipsis: true,
+    },
+    {
+        title: t('DiskUsage'),
+        dataIndex: 'used_disk',
+        key: 'used_disk',
+        width: '33%',
+        customRender: ({ text }) => `${((text || 0) / 1024).toFixed(2)}`,
+    },
+    {
+        title: t('DashboardUsersColumnTask'),
+        dataIndex: 'running_task',
+        key: 'running_task',
+        width: '33%',
+    },
+])
+
+const fetchRows = (page = pagination.value.page) => {
+    loading.value = true
+    apiGet(`/account/?page=${page}&size=${pagination.value.rowsPerPage}`, (res) => {
         pagination.value.rowsNumber = res.data.total_count
         pagination.value.page = page
-        pagination.value.rowsPerPage = rowsPerPage
         rows.value = res.data.item_list
+        loading.value = false
     })
-
 }
-const columns = computed(()=>[
-    {
-        name: 'nickname',
-        required: true,
-        label: t('User'),
-        align: 'left',
-        field: (row) => row.nickname,
-        format: (val) => `${val}`,
-    },
-    { name: 'used_disk', label: t('DiskUsage'), field: (row) => (row.used_disk/1024).toFixed(2) },
-    { name: 'sodium', label: t('DashboardUsersColumnTask'), field: 'running_task' },
-])
-const rows = ref([])
+
+const onPageChange = (page) => {
+    fetchRows(page)
+}
+
+onMounted(() => {
+    fetchRows(1)
+})
 </script>
 
-<style lang="scss">
-.my-sticky-header-column-table {
-    /* height or max-height is important */
-    height: 300px;
+<style lang="scss" scoped>
+.dashboard-user-table {
+    display: flex;
+    flex-direction: column;
+    height: 340px;
+    border-radius: 24px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(210, 219, 233, 0.7);
+    box-shadow: 0 14px 40px rgba(17, 38, 68, 0.08);
+}
 
-    /* specifying max-width so the example can
-    highlight the sticky column on any browser window */
-    width: 100%;
-    td:first-child {
-        background-color: silver !important;
-        z-index: 10;
-    }
-    tr th {
-        position: sticky;
-        /* higher than z-index for td below */
-        z-index: 2;
-        /* bg color is important; just specify one */
-        background: #fff;
-    }
-    /* this will be the loading indicator */
-    thead tr:last-child th {
-        /* height of all previous header rows */
-        top: 48px;
-        /* highest z-index */
-        z-index: 3;
-    }
-    thead tr:first-child th {
-        top: 0;
-        z-index: 1;
-    }
-    tr:first-child th:first-child {
-        /* highest z-index */
-        z-index: 3;
-    }
-    td:first-child {
-        z-index: 1;
-    }
+.dashboard-user-table__header {
+    padding: 16px 18px 10px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #172033;
+}
 
-    td:first-child,
-    th:first-child {
-        position: sticky;
-        left: 0;
-    }
+.dashboard-user-table__inner {
+    flex: 1 1 auto;
+    padding: 0 12px;
+}
+
+.dashboard-user-table__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 14px 12px;
+    border-top: 1px solid #edf2f7;
+    background: rgba(250, 252, 255, 0.92);
+}
+
+.dashboard-user-table__inner :deep(.ant-table) {
+    font-size: 12px;
+}
+
+.dashboard-user-table__inner :deep(.ant-table-container) {
+    border-inline-start: none !important;
+}
+
+.dashboard-user-table__inner :deep(.ant-table-thead > tr > th) {
+    padding: 10px 12px;
+    background: #f7f9fd;
+    color: #5f6e86;
+    font-weight: 700;
+    border-bottom: 1px solid #e8eef6;
+}
+
+.dashboard-user-table__inner :deep(.ant-table-tbody > tr > td) {
+    padding: 9px 12px;
+    color: #243247;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.dashboard-user-table__inner :deep(.ant-table-tbody > tr > td:first-child) {
+    font-weight: 600;
+    background: #f8fbff;
+}
+
+.dashboard-user-table__inner :deep(.ant-table-tbody > tr:hover > td) {
+    background: #eef4ff !important;
+}
+
+.dashboard-user-table__inner :deep(.ant-table-header) {
+    border-radius: 14px 14px 0 0;
 }
 </style>

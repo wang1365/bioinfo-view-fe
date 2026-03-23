@@ -2,22 +2,27 @@
     <q-layout view="hHh Lpr lff">
         <!--        <q-header reveal elevated class="bg-primary text-white header_normal">-->
         <q-header reveal elevated class="header_normal">
-            <q-toolbar>
-                <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+            <q-toolbar class="main-toolbar">
+                <q-btn dense flat round icon="menu" class="toolbar-icon-btn" @click="toggleLeftDrawer" />
 
-                <q-toolbar-title shrink class="text-bold text-italic cursor-pointer" style="padding: 0 5px">
-                    <q-avatar @click="router.push('/')">
-                        <img :src="store.ui.image" style="width: 30px; height: 25px" />
+                <q-toolbar-title shrink class="toolbar-brand cursor-pointer" @click="router.push('/')">
+                    <q-avatar class="toolbar-brand__avatar">
+                        <img :src="store.ui.image" alt="logo" />
                     </q-avatar>
-                    {{ store.ui.title }}
+                    <div class="toolbar-brand__content">
+                        <div class="toolbar-brand__title">{{ store.ui.title }}</div>
+                    </div>
                 </q-toolbar-title>
                 <q-space />
-                <div class="q-gutter-sm row items-center no-wrap">
+                <div class="toolbar-actions row items-center no-wrap">
                     <SelectLanguage dark v-if="store.langConfig.langSwitch" />
                     <Fullscreen />
-                    <q-btn dense flat>
-                        <q-icon name="person_pin" />
-                        &nbsp;&nbsp;&nbsp;&nbsp;{{store.currentUser?.nickname}}
+                    <q-btn dense flat no-caps class="user-entry">
+                        <q-icon name="person_pin" size="20px" />
+                        <div class="user-entry__meta gt-xs">
+                            <div class="user-entry__name">{{ store.currentUser?.nickname }}</div>
+                            <div class="user-entry__role">{{ getRole() }}</div>
+                        </div>
                         <q-menu class="row items-center justify-around q-pa-md">
                             <div class="column">
                                 <div class="text-h6">{{$t('UserDetail')}}</div>
@@ -200,12 +205,10 @@ onBeforeMount(() => {
 
 
 .header_normal {
-    height: 3.5rem;
-    background: linear-gradient(
-        145deg,
-        rgb(21, 57, 102) 70%,
-        rgb(32, 106, 80) 15%
-    );
+    backdrop-filter: blur(14px);
+    background:
+        linear-gradient(120deg, rgba(21, 57, 102, 0.96) 0%, rgba(24, 74, 126, 0.94) 58%, rgba(31, 123, 92, 0.92) 100%);
+    box-shadow: 0 12px 30px rgba(10, 25, 41, 0.22);
 }
 
 .header_dark {
@@ -222,5 +225,86 @@ onBeforeMount(() => {
 
 .left-navigation :deep(.q-scrollarea__content) {
     min-height: 100%;
+}
+
+.main-toolbar {
+    min-height: 56px;
+    padding: 0 12px 0 10px;
+    gap: 8px;
+}
+
+.toolbar-icon-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.toolbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 0 6px;
+}
+
+.toolbar-brand__avatar {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 6px 14px rgba(8, 20, 34, 0.2);
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.toolbar-brand__avatar img {
+    width: 24px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.toolbar-brand__content {
+    min-width: 0;
+}
+
+.toolbar-brand__title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.toolbar-actions {
+    gap: 6px;
+}
+
+.user-entry {
+    gap: 10px;
+    padding: 4px 8px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.user-entry__meta {
+    text-align: left;
+    line-height: 1.15;
+}
+
+.user-entry__name {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.user-entry__role {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+@media (max-width: 900px) {
+    .main-toolbar {
+        min-height: 52px;
+    }
+
 }
 </style>

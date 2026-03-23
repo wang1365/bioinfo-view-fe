@@ -1,5 +1,5 @@
 <template>
-    <q-card>
+    <q-card class="dashboard-chart-card" flat>
         <div ref="linechart" style="height: 300px"></div>
         <q-resize-observer @resize="onResize" />
     </q-card>
@@ -97,3 +97,12 @@ watch(langCode, lc => {
     init()
 })
 </script>
+
+<style lang="scss" scoped>
+.dashboard-chart-card {
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(210, 219, 233, 0.7);
+    box-shadow: 0 14px 40px rgba(17, 38, 68, 0.08);
+}
+</style>
