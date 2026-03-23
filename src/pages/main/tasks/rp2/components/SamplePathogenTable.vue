@@ -192,13 +192,13 @@ const shouldRemoveColumn = (header) => {
     return (
         header.includes('去重后序列数') ||
         normalized.includes('uniq') ||
-        ['是否报出', 'isreported', 'reported', 'report'].includes(normalizedHeader) ||
+        ['是否报出', '检测结果', 'isreported', 'reported', 'report', 'detectionresult'].includes(normalizedHeader) ||
         (!props.showReadPath && ['read路径', 'readpath', 'read path', 'file', 'readsfile'].includes(normalizedHeader))
     )
 }
 
 const findReportedHeader = (headers) => {
-    const aliases = ['是否报出', 'isreported', 'reported', 'report']
+    const aliases = ['是否报出', '检测结果', 'isreported', 'reported', 'report', 'detectionresult']
     for (const header of headers) {
         const normalized = normalizeHeader(header)
         if (aliases.some((alias) => normalized === normalizeHeader(alias))) {
@@ -289,6 +289,7 @@ const displayHeader = (header) => {
         '中文属名': '属名',
         '中文病毒名': '属名',
         '占比': '相对丰度',
+        'abundance(%)': 'Abundance',
         '属count': '序列数',
         'count': '序列数',
         '中文种名': '种名',
