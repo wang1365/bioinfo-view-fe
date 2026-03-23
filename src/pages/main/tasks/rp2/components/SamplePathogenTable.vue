@@ -82,6 +82,7 @@ import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { readTaskFile } from 'src/api/task'
+import { getRelatedTasks } from 'src/api/report'
 import { getRp2LangSuffix, parseTabText } from './rp2File'
 
 const props = defineProps({
@@ -168,18 +169,22 @@ const tableScroll = computed(() => {
     return null
 })
 
-const filePath = computed(() => {
+const buildFilePath = (sampleName) => {
     const suffix = getRp2LangSuffix(langCode.value)
     const dir = categoryDirMap[props.category]
     if (props.category === 'virus') {
-        return `${props.sampleName}/final_result/${dir}/${dir}_${suffix}_report.RPM.txt`
+        return `${sampleName}/final_result/${dir}/${dir}_${suffix}_report.RPM.txt`
     }
-    return `${props.sampleName}/final_result/${dir}/${dir}_${suffix}_pintai.RPM.txt`
-})
+    return `${sampleName}/final_result/${dir}/${dir}_${suffix}_pintai.RPM.txt`
+}
+
+const filePath = computed(() => buildFilePath(props.sampleName))
 
 const compareColumns = computed(() => [
     { title: t('Sample'), dataIndex: 'sample', key: 'sample', width: 180 },
-    { title: t('Detail'), dataIndex: 'pathogen', key: 'pathogen' }
+    { title: props.category === 'virus' ? t('Virus') : t('Zhong'), dataIndex: 'speciesName', key: 'speciesName' },
+    { title: t('TotalProportion'), dataIndex: 'totalProportion', key: 'totalProportion', width: 140 },
+    { title: t('ReadsCount'), dataIndex: 'readsCount', key: 'readsCount', width: 120 }
 ])
 
 const shouldRemoveColumn = (header) => {
@@ -226,6 +231,18 @@ const getPathogenKeyword = (row) => {
     return String((speciesKey && row?.[speciesKey]) || (genusKey && row?.[genusKey]) || '').trim()
 }
 
+const getCompareSpeciesName = (row) => {
+    const speciesKey = findHeaderByAliasList(Object.keys(row || {}), [
+        '中文种名',
+        '种名',
+        'speciesname',
+        'species',
+        'virusspeciesname',
+        'virusname'
+    ])
+    return String((speciesKey && row?.[speciesKey]) || '').trim()
+}
+
 const toIgvPath = (rawPath) => {
     const path = String(rawPath || '').trim()
     if (!path) {
@@ -243,44 +260,106 @@ const getFileName = (rawPath) => {
     return normalized.substring(normalized.lastIndexOf('/') + 1)
 }
 
-const buildCompareResultFromSummary = (summaryRows, summaryHeaders) => {
-    const sampleKey =
-        findHeaderByAliasList(summaryHeaders, ['数据识别号', 'Data Identifier', 'Data ID']) ||
-        findHeaderByAliasList(summaryHeaders, ['样本', 'Sample']) ||
-        summaryHeaders[0]
-    const targetColumnMap = {
-        bacteria: findHeaderByAliasList(summaryHeaders, ['细菌', 'Bacteria']),
-        fungus: findHeaderByAliasList(summaryHeaders, ['真菌', 'Fungus']),
-        virus: findHeaderByAliasList(summaryHeaders, ['病毒', 'Virus'])
+const extractCompareMatchFromFile = (headers, row, sampleLabel) => {
+    const speciesKey = findHeaderByAliasList(headers, ['中文种名', '种名', 'speciesname', 'species', 'virusspeciesname', 'virusname'])
+    const totalProportionKey = findHeaderByAliasList(headers, [
+        '总占比',
+        'totalproportion',
+        'abundance(%)',
+        'abundance',
+        'relativeabundance'
+    ])
+    const readsCountKey = findHeaderByAliasList(headers, [
+        '种count',
+        '种_count',
+        'speciescount',
+        'readscount',
+        'count'
+    ])
+
+    return {
+        sample: sampleLabel || '-',
+        speciesName: speciesKey ? row?.[speciesKey] || '-' : '-',
+        totalProportion: totalProportionKey ? row?.[totalProportionKey] || '-' : '-',
+        readsCount: readsCountKey ? row?.[readsCountKey] || '-' : '-'
     }
-    const targetColumn = targetColumnMap[props.category]
-    if (!targetColumn) {
-        rows.value.forEach((row) => {
-            row.__compareResult = []
-            row.__compareCount = 0
-        })
+}
+
+const buildCompareResultFromRelatedTasks = async () => {
+    rows.value.forEach((row) => {
+        row.__compareResult = []
+        row.__compareCount = 0
+    })
+
+    const targetSpeciesMap = new Map()
+    rows.value.forEach((row) => {
+        const speciesName = getCompareSpeciesName(row)
+        if (speciesName) {
+            targetSpeciesMap.set(row.__rowKey, speciesName)
+        }
+    })
+
+    if (!targetSpeciesMap.size) {
         return
     }
 
-    rows.value.forEach((row) => {
-        const keyword = getPathogenKeyword(row)
-        if (!keyword) {
-            row.__compareResult = []
-            row.__compareCount = 0
-            return
-        }
+    const relatedTasks = await getRelatedTasks(props.taskId)
+    const tasks = Array.isArray(relatedTasks) ? relatedTasks : []
 
-        const keywordLower = keyword.toLowerCase()
-        const matches = summaryRows
-            .filter((item) => String(item?.[targetColumn] || '').toLowerCase().includes(keywordLower))
-            .map((item) => ({
-                sample: item?.[sampleKey] || '-',
-                pathogen: item?.[targetColumn] || '-'
-            }))
+    await Promise.all(
+        tasks.map(async (task) => {
+            const taskId = task?.id
+            if (!taskId) {
+                return
+            }
 
-        row.__compareResult = matches
-        row.__compareCount = matches.length
-    })
+            try {
+                const sampleLabel = task?.samples?.[0]?.identifier || ''
+                if (!sampleLabel) {
+                    return
+                }
+
+                const response = await readTaskFile(taskId, buildFilePath(sampleLabel), true, true)
+                const text = typeof response === 'string' ? response : ''
+                if (!text) {
+                    return
+                }
+
+                const { headers, rows: parsedRows } = parseTabText(text, { hasHeader: true })
+                if (!headers.length || !parsedRows.length) {
+                    return
+                }
+
+                const speciesKey = findHeaderByAliasList(headers, [
+                    '中文种名',
+                    '种名',
+                    'speciesname',
+                    'species',
+                    'virusspeciesname',
+                    'virusname'
+                ])
+                if (!speciesKey) {
+                    return
+                }
+                rows.value.forEach((row) => {
+                    const targetSpecies = targetSpeciesMap.get(row.__rowKey)
+                    if (!targetSpecies) {
+                        return
+                    }
+                    const match = parsedRows.find(
+                        (item) => String(item?.[speciesKey] || '').trim() === targetSpecies
+                    )
+                    if (!match) {
+                        return
+                    }
+                    row.__compareResult.push(extractCompareMatchFromFile(headers, match, sampleLabel))
+                    row.__compareCount = row.__compareResult.length
+                })
+            } catch (error) {
+                // ignore single related task failures
+            }
+        })
+    )
 }
 
 const displayHeader = (header) => {
@@ -569,11 +648,7 @@ const loadData = async () => {
         columns.value = buildColumns(keptHeaders)
 
         if (props.showVerification) {
-            const suffix = getRp2LangSuffix(langCode.value)
-            const summaryPath = `menu/merged_results.${suffix}.add.txt`
-            const summaryText = await readTaskFile(props.taskId, summaryPath, true, true)
-            const parsedSummary = parseTabText(typeof summaryText === 'string' ? summaryText : '', { hasHeader: true })
-            buildCompareResultFromSummary(parsedSummary.rows || [], parsedSummary.headers || [])
+            await buildCompareResultFromRelatedTasks()
         }
     } catch (error) {
         rows.value = []
