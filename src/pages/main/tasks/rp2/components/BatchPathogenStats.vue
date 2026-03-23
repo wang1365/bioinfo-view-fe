@@ -104,6 +104,7 @@
                     :title="t('Rp2NcOverlapTab')"
                     cn-file="menu/analysis_NC_overlap_stats.CN.add.txt"
                     en-file="menu/analysis_NC_overlap_stats.EN.add.txt"
+                    :column-widths="[120, 120, 120, 120, 120, 120, 80, 80, 80, 80, 360]"
                 />
             </q-tab-panel>
 

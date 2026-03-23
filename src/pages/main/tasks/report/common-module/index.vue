@@ -32,7 +32,7 @@
                     size="small"
                     outline
                     color="orange"
-                    class="q-mr-md"
+                    class="q-mr-md intro-help-button"
                     @click="dlgVisible = !dlgVisible"
                     >{{$t('Intro')}}</q-btn
                 >
@@ -644,6 +644,16 @@ const showHtmlDialg = (record, column) => {
     align-items: center;
     margin-right: 8px;
     white-space: nowrap;
+}
+
+.intro-help-button {
+    min-width: 82px;
+}
+
+.intro-help-button :deep(.q-btn__content) {
+    justify-content: center;
+    gap: 4px;
+    padding: 0 4px;
 }
 
 .search-input {

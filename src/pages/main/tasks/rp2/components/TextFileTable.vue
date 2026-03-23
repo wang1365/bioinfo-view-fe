@@ -64,6 +64,10 @@ const props = defineProps({
         type: Array,
         default: () => []
     },
+    columnWidthAliases: {
+        type: Array,
+        default: () => []
+    },
     hiddenHeaderAliases: {
         type: Array,
         default: () => []
@@ -112,6 +116,14 @@ const hoveredColumnKey = ref('')
 const hasColumnWidths = computed(() => Array.isArray(props.columnWidths) && props.columnWidths.length > 0)
 const hasFixedColumns = computed(() => Number(props.fixedLeftColumnCount || 0) > 0)
 const hiddenHeaderSet = computed(() => new Set((props.hiddenHeaderAliases || []).map((item) => String(item || '').trim().toLowerCase())))
+const normalizedColumnWidthAliases = computed(() =>
+    (props.columnWidthAliases || []).map((item) => ({
+        width: Number(item?.width),
+        aliases: Array.isArray(item?.aliases)
+            ? item.aliases.map((alias) => String(alias || '').trim().toLowerCase()).filter(Boolean)
+            : []
+    }))
+)
 
 const normalizeSortValue = (value) => {
     const text = String(value ?? '').trim()
@@ -220,6 +232,13 @@ const getFixedColumnWidth = (index) => {
 }
 
 const getColumnWidth = (index) => {
+    const header = String(baseHeaders.value[index] || '').trim().toLowerCase()
+    const matchedWidthRule = normalizedColumnWidthAliases.value.find(
+        (item) => Number.isFinite(item.width) && item.width > 0 && item.aliases.includes(header)
+    )
+    if (matchedWidthRule) {
+        return matchedWidthRule.width
+    }
     if (hasColumnWidths.value && props.columnWidths[index]) {
         return props.columnWidths[index]
     }

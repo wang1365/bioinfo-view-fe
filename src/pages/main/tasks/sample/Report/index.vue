@@ -34,7 +34,7 @@
         </q-tabs>
 
         <div class="sample-panels-wrap">
-            <div class="sample-panel-intro">
+            <div v-if="showOuterIntro" class="sample-panel-intro">
                 <IntroHelpButton :title="introTitle" :disable-float="true" />
             </div>
             <q-tab-panels v-model="tab" animated>
@@ -51,6 +51,7 @@
                     v-for="(moduleItem, index) in customModules"
                     :key="`sample-custom-panel-${index}`"
                     :name="customTabName(index)"
+                    class="sample-custom-panel"
                 >
                     <CommonModuleVue
                         :view-config="moduleItem"
@@ -92,6 +93,7 @@ const taskDetail = ref({ id: taskId.value })
 const customModules = ref([])
 const taskForCommonModule = computed(() => ({ id: taskDetail.value?.id || taskId.value }))
 const customTabName = (index) => `sampleCustomTab${index}`
+const showOuterIntro = computed(() => !tab.value.startsWith('sampleCustomTab'))
 const introTitle = computed(() => {
     if (tab.value.startsWith('sampleCustomTab')) {
         const index = Number(tab.value.replace('sampleCustomTab', ''))
@@ -217,7 +219,7 @@ watch(
 
 .sample-panel-intro {
     position: absolute;
-    top: 6px;
+    top: 8px;
     right: 12px;
     z-index: 5;
 }
@@ -228,7 +230,11 @@ watch(
 }
 
 .sample-panels-wrap :deep(.q-tab-panel) {
-    padding-top: 36px;
+    padding-top: 52px;
+}
+
+.sample-panels-wrap :deep(.sample-custom-panel) {
+    padding-top: 12px;
 }
 
 .sample-panels-wrap :deep(.ant-table-wrapper) {
