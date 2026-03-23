@@ -170,10 +170,10 @@ onBeforeMount(() => {
     min-height: 100%;
     display: flex;
     flex-direction: column;
+    overflow: auto;
 }
 
 .main-page-host :deep(.q-page) {
-    height: 100%;
     min-height: 100%;
 }
 
