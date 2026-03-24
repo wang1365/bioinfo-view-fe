@@ -61,25 +61,42 @@
 
                 <template v-if="column.dataIndex === 'operation'">
                     <div class="operation-buttons">
-                        <a class="operation-link" @click.prevent="viewResult(record)">{{ t('Rp2ViewResult') }}</a>
+                        <q-btn
+                            flat
+                            dense
+                            no-caps
+                            class="operation-btn"
+                            :label="t('Rp2ViewResult')"
+                            @click="viewResult(record)"
+                        />
                         <q-btn-dropdown
                             flat
                             dense
-                            color="secondary"
+                            no-caps
                             class="report-dropdown"
-                            style="font-size: 12px;"
+                            content-class="report-menu-panel"
                             :label="t('Report')"
                             dropdown-icon="arrow_drop_down"
                             auto-close
                         >
-                            <q-list dense>
-                                <q-item clickable v-close-popup @click="openCustomReportDialog(record)">
-                                    <q-item-section>{{ t('Rp2ConfigReport') }}</q-item-section>
+                            <q-list dense class="report-menu-list">
+                                <q-item clickable dense v-close-popup @click="openCustomReportDialog(record)">
+                                    <q-item-section avatar class="report-menu-icon">
+                                        <q-icon name="tune" />
+                                    </q-item-section>
+                                    <q-item-section>{{ configCustomReportText }}</q-item-section>
                                 </q-item>
-                                <q-item clickable v-close-popup @click="downloadReport(record, 'default')">
+                                <q-separator spaced inset />
+                                <q-item clickable dense v-close-popup @click="downloadReport(record, 'default')">
+                                    <q-item-section avatar class="report-menu-icon">
+                                        <q-icon name="download" />
+                                    </q-item-section>
                                     <q-item-section>{{ t('Rp2DownloadDefaultReport') }}</q-item-section>
                                 </q-item>
-                                <q-item clickable v-close-popup :disable="!record.hasCustomReport" @click="downloadReport(record, 'custom')">
+                                <q-item clickable dense v-close-popup :disable="!record.hasCustomReport" @click="downloadReport(record, 'custom')">
+                                    <q-item-section avatar class="report-menu-icon">
+                                        <q-icon name="description" />
+                                    </q-item-section>
                                     <q-item-section>{{ t('Rp2DownloadCustomReport') }}</q-item-section>
                                 </q-item>
                             </q-list>
@@ -88,10 +105,6 @@
                 </template>
             </template>
         </a-table>
-
-        <div class="q-mt-md chart-wrapper">
-            <div ref="summaryChartRef" class="summary-chart"></div>
-        </div>
 
         <CustomReportDialog
             v-model="customReportVisible"
@@ -130,8 +143,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
-import * as echarts from 'echarts'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
@@ -157,6 +169,9 @@ const router = useRouter()
 const { t } = useI18n()
 const store = globalStore()
 const { langCode } = storeToRefs(store)
+const configCustomReportText = computed(() =>
+    langCode.value === 'en' ? 'Configure Custom Report' : '配置自定义报告'
+)
 
 const rows = ref([])
 const tableHeaders = ref([])
@@ -172,7 +187,6 @@ const patientNameKey = ref('')
 
 const loading = ref(false)
 const searchKeyword = ref('')
-const summaryChartRef = ref(null)
 const customReportVisible = ref(false)
 const customReportSampleName = ref('')
 const showPatientInfo = ref(false)
@@ -181,7 +195,6 @@ const showDataInfo = ref(false)
 const patientInfoId = ref(0)
 const sampleInfoId = ref(0)
 const dataInfoId = ref(0)
-let summaryChart = null
 const reportStateMap = ref({})
 
 const normalizeKey = (value) => String(value || '').replace(/\s+/g, '').replace(/[_-]/g, '').toLowerCase()
@@ -281,7 +294,7 @@ const columns = computed(() => {
         title: t('Rp2Operation'),
         dataIndex: 'operation',
         key: 'operation',
-        width: 140,
+        width: 180,
         align: 'center'
     })
 
@@ -316,26 +329,6 @@ const filteredRows = computed(() => {
     })
 })
 
-const summaryCounts = computed(() => {
-    let bacteria = 0
-    let fungus = 0
-    let virus = 0
-
-    filteredRows.value.forEach((row) => {
-        if (bacteriaColumnKey.value && isDetected(row[bacteriaColumnKey.value])) {
-            bacteria += 1
-        }
-        if (fungusColumnKey.value && isDetected(row[fungusColumnKey.value])) {
-            fungus += 1
-        }
-        if (virusColumnKey.value && isDetected(row[virusColumnKey.value])) {
-            virus += 1
-        }
-    })
-
-    return { bacteria, fungus, virus }
-})
-
 const loadData = async () => {
     loading.value = true
 
@@ -348,7 +341,6 @@ const loadData = async () => {
         if (!text) {
             rows.value = []
             tableHeaders.value = []
-            renderSummaryChart()
             return
         }
 
@@ -398,13 +390,10 @@ const loadData = async () => {
 
         rows.value = mergeReportState(baseRows)
         await loadReportStates(rows.value.map((item) => item.dataIdentifier).filter(Boolean))
-
-        renderSummaryChart()
     } catch (error) {
         rows.value = []
         tableHeaders.value = []
         reportStateMap.value = {}
-        renderSummaryChart()
     } finally {
         loading.value = false
     }
@@ -627,62 +616,11 @@ const openDataDetail = async (record) => {
     }
 }
 
-const renderSummaryChart = async () => {
-    await nextTick()
-
-    if (!summaryChartRef.value) {
-        return
-    }
-
-    if (!summaryChart) {
-        summaryChart = echarts.init(summaryChartRef.value)
-    }
-
-    const data = summaryCounts.value
-    summaryChart.setOption({
-        animation: false,
-        tooltip: { trigger: 'axis' },
-        xAxis: {
-            type: 'category',
-            data: [t('Rp2Xijun'), t('Rp2Zhenjun'), t('Rp2Bingdu')]
-        },
-        yAxis: { type: 'value' },
-        series: [
-            {
-                name: t('Rp2PositiveSampleCount'),
-                type: 'bar',
-                data: [data.bacteria, data.fungus, data.virus],
-                barWidth: 36,
-                itemStyle: {
-                    color: '#1890ff'
-                }
-            }
-        ],
-        grid: {
-            top: 20,
-            right: 16,
-            bottom: 30,
-            left: 40
-        }
-    })
-}
-
 watch(
     () => [props.taskId, langCode.value],
     loadData,
     { immediate: true }
 )
-
-watch(filteredRows, () => {
-    renderSummaryChart()
-})
-
-onBeforeUnmount(() => {
-    if (summaryChart) {
-        summaryChart.dispose()
-        summaryChart = null
-    }
-})
 </script>
 
 <style lang="scss" scoped>
@@ -704,32 +642,88 @@ onBeforeUnmount(() => {
 
 .operation-buttons {
     display: flex;
-    gap: 0;
+    gap: 6px;
     justify-content: center;
     flex-wrap: nowrap;
     align-items: center;
-}
-
-.operation-link {
-    color: #1976d2;
-    font-size: 12px;
-    font-weight: 500;
-    text-decoration: none;
     white-space: nowrap;
-    cursor: pointer;
 }
 
-.operation-link:hover {
-    text-decoration: underline;
+.operation-btn {
+    border: 1px solid #b8c7dc;
+    border-radius: 2px;
+    color: #245ea8;
+    background: #f7fbff;
+    font-size: 12px;
+    height: 28px;
+    padding: 0 6px;
+}
+
+.operation-btn:hover {
+    border-color: #8fb0d9;
+    background: #eef6ff;
 }
 
 .report-dropdown {
-    margin-left: 2px;
+    border: 1px solid #b8c7dc;
+    border-radius: 2px;
+    color: #245ea8;
+    background: #f7fbff;
+    font-size: 12px;
+    height: 28px;
+    padding: 0 6px;
+}
+
+.report-dropdown:hover {
+    border-color: #8fb0d9;
+    background: #eef6ff;
 }
 
 .report-dropdown :deep(.q-btn__content) {
     min-width: 0;
     white-space: nowrap;
+    font-weight: 600;
+}
+
+.report-dropdown :deep(.q-btn-dropdown__arrow) {
+    margin-left: 2px;
+}
+
+.report-menu-list {
+    min-width: 190px;
+    padding: 4px;
+}
+
+.report-menu-panel {
+    border-radius: 10px;
+    border: 1px solid #d6e1ef;
+    box-shadow: 0 10px 26px rgba(23, 47, 84, 0.16);
+}
+
+.report-menu-list :deep(.q-item) {
+    min-height: 34px;
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.report-menu-list :deep(.q-item.q-item--active),
+.report-menu-list :deep(.q-item:hover) {
+    background: #edf5ff;
+}
+
+.report-menu-list :deep(.q-item--disabled) {
+    opacity: 0.48;
+}
+
+.report-menu-list :deep(.q-item__section--main) {
+    color: #2a3f60;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.report-menu-icon {
+    min-width: 20px;
+    color: #2f6fbf;
 }
 
 .patient-info-cell {
@@ -748,18 +742,6 @@ onBeforeUnmount(() => {
 
 .identifier-link:hover {
     text-decoration: underline;
-}
-
-.chart-wrapper {
-    width: 50%;
-    min-width: 320px;
-}
-
-.summary-chart {
-    width: 100%;
-    height: 180px;
-    border: 1px solid #f0f0f0;
-    border-radius: 8px;
 }
 
 .sample-list :deep(.rp2-grid-table .ant-table),
