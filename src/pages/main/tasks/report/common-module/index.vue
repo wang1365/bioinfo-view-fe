@@ -12,14 +12,14 @@
             </q-card>
         </q-dialog>
 
-        <div class="tabs-header bg-grey-2 shadow-2">
+        <div class="tabs-header" :class="{ 'tabs-header--rp2': enhancedTableBorder }">
             <q-tabs
                 v-model="tab"
                 dense
                 align="left"
                 active-color="primary"
-                active-bg-color="grey-5"
-                class="tabs-main"
+                :active-bg-color="enhancedTableBorder ? 'white' : 'grey-5'"
+                :class="['tabs-main', { 'tabs-main--rp2': enhancedTableBorder }]"
                 indicator-color="primary"
                 inline-label
                 :breakpoint="0"
@@ -59,7 +59,7 @@
         </div>
         <q-tab-panels v-model="tab" animated>
             <q-tab-panel v-for="table in tables" :name="table.name" :key="table.name">
-                <q-toolbar class="text-primary">
+                <q-toolbar class="text-primary search-toolbar">
                     <q-input
                         v-model="table.keyword"
                         class="q-mr-sm search-input"
@@ -635,8 +635,49 @@ const showHtmlDialg = (record, column) => {
     justify-content: space-between;
 }
 
+.tabs-header--rp2 {
+    border-bottom: 1px solid #d8e2ef;
+    padding: 0 4px;
+}
+
 .tabs-main {
     flex: 1;
+}
+
+.tabs-main--rp2 :deep(.q-tab) {
+    margin-right: 6px;
+    border: 1px solid #d8e2ef;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    background: #f4f7fb;
+    min-height: 34px;
+    padding: 0 12px;
+    color: #4f5d75;
+}
+
+.tabs-main--rp2 :deep(.q-tab:last-child) {
+    margin-right: 0;
+}
+
+.tabs-main--rp2 :deep(.q-tab__content) {
+    min-width: 0;
+    padding: 0;
+}
+
+.tabs-main--rp2 :deep(.q-tab__label) {
+    font-size: 13px;
+    line-height: 1.1;
+}
+
+.tabs-main--rp2 :deep(.q-tab--active) {
+    background: #fff;
+    border-color: #78a9ff;
+    color: #1677ff;
+    font-weight: 600;
+}
+
+.tabs-main--rp2 :deep(.q-tab__indicator) {
+    height: 2px;
 }
 
 .intro-actions {
@@ -657,8 +698,17 @@ const showHtmlDialg = (record, column) => {
 }
 
 .search-input {
-    width: 33.3333%;
-    min-width: 280px;
+    width: 25%;
+    min-width: 240px;
+}
+
+.search-toolbar {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.search-input :deep(.q-field__control) {
+    border-color: var(--q-primary) !important;
 }
 
 .common-module-root :deep(.rp2-grid-table .ant-table),

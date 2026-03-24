@@ -6,7 +6,7 @@
                     {{ t('Rp2CustomReportTitle', { sample: sampleName }) }}
                 </div>
                 <q-space />
-                <q-btn flat round dense icon="close" @click="closeDialog" />
+                <q-btn flat round dense icon="close" :disable="submitting" @click="closeDialog" />
             </q-card-section>
 
             <q-separator />
@@ -62,13 +62,20 @@
                             @selection-change="onSelectionChange"
                         />
                     </div>
+
+                    <q-inner-loading :showing="submitting" color="primary" class="custom-report-loading">
+                        <div class="column items-center q-gutter-sm">
+                            <q-spinner color="primary" size="36px" />
+                            <div class="loading-text">{{ t('Rp2CustomReportGenerating') }}</div>
+                        </div>
+                    </q-inner-loading>
                 </div>
             </q-card-section>
 
             <q-separator />
 
             <q-card-actions align="right">
-                <q-btn flat :label="t('Cancel')" @click="closeDialog" />
+                <q-btn flat :label="t('Cancel')" :disable="submitting" @click="closeDialog" />
                 <q-btn
                     color="primary"
                     :loading="submitting"
@@ -76,6 +83,7 @@
                     @click="submitCustomReport"
                 />
             </q-card-actions>
+
         </q-card>
     </q-dialog>
 </template>
@@ -116,7 +124,10 @@ const selectedCountMap = ref({
     virus: 0
 })
 
-const closeDialog = () => {
+const closeDialog = (force = false) => {
+    if (submitting.value && !force) {
+        return
+    }
     emit('update:modelValue', false)
 }
 
@@ -169,9 +180,9 @@ const submitCustomReport = async () => {
             sample_name: props.sampleName,
             selections
         })
+        closeDialog(true)
         successMessage(t('Rp2CustomReportSubmitSuccess'))
         emit('submitted', result)
-        closeDialog()
     } finally {
         submitting.value = false
     }
@@ -183,6 +194,7 @@ const submitCustomReport = async () => {
     width: 96vw;
     max-width: 96vw;
     height: 96vh;
+    position: relative;
 }
 
 .dialog-content {
@@ -193,11 +205,26 @@ const submitCustomReport = async () => {
 .dialog-panels {
     height: calc(100% - 42px);
     overflow: hidden;
+    position: relative;
 }
 
 .panel-content {
     height: 100%;
     padding: 12px 14px 0;
     box-sizing: border-box;
+}
+
+.loading-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: #245ea8;
+}
+
+.custom-report-loading {
+    z-index: 4000 !important;
+}
+
+.custom-report-loading :deep(.q-inner-loading__backdrop) {
+    background: rgba(255, 255, 255, 0.92) !important;
 }
 </style>

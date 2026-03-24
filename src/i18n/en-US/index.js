@@ -962,7 +962,8 @@ export default {
     Rp2SpeciesGroupTitle: 'Species',
     Rp2CustomReportTitle: '{sample} Custom Report',
     Rp2GenerateReport: 'Generate Report',
+    Rp2CustomReportGenerating: 'Report is being generated',
     Rp2CustomReportSelectAtLeastOne: 'Please select at least one row to generate report',
-    Rp2CustomReportSubmitSuccess: 'Custom report request submitted',
+    Rp2CustomReportSubmitSuccess: 'Custom report created successfully',
     Rp2SelectedRowsCount: 'Selected {total} rows',
 }

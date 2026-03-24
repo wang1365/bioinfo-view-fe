@@ -636,8 +636,8 @@ watch(
 }
 
 .search-input {
-    width: 33.3333%;
-    min-width: 280px;
+    width: 25%;
+    min-width: 240px;
 }
 
 .operation-buttons {
