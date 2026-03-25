@@ -511,11 +511,7 @@ const downloadReport = async (record, reportType) => {
 }
 
 const handleCustomReportSubmitted = async () => {
-    const sampleName = customReportSampleName.value
-    if (!sampleName) {
-        return
-    }
-    await loadReportStates([sampleName])
+    await loadData()
 }
 
 const toResultList = (response) => {
