@@ -789,7 +789,7 @@ const saveReport = () => {
 }
 
 const goBack = () => {
-    router.push(`/main/tasks/${taskId.value}/rp2`)
+    router.replace(`/main/tasks/${taskId.value}/rp2`)
 }
 
 const loadTaskSamples = () => {

@@ -3,7 +3,7 @@
         <div class="row items-center">
             <h6>{{ pageTitle }}</h6>
             <q-space />
-            <q-btn :label="$t('Back')" icon="arrow_back" class="q-mr-lg" color="primary" flat @click="router.back()" />
+            <q-btn :label="$t('Back')" icon="arrow_back" class="q-mr-lg" color="primary" flat @click="goBackToTaskList" />
         </div>
 
         <q-tabs
@@ -87,6 +87,9 @@ const pageTitle = computed(() => {
     return taskName.value ? `"${taskName.value}" ${t('Rp2SummaryTitleSuffix')}` : t('Rp2PageTitle')
 })
 const taskForCommonModule = computed(() => ({ id: taskDetail.value?.id || taskId }))
+const goBackToTaskList = () => {
+    router.push('/main/tasks')
+}
 
 const customTabName = (index) => `rp2CustomTab${index}`
 
