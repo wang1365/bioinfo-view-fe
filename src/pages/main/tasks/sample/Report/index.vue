@@ -160,13 +160,7 @@ const extractCustomModules = (rawConfig) => {
 
 const loadCustomModules = async () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
-    const candidates = [
-        `${sampleName.value}/module_${suffix}.json`,
-        `${sampleName.value}/module_${suffix}json`
-    ]
-    if (suffix !== 'CN') {
-        candidates.push(`${sampleName.value}/module_CN.json`)
-    }
+    const candidates = [`${sampleName.value}/module_${suffix}.json`]
 
     let configText = ''
     for (const path of candidates) {
