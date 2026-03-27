@@ -34,6 +34,17 @@
         </q-tabs>
 
         <div class="sample-panels-wrap">
+            <q-banner
+                v-if="customModulesError"
+                inline-actions
+                rounded
+                class="bg-orange-1 text-orange-10 q-mt-md q-mx-sm"
+            >
+                <template #avatar>
+                    <q-icon name="warning" color="orange-8" />
+                </template>
+                {{ customModulesError }}
+            </q-banner>
             <div v-if="showOuterIntro" class="sample-panel-intro">
                 <IntroHelpButton :title="introTitle" :disable-float="true" />
             </div>
@@ -91,6 +102,7 @@ const sampleName = computed(() => decodeURIComponent(route.params.sampleId || ''
 const taskName = ref('')
 const taskDetail = ref({ id: taskId.value })
 const customModules = ref([])
+const customModulesError = ref('')
 const taskForCommonModule = computed(() => ({ id: taskDetail.value?.id || taskId.value }))
 const customTabName = (index) => `sampleCustomTab${index}`
 const showOuterIntro = computed(() => !tab.value.startsWith('sampleCustomTab'))
@@ -161,12 +173,15 @@ const extractCustomModules = (rawConfig) => {
 const loadCustomModules = async () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     const candidates = [`${sampleName.value}/module_${suffix}.json`]
+    customModulesError.value = ''
 
     let configText = ''
+    let loadedPath = ''
     for (const path of candidates) {
         try {
             configText = await readTaskFile(taskId.value, path, true, true)
             if (typeof configText === 'string' && configText.trim()) {
+                loadedPath = path
                 break
             }
         } catch (error) {
@@ -175,6 +190,9 @@ const loadCustomModules = async () => {
     }
 
     const configJson = tryParseJson(typeof configText === 'string' ? configText : '')
+    if (configText && !configJson) {
+        customModulesError.value = `${t('DefineReportModuleNotJsonErrorMessage')}: ${loadedPath || candidates[0]}`
+    }
     customModules.value = extractCustomModules(configJson)
 }
 
