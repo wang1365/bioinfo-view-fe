@@ -964,6 +964,9 @@ export default {
     Rp2GenerateReport: 'Generate Report',
     Rp2CustomReportGenerating: 'Report is being generated',
     Rp2CustomReportSelectAtLeastOne: 'Please select at least one row to generate report',
+    Rp2CustomReportNoPathogenTitle: 'No Pathogen Selected',
+    Rp2CustomReportNoPathogenConfirm:
+        'No pathogen is selected. This sample will be treated as a negative sample. Do you want to continue?',
     Rp2CustomReportSubmitSuccess: 'Custom report created successfully',
     Rp2SelectedRowsCount: 'Selected {total} rows',
 }

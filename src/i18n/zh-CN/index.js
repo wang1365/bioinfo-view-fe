@@ -946,6 +946,8 @@ export default {
     Rp2GenerateReport: '生成报告',
     Rp2CustomReportGenerating: '报告正在生成中',
     Rp2CustomReportSelectAtLeastOne: '请至少勾选一行用于生成报告',
+    Rp2CustomReportNoPathogenTitle: '未选择病原',
+    Rp2CustomReportNoPathogenConfirm: '没有选择任何病原，该样本将被判断为阴性样本，是否确认?',
     Rp2CustomReportSubmitSuccess: '自定义报告已创建成功',
     Rp2SelectedRowsCount: '已选择{total}条',
     SampleListTableColumnNCSample: 'NC样本',

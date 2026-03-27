@@ -91,8 +91,9 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 import { createRp2CustomReport } from 'src/api/task'
-import { successMessage, warnMessage } from 'src/utils/notify'
+import { successMessage } from 'src/utils/notify'
 import SamplePathogenTable from './SamplePathogenTable.vue'
 
 const props = defineProps({
@@ -113,6 +114,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'submitted'])
 
 const { t } = useI18n()
+const $q = useQuasar()
 const tab = ref('bacteria')
 const submitting = ref(false)
 const bacteriaRef = ref(null)
@@ -170,8 +172,27 @@ const submitCustomReport = async () => {
 
     const selectedCount = selections.reduce((sum, item) => sum + (item.row_numbers?.length || 0), 0)
     if (selectedCount === 0) {
-        warnMessage(t('Rp2CustomReportSelectAtLeastOne'))
-        return
+        const confirmed = await new Promise((resolve) => {
+            $q.dialog({
+                title: t('Rp2CustomReportNoPathogenTitle'),
+                message: t('Rp2CustomReportNoPathogenConfirm'),
+                ok: {
+                    label: t('Confirm'),
+                    color: 'primary'
+                },
+                cancel: {
+                    label: t('Remove'),
+                    flat: true
+                },
+                persistent: true
+            })
+                .onOk(() => resolve(true))
+                .onCancel(() => resolve(false))
+                .onDismiss(() => resolve(false))
+        })
+        if (!confirmed) {
+            return
+        }
     }
 
     submitting.value = true
