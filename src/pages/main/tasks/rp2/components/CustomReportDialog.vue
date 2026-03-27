@@ -181,7 +181,7 @@ const submitCustomReport = async () => {
                     color: 'primary'
                 },
                 cancel: {
-                    label: t('Remove'),
+                    label: t('Cancel'),
                     flat: true
                 },
                 persistent: true
