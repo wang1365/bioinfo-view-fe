@@ -7,65 +7,62 @@
                     <q-btn
                         class="task-card task-card--all"
                         :class="{ 'task-card--active': status === 'ALL' }"
-                        color="white"
                         unelevated
                         @click="clickCard(options[0].value)"
                     >
-                        <div class="task-card-content text-black">
-                            <div class="task-card-text">{{ $t('TaskPageListStatusAll') }} ({{ total_task_count }})</div>
+                        <div class="task-card-content">
+                            <div class="task-card-label">{{ $t('TaskPageListStatusAll') }}</div>
+                            <div class="task-card-value">{{ total_task_count }}</div>
+                            <div class="task-card-icon"><q-icon name="dashboard" /></div>
                         </div>
                     </q-btn>
 
                     <q-btn
                         class="task-card task-card--primary"
                         :class="{ 'task-card--active': status === 'RUNNING' }"
-                        color="primary"
                         unelevated
                         @click="clickCard(options[1].value)"
                     >
-                        <div class="task-card-content text-white">
-                            <div class="task-card-text">
-                                {{ $t('TaskPageListStatusRun') }} ({{ taskSummary.running_task_count }})
-                            </div>
+                        <div class="task-card-content">
+                            <div class="task-card-label">{{ $t('TaskPageListStatusRun') }}</div>
+                            <div class="task-card-value">{{ taskSummary.running_task_count }}</div>
+                            <div class="task-card-icon"><q-icon name="play_circle" /></div>
                         </div>
                     </q-btn>
                     <q-btn
                         class="task-card task-card--negative"
                         :class="{ 'task-card--active': status === 'FAILURED' }"
-                        color="negative"
                         unelevated
                         @click="clickCard(options[3].value)"
                     >
-                        <div class="task-card-content text-white">
-                            <div class="task-card-text">
-                                {{ $t('TaskPageListStatusFail') }} ({{ taskSummary.failured_task_count }})
-                            </div>
+                        <div class="task-card-content">
+                            <div class="task-card-label">{{ $t('TaskPageListStatusFail') }}</div>
+                            <div class="task-card-value">{{ taskSummary.failured_task_count }}</div>
+                            <div class="task-card-icon"><q-icon name="warning" /></div>
                         </div>
                     </q-btn>
                     <q-btn
                         class="task-card task-card--secondary"
                         :class="{ 'task-card--active': status === 'PENDING' }"
-                        color="secondary"
                         unelevated
                         @click="clickCard(options[2].value)"
                     >
-                        <div class="task-card-content text-white">
-                            <div class="task-card-text">
-                                {{ $t('TaskPageListStatusQueue') }} ({{ taskSummary.pending_task_count }})
-                            </div>
+                        <div class="task-card-content">
+                            <div class="task-card-label">{{ $t('TaskPageListStatusQueue') }}</div>
+                            <div class="task-card-value">{{ taskSummary.pending_task_count }}</div>
+                            <div class="task-card-icon"><q-icon name="schedule" /></div>
                         </div>
                     </q-btn>
                     <q-btn
                         class="task-card task-card--positive"
                         :class="{ 'task-card--active': status === 'FINISHED' }"
-                        color="positive"
                         unelevated
                         @click="clickCard(options[4].value)"
                     >
-                        <div class="task-card-content text-white">
-                            <div class="task-card-text">
-                                {{ $t('TaskPageListStatusFinish') }} ({{ taskSummary.finished_task_count }})
-                            </div>
+                        <div class="task-card-content">
+                            <div class="task-card-label">{{ $t('TaskPageListStatusFinish') }}</div>
+                            <div class="task-card-value">{{ taskSummary.finished_task_count }}</div>
+                            <div class="task-card-icon"><q-icon name="check_circle" /></div>
                         </div>
                     </q-btn>
                 </div>
@@ -884,7 +881,7 @@ const summary = async () => {
   flex: 1 1 auto
   display: grid
   grid-template-columns: repeat(5, minmax(0, 1fr))
-  gap: 8px
+  gap: 10px
   padding: 0
   align-items: stretch
   min-width: 0
@@ -892,34 +889,64 @@ const summary = async () => {
 
 .task-card
   width: 100%
-  height: 48px
-  border-radius: 12px
-  box-shadow: 0 8px 18px rgba(20, 52, 86, .10)
-  transition: transform .2s ease, box-shadow .2s ease
+  height: 62px
+  border-radius: 14px
+  box-shadow: 0 10px 22px rgba(20, 52, 86, .12)
+  transition: transform .22s ease, box-shadow .22s ease, filter .22s ease
   padding: 0
   min-width: 0
   justify-self: center
-  border: 2px solid transparent
+  border: 1px solid rgba(160, 178, 205, .42)
+  overflow: hidden
+  position: relative
 
 .task-card-content
   width: 100%
   height: 100%
-  display: flex
-  justify-content: center
-  align-items: center
-  padding: 0 6px
+  display: block
+  position: relative
+  padding: 7px 10px
+  color: #fff
 
-.task-card-text
-  font-size: 13px
+.task-card-label
+  position: absolute
+  top: 8px
+  left: 12px
+  font-size: 11px
   font-weight: 600
-  line-height: 1
+  letter-spacing: .02em
+  opacity: .92
   white-space: nowrap
   overflow: hidden
   text-overflow: ellipsis
 
+.task-card-icon
+  position: absolute
+  top: 8px
+  right: 10px
+  width: 18px
+  height: 18px
+  border-radius: 50%
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  background: rgba(255, 255, 255, .22)
+  font-size: 12px
+
+.task-card-value
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  font-size: 31px
+  line-height: .95
+  font-weight: 800
+  letter-spacing: .015em
+  text-align: center
+
 @media (min-width: 1280px)
   .task-card
-    max-width: 10vw
+    max-width: 11vw
 
 @media (max-width: 1200px)
   .task-header-row
@@ -930,42 +957,28 @@ const summary = async () => {
     width: 100%
 
 .task-card:hover
-  transform: translateY(-2px)
-  box-shadow: 0 12px 24px rgba(20, 52, 86, .16)
+  transform: translateY(-3px)
+  box-shadow: 0 16px 30px rgba(20, 52, 86, .18)
+  filter: saturate(1.05)
 
 .task-card--all
-  border-color: rgba(0,0,0,.12)
+  background: linear-gradient(135deg, #64748b 0%, #334155 100%)
 
-.task-card--all:not(.task-card--active)
-  background: linear-gradient(0deg, #fafafa, #ffffff)
+.task-card--primary
+  background: linear-gradient(135deg, #2b77ff 0%, #1454cc 100%)
 
-.task-card--all:hover:not(.task-card--active)
-  border-color: rgba(0,0,0,.24)
-  box-shadow: 0 4px 12px rgba(0,0,0,.12)
+.task-card--secondary
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)
+
+.task-card--negative
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)
+
+.task-card--positive
+  background: linear-gradient(135deg, #16a34a 0%, #0f7a36 100%)
 
 .task-card--active
-  transform: translateY(-2px) scale(1.02)
-  box-shadow: 0 14px 28px rgba(20, 52, 86, .22)
-
-.task-card--active.task-card--primary
-  border-color: #fff
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-primary), 0 8px 24px rgba(0,0,0,.22)
-
-.task-card--active.task-card--negative
-  border-color: #fff
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-negative), 0 8px 24px rgba(0,0,0,.22)
-
-.task-card--active.task-card--secondary
-  border-color: #fff
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-secondary), 0 8px 24px rgba(0,0,0,.22)
-
-.task-card--active.task-card--positive
-  border-color: #fff
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--q-positive), 0 8px 24px rgba(0,0,0,.22)
-
-.task-card--active.task-card--all
-  border-color: var(--q-primary)
-  box-shadow: 0 0 0 2px var(--q-primary), 0 8px 24px rgba(0,0,0,.22)
+  transform: translateY(-3px) scale(1.015)
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(45, 111, 237, .55), 0 20px 34px rgba(20, 52, 86, .25)
 
 .task-table-wrap :deep(.ant-table-wrapper)
   height: 100%
