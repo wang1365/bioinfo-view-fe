@@ -4,8 +4,8 @@
             icon="help_outline"
             size="small"
             outline
-            color="orange"
-            class=" q-mr-md"
+            color="primary"
+            class="q-mr-md intro-help-btn"
             @click="dlgVisible = !dlgVisible"
             :label="$t('Intro')"
         />

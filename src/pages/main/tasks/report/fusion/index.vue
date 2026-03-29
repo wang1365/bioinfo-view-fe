@@ -5,7 +5,7 @@
         <q-btn v-if="props.viewConfig.showStick && !props.viewConfig.stickDone" icon="bookmarks" size="small" outline
             color="primary" class="relative-position float-right q-mr-md" @click="stickFilter()"
             :label="$t('ReportStickData')" />
-        <q-btn icon="help_outline" size="small" outline color="orange" class="relative-position float-right q-mr-md"
+        <q-btn icon="help_outline" size="small" outline color="primary" class="relative-position float-right q-mr-md intro-help-btn"
             @click="dlgVisible = !dlgVisible">{{ $t('Intro') }}</q-btn>
         <q-tabs v-model="tab" active-color="primary" active-bg-color="grey-4" align="left" class="bg-grey-1" :breakpoint="0"
             dense>

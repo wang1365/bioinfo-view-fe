@@ -4,8 +4,8 @@
             icon="help_outline"
             size="small"
             outline
-            color="orange"
-            class="relative-position float-right q-mr-md"
+            color="primary"
+            class="relative-position float-right q-mr-md intro-help-btn"
             @click="dlgVisible = !dlgVisible"
             >Intro.
         </q-btn>

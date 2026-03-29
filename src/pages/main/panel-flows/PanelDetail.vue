@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-xs">
+    <div class="panel-detail q-pa-xs">
         <PageTitle :title="detail.name + ' ' + $t('AnalysisFlowComment')" />
         <q-list>
             <q-expansion-item
@@ -27,7 +27,8 @@
                     v-for="flow in detail.flows"
                     :key="flow.id"
                     :label="flow.name"
-                    color="purple"
+                    color="primary"
+                    outline
                     class="q-ma-sm"
                     @click="amISuper() ? showFlowDlg(flow) : () => {}"
                 >
@@ -56,12 +57,11 @@
                 </q-card>
             </q-expansion-item>
         </q-list>
-        <q-input readonly></q-input>
         <flow-dialog ref="dlgFlow" action="info" :id="currentFlowId" />
     </div>
 </template>
 <script setup>
-import {ref, onMounted, watch, toRefs} from "vue"
+import { ref, onMounted, watch } from 'vue'
 import { getPanelDetail } from "src/api/panel"
 import PageTitle from "components/page-title/PageTitle"
 import FlowDialog from "pages/main/settings/flow/FlowDialog"
@@ -78,9 +78,9 @@ const refresh = () => {
     }
 }
 
-onMounted(() => [
+onMounted(() => {
     refresh()
-])
+})
 
 const props = defineProps({
     id: {
@@ -89,10 +89,12 @@ const props = defineProps({
     }
 })
 
-const {panelId} =  toRefs(props)
-watch(panelId, (val) => {
+watch(
+    () => props.id,
+    () => {
     refresh()
-})
+    }
+)
 
 const showFlowDlg = (row) => {
     currentFlowId.value = row.id
@@ -100,3 +102,9 @@ const showFlowDlg = (row) => {
 }
 
 </script>
+
+<style scoped lang="scss">
+.panel-detail {
+    min-height: 100%;
+}
+</style>

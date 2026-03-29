@@ -3,8 +3,8 @@
         icon="help_outline"
         size="small"
         outline
-        color="orange"
-        class="relative-position float-right q-mr-md q-mb-sm"
+        color="primary"
+        class="relative-position float-right q-mr-md q-mb-sm intro-help-btn"
         @click="dlgVisible = !dlgVisible"
         >{{ $t('Intro') }}
     </q-btn>

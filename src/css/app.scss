@@ -238,6 +238,28 @@
     background: #fff0f0;
 }
 
+.intro-help-btn {
+    min-height: 30px !important;
+    padding: 0 12px !important;
+    border-radius: 16px !important;
+    border: 1px solid #9db7d8 !important;
+    background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%) !important;
+    color: #2b5f97 !important;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.intro-help-btn:hover {
+    border-color: #7ea4d2 !important;
+    background: linear-gradient(180deg, #f1f7ff 0%, #e6f0ff 100%) !important;
+    color: #1f4f82 !important;
+}
+
+.intro-help-btn .q-icon {
+    margin-right: 2px;
+    color: #2d6fb3 !important;
+}
+
 .page-grid-table .ant-table,
 .page-grid-table .ant-table-container {
     border: 1px solid #6f8098 !important;

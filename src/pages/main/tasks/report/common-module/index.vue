@@ -31,8 +31,8 @@
                     icon="help_outline"
                     size="small"
                     outline
-                    color="orange"
-                    class="q-mr-md intro-help-button"
+                    color="primary"
+                    class="q-mr-md intro-help-button intro-help-btn"
                     @click="dlgVisible = !dlgVisible"
                     >{{$t('Intro')}}</q-btn
                 >
