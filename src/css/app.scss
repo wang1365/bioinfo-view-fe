@@ -434,6 +434,11 @@
     white-space: nowrap;
 }
 
+.task-report-page .mutation-table-wrap {
+    width: 100%;
+    overflow: hidden;
+}
+
 .table-operation-btn {
     min-height: 28px !important;
     padding: 0 6px !important;

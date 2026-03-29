@@ -1,12 +1,18 @@
 <template>
     <div>
-        <q-splitter v-model="splitterModel" unit="px" style="height: 780px">
+        <q-splitter
+            v-model="splitterModel"
+            unit="px"
+            :class="['mutation-splitter', { 'mutation-splitter--collapsed': !leftPanelOpen }]"
+            :limits="[0, 2000]"
+            :before-style="splitterBeforeStyle"
+        >
             <template v-slot:separator>
                 <q-btn
                     round
                     dense
                     color="primary"
-                    class="cursor-pointer q-ml-sm"
+                    class="cursor-pointer"
                     @click="toggleLeftPanel"
                     size="lg"
                     style="opacity: 0.7;"
@@ -15,7 +21,7 @@
                 </q-btn>
             </template>
             <template v-slot:before>
-                <div class="column" style="width:90%">
+                <div class="mutation-filter-panel" style="width:100%">
                     <q-input
                         v-model="innerSearchParams.gene"
                         :label="$t('Gene')"
@@ -32,7 +38,7 @@
                         type="number"
                         stack-label
                         label-color="primary"
-                        class="col-6"
+                        class="full-width"
                         :disable="showSticky && stickDone"
                     >
                         <template v-slot:after>
@@ -46,7 +52,7 @@
                         type="number"
                         stack-label
                         label-color="black"
-                        class="col-6"
+                        class="full-width"
                         :disable="showSticky && stickDone"
                     >
                         <template v-slot:after>
@@ -60,7 +66,7 @@
                         type="number"
                         stack-label
                         label-color="primary"
-                        class="col-6"
+                        class="full-width"
                         :disable="showSticky && stickDone"
                     >
                         <template v-slot:after>
@@ -74,7 +80,7 @@
                         type="number"
                         stack-label
                         label-color="black"
-                        class="col-6"
+                        class="full-width"
                         :disable="showSticky && stickDone"
                     >
                         <template v-slot:after>
@@ -241,7 +247,7 @@
                      <span v-else>{{record[column.dataIndex]}}</span>
                      </template>
                      </a-table> -->
-                <div style="position:relative" class="q-ml-xs">
+                <div style="position:relative" class="q-ml-xs mutation-table-wrap">
                     <q-icon
                         v-if="isDefineReport"
                         color="accent"
@@ -258,27 +264,27 @@
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
-                        :scroll="{ x: 2200, y: 600 }"
+                        :scroll="{ x: 2200, y: 650 }"
                         :custom-row="customRow"
-                        :sticky="true"
                         rowKey="lineNumber"
                         :row-selection="rowSelection"
                     >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.key === 'operation'">
-                                <TableActionButton
-                                    variant="primary"
-                                    :label="$t('Detail')"
-                                    padding="xs"
-                                    class="q-mr-xs"
-                                    @click="clickDetail(record)"
-                                />
-                                <TableActionButton
-                                    variant="primary"
-                                    label="IGV"
-                                    padding="xs"
-                                    @click="clickIgv(record)"
-                                />
+                                <div class="table-operation-buttons">
+                                    <TableActionButton
+                                        variant="primary"
+                                        :label="$t('Detail')"
+                                        padding="xs"
+                                        @click="clickDetail(record)"
+                                    />
+                                    <TableActionButton
+                                        variant="primary"
+                                        label="IGV"
+                                        padding="xs"
+                                        @click="clickIgv(record)"
+                                    />
+                                </div>
                             </template>
                             <template v-else>
                                 <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">
@@ -401,24 +407,24 @@ const { t } = useI18n()
 const customCell = useCustomCell('col254')
 const splitterModel = ref(250)
 const leftPanelOpen = ref(true)
+const splitterBeforeStyle = computed(() => {
+    if (leftPanelOpen.value) {
+        return {}
+    }
+    return {
+        width: '0px',
+        minWidth: '0px',
+        maxWidth: '0px',
+        padding: '0px',
+        overflow: 'hidden',
+    }
+})
 
 function toggleLeftPanel() {
     leftPanelOpen.value = !leftPanelOpen.value
     splitterModel.value = leftPanelOpen.value ? 250 : 0
-    // 设置before插槽的样式，完全隐藏查询区域
-    const beforeSlot = document.querySelector('.q-splitter__before')
-    if (beforeSlot) {
-        beforeSlot.style.display = leftPanelOpen.value ? 'block' : 'none'
-    }
 }
 
-// 确保组件挂载后初始化查询区域显示状态
-onMounted(() => {
-    const beforeSlot = document.querySelector('.q-splitter__before')
-    if (beforeSlot) {
-        beforeSlot.style.display = 'block'
-    }
-})
 const emit = defineEmits(['stickDone', 'searchParamsChange', 'rowsLoaded'])
 const props = defineProps({
     intro: {
@@ -690,7 +696,7 @@ const fixedColumns = computed(() => {
     })
 
     // 添加操作列
-    result.push({ title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 100 })
+    result.push({ title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 120 })
 
     return result
 })
@@ -1030,7 +1036,9 @@ onMounted(() => {
 const propSearchParams = toRef(props, 'searchParams')
 const loadTable = () => {
     columns.value.forEach((col) => (col.title = header.value[col.i - 1]))
-    columns.value[columns.value.length - 1].title = computed(() => t('Operate'))
+    const actionColumn = columns.value[columns.value.length - 1]
+    actionColumn.title = computed(() => t('Operate'))
+    actionColumn.width = 120
 
     innerSearchParams.value = Object.assign(innerSearchParams.value, propSearchParams.value)
     searchFilterRows(propSearchParams.value)
@@ -1146,3 +1154,47 @@ const downloadExcel = () => {
         })
 }
 </script>
+
+<style scoped lang="scss">
+.mutation-splitter {
+    height: 780px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.mutation-filter-panel {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+:deep(.mutation-splitter .q-splitter__before),
+:deep(.mutation-splitter .q-splitter__after) {
+    overflow-x: hidden !important;
+}
+
+:deep(.mutation-splitter .q-splitter__before) {
+    overflow-y: auto !important;
+}
+
+:deep(.mutation-splitter .q-splitter__after) {
+    overflow-y: hidden !important;
+}
+
+:deep(.mutation-splitter--collapsed .q-splitter__before) {
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    flex: 0 0 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+}
+
+:deep(.mutation-splitter--collapsed .mutation-filter-panel) {
+    display: none !important;
+}
+</style>
