@@ -1,5 +1,5 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
+    <q-page padding class="settings-page" style="overflow-x: hidden">
         <PageTitle :title="$t('SystemSetting')" />
 
         <!-- 系统版本信息 -->

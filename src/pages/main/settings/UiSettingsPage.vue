@@ -1,5 +1,5 @@
 <template>
-    <q-page padding>
+    <q-page padding class="ui-settings-page">
         <PageTitle :title="$t('SystemUiConfig')"></PageTitle>
         <q-card class="width:600px">
             <q-card-section>

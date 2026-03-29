@@ -23,33 +23,36 @@
         <q-card-section class="q-pt-none">
             <div class="q-pa-sm bio-data-table">
                 <a-table
+                    class="page-grid-table"
                     :columns="columns"
                     :data-source="dataItems"
                     :scroll="{ x: 2000, y: 500 }"
                     size="small"
+                    bordered
                     :pagination="pagination"
                     @change="handleTableChange"
                 >
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.dataIndex === 'operation'">
-                            <q-btn
-                                color="secondary"
-                                :label="$t('Detail')"
-                                icon="visibility"
-                                @click="info(record)"
-                                padding="5px 10px"
-                                size="sm"
-                            />
-                            <q-btn
-                                color="red"
-                                :label="$t('Delete')"
-                                icon="delete"
-                                @click="confirm(record)"
-                                size="sm"
-                                class="q-ml-xs"
-                                padding="5px 10px"
-                                v-if="!fromParent(record)"
-                            />
+                            <div class="table-operation-buttons">
+                                <q-btn
+                                    class="table-operation-btn table-operation-btn--primary"
+                                    :label="$t('Detail')"
+                                    @click="info(record)"
+                                    flat
+                                    dense
+                                    no-caps
+                                />
+                                <q-btn
+                                    v-if="!fromParent(record)"
+                                    class="table-operation-btn table-operation-btn--danger"
+                                    :label="$t('Delete')"
+                                    @click="confirm(record)"
+                                    flat
+                                    dense
+                                    no-caps
+                                />
+                            </div>
                         </template>
                     </template>
                 </a-table>
@@ -113,7 +116,7 @@ const columns = computed(() => [
     { title: t('SampleListTableColumnSamplingSite'), dataIndex: ['sample_meta', 'sample_componet'],  align: 'left', width: 60},
     { title: t('SampleListTableColumnTumorSample'), dataIndex: 'sample_meta',  align: 'left', width: 40,
         customRender: ({text, record}) => `${JSON.stringify(record?.sample_meta?.is_panel)}` },
-    { title: t('Operation'), dataIndex: 'operation', fixed: 'right', align: 'center', width: 70},
+    { title: t('Operation'), dataIndex: 'operation', fixed: 'right', align: 'center', width: 70 },
 ])
 
 const info = async (item) => {

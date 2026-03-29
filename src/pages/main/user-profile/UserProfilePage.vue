@@ -1,5 +1,5 @@
 <template>
-    <q-page padding style="overflow-x: hidden">
+    <q-page padding class="user-profile-page" style="overflow-x: hidden">
         <PageTitle :title="$t('UserProfile')" />
         <q-card class="column full-height full-width bg-white">
             <q-card-section class="row items-center q-pb-none">

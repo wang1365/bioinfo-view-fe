@@ -571,8 +571,8 @@ export default {
     PatientPageListTableColumnSampleSize: 'Samples',
     PatientPageListTableColumnOperations: 'Operate',
     PatientPageListTableRowBtnEdit: 'Edit',
-    PatientPageListTableRowBtnAssociateWithSamples: 'Associate With Samples',
-    PatientPageListTableRowBtnPatientInformation: 'Patient Information',
+    PatientPageListTableRowBtnAssociateWithSamples: 'Link Sample',
+    PatientPageListTableRowBtnPatientInformation: 'Detail',
     PatientPageListTableRowBtnDelete: 'Delete',
     PatientPageListTableRowBtnDeleteTitle:
         'Are you sure to delete, the current patient is associated with {count} samples',

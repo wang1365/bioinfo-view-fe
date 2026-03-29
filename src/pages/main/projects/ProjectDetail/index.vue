@@ -1,5 +1,5 @@
 <template>
-    <q-page padding style="overflow-y:scroll; height: 600px">
+    <q-page padding class="project-detail-page" style="overflow-y:scroll; height: 600px">
         <div class="row items-center q-py-sm">
             <h6>{{`${$t('ProjectDetailPageTitle')}`}}</h6>
             <q-space />

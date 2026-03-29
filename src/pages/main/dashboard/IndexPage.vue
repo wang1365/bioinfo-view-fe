@@ -285,11 +285,62 @@ const init = () => {
 
 <style lang="scss" scoped>
 .dashboard-page {
+    position: relative;
+    isolation: isolate;
     min-height: 100%;
     padding: 18px 18px 14px;
     background:
-        radial-gradient(circle at top right, rgba(45, 140, 255, 0.1), transparent 24%),
-        linear-gradient(180deg, #f4f7fb 0%, #edf2f8 100%);
+        radial-gradient(circle at 10% 0%, rgba(54, 209, 196, 0.25), transparent 38%),
+        radial-gradient(circle at 92% 12%, rgba(82, 138, 255, 0.28), transparent 40%),
+        radial-gradient(circle at 58% 100%, rgba(71, 166, 255, 0.16), transparent 42%),
+        linear-gradient(145deg, #f3f9ff 0%, #eaf4ff 42%, #e8f3ff 100%);
+    overflow: hidden;
+}
+
+.dashboard-page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 16% 24%, rgba(69, 134, 243, 0.22) 0 2px, transparent 3px),
+        radial-gradient(circle at 22% 32%, rgba(57, 210, 188, 0.2) 0 2px, transparent 3px),
+        radial-gradient(circle at 28% 41%, rgba(69, 134, 243, 0.2) 0 2px, transparent 3px),
+        radial-gradient(circle at 72% 26%, rgba(69, 134, 243, 0.22) 0 2px, transparent 3px),
+        radial-gradient(circle at 78% 34%, rgba(57, 210, 188, 0.2) 0 2px, transparent 3px),
+        radial-gradient(circle at 84% 42%, rgba(69, 134, 243, 0.2) 0 2px, transparent 3px),
+        linear-gradient(120deg, rgba(78, 142, 245, 0.14) 0 1px, transparent 1px) 0 0 / 280px 220px,
+        linear-gradient(120deg, rgba(78, 142, 245, 0.14) 0 1px, transparent 1px) 8px 32px / 280px 220px;
+    opacity: 0.58;
+}
+
+.dashboard-page::after {
+    content: '';
+    position: absolute;
+    inset: -180px -180px -120px;
+    pointer-events: none;
+    z-index: 0;
+    background:
+        radial-gradient(circle at 14% 10%, rgba(95, 152, 255, 0.2), transparent 36%),
+        radial-gradient(circle at 84% 18%, rgba(73, 207, 191, 0.18), transparent 33%),
+        radial-gradient(circle at 52% 70%, rgba(95, 152, 255, 0.12), transparent 40%);
+    filter: blur(2px) saturate(112%);
+    animation: dashboard-bio-drift 12s ease-in-out infinite alternate;
+}
+
+.dashboard-page > * {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes dashboard-bio-drift {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1.01);
+    }
+    100% {
+        transform: translate3d(-12px, -8px, 0) scale(1.04);
+    }
 }
 
 .dashboard-hero {
@@ -302,18 +353,19 @@ const init = () => {
     position: relative;
     min-width: 420px;
     padding: 12px 44px;
-    border-radius: 18px 6px 18px 6px;
-    border: 1px solid rgba(68, 124, 255, 0.22);
-    background: linear-gradient(90deg, rgba(225, 236, 255, 0.9) 0%, rgba(247, 250, 255, 0.98) 46%, rgba(225, 236, 255, 0.9) 100%);
+    border-radius: 14px;
+    border: 1px solid rgba(90, 142, 234, 0.34);
+    background: linear-gradient(92deg, rgba(239, 247, 255, 0.92) 0%, rgba(252, 254, 255, 0.98) 48%, rgba(236, 246, 255, 0.92) 100%);
     box-shadow:
-        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-        0 10px 26px rgba(33, 76, 154, 0.1);
-    color: #163a74;
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 10px 30px rgba(31, 82, 170, 0.14),
+        0 0 0 1px rgba(122, 166, 240, 0.18);
+    color: #0f3f86;
     font-size: 1.3rem;
     font-weight: 700;
-    letter-spacing: 0.28em;
+    letter-spacing: 0.32em;
     text-align: center;
-    text-shadow: 0 0 12px rgba(66, 133, 244, 0.16);
+    text-shadow: 0 0 16px rgba(66, 133, 244, 0.2);
     user-select: none;
     -webkit-user-select: none;
 }
@@ -323,9 +375,9 @@ const init = () => {
     content: '';
     position: absolute;
     top: 50%;
-    width: 56px;
+    width: 64px;
     height: 2px;
-    background: linear-gradient(90deg, rgba(66, 133, 244, 0), rgba(66, 133, 244, 0.78));
+    background: linear-gradient(90deg, rgba(66, 133, 244, 0), rgba(66, 133, 244, 0.9));
 }
 
 .dashboard-hero__title::before {
@@ -351,10 +403,13 @@ const init = () => {
 }
 
 .summary-card {
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.88);
-    border: 1px solid rgba(210, 219, 233, 0.7);
-    box-shadow: 0 10px 26px rgba(17, 38, 68, 0.07);
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 250, 255, 0.86) 100%);
+    border: 1px solid rgba(176, 201, 235, 0.58);
+    backdrop-filter: blur(10px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 12px 28px rgba(21, 64, 136, 0.12);
 }
 
 .summary-card__section {
@@ -442,10 +497,13 @@ const init = () => {
     height: 340px;
     display: flex;
     flex-direction: column;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(210, 219, 233, 0.7);
-    box-shadow: 0 10px 26px rgba(17, 38, 68, 0.07);
+    border-radius: 16px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.93) 0%, rgba(246, 251, 255, 0.88) 100%);
+    border: 1px solid rgba(176, 201, 235, 0.58);
+    backdrop-filter: blur(10px);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        0 12px 28px rgba(21, 64, 136, 0.12);
 }
 
 .task-panel__header {

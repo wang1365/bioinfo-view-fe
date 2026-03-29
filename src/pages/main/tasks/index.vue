@@ -115,8 +115,25 @@
                             <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                         </template>
                     </q-input>
-                    <q-btn color="primary" size="md" :label="$t('Search')" icon="search" @click="search()" />
-                    <q-btn color="primary" size="md" :label="$t('Reset')" icon="clear" @click="reset()" />
+                    <q-btn
+                        class="app-action-btn app-action-btn--primary"
+                        color="primary"
+                        :label="$t('Search')"
+                        icon="search"
+                        dense
+                        flat
+                        no-caps
+                        @click="search()"
+                    />
+                    <q-btn
+                        class="app-action-btn"
+                        :label="$t('Reset')"
+                        icon="refresh"
+                        dense
+                        flat
+                        no-caps
+                        @click="reset()"
+                    />
                 </div>
             </div>
         </div>
