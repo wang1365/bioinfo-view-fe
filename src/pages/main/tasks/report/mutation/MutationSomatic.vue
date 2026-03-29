@@ -180,32 +180,31 @@
                     </div>
 
                     <div class="q-gutter-xs text-center justify-between">
-                        <q-btn
-                            color="primary"
+                        <AppActionButton
+                            variant="primary"
                             :label="$t('Confirm')"
                             icon="search"
                             padding="sm"
                             @click="search"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn
-                            color="primary"
+                        <AppActionButton
+                            variant="primary"
                             :label="$t('Reset')"
                             icon="settings_backup_restore"
                             @click="reset"
                             padding="sm"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn
-                            color="primary"
+                        <AppActionButton
+                            variant="primary"
                             :label="$t('MoreColumns')"
-                            size="md"
                             padding="sm"
                             icon="last_page"
                             @click="showDrawer = !showDrawer"
                             :disable="showSticky && stickDone"
                         />
-                        <q-btn icon="download" color="primary" :label="$t('Download')">
+                        <AppActionButton variant="primary" icon="download" :label="$t('Download')">
                             <q-menu>
                                 <q-list>
                                     <q-item clickable
@@ -214,7 +213,7 @@
                                     <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
                                 </q-list>
                             </q-menu>
-                        </q-btn>
+                        </AppActionButton>
                     </div>
                 </div>
             </template>
@@ -267,21 +266,17 @@
                     >
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.key === 'operation'">
-                                <q-btn
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('Detail')"
-                                    color="primary"
-                                    size="12px"
-                                    flat
                                     padding="xs"
                                     class="q-mr-xs"
                                     @click="clickDetail(record)"
                                 />
-                                <q-btn
+                                <TableActionButton
+                                    variant="primary"
                                     label="IGV"
-                                    color="primary"
-                                    size="12px"
                                     padding="xs"
-                                    flat
                                     @click="clickIgv(record)"
                                 />
                             </template>
@@ -318,9 +313,9 @@
                 </q-card-section>
 
                 <q-card-actions align="center">
-                    <q-btn color="primary" @click="clickSelectAll">{{$t('SelectAll')}}</q-btn>
-                    <q-btn color="primary" @click="clickSelectNone">{{$t('Clear')}}</q-btn>
-                    <q-btn color="primary" v-close-popup>{{$t('Confirm')}}</q-btn>
+                    <AppActionButton variant="primary" @click="clickSelectAll">{{$t('SelectAll')}}</AppActionButton>
+                    <AppActionButton variant="primary" @click="clickSelectNone">{{$t('Clear')}}</AppActionButton>
+                    <AppActionButton variant="primary" v-close-popup>{{$t('Confirm')}}</AppActionButton>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -368,7 +363,7 @@
             </q-card-section>
             <q-space></q-space>
             <q-card-actions align="center" vertical>
-                <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
+                <AppActionButton variant="primary" :label="$t('Close')" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -399,6 +394,8 @@ import { useComparator } from 'src/utils/comparator'
 import { useI18n } from 'vue-i18n'
 import { useCustomCell } from './index'
 import * as XLSX from "xlsx";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n()
 const customCell = useCustomCell('col254')

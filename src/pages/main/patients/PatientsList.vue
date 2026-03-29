@@ -73,16 +73,13 @@
                         </q-icon>
                     </template>
                 </q-input>
-                <q-btn
-                    color="primary"
-                    unelevated
+                <AppActionButton
+                    variant="primary"
                     :label="$t('PatientPageListSearchEnsure')"
                     icon="search"
                     @click="refreshPage()"
                 />
-                <q-btn
-                    color="grey-7"
-                    outline
+                <AppActionButton
                     :label="$t('PatientPageListSearchReset')"
                     icon="clear"
                     @click="reset()"
@@ -91,16 +88,15 @@
         </div>
         <div>
             <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-                <q-btn
+                <AppActionButton
                     v-permission="'createPatient'"
-                    color="primary"
-                    unelevated
+                    variant="primary"
                     :label="$t('PatientPageListTableCreate')"
                     icon="description"
                     @click="showPatientNew = true"
                 />
-                <q-btn color="info" unelevated :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
-                <q-btn color="positive" unelevated v-permission="'createPatient'">
+                <AppActionButton variant="primary" :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
+                <AppActionButton variant="success" v-permission="'createPatient'">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         {{ $t('PageListTableUpload') }}
@@ -108,10 +104,9 @@
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
-                </q-btn>
-                <q-btn
-                    color="positive"
-                    unelevated
+                </AppActionButton>
+                <AppActionButton
+                    variant="success"
                     :label="$t('PageListTableTemplate')"
                     icon="file_download"
                     @click="downlaodTemplate()"
@@ -141,37 +136,25 @@
                     </template>
                     <template v-else-if="column.key === 'operation'">
                         <div class="table-operation-buttons">
-                            <q-btn
-                                class="table-operation-btn table-operation-btn--primary"
+                            <TableActionButton
+                                variant="primary"
                                 :label="$t('PatientPageListTableRowBtnEdit')"
-                                flat
-                                dense
-                                no-caps
                                 @click="edit(record)"
                             />
-                            <q-btn
-                                class="table-operation-btn table-operation-btn--primary"
+                            <TableActionButton
+                                variant="primary"
                                 :label="$t('PatientPageListTableRowBtnPatientInformation')"
-                                flat
-                                dense
-                                no-caps
                                 @click="info(record)"
                             />
-                            <q-btn
-                                class="table-operation-btn table-operation-btn--secondary"
+                            <TableActionButton
+                                variant="secondary"
                                 :label="$t('PatientPageListTableRowBtnAssociateWithSamples')"
-                                flat
-                                dense
-                                no-caps
                                 @click="link(record)"
                             />
-                            <q-btn
+                            <TableActionButton
                                 v-permission="'deletePatient'"
-                                class="table-operation-btn table-operation-btn--danger"
+                                variant="danger"
                                 :label="$t('PatientPageListTableRowBtnDelete')"
-                                flat
-                                dense
-                                no-caps
                                 @click="confirm(record)"
                             />
                         </div>
@@ -216,6 +199,8 @@ import { useRouter } from 'vue-router'
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 import { infoMessage, warnMessage } from 'src/utils/notify'
 import { useI18n } from 'vue-i18n'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 import PatientInfo from './PatientInfo.vue'
 import PatientEdit from './PatientEdit.vue'
 import PatientNew from './PatientNew.vue'

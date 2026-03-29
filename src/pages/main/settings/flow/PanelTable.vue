@@ -11,12 +11,12 @@
                 @keypress.enter="refreshRows"
                 @clear="refreshRows"
             />
-            <q-btn color="primary" icon="search" :label="$t('Search')" @click="refreshRows" />
-            <q-btn color="grey-7" outline icon="close" :label="$t('Reset')" @click="keyword = ''; refreshRows()" />
+            <AppActionButton variant="primary" icon="search" :label="$t('Search')" @click="refreshRows" />
+            <AppActionButton icon="close" :label="$t('Reset')" @click="keyword = ''; refreshRows()" />
         </div>
 
         <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-            <q-btn v-if="!props.readonly" color="primary" icon="add" :label="$t('Add')" @click="addRow" />
+            <AppActionButton v-if="!props.readonly" variant="primary" icon="add" :label="$t('Add')" @click="addRow" />
         </q-toolbar>
 
         <a-table
@@ -36,16 +36,13 @@
                         <a-tag v-for="item in record.flows.slice(0, 2)" :key="item.id" color="blue">
                             {{ item.name }}
                         </a-tag>
-                        <q-btn
+                        <TableActionButton
                             v-if="record.flows.length > 2"
-                            dense
-                            flat
-                            no-caps
-                            class="table-operation-btn table-operation-btn--primary"
+                            variant="primary"
                             @click="showFlowModal(record)"
                         >
                             {{ $t('More') }}({{ record.flows.length }})
-                        </q-btn>
+                        </TableActionButton>
                     </div>
                 </template>
 
@@ -55,20 +52,14 @@
 
                 <template v-else-if="column.key === 'operation'">
                     <div class="table-operation-buttons">
-                        <q-btn
-                            dense
-                            flat
-                            no-caps
+                        <TableActionButton
                             :label="$t('Edit')"
-                            class="table-operation-btn table-operation-btn--primary"
+                            variant="primary"
                             @click="showEditDlg(record)"
                         />
-                        <q-btn
-                            dense
-                            flat
-                            no-caps
+                        <TableActionButton
                             :label="$t('Delete')"
-                            class="table-operation-btn table-operation-btn--danger"
+                            variant="danger"
                             @click="showDeleteDlg(record)"
                         />
                     </div>
@@ -103,6 +94,8 @@ import { useQuasar } from 'quasar'
 import { deletePanel, getPanels } from 'src/api/panel'
 import PanelDialog from 'pages/main/settings/flow/PanelDialog'
 import { format } from 'src/utils/time'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const props = defineProps({
     selection: {

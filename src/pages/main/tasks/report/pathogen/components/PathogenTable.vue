@@ -10,29 +10,23 @@
     >
         <template #bodyCell="{ record, column, }">
             <template v-if="column.dataIndex === 'report'">
-                <q-btn
-                    flat
-                    size="sm"
-                    color="primary"
+                <TableActionButton
+                    variant="primary"
                     label="reads"
                     target="_blank"
                     :href="record.file"
                     :download="record.fileName"
                 />
                 <span>|</span>
-                <q-btn
-                    flat
-                    size="sm"
-                    color="primary"
+                <TableActionButton
+                    variant="primary"
                     label="Blast"
                     target="_blank"
                     href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"
                 />
                 <span>|</span>
-                <q-btn
-                    flat
-                    size="sm"
-                    color="primary"
+                <TableActionButton
+                    variant="primary"
                     :label="`Compare(${record.compareResult.length})`"
                     @click="showCompareDialog(record)"
                 />
@@ -95,6 +89,7 @@ import { globalStore } from 'stores/global'
 import { storeToRefs } from 'pinia'
 import CompareDialog from './CompareDialog.vue'
 import { fillCompareData } from 'pages/main/tasks/report/pathogen/components/compare';
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 
 const store = globalStore()

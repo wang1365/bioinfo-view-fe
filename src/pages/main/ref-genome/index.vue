@@ -14,16 +14,15 @@
                         clearable
                         @clear="refreshPage()"
                     />
-                    <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshPage()" />
-                    <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="resetSearch()" />
+                    <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                    <AppActionButton :label="$t('Reset')" icon="clear" @click="resetSearch()" />
                 </div>
             </div>
             <div>
                 <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-                    <q-btn
+                    <AppActionButton
                         v-if="canCreate"
-                        color="primary"
-                        unelevated
+                        variant="primary"
                         :label="$t('Add')"
                         icon="description"
                         @click="openNewDialog = true"
@@ -59,21 +58,15 @@
                         </template>
                         <template v-else-if="column.key === 'actions'">
                             <div class="table-operation-buttons">
-                                <q-btn
-                                    class="table-operation-btn table-operation-btn--primary"
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('Detail')"
-                                    flat
-                                    dense
-                                    no-caps
                                     @click="gotoDetail(record)"
                                 />
-                                <q-btn
+                                <TableActionButton
                                     v-if="canDelete"
-                                    class="table-operation-btn table-operation-btn--danger"
+                                    variant="danger"
                                     :label="$t('Delete')"
-                                    flat
-                                    dense
-                                    no-caps
                                     @click="confirmDelete(record)"
                                 />
                             </div>
@@ -97,6 +90,8 @@ import { toLocalString } from 'src/utils/time'
 import { getCurrentUser } from 'src/utils/user'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import CreateCustomReferenceGenomeDialog from './CreateCustomReferenceGenomeDialog.vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const router = useRouter()
 const $q = useQuasar()

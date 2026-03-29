@@ -7,7 +7,7 @@
                     <div style="white-space:pre-wrap; line-height: 35px">{{intro}}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">{{ $t('Close')}}</q-btn>
+                    <AppActionButton variant="primary" v-close-popup>{{ $t('Close')}}</AppActionButton>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -74,21 +74,20 @@
                             <q-icon name="search" />
                         </template>
                     </q-input>
-                    <q-btn
-                        size="small"
-                        color="primary"
+                    <AppActionButton
+                        variant="primary"
                         :label="$t('Search')"
                         @click="searchKeyword(table)"
                         :disable="props.viewConfig.showStick && props.viewConfig.stickDone"
-                    ></q-btn>
+                    />
                     <q-space />
-                    <q-btn
+                    <AppActionButton
+                        variant="primary"
                         :href="table.url"
                         :download="table.fileName"
                         :label="$t('Download')"
                         icon="download"
-                        size="12px"
-                        flat
+                        target="_blank"
                     />
                 </q-toolbar>
                 <div style="position:relative">
@@ -116,23 +115,20 @@
   :pagination="paginationConfig"
 >
                         <template #bodyCell="{ column, record }">
-                            <q-btn
+                            <TableActionButton
+                                variant="primary"
                                 v-if="column.config.type === 'image'"
-                                size="12px"
-                                flat
-                                color="primary"
                                 :label="$t('View')"
                                 @click="clickView(record,column.title)"
                             />
-                            <q-btn
+                            <TableActionButton
+                                variant="primary"
                                 v-if="column.config.type === 'file'"
                                 :href="`igv${record[column.dataIndex]}`"
                                 :download="`igv${record[column.dataIndex]}`"
                                 :label="$t('Download')"
                                 icon="download"
-                                text-color="primary"
-                                size="12px"
-                                flat
+                                target="_blank"
                             />
                             <template v-if="column.config.type === 'link'">
                                 <a
@@ -141,20 +137,17 @@
                                     target="_blank"
                                     >{{$t('View')}}</a
                                 >
-                                <q-btn
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('View')"
-                                    flat
-                                    text-color="primary"
                                     @click="showHtmlDialg(record, column)"
                                 />
                             </template>
                             <template
                                 v-if="(column.title.includes('Plot') || column.title.includes('plot')) && record[column.dataIndex]!=='-' && record[column.dataIndex]"
                             >
-                                <q-btn
-                                    size="12px"
-                                    flat
-                                    color="primary"
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('View')"
                                     @click="clickView(record,column.title)"
                                 />
@@ -180,16 +173,15 @@
         </q-tab-panels>
 
         <template v-for="file in files" :key="file.buttonName">
-            <q-btn
+            <AppActionButton
+                variant="primary"
                 :label="file.buttonName"
-                color="primary"
                 icon="download"
                 type="href"
                 :href="`/igv${resolveFilePath(file.filePath)}`"
                 target="_blank"
                 class="q-mb-sm"
-            >
-            </q-btn>
+            />
         </template>
         <q-dialog v-model="showImage">
             <q-card style="width:80%;max-width:1000px;height:550px;align-items: center">
@@ -265,6 +257,8 @@ import { useI18n } from 'vue-i18n'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
 import { useQuasar } from "quasar"
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'
 import { template } from 'lodash'

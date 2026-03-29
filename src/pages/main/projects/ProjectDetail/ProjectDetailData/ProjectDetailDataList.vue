@@ -12,8 +12,8 @@
                         >{{ $t('ProjectDetailPageDataFromParent') }}</span
                     >
                 </q-toolbar-title>
-                <q-btn
-                    color="primary"
+                <AppActionButton
+                    variant="primary"
                     :label="$t('ProjectDetailPageSelectData')"
                     icon="description"
                     @click="openDataSelector = true"
@@ -35,22 +35,16 @@
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.dataIndex === 'operation'">
                             <div class="table-operation-buttons">
-                                <q-btn
-                                    class="table-operation-btn table-operation-btn--primary"
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('Detail')"
                                     @click="info(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
-                                <q-btn
+                                <TableActionButton
                                     v-if="!fromParent(record)"
-                                    class="table-operation-btn table-operation-btn--danger"
+                                    variant="danger"
                                     :label="$t('Delete')"
                                     @click="confirm(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
                             </div>
                         </template>
@@ -76,6 +70,8 @@ import ProjectDetailDataSelect from "./ProjectDetailDataSelect.vue";
 import { useApi } from "src/api/apiBase";
 import { infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 const { t } = useI18n();
 const emit = defineEmits(["refresh"]);
 const props = defineProps({

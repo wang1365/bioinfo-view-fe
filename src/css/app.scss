@@ -149,21 +149,8 @@
 
 .page-list-filter .q-field__native,
 .page-list-filter .q-field__input,
-.page-list-filter .q-field__label,
-.page-list-toolbar .q-btn {
+.page-list-filter .q-field__label {
     font-size: 13px;
-}
-
-.page-list-filter .q-btn,
-.page-list-toolbar .q-btn {
-    min-height: 34px;
-    padding: 0 14px;
-    border-radius: 6px;
-}
-
-.page-list-filter .q-btn .q-icon,
-.page-list-toolbar .q-btn .q-icon {
-    font-size: 16px;
 }
 
 .app-action-btn {
@@ -219,17 +206,9 @@
     background: #fff0f0 !important;
 }
 
-/* Global non-table action button style.
-   Keep intro-help and table-operation buttons unchanged. */
-.page-list-filter .q-btn:not(.intro-help-btn):not(.table-operation-btn),
-.page-list-toolbar .q-btn:not(.intro-help-btn):not(.table-operation-btn),
-.task-filter-row .q-btn:not(.intro-help-btn):not(.table-operation-btn):not(.task-card),
-.settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn),
-.ui-settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn),
-.users-page .q-btn:not(.intro-help-btn):not(.table-operation-btn),
-.user-profile-page .q-btn:not(.intro-help-btn):not(.table-operation-btn),
-.project-detail-page .q-btn:not(.intro-help-btn):not(.table-operation-btn),
-.q-dialog .q-btn:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn) {
+/* Unified button style for task report page
+   Exclude intro/help and comparator operator buttons (<, >, =) */
+.task-report-page .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) {
     height: 34px !important;
     min-height: 34px !important;
     padding: 0 14px !important;
@@ -241,15 +220,180 @@
     font-weight: 600;
 }
 
-.page-list-filter .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
-.page-list-toolbar .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
-.task-filter-row .q-btn:not(.intro-help-btn):not(.table-operation-btn):not(.task-card) .q-btn__content,
-.settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
-.ui-settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
-.users-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
-.user-profile-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
-.project-detail-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
-.q-dialog .q-btn:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn) .q-btn__content,
+.task-report-page .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover {
+    border-color: #aeb9c8 !important;
+    background: #f2f5f9 !important;
+}
+
+.task-report-page .q-btn.bg-primary:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) {
+    color: #245ea8 !important;
+    border-color: #a9bfdc !important;
+    background: #eef5ff !important;
+}
+
+.task-report-page .q-btn.bg-primary:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover {
+    border-color: #8eaed7 !important;
+    background: #e5efff !important;
+}
+
+.task-report-page .q-btn.bg-positive:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) {
+    color: #1d7a46 !important;
+    border-color: #b9dbc6 !important;
+    background: #f4fbf6 !important;
+}
+
+.task-report-page .q-btn.bg-positive:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover {
+    border-color: #8ec0a1 !important;
+    background: #e9f7ee !important;
+}
+
+.task-report-page .q-btn.bg-red:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) {
+    color: #d34d4d !important;
+    border-color: #efc2c2 !important;
+    background: #fff7f7 !important;
+}
+
+.task-report-page .q-btn.bg-red:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover {
+    border-color: #e8a3a3 !important;
+    background: #fff0f0 !important;
+}
+
+.task-report-page .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) .q-btn__content {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    column-gap: 6px;
+}
+
+.task-report-page .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) .q-btn__content > .q-icon {
+    font-size: 16px;
+    margin-right: 0 !important;
+}
+
+/* Unified table style for /main/tasks/:id/report subtree */
+.task-report-page .ant-table,
+.task-report-page .ant-table-container {
+    border: 1px solid #6f8098 !important;
+}
+
+.task-report-page .ant-table-container {
+    border-color: #6f8098 !important;
+}
+
+.task-report-page .ant-table-thead > tr > th {
+    border-bottom: 1px solid #c7cfdb !important;
+    border-right: 1px solid #cfd7e3 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    line-height: 1.2 !important;
+    box-sizing: border-box;
+    background: #f7faff !important;
+}
+
+.task-report-page .ant-table-thead > tr > th::before {
+    display: none !important;
+}
+
+.task-report-page .ant-table-tbody > tr > td {
+    border-bottom: 1px solid #d4dbe6 !important;
+    border-right: 1px solid #d9e0ea !important;
+    box-sizing: border-box;
+}
+
+.task-report-page .ant-table-thead > tr > th:last-child,
+.task-report-page .ant-table-tbody > tr > td:last-child {
+    border-right: 0 !important;
+}
+
+.task-report-page .ant-table-thead > tr > th.ant-table-cell-scrollbar {
+    border-right: 0 !important;
+    box-shadow: none !important;
+}
+
+.task-report-page .ant-table-tbody > tr:hover > td {
+    background: #eef4ff !important;
+}
+
+.task-report-page .q-table {
+    border: 1px solid #6f8098 !important;
+}
+
+.task-report-page .q-table thead tr th {
+    border-right: 1px solid #cfd7e3 !important;
+    border-bottom: 1px solid #c7cfdb !important;
+    background: #f7faff !important;
+}
+
+.task-report-page .q-table tbody tr td {
+    border-right: 1px solid #d9e0ea !important;
+    border-bottom: 1px solid #d4dbe6 !important;
+}
+
+.task-report-page .q-table thead tr th:last-child,
+.task-report-page .q-table tbody tr td:last-child {
+    border-right: 0 !important;
+}
+
+/* Report page: table-cell buttons follow PatientsList operation style */
+.task-report-page .ant-table-tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn),
+.task-report-page .q-table tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) {
+    height: 28px !important;
+    min-height: 28px !important;
+    padding: 0 6px !important;
+    border: 1px solid #b8c7dc !important;
+    border-radius: 2px !important;
+    background: #f7fbff !important;
+    color: #245ea8 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+.task-report-page .ant-table-tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover,
+.task-report-page .q-table tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover {
+    border-color: #8fb0d9 !important;
+    background: #eef6ff !important;
+}
+
+.task-report-page .ant-table-tbody .q-btn.bg-positive:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn),
+.task-report-page .q-table tbody .q-btn.bg-positive:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) {
+    color: #1d7a46 !important;
+    border-color: #b9dbc6 !important;
+    background: #f4fbf6 !important;
+}
+
+.task-report-page .ant-table-tbody .q-btn.bg-positive:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover,
+.task-report-page .q-table tbody .q-btn.bg-positive:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover {
+    border-color: #8ec0a1 !important;
+    background: #e9f7ee !important;
+}
+
+.task-report-page .ant-table-tbody .q-btn.bg-red:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn),
+.task-report-page .q-table tbody .q-btn.bg-red:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) {
+    color: #e14b4b !important;
+    border-color: #efc2c2 !important;
+    background: #fff7f7 !important;
+}
+
+.task-report-page .ant-table-tbody .q-btn.bg-red:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover,
+.task-report-page .q-table tbody .q-btn.bg-red:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn):hover {
+    border-color: #e8a3a3 !important;
+    background: #fff0f0 !important;
+}
+
+.task-report-page .ant-table-tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) .q-btn__content,
+.task-report-page .q-table tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) .q-btn__content {
+    font-size: 12px !important;
+    line-height: 1 !important;
+    column-gap: 4px !important;
+}
+
+.task-report-page .ant-table-tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) .q-icon,
+.task-report-page .q-table tbody .q-btn:not(.intro-help-btn):not(.q-btn--round):not(.q-btn--dense):not(.q-btn-toggle__option):not(.q-btn-group__btn) .q-icon {
+    font-size: 14px !important;
+    margin-right: 0 !important;
+}
+
+/* Explicit action-button style. */
 .app-action-btn .q-btn__content {
     font-size: 13px;
     font-weight: 600;
@@ -257,108 +401,9 @@
     column-gap: 6px;
 }
 
-.page-list-filter .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
-.page-list-toolbar .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
-.task-filter-row .q-btn:not(.intro-help-btn):not(.table-operation-btn):not(.task-card) .q-btn__content > .q-icon,
-.settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
-.ui-settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
-.users-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
-.user-profile-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
-.project-detail-page .q-btn:not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
-.q-dialog .q-btn:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn) .q-btn__content > .q-icon,
 .app-action-btn .q-btn__content > .q-icon {
     font-size: 16px;
     margin-right: 0 !important;
-}
-
-.page-list-filter .q-btn:not(.intro-help-btn):not(.table-operation-btn):hover,
-.page-list-toolbar .q-btn:not(.intro-help-btn):not(.table-operation-btn):hover,
-.task-filter-row .q-btn:not(.intro-help-btn):not(.table-operation-btn):not(.task-card):hover,
-.settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn):hover,
-.ui-settings-page .q-btn:not(.intro-help-btn):not(.table-operation-btn):hover,
-.users-page .q-btn:not(.intro-help-btn):not(.table-operation-btn):hover,
-.user-profile-page .q-btn:not(.intro-help-btn):not(.table-operation-btn):hover,
-.project-detail-page .q-btn:not(.intro-help-btn):not(.table-operation-btn):hover,
-.q-dialog .q-btn:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn):hover {
-    border-color: #aeb9c8 !important;
-    background: #f2f5f9 !important;
-}
-
-.page-list-filter .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn),
-.page-list-toolbar .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn),
-.task-filter-row .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):not(.task-card),
-.settings-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn),
-.ui-settings-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn),
-.users-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn),
-.user-profile-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn),
-.project-detail-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn),
-.q-dialog .q-btn.bg-primary:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn) {
-    color: #245ea8 !important;
-    border-color: #a9bfdc !important;
-    background: #eef5ff !important;
-}
-
-.page-list-filter .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):hover,
-.page-list-toolbar .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):hover,
-.task-filter-row .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):not(.task-card):hover,
-.settings-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):hover,
-.ui-settings-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):hover,
-.users-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):hover,
-.user-profile-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):hover,
-.project-detail-page .q-btn.bg-primary:not(.intro-help-btn):not(.table-operation-btn):hover,
-.q-dialog .q-btn.bg-primary:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn):hover {
-    border-color: #8eaed7 !important;
-    background: #e5efff !important;
-}
-
-.page-list-filter .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn),
-.page-list-toolbar .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn),
-.settings-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn),
-.ui-settings-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn),
-.users-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn),
-.user-profile-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn),
-.project-detail-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn),
-.q-dialog .q-btn.bg-positive:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn) {
-    color: #1d7a46 !important;
-    border-color: #b9dbc6 !important;
-    background: #f4fbf6 !important;
-}
-
-.page-list-filter .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn):hover,
-.page-list-toolbar .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn):hover,
-.settings-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn):hover,
-.ui-settings-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn):hover,
-.users-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn):hover,
-.user-profile-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn):hover,
-.project-detail-page .q-btn.bg-positive:not(.intro-help-btn):not(.table-operation-btn):hover,
-.q-dialog .q-btn.bg-positive:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn):hover {
-    border-color: #8ec0a1 !important;
-    background: #e9f7ee !important;
-}
-
-.page-list-filter .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn),
-.page-list-toolbar .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn),
-.settings-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn),
-.ui-settings-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn),
-.users-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn),
-.user-profile-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn),
-.project-detail-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn),
-.q-dialog .q-btn.bg-red:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn) {
-    color: #d34d4d !important;
-    border-color: #efc2c2 !important;
-    background: #fff7f7 !important;
-}
-
-.page-list-filter .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn):hover,
-.page-list-toolbar .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn):hover,
-.settings-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn):hover,
-.ui-settings-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn):hover,
-.users-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn):hover,
-.user-profile-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn):hover,
-.project-detail-page .q-btn.bg-red:not(.intro-help-btn):not(.table-operation-btn):hover,
-.q-dialog .q-btn.bg-red:not(.q-btn--round):not(.q-btn--dense):not(.intro-help-btn):not(.table-operation-btn):hover {
-    border-color: #e8a3a3 !important;
-    background: #fff0f0 !important;
 }
 
 .page-list-toolbar {

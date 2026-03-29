@@ -112,9 +112,9 @@
             </template>
             <template v-slot:contentFooter>
                 <div class="row justify-center q-gutter-md q-my-md">
-                    <q-btn :label="$t('Cancel')" v-close-popup class="q-px-xl" style="min-width: 160px" />
-                    <q-btn
-                        color="primary"
+                    <AppActionButton :label="$t('Cancel')" v-close-popup class="q-px-xl" style="min-width: 160px" />
+                    <AppActionButton
+                        variant="primary"
                         :label="$t('Confirm')"
                         @click="confirmTaskCreated()"
                         class="q-px-xl"
@@ -143,6 +143,7 @@
 <script setup>
 import { ref, toRefs, onMounted } from "vue";
 import PopupContentScroll from "src/components/popup-content-scroll/PopupContentScroll.vue";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 // selection dialogs handled in SingleTaskEditor
 import BatchSelectDialog from "./BatchSelectDialog.vue";
 import SingleTaskEditor from "./SingleTaskEditor.vue";

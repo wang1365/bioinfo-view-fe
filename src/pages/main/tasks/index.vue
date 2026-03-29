@@ -115,23 +115,15 @@
                             <q-icon class="cursor-pointer" name="search" @click="showProjectSelect = true" />
                         </template>
                     </q-input>
-                    <q-btn
-                        class="app-action-btn app-action-btn--primary"
-                        color="primary"
+                    <AppActionButton
+                        variant="primary"
                         :label="$t('Search')"
                         icon="search"
-                        dense
-                        flat
-                        no-caps
                         @click="search()"
                     />
-                    <q-btn
-                        class="app-action-btn"
+                    <AppActionButton
                         :label="$t('Reset')"
                         icon="refresh"
-                        dense
-                        flat
-                        no-caps
                         @click="reset()"
                     />
                 </div>
@@ -273,22 +265,16 @@
 
                     <template v-if="column.dataIndex === 'operate'">
                         <div class="table-operation-buttons task-operate-row">
-                            <q-btn
-                                class="table-operation-btn table-operation-btn--primary"
+                            <TableActionButton
+                                variant="primary"
                                 :label="$t('Detail')"
                                 :to="`/main/tasks/${record.id}`"
-                                dense
-                                flat
-                                no-caps
                             />
-                            <q-btn
-                                class="table-operation-btn table-operation-btn--success"
+                            <TableActionButton
+                                variant="success"
                                 :disable="record.status !== 'FINISHED'"
                                 :label="$t('Result')"
                                 :to="getResultRoute(record)"
-                                dense
-                                flat
-                                no-caps
                             />
 
                             <q-btn-dropdown
@@ -417,6 +403,8 @@ import { isRP2Flow } from 'src/utils/flow'
 import { ref, onMounted, computed, onUnmounted, nextTick, watch } from 'vue';
 import { useApi } from 'src/api/apiBase';
 import PageTitle from 'components/page-title/PageTitle.vue';
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 import ProjectListVue from './components/ProjectList.vue';
 import { useRouter } from 'vue-router';
 import { updateTask } from 'src/api/task';

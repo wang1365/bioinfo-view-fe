@@ -130,9 +130,9 @@
                             </q-form>
                         </q-card-section>
                         <q-card-actions align="right">
-                            <q-btn
+                            <AppActionButton
                                 class="q-mr-lg"
-                                color="primary"
+                                variant="primary"
                                 type="submit"
                                 icon="save_as"
                                 :label="$t('Save')"
@@ -163,9 +163,9 @@
                                 />
                             </div>
                             <q-card-actions align="right">
-                                <q-btn
+                                <AppActionButton
                                     class="q-mr-lg"
-                                    color="primary"
+                                    variant="primary"
                                     type="submit"
                                     icon="save_as"
                                     :label="$t('Save')"
@@ -181,6 +181,7 @@
 
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import {ref, onMounted, computed} from 'vue'
 import {useQuasar} from 'quasar'
 import {createConfig, listConfig, updateConfig} from 'src/api/config'

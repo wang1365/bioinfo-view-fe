@@ -49,14 +49,13 @@
             />
         </q-card-section>
         <q-card-actions align="center" class="q-mt-auto q-py-md">
-            <q-btn
+            <AppActionButton
                 :label="$t('Confirm')"
-                color="primary"
-                outline
+                variant="primary"
                 @click="ensureSelect()"
                 :disable="selectedRowKeys.length === 0"
             />
-            <q-btn :label="$t('Cancel')" outline v-close-popup />
+            <AppActionButton :label="$t('Cancel')" v-close-popup />
         </q-card-actions>
     </q-card>
 </template>
@@ -65,6 +64,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useApi } from 'src/api/apiBase.js'
 import { errorMessage } from 'src/utils/notify.js'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

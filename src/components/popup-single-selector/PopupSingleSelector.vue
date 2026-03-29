@@ -73,10 +73,10 @@
                         :currentPage="props.currentPage"
                         @pageChange="pageChange($event)"
                     />
-                    <q-btn class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
-                    <q-btn
+                    <AppActionButton class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
+                    <AppActionButton
                         v-if="selectedItem[props.selectedShowField]"
-                        color="primary"
+                        variant="primary"
                         :label="$t('PopupSelectEnsure')"
                         @click="ensureSelect()"
                     />
@@ -88,6 +88,7 @@
 <script setup>
 import { ref } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 
 const selectedItem = ref({});
 const selectItem = (flow) => {

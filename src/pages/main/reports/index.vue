@@ -37,8 +37,8 @@
                         :label="$t('DataNewFormDataIdentificationNumber')"
                         clearable
                     />
-                    <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshPage()" />
-                    <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="reset()" />
+                    <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                    <AppActionButton :label="$t('Reset')" icon="clear" @click="reset()" />
                 </div>
             </div>
             <div class="q-pt-sm q-px-md q-pb-md bio-data-table">
@@ -79,22 +79,16 @@
                         <template v-else-if="column.key === 'actions'">
                             <div class="table-operation-buttons">
                                 <a :href="getreportPath(record)" download v-if="record.status === '鍒涘缓鎴愬姛'">
-                                    <q-btn
-                                        class="table-operation-btn table-operation-btn--primary"
+                                    <TableActionButton
+                                        variant="primary"
                                         :label="$t('Download')"
-                                        dense
-                                        flat
-                                        no-caps
                                     />
                                 </a>
-                                <q-btn
+                                <TableActionButton
                                     v-permission="'deleteReport'"
-                                    class="table-operation-btn table-operation-btn--danger"
+                                    variant="danger"
                                     @click="onDelete(record)"
                                     :label="$t('Delete')"
-                                    dense
-                                    flat
-                                    no-caps
                                 />
                             </div>
                         </template>
@@ -115,6 +109,8 @@ import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'
 import { format } from 'src/utils/time'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const store = globalStore()
 const { langCode } = storeToRefs(store)

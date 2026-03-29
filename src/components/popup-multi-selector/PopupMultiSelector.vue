@@ -58,8 +58,8 @@
             <div>
                 <q-toolbar>
                     <q-toolbar-title></q-toolbar-title>
-                    <q-btn class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
-                    <q-btn color="primary" :label="$t('PopupSelectEnsure')" @click="ensureSelect()" />
+                    <AppActionButton class="q-mr-md" :label="$t('PopupSelectCancel')" v-close-popup />
+                    <AppActionButton variant="primary" :label="$t('PopupSelectEnsure')" @click="ensureSelect()" />
                 </q-toolbar>
             </div>
         </div>
@@ -68,6 +68,7 @@
 <script setup>
 import { ref, onUpdated, computed, onMounted } from "vue";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 
 const checkAll = ref(false);
 // const selectedItems = computed(() => {

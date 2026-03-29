@@ -68,7 +68,7 @@
                 <div style="white-space:pre-wrap; line-height: 35px">{{ props.intro }}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">{{ $t('Close') }}</q-btn>
+                <AppActionButton variant="primary" v-close-popup>{{ $t('Close') }}</AppActionButton>
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -87,6 +87,7 @@ import { useI18n } from 'vue-i18n';
 import { globalStore } from 'src/stores/global';
 import { storeToRefs } from 'pinia';
 import _ from 'lodash';
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 
 const store = globalStore();
 const { langCode } = storeToRefs(store);

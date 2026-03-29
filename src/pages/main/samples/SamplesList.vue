@@ -108,22 +108,21 @@
                     map-options
                     :label="$t('SampleListPageSearchIsPanel')"
                 />
-                <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshPage()" />
-                <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="reset()" />
+                <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                <AppActionButton :label="$t('Reset')" icon="clear" @click="reset()" />
             </div>
         </div>
         <div>
             <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-                <q-btn
+                <AppActionButton
                     v-permission="'createSample'"
-                    color="primary"
-                    unelevated
+                    variant="primary"
                     :label="$t('SampleListTableBtnNew')"
                     icon="description"
                     @click="showSampleNew = true"
                 />
-                <q-btn color="info" unelevated :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
-                <q-btn color="positive" unelevated v-permission="'createSample'">
+                <AppActionButton variant="primary" :label="$t('PageListTableExport')" icon="file_download" @click="exportData()" />
+                <AppActionButton variant="success" v-permission="'createSample'">
                     <label for="file">
                         <q-icon name="file_upload"></q-icon>
                         {{ $t('PageListTableUpload') }}
@@ -131,10 +130,9 @@
                             <input id="file" type="file" style="rgba(0,0,0,0)" @change="fileSelected($event)" />
                         </span>
                     </label>
-                </q-btn>
-                <q-btn
-                    color="positive"
-                    unelevated
+                </AppActionButton>
+                <AppActionButton
+                    variant="success"
                     :label="$t('PageListTableTemplate')"
                     icon="file_download"
                     @click="downloadTemplate()"
@@ -171,38 +169,26 @@
                         </template>
                         <template v-else-if="column.key === 'operation'">
                             <div class="table-operation-buttons">
-                                <q-btn
-                                    class="table-operation-btn table-operation-btn--primary"
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('SampleListTableColumnBtnDetail')"
                                     @click="info(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
-                                <q-btn
-                                    class="table-operation-btn table-operation-btn--primary"
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('SampleListTableColumnBtnEdit')"
                                     @click="edit(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
-                                <q-btn
-                                    class="table-operation-btn table-operation-btn--secondary"
+                                <TableActionButton
+                                    variant="secondary"
                                     :label="$t('SampleListTableColumnBtnAssociatewithPatient')"
                                     @click="link(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
-                                <q-btn
+                                <TableActionButton
                                     v-permission="'deleteSample'"
-                                    class="table-operation-btn table-operation-btn--danger"
+                                    variant="danger"
                                     :label="$t('SampleListTableColumnBtnDelete')"
                                     @click="confirm(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
                             </div>
                         </template>
@@ -239,6 +225,8 @@
 import { useQuasar } from 'quasar'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 import SampleInfo from './SampleInfo.vue'
 import SampleEdit from './SampleEdit.vue'
 import SampleNew from './SampleNew.vue'

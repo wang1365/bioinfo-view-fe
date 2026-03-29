@@ -50,15 +50,13 @@
                 </div>
             </q-card-section>
             <q-card-actions align="right">
-                <q-btn
+                <AppActionButton
                     icon="password"
-                    color="primary"
-                    text-color="white"
-                    size="1rem"
+                    variant="primary"
                     :label="$t('ChangePassword')"
                     @click="showPasswordDialog()"
-                ></q-btn>
-                <q-btn icon="logout" color="red-10" text-color="white" size="1rem" :label="$t('Logout')" @click="logout"></q-btn>
+                />
+                <AppActionButton icon="logout" variant="danger" :label="$t('Logout')" @click="logout" />
             </q-card-actions>
             <ChangePasswordDialog ref="changePasswordDialog" v-model="passwordDialogVisible" />
         </q-card>
@@ -68,6 +66,7 @@
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
 import ChangePasswordDialog from "./ChangePasswordDialog";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { ref } from "vue";
 import { useRouter } from "vue-router"
 import { globalStore } from "src/stores/global"

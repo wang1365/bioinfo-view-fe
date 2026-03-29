@@ -43,8 +43,8 @@
                 @clear="refreshUrl"
                 @keypress.enter="clickSearch"
             />
-            <q-btn color="primary" icon="search" :label="$t('Search')" @click="clickSearch" />
-            <q-btn color="grey-7" outline icon="close" :label="$t('Reset')" @click="clickReset" />
+            <AppActionButton variant="primary" icon="search" :label="$t('Search')" @click="clickSearch" />
+            <AppActionButton icon="close" :label="$t('Reset')" @click="clickReset" />
         </div>
 
         <a-table
@@ -62,13 +62,10 @@
             <template #bodyCell="{ column, record }">
                 <template v-if="column.key === 'operation'">
                     <div class="table-operation-buttons">
-                        <q-btn
+                        <TableActionButton
                             v-if="filterTasks(record.tasks || [], 3).length > 0"
                             label="IGV"
-                            dense
-                            flat
-                            no-caps
-                            class="table-operation-btn table-operation-btn--primary"
+                            variant="primary"
                         >
                             <q-menu>
                                 <q-list>
@@ -84,7 +81,7 @@
                                     </q-item>
                                 </q-list>
                             </q-menu>
-                        </q-btn>
+                        </TableActionButton>
                     </div>
                 </template>
 
@@ -112,6 +109,8 @@ import { useRouter, useRoute } from 'vue-router'
 import PageTitle from 'components/page-title/PageTitle'
 import { useI18n } from 'vue-i18n'
 import * as _ from 'lodash'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n()
 const loading = ref(false)

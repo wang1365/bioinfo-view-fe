@@ -62,7 +62,7 @@
             <q-separator />
             <q-card-actions align="left">
                 <q-card-section>
-                    <q-btn :label="$t('Save')" color="primary" icon="save_as" @click="clickSet"></q-btn>
+                    <AppActionButton :label="$t('Save')" variant="primary" icon="save_as" @click="clickSet" />
                 </q-card-section>
             </q-card-actions>
         </q-card>
@@ -72,6 +72,7 @@
 <script setup>
 import { ref, watch, onMounted, toRefs } from 'vue'
 import PageTitle from "components/page-title/PageTitle"
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { useQuasar } from 'quasar'
 import { QSpinnerGears } from 'quasar'
 import { listUiConfig, createUiConfig, updateUiConfig, refreshSystemUi } from 'src/api/ui'

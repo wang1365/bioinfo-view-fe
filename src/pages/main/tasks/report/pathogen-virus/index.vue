@@ -41,29 +41,23 @@
         >
             <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'report'">
-                    <q-btn
-                        flat
-                        size="sm"
-                        color="primary"
+                    <TableActionButton
+                        variant="primary"
                         label="reads"
                         target="_blank"
                         :href="record.file"
                         :download="record.fileName"
                     />
                     <span>|</span>
-                    <q-btn
-                        flat
-                        size="sm"
-                        color="primary"
+                    <TableActionButton
+                        variant="primary"
                         label="Blast"
                         target="_blank"
                         href="https://blast.ncbi.nlm.nih.gov/Blast.cgi"
                     />
                     <span>|</span>
-                    <q-btn
-                        flat
-                        size="sm"
-                        color="primary"
+                    <TableActionButton
+                        variant="primary"
                         :label="`Compare(${record.compareResult.length})`"
                         @click="showCompareDialog(record)"
                     />
@@ -110,7 +104,7 @@
                     <div style="white-space:pre-wrap; line-height: 35px">{{ props.intro }}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">{{ $t('Close') }}</q-btn>
+                    <AppActionButton variant="primary" v-close-popup>{{ $t('Close') }}</AppActionButton>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -136,6 +130,8 @@ import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import CompareDialog from '../pathogen/components/CompareDialog.vue'
 import { fillCompareData } from '../pathogen/components/compare'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 
 const props = defineProps({

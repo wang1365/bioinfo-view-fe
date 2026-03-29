@@ -3,9 +3,9 @@
         <q-toolbar class="text-primary">
             <q-input v-model="keyword" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable @clear="clearKeyword"
                 style="width:300px" :disable="showSticky && stickDone" />
-            <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword"
+            <AppActionButton variant="primary" :label="$t('Search')" @click="searchKeyword"
                 :disable="showSticky && stickDone" />
-            <q-btn :href="props.url" :label="$t('Download')" size="small" icon="download" color="primary" target="_blank"
+            <AppActionButton variant="primary" :href="props.url" :label="$t('Download')" icon="download" target="_blank"
                 class="q-ml-sm" />
         </q-toolbar>
         <div class="bio-data-table q-py-sm">
@@ -17,8 +17,8 @@
                 <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows" :columns="columns" :sticky="true"
                     rowKey="0" :row-selection="rowSelection">
                     <template #bodyCell="{ column, record }">
-                        <q-btn v-if="column.title === 'IGV'" label="IGV" color="primary" size="xs" outline
-                            @click="clickView(record)"></q-btn>
+                        <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
+                            @click="clickView(record)" />
                     </template>
                 </a-table>
             </div>
@@ -36,6 +36,8 @@ import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed, onDe
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n"
 import IGV from './Igv.vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 
 const { t } = useI18n()

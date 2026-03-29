@@ -15,16 +15,15 @@
                         @keypress.enter="refreshUsers"
                         v-model="searchKeyword"
                     />
-                    <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshUsers" />
-                    <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="resetSearch" />
+                    <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshUsers" />
+                    <AppActionButton :label="$t('Reset')" icon="clear" @click="resetSearch" />
                 </div>
             </div>
             <div>
                 <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-                    <q-btn
+                    <AppActionButton
                         v-permission="'createUser'"
-                        color="primary"
-                        unelevated
+                        variant="primary"
                         icon="description"
                         :label="$t('Add')"
                         @click="clickCreate"
@@ -77,41 +76,29 @@
                         </template>
                         <template v-else-if="column.key === 'operation'">
                             <div class="table-operation-buttons users-op">
-                                <q-btn
+                                <TableActionButton
                                     v-if="allowReset(record)"
-                                    class="table-operation-btn table-operation-btn--primary"
-                                    flat
-                                    dense
-                                    no-caps
+                                    variant="primary"
                                     :label="$t('Setting')"
                                     @click="clickEdit(record)"
                                 />
-                                <q-btn
+                                <TableActionButton
                                     v-permission="'resetPassword'"
                                     v-if="allowReset(record)"
-                                    class="table-operation-btn table-operation-btn--secondary"
-                                    dense
-                                    flat
-                                    no-caps
+                                    variant="secondary"
                                     :label="$t('ResetPassword')"
                                     @click="clickReset(record)"
                                 />
-                                <q-btn
+                                <TableActionButton
                                     v-permission="'deleteUser'"
                                     v-if="allowDelete(record)"
-                                    class="table-operation-btn table-operation-btn--danger"
-                                    dense
-                                    flat
-                                    no-caps
+                                    variant="danger"
                                     :label="$t('Delete')"
                                     @click="clickDelete(record)"
                                 />
-                                <q-btn
+                                <TableActionButton
                                     v-if="amISuper() && !isSuper(record)"
-                                    class="table-operation-btn table-operation-btn--primary"
-                                    dense
-                                    flat
-                                    no-caps
+                                    variant="primary"
                                     :label="$t('Permission')"
                                     @click="clickSetPermission(record)"
                                 />
@@ -141,6 +128,8 @@ import { useI18n } from 'vue-i18n'
 import ResetPassword from 'pages/main/users/ResetPassword'
 import { globalStore } from 'src/stores/global'
 import SetPermissionsDialog from 'pages/main/users/SetPermissionsDialog.vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n()
 const createUserDlg = ref(null)

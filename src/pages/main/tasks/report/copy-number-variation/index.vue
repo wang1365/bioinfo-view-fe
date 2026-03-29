@@ -60,27 +60,24 @@
                             />
                         </div>
                         <div class="q-gutter-xs">
-                            <q-btn
+                            <AppActionButton
                                 class="col"
-                                color="primary"
-                                size="small"
+                                variant="primary"
                                 :label="$t('Confirm')"
                                 @click="refreshPie"
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
                             />
-                            <q-btn
+                            <AppActionButton
                                 class="col"
-                                color="primary"
-                                size="small"
+                                variant="primary"
                                 :label="$t('FuWei')"
                                 @click="resetPie"
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
                             />
-                            <q-btn
+                            <AppActionButton
                                 v-if="amISuper()"
                                 class="col"
-                                color="primary"
-                                size="small"
+                                variant="primary"
                                 :label="showPieTable ? $t('HideDetail') : $t('ShowDetail')"
                                 @click="showPieTable = !showPieTable"
                                 :disable="viewConfig.showStick && viewConfig.stickDone"
@@ -151,25 +148,25 @@
                     style="width:150px"
                     dense
                 />
-                <q-btn
-                    color="primary"
+                <AppActionButton
+                    variant="primary"
                     :label="$t('Confirm')"
                     icon="search"
                     @click="clickSearch()"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
                 />
-                <q-btn
-                    color="primary"
+                <AppActionButton
+                    variant="primary"
                     :label="$t('Clear')"
                     icon="delete"
                     @click="clickClear()"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
                 />
-                <q-btn
+                <AppActionButton
+                    variant="primary"
                     :href="tableFileUrl"
                     :label="$t('Download')"
                     icon="download"
-                    color="primary"
                     target="_blank"
                     class="q-ml-sm"
                     :download="tableFileName"
@@ -213,7 +210,7 @@
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
                     <template v-else>
-                        <q-btn size="xs" outline color="primary" :label="$t('View')" @click="clickView(record)" />
+                        <TableActionButton variant="primary" :label="$t('View')" @click="clickView(record)" />
                     </template>
                 </template>
             </a-table>
@@ -235,7 +232,7 @@
                 <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
+                <AppActionButton variant="primary" v-close-popup>{{$t('Close')}}</AppActionButton>
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -253,6 +250,8 @@ import * as echarts from 'echarts'
 import { pieOption } from './index'
 import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 

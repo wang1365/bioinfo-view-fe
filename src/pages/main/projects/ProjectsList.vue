@@ -12,16 +12,15 @@
                     clearable
                     @clear="refreshPage()"
                 />
-                <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshPage()" />
-                <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="reset()" />
+                <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                <AppActionButton :label="$t('Reset')" icon="clear" @click="reset()" />
             </div>
         </div>
         <div>
             <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-                <q-btn
+                <AppActionButton
                     v-permission="'createProject'"
-                    color="primary"
-                    unelevated
+                    variant="primary"
                     :label="$t('ProjectPageListSearchNewBtn')"
                     icon="description"
                     @click="openNewProject = true"
@@ -52,30 +51,21 @@
                         </template>
                         <template v-else-if="column.key === 'operation'">
                             <div class="table-operation-buttons">
-                                <q-btn
-                                    class="table-operation-btn table-operation-btn--primary"
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('Detail')"
                                     @click="gotoChild(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
-                                <q-btn
-                                    class="table-operation-btn table-operation-btn--primary"
+                                <TableActionButton
+                                    variant="primary"
                                     :label="$t('Edit')"
                                     @click="updateProjectName = record.name; currentProject = record; openEditProject = true"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
-                                <q-btn
+                                <TableActionButton
                                     v-permission="'deleteProject'"
-                                    class="table-operation-btn table-operation-btn--danger"
+                                    variant="danger"
                                     :label="$t('Delete')"
                                     @click="confirm(record)"
-                                    flat
-                                    dense
-                                    no-caps
                                 />
                             </div>
                         </template>
@@ -109,8 +99,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="q-gutter-x-sm">
-                            <q-btn :label="$t('Cancel')" v-close-popup />
-                            <q-btn color="primary" :label="$t('Confirm')" @click="createProject()" />
+                            <AppActionButton :label="$t('Cancel')" v-close-popup />
+                            <AppActionButton variant="primary" :label="$t('Confirm')" @click="createProject()" />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -141,8 +131,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="q-gutter-x-sm">
-                            <q-btn :label="$t('Cancel')" v-close-popup />
-                            <q-btn color="primary" :label="$t('Confirm')" @click="updateProject()" />
+                            <AppActionButton :label="$t('Cancel')" v-close-popup />
+                            <AppActionButton variant="primary" :label="$t('Confirm')" @click="updateProject()" />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -158,6 +148,8 @@ import { useApi } from 'src/api/apiBase'
 import { infoMessage } from 'src/utils/notify'
 import { useI18n } from 'vue-i18n'
 import { toLocalString } from 'src/utils/time'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n()
 const { apiGet, apiPut, apiPost, apiDelete } = useApi()

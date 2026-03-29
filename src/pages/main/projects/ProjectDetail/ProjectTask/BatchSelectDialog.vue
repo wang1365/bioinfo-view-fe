@@ -30,9 +30,9 @@
 
                     <!-- 中间匹配按钮 -->
                     <div class="col-auto" style="display: flex; align-items: center; justify-content: center; padding: 0 16px;">
-                        <q-btn 
+                        <AppActionButton
                             :label="$t('Match')" 
-                            color="primary" 
+                            variant="primary"
                             @click="performMatch"
                             icon="arrow_forward"
                             style="min-width: 100px;"
@@ -57,8 +57,8 @@
             </q-card-section>
 
             <q-card-actions align="right" class="q-pa-md">
-                <q-btn flat :label="$t('Cancel')" color="primary" v-close-popup />
-                <q-btn :label="$t('Confirm')" color="primary" @click="confirmSelect" />
+                <AppActionButton :label="$t('Cancel')" v-close-popup />
+                <AppActionButton :label="$t('Confirm')" variant="primary" @click="confirmSelect" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -68,6 +68,7 @@
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { globalStore } from 'src/stores/global';
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 
 const { t } = useI18n();
 const { langConfig } = globalStore();

@@ -39,7 +39,7 @@
                     <div style="white-space:pre-wrap; line-height: 35px">{{ props.intro }}</div>
                 </q-card-section>
                 <q-card-actions align="center">
-                    <q-btn v-close-popup color="primary">{{ $t('Close') }}</q-btn>
+                    <AppActionButton variant="primary" v-close-popup>{{ $t('Close') }}</AppActionButton>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -232,34 +232,31 @@
                     </q-input>
                     <div>
                         <div class="row q-gutter-x-sm">
-                            <q-btn
-                                color="primary"
+                            <AppActionButton
+                                variant="primary"
                                 :label="$t('Confirm')"
-                                size="md"
                                 dense
                                 padding="sm"
                                 icon="search"
                                 @click="search"
                             />
-                            <q-btn
-                                color="primary"
+                            <AppActionButton
+                                variant="primary"
                                 :label="$t('Reset')"
-                                size="md"
                                 dense
                                 padding="sm"
                                 icon="settings_backup_restore"
                                 @click="reset"
                             />
-                            <q-btn
+                            <AppActionButton
+                                variant="primary"
                                 :href="tableFile"
                                 :download="tableFileName"
                                 :label="$t('Download')"
                                 padding="sm"
                                 dense
                                 icon="download"
-                                color="primary"
                                 target="_blank"
-                                size="md"
                                 @click="downloadFile()"
                             />
                         </div>
@@ -500,9 +497,9 @@
                 </q-card-section>
 
                 <q-card-actions align="center">
-                    <q-btn color="primary" @click="clickSelectAll">{{ $t('SelectAll') }}</q-btn>
-                    <q-btn color="primary" @click="clickSelectNone">{{ $t('Clear') }}</q-btn>
-                    <q-btn color="primary" v-close-popup>{{ $t('Confirm') }}</q-btn>
+                    <AppActionButton variant="primary" @click="clickSelectAll">{{ $t('SelectAll') }}</AppActionButton>
+                    <AppActionButton variant="primary" @click="clickSelectNone">{{ $t('Clear') }}</AppActionButton>
+                    <AppActionButton variant="primary" v-close-popup>{{ $t('Confirm') }}</AppActionButton>
                 </q-card-actions>
             </q-card>
         </q-dialog>
@@ -521,7 +518,7 @@
                             <q-input v-model="geneSetInput" label="" type="textarea" filled />
                         </div>
                         <q-stepper-navigation>
-                            <q-btn @click="checkGeneSetInput" color="primary" label="Continue" />
+                            <AppActionButton variant="primary" @click="checkGeneSetInput" label="Continue" />
                         </q-stepper-navigation>
                     </q-step>
 
@@ -529,8 +526,8 @@
                         {{ geneSetMessage }}
 
                         <q-stepper-navigation>
-                            <q-btn @click="geneSetStep = 1" color="primary" label="Back" />
-                            <q-btn flat @click="confirmGeneSetInput" color="primary" label="Confirm" class="q-ml-sm" />
+                            <AppActionButton variant="primary" @click="geneSetStep = 1" label="Back" />
+                            <AppActionButton variant="primary" @click="confirmGeneSetInput" label="Confirm" class="q-ml-sm" />
                         </q-stepper-navigation>
                     </q-step>
                 </q-stepper>
@@ -544,7 +541,7 @@
                 <img :src="'/igv' + currentRow.Plot.replace('//', '/')" alt="." />
             </q-card-section>
             <q-card-actions align="center" vertical>
-                <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
+                <AppActionButton variant="primary" :label="$t('Close')" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -568,7 +565,7 @@
                 />
             </q-card-section>
             <q-card-actions align="center" vertical>
-                <q-btn :label="$t('Close')" color="primary" v-close-popup></q-btn>
+                <AppActionButton variant="primary" :label="$t('Close')" v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -581,8 +578,8 @@
                 <q-option-group v-model="verdictData.verdict" type="checkbox" :options="verdictData.options" />
             </q-card-section>
             <q-card-actions align="right">
-                <q-btn :label='$t("Confirm")' @click="onVerdictConfirm()" color="primary" />
-                <q-btn :label='$t("Cancel")' color="primary" v-close-popup />
+                <AppActionButton variant="primary" :label='$t("Confirm")' @click="onVerdictConfirm()" />
+                <AppActionButton :label='$t("Cancel")' v-close-popup />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -606,6 +603,7 @@ import {getCurrentUsername} from 'src/utils/user'
 import {listVerdictByPatient} from 'src/api/verdict'
 import {globalStore} from 'src/stores/global'
 import {useQuasar} from "quasar";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 
 
 const store = globalStore()

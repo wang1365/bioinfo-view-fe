@@ -68,8 +68,8 @@
             </q-card-section>
 
             <q-card-actions align="right">
-                <q-btn :label="$t('Cancel')" color="primary" v-close-popup />
-                <q-btn :label="$t('Confirm')" color="primary" @click="updatePermissions" />
+                <AppActionButton :label="$t('Cancel')" v-close-popup />
+                <AppActionButton :label="$t('Confirm')" variant="primary" @click="updatePermissions" />
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -79,6 +79,7 @@
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useQuasar } from 'quasar';
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { patchUser } from 'src/api/user'; // 假设你有一个patchUser方法来更新用户信息
 
 const { t } = useI18n();

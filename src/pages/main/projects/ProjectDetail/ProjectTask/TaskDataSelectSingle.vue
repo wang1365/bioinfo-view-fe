@@ -16,7 +16,7 @@
                     <q-select style="width:100px" clearable dense v-model="searchParams.risk"
                         :options="[{ label: $t('Yes'), value: '是' }, { label: $t('No'), value: '否' }]" emit-value map-options
                         :label="$t('DataListPageSearchRiskSequencing')" />
-                    <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                    <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 </div>
             </template>
             <template v-slot:itemRow="{ row }">
@@ -42,6 +42,7 @@
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { useApi } from "src/api/apiBase";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
 

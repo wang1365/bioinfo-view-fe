@@ -3,9 +3,9 @@
         <q-toolbar-title v-if="!isSingle">{{ $t('TumorSingleSampleFusion') }}</q-toolbar-title>
         <q-input v-model="keyword1" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable @clear="clearKeyword1"
             style="width:300px" :disable="showSticky && stickDone" />
-        <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword1"
-            :disable="showSticky && stickDone"></q-btn>
-        <q-btn :href="props.qt.url" :label="$t('Download')" size="small" icon="download" color="primary" target="_blank"
+        <AppActionButton variant="primary" :label="$t('Search')" @click="searchKeyword1"
+            :disable="showSticky && stickDone" />
+        <AppActionButton variant="primary" :href="props.qt.url" :label="$t('Download')" icon="download" target="_blank"
             class="q-ml-sm" />
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
@@ -17,8 +17,8 @@
             <a-table style="z-index:1" size="middle" bordered rowKey="0" :data-source="filteredRows1" :columns="columns1"
                 :sticky="true" :row-selection="rowSelection1">
                 <template #bodyCell="{ column, record }">
-                    <q-btn v-if="column.title === 'IGV'" label="IGV" color="primary" size="xs" outline
-                        @click="clickView(record)"></q-btn>
+                    <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
+                        @click="clickView(record)" />
                     <template v-else>
                         <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]"
                             :overlay-style="{ maxWidth: '1200px' }">
@@ -37,9 +37,9 @@
 
             <q-input v-model="keyword2" class="q-mr-sm" dense :label="$t('Search') + ':'" clearable @clear="clearKeyword2"
                 style="width:300px" :disable="showSticky && stickDone" />
-            <q-btn size="small" color="primary" :label="$t('Search')" @click="searchKeyword2"
+            <AppActionButton variant="primary" :label="$t('Search')" @click="searchKeyword2"
                 :disable="showSticky && stickDone" />
-            <q-btn :href="props.qn.url" :label="$t('Download')" size="small" icon="download" color="primary" target="_blank"
+            <AppActionButton variant="primary" :href="props.qn.url" :label="$t('Download')" icon="download" target="_blank"
                 class="q-ml-sm" />
         </q-toolbar>
         <div style="position:relative">
@@ -50,8 +50,8 @@
             <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
                 :sticky="true" rowKey="0" :row-selection="rowSelection2">
                 <template #bodyCell="{ column, record }">
-                    <q-btn v-if="column.title === 'IGV'" label="IGV" color="primary" size="xs" outline
-                        @click="clickView(record)"></q-btn>
+                    <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
+                        @click="clickView(record)" />
                     <template v-else>
                         <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]"
                             :overlay-style="{ maxWidth: '1200px' }">
@@ -80,6 +80,8 @@ import { getCsvData } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n();
 const props = defineProps({

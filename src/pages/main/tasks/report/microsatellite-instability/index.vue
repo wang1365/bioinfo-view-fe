@@ -10,15 +10,14 @@
     >
     <div class="q-py-md" v-if="props.viewConfig.showMSI">
         <span class="text-h6 text-primary text-bold q-mr-sm">{{$t('OverallMicrosatelliteStatusTable')}}</span>
-        <q-btn
+        <AppActionButton
+            variant="primary"
             :href="tableFileUrl1"
             :label="$t('Download')"
-            icon="download" padding="sm"
-            color="primary"
+            icon="download"
             target="_blank"
             class="q-ml-sm q-mb-xs"
             :download="tableFileName1"
-            size="sm"
         />
         <a-table
             class="col-5"
@@ -34,15 +33,14 @@
     <div class="q-py-md" v-if="props.viewConfig.showMSIsite">
         <span class="text-h6 text-primary text-bold">{{$t('GoldStandardMicrosatelliteImage')}}</span>
         <!-- TODO: 这里点击最后一列时,如果没有图片需要提 bed文件不包含金标微卫星位点 -->
-        <q-btn
+        <AppActionButton
+            variant="primary"
             :href="tableFileUrl2"
             :label="$t('Download')"
-            icon="download" padding="sm"
-            color="primary"
+            icon="download"
             target="_blank"
             class="q-ml-sm q-mb-xs"
             :download="tableFileName2"
-            size="sm"
         />
         <a-table
             class="col-5"
@@ -54,15 +52,12 @@
             :sticky="true"
         >
             <template #bodyCell="{ column, record }">
-                <q-btn
+                <TableActionButton
+                    variant="primary"
                     v-if="column.key === 'k3'"
                     :label="record.k3"
-                    color="primary"
-                    flat
-                    size="xs"
                     @click="clickView(record)"
-                >
-                </q-btn>
+                />
             </template>
         </a-table>
     </div>
@@ -80,7 +75,7 @@
                 <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
+                <AppActionButton variant="primary" v-close-popup>{{$t('Close')}}</AppActionButton>
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -91,6 +86,8 @@ import {readTaskFile} from "src/api/task";
 import { useRoute } from 'vue-router'
 import { getCsvData } from "src/utils/csv";
 import {getDualIdentifiers, getSingleIdentifiers} from "src/utils/samples";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const route = useRoute()
 const showImage = ref('false')

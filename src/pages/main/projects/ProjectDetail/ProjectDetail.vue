@@ -9,9 +9,9 @@
                             toLocalString(props.projectDetail.create_time)
                     }}</span>
                 </q-toolbar-title>
-                <q-btn
+                <AppActionButton
                     v-permission="'createTask'"
-                    color="primary"
+                    variant="primary"
                     :label="$t('ProjectDetailPageCreateTask')"
                     icon="auto_mode"
                     @click="clickCreateTask"
@@ -84,6 +84,7 @@ import {ref, computed} from "vue"
 import {useApi} from "src/api/apiBase"
 import FlowSelect from "./ProjectTask/FlowSelect.vue"
 import CreateTask from "./ProjectTask/CreateTask.vue"
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import {globalStore} from 'src/stores/global'
 import {errorMessage} from 'src/utils/notify'
 import {useI18n} from 'vue-i18n'

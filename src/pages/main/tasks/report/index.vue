@@ -1,12 +1,12 @@
 <template>
-    <q-page style="padding: 10px; overflow: auto; height: 90vh">
+    <q-page class="task-report-page" style="padding: 10px; overflow: auto; height: 90vh">
         <div class="row items-center">
             <h6>{{ $t('TaskResult') }}</h6>
 
             <SampleInfoDisplay :samples="samples" />
 
             <q-space />
-            <q-btn :label="$t('Back')" icon="arrow_back" class="q-mr-lg" color="primary" flat @click="router.back()" />
+            <AppActionButton variant="primary" :label="$t('Back')" icon="arrow_back" class="q-mr-lg" @click="router.back()" />
         </div>
         <div class="q-pt-xs">
             <q-tabs
@@ -222,6 +222,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { readTaskFile } from 'src/api/task'
 import { errorMessage } from 'src/utils/notify'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 
 import { buildModelQuery } from 'src/api/modelQueryBuilder'
 

@@ -4,7 +4,7 @@
             <q-toolbar class="q-gutter-x-sm" style="min-height: 48px">
                 <q-icon size="md" color="primary" name="folder" />
                 <q-toolbar-title class="text-h6"> {{ $t('ProjectDetailPageChildTitle') }} </q-toolbar-title>
-                <q-btn color="primary" :label="$t('ProjectDetailPageCreateChildProject')" icon="folder"
+                <AppActionButton variant="primary" :label="$t('ProjectDetailPageCreateChildProject')" icon="folder"
                     @click="openNewProject = true" />
             </q-toolbar>
         </q-card-section>
@@ -75,8 +75,8 @@
                 <q-list>
                     <q-item>
                         <q-section class="q-gutter-x-sm">
-                            <q-btn :label="$t('Cancel')" v-close-popup />
-                            <q-btn color="primary" :label="$t('Confirm')" @click="createProject()" />
+                            <AppActionButton :label="$t('Cancel')" v-close-popup />
+                            <AppActionButton variant="primary" :label="$t('Confirm')" @click="createProject()" />
                         </q-section>
                     </q-item>
                 </q-list>
@@ -107,8 +107,8 @@
                 <q-list>
                     <q-item>
                         <q-card-section class="q-gutter-x-sm">
-                            <q-btn :label="$t('Cancel')" v-close-popup />
-                            <q-btn color="primary" :label="$t('Confirm')" @click="updateProject()" />
+                            <AppActionButton :label="$t('Cancel')" v-close-popup />
+                            <AppActionButton variant="primary" :label="$t('Confirm')" @click="updateProject()" />
                         </q-card-section>
                     </q-item>
                 </q-list>
@@ -123,6 +123,7 @@ import { api } from "src/boot/axios";
 import { useRoute, useRouter } from "vue-router";
 import { useApi } from "src/api/apiBase";
 import PaginatorVue from "src/components/paginator/Paginator.vue";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { infoMessage } from "src/utils/notify";
 import { useI18n } from "vue-i18n";
 import { toLocalString } from "src/utils/time";

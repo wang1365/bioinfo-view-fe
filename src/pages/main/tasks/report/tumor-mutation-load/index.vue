@@ -173,15 +173,15 @@
                 />
             </div>
             <div class="q-gutter-md text-center q-py-sm">
-                <q-btn
-                    color="primary"
+                <AppActionButton
+                    variant="primary"
                     :label="$t('Confirm')"
                     icon="search"
                     @click="search()"
                     :disable="viewConfig.showStick && viewConfig.stickDone"
                 />
-                <q-btn
-                    color="primary"
+                <AppActionButton
+                    variant="primary"
                     :label="$t('FuWei')"
                     icon="settings_backup_restore"
                     @click="clickReset"
@@ -208,7 +208,7 @@
                 <div style="white-space:pre-wrap; line-height: 35px">{{props.intro}}</div>
             </q-card-section>
             <q-card-actions align="center">
-                <q-btn v-close-popup color="primary">{{$t('Close')}}</q-btn>
+                <AppActionButton variant="primary" v-close-popup>{{$t('Close')}}</AppActionButton>
             </q-card-actions>
         </q-card>
     </q-dialog>
@@ -224,6 +224,7 @@ import { useApi } from 'src/api/apiBase'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 
 const store = globalStore()
 const { langCode } = storeToRefs(store)

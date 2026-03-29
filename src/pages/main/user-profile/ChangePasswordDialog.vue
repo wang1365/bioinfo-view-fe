@@ -65,9 +65,9 @@
                 </q-card-section>
 
                 <q-card-actions align="right" class="text-primary">
-                    <q-btn :label="$t('Cancel')" v-close-popup />
+                    <AppActionButton :label="$t('Cancel')" v-close-popup />
                     <!--                    <q-btn flat label="确认" @click="handleChangePassword"/>-->
-                    <q-btn :label="$t('Confirm')" color="primary" type="submit" v-close-popup />
+                    <AppActionButton :label="$t('Confirm')" variant="primary" type="submit" v-close-popup />
                 </q-card-actions>
             </q-form>
         </q-card>
@@ -78,6 +78,7 @@
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { useQuasar } from 'quasar'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { changePassword } from 'src/api/user'
 import { globalStore} from 'src/stores/global'
 import { useI18n } from 'vue-i18n'

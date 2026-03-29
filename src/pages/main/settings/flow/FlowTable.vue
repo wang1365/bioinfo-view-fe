@@ -11,12 +11,12 @@
                 @keypress.enter="refreshFlows"
                 class="page-list-filter__field page-list-filter__field--keyword"
             />
-            <q-btn color="primary" icon="search" :label="$t('Search')" @click="refreshFlows" />
-            <q-btn color="grey-7" outline icon="close" :label="$t('Reset')" @click="keyword = ''; refreshFlows()" />
+            <AppActionButton variant="primary" icon="search" :label="$t('Search')" @click="refreshFlows" />
+            <AppActionButton icon="close" :label="$t('Reset')" @click="keyword = ''; refreshFlows()" />
         </div>
 
         <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-            <q-btn color="primary" icon="add" :label="$t('Add')" @click="addFlow" />
+            <AppActionButton variant="primary" icon="add" :label="$t('Add')" @click="addFlow" />
         </q-toolbar>
 
         <a-table
@@ -47,28 +47,19 @@
                 </template>
                 <template v-if="column.key === 'operation'">
                     <div class="table-operation-buttons">
-                        <q-btn
+                        <TableActionButton
                             :label="$t('Detail')"
-                            dense
-                            flat
-                            no-caps
-                            class="table-operation-btn table-operation-btn--primary"
+                            variant="primary"
                             @click="showInfoDlg(record)"
                         />
-                        <q-btn
+                        <TableActionButton
                             :label="$t('Edit')"
-                            dense
-                            flat
-                            no-caps
-                            class="table-operation-btn table-operation-btn--primary"
+                            variant="primary"
                             @click="showEditDlg(record)"
                         />
-                        <q-btn
+                        <TableActionButton
                             :label="$t('Delete')"
-                            dense
-                            flat
-                            no-caps
-                            class="table-operation-btn table-operation-btn--danger"
+                            variant="danger"
                             @click="showDeleteDlg(record)"
                         />
                     </div>
@@ -87,8 +78,8 @@
                     </q-item>
 
                     <q-card-actions align="right">
-                        <q-btn flat :label="t('Cancel')" color="primary" v-close-popup />
-                        <q-btn flat :label="t('Confirm')" color="primary" type="submit" v-close-popup />
+                        <AppActionButton :label="t('Cancel')" v-close-popup />
+                        <AppActionButton variant="primary" :label="t('Confirm')" type="submit" v-close-popup />
                     </q-card-actions>
                 </q-form>
             </q-card>
@@ -103,6 +94,8 @@ import { useQuasar } from 'quasar'
 import { format } from 'src/utils/time'
 import { useI18n } from 'vue-i18n'
 import FlowDialog from './FlowDialog'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 
 const { t } = useI18n()

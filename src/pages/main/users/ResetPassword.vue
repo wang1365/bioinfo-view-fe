@@ -35,8 +35,8 @@
                         />
                     </q-item>
                     <q-card-actions align="right">
-                        <q-btn :label="$t('Confirm')" type="button" color="primary" @click="clickOk" />
-                        <q-btn :label="$t('Cancel')" type="button" color="primary" v-close-popup flat class="q-ml-sm" />
+                        <AppActionButton :label="$t('Confirm')" type="button" variant="primary" @click="clickOk" />
+                        <AppActionButton :label="$t('Cancel')" type="button" v-close-popup class="q-ml-sm" />
                     </q-card-actions>
                 </q-list>
             </q-card-section>
@@ -48,6 +48,7 @@
 import { ref, toRefs, onMounted } from 'vue'
 import { createUser, resetPassword } from 'src/api/user'
 import { useQuasar } from 'quasar'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

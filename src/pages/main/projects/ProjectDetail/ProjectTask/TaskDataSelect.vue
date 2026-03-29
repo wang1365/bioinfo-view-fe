@@ -36,7 +36,7 @@
                     map-options
                     :label="$t('DataListPageSearchRiskSequencing')"
                 />
-                <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
             </div>
             <a-table
                 :columns="columns"
@@ -49,8 +49,8 @@
                 v-bind="$attrs"
             />
             <q-card-actions align="right">
-                <q-btn class="q-mr-lg" :label="$t('Cancel')" v-close-popup />
-                <q-btn color="primary" :label="$t('Confirm')" @click="ensureSelect()" />
+                <AppActionButton class="q-mr-lg" :label="$t('Cancel')" v-close-popup />
+                <AppActionButton variant="primary" :label="$t('Confirm')" @click="ensureSelect()" />
             </q-card-actions>
         </q-card>
         <!--        <PopupSingleSelector-->
@@ -120,6 +120,7 @@
 <script setup>
 import { onMounted, ref, computed, reactive } from 'vue'
 import { useApi } from "src/api/apiBase"
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import PopupSingleSelector from "components/popup-single-selector/PopupSingleSelector.vue";
 import { buildModelQuery } from "src/api/modelQueryBuilder"
 

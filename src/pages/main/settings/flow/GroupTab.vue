@@ -14,7 +14,7 @@
         </div>
 
         <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
-            <q-btn color="primary" icon="add" :label="$t('Add')" @click="addRow" />
+            <AppActionButton variant="primary" icon="add" :label="$t('Add')" @click="addRow" />
         </q-toolbar>
 
         <a-table
@@ -41,20 +41,14 @@
                 </template>
                 <template v-else-if="column.key === 'operation'">
                     <div class="table-operation-buttons">
-                        <q-btn
+                        <TableActionButton
                             :label="$t('Edit')"
-                            dense
-                            flat
-                            no-caps
-                            class="table-operation-btn table-operation-btn--primary"
+                            variant="primary"
                             @click="showEditDlg(record)"
                         />
-                        <q-btn
+                        <TableActionButton
                             :label="$t('Delete')"
-                            dense
-                            flat
-                            no-caps
-                            class="table-operation-btn table-operation-btn--danger"
+                            variant="danger"
                             @click="showDeleteDlg(record)"
                         />
                     </div>
@@ -75,6 +69,8 @@ import { useQuasar } from 'quasar'
 import GroupDialog from 'pages/main/settings/flow/GroupDialog'
 import { format } from 'src/utils/time'
 import { useI18n } from 'vue-i18n'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n()
 const loading = ref(false)

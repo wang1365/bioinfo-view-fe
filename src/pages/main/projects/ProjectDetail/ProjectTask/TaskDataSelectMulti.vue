@@ -47,7 +47,7 @@
                         map-options
                         :label="$t('DataListPageSearchRiskSequencing')"
                     />
-                    <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
+                    <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
                 </div>
             </template>
             <template v-slot:itemRow="{ row }">
@@ -73,6 +73,7 @@
 <script setup>
 import { onMounted, ref ,computed} from "vue";
 import { useApi } from "src/api/apiBase";
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import PopupMultiSelector from "components/popup-multi-selector/PopupMultiSelector.vue";
 import { infoMessage } from "src/utils/notify";
 import { buildModelQuery } from "src/api/modelQueryBuilder";
