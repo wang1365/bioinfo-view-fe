@@ -546,7 +546,13 @@ const renderSpeciesCharts = async () => {
                     rotate: labels.length > 6 ? 30 : 0
                 }
             },
-            yAxis: { type: 'value', name: t('Rp2DetectCount') },
+            yAxis: {
+                type: 'value',
+                name: t('Rp2DetectCount'),
+                min: 0,
+                interval: 1,
+                max: (axis) => Math.max(3, Math.ceil(Number(axis?.max || 0)))
+            },
             series: [
                 {
                     type: 'bar',
