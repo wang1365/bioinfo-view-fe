@@ -7,211 +7,94 @@
         <q-separator color="primary" />
         <q-card-section>
             <q-list dense>
-                <q-item>
-                    <div class="row full-width justify-between q-col-gutter-md">
-                        <div class="col">
-                            <q-input
-                                v-model="form.project_index"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormDataDetails')"
-                            />
+                <q-item class="data-form-item">
+                    <div class="row full-width q-col-gutter-md">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.identifier" stack-label readonly label-color="primary" :label="$t('DataNewFormDataIdentificationNumber')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.library_number"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormLibraryNumber')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.project_index" stack-label readonly label-color="primary" :label="$t('DataNewFormDataDetails')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.reagent_box"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormCaptureKit')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.sample_identifier" stack-label readonly label-color="primary" :label="$t('DataNewFormSampleIdentificationNumber')" />
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.sample_meta_id" stack-label readonly label-color="primary" :label="$t('DataNewFormSampleID')" />
                         </div>
                     </div>
                 </q-item>
-                <q-item>
-                    <div class="row full-width justify-between q-col-gutter-md">
-                        <div class="col">
-                            <q-input
-                                v-model="form.library_input"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormLibraryConstructionInput')"
-                            />
+                <q-item class="data-form-item">
+                    <div class="row full-width q-col-gutter-md">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.library_number" stack-label readonly label-color="primary" :label="$t('DataNewFormLibraryNumber')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.index_type"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormIndexType')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.library_input" stack-label readonly label-color="primary" :label="$t('DataNewFormLibraryConstructionInput')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.index_number"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormIndexNumber')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.index_type" stack-label readonly label-color="primary" :label="$t('DataNewFormIndexType')" />
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.index_number" stack-label readonly label-color="primary" :label="$t('DataNewFormIndexNumber')" />
                         </div>
                     </div>
                 </q-item>
-                <q-item>
-                    <div class="row full-width justify-between q-col-gutter-md">
-                        <div class="col">
-                            <q-input
-                                v-model="form.hybrid_input"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormHybridInput')"
-                            />
+                <q-item class="data-form-item">
+                    <div class="row full-width q-col-gutter-md">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.hybrid_input" stack-label readonly label-color="primary" :label="$t('DataNewFormHybridInput')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.nucleic_break_type"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormNucleicAcidFragmentationMethod')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.nucleic_break_type" stack-label readonly label-color="primary" :label="$t('DataNewFormNucleicAcidFragmentationMethod')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.identifier"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormDataIdentificationNumber')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.company" stack-label readonly label-color="primary" :label="$t('DataNewFormSubmissionUnit')" />
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.nucleic_type" stack-label readonly label-color="primary" :label="$t('DataNewFormTypeOfNucleicAcids')" />
                         </div>
                     </div>
                 </q-item>
-                <q-item>
-                    <div class="row full-width justify-between q-col-gutter-md">
-                        <div class="col">
-                            <q-input
-                                v-model="form.company"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormSubmissionUnit')"
-                            />
+                <q-item class="data-form-item">
+                    <div class="row full-width q-col-gutter-md">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.nucleic_level" stack-label readonly label-color="primary" :label="$t('DataNewFormDegradationGradeOfNucleicAcids')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.nucleic_type"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormTypeOfNucleicAcids')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.reagent_box" stack-label readonly label-color="primary" :label="$t('DataNewFormCaptureKit')" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.nucleic_level"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormDegradationGradeOfNucleicAcids')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.tag_label" stack-label readonly label-color="primary" :label="$t('DataNewFormTagLabel')" />
                         </div>
                     </div>
                 </q-item>
-                <q-item>
-                    <div class="row full-width justify-between q-col-gutter-md">
-                        <div class="col-2 content-center">
-                            <q-checkbox
-                                v-model="form.risk"
-                                disable
-                                :label="$t('DataNewFormRiskSequencing')"
-                                color="primary"
-                            />
+                <q-item class="data-form-item">
+                    <div class="row full-width q-col-gutter-md">
+                        <div class="col-12 col-md-6 col-lg-3 data-form-check">
+                            <q-checkbox v-model="form.risk" disable :label="$t('DataNewFormRiskSequencing')" color="primary" />
                         </div>
-                        <div class="col-2 content-center">
+                        <div class="col-12 col-md-6 col-lg-3 data-form-check">
                             <q-checkbox v-model="form.msre" disable label="MSRE" color="primary" />
                         </div>
-                        <div class="col-4">
-                            <q-input
-                                v-model="form.sample_identifier"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormSampleIdentificationNumber')"
-                            />
+                    </div>
+                </q-item>
+                <q-item class="data-form-item">
+                    <div class="row full-width q-col-gutter-md">
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.fastq1_path" stack-label readonly label-color="primary" :label="$t('DataNewFormDataNameOfR1')" />
                         </div>
-                        <div class="col-4">
-                            <q-input
-                                v-model="form.sample_meta_id"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormSampleID')"
-                            />
+                        <div class="col-12 col-md-6 col-lg-3">
+                            <q-input v-model="form.fastq2_path" stack-label readonly label-color="primary" :label="$t('DataNewFormDataNameOfR2')" />
                         </div>
                     </div>
                 </q-item>
-                <q-item>
-                    <div class="row full-width justify-between q-col-gutter-md">
-                        <div class="col">
-                            <q-input
-                                v-model="form.tag_label"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormTagLabel')"
-                            />
+                <q-item v-if="form.fastq_merge_required === true" class="data-form-item">
+                    <div class="row full-width q-col-gutter-md">
+                        <div class="col-12 col-md-6">
+                            <q-input class="primary" :label="$t('DataNewFormDataNameListOfR1') + ' :'" label-color="primary" :model-value="form.fastq1_path_list" />
                         </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.fastq1_path"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormDataNameOfR1')"
-                            />
-                        </div>
-                        <div class="col">
-                            <q-input
-                                v-model="form.fastq2_path"
-                                stack-label
-                                readonly
-                                label-color="primary"
-                                :label="$t('DataNewFormDataNameOfR2')"
-                            />
-                        </div>
-                    </div>
-                </q-item>
-                <q-item v-if="form.fastq_merge_required === true">
-                    <div class="row full-width justify-between">
-                        <div class="col q-pa-sm">
-                            <q-input
-                                class="primary"
-                                :label="$t('DataNewFormDataNameListOfR1') + ' :'"
-                                label-color="primary"
-                                :model-value="form.fastq1_path_list"
-                            />
-                        </div>
-                        <div class="col q-pa-sm">
-                            <q-input
-                                class="primary"
-                                :label="$t('DataNewFormDataNameListOfR2') + ' :'"
-                                label-color="primary"
-                                :model-value="form.fastq2_path_list"
-                            />
+                        <div class="col-12 col-md-6">
+                            <q-input class="primary" :label="$t('DataNewFormDataNameListOfR2') + ' :'" label-color="primary" :model-value="form.fastq2_path_list" />
                         </div>
                     </div>
                 </q-item>
@@ -273,3 +156,16 @@ onMounted(() => {
     });
 });
 </script>
+
+<style scoped>
+.data-form-item {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.data-form-check {
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+}
+</style>
