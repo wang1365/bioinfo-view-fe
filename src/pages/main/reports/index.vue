@@ -1,100 +1,127 @@
 <template>
     <q-page padding style="overflow-x: hidden; display: flex; flex-direction: column">
         <PageTitle :title="$t('ReportPageTitle')" />
-        <q-separator />
-        <q-card class="q-mt-xs">
-            <q-card-section>
-                <div class="q-gutter-md row items-start q-pa-md">
+        <q-card class="reports-card page-list-card q-mt-xs" flat>
+            <div>
+                <div class="page-list-filter row q-px-md bio-data-table">
                     <q-input
-                        style="width:350px"
+                        class="page-list-filter__field page-list-filter__field--keyword"
+                        style="width: 350px"
                         v-model="searchParams.search"
+                        filled
                         dense
                         :label="$t('Task') + ' ' + $t('Name')"
                         clearable
                     />
                     <q-input
                         v-model="searchParams.patient_identifier"
+                        class="page-list-filter__field"
+                        filled
                         dense
                         :label="$t('PatientNewFormPatientIdentificationNumber')"
                         clearable
                     />
                     <q-input
                         v-model="searchParams.sample_meta_identifier"
+                        class="page-list-filter__field"
+                        filled
                         dense
                         :label="$t('SampleListTableColumnSampleIdentificationNumber')"
                         clearable
                     />
                     <q-input
                         v-model="searchParams.sample_identifier"
+                        class="page-list-filter__field"
+                        filled
                         dense
                         :label="$t('DataNewFormDataIdentificationNumber')"
                         clearable
                     />
-                    <q-btn color="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
-                    <q-btn color="primary" :label="$t('Reset')" icon="close" @click="reset()" />
+                    <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshPage()" />
+                    <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="reset()" />
                 </div>
-                <q-table
-                    :rows="rows"
+            </div>
+            <div class="q-pt-sm q-px-md q-pb-md bio-data-table">
+                <a-table
+                    class="page-grid-table"
+                    :data-source="rows"
                     :columns="columns"
+                    :loading="loading"
+                    :pagination="pagination"
+                    :scroll="tableScroll"
                     row-key="id"
-                    ref="tableRef"
-                    v-model:pagination="pagination"
-                    @request="onRequest"
-                    :rows-per-page-options="[5, 15, 35, 50]"
-                    style="flex: 1;max-height: 650px"
-                    virtual-scroll
+                    size="small"
+                    :locale="tableLocale"
+                    bordered
+                    @change="handleTableChange"
                 >
-                    <template v-slot:body-cell-actions="props">
-                        <q-td :props="props" class="q-gutter-xs">
-                            <a :href="getreportPath(props)" download v-if="props.row.status == '创建成功'">
-                                <q-btn color="primary" :label="$t('Download')" size="md" icon="download" dense flat />
-                            </a>
-                            <a>
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'task_id'">
+                            {{ record.task?.name || '-' }}
+                        </template>
+                        <template v-else-if="column.key === 'patient_id'">
+                            {{ getPatientIdentifiers(record) }}
+                        </template>
+                        <template v-else-if="column.key === 'data_id'">
+                            {{ getDataIdentifiers(record) }}
+                        </template>
+                        <template v-else-if="column.key === 'sample_id'">
+                            {{ getSampleIdentifiers(record) }}
+                        </template>
+                        <template v-else-if="column.key === 'create_time'">
+                            {{ format(record.create_time) }}
+                        </template>
+                        <template v-else-if="column.key === 'status'">
+                            <span v-if="record.status === '鍒涘缓鎴愬姛'">{{ $t('Success') }}</span>
+                            <span v-else-if="record.status === '鍒涘缓澶辫触'">{{ $t('Failed') }}</span>
+                            <span v-else>{{ record.status || '-' }}</span>
+                        </template>
+                        <template v-else-if="column.key === 'actions'">
+                            <div class="table-operation-buttons">
+                                <a :href="getreportPath(record)" download v-if="record.status === '鍒涘缓鎴愬姛'">
+                                    <q-btn
+                                        class="table-operation-btn table-operation-btn--primary"
+                                        :label="$t('Download')"
+                                        dense
+                                        flat
+                                        no-caps
+                                    />
+                                </a>
                                 <q-btn
                                     v-permission="'deleteReport'"
-                                    @click="onDelete(props.row)"
-                                    color="red"
-                                    icon="delete"
+                                    class="table-operation-btn table-operation-btn--danger"
+                                    @click="onDelete(record)"
                                     :label="$t('Delete')"
-                                    size="md"
                                     dense
                                     flat
+                                    no-caps
                                 />
-                            </a>
-                        </q-td>
+                            </div>
+                        </template>
                     </template>
-                    <template v-slot:body-cell-status="props">
-                        <q-td :props="props" class="q-gutter-xs">
-                            <span v-if="props.row.status == '创建成功'"> {{ $t("Success") }}</span>
-                            <span v-if="props.row.status == '创建失败'"> {{ $t("Failed") }}</span>
-                        </q-td>
-                    </template>
-                </q-table>
-            </q-card-section>
+                </a-table>
+            </div>
         </q-card>
     </q-page>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import { useApi } from 'src/api/apiBase'
-import { useQTable } from 'src/utils/q-table'
 import { useQuasar } from 'quasar'
 import { infoMessage } from 'src/utils/notify'
-import { useI18n } from "vue-i18n";
-import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia'
 import { globalStore } from 'src/stores/global'
-const store = globalStore()
-const { langCode } = storeToRefs(store)
-const { t } = useI18n();
 import { format } from 'src/utils/time'
 
-const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable()
-const { apiGet, apiDelete, apiPost } = useApi()
+const store = globalStore()
+const { langCode } = storeToRefs(store)
+const { t } = useI18n()
+const { apiGet, apiDelete } = useApi()
 const $q = useQuasar()
-const reportUrl = '/reports'
+
 const searchParams = ref({
     search: '',
     patient_identifier: '',
@@ -102,122 +129,126 @@ const searchParams = ref({
     sample_identifier: '',
 })
 
-const getreportPath = (props) => {
-    let suffix = langCode.value === 'en' ? 'EN' : 'CN'
-    if (props.row.report_path) {
+const rows = ref([])
+const loading = ref(false)
+const intId = ref('')
 
-        return '/igv' + props.row.report_path
-    } else {
-        if (suffix === 'EN' && props.row.report_path_en) {
-            return '/igv' + props.row.report_path_en
-        }
-        if (suffix === 'CN' && props.row.report_path_cn) {
-            return '/igv' + props.row.report_path_cn
-        }
+const pagination = ref({
+    current: 1,
+    pageSize: 15,
+    total: 0,
+    showSizeChanger: true,
+    showTotal: (total) => t('PaginationTotal', { total }),
+    pageSizeOptions: ['5', '15', '35', '50'],
+})
 
+const tableLocale = computed(() => ({
+    emptyText: t('NoData'),
+}))
+
+const tableScroll = computed(() => ({
+    x: 1400,
+    y: 'calc(100vh - 360px)',
+}))
+
+const getreportPath = (row) => {
+    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
+    if (row.report_path) {
+        return '/igv' + row.report_path
     }
+    if (suffix === 'EN' && row.report_path_en) {
+        return '/igv' + row.report_path_en
+    }
+    if (suffix === 'CN' && row.report_path_cn) {
+        return '/igv' + row.report_path_cn
+    }
+    return '#'
 }
+
+const joinSampleValues = (row, getter) => {
+    if (!row.task || !row.task.samples) return '-'
+    const values = row.task.samples.map((item) => getter(item)).filter(Boolean)
+    return values.length ? values.join(' ') : '-'
+}
+
+const getPatientIdentifiers = (row) => joinSampleValues(row, (item) => item.sample_meta?.patient?.identifier)
+const getDataIdentifiers = (row) => joinSampleValues(row, (item) => item.identifier)
+const getSampleIdentifiers = (row) => joinSampleValues(row, (item) => item.sample_meta?.identifier)
 
 const columns = computed(() => [
     {
-        name: 'id',
-        required: false,
-        label: 'ID',
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id',
         align: 'left',
-        field: (row) => row.id,
-        format: (val) => `${val}`,
+        width: 80,
     },
     {
-        name: 'task_id',
-        label: t('Task'),
+        title: t('Task'),
+        dataIndex: 'task_id',
+        key: 'task_id',
         align: 'left',
-        field: (row) => row.task?.name,
-        format: (val) => `${val}`,
     },
     {
-        name: 'patient_id',
-        required: true,
-        label: t('SampleListTableColumnPatientIdentificationNumber'),
+        title: t('SampleListTableColumnPatientIdentificationNumber'),
+        dataIndex: 'patient_id',
+        key: 'patient_id',
         align: 'left',
-        field: (row) => {
-            let result = ''
-            if (!row.task || !row.task.samples) return result
-            for (let item of row.task?.samples) {
-                if (item.sample_meta && item.sample_meta.patient) result += item.sample_meta.patient.identifier + ' '
-            }
-            return result
-        },
-        format: (val) => `${val}`,
     },
     {
-        name: 'data_id',
-        required: true,
-        label: t('DataNewFormDataIdentificationNumber'),
+        title: t('DataNewFormDataIdentificationNumber'),
+        dataIndex: 'data_id',
+        key: 'data_id',
         align: 'left',
-        field: (row) => {
-            let result = ''
-            if (!row.task || !row.task.samples) return result
-            for (let item of row.task?.samples) {
-                result += item.identifier + ' '
-            }
-            return result
-        },
-        format: (val) => `${val}`,
     },
     {
-        name: 'data_id',
-        required: true,
-        label: t('SampleListTableColumnSampleIdentificationNumber'),
+        title: t('SampleListTableColumnSampleIdentificationNumber'),
+        dataIndex: 'sample_id',
+        key: 'sample_id',
         align: 'left',
-        field: (row) => {
-            let result = ''
-            if (!row.task || !row.task.samples) return result
-            for (let item of row.task?.samples) {
-                if (item.sample_meta) result += item.sample_meta.identifier + ' '
-            }
-            return result
-        },
-        format: (val) => `${val}`,
     },
     {
-        name: 'comment',
-        required: true,
-        label: t('Comment'),
+        title: t('Comment'),
+        dataIndex: 'comment',
+        key: 'comment',
         align: 'left',
-        field: (row) => row.comment,
-        format: (val) => `${val}`,
     },
     {
-        name: 'comment',
-        required: true,
-        label: t('CreateTime'),
+        title: t('CreateTime'),
+        dataIndex: 'create_time',
+        key: 'create_time',
         align: 'left',
-        field: (row) => row.create_time,
-        format: (val) => format(val),
     },
     {
-        name: 'status',
-        required: true,
-        label: t('Status'),
+        title: t('Status'),
+        dataIndex: 'status',
+        key: 'status',
         align: 'left',
-        field: (row) => row.status,
-        format: (val) => `${val}`,
+        width: 100,
     },
     {
-        name: 'actions',
-        label: t('Operate'),
-        required: false,
-        align: 'left',
+        title: t('Operate'),
+        dataIndex: 'actions',
+        key: 'actions',
+        align: 'center',
+        width: 180,
     },
 ])
-let intId = ref("")
+
 onMounted(() => {
-    loadDataOnMount()
-    intId.value = setInterval(() => refreshPage(), 5000)
+    loadPage()
+    intId.value = setInterval(() => loadPage(false), 5000)
 })
-onUnmounted(()=>{
+
+onUnmounted(() => {
     clearInterval(intId.value)
 })
+
+const refreshPage = () => {
+    pagination.value.current = 1
+    loadPage()
+}
+
 const reset = () => {
     searchParams.value = {
         search: '',
@@ -227,9 +258,17 @@ const reset = () => {
     }
     refreshPage()
 }
-const onRequest = (props) => {
-    const { page, rowsPerPage } = props.pagination
-    let params = `?page=${page}&size=${rowsPerPage}`
+
+const handleTableChange = (pg) => {
+    pagination.value.current = pg.current
+    pagination.value.pageSize = pg.pageSize
+    loadPage()
+}
+
+const loadPage = (showLoading = true) => {
+    const page = pagination.value.current
+    const pageSize = pagination.value.pageSize
+    let params = `?page=${page}&size=${pageSize}`
     if (searchParams.value.search) {
         params = `${params}&search=${searchParams.value.search}`
     }
@@ -242,17 +281,24 @@ const onRequest = (props) => {
     if (searchParams.value.sample_identifier) {
         params = `${params}&sample_identifier=${searchParams.value.sample_identifier}`
     }
-    apiGet(`/report/report/${params}`, (res) => {
-        pagination.value.rowsNumber = res.data.count
-        pagination.value.page = page
-        pagination.value.rowsPerPage = rowsPerPage
-        rows.value = res.data.results
-        for (let item of rows.value) {
-            item.actions = true
+    if (showLoading) {
+        loading.value = true
+    }
+    apiGet(
+        `/report/report/${params}`,
+        (res) => {
+            pagination.value.total = res.data.count
+            rows.value = res.data.results || []
+        },
+        {},
+        null,
+        null,
+        () => {
+            loading.value = false
         }
-    })
+    )
 }
-const onDownload = (report) => { }
+
 const onDelete = (item) => {
     $q.dialog({
         title: t('Confirm'),
@@ -262,23 +308,37 @@ const onDelete = (item) => {
         apiDelete(`/report/report/${item.id}/`, (_) => {
             infoMessage(t('Success'))
             if (rows.value.length > 1) {
-                let index = 0
-                for (let i = 0; i < rows.value.length; i++) {
-                    if (rows.value[i].id === item.id) {
-                        index = i
-                    }
+                const index = rows.value.findIndex((row) => row.id === item.id)
+                if (index !== -1) {
+                    pagination.value.total -= 1
+                    rows.value.splice(index, 1)
                 }
-                pagination.value.rowsNumber -= 1
-                rows.value.splice(index, 1)
             } else {
-                if (pagination.value.page > 1) {
-                    pagination.value.page = pagination.value.page - 1
+                if (pagination.value.current > 1) {
+                    pagination.value.current -= 1
                 } else {
-                    pagination.value.page = 1
+                    pagination.value.current = 1
                 }
-                refreshPage()
+                loadPage()
             }
         })
     })
 }
 </script>
+
+<style lang="scss">
+.reports-card {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    flex-direction: column;
+}
+
+.reports-card .bio-data-table {
+    flex: 1;
+    display: flex;
+}
+
+.reports-card .bio-data-table .ant-table-wrapper {
+    flex: 1;
+}
+</style>

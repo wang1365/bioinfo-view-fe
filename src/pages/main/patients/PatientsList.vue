@@ -1,5 +1,5 @@
 <template>
-    <q-card class="q-mt-xs">
+    <q-card class="q-mt-xs page-list-card" flat>
         <q-card-section>
             <div class=" q-gutter-md row items-start bio-data-table">
                 <q-input

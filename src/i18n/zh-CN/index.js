@@ -416,6 +416,7 @@ export default {
     CrowdFrequency: '人群频率',
     RelatedToDrugs: '是否关联药物',
     MoreColumns: '扩展列',
+    More: '更多',
     SelectAll: '全选',
     MutationTypeStatistics: '突变类型统计',
     MutationPositionStatistics: '突变位置统计',

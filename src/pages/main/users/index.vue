@@ -1,138 +1,126 @@
 <template>
     <q-page padding class="users-page column no-wrap">
         <PageTitle :title="$t('UserManage')" />
-        <div class="row justify-end q-gutter-md items-center q-py-xs">
-            <div class="col-4">
-                <q-input
-                    :label="$t('UserAndNameAndEmailSearch')"
-                    clearable
-                    dense
-                    @clear="refreshUsers"
-                    @keypress.enter="refreshUsers"
-                    v-model="searchKeyword"
+        <q-card class="users-card page-list-card" flat>
+            <div>
+                <div class="page-list-filter row q-px-md bio-data-table">
+                    <q-input
+                        class="page-list-filter__field page-list-filter__field--keyword"
+                        style="width: 320px"
+                        :label="$t('UserAndNameAndEmailSearch')"
+                        clearable
+                        filled
+                        dense
+                        @clear="refreshUsers"
+                        @keypress.enter="refreshUsers"
+                        v-model="searchKeyword"
+                    />
+                    <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshUsers" />
+                    <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="resetSearch" />
+                </div>
+            </div>
+            <div>
+                <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
+                    <q-btn
+                        v-permission="'createUser'"
+                        color="primary"
+                        unelevated
+                        icon="description"
+                        :label="$t('Add')"
+                        @click="clickCreate"
+                    />
+                </q-toolbar>
+            </div>
+            <div ref="tableAreaRef" class="col users-table-area q-pt-sm q-px-md q-pb-md bio-data-table">
+                <a-table
+                    class="page-grid-table"
+                    :data-source="rows"
+                    :columns="columns"
+                    :loading="loading"
+                    :pagination="pagination"
+                    :scroll="{ x: 1200, y: tableScrollY }"
+                    row-key="id"
+                    size="small"
+                    :locale="tableLocale"
+                    bordered
+                    @change="handleTableChange"
                 >
-                    <template v-slot:prepend>
-                        <q-icon name="face"></q-icon>
-                    </template>
-                </q-input>
-            </div>
-            <div class="col-1">
-                <q-btn
-                    class="on-right users-toolbar-btn"
-                    size="sm"
-                    color="primary"
-                    icon="search"
-                    :label="$t('Search')"
-                    @click="refreshUsers"
-                ></q-btn>
-            </div>
-            <div class="col-1">
-                <q-btn
-                    v-permission="'createUser'"
-                    class="on-plus users-toolbar-btn"
-                    size="sm"
-                    color="primary"
-                    icon="add"
-                    :label="$t('Add')"
-                    @click="clickCreate"
-                />
-            </div>
-        </div>
-        <q-separator />
-        <div ref="tableAreaRef" class="col users-table-area">
-            <a-table
-                :data-source="rows"
-                :columns="columns"
-                :loading="loading"
-                :pagination="pagination"
-                :scroll="{ x: 'max-content', y: tableScrollY }"
-                row-key="id"
-                size="small"
-                @change="handleTableChange"
-            >
-                <template #bodyCell="{ column, record }">
-                    <template v-if="column.key === 'disk'">
-                        {{ (record.used_disk || 0) + '/' + (record.disk_limit || $t('Unlimited')) }}
-                    </template>
-                    <template v-else-if="column.key === 'task'">
-                        {{ (record.task_count || 0) + '/' + (record.task_limit === null ? $t('Unlimited') : record.task_limit) }}
-                    </template>
-                    <template v-else-if="column.key === 'role'">
-                        <q-chip
-                            v-if="_.get(record, 'role[0]') === 'super'"
-                            color="primary"
-                            text-color="white"
-                            size="sm"
-                        >
-                            <q-avatar icon="bookmark" color="red" text-color="white" />
-                            {{ $t('SuperAdmin') }}
-                        </q-chip>
-                        <span v-else-if="_.get(record, 'role[0]') === 'admin'">{{ $t('Admin') }}</span>
-                        <span v-else>{{ $t('NormalUser') }}</span>
-                    </template>
-                    <template v-else-if="column.key === 'is_active'">
-                        <q-chip
-                            v-if="record.is_active"
-                            class="users-status-chip"
-                            :label="$t('Enabled')"
-                            color="green"
-                            size="sm"
-                        />
-                        <q-chip v-else class="users-status-chip" :label="$t('Disable')" color="orange" size="sm" />
-                    </template>
-                    <template v-else-if="column.key === 'operation'">
-                        <div class="users-op q-pa-xs q-gutter-xs no-wrap">
-                            <q-btn
-                                v-if="allowReset(record)"
-                                flat
-                                dense
-                                icon="settings"
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'disk'">
+                            {{ (record.used_disk || 0) + '/' + (record.disk_limit || $t('Unlimited')) }}
+                        </template>
+                        <template v-else-if="column.key === 'task'">
+                            {{ (record.task_count || 0) + '/' + (record.task_limit === null ? $t('Unlimited') : record.task_limit) }}
+                        </template>
+                        <template v-else-if="column.key === 'role'">
+                            <q-chip
+                                v-if="_.get(record, 'role[0]') === 'super'"
                                 color="primary"
+                                text-color="white"
                                 size="sm"
-                                class="no-wrap"
-                                :label="$t('Setting')"
-                                @click="clickEdit(record)"
-                            ></q-btn>
-                            <q-btn
-                                v-permission="'resetPassword'"
-                                v-if="allowReset(record)"
-                                dense
-                                flat
-                                icon="refresh"
-                                color="red"
+                            >
+                                <q-avatar icon="bookmark" color="red" text-color="white" />
+                                {{ $t('SuperAdmin') }}
+                            </q-chip>
+                            <span v-else-if="_.get(record, 'role[0]') === 'admin'">{{ $t('Admin') }}</span>
+                            <span v-else>{{ $t('NormalUser') }}</span>
+                        </template>
+                        <template v-else-if="column.key === 'is_active'">
+                            <q-chip
+                                v-if="record.is_active"
+                                class="users-status-chip"
+                                :label="$t('Enabled')"
+                                color="green"
                                 size="sm"
-                                class="no-wrap"
-                                :label="$t('ResetPassword')"
-                                @click="clickReset(record)"
-                            ></q-btn>
-                            <q-btn
-                                v-permission="'deleteUser'"
-                                v-if="allowDelete(record)"
-                                dense
-                                flat
-                                icon="delete"
-                                color="red"
-                                size="sm"
-                                class="no-wrap"
-                                :label="$t('Delete')"
-                                @click="clickDelete(record)"
-                            ></q-btn>
-                            <q-btn
-                                v-if="amISuper() && !isSuper(record)"
-                                dense
-                                flat
-                                icon="grading"
-                                color="primary"
-                                size="sm"
-                                class="no-wrap"
-                                :label="$t('Permission')"
-                                @click="clickSetPermission(record)"
                             />
-                        </div>
+                            <q-chip v-else class="users-status-chip" :label="$t('Disable')" color="orange" size="sm" />
+                        </template>
+                        <template v-else-if="column.key === 'operation'">
+                            <div class="table-operation-buttons users-op">
+                                <q-btn
+                                    v-if="allowReset(record)"
+                                    class="table-operation-btn table-operation-btn--primary"
+                                    flat
+                                    dense
+                                    no-caps
+                                    :label="$t('Setting')"
+                                    @click="clickEdit(record)"
+                                />
+                                <q-btn
+                                    v-permission="'resetPassword'"
+                                    v-if="allowReset(record)"
+                                    class="table-operation-btn table-operation-btn--secondary"
+                                    dense
+                                    flat
+                                    no-caps
+                                    :label="$t('ResetPassword')"
+                                    @click="clickReset(record)"
+                                />
+                                <q-btn
+                                    v-permission="'deleteUser'"
+                                    v-if="allowDelete(record)"
+                                    class="table-operation-btn table-operation-btn--danger"
+                                    dense
+                                    flat
+                                    no-caps
+                                    :label="$t('Delete')"
+                                    @click="clickDelete(record)"
+                                />
+                                <q-btn
+                                    v-if="amISuper() && !isSuper(record)"
+                                    class="table-operation-btn table-operation-btn--primary"
+                                    dense
+                                    flat
+                                    no-caps
+                                    :label="$t('Permission')"
+                                    @click="clickSetPermission(record)"
+                                />
+                            </div>
+                        </template>
                     </template>
-                </template>
-            </a-table>
-        </div>
+                </a-table>
+            </div>
+        </q-card>
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
         <EditUser ref="editUserDlg" :user="user" @success="refreshUsers"></EditUser>
         <ResetPassword ref="resetPasswordDlg" :user="user"></ResetPassword>
@@ -216,12 +204,15 @@ const columns = computed(() => [
         key: 'operation',
         dataIndex: 'operation',
         align: 'center',
-        width: 420,
+        width: 300,
     },
 ])
 
 const loading = ref(false)
 const rows = ref([])
+const tableLocale = computed(() => ({
+    emptyText: t('NoData'),
+}))
 
 onMounted(() => {
     nextTick(() => {
@@ -243,23 +234,6 @@ onUnmounted(() => {
 
 const searchKeyword = ref('')
 const isPermissionDlgVisible = ref(false)
-
-const roleMap = {
-    super: computed(() => t('SuperAdmin')),
-    admin: computed(() => t('Admin')),
-    normal: computed(() => t('NormalUser')),
-}
-
-const getRoleName = (roles) => {
-    if (!_.isArray(roles)) {
-        return ''
-    }
-    if (roles.length === 0) {
-        return ''
-    }
-
-    return roleMap[roles[0]] || ''
-}
 
 const allowReset = (row) => {
     return row.id !== _.get(store, 'currentUser.id')
@@ -293,15 +267,9 @@ const clickReset = (row) => {
     resetPasswordDlg.value.show()
 }
 
-const clickFlowAuth = (row) => {
-}
-
-const clickSetResourceLimit = (row) => {
-}
-
 const clickDelete = (row) => {
     $q.dialog({
-        title: '确认删除',
+        title: '纭鍒犻櫎',
         message: t('ConfirmToDeleteUser') + `${row.username}?`,
         cancel: t('Cancel'),
         ok: t('Confirm'),
@@ -313,9 +281,6 @@ const clickDelete = (row) => {
             })
         })
         .onCancel(() => {})
-}
-
-const clickPermission = (row) => {
 }
 
 const handleTableChange = (pg) => {
@@ -348,6 +313,12 @@ function refreshUsers() {
         })
 }
 
+const resetSearch = () => {
+    searchKeyword.value = ''
+    pagination.value.current = 1
+    refreshUsers()
+}
+
 const allowDelete = (row) => {
     if (isSuper(row)) {
         return false
@@ -365,17 +336,21 @@ const allowDelete = (row) => {
 .users-page
     overflow: hidden
 
+    .users-card
+        flex: 1 1 auto
+        min-height: 0
+        display: flex
+        flex-direction: column
+
     .users-table-area
+        flex: 1 1 auto
         min-height: 0
         overflow: hidden
         display: flex
         flex-direction: column
 
-    .ant-table
+    .ant-table-wrapper
         flex: 1
-
-    .ant-table-cell
-        white-space: nowrap
 
     .ant-table-thead > tr > th,
     .ant-table-tbody > tr > td
@@ -385,12 +360,7 @@ const allowDelete = (row) => {
         margin: 8px 0 !important
 
     .users-op
-        .q-btn__content
-            font-size: 13px
-
-    .users-toolbar-btn
-        .q-btn__content
-            font-size: 14px
+        justify-content: center
 
     .users-status-chip
         font-size: 13px

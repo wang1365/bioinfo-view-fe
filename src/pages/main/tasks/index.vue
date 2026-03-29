@@ -1,71 +1,74 @@
 <template>
     <q-page class="task-list-page q-px-sm q-pt-sm">
         <div class="q-px-sm">
-            <div class="task-cards">
-                <q-btn
-                    class="task-card task-card--all"
-                    :class="{ 'task-card--active': status === 'ALL' }"
-                    color="white"
-                    unelevated
-                    @click="clickCard(options[0].value)"
-                >
-                    <div class="task-card-content text-black">
-                        <div class="task-card-text">{{ $t('TaskPageListStatusAll') }} ({{ total_task_count }})</div>
-                    </div>
-                </q-btn>
+            <div class="task-header-row">
+                <div class="task-page-title">{{ $t('Task') + $t('Manage') }}</div>
+                <div class="task-cards">
+                    <q-btn
+                        class="task-card task-card--all"
+                        :class="{ 'task-card--active': status === 'ALL' }"
+                        color="white"
+                        unelevated
+                        @click="clickCard(options[0].value)"
+                    >
+                        <div class="task-card-content text-black">
+                            <div class="task-card-text">{{ $t('TaskPageListStatusAll') }} ({{ total_task_count }})</div>
+                        </div>
+                    </q-btn>
 
-                <q-btn
-                    class="task-card task-card--primary"
-                    :class="{ 'task-card--active': status === 'RUNNING' }"
-                    color="primary"
-                    unelevated
-                    @click="clickCard(options[1].value)"
-                >
-                    <div class="task-card-content text-white">
-                        <div class="task-card-text">
-                            {{ $t('TaskPageListStatusRun') }} ({{ taskSummary.running_task_count }})
+                    <q-btn
+                        class="task-card task-card--primary"
+                        :class="{ 'task-card--active': status === 'RUNNING' }"
+                        color="primary"
+                        unelevated
+                        @click="clickCard(options[1].value)"
+                    >
+                        <div class="task-card-content text-white">
+                            <div class="task-card-text">
+                                {{ $t('TaskPageListStatusRun') }} ({{ taskSummary.running_task_count }})
+                            </div>
                         </div>
-                    </div>
-                </q-btn>
-                <q-btn
-                    class="task-card task-card--negative"
-                    :class="{ 'task-card--active': status === 'FAILURED' }"
-                    color="negative"
-                    unelevated
-                    @click="clickCard(options[3].value)"
-                >
-                    <div class="task-card-content text-white">
-                        <div class="task-card-text">
-                            {{ $t('TaskPageListStatusFail') }} ({{ taskSummary.failured_task_count }})
+                    </q-btn>
+                    <q-btn
+                        class="task-card task-card--negative"
+                        :class="{ 'task-card--active': status === 'FAILURED' }"
+                        color="negative"
+                        unelevated
+                        @click="clickCard(options[3].value)"
+                    >
+                        <div class="task-card-content text-white">
+                            <div class="task-card-text">
+                                {{ $t('TaskPageListStatusFail') }} ({{ taskSummary.failured_task_count }})
+                            </div>
                         </div>
-                    </div>
-                </q-btn>
-                <q-btn
-                    class="task-card task-card--secondary"
-                    :class="{ 'task-card--active': status === 'PENDING' }"
-                    color="secondary"
-                    unelevated
-                    @click="clickCard(options[2].value)"
-                >
-                    <div class="task-card-content text-white">
-                        <div class="task-card-text">
-                            {{ $t('TaskPageListStatusQueue') }} ({{ taskSummary.pending_task_count }})
+                    </q-btn>
+                    <q-btn
+                        class="task-card task-card--secondary"
+                        :class="{ 'task-card--active': status === 'PENDING' }"
+                        color="secondary"
+                        unelevated
+                        @click="clickCard(options[2].value)"
+                    >
+                        <div class="task-card-content text-white">
+                            <div class="task-card-text">
+                                {{ $t('TaskPageListStatusQueue') }} ({{ taskSummary.pending_task_count }})
+                            </div>
                         </div>
-                    </div>
-                </q-btn>
-                <q-btn
-                    class="task-card task-card--positive"
-                    :class="{ 'task-card--active': status === 'FINISHED' }"
-                    color="positive"
-                    unelevated
-                    @click="clickCard(options[4].value)"
-                >
-                    <div class="task-card-content text-white">
-                        <div class="task-card-text">
-                            {{ $t('TaskPageListStatusFinish') }} ({{ taskSummary.finished_task_count }})
+                    </q-btn>
+                    <q-btn
+                        class="task-card task-card--positive"
+                        :class="{ 'task-card--active': status === 'FINISHED' }"
+                        color="positive"
+                        unelevated
+                        @click="clickCard(options[4].value)"
+                    >
+                        <div class="task-card-content text-white">
+                            <div class="task-card-text">
+                                {{ $t('TaskPageListStatusFinish') }} ({{ taskSummary.finished_task_count }})
+                            </div>
                         </div>
-                    </div>
-                </q-btn>
+                    </q-btn>
+                </div>
             </div>
         </div>
         <div class="q-px-sm q-my-sm">
@@ -122,6 +125,7 @@
         </div>
         <div ref="tableWrapRef" class="q-px-sm task-table-wrap">
             <a-table
+                class="page-grid-table"
                 :columns="columns"
                 :data-source="rows"
                 :pagination="pagination"
@@ -188,35 +192,35 @@
                     </template>
 
                     <template v-if="column.dataIndex ==='patient'">
-                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                        <div v-for="sd in record.sample_data.slice(0,2)" :key="sd.sample_data_identifier">
                             {{ sd.patient_name }}
                         </div>
-                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                        <div v-if="record.sample_data.length > 2" class="text-grey">
                             ... ({{ record.sample_data.length }})
                         </div>
                     </template>
 
                     <template v-if="column.dataIndex ==='sample'">
-                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                        <div v-for="sd in record.sample_data.slice(0,2)" :key="sd.sample_data_identifier">
                             {{ sd.sample_data_identifier }}
                         </div>
-                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                        <div v-if="record.sample_data.length > 2" class="text-grey">
                             ... ({{ record.sample_data.length }})
                         </div>
                     </template>
                     <template v-if="column.dataIndex ==='data'">
-                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                        <div v-for="sd in record.sample_data.slice(0,2)" :key="sd.sample_data_identifier">
                             {{ sd.sample_identifier }}
                         </div>
-                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                        <div v-if="record.sample_data.length > 2" class="text-grey">
                             ... ({{ record.sample_data.length }})
                         </div>
                     </template>
                     <template v-if="column.dataIndex ==='library_number'">
-                        <div v-for="sd in record.sample_data.slice(0,3)" :key="sd.sample_data_identifier">
+                        <div v-for="sd in record.sample_data.slice(0,2)" :key="sd.sample_data_identifier">
                             {{ sd.library_number }}
                         </div>
-                        <div v-if="record.sample_data.length > 3" class="text-grey">
+                        <div v-if="record.sample_data.length > 2" class="text-grey">
                             ... ({{ record.sample_data.length }})
                         </div>
                     </template>
@@ -254,122 +258,122 @@
                     </template>
 
                     <template v-if="column.dataIndex === 'operate'">
-                        <div class="task-operate-row">
+                        <div class="table-operation-buttons task-operate-row">
                             <q-btn
-                                color="primary"
+                                class="table-operation-btn table-operation-btn--primary"
                                 :label="$t('Detail')"
                                 :to="`/main/tasks/${record.id}`"
-                                size="md"
                                 dense
                                 flat
-                                padding="3px 8px"
+                                no-caps
                             />
                             <q-btn
+                                class="table-operation-btn table-operation-btn--success"
                                 :disable="record.status !== 'FINISHED'"
-                                :color="record.status !== 'FINISHED' ? 'grey' : 'green-9'"
                                 :label="$t('Result')"
                                 :to="getResultRoute(record)"
-                                size="md"
                                 dense
                                 flat
-                                padding="3px 8px"
+                                no-caps
                             />
 
-                            <q-btn label="" color="primary" size="md" padding="3px 8px" dense outline flat icon="more_horiz">
-                                <q-menu>
-                                    <q-list style="min-width: 100px" dense>
-                                        <q-item v-permission="'createReport'" clickable>
-                                            <q-item-section>
-                                                <q-btn
-                                                    :disable="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report"
-                                                    :color="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report ? 'grey': 'primary'"
-                                                    :label="$t('TaskPageBtnCustomReport')"
-                                                    :to="`/main/tasks/${record.id}/define-report`"
-                                                    size="md"
-                                                    dense
-                                                    align="left"
-                                                    flat
-                                                    padding="xs sm"
-                                                />
-                                            </q-item-section>
-                                        </q-item>
-                                        <q-separator v-permission="'createReport'" />
-                                        <q-item clickable>
-                                            <q-item-section>
-                                                <q-btn
-                                                    :disable="record.status !== 'FINISHED'"
-                                                    color="primary"
-                                                    size="md"
-                                                    dense
-                                                    align="left"
-                                                    icon="download"
-                                                    flat
-                                                    padding="xs sm"
-                                                    :href="download(record)"
-                                                    :label="$t('Download')"
-                                                />
-                                            </q-item-section>
-                                        </q-item>
-                                        <q-item>
-                                            <q-item-section>
-                                                <q-btn
-                                                    color="primary"
-                                                    padding="xs sm"
-                                                    :disable="record.status !== 'FINISHED'"
-                                                    :label="$t('Download') + ' bam'"
-                                                    icon="download"
-                                                    size="md"
-                                                    align="left"
-                                                    dense
-                                                    flat
-                                                    :href="`/igv${record.result_dir}/bam/${record.id}-bam.zip`"
-                                                    target="_blank"
-                                                />
-                                            </q-item-section>
-                                        </q-item>
-                                        <q-separator />
-                                        <q-item clickable>
-                                            <q-item-section>
-                                                <q-btn
-                                                    v-permission="'deleteTaskTmpFile'"
-                                                    :disable="record.status !== 'FINISHED' || record.deleted_tempdir"
-                                                    color="red"
-                                                    :label="$t('TaskPageBtnDeleteTmpFile')"
-                                                    icon="delete"
-                                                    @click="deleteMiddleFiles(record)"
-                                                    size="md"
-                                                    dense
-                                                    align="left"
-                                                    flat
-                                                    padding="xs sm"
-                                                >
-                                                    <q-tooltip
-                                                        >{{
-                                                            $t('TaskPageListTableRowBtnDeleteTmpTip')
-                                                        }}
-                                                    </q-tooltip>
-                                                </q-btn>
-                                            </q-item-section>
-                                        </q-item>
-                                        <q-item clickable>
-                                            <q-item-section>
-                                                <q-btn
-                                                    v-permission="'deleteTask'"
-                                                    color="red"
-                                                    padding="xs sm"
-                                                    :label="$t('Delete')"
-                                                    icon="delete"
-                                                    size="md"
-                                                    dense
-                                                    align="left"
-                                                    flat
-                                                    @click="confirm(record)"
-                                                />
-                                            </q-item-section>
-                                        </q-item>
-                                    </q-list>
-                                </q-menu>
-                            </q-btn>
+                            <q-btn-dropdown
+                                class="table-operation-btn table-operation-btn--primary task-operate-dropdown"
+                                :label="$t('More')"
+                                dense
+                                flat
+                                no-caps
+                                dropdown-icon="arrow_drop_down"
+                                auto-close
+                            >
+                                <q-list style="min-width: 100px" dense>
+                                    <q-item v-permission="'createReport'" clickable>
+                                        <q-item-section>
+                                            <q-btn
+                                                :disable="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report"
+                                                :color="isRP2Flow(record) || record.status !== 'FINISHED' || !record.flow.allow_define_report ? 'grey': 'primary'"
+                                                :label="$t('TaskPageBtnCustomReport')"
+                                                :to="`/main/tasks/${record.id}/define-report`"
+                                                dense
+                                                align="left"
+                                                flat
+                                                no-caps
+                                                padding="xs sm"
+                                            />
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-separator v-permission="'createReport'" />
+                                    <q-item clickable>
+                                        <q-item-section>
+                                            <q-btn
+                                                :disable="record.status !== 'FINISHED'"
+                                                color="primary"
+                                                dense
+                                                align="left"
+                                                flat
+                                                no-caps
+                                                padding="xs sm"
+                                                :href="download(record)"
+                                                :label="$t('Download')"
+                                            />
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item>
+                                        <q-item-section>
+                                            <q-btn
+                                                color="primary"
+                                                padding="xs sm"
+                                                :disable="record.status !== 'FINISHED'"
+                                                :label="$t('Download') + ' bam'"
+                                                align="left"
+                                                dense
+                                                flat
+                                                no-caps
+                                                :href="`/igv${record.result_dir}/bam/${record.id}-bam.zip`"
+                                                target="_blank"
+                                            />
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-separator />
+                                    <q-item clickable>
+                                        <q-item-section>
+                                            <q-btn
+                                                v-permission="'deleteTaskTmpFile'"
+                                                :disable="record.status !== 'FINISHED' || record.deleted_tempdir"
+                                                color="red"
+                                                :label="$t('TaskPageBtnDeleteTmpFile')"
+                                                @click="deleteMiddleFiles(record)"
+                                                dense
+                                                align="left"
+                                                flat
+                                                no-caps
+                                                padding="xs sm"
+                                            >
+                                                <q-tooltip
+                                                    >{{
+                                                        $t('TaskPageListTableRowBtnDeleteTmpTip')
+                                                    }}
+                                                </q-tooltip>
+                                            </q-btn>
+                                        </q-item-section>
+                                    </q-item>
+                                    <q-item clickable>
+                                        <q-item-section>
+                                            <q-btn
+                                                v-permission="'deleteTask'"
+                                                color="red"
+                                                padding="xs sm"
+                                                :label="$t('Delete')"
+                                                dense
+                                                align="left"
+                                                flat
+                                                no-caps
+                                                @click="confirm(record)"
+                                            />
+                                        </q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </q-btn-dropdown>
                         </div>
                     </template>
                 </template>
@@ -437,7 +441,7 @@ const pagination = ref({
 const columns = computed(() => [
     { dataIndex: 'id', title: 'ID', align: 'left', width: 60 , fixed: 'left'},
     { dataIndex: 'name',  title: t('Name'), align: 'left', width: 180 , fixed: 'left'},
-    { dataIndex: 'patient', title: t('Patient') + t('Name'), align: 'left', width: 100 },
+    { dataIndex: 'patient', title: t('Patient'), align: 'left', width: 100 },
     { dataIndex: 'sample', title: t('Sample'), align: 'left', width: 120 },
     { dataIndex: 'data', title: t('Data'), align: 'left', width: 120 },
     { dataIndex: 'library_number', title: t('LibraryNumber'), align: 'left', width: 220},
@@ -445,7 +449,7 @@ const columns = computed(() => [
     { dataIndex: 'status', title: t('Status'), align: 'center', width: 100 },
     { dataIndex: 'creator', title: t('CreatedBy'), align: 'left', width: 160, },
     { dataIndex: 'task_priority', title: t('TaskPriority'), align: 'left', width: 100, },
-    { dataIndex: 'operate', title: t('Operate'), align: 'center', fixed: 'right', width: langCode.value === 'en' ? 190 : 180}
+    { dataIndex: 'operate', title: t('Operate'), align: 'center', fixed: 'right', width: langCode.value === 'en' ? 180 : 160}
 ]);
 
 const tableScroll = computed(() => ({
@@ -790,19 +794,56 @@ const summary = async () => {
   display: flex
   flex-direction: column
   overflow: hidden
+  position: relative
+  background: linear-gradient(180deg, #f5f8ff 0%, #edf4ff 46%, #f8fbff 100%)
+  border-radius: 16px
+  isolation: isolate
+
+.task-list-page::before
+  content: ''
+  position: absolute
+  inset: -8% auto auto -10%
+  width: 420px
+  height: 420px
+  border-radius: 50%
+  background: radial-gradient(circle, rgba(46, 125, 255, .16) 0%, rgba(46, 125, 255, 0) 72%)
+  pointer-events: none
+  z-index: 0
+
+.task-list-page::after
+  content: ''
+  position: absolute
+  inset: auto -8% 6% auto
+  width: 360px
+  height: 360px
+  border-radius: 50%
+  background: radial-gradient(circle, rgba(34, 197, 94, .12) 0%, rgba(34, 197, 94, 0) 74%)
+  pointer-events: none
+  z-index: 0
+
+.task-list-page > *
+  position: relative
+  z-index: 1
 
 .task-table-wrap
   flex: 1 1 auto
   min-height: 0
+  padding: 10px 12px 12px
+  border: 1px solid rgba(151, 173, 205, .45)
+  border-radius: 16px
+  background: rgba(255, 255, 255, .78)
+  box-shadow: 0 16px 40px rgba(38, 84, 124, .08)
+  backdrop-filter: blur(10px)
 
 .task-panel
-  border: 1px solid #d7e1ee
-  border-radius: 8px
-  background: #fff
-  box-shadow: 0 2px 8px rgba(15, 23, 42, .04)
+  border: 1px solid rgba(163, 184, 212, .48)
+  border-radius: 14px
+  background: rgba(255, 255, 255, .86)
+  box-shadow: 0 10px 24px rgba(15, 23, 42, .06)
+  backdrop-filter: blur(8px)
 
 .task-panel--filters
-  padding: 8px 12px
+  padding: 10px 12px
 
 .task-filter-row
   display: flex
@@ -817,20 +858,43 @@ const summary = async () => {
 .task-list-page > :not(.task-table-wrap)
   flex: 0 0 auto
 
+.task-header-row
+  display: flex
+  align-items: center
+  gap: 12px
+  margin-bottom: 8px
+  padding: 10px 12px
+  border: 1px solid rgba(158, 177, 203, .42)
+  border-radius: 16px
+  background: linear-gradient(135deg, rgba(255, 255, 255, .92) 0%, rgba(245, 250, 255, .86) 100%)
+  box-shadow: 0 12px 28px rgba(33, 72, 112, .07)
+  backdrop-filter: blur(10px)
+
+.task-page-title
+  flex: 0 0 auto
+  font-size: 20px
+  font-weight: 700
+  line-height: 1.2
+  color: #183b66
+  white-space: nowrap
+  letter-spacing: .02em
+  padding: 0 4px
+
 .task-cards
+  flex: 1 1 auto
   display: grid
   grid-template-columns: repeat(5, minmax(0, 1fr))
   gap: 8px
   padding: 0
   align-items: stretch
-  margin-bottom: 4px
+  min-width: 0
 
 
 .task-card
   width: 100%
   height: 48px
-  border-radius: 10px
-  box-shadow: 0 2px 8px rgba(0,0,0,.08)
+  border-radius: 12px
+  box-shadow: 0 8px 18px rgba(20, 52, 86, .10)
   transition: transform .2s ease, box-shadow .2s ease
   padding: 0
   min-width: 0
@@ -857,9 +921,17 @@ const summary = async () => {
   .task-card
     max-width: 10vw
 
+@media (max-width: 1200px)
+  .task-header-row
+    align-items: flex-start
+    flex-direction: column
+
+  .task-cards
+    width: 100%
+
 .task-card:hover
   transform: translateY(-2px)
-  box-shadow: 0 6px 16px rgba(0,0,0,.12)
+  box-shadow: 0 12px 24px rgba(20, 52, 86, .16)
 
 .task-card--all
   border-color: rgba(0,0,0,.12)
@@ -873,7 +945,7 @@ const summary = async () => {
 
 .task-card--active
   transform: translateY(-2px) scale(1.02)
-  box-shadow: 0 8px 24px rgba(0,0,0,.22)
+  box-shadow: 0 14px 28px rgba(20, 52, 86, .22)
 
 .task-card--active.task-card--primary
   border-color: #fff
@@ -895,39 +967,37 @@ const summary = async () => {
   border-color: var(--q-primary)
   box-shadow: 0 0 0 2px var(--q-primary), 0 8px 24px rgba(0,0,0,.22)
 
-.ant-table-wrapper
-  .ant-table-container
-    border: 1px solid #b9c7d8 !important
-    border-radius: 4px
+.task-table-wrap :deep(.ant-table-wrapper)
+  height: 100%
 
-  .ant-table-thead > tr > th
-    padding-top: 7px !important
-    padding-bottom: 7px !important
-    line-height: 1.15 !important
-    height: 38px !important
-    min-height: 38px !important
-    border-bottom: 1px solid #d5deea !important
+.task-table-wrap :deep(.ant-table)
+  background: rgba(255, 255, 255, .94)
 
-  .ant-table-tbody > tr > td
-    border-bottom: 1px solid #edf1f6 !important
+.task-table-wrap :deep(.ant-table-container)
+  border-radius: 12px
+  overflow: hidden
 
-  .ant-table-tbody > tr > td:last-child
-    text-align: center
+.task-table-wrap :deep(.page-grid-table .ant-table-tbody > tr > td:last-child)
+  text-align: center
 
-    .task-operate-row
-      display: flex
-      justify-content: center
-      align-items: center
-      flex-wrap: nowrap
-      white-space: nowrap
+.task-table-wrap :deep(.page-grid-table .ant-table-tbody > tr > td)
+  padding-top: 5px !important
+  padding-bottom: 5px !important
+  line-height: 1.35
 
-      .q-btn
-        white-space: nowrap
-        min-width: auto
-        margin-left: 2px
-        margin-right: 2px
+.task-table-wrap :deep(.page-grid-table .ant-table-tbody > tr > td > div)
+  margin-bottom: 1px
 
-      .q-btn__content
-        flex-wrap: nowrap
-        white-space: nowrap
+.task-table-wrap :deep(.page-grid-table .ant-table-tbody > tr > td > div:last-child)
+  margin-bottom: 0
+
+.task-operate-row
+  gap: 10px
+
+.task-operate-dropdown :deep(.q-btn__content)
+  flex-wrap: nowrap
+  white-space: nowrap
+
+.task-operate-dropdown :deep(.q-btn-dropdown__arrow)
+  margin-left: 2px
 </style>

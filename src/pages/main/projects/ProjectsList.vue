@@ -1,32 +1,37 @@
 <template>
-    <q-card class="projects-card">
-        <q-card-section>
-            <q-toolbar class="q-gutter-x-sm">
-                <q-icon size="md" color="primary" name="folder" />
-                <q-toolbar-title class="text-h6">
-                    {{ $t('ProjectPageListSearchTitle') }}
-                </q-toolbar-title>
+    <q-card class="projects-card page-list-card" flat>
+        <div>
+            <div class="page-list-filter row q-px-md bio-data-table">
                 <q-input
+                    class="page-list-filter__field page-list-filter__field--keyword"
                     style="width: 250px"
+                    filled
                     dense
                     v-model="search"
                     :label="$t('ProjectPageListSearchInput')"
                     clearable
                     @clear="refreshPage()"
                 />
-                <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
+                <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshPage()" />
+                <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="reset()" />
+            </div>
+        </div>
+        <div>
+            <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
                 <q-btn
                     v-permission="'createProject'"
                     color="primary"
+                    unelevated
                     :label="$t('ProjectPageListSearchNewBtn')"
-                    icon="folder"
+                    icon="description"
                     @click="openNewProject = true"
                 />
             </q-toolbar>
-        </q-card-section>
-        <q-card-section>
-            <div class="q-pa-md bio-data-table">
+        </div>
+        <div>
+            <div class="q-pt-sm q-px-md q-pb-md bio-data-table">
                 <a-table
+                    class="page-grid-table"
                     :data-source="dataItems"
                     :columns="columns"
                     :loading="loading"
@@ -46,42 +51,38 @@
                             {{ (record.samples || []).length }}
                         </template>
                         <template v-else-if="column.key === 'operation'">
-                            <div class="q-gutter-x-sm">
+                            <div class="table-operation-buttons">
                                 <q-btn
-                                    color="primary"
+                                    class="table-operation-btn table-operation-btn--primary"
                                     :label="$t('Detail')"
-                                    icon="arrow_outward"
                                     @click="gotoChild(record)"
-                                    size="md"
                                     flat
                                     dense
+                                    no-caps
                                 />
                                 <q-btn
-                                    color="primary"
+                                    class="table-operation-btn table-operation-btn--primary"
                                     :label="$t('Edit')"
-                                    icon="edit"
-                                    @click="updateProjectName = record.name; currentProject = record; openEditProject = true;"
-                                    size="md"
+                                    @click="updateProjectName = record.name; currentProject = record; openEditProject = true"
                                     flat
                                     dense
+                                    no-caps
                                 />
                                 <q-btn
                                     v-permission="'deleteProject'"
-                                    color="red"
+                                    class="table-operation-btn table-operation-btn--danger"
                                     :label="$t('Delete')"
-                                    icon="delete"
                                     @click="confirm(record)"
-                                    size="md"
                                     flat
                                     dense
+                                    no-caps
                                 />
                             </div>
                         </template>
                     </template>
                 </a-table>
             </div>
-        </q-card-section>
-        <q-card-section class="q-pd-md"></q-card-section>
+        </div>
     </q-card>
     <q-dialog v-model="openNewProject" persistent>
         <q-card style="width: 700px; max-width: 80vw">
@@ -228,7 +229,7 @@ const columns = computed(() => [
         dataIndex: 'operation',
         key: 'operation',
         align: 'center',
-        width: 280,
+        width: 220,
     },
 ])
 
@@ -238,6 +239,7 @@ const tableLocale = computed(() => ({
 
 const tableScrollY = computed(() => ({
     y: `calc(100vh - 360px)`,
+    x: 1100,
 }))
 
 onMounted(() => {
@@ -291,6 +293,11 @@ const updateProject = () => {
 const refreshPage = async () => {
     pagination.value.current = 1
     loadPage()
+}
+
+const reset = () => {
+    search.value = ''
+    refreshPage()
 }
 
 const handleTableChange = (pg) => {
