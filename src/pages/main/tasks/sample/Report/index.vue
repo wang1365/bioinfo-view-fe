@@ -50,13 +50,28 @@
             </div>
             <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="bacteria">
-                    <SamplePathogenTable :task-id="taskId" :sample-name="sampleName" category="bacteria" />
+                    <SamplePathogenTable
+                        :task-id="taskId"
+                        :sample-name="sampleName"
+                        :sample-identifier="sampleIdentifier"
+                        category="bacteria"
+                    />
                 </q-tab-panel>
                 <q-tab-panel name="fungus">
-                    <SamplePathogenTable :task-id="taskId" :sample-name="sampleName" category="fungus" />
+                    <SamplePathogenTable
+                        :task-id="taskId"
+                        :sample-name="sampleName"
+                        :sample-identifier="sampleIdentifier"
+                        category="fungus"
+                    />
                 </q-tab-panel>
                 <q-tab-panel name="virus">
-                    <SamplePathogenTable :task-id="taskId" :sample-name="sampleName" category="virus" />
+                    <SamplePathogenTable
+                        :task-id="taskId"
+                        :sample-name="sampleName"
+                        :sample-identifier="sampleIdentifier"
+                        category="virus"
+                    />
                 </q-tab-panel>
                 <q-tab-panel
                     v-for="(moduleItem, index) in customModules"
@@ -99,6 +114,7 @@ const { langCode } = storeToRefs(store)
 const tab = ref('bacteria')
 const taskId = computed(() => route.params.id)
 const sampleName = computed(() => decodeURIComponent(route.params.sampleId || ''))
+const sampleIdentifier = computed(() => decodeURIComponent(route.query.sampleIdentifier || ''))
 const taskName = ref('')
 const taskDetail = ref({ id: taskId.value })
 const customModules = ref([])

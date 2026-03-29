@@ -403,7 +403,8 @@ const rowKey = (record) => record.dataIdentifier || record.__rowKey
 
 const viewResult = (record) => {
     const encoded = encodeURIComponent(record.dataIdentifier || '')
-    router.push(`/main/tasks/${props.taskId}/sample/${encoded}/report`)
+    const sampleIdentifier = encodeURIComponent(record.sampleIdentifier || '')
+    router.push(`/main/tasks/${props.taskId}/sample/${encoded}/report?sampleIdentifier=${sampleIdentifier}`)
 }
 
 const openCustomReportDialog = (record) => {

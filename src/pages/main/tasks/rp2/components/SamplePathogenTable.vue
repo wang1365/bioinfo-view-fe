@@ -94,6 +94,10 @@ const props = defineProps({
         type: String,
         required: true
     },
+    sampleIdentifier: {
+        type: String,
+        default: ''
+    },
     category: {
         type: String,
         required: true
@@ -314,7 +318,14 @@ const buildCompareResultFromRelatedTasks = async () => {
             }
 
             try {
-                const sampleLabel = task?.samples?.[0]?.identifier || ''
+                const matchedSample = Array.isArray(task?.samples)
+                    ? task.samples.find(
+                          (sample) =>
+                              String(sample?.sample_identifier || '').trim() ===
+                              String(props.sampleIdentifier || '').trim()
+                      )
+                    : null
+                const sampleLabel = String(matchedSample?.identifier || '').trim()
                 if (!sampleLabel) {
                     return
                 }

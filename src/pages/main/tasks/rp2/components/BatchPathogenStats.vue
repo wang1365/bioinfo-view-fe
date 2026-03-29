@@ -127,7 +127,11 @@
                                 {{ t('Rp2SimilarityHeatmapTitle') }}
                             </q-card-section>
                             <q-card-section>
-                                <div ref="similarityHeatmapRef" class="rp2-chart"></div>
+                                <div
+                                    ref="similarityHeatmapRef"
+                                    class="rp2-chart rp2-chart--similarity"
+                                    :style="similarityHeatmapStyle"
+                                ></div>
                             </q-card-section>
                         </q-card>
                     </div>
@@ -184,6 +188,10 @@ const pathogenTypeChartStyle = computed(() => {
     const width = Number(pathogenTypeChartWidth.value)
     return width > 0 ? { width: `${width}px` } : {}
 })
+const similarityHeatmapHeight = ref(350)
+const similarityHeatmapStyle = computed(() => ({
+    height: `${similarityHeatmapHeight.value}px`
+}))
 
 const normalize = (text) => String(text ?? '').trim().replace(/\s+/g, '').toLowerCase()
 
@@ -333,6 +341,42 @@ const ensureChartInstance = (chartRef, instance, setInstance) => {
         setInstance(current)
     }
     return current
+}
+
+const getDynamicBarWidth = (chartRef, count, { min = 8, max = 28, ratio = 0.55 } = {}) => {
+    const total = Number(count) || 0
+    if (total <= 0) {
+        return min
+    }
+
+    const chartWidth = chartRef?.value?.clientWidth || 0
+    if (!chartWidth) {
+        return Math.max(min, Math.min(max, 16))
+    }
+
+    const estimatedGridWidth = Math.max(chartWidth - 90, 120)
+    const width = Math.floor((estimatedGridWidth / total) * ratio)
+    return Math.max(min, Math.min(max, width))
+}
+
+const getDynamicHeatmapHeight = (count, { min = 350, max = 1100, rowHeight = 24, padding = 90 } = {}) => {
+    const total = Number(count) || 0
+    if (total <= 0) {
+        return min
+    }
+
+    const height = total * rowHeight + padding
+    return Math.max(min, Math.min(max, height))
+}
+
+const getPathogenTypeChartWidth = (count, { min = 480, minStep = 72, maxStep = 100 } = {}) => {
+    const total = Number(count) || 0
+    if (total <= 0) {
+        return min
+    }
+
+    const step = total > 24 ? minStep : total > 12 ? 82 : maxStep
+    return Math.max(min, total * step)
 }
 
 const buildSimilarityAxisData = (labels, activeIndex, activeColor) =>
@@ -486,6 +530,11 @@ const renderSpeciesCharts = async () => {
         if (!speciesBarChart) {
             return
         }
+        const dynamicBarWidth = getDynamicBarWidth(speciesBarRef, labels.length, {
+            min: 6,
+            max: 24,
+            ratio: 0.52
+        })
         speciesBarChart.setOption({
             animation: false,
             tooltip: { trigger: 'axis' },
@@ -501,7 +550,8 @@ const renderSpeciesCharts = async () => {
             series: [
                 {
                     type: 'bar',
-                    barWidth: 48,
+                    barWidth: dynamicBarWidth,
+                    barMaxWidth: 24,
                     data: values,
                     itemStyle: {
                         color: (params) => redByCount(Number(params.value ?? 0), minValue, maxValue)
@@ -560,7 +610,11 @@ const renderPathogenTypeStackChart = async () => {
     }
 
     const { labels, bacteria, fungus, virus } = extractPathogenTypeStack(headers, rows)
-    pathogenTypeChartWidth.value = Math.max(480, labels.length * 120)
+    pathogenTypeChartWidth.value = getPathogenTypeChartWidth(labels.length, {
+        min: 480,
+        minStep: 72,
+        maxStep: 100
+    })
 
     await nextTick()
     if (!pathogenTypeStackRef.value) {
@@ -597,7 +651,9 @@ const renderPathogenTypeStackChart = async () => {
                 name: t('Rp2Xijun'),
                 type: 'bar',
                 stack: 'pathogen',
-                barWidth: 30,
+                barWidth: 36,
+                barMaxWidth: 36,
+                barCategoryGap: '8%',
                 data: bacteria,
                 itemStyle: { color: '#d9534f' }
             },
@@ -605,7 +661,9 @@ const renderPathogenTypeStackChart = async () => {
                 name: t('Rp2Zhenjun'),
                 type: 'bar',
                 stack: 'pathogen',
-                barWidth: 30,
+                barWidth: 36,
+                barMaxWidth: 36,
+                barCategoryGap: '8%',
                 data: fungus,
                 itemStyle: { color: '#f6c343' }
             },
@@ -613,7 +671,9 @@ const renderPathogenTypeStackChart = async () => {
                 name: t('Rp2Bingdu'),
                 type: 'bar',
                 stack: 'pathogen',
-                barWidth: 30,
+                barWidth: 36,
+                barMaxWidth: 36,
+                barCategoryGap: '8%',
                 data: virus,
                 itemStyle: { color: '#f39c12' }
             }
@@ -658,6 +718,13 @@ const renderSimilarityHeatmap = async () => {
         (row, index) => String(row?.[dataIdentifierHeader] ?? '').trim() || String(index + 1)
     )
     const points = []
+
+    similarityHeatmapHeight.value = getDynamicHeatmapHeight(yLabels.length, {
+        min: 350,
+        max: 1100,
+        rowHeight: 24,
+        padding: 90
+    })
 
     yLabels.forEach((_, yIndex) => {
         xLabels.forEach((header, xIndex) => {
@@ -944,6 +1011,10 @@ onBeforeUnmount(() => {
 .rp2-chart {
     width: 100%;
     height: 350px;
+}
+
+.rp2-chart--similarity {
+    min-height: 350px;
 }
 
 .rp2-chart-card--positive {
