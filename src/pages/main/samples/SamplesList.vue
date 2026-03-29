@@ -150,6 +150,7 @@
                     :loading="loading"
                     :pagination="pagination"
                     :scroll="tableScrollY"
+                    table-layout="fixed"
                     row-key="id"
                     @change="handleTableChange"
                     :locale="tableLocale"
@@ -299,48 +300,56 @@ const columns = computed(() => [
         dataIndex: 'sample_date',
         key: 'sample_date',
         align: 'center',
+        width: 120,
     },
     {
         title: t('SampleListTableColumnSubmissionDate'),
         dataIndex: 'test_date',
         key: 'test_date',
         align: 'center',
+        width: 120,
     },
     {
         title: t('SampleListTableColumnSamplingSite'),
         dataIndex: 'sample_componet',
         key: 'sample_componet',
         align: 'center',
+        width: 130,
     },
     {
         title: t('SampleListTableColumnSampleType'),
         dataIndex: 'sample_type',
         key: 'sample_type',
         align: 'center',
+        width: 130,
     },
     {
         title: t('SampleListTableColumnTumorContent'),
         dataIndex: 'panel_proportion',
         key: 'panel_proportion',
         align: 'center',
+        width: 110,
     },
     {
         title: t('SampleListTableColumnTumorSample'),
         dataIndex: 'is_panel',
         key: 'is_panel',
         align: 'center',
+        width: 100,
     },
     {
         title: t('SampleListTableColumnPatientIdentificationNumber'),
         dataIndex: 'patient_identifier',
         key: 'patient_identifier',
         align: 'center',
+        width: 140,
     },
     {
         title: t('SampleListTableColumnSampleIdentificationNumber'),
         dataIndex: 'identifier',
         key: 'identifier',
         align: 'center',
+        width: 140,
     },
     {
         title: t('SampleListTableColumnOperations'),
@@ -357,7 +366,7 @@ const tableLocale = computed(() => ({
 
 const tableScrollY = computed(() => ({
     y: 'calc(100vh - 420px)',
-    x: 1200,
+    x: 1410,
 }))
 
 const displayBoolean = (value) => {

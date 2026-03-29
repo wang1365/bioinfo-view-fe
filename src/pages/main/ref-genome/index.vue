@@ -1,199 +1,163 @@
 <template>
     <q-page padding style="overflow-x: hidden">
         <PageTitle :title="$t('CustomReferenceGenome')" />
-        <q-card>
-            <q-card-section>
-                <q-toolbar class="q-gutter-x-sm">
-                    <q-icon size="md" color="primary" name="ballot" />
-                    <q-toolbar-title class="text-h6">
-                        {{ $t('CustomReferenceGenomeList') }}
-                    </q-toolbar-title>
+        <q-card class="q-mt-xs ref-genome-card page-list-card" flat>
+            <div>
+                <div class="page-list-filter row q-px-md bio-data-table">
                     <q-input
-                        style="width: 250px"
+                        class="page-list-filter__field page-list-filter__field--keyword"
+                        style="width: 320px"
+                        filled
                         dense
                         v-model="search"
                         :label="$t('SearchCustomDatabase')"
                         clearable
                         @clear="refreshPage()"
                     />
-                    <q-btn color="primary" icon="search" @click="refreshPage()"></q-btn>
+                    <q-btn color="primary" unelevated :label="$t('Search')" icon="search" @click="refreshPage()" />
+                    <q-btn color="grey-7" outline :label="$t('Reset')" icon="clear" @click="resetSearch()" />
+                </div>
+            </div>
+            <div>
+                <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
                     <q-btn
                         v-if="canCreate"
                         color="primary"
+                        unelevated
                         :label="$t('Add')"
-                        icon="add"
+                        icon="description"
                         @click="openNewDialog = true"
                     />
                 </q-toolbar>
-            </q-card-section>
-            <q-card-section>
-                <div class="q-pa-md">
-                    <a-table
-                        :columns="columns"
-                        :data-source="dataItems"
-                        :pagination="paginationConfig"
-                        :loading="loading"
-                        row-key="id"
-                        @change="handleTableChange"
-                    >
-                        <template #bodyCell="{ column, record }">
-                            <template v-if="column.key === 'virus_name'">
-                                {{ formatJsonField(record.virus_name) }}
-                            </template>
-                            <template v-else-if="column.key === 'virus_type'">
-                                {{ formatJsonField(record.virus_type) }}
-                            </template>
-                            <template v-else-if="column.key === 'status'">
-                                {{ formatStatus(record.status) }}
-                            </template>
-                            <template v-else-if="column.key === 'create_time'">
-                                {{ toLocalString(record.create_time) }}
-                            </template>
-                            <template v-if="column.key === 'actions'">
-                                <a-space>
-                                    <a-button type="primary" size="small" @click="gotoDetail(record)">
-                                        <template #icon>
-                                            <EyeOutlined />
-                                        </template>
-                                        {{ $t('Detail') }}
-                                    </a-button>
-                                    <a-button
-                                        v-if="canDelete"
-                                        type="primary"
-                                        danger
-                                        size="small"
-                                        @click="confirmDelete(record)"
-                                    >
-                                        <template #icon>
-                                            <DeleteOutlined />
-                                        </template>
-                                        {{ $t('Delete') }}
-                                    </a-button>
-                                </a-space>
-                            </template>
+            </div>
+            <div class="q-pt-sm q-px-md q-pb-md bio-data-table">
+                <a-table
+                    class="page-grid-table"
+                    :columns="columns"
+                    :data-source="dataItems"
+                    :pagination="paginationConfig"
+                    :loading="loading"
+                    :scroll="tableScroll"
+                    :locale="tableLocale"
+                    row-key="id"
+                    size="small"
+                    bordered
+                    @change="handleTableChange"
+                >
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.key === 'virus_name'">
+                            {{ formatJsonField(record.virus_name) }}
                         </template>
-                    </a-table>
-                </div>
-            </q-card-section>
+                        <template v-else-if="column.key === 'virus_type'">
+                            {{ formatJsonField(record.virus_type) }}
+                        </template>
+                        <template v-else-if="column.key === 'status'">
+                            {{ formatStatus(record.status) }}
+                        </template>
+                        <template v-else-if="column.key === 'create_time'">
+                            {{ toLocalString(record.create_time) }}
+                        </template>
+                        <template v-else-if="column.key === 'actions'">
+                            <div class="table-operation-buttons">
+                                <q-btn
+                                    class="table-operation-btn table-operation-btn--primary"
+                                    :label="$t('Detail')"
+                                    flat
+                                    dense
+                                    no-caps
+                                    @click="gotoDetail(record)"
+                                />
+                                <q-btn
+                                    v-if="canDelete"
+                                    class="table-operation-btn table-operation-btn--danger"
+                                    :label="$t('Delete')"
+                                    flat
+                                    dense
+                                    no-caps
+                                    @click="confirmDelete(record)"
+                                />
+                            </div>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
         </q-card>
-
-        <!-- 新建对话框 -->
         <CreateCustomReferenceGenomeDialog v-model:visible="openNewDialog" @save="handleDialogSave" />
     </q-page>
 </template>
 
 <script setup>
+import { computed, onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
-import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import {
-    getCustomReferenceGenomeList,
-    deleteCustomReferenceGenome,
-} from 'src/api/customReferenceGenome'
+import { getCustomReferenceGenomeList, deleteCustomReferenceGenome } from 'src/api/customReferenceGenome'
 import { infoMessage, errorMessage } from 'src/utils/notify'
-import { format, toLocalString } from 'src/utils/time'
+import { toLocalString } from 'src/utils/time'
 import { getCurrentUser } from 'src/utils/user'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import CreateCustomReferenceGenomeDialog from './CreateCustomReferenceGenomeDialog.vue'
-import { EyeOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const $q = useQuasar()
 const { t } = useI18n()
 
-// 获取当前用户权限
 const currentUser = getCurrentUser()
 const userPermissions = computed(() => currentUser?.permissions || {})
 const isSuper = computed(() => currentUser?.role_list?.includes('super') || false)
 const canCreate = computed(() => isSuper.value || userPermissions.value.createReferenceGenome)
 const canDelete = computed(() => isSuper.value || userPermissions.value.deleteReferenceGenome)
 
-// 列表相关
 const search = ref('')
 const currentPage = ref(1)
 const pageSize = ref(10)
 const total = ref(0)
 const dataItems = ref([])
 const loading = ref(false)
+const openNewDialog = ref(false)
 
-// 表格列定义
 const columns = computed(() => [
-    {
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-        width: 80,
-    },
-    {
-        title: t('CustomDatabase'),
-        dataIndex: 'custom_database',
-        key: 'custom_database',
-        ellipsis: true,
-    },
-    {
-        title: t('SpeciesName2'),
-        dataIndex: 'virus_name',
-        key: 'virus_name',
-        ellipsis: true,
-    },
-    {
-        title: t('SubTypes'),
-        dataIndex: 'virus_type',
-        key: 'virus_type',
-        ellipsis: true,
-    },
-    {
-        title: t('Host'),
-        dataIndex: 'host',
-        key: 'host',
-    },
-    { title: t('HostGenomeVersion'), dataIndex: 'host_genome_version', key: 'host_genome_version', },
-    { title: t('Status'), dataIndex: 'status', key: 'status', },
-    {
-        title: t('CreatedAt'),
-        dataIndex: 'create_time',
-        key: 'create_time',
-        width: 180,
-        customRender: (text) => {
-            return format(text)
-        },
-    },
-    {
-        title: t('Operation'),
-        key: 'actions',
-        width: 150,
-        fixed: 'right',
-    },
+    { title: 'ID', dataIndex: 'id', key: 'id', width: 80, align: 'center' },
+    { title: t('CustomDatabase'), dataIndex: 'custom_database', key: 'custom_database', width: 220, ellipsis: true, align: 'center' },
+    { title: t('SpeciesName2'), dataIndex: 'virus_name', key: 'virus_name', width: 220, ellipsis: true, align: 'center' },
+    { title: t('SubTypes'), dataIndex: 'virus_type', key: 'virus_type', width: 220, ellipsis: true, align: 'center' },
+    { title: t('Host'), dataIndex: 'host', key: 'host', width: 160, align: 'center' },
+    { title: t('HostGenomeVersion'), dataIndex: 'host_genome_version', key: 'host_genome_version', width: 200, align: 'center' },
+    { title: t('Status'), dataIndex: 'status', key: 'status', width: 100, align: 'center' },
+    { title: t('CreatedAt'), dataIndex: 'create_time', key: 'create_time', width: 180, align: 'center' },
+    { title: t('Operation'), key: 'actions', width: 180, fixed: 'right', align: 'center' },
 ])
 
-// 分页配置
 const paginationConfig = computed(() => ({
     current: currentPage.value,
     pageSize: pageSize.value,
     total: total.value,
     showSizeChanger: true,
-    showQuickJumper: true,
-    showTotal: (total, range) => `${range[0]}-${range[1]} / ${total}`,
+    showTotal: (ttl) => t('PaginationTotal', { total: ttl }),
     pageSizeOptions: ['10', '20', '50', '100'],
 }))
 
-// 对话框相关
-const openNewDialog = ref(false)
+const tableLocale = computed(() => ({
+    emptyText: t('NoData'),
+}))
 
+const tableScroll = computed(() => ({
+    x: 1400,
+    y: 'calc(100vh - 370px)',
+}))
 
 onMounted(() => {
     loadPage()
 })
 
-// 格式化JSON字段显示
 const formatJsonField = (jsonData) => {
     if (!jsonData) return ''
     try {
         if (typeof jsonData === 'string') {
             const parsed = JSON.parse(jsonData)
             return Object.values(parsed).join(', ')
-        } else if (typeof jsonData === 'object') {
+        }
+        if (typeof jsonData === 'object') {
             return Object.values(jsonData).join(', ')
         }
         return String(jsonData)
@@ -202,7 +166,6 @@ const formatJsonField = (jsonData) => {
     }
 }
 
-// 格式化状态显示
 const formatStatus = (status) => {
     if (!status) return ''
     switch (status.toUpperCase()) {
@@ -215,7 +178,6 @@ const formatStatus = (status) => {
     }
 }
 
-// 加载列表数据
 const loadPage = async () => {
     try {
         loading.value = true
@@ -223,56 +185,44 @@ const loadPage = async () => {
             page: currentPage.value,
             page_size: pageSize.value,
         }
-
         if (search.value) {
             params.custom_database = search.value
         }
-
         const data = await getCustomReferenceGenomeList(params)
-        dataItems.value = data.results
-        total.value = data.count
-        console.log('加载数据成功data:', data)
-        console.log('加载数据成功dataItems:', dataItems.value)
+        dataItems.value = data.results || []
+        total.value = data.count || 0
     } catch (error) {
-        errorMessage(t('LoadDataFailed') || '加载数据失败')
-        console.error('加载数据失败:', error)
+        errorMessage(t('LoadDataFailed') || 'Load data failed')
+        console.error('Load data failed:', error)
     } finally {
         loading.value = false
     }
 }
 
-// 刷新页面
 const refreshPage = () => {
     currentPage.value = 1
     loadPage()
 }
 
-// 处理表格变化（分页、排序、筛选）
-const handleTableChange = (pagination, filters, sorter) => {
+const resetSearch = () => {
+    search.value = ''
+    refreshPage()
+}
+
+const handleTableChange = (pagination) => {
     currentPage.value = pagination.current
     pageSize.value = pagination.pageSize
     loadPage()
 }
 
-// 分页变化（保留兼容性）
-const pageChange = async (event) => {
-    currentPage.value = event.currentPage
-    pageSize.value = event.pageSize
-    loadPage()
-}
-
-// 跳转到详情页
 const gotoDetail = (item) => {
     router.push(`/main/settings/customReferenceGenome/${item.id}`)
 }
 
-// 处理对话框保存事件
 const handleDialogSave = async () => {
     loadPage()
 }
 
-
-// 确认删除
 const confirmDelete = (item) => {
     $q.dialog({
         title: t('ConfirmToDelete'),
@@ -286,23 +236,25 @@ const confirmDelete = (item) => {
             loadPage()
         } catch (error) {
             errorMessage(t('Failed'))
-            console.error('删除失败:', error)
+            console.error('Delete failed:', error)
         }
     })
 }
-
-// 注册组件
-const components = {
-    EyeOutlined,
-    DeleteOutlined
-}
 </script>
 
-<style lang="scss" scoped>
-// Ant Design Vue表格样式已经内置，这里可以添加自定义样式
-.ant-table {
-    .ant-table-tbody > tr > td {
-        padding: 12px 16px;
-    }
+<style lang="scss">
+.ref-genome-card {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    flex-direction: column;
+}
+
+.ref-genome-card .bio-data-table {
+    flex: 1;
+    display: flex;
+}
+
+.ref-genome-card .bio-data-table .ant-table-wrapper {
+    flex: 1;
 }
 </style>

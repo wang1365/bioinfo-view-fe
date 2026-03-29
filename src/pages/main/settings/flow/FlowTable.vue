@@ -1,35 +1,38 @@
 <template>
-    <q-page>
-        <div class="row q-mb-xs">
+    <div class="flow-table-page">
+        <div class="page-list-filter row q-px-md bio-data-table">
             <q-input
-                :label="$t('ModuleName')"
                 v-model="keyword"
+                :placeholder="$t('ModuleName')"
                 clearable
                 dense
-                stack-label
-                label-color="primary"
+                filled
                 @clear="refreshFlows"
                 @keypress.enter="refreshFlows"
-                class="col-2 q-pb-sm"
+                class="page-list-filter__field page-list-filter__field--keyword"
             />
-            <div class="col">
-                <q-btn
-                    color="primary"
-                    icon="search"
-                    size="small"
-                    class="q-mx-sm"
-                    :label="$t('Search')"
-                    @click="refreshFlows"
-                />
-                <q-btn color="primary" icon="add" size="md" :label="$t('Add')" @click="addFlow" />
-            </div>
+            <q-btn color="primary" icon="search" :label="$t('Search')" @click="refreshFlows" />
+            <q-btn color="grey-7" outline icon="close" :label="$t('Reset')" @click="keyword = ''; refreshFlows()" />
         </div>
-        <a-table :columns="columns" :data-source="flows" size="middle" sticky :scroll="{ x:500, y: 450 }" :loading="loading">
-            <template v-slot:bodyCell="{column, record}">
+
+        <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
+            <q-btn color="primary" icon="add" :label="$t('Add')" @click="addFlow" />
+        </q-toolbar>
+
+        <a-table
+            :columns="columns"
+            :data-source="flows"
+            size="small"
+            bordered
+            class="page-grid-table"
+            sticky
+            row-key="id"
+            :scroll="{ x: 1900, y: 560 }"
+            :loading="loading"
+        >
+            <template #bodyCell="{column, record}">
                 <template v-if="column.key === 'task_count'">
-                    <span v-if="record.task_count >= record?.config?.taskLimit" class="text-red text-weight-bolder">
-                        {{ record?.task_count }}</span
-                    >
+                    <span v-if="record.task_count >= record?.config?.taskLimit" class="text-red text-weight-bolder">{{ record?.task_count }}</span>
                     <span v-else>{{ record?.task_count }}</span>
                 </template>
                 <template v-if="column.key === 'config'">
@@ -43,17 +46,32 @@
                     ></q-icon>
                 </template>
                 <template v-if="column.key === 'operation'">
-                    <q-btn :label="$t('Detail')" color="primary" size="md" flat dense @click="showInfoDlg(record)" />
-                    <q-btn
-                        :label="$t('Edit')"
-                        color="orange"
-                        size="md"
-                        class="q-mx-xs"
-                        flat
-                        dense
-                        @click="showEditDlg(record)"
-                    />
-                    <q-btn :label="$t('Delete')" color="red" size="md" flat dense @click="showDeleteDlg(record)" />
+                    <div class="table-operation-buttons">
+                        <q-btn
+                            :label="$t('Detail')"
+                            dense
+                            flat
+                            no-caps
+                            class="table-operation-btn table-operation-btn--primary"
+                            @click="showInfoDlg(record)"
+                        />
+                        <q-btn
+                            :label="$t('Edit')"
+                            dense
+                            flat
+                            no-caps
+                            class="table-operation-btn table-operation-btn--primary"
+                            @click="showEditDlg(record)"
+                        />
+                        <q-btn
+                            :label="$t('Delete')"
+                            dense
+                            flat
+                            no-caps
+                            class="table-operation-btn table-operation-btn--danger"
+                            @click="showDeleteDlg(record)"
+                        />
+                    </div>
                 </template>
             </template>
         </a-table>
@@ -75,7 +93,7 @@
                 </q-form>
             </q-card>
         </q-dialog>
-    </q-page>
+    </div>
 </template>
 
 <script setup>
@@ -90,13 +108,10 @@ import FlowDialog from './FlowDialog'
 const { t } = useI18n()
 const loading = ref(false)
 const dlgFlow = ref(null)
-const dlgTaskLimit = ref(null)
 const taskLimitDlgVisible = ref(false)
-const dlgCreateTask = ref(null)
 const currentFlow = ref({ config: { taskLimit: 0 }})
 const keyword = ref('')
 const action = ref('info')
-const selected = ref([])
 const $q = useQuasar()
 
 const columns = computed(() => [
@@ -139,39 +154,10 @@ const columns = computed(() => [
         customRender: ({ text }) => format(text)
     },
 
-    { key: 'operation', title: t('Operate'), align: 'center', width: 200, fixed: 'right' },
+    { key: 'operation', title: t('Operate'), align: 'center', width: 180, fixed: 'right' },
 ])
 
-const visibleColumns = computed(() => {
-    return props.columns || columns.value.map(t => t.name)
-})
-
-const pagination = ref({
-    sortBy: 'desc',
-    descending: false,
-    page: 1,
-    rowsPerPage: 10,
-    // rowsNumber: xx if getting data from a server
-})
-
-const props = defineProps({
-    selection: {
-        required: false,
-        type: String,
-        default: 'none',
-    },
-    columns: {
-        required: false,
-        type: Array,
-        default: null
-    }
-})
-
 const flows = ref([])
-const selectedFlow = ref({})
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(10)
 
 onMounted(() => {
     refreshFlows()
@@ -182,7 +168,6 @@ const refreshFlows = () => {
     getFlows(keyword.value, 1, 100)
         .then((data) => {
             flows.value = data.results
-            total.value = data.count
         })
         .finally(stopLoading)
 }
@@ -222,7 +207,6 @@ const showEditDlg = (row) => {
     action.value = 'edit'
     dlgFlow.value.setData(row)
     nextTick(() => {
-        console.log('nextTick => show edit dlg', row.id)
         dlgFlow.value.show()
     })
 }
@@ -241,11 +225,6 @@ const showDeleteDlg = (row) => {
             })
             .finally(stopLoading)
     })
-}
-
-const showCreateTaskDlg = (row) => {
-    dlgCreateTask.value.show()
-    dlgCreateTask.value.setData(row)
 }
 
 const addFlow = () => {
@@ -268,23 +247,13 @@ const addFlow = () => {
         support_sample_ratio: false,
     })
     dlgFlow.value.show()
-    // isCreateDlgShow.value = true
-}
-
-const handleSizeChange = (size) => {
-    pageSize.value = size
-    refreshFlows()
-}
-
-const handleCurrentChange = (page) => {
-    page.value = page
-    refreshFlows()
 }
 </script>
 
 <style lang="scss" scoped>
-.pagination {
-    padding: 30px 30px 0 0;
-    text-align: center;
+.flow-table-page {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 </style>

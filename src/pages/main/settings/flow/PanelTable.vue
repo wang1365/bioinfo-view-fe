@@ -1,86 +1,98 @@
 <template>
-    <q-page>
-        <div class="panel-table-page">
-            <div class="table-toolbar">
-                <a-input
-                    v-model:value="keyword"
-                    :placeholder="$t('FlowName')"
-                    allow-clear
-                    class="toolbar-search"
-                    @pressEnter="refreshRows"
-                    @change="handleKeywordChange"
-                />
-                <a-button type="primary" @click="refreshRows">
-                    {{ $t('Search') }}
-                </a-button>
-                <a-button v-if="!props.readonly" type="primary" @click="addRow">
-                    {{ $t('Add') }}
-                </a-button>
-            </div>
-
-            <a-table
-                :columns="tableColumns"
-                :data-source="rows"
-                :loading="loading"
-                :pagination="pagination"
-                :scroll="{ y: 600 }"
-                row-key="id"
-                class="bio-ant-table"
-                size="small"
-            >
-                <template #bodyCell="{ column, record }">
-                    <template v-if="column.key === 'flows'">
-                        <div class="flow-cell">
-                            <a-tag v-for="item in record.flows.slice(0, 2)" :key="item.id" color="blue">
-                                {{ item.name }}
-                            </a-tag>
-                            <a-button
-                                v-if="record.flows.length > 2"
-                                type="link"
-                                size="small"
-                                class="more-btn"
-                                @click="showFlowModal(record)"
-                            >
-                                更多({{ record.flows.length }})
-                            </a-button>
-                        </div>
-                    </template>
-
-                    <template v-else-if="column.key === 'create_time'">
-                        {{ format(record.create_time) }}
-                    </template>
-
-                    <template v-else-if="column.key === 'operation'">
-                        <div class="operation-cell">
-                            <a-button type="link" @click="showEditDlg(record)">
-                                {{ $t('Edit') }}
-                            </a-button>
-                            <a-button danger type="link" @click="showDeleteDlg(record)">
-                                {{ $t('Delete') }}
-                            </a-button>
-                        </div>
-                    </template>
-                </template>
-            </a-table>
+    <div class="panel-table-page">
+        <div class="page-list-filter row q-px-md bio-data-table">
+            <q-input
+                v-model="keyword"
+                :placeholder="$t('FlowName')"
+                clearable
+                dense
+                filled
+                class="page-list-filter__field page-list-filter__field--keyword"
+                @keypress.enter="refreshRows"
+                @clear="refreshRows"
+            />
+            <q-btn color="primary" icon="search" :label="$t('Search')" @click="refreshRows" />
+            <q-btn color="grey-7" outline icon="close" :label="$t('Reset')" @click="keyword = ''; refreshRows()" />
         </div>
 
-        <a-modal
-            v-model:visible="flowModalVisible"
-            :title="flowModalTitle"
-            :footer="null"
-            width="640px"
-        >
-            <a-table
-                :columns="flowModalColumns"
-                :data-source="flowModalRows"
-                :pagination="false"
-                row-key="key"
-                size="small"
-            />
-        </a-modal>
+        <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
+            <q-btn v-if="!props.readonly" color="primary" icon="add" :label="$t('Add')" @click="addRow" />
+        </q-toolbar>
 
-        <panel-dialog ref="dlgPanel" :mode="dialogMode" @success="refreshRows" />
-    </q-page>
+        <a-table
+            :columns="tableColumns"
+            :data-source="rows"
+            :loading="loading"
+            :pagination="pagination"
+            :scroll="{ x: 1200, y: 600 }"
+            row-key="id"
+            class="page-grid-table"
+            size="small"
+            bordered
+        >
+            <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'flows'">
+                    <div class="flow-cell">
+                        <a-tag v-for="item in record.flows.slice(0, 2)" :key="item.id" color="blue">
+                            {{ item.name }}
+                        </a-tag>
+                        <q-btn
+                            v-if="record.flows.length > 2"
+                            dense
+                            flat
+                            no-caps
+                            class="table-operation-btn table-operation-btn--primary"
+                            @click="showFlowModal(record)"
+                        >
+                            {{ $t('More') }}({{ record.flows.length }})
+                        </q-btn>
+                    </div>
+                </template>
+
+                <template v-else-if="column.key === 'create_time'">
+                    {{ format(record.create_time) }}
+                </template>
+
+                <template v-else-if="column.key === 'operation'">
+                    <div class="table-operation-buttons">
+                        <q-btn
+                            dense
+                            flat
+                            no-caps
+                            :label="$t('Edit')"
+                            class="table-operation-btn table-operation-btn--primary"
+                            @click="showEditDlg(record)"
+                        />
+                        <q-btn
+                            dense
+                            flat
+                            no-caps
+                            :label="$t('Delete')"
+                            class="table-operation-btn table-operation-btn--danger"
+                            @click="showDeleteDlg(record)"
+                        />
+                    </div>
+                </template>
+            </template>
+        </a-table>
+    </div>
+
+    <a-modal
+        v-model:visible="flowModalVisible"
+        :title="flowModalTitle"
+        :footer="null"
+        width="640px"
+    >
+        <a-table
+            :columns="flowModalColumns"
+            :data-source="flowModalRows"
+            :pagination="false"
+            row-key="key"
+            size="small"
+        />
+    </a-modal>
+
+    <panel-dialog ref="dlgPanel" :mode="dialogMode" @success="refreshRows" />
 </template>
 
 <script setup>
@@ -174,31 +186,31 @@ const tableColumns = computed(() => {
 const pagination = computed(() => ({
     pageSize: 10,
     showSizeChanger: false,
-    showTotal: total => `共 ${total} 条`,
 }))
 
-const flowModalTitle = computed(() => `${currentPanelName.value || ''} 关联分析模块`)
+const flowModalTitle = computed(() => `${currentPanelName.value || ''} ${t('AnalysisModule')}`)
 const flowModalColumns = computed(() => [
     {
-        title: '序号',
+        title: 'No.',
         dataIndex: 'index',
         key: 'index',
         width: 80,
         align: 'center',
     },
     {
-        title: '模块 ID',
+        title: 'Module ID',
         dataIndex: 'id',
         key: 'id',
         width: 120,
         align: 'center',
     },
     {
-        title: '模块名称',
+        title: t('Name'),
         dataIndex: 'name',
         key: 'name',
     },
 ])
+
 const flowModalRows = computed(() =>
     currentFlowModules.value.map((item, index) => ({
         key: `${item.id}-${index}`,
@@ -244,12 +256,6 @@ const refreshRows = () => {
         .finally(stopLoading)
 }
 
-const handleKeywordChange = event => {
-    if (!event.target.value) {
-        refreshRows()
-    }
-}
-
 const showFlowModal = row => {
     currentPanelName.value = row.name
     currentFlowModules.value = row.flows || []
@@ -264,14 +270,14 @@ const showEditDlg = row => {
 
 const showDeleteDlg = row => {
     Modal.confirm({
-        title: `是否要删除“${row.name}”？`,
-        okText: '确认',
-        cancelText: '取消',
+        title: `${t('ConfirmToDelete')} ${row.name}?`,
+        okText: t('Confirm'),
+        cancelText: t('Cancel'),
         onOk: () => {
             startLoading()
             return deletePanel(row.id)
                 .then(() => {
-                    $q.notify({ type: 'positive', message: '删除成功' })
+                    $q.notify({ type: 'positive', message: t('DeleteSuccess') })
                     refreshRows()
                 })
                 .finally(stopLoading)
@@ -291,38 +297,7 @@ const addRow = () => {
 .panel-table-page {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-}
-
-.table-toolbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.toolbar-search {
-    width: 280px;
-}
-
-.bio-ant-table :deep(.ant-table-cell) {
-    vertical-align: top;
-    padding: 8px 10px;
-}
-
-.bio-ant-table :deep(.ant-table-thead > tr > th) {
-    padding: 10px;
-}
-
-.bio-ant-table :deep(.ant-pagination) {
-    margin-top: 16px;
-}
-
-.bio-ant-table :deep(.ant-pagination-item),
-.bio-ant-table :deep(.ant-pagination-prev),
-.bio-ant-table :deep(.ant-pagination-next),
-.bio-ant-table :deep(.ant-pagination-jump-prev),
-.bio-ant-table :deep(.ant-pagination-jump-next) {
-    margin-inline-end: 10px;
+    gap: 6px;
 }
 
 .flow-cell {
@@ -332,16 +307,4 @@ const addRow = () => {
     gap: 6px;
     line-height: 1.2;
 }
-
-.more-btn {
-    padding-inline: 0;
-    height: auto;
-}
-
-.operation-cell {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-}
-
 </style>

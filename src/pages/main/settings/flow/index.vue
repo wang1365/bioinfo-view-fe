@@ -1,11 +1,11 @@
 <template>
-    <q-page padding>
+    <q-page class="flow-management-page q-pa-md">
         <q-tabs
             v-model="tabValue"
             active-color="white"
             active-bg-color="primary"
             indicator-color="purple"
-            class="bg-gray text-black shadow-2"
+            class="flow-management-tabs bg-grey-2 text-black"
             align="justify"
             dense
         >
@@ -13,14 +13,14 @@
             <q-tab name="panel" :label="$t('PanelFlow')" />
             <q-tab name="group" :label="$t('PanelGroup')" />
         </q-tabs>
-        <q-tab-panels v-model="tabValue">
-            <q-tab-panel name="flow">
+        <q-tab-panels v-model="tabValue" class="bg-transparent">
+            <q-tab-panel name="flow" class="q-pa-none q-pt-sm">
                 <FlowTable />
             </q-tab-panel>
-            <q-tab-panel name="panel">
+            <q-tab-panel name="panel" class="q-pa-none q-pt-sm">
                 <PanelTable />
             </q-tab-panel>
-            <q-tab-panel name="group">
+            <q-tab-panel name="group" class="q-pa-none q-pt-sm">
                 <GroupTab />
             </q-tab-panel>
         </q-tab-panels>
@@ -28,25 +28,18 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue'
-import {useQuasar} from 'quasar'
-import FlowTable from "pages/main/settings/flow/FlowTable"
-import GroupTab from "pages/main/settings/flow/GroupTab"
-import PanelTable from "pages/main/settings/flow/PanelTable"
-
-const $q = useQuasar()
+import { ref } from 'vue'
+import FlowTable from 'pages/main/settings/flow/FlowTable'
+import GroupTab from 'pages/main/settings/flow/GroupTab'
+import PanelTable from 'pages/main/settings/flow/PanelTable'
 
 const tabValue = ref('flow')
-
-
-
-onMounted(() => {
-})
 </script>
 
 <style lang="scss" scoped>
-.pagination {
-    padding: 30px 30px 0 0;
-    text-align: center;
+.flow-management-tabs {
+    border-radius: 8px;
+    border: 1px solid #d7deea;
+    overflow: hidden;
 }
 </style>

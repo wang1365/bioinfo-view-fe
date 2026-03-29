@@ -1,71 +1,78 @@
 <template>
-    <q-page padding>
-        <q-table
-            :rows="rows"
+    <div class="group-table-page">
+        <div class="page-list-filter row q-px-md bio-data-table">
+            <q-toggle
+                v-model="config.value"
+                :true-value="1"
+                :false-value="0"
+                color="green"
+                checked-icon="check"
+                unchecked-icon="clear"
+                :label="$t('ShowGroup')"
+                @update:model-value="clickEnabled"
+            />
+        </div>
+
+        <q-toolbar class="page-list-toolbar page-list-toolbar--actions">
+            <q-btn color="primary" icon="add" :label="$t('Add')" @click="addRow" />
+        </q-toolbar>
+
+        <a-table
             :columns="columns"
+            :data-source="rows"
             :loading="loading"
-            :table-style="{ height: '600px' }"
-            row-key="name"
-            hide-no-data
-            wrap-cells
-            rows-per-page-label="每页条数"
-            class="bio-data-table"
-            rows-per-page-options="0"
+            row-key="id"
+            size="small"
+            bordered
+            class="page-grid-table"
+            :scroll="{ x: 980, y: 600 }"
+            :pagination="false"
         >
-            <template v-slot:top>
-                <q-btn color="primary" :label="$t('Add')" @click="addRow" />
-                <q-toggle
-                    v-model="config.value"
-                    :true-value="1"
-                    :false-value="0"
-                    color="green"
-                    checked-icon="check"
-                    unchecked-icon="clear"
-                    :label="$t('ShowGroup')"
-                    @update:model-value="clickEnabled()"
-                />
+            <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'panels'">
+                    <div class="group-panels-cell">
+                        <a-tag v-for="item in record.panels" :key="item.id" color="blue">
+                            {{ item.name }}
+                        </a-tag>
+                    </div>
+                </template>
+                <template v-else-if="column.key === 'create_time'">
+                    {{ format(record.create_time) }}
+                </template>
+                <template v-else-if="column.key === 'operation'">
+                    <div class="table-operation-buttons">
+                        <q-btn
+                            :label="$t('Edit')"
+                            dense
+                            flat
+                            no-caps
+                            class="table-operation-btn table-operation-btn--primary"
+                            @click="showEditDlg(record)"
+                        />
+                        <q-btn
+                            :label="$t('Delete')"
+                            dense
+                            flat
+                            no-caps
+                            class="table-operation-btn table-operation-btn--danger"
+                            @click="showDeleteDlg(record)"
+                        />
+                    </div>
+                </template>
             </template>
-            <template v-slot:body-cell-panels="props">
-                <q-td :props="props">
-                    <template v-for="item in props.row.panels" :key="item.id">
-                        <q-chip :label="item.name" color="primary" outline size="md" />
-                    </template>
-                </q-td>
-            </template>
-            <template v-slot:body-cell-operation="props">
-                <q-td :props="props" class="q-gutter-xs">
-                    <q-btn
-                        :label="$t('Edit')"
-                        color="orange"
-                        size="md"
-                        flat
-                        dense
-                        @click="showEditDlg(props.row)"
-                    ></q-btn>
-                    <q-btn
-                        :label="$t('Delete')"
-                        color="red"
-                        size="md"
-                        flat
-                        dense
-                        @click="showDeleteDlg(props.row)"
-                    ></q-btn>
-                </q-td>
-            </template>
-        </q-table>
+        </a-table>
 
         <group-dialog ref="dlgCreate" mode="create" @success="refreshRows" />
         <group-dialog ref="dlgEdit" mode="edit" @success="refreshRows" />
-        <group-dialog ref="dlgInfo" mode="info" />
-    </q-page>
+    </div>
 </template>
 
 <script setup>
-import {getPanelGroups, deletePanelGroup} from 'src/api/panelGroup'
-import { createConfig, listConfig, updateConfig } from "src/api/config"
-import {ref, onMounted, computed} from 'vue'
-import {useQuasar} from 'quasar'
-import GroupDialog from "pages/main/settings/flow/GroupDialog";
+import { getPanelGroups, deletePanelGroup } from 'src/api/panelGroup'
+import { createConfig, listConfig, updateConfig } from 'src/api/config'
+import { ref, onMounted, computed } from 'vue'
+import { useQuasar } from 'quasar'
+import GroupDialog from 'pages/main/settings/flow/GroupDialog'
 import { format } from 'src/utils/time'
 import { useI18n } from 'vue-i18n'
 
@@ -73,37 +80,18 @@ const { t } = useI18n()
 const loading = ref(false)
 const dlgCreate = ref(null)
 const dlgEdit = ref(null)
-const dlgInfo = ref(null)
-const currentFlowId = ref(null)
-const config = ref({value: 0})
+const config = ref({ value: 0 })
 
 const $q = useQuasar()
-const columns = computed( () => [
-    {name: 'id', label: 'ID', align: 'center', style: 'width:80px', required: true, style: 'width:80px', field: (row) => row.id},
-    {name: 'name', label: t('Name'), field: 'name', sortable: true, align: 'left', style: 'width:120px', required: true},
-    {name: 'panels', label: 'Panel', field: 'panels', sortable: true, align: 'left', style: 'width:450px', required: true},
-    {name: 'create_time', label: t('CreateTime'), field: 'create_time', align: 'center', style: 'width:120px', format: v => format(v)},
-    {name: 'operation', label: t('Operate'), align: 'center', style: 'width:150px'},
+const columns = computed(() => [
+    { key: 'id', title: 'ID', dataIndex: 'id', align: 'center', width: 80, fixed: 'left' },
+    { key: 'name', title: t('Name'), dataIndex: 'name', align: 'left', width: 180 },
+    { key: 'panels', title: 'Panel', dataIndex: 'panels', align: 'left', width: 480 },
+    { key: 'create_time', title: t('CreateTime'), dataIndex: 'create_time', align: 'center', width: 180 },
+    { key: 'operation', title: t('Operate'), align: 'center', width: 130, fixed: 'right' },
 ])
 
-
-const rows = ref([
-    {
-        name: 'WGS',
-        location: 'first.sh',
-        alignment_tool: 'bioinfo',
-        parameters: [
-            {key: 'INPUT_DIR', type: 'array', required: true, blank: false},
-            {key: 'REPORT_OUTPUT_DIR', type: 'array', required: true, blank: false},
-        ],
-        desp: 'xxx',
-    },
-])
-const selectedRow = ref({})
-const mode = ref('info')
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(10)
+const rows = ref([])
 
 onMounted(() => {
     refreshRows()
@@ -115,9 +103,9 @@ onMounted(() => {
         } else {
             createConfig({
                 name,
-                value: 0
-            }).then(res => {
-                config.value = res
+                value: 0,
+            }).then(createRes => {
+                config.value = createRes
             })
         }
     })
@@ -126,17 +114,17 @@ onMounted(() => {
 const refreshRows = () => {
     startLoading()
     getPanelGroups({ panel_brief: 1 })
-        .then((data) => {
+        .then(data => {
             rows.value = data
         })
         .finally(stopLoading)
 }
 
 const clickEnabled = () => {
-    console.log(111)
     updateConfig(config.value)
 }
-const showEditDlg = (row) => {
+
+const showEditDlg = row => {
     dlgEdit.value.show()
     dlgEdit.value.setData(row)
 }
@@ -149,31 +137,20 @@ const stopLoading = () => {
     loading.value = false
 }
 
-const showDeleteDlg = (row) => {
+const showDeleteDlg = row => {
     $q.dialog({
-        title: `是否要删除“${row.name}”?`,
-        ok: '确认',
-        cancel: '取消',
+        title: `${t('ConfirmToDelete')} ${row.name}?`,
+        ok: t('Confirm'),
+        cancel: t('Cancel'),
     }).onOk(() => {
         startLoading()
         deletePanelGroup(row.id)
             .then(() => {
-                $q.notify({type: 'positive', message: '删除成功'})
+                $q.notify({ type: 'positive', message: t('DeleteSuccess') })
                 refreshRows()
             })
             .finally(stopLoading)
     })
-}
-
-const showCreateTaskDlg = (row) => {
-    currentFlowId.value = row.id
-    dlgCreateTask.value.show()
-    dlgCreateTask.value.setData(row)
-}
-
-const showInfoDlg = (row) => {
-    dlgInfo.value.show()
-    dlgInfo.value.setData(row)
 }
 
 const addRow = () => {
@@ -190,13 +167,19 @@ const addRow = () => {
     })
     dlgCreate.value.reset()
     dlgCreate.value.show()
-    // isCreateDlgShow.value = true
 }
 </script>
 
 <style lang="scss" scoped>
-.pagination {
-    padding: 30px 30px 0 0;
-    text-align: center;
+.group-table-page {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.group-panels-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 </style>
