@@ -139,7 +139,6 @@
                             <td>{{$t('SampleListTableColumnSampleType')}}</td>
                             <td>{{$t('SampleListTableColumnTumorContent')}}</td>
                             <td>{{$t('SampleListTableColumnTumorSample')}}</td>
-                            <td>{{$t('SampleListTableColumnNCSample')}}</td>
                             <td>{{$t('SampleListTableColumnPatientIdentificationNumber')}}</td>
                             <td>{{$t('SampleListTableColumnSampleIdentificationNumber')}}</td>
                             <td>{{$t('SampleListTableColumnOperations')}}</td>
@@ -164,9 +163,12 @@
                                 {{ item.panel_proportion }}
                             </td>
                             <td>{{ item.is_panel }}</td>
-                            <td>{{ displayNcSample(item.is_nc_sample) }}</td>
                             <td>{{ item.patient?.identifier }}</td>
-                            <td>{{ item.identifier }}</td>
+                            <td>
+                                <span :class="{ 'text-primary': item.is_nc_sample === true }">
+                                    {{ formatSampleIdentifier(item) }}
+                                </span>
+                            </td>
                             <td class="q-gutter-xs">
                                 <q-btn
                                     color="primary"
@@ -293,6 +295,14 @@ const displayNcSample = (value) => {
     if (value === true) return t('Yes');
     if (value === false) return t('No');
     return '-';
+};
+
+const formatSampleIdentifier = (item) => {
+    const identifier = item?.identifier ?? '-';
+    if (item?.is_nc_sample === true && identifier !== '-') {
+        return `${identifier} (NC)`;
+    }
+    return identifier;
 };
 
 const edit = async (item) => {
