@@ -1,0 +1,948 @@
+npm info using npm@11.0.0
+npm info using node@v22.14.0
+
+> bio-frontend-quasar@0.0.1 dev
+> quasar dev
+
+
+ .d88888b.
+d88P" "Y88b
+888     888
+888     888 888  888  8888b.  .d8888b   8888b.  888d888
+888     888 888  888     "88b 88K          "88b 888P"
+888 Y8b 888 888  888 .d888888 "Y8888b. .d888888 888
+Y88b.Y8b88P Y88b 888 888  888      X88 888  888 888
+ "Y888888"   "Y88888 "Y888888  88888P' "Y888888 888
+       Y8b
+
+
+ Dev mode.................. spa
+ Pkg quasar................ v2.12.7
+ Pkg @quasar/app-webpack... v3.11.2
+ Pkg webpack............... v5
+ Debugging................. enabled
+
+Browserslist: caniuse-lite is outdated. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ Configured browser support (>= 85.85% of global marketshare):
+ · Chrome for Android >= 117
+ · Firefox for Android >= 118
+ · Android >= 117
+ · Chrome >= 109
+ · Edge >= 115
+ · Firefox >= 109
+ · iOS >= 15.5
+ · Opera >= 99
+ · Safari >= 16.1
+
+ENV: {
+  '123pan': 'D:\\Program Files\\123net\\123pan\\123pan.exe',
+  AGENT: '1',
+  ALLUSERSPROFILE: 'C:\\ProgramData',
+  APPCODE_VM_OPTIONS: 'D:\\software\\jetbra\\vmoptions\\appcode.vmoptions',
+  APPDATA: 'C:\\Users\\86180\\AppData\\Roaming',
+  AQUA_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\aqua.vmoptions',
+  ChocolateyInstall: 'C:\\ProgramData\\chocolatey',
+  ChocolateyLastPathUpdate: '133275644514135899',
+  CLION_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\clion.vmoptions',
+  COLOR: '0',
+  COLORTERM: 'truecolor',
+  COMMONPROGRAMFILES: 'C:\\Program Files\\Common Files',
+  'CommonProgramFiles(x86)': 'C:\\Program Files (x86)\\Common Files',
+  CommonProgramW6432: 'C:\\Program Files\\Common Files',
+  COMPUTERNAME: 'DESKTOP-E3L4EVN',
+  COMSPEC: 'C:\\Windows\\system32\\cmd.exe',
+  DATAGRIP_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\datagrip.vmoptions',
+  DATASPELL_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\dataspell.vmoptions',
+  DEVECOSTUDIO_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\devecostudio.vmoptions',
+  dp0: 'D:\\private\\bio\\code\\bio2023\\bioinfo-view-fe\\node_modules\\.bin\\',
+  DriverData: 'C:\\Windows\\System32\\Drivers\\DriverData',
+  EDITOR: 'C:\\Windows\\notepad.exe',
+  EXEPATH: 'D:\\Program Files\\Git\\bin',
+  FLUTTER_STORAGE_BASE_URL: 'https://storage.flutter-io.cn',
+  FPS_BROWSER_APP_PROFILE_STRING: 'Internet Explorer',
+  FPS_BROWSER_USER_PROFILE_STRING: 'Default',
+  GATEWAY_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\gateway.vmoptions',
+  GOLAND_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\goland.vmoptions',
+  HOME: 'C:\\Users\\86180',
+  HOMEDRIVE: 'C:',
+  HOMEPATH: '\\Users\\86180',
+  IDEA_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\idea.vmoptions',
+  INIT_CWD: 'D:\\private\\bio\\code\\bio2023\\bioinfo-view-fe',
+  JETBRAINSCLIENT_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\jetbrainsclient.vmoptions',
+  JETBRAINS_CLIENT_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\jetbrains_client.vmoptions',
+  LOCALAPPDATA: 'C:\\Users\\86180\\AppData\\Local',
+  LOGONSERVER: '\\\\DESKTOP-E3L4EVN',
+  MSYSTEM: 'MINGW64',
+  NODE: 'D:\\Program Files\\nodejs\\node.exe',
+  NODE_ENV: 'development',
+  npm_command: 'run-script',
+  npm_config_cache: 'C:\\Users\\86180\\AppData\\Local\\npm-cache',
+  npm_config_globalconfig: 'C:\\Users\\86180\\AppData\\Roaming\\npm\\etc\\npmrc',
+  npm_config_global_prefix: 'C:\\Users\\86180\\AppData\\Roaming\\npm',
+  npm_config_init_module: 'C:\\Users\\86180\\.npm-init.js',
+  npm_config_local_prefix: 'D:\\private\\bio\\code\\bio2023\\bioinfo-view-fe',
+  npm_config_loglevel: 'info',
+  npm_config_node_gyp: 'C:\\Users\\86180\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\node-gyp\\bin\\node-gyp.js',
+  npm_config_noproxy: '',
+  npm_config_npm_version: '11.0.0',
+  npm_config_prefix: 'C:\\Users\\86180\\AppData\\Roaming\\npm',
+  npm_config_userconfig: 'C:\\Users\\86180\\.npmrc',
+  npm_config_user_agent: 'npm/11.0.0 node/v22.14.0 win32 x64 workspaces/false',
+  npm_execpath: 'C:\\Users\\86180\\AppData\\Roaming\\npm\\node_modules\\npm\\bin\\npm-cli.js',
+  npm_lifecycle_event: 'dev',
+  npm_lifecycle_script: 'quasar dev',
+  npm_node_execpath: 'D:\\Program Files\\nodejs\\node.exe',
+  npm_package_engines_node: '>= 12.22.1',
+  npm_package_engines_npm: '>= 6.13.4',
+  npm_package_engines_yarn: '>= 1.21.1',
+  npm_package_json: 'D:\\private\\bio\\code\\bio2023\\bioinfo-view-fe\\package.json',
+  npm_package_name: 'bio-frontend-quasar',
+  npm_package_version: '0.0.1',
+  NUMBER_OF_PROCESSORS: '12',
+  OLDPWD: 'D:/private/bio/code/bio2023',
+  OneDrive: 'C:\\Users\\86180\\OneDrive',
+  OPENCODE: '1',
+  OS: 'Windows_NT',
+  PATH: 'D:\\private\\bio\\code\\bio2023\\bioinfo-view-fe\\node_modules\\.bin;D:\\private\\bio\\code\\bio2023\\node_modules\\.bin;D:\\private\\bio\\code\\node_modules\\.bin;D:\\private\\bio\\node_modules\\.bin;D:\\private\\node_modules\\.bin;D:\\node_modules\\.bin;C:\\Users\\86180\\AppData\\Roaming\\npm\\node_modules\\npm\\node_modules\\@npmcli\\run-script\\lib\\node-gyp-bin;D:\\Program Files\\Git\\mingw64\\bin;D:\\Program Files\\Git\\usr\\bin;C:\\Users\\86180\\bin;D:\\applications\\python\\python312\\Scripts;D:\\applications\\python\\python312;D:\\Program Files\\Kingbase\\ES\\V9\\KESRealPro\\V009R001C001B0025\\Interface\\compress\\v8r6_compress_win\\kb_x64\\release;D:\\Program Files\\python310\\Scripts;D:\\Program Files\\python310;D:\\Program Files\\Python38\\Scripts;D:\\Program Files\\Python38;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0;C:\\Windows\\System32\\OpenSSH;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;D:\\Program Files\\Git\\cmd;D:\\Program Files\\Microsoft VS Code\\bin;D:\\software\\Miniconda3\\Scripts;C:\\ProgramData\\chocolatey\\bin;C:\\Program Files\\dotnet;D:\\GAMS\\41\\apifiles\\Java\\api;D:\\GAMS\\41;C:\\Windows\\System32\\Wbem;D:\\Program Files\\Tesseract-OCR;D:\\Program Files\\nodejs;D:\\applications\\ffmpeg-7.1.1-full_build\\bin;C:\\Program Files\\WezTerm;C:\\Users\\86180\\.local\\bin;D:\\software\\Trae\\bin;C:\\Users\\86180\\AppData\\Local\\Microsoft\\WindowsApps;D:\\Program Files\\JetBrains\\PyCharm Community Edition 2022.1\\bin;C:\\Users\\86180\\.dotnet\\tools;D:\\GAMS\\41\\apifiles\\Java\\api;D:\\GAMS\\41;C:\\Users\\86180\\AppData\\Local\\GitHubDesktop\\bin;D:\\private\\upworks\\code\\odds-portal-scraper\\full_scraper;C:\\Windows\\System32\\Wbem;C:\\Users\\86180\\AppData\\Roaming\\npm;C:\\Users\\86180\\.bun\\bin;C:\\Windows\\System32\\Wbem',
+  PATHEXT: '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JSE;.WSF;.WSH;.MSC;.PY;.PYW',
+  PHPSTORM_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\phpstorm.vmoptions',
+  PLINK_PROTOCOL: 'ssh',
+  PROCESSOR_ARCHITECTURE: 'AMD64',
+  PROCESSOR_IDENTIFIER: 'Intel64 Family 6 Model 167 Stepping 1, GenuineIntel',
+  PROCESSOR_LEVEL: '6',
+  PROCESSOR_REVISION: 'a701',
+  ProgramData: 'C:\\ProgramData',
+  PROGRAMFILES: 'C:\\Program Files',
+  'ProgramFiles(x86)': 'C:\\Program Files (x86)',
+  ProgramW6432: 'C:\\Program Files',
+  PROMPT: '$P$G',
+  PSModulePath: 'C:\\Program Files (x86)\\WindowsPowerShell\\Modules;C:\\Windows\\system32\\WindowsPowerShell\\v1.0\\Modules;',
+  PUBLIC: 'C:\\Users\\Public',
+  PUB_HOSTED_URL: 'https://pub.flutter-io.cn',
+  PWD: 'D:/private/bio/code/bio2023/bioinfo-view-fe',
+  'PyCharm Community Edition': 'D:\\Program Files\\JetBrains\\PyCharm Community Edition 2022.1\\bin;',
+  PYCHARM_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\pycharm.vmoptions',
+  QUASAR_CLI_VERSION: '2.3.0',
+  RIDER_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\rider.vmoptions',
+  RUBYMINE_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\rubymine.vmoptions',
+  RUSTROVER_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\rustrover.vmoptions',
+  SESSIONNAME: 'Console',
+  SHLVL: '2',
+  STUDIO_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\studio.vmoptions',
+  SYSTEMDRIVE: 'C:',
+  SYSTEMROOT: 'C:\\Windows',
+  TEMP: 'C:\\Users\\86180\\AppData\\Local\\Temp',
+  TERM: 'xterm-256color',
+  TERM_PROGRAM: 'WezTerm',
+  TERM_PROGRAM_VERSION: '20240203-110809-5046fc22',
+  TMP: 'C:\\Users\\86180\\AppData\\Local\\Temp',
+  USERDOMAIN: 'DESKTOP-E3L4EVN',
+  USERDOMAIN_ROAMINGPROFILE: 'DESKTOP-E3L4EVN',
+  USERNAME: '86180',
+  USERPROFILE: 'C:\\Users\\86180',
+  VBOX_MSI_INSTALL_PATH: 'D:\\VirtualBox\\',
+  WEBIDE_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\webide.vmoptions',
+  WEBPACK_SERVE: 'true',
+  WEBSTORM_VM_OPTIONS: 'D:\\data\\jetbrains\\JetBrains-2025-po-jie-bao\\jetbra\\vmoptions\\webstorm.vmoptions',
+  WEZTERM_EXECUTABLE: 'C:\\Program Files\\WezTerm\\wezterm-gui.exe',
+  WEZTERM_EXECUTABLE_DIR: 'C:\\Program Files\\WezTerm',
+  WEZTERM_PANE: '4',
+  WEZTERM_UNIX_SOCKET: 'C:\\Users\\86180\\.local/share/wezterm\\gui-sock-26280',
+  WINDIR: 'C:\\Windows',
+  WSLENV: 'TERM:COLORTERM:TERM_PROGRAM:TERM_PROGRAM_VERSION',
+  _: 'D:/Program Files/nodejs/node.exe',
+  _prog: 'node'
+}
+
+ App • ⚠️  ️️Setting port to closest one available: 8086
+
+ App • Chaining "UI" Webpack config
+ App •  WAIT  • Compiling of "UI" in progress...
+[1m[33m[@vue/compiler-sfc][0m[33m `defineEmits` is a compiler macro and no longer needs to be imported.[0m
+
+[1m[33m[@vue/compiler-sfc][0m[33m `defineExpose` is a compiler macro and no longer needs to be imported.[0m
+
+[1m[33m[@vue/compiler-sfc][0m[33m `defineProps` is a compiler macro and no longer needs to be imported.[0m
+
+ App •  DONE  • "UI" compiled with success • 99634ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 1191ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 1409ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 1498ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 1244ms
+
+ App •  ERROR  •  UI  Reported by ESLint:
+[eslint] 
+D:\private\bio\code\bio2023\bioinfo-view-fe\src\pages\main\tasks\rp2\index.vue
+  20:55  error  Parsing error: unexpected-character-in-unquoted-attribute-value  vue/no-parsing-error
+  20:83  error  Parsing error: unexpected-character-in-unquoted-attribute-value  vue/no-parsing-error
+
+✖ 2 problems (2 errors, 0 warnings)
+
+You may use special comments to disable some warnings:
+ · // eslint-disable-next-line to ignore the next line.
+ · /* eslint-disable */ to ignore all warnings in a file.
+
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 1242ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 1035ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 854ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 1163ms
+
+ App •  ERROR  •  UI  in ./src/i18n/zh-CN/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\zh-CN\index.js: Unexpected token, expected "," (895:0)
+
+  893 |     Rp2Operation: '操作',
+  894 |     Rp2ContaminationPlaceholder: '污染评估'
+> 895 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 1154ms
+
+ App •  ERROR  •  UI  in ./src/i18n/en-US/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\en-US\index.js: Unexpected token, expected "," (903:0)
+
+  901 |     Rp2Operation: 'Operation',
+  902 |     Rp2ContaminationPlaceholder: 'Contamination Assessment'
+> 903 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+
+ App •  ERROR  •  UI  in ./src/i18n/zh-CN/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\zh-CN\index.js: Unexpected token, expected "," (895:0)
+
+  893 |     Rp2Operation: '操作',
+  894 |     Rp2ContaminationPlaceholder: '污染评估'
+> 895 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:459:9)
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 801ms
+
+ App •  ERROR  •  UI  in ./src/i18n/en-US/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\en-US\index.js: Unexpected token, expected "," (903:0)
+
+  901 |     Rp2Operation: 'Operation',
+  902 |     Rp2ContaminationPlaceholder: 'Contamination Assessment'
+> 903 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:459:9)
+
+ App •  ERROR  •  UI  in ./src/i18n/zh-CN/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\zh-CN\index.js: Unexpected token, expected "," (895:0)
+
+  893 |     Rp2Operation: '操作',
+  894 |     Rp2ContaminationPlaceholder: '污染评估'
+> 895 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:459:9)
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 829ms
+
+ App •  ERROR  •  UI  in ./src/i18n/en-US/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\en-US\index.js: Unexpected token, expected "," (903:0)
+
+  901 |     Rp2Operation: 'Operation',
+  902 |     Rp2ContaminationPlaceholder: 'Contamination Assessment'
+> 903 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:459:9)
+
+ App •  ERROR  •  UI  in ./src/i18n/zh-CN/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\zh-CN\index.js: Unexpected token, expected "," (895:0)
+
+  893 |     Rp2Operation: '操作',
+  894 |     Rp2ContaminationPlaceholder: '污染评估'
+> 895 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:459:9)
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 1454ms
+
+ App •  ERROR  •  UI  in ./src/i18n/en-US/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\en-US\index.js: Unexpected token, expected "," (903:0)
+
+  901 |     Rp2Operation: 'Operation',
+  902 |     Rp2ContaminationPlaceholder: 'Contamination Assessment'
+> 903 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:459:9)
+
+ App •  ERROR  •  UI  in ./src/i18n/zh-CN/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\zh-CN\index.js: Unexpected token, expected "," (895:0)
+
+  893 |     Rp2Operation: '操作',
+  894 |     Rp2ContaminationPlaceholder: '污染评估'
+> 895 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at runNextTicks (node:internal/process/task_queues:69:3)
+    at process.processImmediate (node:internal/timers:459:9)
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 1082ms
+
+ App •  ERROR  •  UI  in ./src/i18n/en-US/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\en-US\index.js: Unexpected token, expected "," (903:0)
+
+  901 |     Rp2Operation: 'Operation',
+  902 |     Rp2ContaminationPlaceholder: 'Contamination Assessment'
+> 903 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+
+ App •  ERROR  •  UI  in ./src/i18n/zh-CN/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\zh-CN\index.js: Unexpected token, expected "," (895:0)
+
+  893 |     Rp2Operation: '操作',
+  894 |     Rp2ContaminationPlaceholder: '污染评估'
+> 895 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with errors • 915ms
+
+ App •  ERROR  •  UI  in ./src/i18n/en-US/index.js
+
+Syntax Error: D:\private\bio\code\bio2023\bioinfo-view-fe\src\i18n\en-US\index.js: Unexpected token, expected "," (903:0)
+
+  901 |     Rp2Operation: 'Operation',
+  902 |     Rp2ContaminationPlaceholder: 'Contamination Assessment'
+> 903 |
+      | ^
+    at constructor (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:363:19)
+    at Parser.raise (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6609:19)
+    at Parser.unexpected (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6629:16)
+    at Parser.expect (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:6910:12)
+    at Parser.parseObjectLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11755:14)
+    at Parser.parseExprAtom (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11270:23)
+    at Parser.parseExprSubscripts (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:11012:23)
+    at Parser.parseUpdate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10997:21)
+    at Parser.parseMaybeUnary (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10977:23)
+    at Parser.parseMaybeUnaryOrPrivate (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10830:61)
+    at Parser.parseExprOps (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10835:23)
+    at Parser.parseMaybeConditional (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10812:23)
+    at Parser.parseMaybeAssign (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10765:21)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:39
+    at Parser.allowInAnd (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12356:16)
+    at Parser.parseMaybeAssignAllowIn (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:10734:17)
+    at Parser.parseExportDefaultExpression (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13840:22)
+    at Parser.parseExport (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13743:25)
+    at Parser.parseStatementContent (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12797:27)
+    at Parser.parseStatementLike (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12685:17)
+    at Parser.parseModuleItem (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12662:17)
+    at Parser.parseBlockOrModuleBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13235:36)
+    at Parser.parseBlockBody (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:13228:10)
+    at Parser.parseProgram (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12541:10)
+    at Parser.parseTopLevel (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:12531:25)
+    at Parser.parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14410:10)
+    at parse (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\parser\lib\index.js:14423:26)
+    at parser (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\parser\index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transformation\index.js:21:50)
+    at run.next (<anonymous>)
+    at transform (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\@babel\core\lib\transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:261:32)
+    at D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:273:13
+    at async.call.result.err.err (D:\private\bio\code\bio2023\bioinfo-view-fe\node_modules\gensync\index.js:223:11)
+
+
+ App •  COMPILATION FAILED  • Please check the log above for details.
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 1094ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
+ App •  WAIT  • Compiling of "UI" in progress...
+ App •  DONE  • "UI" compiled with success • 807ms
+
+ App •  READY  • Compiled: "UI"
+
+ » App dir................... D:\private\bio\code\bio2023\bioinfo-view-fe
+ » App URL................... http://3.0.1.7:8086
+                              http://192.168.56.1:8086
+                              http://192.168.0.104:8086
+                              http://localhost:8086
+ » Dev mode.................. spa
+ » Pkg quasar................ v2.12.7
+ » Pkg @quasar/app-webpack... v3.11.2
+ » Transpiled JS............. yes (Babel)
+
