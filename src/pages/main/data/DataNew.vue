@@ -216,6 +216,21 @@
                             </div>
                         </div>
                     </q-item>
+                    <q-item>
+                        <div class="row full-width justify-between">
+                            <div class="col q-mx-sm">
+                                <q-input
+                                    v-model="form.tag_label"
+                                    stack-label
+                                    filled
+                                    label-color="primary"
+                                    :label="$t('DataNewFormTagLabel')"
+                                    :error="errors.tag_label.error"
+                                    :error-message="errors.tag_label.message"
+                                />
+                            </div>
+                        </div>
+                    </q-item>
                     <q-separator color="primary" />
                     <q-item>
                         <div class="row full-width justify-between">
@@ -350,6 +365,7 @@ const test_data = {
     'sample_meta_id': 215,
     'sample_identifier': 'S00000215',
     'identifier': '',
+    'tag_label': 'tag01',
     'company': '胜多负少',
     'nucleic_type': 'gDNA',
     'fastq1_path': '',
@@ -375,6 +391,7 @@ const form = ref(use_test_data ? test_data :
     sample_meta_id: '',
     sample_identifier: '',
     identifier: '',
+    tag_label: '',
     company: '',
     nucleic_type: 'gDNA',
     msre: false,
@@ -442,6 +459,10 @@ const errors = ref({
         message: t('Required'),
         error: false,
     },
+    tag_label: {
+        message: t('Required'),
+        error: false,
+    },
     nucleic_type: {
         message: t('Required'),
         error: false,
@@ -484,6 +505,7 @@ const save = async () => {
         sample_meta_id: form.value.sample_meta_id,
         sample_identifier: form.value.sample_identifier,
         identifier: form.value.identifier,
+        tag_label: form.value.tag_label || null,
         company: form.value.company,
         nucleic_type: form.value.nucleic_type,
         fastq1_path: form.value.fastq1_path,

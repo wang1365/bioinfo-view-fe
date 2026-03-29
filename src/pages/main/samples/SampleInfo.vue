@@ -49,7 +49,6 @@ const form = ref({
     sampling_tube_brand: '',
     specimen_type: '',
     is_nc_sample: null,
-    tag_label: '',
 })
 
 const valueOrDash = (value) => {
@@ -81,7 +80,6 @@ const sampleFields = computed(() => [
     { label: t('SamplingTubeBrand'), value: valueOrDash(form.value.sampling_tube_brand) },
     { label: t('SpecimenType'), value: valueOrDash(form.value.specimen_type) },
     { label: t('SampleNewFormNCSample'), value: boolText(form.value.is_nc_sample) },
-    { label: t('SampleNewFormTagLabel'), value: valueOrDash(form.value.tag_label) },
 ])
 
 onMounted(() => {

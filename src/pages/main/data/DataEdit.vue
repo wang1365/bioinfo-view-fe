@@ -219,6 +219,21 @@
                     <div class="row full-width justify-between">
                         <div class="col q-mx-sm">
                             <q-input
+                                v-model="form.tag_label"
+                                stack-label
+                                filled
+                                label-color="primary"
+                                :label="$t('DataNewFormTagLabel')"
+                                :error="errors.tag_label.error"
+                                :error-message="errors.tag_label.message"
+                            />
+                        </div>
+                    </div>
+                </q-item>
+                <q-item>
+                    <div class="row full-width justify-between">
+                        <div class="col q-mx-sm">
+                            <q-input
                                 v-model="form.fastq1_path"
                                 stack-label
                                 filled
@@ -340,6 +355,7 @@ const form = ref({
     sample_meta_id: "",
     sample_identifier: "",
     identifier: "",
+    tag_label: "",
     company: "",
     nucleic_type: "gDNA",
     msre: false,
@@ -370,6 +386,7 @@ const save = async () => {
         sample_meta_id: form.value.sample_meta_id,
         sample_identifier: form.value.sample_identifier,
         identifier: form.value.identifier,
+        tag_label: form.value.tag_label || null,
         company: form.value.company,
         nucleic_type: form.value.nucleic_type,
         msre: form.value.msre,
@@ -449,6 +466,10 @@ const errors = ref({
         error: false,
     },
     company: {
+        message: t('Required'),
+        error: false,
+    },
+    tag_label: {
         message: t('Required'),
         error: false,
     },

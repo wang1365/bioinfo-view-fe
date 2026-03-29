@@ -168,6 +168,15 @@
                     <div class="row full-width justify-between q-col-gutter-md">
                         <div class="col">
                             <q-input
+                                v-model="form.tag_label"
+                                stack-label
+                                readonly
+                                label-color="primary"
+                                :label="$t('DataNewFormTagLabel')"
+                            />
+                        </div>
+                        <div class="col">
+                            <q-input
                                 v-model="form.fastq1_path"
                                 stack-label
                                 readonly
@@ -247,6 +256,7 @@ const form = ref({
     sample_meta_id: "sample_meta_id",
     sample_identifier: "sample_identifier",
     identifier: "identifier",
+    tag_label: "",
     company: "company",
     nucleic_type: "gDNA",
     msre: false,

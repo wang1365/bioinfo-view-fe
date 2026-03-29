@@ -168,19 +168,6 @@
                             </div>
                         </div>
                     </q-item>
-                    <q-item>
-                        <div class="row full-width justify-start">
-                            <div class="col-4 q-pr-sm">
-                                <q-input
-                                    outlined
-                                    label-color="primary"
-                                    stack-label
-                                    v-model="form.tag_label"
-                                    :label="$t('SampleNewFormTagLabel')"
-                                />
-                            </div>
-                        </div>
-                    </q-item>
                 </q-list>
 
                 <div class="q-pa-md q-gutter-y-sm content-start"></div>
@@ -254,7 +241,6 @@ const form = ref({
     sampling_tube_brand: '',
     specimen_type: '',
     is_nc_sample: null,
-    tag_label: '',
 });
 
 const save = async () => {
@@ -271,7 +257,6 @@ const save = async () => {
         sampling_tube_brand: form.value.sampling_tube_brand,
         specimen_type: form.value.specimen_type,
         is_nc_sample: form.value.is_nc_sample,
-        tag_label: form.value.tag_label || null,
     };
 
     apiPost(
