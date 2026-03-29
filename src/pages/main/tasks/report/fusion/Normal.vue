@@ -14,13 +14,13 @@
                     style="position:absolute;z-index:100;left:0px;top:0px">
                     <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
                 </q-icon>
-                <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows" :columns="columns" :sticky="true"
+                <AppDataTable style="z-index:1" size="middle" bordered :data-source="filteredRows" :columns="columns" :sticky="true"
                     rowKey="0" :row-selection="rowSelection">
                     <template #bodyCell="{ column, record }">
                         <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
                             @click="clickView(record)" />
                     </template>
-                </a-table>
+                </AppDataTable>
             </div>
             <q-dialog v-model="igvVisible">
                 <q-card class="full-width" style="width:90vw;height: 90vh;max-width: 99vw;max-height: 99vh">
@@ -31,6 +31,7 @@
     </div>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { errorMessage, infoMessage } from 'src/utils/notify';
 import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed, onDeactivated } from 'vue'
 import { useRoute } from 'vue-router'

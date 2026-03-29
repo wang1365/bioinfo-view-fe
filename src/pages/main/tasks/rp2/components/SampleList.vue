@@ -17,7 +17,7 @@
             <IntroHelpButton :title="t('Rp2SampleList')" :disable-float="true" />
         </div>
 
-        <a-table
+        <AppDataTable
             class="rp2-grid-table"
             :data-source="filteredRows"
             :columns="columns"
@@ -104,7 +104,7 @@
                     </div>
                 </template>
             </template>
-        </a-table>
+        </AppDataTable>
 
         <CustomReportDialog
             v-model="customReportVisible"
@@ -143,6 +143,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'

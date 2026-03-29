@@ -109,7 +109,7 @@
 
                         <!-- 宿主原序列信息表格 -->
                         <div class="q-mb-md">
-                            <a-table
+                            <AppDataTable
                                 :columns="hostSequenceColumns"
                                 :data-source="hostSequenceData"
                                 :pagination="hostPagination"
@@ -121,7 +121,7 @@
 
                         <!-- 病原原序列信息表格 -->
                         <div class="q-mb-md">
-                            <a-table
+                            <AppDataTable
                                 :columns="pathogenSequenceColumns"
                                 :data-source="pathogenSequenceData"
                                 :pagination="pathogenPagination"
@@ -180,6 +180,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';

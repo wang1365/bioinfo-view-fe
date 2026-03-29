@@ -61,7 +61,7 @@
                 <div class="text-h6 q-pa-xs">
                     <span class="text-primary text-weight-bolder">{{ $t('Sample') + ": " }}</span>
                 </div>
-                <a-table :columns="columns" :data-source="taskSamples" size="small" bordered>
+                <AppDataTable :columns="columns" :data-source="taskSamples" size="small" bordered>
                     <template #bodyCell="{ column, record }">
                         <template v-if="column.key === 'fastq1_path'">
                             <span
@@ -108,7 +108,7 @@
                             </span>
                         </template>
                     </template>
-                </a-table>
+                </AppDataTable>
             </q-card-section>
             <q-separator></q-separator>
             <q-card-section>
@@ -175,6 +175,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import {useApi} from "src/api/apiBase";
 import {computed, onMounted, ref, watch, h} from "vue";
 import {useRoute, useRouter} from "vue-router";

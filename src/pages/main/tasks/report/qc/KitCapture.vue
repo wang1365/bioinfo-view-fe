@@ -12,7 +12,7 @@
     </div>
     <q-separator></q-separator>
     <div class="q-py-sm">
-        <a-table
+        <AppDataTable
             class="col-5 q-px-lg"
             size="small"
             :loading="loading"
@@ -21,10 +21,11 @@
             :sticky="true"
             :pagination="false"
         >
-        </a-table>
+        </AppDataTable>
     </div>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import {ref, onMounted, computed, watch, inject} from "vue";
 import {useRoute} from 'vue-router'
 import {getReportTable, getReportText} from "src/api/report"

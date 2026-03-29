@@ -1,8 +1,8 @@
 <template>
     <q-dialog v-model="dlgVisible" @show="onShow">
         <q-card style="width: 75%; max-width: 1000px">
-            <!--            <a-table :data-source="rows" :columns="columns" />-->
-            <a-table :data-source="props.record.compareResult" :columns="columns" />
+            <!--            <AppDataTable :data-source="rows" :columns="columns" />-->
+            <AppDataTable :data-source="props.record.compareResult" :columns="columns" />
             <q-card-actions align="center">
                 <q-btn color="primary" :label="$t('Confirm')" v-close-popup />
             </q-card-actions>
@@ -10,6 +10,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, computed, toRef, watch, reactive } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'

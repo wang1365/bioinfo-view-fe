@@ -1,6 +1,6 @@
 <template>
-    <q-page class="task-list-page q-px-sm q-pt-sm">
-        <div class="q-px-sm">
+    <q-page class="task-list-page q-pt-sm">
+        <div class="task-section">
             <div class="task-header-row">
                 <div class="task-page-title">{{ $t('Task') + $t('Manage') }}</div>
                 <div class="task-cards">
@@ -68,7 +68,7 @@
                 </div>
             </div>
         </div>
-        <div class="q-px-sm q-my-sm">
+        <div class="task-section task-section--middle">
             <div class="task-panel task-panel--filters">
                 <div class="task-filter-row">
                     <q-input style="width:120px" filled dense clearable v-model="taskId" :label="'ID'" />
@@ -129,15 +129,19 @@
                 </div>
             </div>
         </div>
-        <div ref="tableWrapRef" class="q-px-sm task-table-wrap">
-            <a-table
-                class="page-grid-table"
-                :columns="columns"
-                :data-source="rows"
-                :pagination="pagination"
-                :scroll="tableScroll"
-                :loading="tableLoading"
-            >
+        <div class="task-section task-section--table">
+            <div class="task-table-wrap">
+                <AppDataTable
+                    class="page-grid-table"
+                    :show-inner-vertical-borders="false"
+                    :show-outer-vertical-borders="false"
+                    :show-outer-horizontal-borders="false"
+                    :columns="columns"
+                    :data-source="rows"
+                    :pagination="pagination"
+                    :scroll="tableScroll"
+                    :loading="tableLoading"
+                >
                 <template #bodyCell="{ column, record }">
                     <template v-if="column.dataIndex ==='name'">
                         <span class="text-weight-bolder" style="font-size: 14px" v-if="record.status !== 'FINISHED'">
@@ -377,7 +381,8 @@
                         </div>
                     </template>
                 </template>
-            </a-table>
+                </AppDataTable>
+            </div>
         </div>
         <q-dialog v-model="showProjectSelect">
             <ProjectListVue @itemSelected="projectSelected($event)" />
@@ -399,10 +404,10 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { isRP2Flow } from 'src/utils/flow'
-import { ref, onMounted, computed, onUnmounted, nextTick, watch } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 import { useApi } from 'src/api/apiBase';
-import PageTitle from 'components/page-title/PageTitle.vue';
 import AppActionButton from 'src/components/button/AppActionButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
 import ProjectListVue from './components/ProjectList.vue';
@@ -413,7 +418,6 @@ import { useQuasar, date } from 'quasar';
 import { useI18n } from 'vue-i18n';
 import { globalStore } from 'src/stores/global';
 import { storeToRefs } from 'pinia';
-import { useQTable } from 'src/utils/q-table';
 import { amIAdmin, amISuper } from 'src/utils/user';
 
 const store = globalStore();
@@ -422,10 +426,7 @@ const { t } = useI18n();
 
 const intId = ref(null);
 const $q = useQuasar();
-const tableWrapRef = ref(null);
-const tableScrollY = ref(550);
 
-// const { tableRef, pagination, rows, refreshPage, loadDataOnMount } = useQTable();
 const pagination = ref({
     current: 1,
     pageSize: 10,
@@ -456,22 +457,8 @@ const columns = computed(() => [
 
 const tableScroll = computed(() => ({
     x: 1800,
-    y: tableScrollY.value
+    ...(rows.value.length > 6 ? { y: 'calc(100vh - 38vh)' } : {})
 }));
-
-// const columns = computed(() => [
-//     { dataIndex: 'id', key: '1', title: 'ID', width: 80, fixed: 'left' },
-//     { dataIndex: 'name',  key: '2', title: t('Name'), width: 180, fixed: 'left' },
-//     { dataIndex: 'patient', key: '3', title: t('Patient') + t('Name'), align: 'left' },
-//     { dataIndex: 'sample', key: '4', title: t('Sample'),  },
-//     { dataIndex: 'data', key: '5', title: t('Data'),  },
-//     { dataIndex: 'library_number', key: '6', title: t('LibraryNumber'), },
-//     { dataIndex: ['flow', 'name'], key: '7', title: t('Flow'), },
-//     { dataIndex: 'status', key: '8', title: t('Status'), align: 'center',  },
-//     { dataIndex: 'task_priority', key: '9', title: t('TaskPriority'), },
-//     { dataIndex: 'creator', key: '10', title: t('CreatedBy'), },
-//     { dataIndex: 'operate', key: '11', title: t('Operate'),  }
-// ]);
 
 
 const options = computed(() => [
@@ -529,30 +516,6 @@ const hasActiveTasksOnCurrentPage = computed(() =>
     rows.value.some((item) => ['RUNNING', 'PENDING'].includes(String(item?.status || '').toUpperCase()))
 );
 
-const onRequest = (props) => {
-    doRequest(props.pagination);
-};
-
-const updateTableScrollY = () => {
-    const wrapEl = tableWrapRef.value?.$el || tableWrapRef.value;
-    if (!wrapEl || typeof window === 'undefined') {
-        return;
-    }
-    const availableHeight = wrapEl.clientHeight || 0;
-    const paginationEl = wrapEl.querySelector('.ant-table-pagination');
-    const headerEl = wrapEl.querySelector('.ant-table-thead');
-    const horizontalScrollbarEl = wrapEl.querySelector('.ant-table-body-horizontal-scroll');
-    const paginationHeight = paginationEl ? paginationEl.getBoundingClientRect().height : 64;
-    const headerHeight = headerEl ? headerEl.getBoundingClientRect().height : 44;
-    const horizontalScrollbarHeight = horizontalScrollbarEl ? horizontalScrollbarEl.getBoundingClientRect().height : 18;
-    const extraSpacing = 14;
-    const nextHeight = Math.max(
-        180,
-        Math.floor(availableHeight - paginationHeight - headerHeight - horizontalScrollbarHeight - extraSpacing)
-    );
-    tableScrollY.value = nextHeight;
-};
-
 const doRequest = (showLoading = true) => {
     if (showLoading) {
         $q.loading.show();
@@ -579,9 +542,6 @@ const doRequest = (showLoading = true) => {
             for (let item of rows.value) {
                 item.actions = true;
             }
-            nextTick(() => {
-                updateTableScrollY();
-            });
         }, {}, null, null, () => {
             if (showLoading) {
                 $q.loading.hide();
@@ -653,19 +613,13 @@ const gotoDefineReport = (item) => {
 };
 onMounted(() => {
     loadBackup();
-    // loadDataOnMount();
     doRequest(false);
-    nextTick(() => {
-        updateTableScrollY();
-    });
-    window.addEventListener('resize', updateTableScrollY);
     intId.value = setInterval(() => {
         if (!hasActiveTasksOnCurrentPage.value) {
             return;
         }
         loadBackup();
         console.log(pagination.value);
-        // refreshPage();
         doRequest(false);
     }, 60000);
     summary();
@@ -674,18 +628,8 @@ onUnmounted(() => {
     if (intId.value) {
         clearInterval(intId.value);
     }
-    window.removeEventListener('resize', updateTableScrollY);
     backupSearch();
 });
-
-watch(
-    () => [rows.value.length, pagination.value.current, pagination.value.pageSize, pagination.value.total],
-    () => {
-        nextTick(() => {
-            updateTableScrollY();
-        });
-    }
-);
 
 const reset = () => {
     projectName.value = '';
@@ -795,7 +739,8 @@ const summary = async () => {
   min-height: 100%
   display: flex
   flex-direction: column
-  overflow: hidden
+  overflow-y: auto
+  overflow-x: hidden
   position: relative
   background: linear-gradient(180deg, #f5f8ff 0%, #edf4ff 46%, #f8fbff 100%)
   border-radius: 16px
@@ -827,10 +772,21 @@ const summary = async () => {
   position: relative
   z-index: 1
 
+.task-section
+  padding-left: 12px
+  padding-right: 12px
+
+.task-section--middle
+  margin-top: 2px
+  margin-bottom: 8px
+
+.task-section--table
+  margin-top: 0
+
 .task-table-wrap
-  flex: 1 1 auto
-  min-height: 0
-  padding: 10px 12px 12px
+  flex: 0 0 auto
+  padding: 10px 12px 0px
+  margin-bottom: 2px
   border: 1px solid rgba(151, 173, 205, .45)
   border-radius: 16px
   background: rgba(255, 255, 255, .78)
@@ -852,13 +808,6 @@ const summary = async () => {
   align-items: center
   flex-wrap: wrap
   gap: 8px
-
-.task-table-wrap :deep(.ant-table-pagination.ant-pagination)
-  margin-top: 10px
-  margin-bottom: 0
-
-.task-list-page > :not(.task-table-wrap)
-  flex: 0 0 auto
 
 .task-header-row
   display: flex
@@ -986,7 +935,8 @@ const summary = async () => {
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(45, 111, 237, .55), 0 20px 34px rgba(20, 52, 86, .25)
 
 .task-table-wrap :deep(.ant-table-wrapper)
-  height: 100%
+  height: auto
+  min-height: 0
 
 .task-table-wrap :deep(.ant-table)
   background: rgba(255, 255, 255, .94)
@@ -994,6 +944,9 @@ const summary = async () => {
 .task-table-wrap :deep(.ant-table-container)
   border-radius: 12px
   overflow: hidden
+
+.task-table-wrap :deep(.ant-table-body)
+  max-height: none !important
 
 .task-table-wrap :deep(.page-grid-table .ant-table-tbody > tr > td:last-child)
   text-align: center
@@ -1016,6 +969,4 @@ const summary = async () => {
   flex-wrap: nowrap
   white-space: nowrap
 
-.task-operate-dropdown :deep(.q-btn-dropdown__arrow)
-  margin-left: 2px
 </style>

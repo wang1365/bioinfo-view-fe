@@ -88,14 +88,14 @@
                 <div class="q-py-sm">{{intro}}</div>
 
                 <div>
-                    <a-table
+                    <AppDataTable
                         :columns="columns"
                         :data-source="rows"
                         :scroll="{ x: 800}"
                         size="small"
                         bordered
                         :sticky="true"
-                    ></a-table>
+                    ></AppDataTable>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -103,6 +103,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, toRefs, computed, watch } from 'vue'
 import RadarChartVue from './SomaticColumnCharts/RadarChart'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'

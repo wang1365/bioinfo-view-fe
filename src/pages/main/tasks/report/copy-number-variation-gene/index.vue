@@ -12,7 +12,7 @@
     <div class="flex flex-center" style="width:100%;">
         <div :id="chartDiv" style="min-width: 95%;max-width:100%; height: 500px" />
     </div>
-    <a-table :columns="columns" :data-source="rows" bordered size="small">
+    <AppDataTable :columns="columns" :data-source="rows" bordered size="small">
         <template #bodyCell="{record, column}">
             <template v-if="column.key === 'Chromosome'  || column.key === '染色体'">
                 <q-btn
@@ -60,7 +60,7 @@
         <template #customFilterIcon="{ filtered }">
             <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
         </template>
-    </a-table>
+    </AppDataTable>
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
             <q-bar class="bg-primary text-white">{{ $t('CopyNumberVariationGeneAnalysis') }}</q-bar>
@@ -75,6 +75,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, computed, watch, toRef, shallowRef, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { readTaskFile } from 'src/api/task';

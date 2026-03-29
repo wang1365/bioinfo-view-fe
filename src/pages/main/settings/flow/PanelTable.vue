@@ -19,7 +19,7 @@
             <AppActionButton v-if="!props.readonly" variant="primary" icon="add" :label="$t('Add')" @click="addRow" />
         </q-toolbar>
 
-        <a-table
+        <AppDataTable
             :columns="tableColumns"
             :data-source="rows"
             :loading="loading"
@@ -65,7 +65,7 @@
                     </div>
                 </template>
             </template>
-        </a-table>
+        </AppDataTable>
     </div>
 
     <a-modal
@@ -74,7 +74,7 @@
         :footer="null"
         width="640px"
     >
-        <a-table
+        <AppDataTable
             :columns="flowModalColumns"
             :data-source="flowModalRows"
             :pagination="false"
@@ -87,6 +87,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { Modal } from 'ant-design-vue'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'

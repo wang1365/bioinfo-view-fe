@@ -19,7 +19,7 @@
             class="q-ml-sm q-mb-xs"
             :download="tableFileName1"
         />
-        <a-table
+        <AppDataTable
             class="col-5"
             size="sm"
             bordered
@@ -28,7 +28,7 @@
             :columns="columns1"
             :sticky="true"
         >
-        </a-table>
+        </AppDataTable>
     </div>
     <div class="q-py-md" v-if="props.viewConfig.showMSIsite">
         <span class="text-h6 text-primary text-bold">{{$t('GoldStandardMicrosatelliteImage')}}</span>
@@ -42,7 +42,7 @@
             class="q-ml-sm q-mb-xs"
             :download="tableFileName2"
         />
-        <a-table
+        <AppDataTable
             class="col-5"
             size="small"
             bordered
@@ -59,7 +59,7 @@
                     @click="clickView(record)"
                 />
             </template>
-        </a-table>
+        </AppDataTable>
     </div>
     <q-dialog v-model="showImage">
         <q-card style="width:850px;max-width:1000px;height:550px;align-items: center">
@@ -81,6 +81,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted } from "vue";
 import {readTaskFile} from "src/api/task";
 import { useRoute } from 'vue-router'

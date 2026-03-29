@@ -13,7 +13,7 @@
             <div class="q-py-md text-bold text-h6 text-primary">{{$t('HRDStatistics')}}</div>
             <div class="row q-gutter-x-sm">
                 <div class="col-7 justify-end">
-                    <a-table
+                    <AppDataTable
                         size="small"
                         bordered
                         :loading="loading"
@@ -21,7 +21,7 @@
                         :columns="columns"
                         :sticky="true"
                     >
-                    </a-table>
+                    </AppDataTable>
                     <div class="q-pl-lg">
                         <div class="text-bold text-primary">{{$t('OnlyForResearch')}}</div>
                         <div class="text-bold text-primary q-mt-sm" style="white-space: pre-wrap">{{tableTip}}</div>
@@ -64,6 +64,7 @@
     </div>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, watch } from "vue"
 import { readTaskFile} from "src/api/task"
 import { getCsvData} from "src/utils/csv"

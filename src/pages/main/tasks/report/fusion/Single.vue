@@ -14,7 +14,7 @@
                 style="position:absolute;z-index:100;left:0px;top:0px">
                 <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
             </q-icon>
-            <a-table style="z-index:1" size="middle" bordered rowKey="0" :data-source="filteredRows1" :columns="columns1"
+            <AppDataTable style="z-index:1" size="middle" bordered rowKey="0" :data-source="filteredRows1" :columns="columns1"
                 :sticky="true" :row-selection="rowSelection1">
                 <template #bodyCell="{ column, record }">
                     <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
@@ -27,7 +27,7 @@
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
                 </template>
-            </a-table>
+            </AppDataTable>
         </div>
     </div>
 
@@ -47,7 +47,7 @@
                 style="position:absolute;z-index:100;left:0px;top:0px">
                 <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
             </q-icon>
-            <a-table style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
+            <AppDataTable style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
                 :sticky="true" rowKey="0" :row-selection="rowSelection2">
                 <template #bodyCell="{ column, record }">
                     <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
@@ -60,7 +60,7 @@
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
                 </template>
-            </a-table>
+            </AppDataTable>
         </div>
     </div>
 
@@ -71,6 +71,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, computed, toRefs, watch, toRef, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { exportFile } from 'quasar'

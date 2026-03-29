@@ -47,7 +47,7 @@
             <AppActionButton icon="close" :label="$t('Reset')" @click="clickReset" />
         </div>
 
-        <a-table
+        <AppDataTable
             :data-source="rows"
             :columns="columns"
             :loading="loading"
@@ -98,11 +98,12 @@
                     <span v-else>{{ getCellValue(record, column.dataIndex) }}</span>
                 </template>
             </template>
-        </a-table>
+        </AppDataTable>
     </div>
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { listSample } from 'src/api/sample'
 import { ref, watch, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'

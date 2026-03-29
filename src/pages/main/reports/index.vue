@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="q-pt-sm q-px-md q-pb-md bio-data-table">
-                <a-table
+                <AppDataTable
                     class="page-grid-table"
                     :data-source="rows"
                     :columns="columns"
@@ -93,13 +93,14 @@
                             </div>
                         </template>
                     </template>
-                </a-table>
+                </AppDataTable>
             </div>
         </q-card>
     </q-page>
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import PageTitle from 'components/page-title/PageTitle.vue'
 import { useApi } from 'src/api/apiBase'

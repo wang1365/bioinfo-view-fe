@@ -29,7 +29,7 @@
         </div>
         <div>
             <div class="q-pt-sm q-px-md q-pb-md bio-data-table">
-                <a-table
+                <AppDataTable
                     class="page-grid-table"
                     :data-source="dataItems"
                     :columns="columns"
@@ -70,7 +70,7 @@
                             </div>
                         </template>
                     </template>
-                </a-table>
+                </AppDataTable>
             </div>
         </div>
     </q-card>
@@ -141,6 +141,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { useQuasar } from 'quasar'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'

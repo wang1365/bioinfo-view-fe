@@ -266,7 +266,7 @@
 
             <template v-slot:after>
                 <div style="position:relative">
-                    <a-table
+                    <AppDataTable
                         style="z-index:1"
                         :loading="loading"
                         :data-source="filteredRows"
@@ -471,7 +471,7 @@
                                 />
                             </template> -->
                         </template>
-                    </a-table>
+                    </AppDataTable>
                 </div>
             </template>
         </q-splitter>
@@ -590,6 +590,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import {ref, onMounted, toRef, toRefs, watch, computed, onUnmounted} from 'vue'
 import {useComparator} from 'src/utils/comparator'
 import {readTaskFile, readTaskMuFile} from 'src/api/task'

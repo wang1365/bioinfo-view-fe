@@ -210,7 +210,7 @@
                     >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
-                    <a-table
+                    <AppDataTable
                         style="z-index:1"
                         bordered
                         :loading="loading"
@@ -245,7 +245,7 @@
                                 <span v-else>{{ record[column.dataIndex] }}</span>
                             </template>
                         </template>
-                    </a-table>
+                    </AppDataTable>
                 </div>
             </template>
         </q-splitter>
@@ -329,6 +329,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, toRef, toRefs, watch, computed, onUnmounted } from 'vue'
 import BarChartVue from './SomaticInfoCharts/BarChart.vue'
 import PieChartVue from './SomaticInfoCharts/PieChart.vue'

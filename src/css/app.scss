@@ -505,49 +505,6 @@
     color: #2d6fb3 !important;
 }
 
-.page-grid-table .ant-table,
-.page-grid-table .ant-table-container {
-    border: 1px solid #6f8098 !important;
-}
-
-.page-grid-table .ant-table-container {
-    border-color: #6f8098 !important;
-}
-
-.page-grid-table .ant-table-content table,
-.page-grid-table .ant-table-header table,
-.page-grid-table .ant-table-body table {
-    table-layout: fixed;
-}
-
-.page-grid-table .ant-table-thead > tr > th {
-    border-bottom: 1px solid #c7cfdb !important;
-    border-right: 1px solid #cfd7e3 !important;
-    padding-top: 8px !important;
-    padding-bottom: 8px !important;
-    line-height: 1.2 !important;
-    box-sizing: border-box;
-}
-
-.page-grid-table .ant-table-thead > tr > th::before {
-    display: none !important;
-}
-
-.page-grid-table .ant-table-tbody > tr > td {
-    border-bottom: 1px solid #d4dbe6 !important;
-    border-right: 1px solid #d9e0ea !important;
-    box-sizing: border-box;
-}
-
-.page-grid-table .ant-table-thead > tr > th:last-child,
-.page-grid-table .ant-table-tbody > tr > td:last-child {
-    border-right: 0 !important;
-}
-
-.page-grid-table .ant-table-thead > tr > th.ant-table-cell-scrollbar {
-    border-right: 0 !important;
-    box-shadow: none !important;
-}
 .popup-selector {
     width: 80vw;
     max-width: 80vw;

@@ -4,7 +4,7 @@
       <q-btn color="primary" :label="$t('Add')" icon="add" @click="$emit('openAdd')" />
       <q-btn color="negative" :label="$t('Delete')" icon="delete" @click="bulkDelete" :disable="selectedRowKeys.length === 0" />
     </div>
-    <a-table
+    <AppDataTable
       :loading="loading"
       :data-source="displayRows"
       :columns="columns"
@@ -69,12 +69,13 @@
           <q-btn color="negative" size="sm" :label="$t('Delete')" @click="$emit('remove', record.lineNumber)" />
         </template>
       </template>
-    </a-table>
+    </AppDataTable>
     <div v-if="!loading && displayRows.length === 0" class="text-grey q-mt-sm">{{$t('NoData')}}</div>
   </div>
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile } from 'src/api/task'

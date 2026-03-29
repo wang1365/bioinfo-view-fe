@@ -8,7 +8,7 @@
             {{ errorText }}
         </q-banner>
 
-        <a-table
+        <AppDataTable
             :class="['rp2-grid-table', { 'rp2-matrix-table': matrixHoverEnabled }]"
             :columns="columns"
             :data-source="rows"
@@ -28,6 +28,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { computed, ref, watch } from 'vue'
 import { readTaskFile } from 'src/api/task'
 import { globalStore } from 'src/stores/global'

@@ -1,7 +1,7 @@
 <template>
     <div class="dashboard-user-table">
         <div class="dashboard-user-table__header">{{ $t('DashboardUsers') }}</div>
-        <a-table
+        <AppDataTable
             class="dashboard-user-table__inner"
             :columns="columns"
             :data-source="rows"
@@ -25,6 +25,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useApi } from 'src/api/apiBase'

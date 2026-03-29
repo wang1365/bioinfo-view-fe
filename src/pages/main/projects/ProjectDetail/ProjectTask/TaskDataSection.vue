@@ -1,5 +1,5 @@
 <template>
-    <a-table
+    <AppDataTable
         :dataSource="files"
         :columns="columns"
         :pagination="false"
@@ -841,10 +841,11 @@
                 </div>
             </template>
         </template>
-    </a-table>
+    </AppDataTable>
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { defineProps, defineEmits, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FastqTooltip from './FastqTooltip.vue'

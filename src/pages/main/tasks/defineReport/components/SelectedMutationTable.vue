@@ -25,7 +25,7 @@
                             :disable="germlineSelectedRowKeys.length === 0"
                         />
                     </div>
-                    <a-table
+                    <AppDataTable
                         :loading="germlineLoading"
                         :data-source="germlineDisplayRows"
                         :columns="germlineColumns"
@@ -69,7 +69,7 @@
                                 </div>
                             </template>
                         </template>
-                    </a-table>
+                    </AppDataTable>
                     <div v-if="!germlineLoading && germlineDisplayRows.length === 0" class="text-grey q-mt-sm">
                         {{$t('NoData')}}
                     </div>
@@ -85,7 +85,7 @@
                             :disable="somaticSelectedRowKeys.length === 0"
                         />
                     </div>
-                    <a-table
+                    <AppDataTable
                         :loading="somaticLoading"
                         :data-source="somaticDisplayRows"
                         :columns="somaticColumns"
@@ -124,7 +124,7 @@
                                 </div>
                             </template>
                         </template>
-                    </a-table>
+                    </AppDataTable>
                     <div v-if="!somaticLoading && somaticDisplayRows.length === 0" class="text-grey q-mt-sm">
                         {{$t('NoData')}}
                     </div>
@@ -144,6 +144,7 @@
     </div>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskMuFile } from 'src/api/task'

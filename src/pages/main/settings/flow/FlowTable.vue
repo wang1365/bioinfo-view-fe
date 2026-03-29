@@ -19,7 +19,7 @@
             <AppActionButton variant="primary" icon="add" :label="$t('Add')" @click="addFlow" />
         </q-toolbar>
 
-        <a-table
+        <AppDataTable
             :columns="columns"
             :data-source="flows"
             size="small"
@@ -65,7 +65,7 @@
                     </div>
                 </template>
             </template>
-        </a-table>
+        </AppDataTable>
         <flow-dialog ref="dlgFlow" :action="action" :id="currentFlow?.id" @success="refreshFlows" />
         <q-dialog v-model="taskLimitDlgVisible">
             <q-card>
@@ -88,6 +88,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { getFlows, deleteFlow, updateFlowTaskConfig } from 'src/api/flow';
 import { ref, onMounted, computed, nextTick } from 'vue'
 import { useQuasar } from 'quasar'

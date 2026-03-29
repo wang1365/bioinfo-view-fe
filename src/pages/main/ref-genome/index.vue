@@ -30,7 +30,7 @@
                 </q-toolbar>
             </div>
             <div class="q-pt-sm q-px-md q-pb-md bio-data-table">
-                <a-table
+                <AppDataTable
                     class="page-grid-table"
                     :columns="columns"
                     :data-source="dataItems"
@@ -72,7 +72,7 @@
                             </div>
                         </template>
                     </template>
-                </a-table>
+                </AppDataTable>
             </div>
         </q-card>
         <CreateCustomReferenceGenomeDialog v-model:visible="openNewDialog" @save="handleDialogSave" />
@@ -80,6 +80,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { computed, onMounted, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'

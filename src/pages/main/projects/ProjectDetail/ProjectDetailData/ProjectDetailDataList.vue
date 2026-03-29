@@ -22,7 +22,7 @@
         </q-card-section>
         <q-card-section class="q-pt-none">
             <div class="q-pa-sm bio-data-table">
-                <a-table
+                <AppDataTable
                     class="page-grid-table"
                     :columns="columns"
                     :data-source="dataItems"
@@ -49,7 +49,7 @@
                             </div>
                         </template>
                     </template>
-                </a-table>
+                </AppDataTable>
             </div>
         </q-card-section>
     </q-card>
@@ -62,6 +62,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { useQuasar } from "quasar";
 import DataInfo from "../../../data/DataInfo.vue";
 import { ref, onMounted, watch, onUpdated, computed } from 'vue';

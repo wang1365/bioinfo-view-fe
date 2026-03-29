@@ -26,7 +26,7 @@
                     />
                 </div>
                 <q-separator></q-separator>
-                <a-table
+                <AppDataTable
                     class="col-5"
                     size="small"
                     bordered
@@ -35,7 +35,7 @@
                     :columns="columns"
                     :sticky="true"
                 >
-                </a-table>
+                </AppDataTable>
             </div>
             <div class="col q-ml-md">
                 <div
@@ -56,7 +56,7 @@
                     />
                 </div>
                 <q-separator></q-separator>
-                <a-table
+                <AppDataTable
                     size="small"
                     bordered
                     :loading="loading2"
@@ -64,12 +64,13 @@
                     :columns="columns"
                     :sticky="true"
                 >
-                </a-table>
+                </AppDataTable>
             </div>
         </div>
     </div>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import {ref, onMounted, computed} from "vue";
 import { readTaskFile } from "src/api/task"
 import { getCsvData } from "src/utils/csv"

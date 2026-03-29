@@ -6,7 +6,7 @@
             </q-banner>
         </div>
         <div class="table-region">
-            <a-table
+            <AppDataTable
                 :class="['rp2-grid-table', { 'rp2-grid-table-selectable': selectable }]"
                 :columns="columns"
                 :data-source="rows"
@@ -47,14 +47,14 @@
                         </div>
                     </template>
                 </template>
-            </a-table>
+            </AppDataTable>
         </div>
 
         <q-dialog v-model="compareDialogVisible">
             <q-card style="width: 75%; max-width: 980px">
                 <q-bar class="bg-primary text-white">{{ compareDialogTitle }}</q-bar>
                 <q-card-section>
-                    <a-table
+                    <AppDataTable
                         class="rp2-grid-table"
                         row-key="sample"
                         :columns="compareColumns"
@@ -77,6 +77,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'

@@ -89,7 +89,7 @@
         </div>
 
         <div v-if="showPieTable">
-            <a-table
+            <AppDataTable
                 class="col-5"
                 size="middle"
                 rowKey="lineNumber"
@@ -98,7 +98,7 @@
                 :columns="variantColumns"
                 @change="handleChange"
                 :sticky="true"
-            ></a-table>
+            ></AppDataTable>
         </div>
 
         <div v-if="props.viewConfig.showCNVtable">
@@ -184,7 +184,7 @@
             >
                 <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
             </q-icon>
-            <a-table
+            <AppDataTable
                 style="z-index:1"
                 class="col-5"
                 size="middle"
@@ -213,7 +213,7 @@
                         <TableActionButton variant="primary" :label="$t('View')" @click="clickView(record)" />
                     </template>
                 </template>
-            </a-table>
+            </AppDataTable>
         </div>
     </div>
 
@@ -238,6 +238,7 @@
     </q-dialog>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, computed, watch, toRef } from 'vue'
 import { useRoute } from 'vue-router'
 import { readTaskFile } from 'src/api/task'

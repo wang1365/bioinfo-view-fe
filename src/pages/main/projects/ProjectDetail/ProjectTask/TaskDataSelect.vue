@@ -38,7 +38,7 @@
                 />
                 <AppActionButton variant="primary" :label="$t('Search')" icon="search" @click="refreshPage()" />
             </div>
-            <a-table
+            <AppDataTable
                 :columns="columns"
                 :data-source="dataItems"
                 :scroll="{ x: 1500, y: 1000 }"
@@ -118,6 +118,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { onMounted, ref, computed, reactive } from 'vue'
 import { useApi } from "src/api/apiBase"
 import AppActionButton from 'src/components/button/AppActionButton.vue'

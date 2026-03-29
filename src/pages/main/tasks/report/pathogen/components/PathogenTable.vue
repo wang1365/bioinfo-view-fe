@@ -1,5 +1,5 @@
 <template>
-    <a-table
+    <AppDataTable
         rowKey="lineNumber"
         :data-source="rows"
         :columns="columns"
@@ -65,7 +65,7 @@
         <template #customFilterIcon="{ filtered }">
             <search-outlined :style="{ color: filtered ? '#108ee9' : undefined }" />
         </template>
-    </a-table>
+    </AppDataTable>
     <CompareDialog
         v-model="dlgCmpVisible"
         :task="props.task"
@@ -76,6 +76,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef, watch, reactive } from 'vue'
 import { SearchOutlined } from '@ant-design/icons-vue'

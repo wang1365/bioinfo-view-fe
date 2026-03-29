@@ -100,7 +100,7 @@
                     >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
-<a-table
+<AppDataTable
   :class="{ 'rp2-grid-table': enhancedTableBorder }"
   style="z-index:1"
   class="col-5"
@@ -167,7 +167,7 @@
                                 </template>
                             </template>
                         </template>
-                    </a-table>
+                    </AppDataTable>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -211,7 +211,7 @@
             </q-card>
         </q-dialog>
 
-        <!-- <a-table :columns="columns" :data-source="rows" @change="onChange" /> -->
+        <!-- <AppDataTable :columns="columns" :data-source="rows" @change="onChange" /> -->
         <div>
             <template v-for="(image, index) in images" :key="image">
                 <q-separator color="primary" class="q-my-sm" />
@@ -252,6 +252,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import {computed, onMounted, ref, toRef, watch} from 'vue'
 import { useI18n } from 'vue-i18n'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'

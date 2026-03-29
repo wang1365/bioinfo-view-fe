@@ -224,7 +224,7 @@
                 </div>
             </template>
             <template v-slot:after>
-                <!-- <a-table
+                <!-- <AppDataTable
                      size="small"
                      bordered
                      :loading="loading"
@@ -246,7 +246,7 @@
                      </a-tooltip>
                      <span v-else>{{record[column.dataIndex]}}</span>
                      </template>
-                     </a-table> -->
+                     </AppDataTable> -->
                 <div style="position:relative" class="q-ml-xs mutation-table-wrap">
                     <q-icon
                         v-if="isDefineReport"
@@ -257,7 +257,7 @@
                     >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
-                    <a-table
+                    <AppDataTable
                         style="z-index:1"
                         size="small"
                         bordered
@@ -293,7 +293,7 @@
                                 <span v-else>{{ record[column.dataIndex] }}</span>
                             </template>
                         </template>
-                    </a-table>
+                    </AppDataTable>
                 </div>
             </template>
         </q-splitter>
@@ -381,6 +381,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { ref, onMounted, computed, toRef, toRefs, watch, onUnmounted, defineExpose } from 'vue'
 import BarChartVue from './SomaticInfoCharts/BarChart.vue'

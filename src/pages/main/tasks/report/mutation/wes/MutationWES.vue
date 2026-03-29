@@ -52,7 +52,7 @@
                     >
                         <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
                     </q-icon>
-                    <a-table
+                    <AppDataTable
                         style="z-index:1"
                         :loading="loading"
                         :data-source="filteredRows"
@@ -351,7 +351,7 @@
                             <!--                                </a-tooltip>-->
                             <!--                            </template>-->
                         </template>
-                    </a-table>
+                    </AppDataTable>
                 </div>
             </template>
         </q-splitter>
@@ -410,6 +410,7 @@
     </a-drawer>
 </template>
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { ref, onMounted, toRef, toRefs, watch, computed, onUnmounted } from 'vue'
 import MutationInfo from '../MutationInfo.vue'
 import { useComparatorOptions } from 'src/utils/comparator'

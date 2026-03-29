@@ -31,7 +31,7 @@
                 </q-toolbar>
             </div>
             <div ref="tableAreaRef" class="col users-table-area q-pt-sm q-px-md q-pb-md bio-data-table">
-                <a-table
+                <AppDataTable
                     class="page-grid-table"
                     :data-source="rows"
                     :columns="columns"
@@ -105,7 +105,7 @@
                             </div>
                         </template>
                     </template>
-                </a-table>
+                </AppDataTable>
             </div>
         </q-card>
         <CreateUser ref="createUserDlg" @success="refreshUsers"></CreateUser>
@@ -116,6 +116,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { useQuasar } from 'quasar'
 import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import _ from 'lodash'

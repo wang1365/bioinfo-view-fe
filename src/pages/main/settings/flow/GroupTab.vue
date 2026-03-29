@@ -17,7 +17,7 @@
             <AppActionButton variant="primary" icon="add" :label="$t('Add')" @click="addRow" />
         </q-toolbar>
 
-        <a-table
+        <AppDataTable
             :columns="columns"
             :data-source="rows"
             :loading="loading"
@@ -54,7 +54,7 @@
                     </div>
                 </template>
             </template>
-        </a-table>
+        </AppDataTable>
 
         <group-dialog ref="dlgCreate" mode="create" @success="refreshRows" />
         <group-dialog ref="dlgEdit" mode="edit" @success="refreshRows" />
@@ -62,6 +62,7 @@
 </template>
 
 <script setup>
+import AppDataTable from 'src/components/table/AppDataTable.vue'
 import { getPanelGroups, deletePanelGroup } from 'src/api/panelGroup'
 import { createConfig, listConfig, updateConfig } from 'src/api/config'
 import { ref, onMounted, computed } from 'vue'
