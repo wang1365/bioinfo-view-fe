@@ -83,7 +83,6 @@ import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { readTaskFile } from 'src/api/task'
-import { getRelatedTasks } from 'src/api/report'
 import { getRp2LangSuffix, parseTabText } from './rp2File'
 
 const props = defineProps({
@@ -184,6 +183,8 @@ const buildFilePath = (sampleName) => {
 }
 
 const filePath = computed(() => buildFilePath(props.sampleName))
+
+const getMergedResultFilePath = () => `menu/merged_results.${getRp2LangSuffix(langCode.value)}.add.txt`
 
 const compareColumns = computed(() => [
     { title: t('Sample'), dataIndex: 'sample', key: 'sample', width: 180 },
@@ -290,7 +291,33 @@ const extractCompareMatchFromFile = (headers, row, sampleLabel) => {
     }
 }
 
-const buildCompareResultFromRelatedTasks = async () => {
+const loadCurrentTaskOtherSampleNames = async () => {
+    const response = await readTaskFile(props.taskId, getMergedResultFilePath(), true, true)
+    const text = typeof response === 'string' ? response : ''
+    if (!text) {
+        return []
+    }
+
+    const { headers, rows: parsedRows } = parseTabText(text, { hasHeader: true })
+    if (!headers.length || !parsedRows.length) {
+        return []
+    }
+
+    const sampleHeader =
+        findHeaderByAliasList(headers, ['数据识别号', 'dataidentifier', 'dataid', 'sample', '样本']) || headers[0] || ''
+    if (!sampleHeader) {
+        return []
+    }
+
+    const currentSampleName = String(props.sampleName || '').trim()
+    const sampleNames = parsedRows
+        .map((row) => String(row?.[sampleHeader] || '').trim())
+        .filter((sampleName) => sampleName && sampleName !== currentSampleName)
+
+    return Array.from(new Set(sampleNames))
+}
+
+const buildCompareResultFromCurrentTask = async () => {
     rows.value.forEach((row) => {
         row.__compareResult = []
         row.__compareCount = 0
@@ -308,30 +335,15 @@ const buildCompareResultFromRelatedTasks = async () => {
         return
     }
 
-    const relatedTasks = await getRelatedTasks(props.taskId)
-    const tasks = Array.isArray(relatedTasks) ? relatedTasks : []
+    const otherSampleNames = await loadCurrentTaskOtherSampleNames()
+    if (!otherSampleNames.length) {
+        return
+    }
 
     await Promise.all(
-        tasks.map(async (task) => {
-            const taskId = task?.id
-            if (!taskId) {
-                return
-            }
-
+        otherSampleNames.map(async (sampleLabel) => {
             try {
-                const matchedSample = Array.isArray(task?.samples)
-                    ? task.samples.find(
-                          (sample) =>
-                              String(sample?.sample_identifier || '').trim() ===
-                              String(props.sampleIdentifier || '').trim()
-                      )
-                    : null
-                const sampleLabel = String(matchedSample?.identifier || '').trim()
-                if (!sampleLabel) {
-                    return
-                }
-
-                const response = await readTaskFile(taskId, buildFilePath(sampleLabel), true, true)
+                const response = await readTaskFile(props.taskId, buildFilePath(sampleLabel), true, true)
                 const text = typeof response === 'string' ? response : ''
                 if (!text) {
                     return
@@ -353,6 +365,7 @@ const buildCompareResultFromRelatedTasks = async () => {
                 if (!speciesKey) {
                     return
                 }
+
                 rows.value.forEach((row) => {
                     const targetSpecies = targetSpeciesMap.get(row.__rowKey)
                     if (!targetSpecies) {
@@ -660,7 +673,7 @@ const loadData = async () => {
         columns.value = buildColumns(keptHeaders)
 
         if (props.showVerification) {
-            await buildCompareResultFromRelatedTasks()
+            await buildCompareResultFromCurrentTask()
         }
     } catch (error) {
         rows.value = []
