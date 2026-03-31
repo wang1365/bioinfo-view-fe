@@ -17,16 +17,18 @@
             <IntroHelpButton :title="t('Rp2SampleList')" :disable-float="true" />
         </div>
 
-        <AppDataTable
-            class="rp2-grid-table"
-            :data-source="filteredRows"
-            :columns="columns"
-            :pagination="paginationConfig"
-            :loading="loading"
-            :row-key="rowKey"
-            bordered
-            size="small"
-        >
+        <div ref="tableRegionRef" class="table-region">
+            <AppDataTable
+                class="rp2-grid-table"
+                :data-source="filteredRows"
+                :columns="columns"
+                :pagination="paginationConfig"
+                :loading="loading"
+                :row-key="rowKey"
+                :scroll="{ y: tableScrollY }"
+                bordered
+                size="small"
+            >
             <template #bodyCell="{ record, column }">
                 <template v-if="column.dataIndex === 'patientInfo'">
                     <div class="patient-info-cell">
@@ -104,7 +106,8 @@
                     </div>
                 </template>
             </template>
-        </AppDataTable>
+            </AppDataTable>
+        </div>
 
         <CustomReportDialog
             v-model="customReportVisible"
@@ -144,7 +147,7 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
@@ -197,6 +200,9 @@ const patientInfoId = ref(0)
 const sampleInfoId = ref(0)
 const dataInfoId = ref(0)
 const reportStateMap = ref({})
+const tableRegionRef = ref(null)
+const tableScrollY = ref(360)
+let tableResizeObserver = null
 
 const normalizeKey = (value) => String(value || '').replace(/\s+/g, '').replace(/[_-]/g, '').toLowerCase()
 
@@ -397,7 +403,28 @@ const loadData = async () => {
         reportStateMap.value = {}
     } finally {
         loading.value = false
+        await nextTick()
+        syncTableScrollY()
     }
+}
+
+const syncTableScrollY = () => {
+    const region = tableRegionRef.value
+    if (!region) {
+        return
+    }
+
+    const tableHeader = region.querySelector('.ant-table-header')
+    const tableThead = region.querySelector('.ant-table-thead')
+    const tablePagination = region.querySelector('.ant-pagination')
+    const headerHeight = tableHeader?.offsetHeight || tableThead?.offsetHeight || 44
+    const paginationHeight = tablePagination?.offsetHeight || 52
+    const regionStyle = window.getComputedStyle(region)
+    const paddingTop = Number.parseFloat(regionStyle.paddingTop || '0') || 0
+    const paddingBottom = Number.parseFloat(regionStyle.paddingBottom || '0') || 0
+    const reserved = headerHeight + paginationHeight + paddingTop + paddingBottom + 18
+
+    tableScrollY.value = Math.max(Math.floor(region.clientHeight - reserved), 180)
 }
 
 const rowKey = (record) => record.dataIdentifier || record.__rowKey
@@ -619,11 +646,44 @@ watch(
     loadData,
     { immediate: true }
 )
+
+watch(
+    () => [filteredRows.value.length, columns.value.length, loading.value],
+    async () => {
+        await nextTick()
+        syncTableScrollY()
+    }
+)
+
+onMounted(async () => {
+    await nextTick()
+    syncTableScrollY()
+    if (!window.ResizeObserver) {
+        return
+    }
+    tableResizeObserver = new window.ResizeObserver(() => {
+        syncTableScrollY()
+    })
+    if (tableRegionRef.value) {
+        tableResizeObserver.observe(tableRegionRef.value)
+    }
+})
+
+onBeforeUnmount(() => {
+    if (tableResizeObserver) {
+        tableResizeObserver.disconnect()
+        tableResizeObserver = null
+    }
+})
 </script>
 
 <style lang="scss" scoped>
 .sample-list {
     padding: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .list-toolbar {
@@ -636,6 +696,18 @@ watch(
 .search-input {
     width: 25%;
     min-width: 240px;
+}
+
+.table-region {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.table-region :deep(.ant-table-wrapper),
+.table-region :deep(.ant-spin-nested-loading),
+.table-region :deep(.ant-spin-container) {
+    height: 100%;
 }
 
 .operation-buttons {

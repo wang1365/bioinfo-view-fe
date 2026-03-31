@@ -1,5 +1,5 @@
 <template>
-    <q-page style="padding: 10px; overflow: auto; height: 90vh">
+    <q-page class="rp2-page">
         <div class="row items-center">
             <h6>{{ pageTitle }}</h6>
             <q-space />
@@ -40,6 +40,7 @@
                 :name="customTabName(index)"
             >
                 <CommonModuleVue
+                    class="rp2-common-module"
                     :view-config="moduleItem"
                     :task="taskForCommonModule"
                     :enable-pagination="true"
@@ -188,8 +189,17 @@ watch(
 </script>
 
 <style scoped>
+.rp2-page {
+    padding: 10px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
 .rp2-tab-wrap {
     position: relative;
+    height: 100%;
 }
 
 .rp2-tab-wrap--no-intro {
@@ -207,6 +217,13 @@ watch(
     padding-top: 10px;
     padding-left: 0;
     padding-right: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.rp2-tab-panels :deep(.rp2-common-module) {
+    height: 100%;
+    min-height: 0;
 }
 
 .rp2-tab-wrap :deep(.rp2-stats-tabs) {
@@ -216,5 +233,11 @@ watch(
 .rp2-tab-wrap :deep(.ant-table-wrapper),
 .rp2-tab-wrap :deep(.ant-table) {
     width: 100%;
+}
+
+.rp2-tab-panels {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 </style>
