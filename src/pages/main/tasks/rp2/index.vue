@@ -31,7 +31,7 @@
         <q-tab-panels v-model="tab" animated class="rp2-tab-panels">
             <q-tab-panel name="sampleList">
                 <div class="rp2-tab-wrap rp2-tab-wrap--no-intro">
-                    <SampleList :task-id="taskId" />
+                    <SampleList :task-id="taskId" :intro-content="sampleListIntro" />
                 </div>
             </q-tab-panel>
             <q-tab-panel
@@ -51,7 +51,7 @@
             <q-tab-panel name="batchStats">
                 <div class="rp2-tab-wrap">
                     <div class="rp2-tab-intro">
-                        <IntroHelpButton :title="$t('Rp2BatchStats')" :disable-float="true" />
+                        <IntroHelpButton :title="$t('Rp2BatchStats')" :content="batchStatsIntro" :disable-float="true" />
                     </div>
                     <BatchPathogenStats :task-id="taskId" :task-root-dir="taskRootDir" />
                 </div>
@@ -83,6 +83,8 @@ const taskRootDir = ref('')
 const taskName = ref('')
 const taskDetail = ref({ id: taskId })
 const customModules = ref([])
+const sampleListIntro = ref('')
+const batchStatsIntro = ref('')
 const tab = ref('sampleList')
 const pageTitle = computed(() => {
     return taskName.value ? `"${taskName.value}" ${t('Rp2SummaryTitleSuffix')}` : t('Rp2PageTitle')
@@ -146,6 +148,31 @@ const extractCustomModules = (rawConfig) => {
     return fallback
 }
 
+const toText = (value) => (typeof value === 'string' ? value : '')
+
+const readIntroText = async (filePath) => {
+    const normalizedPath = String(filePath || '').trim()
+    if (!normalizedPath) {
+        return ''
+    }
+
+    try {
+        const content = await readTaskFile(taskId, normalizedPath, true)
+        if (toText(content)) {
+            return toText(content)
+        }
+    } catch (error) {
+        // no-op, fallback to from_task_root
+    }
+
+    try {
+        const content = await readTaskFile(taskId, normalizedPath, true, true)
+        return toText(content)
+    } catch (error) {
+        return ''
+    }
+}
+
 const loadCustomModules = async () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     let configText = ''
@@ -166,6 +193,15 @@ const loadCustomModules = async () => {
 
     const configJson = tryParseJson(typeof configText === 'string' ? configText : '')
     customModules.value = extractCustomModules(configJson)
+
+    const sampleListDescPath = String(configJson?.['样本列表']?.descriptionFile || '').trim()
+    const batchStatsDescPath = String(configJson?.['批次病原统计']?.descriptionFile || '').trim()
+    const [sampleIntroText, batchIntroText] = await Promise.all([
+        readIntroText(sampleListDescPath),
+        readIntroText(batchStatsDescPath)
+    ])
+    sampleListIntro.value = sampleIntroText
+    batchStatsIntro.value = batchIntroText
 }
 
 onMounted(async () => {

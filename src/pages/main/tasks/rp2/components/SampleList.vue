@@ -14,7 +14,7 @@
                     <q-icon name="search" />
                 </template>
             </q-input>
-            <IntroHelpButton :title="t('Rp2SampleList')" :disable-float="true" />
+            <IntroHelpButton :title="t('Rp2SampleList')" :content="props.introContent" :disable-float="true" />
         </div>
 
         <div ref="tableRegionRef" class="table-region">
@@ -166,6 +166,10 @@ const props = defineProps({
     taskId: {
         type: [String, Number],
         required: true
+    },
+    introContent: {
+        type: String,
+        default: ''
     }
 })
 
