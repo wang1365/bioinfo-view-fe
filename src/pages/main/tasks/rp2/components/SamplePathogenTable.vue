@@ -59,6 +59,7 @@
                         row-key="sample"
                         :columns="compareColumns"
                         :data-source="compareRows"
+                        :row-class-name="compareRowClassName"
                         :pagination="{
                             pageSize: 10,
                             showSizeChanger: true,
@@ -189,7 +190,7 @@ const getMergedResultFilePath = () => `menu/merged_results.${getRp2LangSuffix(la
 const compareColumns = computed(() => [
     { title: t('Sample'), dataIndex: 'sample', key: 'sample', width: 180 },
     { title: props.category === 'virus' ? t('Virus') : t('Zhong'), dataIndex: 'speciesName', key: 'speciesName' },
-    { title: t('TotalProportion'), dataIndex: 'totalProportion', key: 'totalProportion', width: 140 },
+    { title: 'RPM', dataIndex: 'rpm', key: 'rpm', width: 120 },
     { title: t('ReadsCount'), dataIndex: 'readsCount', key: 'readsCount', width: 120 }
 ])
 
@@ -249,6 +250,12 @@ const getCompareSpeciesName = (row) => {
     return String((speciesKey && row?.[speciesKey]) || '').trim()
 }
 
+const normalizeSpeciesName = (value) =>
+    String(value || '')
+        .trim()
+        .replace(/\s+/g, '')
+        .toLowerCase()
+
 const toIgvPath = (rawPath) => {
     const path = String(rawPath || '').trim()
     if (!path) {
@@ -266,18 +273,13 @@ const getFileName = (rawPath) => {
     return normalized.substring(normalized.lastIndexOf('/') + 1)
 }
 
-const extractCompareMatchFromFile = (headers, row, sampleLabel) => {
+const extractCompareMatchFromFile = (headers, row, sampleLabel, reported = '') => {
     const speciesKey = findHeaderByAliasList(headers, ['中文种名', '种名', 'speciesname', 'species', 'virusspeciesname', 'virusname'])
-    const totalProportionKey = findHeaderByAliasList(headers, [
-        '总占比',
-        'totalproportion',
-        'abundance(%)',
-        'abundance',
-        'relativeabundance'
-    ])
+    const rpmKey = findHeaderByAliasList(headers, ['rpm'])
     const readsCountKey = findHeaderByAliasList(headers, [
         '种count',
         '种_count',
+        '序列数',
         'speciescount',
         'readscount',
         'count'
@@ -286,8 +288,12 @@ const extractCompareMatchFromFile = (headers, row, sampleLabel) => {
     return {
         sample: sampleLabel || '-',
         speciesName: speciesKey ? row?.[speciesKey] || '-' : '-',
-        totalProportion: totalProportionKey ? row?.[totalProportionKey] || '-' : '-',
-        readsCount: readsCountKey ? row?.[readsCountKey] || '-' : '-'
+        reported: reported || '-',
+        rpm: rpmKey ? row?.[rpmKey] || '-' : '-',
+        readsCount: readsCountKey ? row?.[readsCountKey] || '-' : '-',
+        __reported: String(reported || '')
+            .trim()
+            .toUpperCase() === 'Y'
     }
 }
 
@@ -362,6 +368,7 @@ const buildCompareResultFromCurrentTask = async () => {
                     'virusspeciesname',
                     'virusname'
                 ])
+                const reportedHeader = findReportedHeader(headers)
                 if (!speciesKey) {
                     return
                 }
@@ -377,7 +384,15 @@ const buildCompareResultFromCurrentTask = async () => {
                     if (!match) {
                         return
                     }
-                    row.__compareResult.push(extractCompareMatchFromFile(headers, match, sampleLabel))
+                    const reportedValue = reportedHeader ? String(match?.[reportedHeader] ?? '').trim() : ''
+                    row.__compareResult.push(
+                        extractCompareMatchFromFile(
+                            headers,
+                            match,
+                            sampleLabel,
+                            reportedValue
+                        )
+                    )
                     row.__compareCount = row.__compareResult.length
                 })
             } catch (error) {
@@ -386,6 +401,8 @@ const buildCompareResultFromCurrentTask = async () => {
         })
     )
 }
+
+const compareRowClassName = (record) => (record?.__reported ? 'rp2-reported-row' : '')
 
 const displayHeader = (header) => {
     const normalized = normalizeHeader(header)
@@ -768,7 +785,7 @@ watch(
     overflow: visible !important;
 }
 
-.pathogen-table-container :deep(.rp2-reported-row > td) {
+:deep(.rp2-reported-row > td) {
     background-color: #fff7e6;
 }
 
