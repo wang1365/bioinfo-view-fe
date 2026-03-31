@@ -113,7 +113,8 @@
                             :columns="table.columns"
                             :sticky="true"
                             :row-selection="rowSelectionConfig(table)"
-                            :pagination="paginationConfig"
+                            :pagination="getPaginationConfig(table.name)"
+                            @change="(pagination) => handleTableChange(table.name, pagination)"
                         >
                         <template #bodyCell="{ column, record }">
                             <TableActionButton
@@ -330,17 +331,59 @@ const resolveFilePath = (filePath) => {
 const readTextFile = (filePath, includeErrors = true) =>
     readTaskFile(props.task.id, resolveFilePath(filePath), includeErrors, props.fromTaskRoot)
 
-// Pagination config for RP2 usage: bind only when enabled
-const paginationConfig = computed(() => {
-  if (props.enablePagination) {
-    return {
-      pageSize: 10,
-      showSizeChanger: true,
-      showTotal: (total) => t('PaginationTotal', { total })
+const getPaginationState = (tableName) => {
+    if (!paginationStateMap.value[tableName]) {
+        paginationStateMap.value[tableName] = {
+            current: 1,
+            pageSize: 10
+        }
     }
-  }
-  return undefined
-})
+    return paginationStateMap.value[tableName]
+}
+
+const updatePagination = (tableName, current, pageSize) => {
+    const state = getPaginationState(tableName)
+    paginationStateMap.value = {
+        ...paginationStateMap.value,
+        [tableName]: {
+            current: Number(current) > 0 ? Number(current) : state.current,
+            pageSize: Number(pageSize) > 0 ? Number(pageSize) : state.pageSize
+        }
+    }
+}
+
+const handleTablePaginationChange = (tableName, current, pageSize) => {
+    updatePagination(tableName, current, pageSize)
+    nextTick(() => {
+        syncTableScrollY(tableName)
+    })
+}
+
+const handleTableChange = (tableName, pagination) => {
+    if (pagination) {
+        updatePagination(tableName, pagination.current, pagination.pageSize)
+    }
+    nextTick(() => {
+        syncTableScrollY(tableName)
+    })
+}
+
+const getPaginationConfig = (tableName) => {
+    if (!props.enablePagination) {
+        return undefined
+    }
+    const state = getPaginationState(tableName)
+    return {
+        current: state.current,
+        pageSize: state.pageSize,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        showQuickJumper: true,
+        onChange: (current, pageSize) => handleTablePaginationChange(tableName, current, pageSize),
+        onShowSizeChange: (current, pageSize) => handleTablePaginationChange(tableName, current, pageSize),
+        showTotal: (total) => t('PaginationTotal', { total })
+    }
+}
 
 const tab = ref('')
 const stepData = toRef(props, 'stepData')
@@ -349,6 +392,7 @@ const intro = ref('')
 const images = ref([])
 const tableRegionRefs = ref({})
 const tableScrollYMap = ref({})
+const paginationStateMap = ref({})
 let tableResizeObserver = null
 
 const tables = computed( () => {
@@ -412,6 +456,9 @@ const searchKeyword = (table) => {
         table.filteredRows = table.rows
     }
     if (tableData.value[table.name]) { tableData.value[table.name].selectedRows = [] }
+    if (props.enablePagination) {
+        updatePagination(table.name, 1, getPaginationState(table.name).pageSize)
+    }
     nextTick(() => {
         syncTableScrollY(table.name)
     })
@@ -501,6 +548,7 @@ const initTable = () => {
       $q.loading.show({ delay: 100 })
     }
     unsortedTables.value = []
+    paginationStateMap.value = {}
 
     // const tmpTables = []
     tableList.forEach((table, i) => {

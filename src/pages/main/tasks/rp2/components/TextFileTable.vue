@@ -15,6 +15,7 @@
             :loading="loading"
             :pagination="pagination"
             :scroll="tableScroll"
+            @change="handleTableChange"
             :show-sorter-tooltip="false"
             :table-layout="compactFirstTwoColumns || hasColumnWidths || fixedLeftColumnCount > 0 ? 'fixed' : undefined"
             :row-class-name="rowClassName"
@@ -114,6 +115,10 @@ const errorText = ref('')
 const tableWrapRef = ref(null)
 const hoveredRowKey = ref('')
 const hoveredColumnKey = ref('')
+const paginationState = ref({
+    current: 1,
+    pageSize: 10
+})
 const hasColumnWidths = computed(() => Array.isArray(props.columnWidths) && props.columnWidths.length > 0)
 const hasFixedColumns = computed(() => Number(props.fixedLeftColumnCount || 0) > 0)
 const hiddenHeaderSet = computed(() => new Set((props.hiddenHeaderAliases || []).map((item) => String(item || '').trim().toLowerCase())))
@@ -159,11 +164,35 @@ const compareCellValue = (left, right) => {
     return String(a.value).localeCompare(String(b.value), undefined, { numeric: true })
 }
 
+const updatePagination = (current, pageSize) => {
+    paginationState.value = {
+        current: Number(current) > 0 ? Number(current) : paginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : paginationState.value.pageSize
+    }
+}
+
+const handlePageChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handlePageSizeChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handleTableChange = (pagination) => {
+    if (pagination) {
+        updatePagination(pagination.current, pagination.pageSize)
+    }
+}
+
 const pagination = computed(() => ({
-    pageSize: 10,
+    current: paginationState.value.current,
+    pageSize: paginationState.value.pageSize,
     showSizeChanger: true,
     pageSizeOptions: ['10', '20', '50', '100'],
     showQuickJumper: true,
+    onChange: handlePageChange,
+    onShowSizeChange: handlePageSizeChange,
     showTotal: (total) => t('PaginationTotal', { total })
 }))
 
@@ -410,7 +439,10 @@ const loadTable = async () => {
 
 watch(
     () => [props.taskId, props.cnFile, props.enFile, props.hasHeader, langCode.value],
-    loadTable,
+    () => {
+        paginationState.value.current = 1
+        loadTable()
+    },
     { immediate: true }
 )
 </script>

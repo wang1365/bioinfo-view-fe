@@ -26,6 +26,7 @@
                 :loading="loading"
                 :row-key="rowKey"
                 :scroll="{ y: tableScrollY }"
+                @change="handleTableChange"
                 bordered
                 size="small"
             >
@@ -206,6 +207,10 @@ const dataInfoId = ref(0)
 const reportStateMap = ref({})
 const tableRegionRef = ref(null)
 const tableScrollY = ref(360)
+const paginationState = ref({
+    current: 1,
+    pageSize: 10
+})
 let tableResizeObserver = null
 
 const normalizeKey = (value) => String(value || '').replace(/\s+/g, '').replace(/[_-]/g, '').toLowerCase()
@@ -312,12 +317,45 @@ const columns = computed(() => {
     return dynamicColumns
 })
 
+const updatePagination = (current, pageSize) => {
+    paginationState.value = {
+        current: Number(current) > 0 ? Number(current) : paginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : paginationState.value.pageSize
+    }
+}
+
+const handlePageChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+    nextTick(() => {
+        syncTableScrollY()
+    })
+}
+
+const handlePageSizeChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+    nextTick(() => {
+        syncTableScrollY()
+    })
+}
+
+const handleTableChange = (pagination) => {
+    if (pagination) {
+        updatePagination(pagination.current, pagination.pageSize)
+    }
+    nextTick(() => {
+        syncTableScrollY()
+    })
+}
+
 const paginationConfig = computed(() => ({
-    pageSize: 10,
+    current: paginationState.value.current,
+    pageSize: paginationState.value.pageSize,
     showLessItems: false,
     showSizeChanger: true,
     pageSizeOptions: ['10', '20', '50', '100'],
     showQuickJumper: true,
+    onChange: handlePageChange,
+    onShowSizeChange: handlePageSizeChange,
     showTotal: (total) => t('PaginationTotal', { total })
 }))
 
@@ -647,8 +685,18 @@ const openDataDetail = async (record) => {
 
 watch(
     () => [props.taskId, langCode.value],
-    loadData,
+    () => {
+        paginationState.value.current = 1
+        loadData()
+    },
     { immediate: true }
+)
+
+watch(
+    () => searchKeyword.value,
+    () => {
+        paginationState.value.current = 1
+    }
 )
 
 watch(
