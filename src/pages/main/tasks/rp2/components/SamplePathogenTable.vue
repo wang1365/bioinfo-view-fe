@@ -15,6 +15,7 @@
                 :row-selection="rowSelection"
                 :scroll="tableScroll"
                 :row-class-name="rowClassName"
+                @change="handleTableChange"
                 row-key="__rowKey"
                 bordered
                 size="middle"
@@ -60,11 +61,8 @@
                         :columns="compareColumns"
                         :data-source="compareRows"
                         :row-class-name="compareRowClassName"
-                        :pagination="{
-                            pageSize: 10,
-                            showSizeChanger: true,
-                            showTotal: (total) => t('PaginationTotal', { total })
-                        }"
+                        :pagination="comparePagination"
+                        @change="handleCompareTableChange"
                         bordered
                         size="small"
                     />
@@ -132,6 +130,14 @@ const compareRows = ref([])
 const containerRef = ref(null)
 const bannerRef = ref(null)
 const tableScrollY = ref(420)
+const paginationState = ref({
+    current: 1,
+    pageSize: 10
+})
+const comparePaginationState = ref({
+    current: 1,
+    pageSize: 10
+})
 let resizeObserver = null
 
 const categoryDirMap = {
@@ -145,13 +151,27 @@ const pagination = computed(() => {
         return false
     }
     return {
-        pageSize: 10,
+        current: paginationState.value.current,
+        pageSize: paginationState.value.pageSize,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
         showQuickJumper: true,
+        onChange: handlePageChange,
+        onShowSizeChange: handlePageSizeChange,
         showTotal: (total) => t('PaginationTotal', { total })
     }
 })
+
+const comparePagination = computed(() => ({
+    current: comparePaginationState.value.current,
+    pageSize: comparePaginationState.value.pageSize,
+    showSizeChanger: true,
+    pageSizeOptions: ['10', '20', '50', '100'],
+    showQuickJumper: true,
+    onChange: handleComparePageChange,
+    onShowSizeChange: handleComparePageSizeChange,
+    showTotal: (total) => t('PaginationTotal', { total })
+}))
 
 const rowSelection = computed(() => {
     if (!props.selectable) {
@@ -255,6 +275,48 @@ const normalizeSpeciesName = (value) =>
         .trim()
         .replace(/\s+/g, '')
         .toLowerCase()
+
+const updatePagination = (current, pageSize) => {
+    paginationState.value = {
+        current: Number(current) > 0 ? Number(current) : paginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : paginationState.value.pageSize
+    }
+}
+
+const handlePageChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handlePageSizeChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handleTableChange = (paginationConfig) => {
+    if (paginationConfig) {
+        updatePagination(paginationConfig.current, paginationConfig.pageSize)
+    }
+}
+
+const updateComparePagination = (current, pageSize) => {
+    comparePaginationState.value = {
+        current: Number(current) > 0 ? Number(current) : comparePaginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : comparePaginationState.value.pageSize
+    }
+}
+
+const handleComparePageChange = (current, pageSize) => {
+    updateComparePagination(current, pageSize)
+}
+
+const handleComparePageSizeChange = (current, pageSize) => {
+    updateComparePagination(current, pageSize)
+}
+
+const handleCompareTableChange = (paginationConfig) => {
+    if (paginationConfig) {
+        updateComparePagination(paginationConfig.current, paginationConfig.pageSize)
+    }
+}
 
 const toIgvPath = (rawPath) => {
     const path = String(rawPath || '').trim()
@@ -706,6 +768,7 @@ const loadData = async () => {
 const showCompareDialog = (record) => {
     const compareResult = Array.isArray(record?.__compareResult) ? record.__compareResult : []
     compareRows.value = compareResult
+    comparePaginationState.value.current = 1
     compareDialogTitle.value = `${t('Verification')} - ${getPathogenKeyword(record) || '-'}`
     compareDialogVisible.value = true
 }

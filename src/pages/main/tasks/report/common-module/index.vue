@@ -373,9 +373,12 @@ const getPaginationConfig = (tableName) => {
         return undefined
     }
     const state = getPaginationState(tableName)
+    const table = tables.value.find((item) => item.name === tableName)
+    const total = Array.isArray(table?.filteredRows) ? table.filteredRows.length : 0
     return {
         current: state.current,
         pageSize: state.pageSize,
+        total,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
         showQuickJumper: true,
