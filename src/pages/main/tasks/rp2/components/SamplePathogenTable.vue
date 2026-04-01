@@ -274,6 +274,7 @@ const normalizeSpeciesName = (value) =>
     String(value || '')
         .trim()
         .replace(/\s+/g, '')
+        .replace(/[()（）\[\]【】]/g, '')
         .toLowerCase()
 
 const updatePagination = (current, pageSize) => {
@@ -371,16 +372,39 @@ const loadCurrentTaskOtherSampleNames = async () => {
         return []
     }
 
-    const sampleHeader =
-        findHeaderByAliasList(headers, ['数据识别号', 'dataidentifier', 'dataid', 'sample', '样本']) || headers[0] || ''
+    const currentSampleName = String(props.sampleName || '').trim()
+    const dataIdentifierAliases = [
+        '数据识别号',
+        'dataidentifier',
+        'data id',
+        'dataid',
+        'data_id',
+        'sampleid',
+        'sample id',
+        'sample_id'
+    ]
+    let sampleHeader = findHeaderByAliasList(headers, dataIdentifierAliases)
+    const headerByCurrentSample = headers.find((header) =>
+        parsedRows.some((row) => String(row?.[header] || '').trim() === currentSampleName)
+    )
+    if (!sampleHeader || !parsedRows.some((row) => String(row?.[sampleHeader] || '').trim() === currentSampleName)) {
+        sampleHeader = headerByCurrentSample || sampleHeader || ''
+    }
     if (!sampleHeader) {
         return []
     }
 
-    const currentSampleName = String(props.sampleName || '').trim()
+    const currentPrefix = (currentSampleName.match(/^[A-Za-z]+/) || [''])[0].toUpperCase()
     const sampleNames = parsedRows
         .map((row) => String(row?.[sampleHeader] || '').trim())
         .filter((sampleName) => sampleName && sampleName !== currentSampleName)
+        .filter((sampleName) => {
+            if (!currentPrefix) {
+                return true
+            }
+            const samplePrefix = (sampleName.match(/^[A-Za-z]+/) || [''])[0].toUpperCase()
+            return samplePrefix === currentPrefix
+        })
 
     return Array.from(new Set(sampleNames))
 }
@@ -395,7 +419,7 @@ const buildCompareResultFromCurrentTask = async () => {
     rows.value.forEach((row) => {
         const speciesName = getCompareSpeciesName(row)
         if (speciesName) {
-            targetSpeciesMap.set(row.__rowKey, speciesName)
+            targetSpeciesMap.set(row.__rowKey, normalizeSpeciesName(speciesName))
         }
     })
 
@@ -434,15 +458,21 @@ const buildCompareResultFromCurrentTask = async () => {
                 if (!speciesKey) {
                     return
                 }
+                const speciesRowMap = new Map()
+                parsedRows.forEach((item) => {
+                    const normalizedSpecies = normalizeSpeciesName(item?.[speciesKey])
+                    if (!normalizedSpecies || speciesRowMap.has(normalizedSpecies)) {
+                        return
+                    }
+                    speciesRowMap.set(normalizedSpecies, item)
+                })
 
                 rows.value.forEach((row) => {
                     const targetSpecies = targetSpeciesMap.get(row.__rowKey)
                     if (!targetSpecies) {
                         return
                     }
-                    const match = parsedRows.find(
-                        (item) => String(item?.[speciesKey] || '').trim() === targetSpecies
-                    )
+                    const match = speciesRowMap.get(targetSpecies)
                     if (!match) {
                         return
                     }
