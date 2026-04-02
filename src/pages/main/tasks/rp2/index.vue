@@ -48,12 +48,12 @@
                     :enhanced-table-border="true"
                 />
             </q-tab-panel>
-            <q-tab-panel name="batchStats">
-                <div class="rp2-tab-wrap">
+            <q-tab-panel name="batchStats" class="rp2-tab-panel-batch-stats">
+                <div class="rp2-tab-wrap rp2-tab-wrap--scrollable">
                     <div class="rp2-tab-intro">
                         <IntroHelpButton :title="$t('Rp2BatchStats')" :content="batchStatsIntro" :disable-float="true" />
                     </div>
-                    <BatchPathogenStats :task-id="taskId" :task-root-dir="taskRootDir" />
+                    <BatchPathogenStats class="rp2-batch-stats-content" :task-id="taskId" :task-root-dir="taskRootDir" />
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -238,6 +238,12 @@ watch(
     height: 100%;
 }
 
+.rp2-tab-wrap--scrollable {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
 .rp2-tab-wrap--no-intro {
     padding-top: 0;
 }
@@ -259,6 +265,17 @@ watch(
 
 .rp2-tab-panels :deep(.rp2-common-module) {
     height: 100%;
+    min-height: 0;
+}
+
+.rp2-tab-panels :deep(.rp2-tab-panel-batch-stats) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.rp2-batch-stats-content {
+    flex: 1;
     min-height: 0;
 }
 

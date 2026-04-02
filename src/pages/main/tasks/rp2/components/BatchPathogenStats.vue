@@ -1,5 +1,5 @@
 ﻿<template>
-    <div>
+    <div class="rp2-batch-pathogen-stats">
         <q-tabs v-model="tab" dense align="left" active-color="primary" indicator-color="primary" class="rp2-stats-tabs">
             <q-tab name="positive" :label="t('Rp2PositiveStatsTab')" />
             <q-tab name="species" :label="t('Rp2PathogenSummaryTab')" />
@@ -8,7 +8,7 @@
             <q-tab name="similarity" :label="t('Rp2SimilarityTab')" />
         </q-tabs>
 
-        <q-tab-panels v-model="tab" animated>
+        <q-tab-panels v-model="tab" animated class="rp2-batch-pathogen-stats__panels">
             <q-tab-panel name="positive">
                 <TextFileTable
                     :task-id="taskId"
@@ -72,28 +72,30 @@
                 </div>
             </q-tab-panel>
 
-            <q-tab-panel name="pathogenType">
-                <TextFileTable
-                    :task-id="taskId"
-                    cn-file="menu/analysis_sample_pathogen_count.CN.add.txt"
-                    en-file="menu/analysis_sample_pathogen_count.EN.add.txt"
-                />
-                <div class="row q-col-gutter-md q-mt-sm">
-                    <div class="col-12">
-                        <q-card flat bordered class="rp2-chart-card">
-                            <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
-                                {{ t('Rp2PathogenTypeDistTitle') }}
-                            </q-card-section>
-                            <q-card-section class="rp2-pathogen-type-chart-section">
-                                <div class="rp2-pathogen-type-chart-wrap">
-                                    <div
-                                        ref="pathogenTypeStackRef"
-                                        class="rp2-chart rp2-chart--pathogen-type"
-                                        :style="pathogenTypeChartStyle"
-                                    ></div>
-                                </div>
-                            </q-card-section>
-                        </q-card>
+            <q-tab-panel name="pathogenType" class="rp2-pathogen-type-panel">
+                <div class="rp2-panel-scroll">
+                    <TextFileTable
+                        :task-id="taskId"
+                        cn-file="menu/analysis_sample_pathogen_count.CN.add.txt"
+                        en-file="menu/analysis_sample_pathogen_count.EN.add.txt"
+                    />
+                    <div class="row q-col-gutter-md q-mt-sm">
+                        <div class="col-12">
+                            <q-card flat bordered class="rp2-chart-card">
+                                <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
+                                    {{ t('Rp2PathogenTypeDistTitle') }}
+                                </q-card-section>
+                                <q-card-section class="rp2-pathogen-type-chart-section">
+                                    <div class="rp2-pathogen-type-chart-wrap">
+                                        <div
+                                            ref="pathogenTypeStackRef"
+                                            class="rp2-chart rp2-chart--pathogen-type"
+                                            :style="pathogenTypeChartStyle"
+                                        ></div>
+                                    </div>
+                                </q-card-section>
+                            </q-card>
+                        </div>
                     </div>
                 </div>
             </q-tab-panel>
@@ -108,32 +110,34 @@
                 />
             </q-tab-panel>
 
-            <q-tab-panel name="similarity">
-                <TextFileTable
-                    :task-id="taskId"
-                    cn-file="menu/analysis_sample_similarity.CN.add.txt"
-                    en-file="menu/analysis_sample_similarity.EN.add.txt"
-                    matrix-hover-enabled
-                    :fixed-left-column-count="6"
-                    :fixed-column-widths="[120, 120, 120, 130, 90, 110]"
-                    :default-column-width="110"
-                    :matrix-start-after-aliases="['姓名', 'name']"
-                    :matrix-row-identifier-aliases="['数据识别号', 'data identifier', 'dataid', 'identifier']"
-                />
-                <div class="row q-col-gutter-md q-mt-sm">
-                    <div class="col-12">
-                        <q-card flat bordered class="rp2-chart-card">
-                            <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
-                                {{ t('Rp2SimilarityHeatmapTitle') }}
-                            </q-card-section>
-                            <q-card-section>
-                                <div
-                                    ref="similarityHeatmapRef"
-                                    class="rp2-chart rp2-chart--similarity"
-                                    :style="similarityHeatmapStyle"
-                                ></div>
-                            </q-card-section>
-                        </q-card>
+            <q-tab-panel name="similarity" class="rp2-similarity-panel">
+                <div class="rp2-panel-scroll">
+                    <TextFileTable
+                        :task-id="taskId"
+                        cn-file="menu/analysis_sample_similarity.CN.add.txt"
+                        en-file="menu/analysis_sample_similarity.EN.add.txt"
+                        matrix-hover-enabled
+                        :fixed-left-column-count="6"
+                        :fixed-column-widths="[120, 120, 120, 130, 90, 110]"
+                        :default-column-width="110"
+                        :matrix-start-after-aliases="['姓名', 'name']"
+                        :matrix-row-identifier-aliases="['数据识别号', 'data identifier', 'dataid', 'identifier']"
+                    />
+                    <div class="row q-col-gutter-md q-mt-sm">
+                        <div class="col-12">
+                            <q-card flat bordered class="rp2-chart-card">
+                                <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
+                                    {{ t('Rp2SimilarityHeatmapTitle') }}
+                                </q-card-section>
+                                <q-card-section>
+                                    <div
+                                        ref="similarityHeatmapRef"
+                                        class="rp2-chart rp2-chart--similarity"
+                                        :style="similarityHeatmapStyle"
+                                    ></div>
+                                </q-card-section>
+                            </q-card>
+                        </div>
                     </div>
                 </div>
             </q-tab-panel>
@@ -1010,6 +1014,35 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.rp2-batch-pathogen-stats {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.rp2-batch-pathogen-stats__panels {
+    min-height: 0;
+}
+
+.rp2-batch-pathogen-stats__panels :deep(.q-tab-panel) {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.rp2-batch-pathogen-stats__panels :deep(.rp2-pathogen-type-panel),
+.rp2-batch-pathogen-stats__panels :deep(.rp2-similarity-panel) {
+    padding-bottom: 0;
+}
+
+.rp2-panel-scroll {
+    height: calc(100vh - 290px);
+    min-height: 420px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 12px;
+}
+
 .rp2-chart-card {
     min-height: 450px;
 }
