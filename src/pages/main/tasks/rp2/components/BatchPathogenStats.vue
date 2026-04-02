@@ -1,4 +1,4 @@
-﻿<template>
+<template>
     <div class="rp2-batch-pathogen-stats">
         <q-tabs v-model="tab" dense align="left" active-color="primary" indicator-color="primary" class="rp2-stats-tabs">
             <q-tab name="positive" :label="t('Rp2PositiveStatsTab')" />
@@ -10,104 +10,19 @@
 
         <q-tab-panels v-model="tab" animated class="rp2-batch-pathogen-stats__panels">
             <q-tab-panel name="positive">
-                <TextFileTable
-                    :task-id="taskId"
-                    cn-file="menu/analysis_positive_negative_stats.CN.txt"
-                    en-file="menu/analysis_positive_negative_stats.EN.txt"
-                    :sortable="false"
-                />
-                <div class="row q-col-gutter-md q-mt-sm">
-                    <div class="col-12 col-md-4">
-                        <q-card flat bordered class="rp2-chart-card rp2-chart-card--positive">
-                            <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
-                                {{ t('Rp2SamplePosNegStatTitle') }}
-                            </q-card-section>
-                            <q-card-section>
-                                <div ref="positiveBarRef" class="rp2-chart rp2-chart--positive"></div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <q-card flat bordered class="rp2-chart-card rp2-chart-card--positive">
-                            <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
-                                {{ t('Rp2SamplePosNegDistTitle') }}
-                            </q-card-section>
-                            <q-card-section>
-                                <div ref="positivePieRef" class="rp2-chart rp2-chart--positive"></div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                </div>
+                <BatchPositiveStatsTab :task-id="taskId" :active="tab === 'positive'" />
             </q-tab-panel>
 
             <q-tab-panel name="species">
-                <TextFileTable
-                    :task-id="taskId"
-                    cn-file="menu/analysis_pathogen_summary.CN.txt"
-                    en-file="menu/analysis_pathogen_summary.EN.txt"
-                    :column-widths="[120, 120, 480]"
-                    :sortable="false"
-                />
-                <div class="row q-col-gutter-md q-mt-sm">
-                    <div class="col-12 col-md-6">
-                        <q-card flat bordered class="rp2-chart-card">
-                            <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
-                                {{ t('Rp2PathogenDetectDistPieTitle') }}
-                            </q-card-section>
-                            <q-card-section>
-                                <div ref="speciesPieRef" class="rp2-chart"></div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <q-card flat bordered class="rp2-chart-card">
-                            <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
-                                {{ t('Rp2PathogenDetectDistBarTitle') }}
-                            </q-card-section>
-                            <q-card-section>
-                                <div ref="speciesBarRef" class="rp2-chart"></div>
-                            </q-card-section>
-                        </q-card>
-                    </div>
-                </div>
+                <BatchSpeciesStatsTab :task-id="taskId" :active="tab === 'species'" />
             </q-tab-panel>
 
-            <q-tab-panel name="pathogenType" class="rp2-pathogen-type-panel">
-                <div class="rp2-panel-scroll">
-                    <TextFileTable
-                        :task-id="taskId"
-                        cn-file="menu/analysis_sample_pathogen_count.CN.add.txt"
-                        en-file="menu/analysis_sample_pathogen_count.EN.add.txt"
-                    />
-                    <div class="row q-col-gutter-md q-mt-sm">
-                        <div class="col-12">
-                            <q-card flat bordered class="rp2-chart-card">
-                                <q-card-section class="text-subtitle2 text-weight-medium q-pb-none">
-                                    {{ t('Rp2PathogenTypeDistTitle') }}
-                                </q-card-section>
-                                <q-card-section class="rp2-pathogen-type-chart-section">
-                                    <div class="rp2-pathogen-type-chart-wrap">
-                                        <div
-                                            ref="pathogenTypeStackRef"
-                                            class="rp2-chart rp2-chart--pathogen-type"
-                                            :style="pathogenTypeChartStyle"
-                                        ></div>
-                                    </div>
-                                </q-card-section>
-                            </q-card>
-                        </div>
-                    </div>
-                </div>
+            <q-tab-panel name="pathogenType">
+                <BatchPathogenTypeStatsTab :task-id="taskId" :active="tab === 'pathogenType'" />
             </q-tab-panel>
 
             <q-tab-panel name="ncOverlap">
-                <TextFileTable
-                    :task-id="taskId"
-                    :title="t('Rp2NcOverlapTab')"
-                    cn-file="menu/analysis_NC_overlap_stats.CN.add.txt"
-                    en-file="menu/analysis_NC_overlap_stats.EN.add.txt"
-                    :column-widths="[120, 120, 120, 120, 120, 120, 80, 80, 80, 80, 360]"
-                />
+                <BatchNcOverlapStatsTab :task-id="taskId" />
             </q-tab-panel>
 
             <q-tab-panel name="similarity" class="rp2-similarity-panel">
@@ -154,6 +69,10 @@ import * as echarts from 'echarts'
 import { readTaskFile } from 'src/api/task'
 import { getRp2LangSuffix, parseTabText } from './rp2File'
 import TextFileTable from './TextFileTable.vue'
+import BatchPositiveStatsTab from './batch-tabs/BatchPositiveStatsTab.vue'
+import BatchSpeciesStatsTab from './batch-tabs/BatchSpeciesStatsTab.vue'
+import BatchPathogenTypeStatsTab from './batch-tabs/BatchPathogenTypeStatsTab.vue'
+import BatchNcOverlapStatsTab from './batch-tabs/BatchNcOverlapStatsTab.vue'
 
 const props = defineProps({
     taskId: {
@@ -170,28 +89,10 @@ const { t } = useI18n()
 const store = globalStore()
 const { langCode } = storeToRefs(store)
 const tab = ref('positive')
-const positiveBarRef = ref(null)
-const positivePieRef = ref(null)
-const speciesBarRef = ref(null)
-const speciesPieRef = ref(null)
-const pathogenTypeStackRef = ref(null)
 const similarityHeatmapRef = ref(null)
-let positiveBarChart = null
-let positivePieChart = null
-let speciesBarChart = null
-let speciesPieChart = null
-let pathogenTypeStackChart = null
 let similarityHeatmapChart = null
-let positiveRenderTimer = null
-let speciesRenderTimer = null
-let pathogenTypeRenderTimer = null
 let similarityRenderTimer = null
 let similarityHoverPosition = null
-const pathogenTypeChartWidth = ref(0)
-const pathogenTypeChartStyle = computed(() => {
-    const width = Number(pathogenTypeChartWidth.value)
-    return width > 0 ? { width: `${width}px` } : {}
-})
 const similarityHeatmapHeight = ref(350)
 const similarityHeatmapStyle = computed(() => ({
     height: `${similarityHeatmapHeight.value}px`
@@ -218,117 +119,6 @@ const parseNumber = (value) => {
     return Number.isFinite(n) ? n : 0
 }
 
-const lerp = (a, b, t) => a + (b - a) * t
-
-const redByCount = (count, min, max) => {
-    if (!Number.isFinite(count) || !Number.isFinite(min) || !Number.isFinite(max)) {
-        return '#d9534f'
-    }
-    if (max <= min) {
-        return '#d9534f'
-    }
-    const ratio = Math.min(1, Math.max(0, (count - min) / (max - min)))
-    const light = { r: 248, g: 196, b: 196 }
-    const dark = { r: 168, g: 28, b: 28 }
-    const r = Math.round(lerp(light.r, dark.r, ratio))
-    const g = Math.round(lerp(light.g, dark.g, ratio))
-    const b = Math.round(lerp(light.b, dark.b, ratio))
-    return `rgb(${r}, ${g}, ${b})`
-}
-
-const parsePathogenCountText = (text) => {
-    const source = String(text ?? '').trim()
-    if (!source || source === '-') {
-        return []
-    }
-
-    const segments = source
-        .split(/[\uFF0C,\u3001\uFF1B;\n\r]+/)
-        .map((item) => item.trim())
-        .filter((item) => item && item !== '-')
-    const results = []
-    const countPattern = /^(.+?)\s*[\(\uFF08]\s*(\d+)\s*(?:\u6B21|times?)?\s*[\)\uFF09]\s*$/i
-    segments.forEach((item) => {
-        const match = item.match(countPattern)
-        if (!match) {
-            return
-        }
-        const name = String(match[1] ?? '').trim()
-        const count = Number(match[2] ?? 0)
-        if (!name || !Number.isFinite(count)) {
-            return
-        }
-        results.push({ name, count })
-    })
-    return results
-}
-
-const extractSpeciesDistribution = (headers, rows) => {
-    const detailHeader = headers[2] || findHeader(headers, ['\u5177\u4F53\u75C5\u539F', 'specificpathogen', 'pathogens'])
-    if (!detailHeader) {
-        return []
-    }
-    const map = new Map()
-    rows.forEach((row) => {
-        const value = row?.[detailHeader]
-        const pairs = parsePathogenCountText(value)
-        pairs.forEach(({ name, count }) => {
-            map.set(name, (map.get(name) || 0) + count)
-        })
-    })
-    return Array.from(map.entries())
-        .map(([name, value]) => ({ name, value }))
-        .sort((a, b) => b.value - a.value)
-}
-
-const extractPathogenTypeStack = (headers, rows) => {
-    const sampleHeader =
-        findHeader(headers, ['\u6837\u672C\u8BC6\u522B\u53F7', 'sampleidentifier', 'sampleid']) ||
-        findHeaderIncludes(headers, ['\u6837\u672C', 'sample']) ||
-        headers[0] ||
-        ''
-    const bacteriaHeader =
-        findHeader(headers, ['\u7EC6\u83CC', 'bacteria']) || findHeaderIncludes(headers, ['\u7EC6\u83CC', 'bacteria'])
-    const fungusHeader =
-        findHeader(headers, ['\u771F\u83CC', 'fungus', 'fungi']) || findHeaderIncludes(headers, ['\u771F\u83CC', 'fung'])
-    const virusHeader =
-        findHeader(headers, ['\u75C5\u6BD2', 'virus']) || findHeaderIncludes(headers, ['\u75C5\u6BD2', 'virus'])
-
-    const labels = []
-    const bacteria = []
-    const fungus = []
-    const virus = []
-
-    rows.forEach((row, index) => {
-        const sampleName = String(row?.[sampleHeader] ?? '').trim()
-        const key = sampleName.toLowerCase()
-        if (['\u603B\u8BA1', '\u5408\u8BA1', 'total', 'sum'].includes(key)) {
-            return
-        }
-        labels.push(sampleName || String(index + 1))
-        bacteria.push(parseNumber(row?.[bacteriaHeader]))
-        fungus.push(parseNumber(row?.[fungusHeader]))
-        virus.push(parseNumber(row?.[virusHeader]))
-    })
-
-    return { labels, bacteria, fungus, virus }
-}
-
-
-const findTotalRow = (rows, firstHeader) => {
-    if (!Array.isArray(rows) || rows.length === 0) {
-        return null
-    }
-
-    const matched = rows.find((row) => {
-        const keyValue = String(row?.[firstHeader] ?? '').trim().toLowerCase()
-        return ['\u603B\u8BA1', '\u5408\u8BA1', 'total', 'sum'].includes(keyValue)
-    })
-
-    return matched || rows[rows.length - 1]
-}
-
-
 const ensureChartInstance = (chartRef, instance, setInstance) => {
     const dom = chartRef?.value
     if (!dom) {
@@ -347,22 +137,6 @@ const ensureChartInstance = (chartRef, instance, setInstance) => {
     return current
 }
 
-const getDynamicBarWidth = (chartRef, count, { min = 8, max = 28, ratio = 0.55 } = {}) => {
-    const total = Number(count) || 0
-    if (total <= 0) {
-        return min
-    }
-
-    const chartWidth = chartRef?.value?.clientWidth || 0
-    if (!chartWidth) {
-        return Math.max(min, Math.min(max, 16))
-    }
-
-    const estimatedGridWidth = Math.max(chartWidth - 90, 120)
-    const width = Math.floor((estimatedGridWidth / total) * ratio)
-    return Math.max(min, Math.min(max, width))
-}
-
 const getDynamicHeatmapHeight = (count, { min = 350, max = 1100, rowHeight = 24, padding = 90 } = {}) => {
     const total = Number(count) || 0
     if (total <= 0) {
@@ -371,16 +145,6 @@ const getDynamicHeatmapHeight = (count, { min = 350, max = 1100, rowHeight = 24,
 
     const height = total * rowHeight + padding
     return Math.max(min, Math.min(max, height))
-}
-
-const getPathogenTypeChartWidth = (count, { min = 480, minStep = 72, maxStep = 100 } = {}) => {
-    const total = Number(count) || 0
-    if (total <= 0) {
-        return min
-    }
-
-    const step = total > 24 ? minStep : total > 12 ? 82 : maxStep
-    return Math.max(min, total * step)
 }
 
 const buildSimilarityAxisData = (labels, activeIndex, activeColor) =>
@@ -420,283 +184,6 @@ const buildSimilaritySeriesData = (points, hoveredPosition) =>
         }
     })
 
-const renderPositiveCharts = async () => {
-    const suffix = getRp2LangSuffix(langCode.value)
-    const filePath = `menu/analysis_positive_negative_stats.${suffix}.txt`
-    const raw = await readTaskFile(props.taskId, filePath, true, true)
-    const text = typeof raw === 'string' ? raw : ''
-    const { headers, rows } = parseTabText(text, { hasHeader: true })
-    if (!headers.length || !rows.length) {
-        return
-    }
-    const firstHeader = headers[0]
-    const positiveHeader =
-        findHeader(headers, ['\u9633\u6027\u6570\u91CF', 'positive', 'positivecount', 'positive_number', 'positivecounts']) ||
-        headers[1] ||
-        ''
-    const negativeHeader =
-        findHeader(headers, ['\u9634\u6027\u6570\u91CF', 'negative', 'negativecount', 'negative_number', 'negativecounts']) ||
-        headers[2] ||
-        ''
-
-    const totalRow = findTotalRow(rows, firstHeader)
-    const positiveCount = parseNumber(totalRow?.[positiveHeader])
-    const negativeCount = parseNumber(totalRow?.[negativeHeader])
-    await nextTick()
-
-    if (positiveBarRef.value) {
-        positiveBarChart = ensureChartInstance(positiveBarRef, positiveBarChart, (next) => {
-            positiveBarChart = next
-        })
-        if (!positiveBarChart) {
-            return
-        }
-        positiveBarChart.setOption({
-            animation: false,
-            tooltip: { trigger: 'axis' },
-            xAxis: {
-                type: 'category',
-                data: [t('Rp2PositiveLabel'), t('Rp2NegativeLabel')]
-            },
-            yAxis: { type: 'value' },
-            series: [
-                {
-                    type: 'bar',
-                    data: [positiveCount, negativeCount],
-                    barWidth: 56,
-                    itemStyle: {
-                        color: (params) => (params.dataIndex === 0 ? '#d9534f' : '#94a3b8')
-                    }
-                }
-            ],
-            grid: {
-                top: 20,
-                left: 40,
-                right: 20,
-                bottom: 30
-            }
-        })
-    }
-
-    if (positivePieRef.value) {
-        positivePieChart = ensureChartInstance(positivePieRef, positivePieChart, (next) => {
-            positivePieChart = next
-        })
-        if (!positivePieChart) {
-            return
-        }
-        positivePieChart.setOption({
-            animation: false,
-            tooltip: { trigger: 'item' },
-            series: [
-                {
-                    type: 'pie',
-                    radius: '64%',
-                    data: [
-                        { name: t('Rp2PositiveLabel'), value: positiveCount, itemStyle: { color: '#d9534f' } },
-                        { name: t('Rp2NegativeLabel'), value: negativeCount, itemStyle: { color: '#94a3b8' } }
-                    ],
-                    label: {
-                        formatter: '{b}: {d}%'
-                    },
-                    itemStyle: {
-                        borderColor: '#fff',
-                        borderWidth: 1
-                    }
-                }
-            ]
-        })
-    }
-}
-
-const renderSpeciesCharts = async () => {
-    const suffix = getRp2LangSuffix(langCode.value)
-    const filePath = `menu/analysis_pathogen_summary.${suffix}.txt`
-    const raw = await readTaskFile(props.taskId, filePath, true, true)
-    const text = typeof raw === 'string' ? raw : ''
-    const { headers, rows } = parseTabText(text, { hasHeader: true })
-    if (!headers.length || !rows.length) {
-        return
-    }
-
-    const distribution = extractSpeciesDistribution(headers, rows)
-    const labels = distribution.map((item) => item.name)
-    const values = distribution.map((item) => item.value)
-    const minValue = values.length ? Math.min(...values) : 0
-    const maxValue = values.length ? Math.max(...values) : 0
-
-    await nextTick()
-
-    if (speciesBarRef.value) {
-        speciesBarChart = ensureChartInstance(speciesBarRef, speciesBarChart, (next) => {
-            speciesBarChart = next
-        })
-        if (!speciesBarChart) {
-            return
-        }
-        const dynamicBarWidth = getDynamicBarWidth(speciesBarRef, labels.length, {
-            min: 6,
-            max: 24,
-            ratio: 0.52
-        })
-        speciesBarChart.setOption({
-            animation: false,
-            tooltip: { trigger: 'axis' },
-            xAxis: {
-                type: 'category',
-                data: labels,
-                axisLabel: {
-                    interval: 0,
-                    rotate: labels.length > 6 ? 30 : 0
-                }
-            },
-            yAxis: {
-                type: 'value',
-                name: t('Rp2DetectCount'),
-                min: 0,
-                interval: 1,
-                max: (axis) => Math.max(3, Math.ceil(Number(axis?.max || 0)))
-            },
-            series: [
-                {
-                    type: 'bar',
-                    barWidth: dynamicBarWidth,
-                    barMaxWidth: 24,
-                    data: values,
-                    itemStyle: {
-                        color: (params) => redByCount(Number(params.value ?? 0), minValue, maxValue)
-                    },
-                    label: {
-                        show: true,
-                        position: 'top'
-                    }
-                }
-            ],
-            grid: {
-                top: 30,
-                left: 50,
-                right: 20,
-                bottom: labels.length > 6 ? 80 : 40
-            }
-        })
-    }
-
-    if (speciesPieRef.value) {
-        speciesPieChart = ensureChartInstance(speciesPieRef, speciesPieChart, (next) => {
-            speciesPieChart = next
-        })
-        if (!speciesPieChart) {
-            return
-        }
-        speciesPieChart.setOption({
-            animation: false,
-            tooltip: { trigger: 'item' },
-            series: [
-                {
-                    type: 'pie',
-                    radius: '62%',
-                    data: distribution,
-                    label: {
-                        formatter: '{b}: {d}%'
-                    },
-                    itemStyle: {
-                        borderColor: '#fff',
-                        borderWidth: 1
-                    }
-                }
-            ]
-        })
-    }
-}
-
-const renderPathogenTypeStackChart = async () => {
-    const suffix = getRp2LangSuffix(langCode.value)
-    const filePath = `menu/analysis_sample_pathogen_count.${suffix}.add.txt`
-    const raw = await readTaskFile(props.taskId, filePath, true, true)
-    const text = typeof raw === 'string' ? raw : ''
-    const { headers, rows } = parseTabText(text, { hasHeader: true })
-    if (!headers.length || !rows.length) {
-        return
-    }
-
-    const { labels, bacteria, fungus, virus } = extractPathogenTypeStack(headers, rows)
-    pathogenTypeChartWidth.value = getPathogenTypeChartWidth(labels.length, {
-        min: 480,
-        minStep: 72,
-        maxStep: 100
-    })
-
-    await nextTick()
-    if (!pathogenTypeStackRef.value) {
-        return
-    }
-
-    pathogenTypeStackChart = ensureChartInstance(pathogenTypeStackRef, pathogenTypeStackChart, (next) => {
-        pathogenTypeStackChart = next
-    })
-    if (!pathogenTypeStackChart) {
-        return
-    }
-
-    pathogenTypeStackChart.setOption({
-        animation: false,
-        tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-        legend: {
-            top: 0
-        },
-        xAxis: {
-            type: 'category',
-            data: labels,
-            axisLabel: {
-                interval: 0,
-                rotate: labels.length > 8 ? 35 : 0
-            }
-        },
-        yAxis: {
-            type: 'value',
-            name: t('Rp2PathogenCount')
-        },
-        series: [
-            {
-                name: t('Rp2Xijun'),
-                type: 'bar',
-                stack: 'pathogen',
-                barWidth: 36,
-                barMaxWidth: 36,
-                barCategoryGap: '8%',
-                data: bacteria,
-                itemStyle: { color: '#d9534f' }
-            },
-            {
-                name: t('Rp2Zhenjun'),
-                type: 'bar',
-                stack: 'pathogen',
-                barWidth: 36,
-                barMaxWidth: 36,
-                barCategoryGap: '8%',
-                data: fungus,
-                itemStyle: { color: '#f6c343' }
-            },
-            {
-                name: t('Rp2Bingdu'),
-                type: 'bar',
-                stack: 'pathogen',
-                barWidth: 36,
-                barMaxWidth: 36,
-                barCategoryGap: '8%',
-                data: virus,
-                itemStyle: { color: '#f39c12' }
-            }
-        ],
-        grid: {
-            top: 45,
-            left: 50,
-            right: 20,
-            bottom: labels.length > 8 ? 95 : 45
-        }
-    })
-}
-
 const renderSimilarityHeatmap = async () => {
     const suffix = getRp2LangSuffix(langCode.value)
     const filePath = `menu/analysis_sample_similarity.${suffix}.add.txt`
@@ -708,10 +195,10 @@ const renderSimilarityHeatmap = async () => {
     }
 
     const nameHeader =
-        findHeader(headers, ['\u59D3\u540D', 'name']) || findHeaderIncludes(headers, ['\u59D3\u540D', 'name']) || ''
+        findHeader(headers, ['姓名', 'name']) || findHeaderIncludes(headers, ['姓名', 'name']) || ''
     const dataIdentifierHeader =
-        findHeader(headers, ['\u6570\u636E\u8BC6\u522B\u53F7', 'dataidentifier', 'dataid']) ||
-        findHeaderIncludes(headers, ['\u6570\u636E\u8BC6\u522B\u53F7', 'dataidentifier', 'dataid']) ||
+        findHeader(headers, ['数据识别号', 'dataidentifier', 'dataid']) ||
+        findHeaderIncludes(headers, ['数据识别号', 'dataidentifier', 'dataid']) ||
         headers[0] ||
         ''
 
@@ -719,10 +206,10 @@ const renderSimilarityHeatmap = async () => {
     const xLabels = headers
         .slice(nameHeaderIndex + 1)
         .map((header) => String(header ?? '').trim())
-        .filter((header) => header && !['\u603B\u8BA1', '\u5408\u8BA1', 'total', 'sum'].includes(header.toLowerCase()))
+        .filter((header) => header && !['总计', '合计', 'total', 'sum'].includes(header.toLowerCase()))
     const matrixRows = rows.filter((row) => {
         const yValue = String(row?.[dataIdentifierHeader] ?? '').trim().toLowerCase()
-        return yValue && !['\u603B\u8BA1', '\u5408\u8BA1', 'total', 'sum'].includes(yValue)
+        return yValue && !['总计', '合计', 'total', 'sum'].includes(yValue)
     })
     const yLabels = matrixRows.map(
         (row, index) => String(row?.[dataIdentifierHeader] ?? '').trim() || String(index + 1)
@@ -876,59 +363,6 @@ const renderSimilarityHeatmap = async () => {
     })
 }
 
-const scheduleRenderPositiveCharts = () => {
-    if (positiveRenderTimer) {
-        clearTimeout(positiveRenderTimer)
-        positiveRenderTimer = null
-    }
-    positiveRenderTimer = setTimeout(async () => {
-        try {
-            await renderPositiveCharts()
-            positiveBarChart?.resize()
-            positivePieChart?.resize()
-        } catch (error) {
-            // keep silent to avoid blocking the page when chart data is missing
-        } finally {
-            positiveRenderTimer = null
-        }
-    }, 80)
-}
-
-const scheduleRenderSpeciesCharts = () => {
-    if (speciesRenderTimer) {
-        clearTimeout(speciesRenderTimer)
-        speciesRenderTimer = null
-    }
-    speciesRenderTimer = setTimeout(async () => {
-        try {
-            await renderSpeciesCharts()
-            speciesBarChart?.resize()
-            speciesPieChart?.resize()
-        } catch (error) {
-            // keep silent to avoid blocking the page when chart data is missing
-        } finally {
-            speciesRenderTimer = null
-        }
-    }, 80)
-}
-
-const scheduleRenderPathogenTypeStackChart = () => {
-    if (pathogenTypeRenderTimer) {
-        clearTimeout(pathogenTypeRenderTimer)
-        pathogenTypeRenderTimer = null
-    }
-    pathogenTypeRenderTimer = setTimeout(async () => {
-        try {
-            await renderPathogenTypeStackChart()
-            pathogenTypeStackChart?.resize()
-        } catch (error) {
-            // keep silent to avoid blocking the page when chart data is missing
-        } finally {
-            pathogenTypeRenderTimer = null
-        }
-    }, 80)
-}
-
 const scheduleRenderSimilarityHeatmap = () => {
     if (similarityRenderTimer) {
         clearTimeout(similarityRenderTimer)
@@ -953,15 +387,6 @@ watch(
             return
         }
         await nextTick()
-        if (currentTab === 'positive') {
-            scheduleRenderPositiveCharts()
-        }
-        if (currentTab === 'species') {
-            scheduleRenderSpeciesCharts()
-        }
-        if (currentTab === 'pathogenType') {
-            scheduleRenderPathogenTypeStackChart()
-        }
         if (currentTab === 'similarity') {
             scheduleRenderSimilarityHeatmap()
         }
@@ -970,38 +395,6 @@ watch(
 )
 
 onBeforeUnmount(() => {
-    if (positiveRenderTimer) {
-        clearTimeout(positiveRenderTimer)
-        positiveRenderTimer = null
-    }
-    if (positiveBarChart) {
-        positiveBarChart.dispose()
-        positiveBarChart = null
-    }
-    if (positivePieChart) {
-        positivePieChart.dispose()
-        positivePieChart = null
-    }
-    if (speciesRenderTimer) {
-        clearTimeout(speciesRenderTimer)
-        speciesRenderTimer = null
-    }
-    if (speciesBarChart) {
-        speciesBarChart.dispose()
-        speciesBarChart = null
-    }
-    if (speciesPieChart) {
-        speciesPieChart.dispose()
-        speciesPieChart = null
-    }
-    if (pathogenTypeRenderTimer) {
-        clearTimeout(pathogenTypeRenderTimer)
-        pathogenTypeRenderTimer = null
-    }
-    if (pathogenTypeStackChart) {
-        pathogenTypeStackChart.dispose()
-        pathogenTypeStackChart = null
-    }
     if (similarityRenderTimer) {
         clearTimeout(similarityRenderTimer)
         similarityRenderTimer = null
@@ -1030,7 +423,6 @@ onBeforeUnmount(() => {
     padding-right: 0;
 }
 
-.rp2-batch-pathogen-stats__panels :deep(.rp2-pathogen-type-panel),
 .rp2-batch-pathogen-stats__panels :deep(.rp2-similarity-panel) {
     padding-bottom: 0;
 }
@@ -1054,27 +446,6 @@ onBeforeUnmount(() => {
 
 .rp2-chart--similarity {
     min-height: 350px;
-}
-
-.rp2-chart-card--positive {
-    min-height: 372px;
-}
-
-.rp2-chart--positive {
-    width: 100%;
-    height: 233px;
-}
-
-.rp2-pathogen-type-chart-section {
-    overflow-x: auto;
-}
-
-.rp2-pathogen-type-chart-wrap {
-    width: 100%;
-}
-
-.rp2-chart--pathogen-type {
-    height: 350px;
 }
 
 :deep(.rp2-stats-tabs) {
@@ -1118,4 +489,3 @@ onBeforeUnmount(() => {
     height: 2px;
 }
 </style>
-
