@@ -141,6 +141,43 @@ const getDynamicBarWidth = (chartRef, count, { min = 8, max = 28, ratio = 0.55 }
     const width = Math.floor((estimatedGridWidth / total) * ratio)
     return Math.max(min, Math.min(max, width))
 }
+const getNiceAxisInterval = (maxValue) => {
+    const safeMax = Math.max(0, Number(maxValue) || 0)
+    if (safeMax <= 10) {
+        return 1
+    }
+    const roughStep = safeMax / 6
+    const magnitude = 10 ** Math.floor(Math.log10(roughStep))
+    const normalized = roughStep / magnitude
+    if (normalized <= 1) {
+        return magnitude
+    }
+    if (normalized <= 2) {
+        return 2 * magnitude
+    }
+    if (normalized <= 5) {
+        return 5 * magnitude
+    }
+    return 10 * magnitude
+}
+const getRoundedAxisMax = (maxValue, interval) => {
+    const safeMax = Math.max(0, Number(maxValue) || 0)
+    const safeInterval = Math.max(1, Number(interval) || 1)
+    return Math.max(safeInterval, Math.ceil(safeMax / safeInterval) * safeInterval)
+}
+const getXAxisLabelInterval = (count) => {
+    const total = Math.max(0, Number(count) || 0)
+    if (total <= 12) {
+        return 0
+    }
+    if (total <= 24) {
+        return 1
+    }
+    if (total <= 36) {
+        return 2
+    }
+    return Math.max(3, Math.ceil(total / 12) - 1)
+}
 
 const renderCharts = async () => {
     const suffix = getRp2LangSuffix(langCode.value)
@@ -157,6 +194,9 @@ const renderCharts = async () => {
     const values = distribution.map((item) => item.value)
     const minValue = values.length ? Math.min(...values) : 0
     const maxValue = values.length ? Math.max(...values) : 0
+    const yAxisInterval = getNiceAxisInterval(maxValue)
+    const yAxisMax = getRoundedAxisMax(maxValue, yAxisInterval)
+    const xAxisLabelInterval = getXAxisLabelInterval(labels.length)
 
     await nextTick()
 
@@ -167,13 +207,30 @@ const renderCharts = async () => {
         speciesBarChart.setOption({
             animation: false,
             tooltip: { trigger: 'axis' },
-            xAxis: { type: 'category', data: labels, axisLabel: { interval: 0, rotate: labels.length > 6 ? 30 : 0 } },
+            xAxis: {
+                type: 'category',
+                data: labels,
+                axisLabel: {
+                    interval: xAxisLabelInterval,
+                    rotate: labels.length > 6 ? 30 : 0
+                }
+            },
             yAxis: {
                 type: 'value',
                 name: t('Rp2DetectCount'),
                 min: 0,
-                interval: 1,
-                max: (axis) => Math.max(3, Math.ceil(Number(axis?.max || 0)))
+                interval: yAxisInterval,
+                minInterval: yAxisInterval,
+                splitNumber: Math.max(3, Math.ceil(yAxisMax / yAxisInterval)),
+                max: Math.max(3, yAxisMax),
+                axisLabel: {
+                    formatter: (value) => {
+                        if (yAxisInterval <= 1) {
+                            return value
+                        }
+                        return value % yAxisInterval === 0 ? value : ''
+                    }
+                }
             },
             series: [
                 {
