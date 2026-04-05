@@ -238,7 +238,7 @@
 </template>
 
 <script setup>
-import { computed, defineExpose, ref, toRefs } from "vue"
+import { computed, defineExpose, ref, toRefs, watch } from "vue"
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { api } from "src/boot/axios";
@@ -341,6 +341,14 @@ const cnLabel = ref('')
 
 const choiceDlgVisible = ref(false)
 const choiceDlg = ref(null)
+
+watch(
+    () => props.data,
+    (data) => {
+        params.value = Array.isArray(data) ? [...data] : []
+    },
+    { deep: true }
+)
 
 
 const setData = (data) => {

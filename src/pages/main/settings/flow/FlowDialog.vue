@@ -276,6 +276,12 @@ watch(id, v => {
     console.log('flow id changed:', v)
     getFlowDetail(v).then(res => {
         form.value = res
+        if (typeof res.parameters === 'string') {
+            form.value.parameters = JSON.parse(res.parameters)
+        }
+        if (paramsTable.value) {
+            paramsTable.value.setData([...(form.value.parameters || [])])
+        }
     })
 })
 
