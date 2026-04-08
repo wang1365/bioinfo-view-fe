@@ -46,7 +46,7 @@
                 {{ customModulesError }}
             </q-banner>
             <div v-if="showOuterIntro" class="sample-panel-intro">
-                <IntroHelpButton :title="introTitle" :disable-float="true" />
+                <IntroHelpButton :title="introTitle" :content="introContent" :disable-float="true" />
             </div>
             <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="bacteria">
@@ -104,6 +104,7 @@ import { storeToRefs } from 'pinia'
 import SamplePathogenTable from '../../rp2/components/SamplePathogenTable.vue'
 import IntroHelpButton from '../../rp2/components/IntroHelpButton.vue'
 import CommonModuleVue from '../../report/common-module/index.vue'
+import rp2IntroUtils from './rp2Intro'
 
 const route = useRoute()
 const router = useRouter()
@@ -119,6 +120,7 @@ const taskName = ref('')
 const taskDetail = ref({ id: taskId.value })
 const customModules = ref([])
 const customModulesError = ref('')
+const introContent = ref('')
 const taskForCommonModule = computed(() => ({ id: taskDetail.value?.id || taskId.value }))
 const customTabName = (index) => `sampleCustomTab${index}`
 const showOuterIntro = computed(() => !tab.value.startsWith('sampleCustomTab'))
@@ -127,32 +129,11 @@ const introTitle = computed(() => {
         const index = Number(tab.value.replace('sampleCustomTab', ''))
         return customModules.value?.[index]?.title || t('Intro')
     }
-    if (tab.value === 'fungus') {
-        return t('Fungus')
-    }
-    if (tab.value === 'virus') {
-        return t('Virus')
-    }
-    return t('Bacteria')
+    return rp2IntroUtils.getSampleTabTitle(tab.value, t)
 })
 
 const goBack = () => {
     router.replace(`/main/tasks/${taskId.value}/rp2`)
-}
-
-const tryParseJson = (text) => {
-    if (!text) {
-        return null
-    }
-    try {
-        return JSON.parse(text)
-    } catch (error) {
-        try {
-            return JSON.parse(String(text).replace(/,[ \t\r\n]+}/g, '}').replace(/,[ \t\r\n]+\]/g, ']'))
-        } catch (ignored) {
-            return null
-        }
-    }
 }
 
 const extractCustomModules = (rawConfig) => {
@@ -187,9 +168,9 @@ const extractCustomModules = (rawConfig) => {
 }
 
 const loadCustomModules = async () => {
-    const suffix = langCode.value === 'en' ? 'EN' : 'CN'
-    const candidates = [`${sampleName.value}/module_${suffix}.json`]
+    const candidates = rp2IntroUtils.getSampleModuleConfigCandidates(sampleName.value, langCode.value)
     customModulesError.value = ''
+    introContent.value = ''
 
     let configText = ''
     let loadedPath = ''
@@ -205,11 +186,23 @@ const loadCustomModules = async () => {
         }
     }
 
-    const configJson = tryParseJson(typeof configText === 'string' ? configText : '')
+    const configJson = rp2IntroUtils.tryParseJson(typeof configText === 'string' ? configText : '')
     if (configText && !configJson) {
         customModulesError.value = `${t('DefineReportModuleNotJsonErrorMessage')}: ${loadedPath || candidates[0]}`
     }
     customModules.value = extractCustomModules(configJson)
+
+    const introPath = rp2IntroUtils.getSampleIntroDescriptionPath(configJson, tab.value, sampleName.value)
+    if (!introPath) {
+        return
+    }
+
+    try {
+        const content = await readTaskFile(taskId.value, introPath, true, true)
+        introContent.value = typeof content === 'string' ? content : ''
+    } catch (error) {
+        introContent.value = ''
+    }
 }
 
 onMounted(async () => {
@@ -228,6 +221,15 @@ onMounted(async () => {
 watch(
     () => [langCode.value, sampleName.value, taskId.value],
     loadCustomModules
+)
+
+watch(
+    () => tab.value,
+    () => {
+        if (!tab.value.startsWith('sampleCustomTab')) {
+            loadCustomModules()
+        }
+    }
 )
 </script>
 
