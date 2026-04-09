@@ -1,16 +1,14 @@
 ﻿<template>
     <div ref="containerRef" :class="['pathogen-table-container', { 'selectable-mode': selectable }]">
-        <div v-if="downloadUrl" class="pathogen-toolbar q-mb-sm">
-            <q-space />
-            <q-btn
-                flat
-                dense
-                no-caps
+        <div v-if="downloadUrl || !!$slots.actions" class="pathogen-toolbar q-mb-sm">
+            <AppActionButton
+                v-if="downloadUrl"
                 icon="download"
-                class="pathogen-toolbar-btn"
+                variant="primary"
                 :label="t('Download')"
                 @click="downloadTableFile"
             />
+            <slot name="actions" />
         </div>
         <div v-if="errorText" ref="bannerRef">
             <q-banner dense class="bg-orange-1 text-orange-9 q-mb-sm">
@@ -89,6 +87,7 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
@@ -893,22 +892,9 @@ watch(
 .pathogen-toolbar {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 8px;
-}
-
-.pathogen-toolbar-btn {
-    border: 1px solid #b8c7dc;
-    border-radius: 2px;
-    color: #245ea8;
-    background: #f7fbff;
-    font-size: 12px;
-    height: 28px;
-    padding: 0 6px;
-}
-
-.pathogen-toolbar-btn:hover {
-    border-color: #8fb0d9;
-    background: #eef6ff;
+    flex-wrap: wrap;
 }
 
 .table-region {

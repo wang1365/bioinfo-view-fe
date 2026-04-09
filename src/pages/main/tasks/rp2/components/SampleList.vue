@@ -15,13 +15,10 @@
                 </template>
             </q-input>
             <div class="list-toolbar-actions">
-                <q-btn
+                <AppActionButton
                     v-if="mergedResultDownloadUrl"
-                    flat
-                    dense
-                    no-caps
                     icon="download"
-                    class="toolbar-btn"
+                    variant="primary"
                     :label="t('Download')"
                     @click="downloadMergedResult"
                 />
@@ -160,6 +157,7 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -787,21 +785,6 @@ onBeforeUnmount(() => {
 .search-input {
     width: 25%;
     min-width: 240px;
-}
-
-.toolbar-btn {
-    border: 1px solid #b8c7dc;
-    border-radius: 2px;
-    color: #245ea8;
-    background: #f7fbff;
-    font-size: 12px;
-    height: 28px;
-    padding: 0 6px;
-}
-
-.toolbar-btn:hover {
-    border-color: #8fb0d9;
-    background: #eef6ff;
 }
 
 .table-region {

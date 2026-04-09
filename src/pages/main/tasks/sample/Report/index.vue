@@ -45,9 +45,6 @@
                 </template>
                 {{ customModulesError }}
             </q-banner>
-            <div v-if="showOuterIntro" class="sample-panel-intro">
-                <IntroHelpButton :title="introTitle" :content="introContent" :disable-float="true" />
-            </div>
             <q-tab-panels v-model="tab" animated>
                 <q-tab-panel name="bacteria">
                     <SamplePathogenTable
@@ -56,7 +53,11 @@
                         :sample-identifier="sampleIdentifier"
                         :task-root-dir="taskRootDir"
                         category="bacteria"
-                    />
+                    >
+                        <template #actions>
+                            <IntroHelpButton :title="introTitle" :content="introContent" :disable-float="true" />
+                        </template>
+                    </SamplePathogenTable>
                 </q-tab-panel>
                 <q-tab-panel name="fungus">
                     <SamplePathogenTable
@@ -65,7 +66,11 @@
                         :sample-identifier="sampleIdentifier"
                         :task-root-dir="taskRootDir"
                         category="fungus"
-                    />
+                    >
+                        <template #actions>
+                            <IntroHelpButton :title="introTitle" :content="introContent" :disable-float="true" />
+                        </template>
+                    </SamplePathogenTable>
                 </q-tab-panel>
                 <q-tab-panel name="virus">
                     <SamplePathogenTable
@@ -74,7 +79,11 @@
                         :sample-identifier="sampleIdentifier"
                         :task-root-dir="taskRootDir"
                         category="virus"
-                    />
+                    >
+                        <template #actions>
+                            <IntroHelpButton :title="introTitle" :content="introContent" :disable-float="true" />
+                        </template>
+                    </SamplePathogenTable>
                 </q-tab-panel>
                 <q-tab-panel
                     v-for="(moduleItem, index) in customModules"
@@ -130,7 +139,6 @@ const customModulesError = ref('')
 const introContent = ref('')
 const taskForCommonModule = computed(() => ({ id: taskDetail.value?.id || taskId.value }))
 const customTabName = (index) => `sampleCustomTab${index}`
-const showOuterIntro = computed(() => !tab.value.startsWith('sampleCustomTab'))
 const introTitle = computed(() => {
     if (tab.value.startsWith('sampleCustomTab')) {
         const index = Number(tab.value.replace('sampleCustomTab', ''))
@@ -250,24 +258,8 @@ watch(
     text-decoration: underline;
 }
 
-.sample-panels-wrap {
-    position: relative;
-}
-
-.sample-panel-intro {
-    position: absolute;
-    top: 8px;
-    right: 12px;
-    z-index: 5;
-}
-
-.sample-panel-intro :deep(.intro-help-float) {
-    float: none;
-    margin: 0;
-}
-
 .sample-panels-wrap :deep(.q-tab-panel) {
-    padding-top: 52px;
+    padding-top: 12px;
 }
 
 .sample-panels-wrap :deep(.sample-custom-panel) {

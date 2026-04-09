@@ -6,13 +6,10 @@
             <div class="col-auto">
                 <div class="rp2-table-toolbar">
                     <slot name="actions" />
-                    <q-btn
+                    <AppActionButton
                         v-if="downloadUrl"
-                        flat
-                        dense
-                        no-caps
                         icon="download"
-                        class="rp2-table-toolbar-btn"
+                        variant="primary"
                         :label="t('Download')"
                         @click="downloadSourceFile"
                     />
@@ -46,6 +43,7 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { computed, ref, useSlots, watch } from 'vue'
 import { readTaskFile } from 'src/api/task'
 import { globalStore } from 'src/stores/global'
@@ -601,18 +599,4 @@ div :deep(.rp2-matrix-table .ant-table-tbody > tr > td.rp2-matrix-hover-cell) {
     flex-wrap: wrap;
 }
 
-.rp2-table-toolbar-btn {
-    border: 1px solid #b8c7dc;
-    border-radius: 2px;
-    color: #245ea8;
-    background: #f7fbff;
-    font-size: 12px;
-    height: 28px;
-    padding: 0 6px;
-}
-
-.rp2-table-toolbar-btn:hover {
-    border-color: #8fb0d9;
-    background: #eef6ff;
-}
 </style>
