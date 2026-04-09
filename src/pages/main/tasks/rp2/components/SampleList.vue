@@ -14,7 +14,19 @@
                     <q-icon name="search" />
                 </template>
             </q-input>
-            <IntroHelpButton :title="t('Rp2SampleList')" :content="props.introContent" :disable-float="true" />
+            <div class="list-toolbar-actions">
+                <q-btn
+                    v-if="mergedResultDownloadUrl"
+                    flat
+                    dense
+                    no-caps
+                    icon="download"
+                    class="toolbar-btn"
+                    :label="t('Download')"
+                    @click="downloadMergedResult"
+                />
+                <IntroHelpButton :title="t('Rp2SampleList')" :content="props.introContent" :disable-float="true" />
+            </div>
         </div>
 
         <div ref="tableRegionRef" class="table-region">
@@ -157,6 +169,7 @@ import { getRp2SampleReports, readTaskFile } from 'src/api/task'
 import { api } from 'src/boot/axios'
 import { infoMessage, warnMessage } from 'src/utils/notify'
 import { getRp2LangSuffix, isDetected, parseTabText } from './rp2File'
+const { buildIgvTaskFileUrl, getTaskFileDownloadName } = require('./textFileTableToolbar')
 import CustomReportDialog from './CustomReportDialog.vue'
 import IntroHelpButton from './IntroHelpButton.vue'
 import PatientInfo from '../../../patients/PatientInfo.vue'
@@ -167,6 +180,10 @@ const props = defineProps({
     taskId: {
         type: [String, Number],
         required: true
+    },
+    taskRootDir: {
+        type: String,
+        default: ''
     },
     introContent: {
         type: String,
@@ -181,6 +198,9 @@ const { langCode } = storeToRefs(store)
 const configCustomReportText = computed(() =>
     langCode.value === 'en' ? 'Configure Custom Report' : '配置自定义报告'
 )
+const mergedResultFilePath = computed(() => `menu/merged_results.${getRp2LangSuffix(langCode.value)}.add.txt`)
+const mergedResultDownloadUrl = computed(() => buildIgvTaskFileUrl(props.taskRootDir, mergedResultFilePath.value))
+const mergedResultDownloadName = computed(() => getTaskFileDownloadName(mergedResultFilePath.value))
 
 const rows = ref([])
 const tableHeaders = ref([])
@@ -471,6 +491,19 @@ const syncTableScrollY = () => {
 
 const rowKey = (record) => record.dataIdentifier || record.__rowKey
 
+const downloadMergedResult = () => {
+    if (!mergedResultDownloadUrl.value) {
+        return
+    }
+    const link = document.createElement('a')
+    link.href = mergedResultDownloadUrl.value
+    link.download = mergedResultDownloadName.value
+    link.target = '_blank'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+
 const viewResult = (record) => {
     const encoded = encodeURIComponent(record.dataIdentifier || '')
     const sampleIdentifier = encodeURIComponent(record.sampleIdentifier || '')
@@ -745,9 +778,30 @@ onBeforeUnmount(() => {
     gap: 12px;
 }
 
+.list-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .search-input {
     width: 25%;
     min-width: 240px;
+}
+
+.toolbar-btn {
+    border: 1px solid #b8c7dc;
+    border-radius: 2px;
+    color: #245ea8;
+    background: #f7fbff;
+    font-size: 12px;
+    height: 28px;
+    padding: 0 6px;
+}
+
+.toolbar-btn:hover {
+    border-color: #8fb0d9;
+    background: #eef6ff;
 }
 
 .table-region {

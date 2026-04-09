@@ -1,6 +1,7 @@
 <template>
     <TextFileTable
         :task-id="taskId"
+        :task-root-dir="taskRootDir"
         :title="t('Rp2NcOverlapTab')"
         cn-file="menu/analysis_NC_overlap_stats.CN.add.txt"
         en-file="menu/analysis_NC_overlap_stats.EN.add.txt"
@@ -16,6 +17,10 @@ defineProps({
     taskId: {
         type: [String, Number],
         required: true
+    },
+    taskRootDir: {
+        type: String,
+        default: ''
     }
 })
 

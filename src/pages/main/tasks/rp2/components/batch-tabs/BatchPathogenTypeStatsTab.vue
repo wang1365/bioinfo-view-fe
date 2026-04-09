@@ -2,6 +2,7 @@
     <div class="rp2-panel-scroll">
         <TextFileTable
             :task-id="taskId"
+            :task-root-dir="taskRootDir"
             cn-file="menu/analysis_sample_pathogen_count.CN.add.txt"
             en-file="menu/analysis_sample_pathogen_count.EN.add.txt"
         />
@@ -38,6 +39,7 @@ import TextFileTable from '../TextFileTable.vue'
 
 const props = defineProps({
     taskId: { type: [String, Number], required: true },
+    taskRootDir: { type: String, default: '' },
     active: { type: Boolean, default: false }
 })
 

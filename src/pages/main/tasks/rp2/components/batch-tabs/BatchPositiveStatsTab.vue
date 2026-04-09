@@ -2,6 +2,7 @@
     <div>
         <TextFileTable
             :task-id="taskId"
+            :task-root-dir="taskRootDir"
             cn-file="menu/analysis_positive_negative_stats.CN.txt"
             en-file="menu/analysis_positive_negative_stats.EN.txt"
             :sortable="false"
@@ -43,6 +44,7 @@ import TextFileTable from '../TextFileTable.vue'
 
 const props = defineProps({
     taskId: { type: [String, Number], required: true },
+    taskRootDir: { type: String, default: '' },
     active: { type: Boolean, default: false }
 })
 

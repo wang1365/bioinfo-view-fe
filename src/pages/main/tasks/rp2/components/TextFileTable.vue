@@ -1,7 +1,23 @@
 <template>
     <div ref="tableWrapRef" @mouseleave="clearMatrixHover">
-        <div class="row items-center q-mb-sm" v-if="title">
-            <div class="text-subtitle1 text-weight-medium">{{ title }}</div>
+        <div v-if="showToolbar" class="row items-center justify-between q-col-gutter-sm q-mb-sm">
+            <div v-if="title" class="col text-subtitle1 text-weight-medium">{{ title }}</div>
+            <q-space v-else />
+            <div class="col-auto">
+                <div class="rp2-table-toolbar">
+                    <slot name="actions" />
+                    <q-btn
+                        v-if="downloadUrl"
+                        flat
+                        dense
+                        no-caps
+                        icon="download"
+                        class="rp2-table-toolbar-btn"
+                        :label="t('Download')"
+                        @click="downloadSourceFile"
+                    />
+                </div>
+            </div>
         </div>
 
         <q-banner v-if="errorText" dense class="bg-orange-1 text-orange-9 q-mb-sm">
@@ -30,12 +46,18 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, useSlots, watch } from 'vue'
 import { readTaskFile } from 'src/api/task'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { getRp2LangSuffix, parseTabText } from './rp2File'
+import { errorMessage } from 'src/utils/notify'
+const {
+    buildIgvTaskFileUrl,
+    getTaskFileDownloadName,
+    shouldShowTableToolbar
+} = require('./textFileTableToolbar')
 
 const props = defineProps({
     taskId: {
@@ -49,6 +71,10 @@ const props = defineProps({
     enFile: {
         type: String,
         required: true
+    },
+    taskRootDir: {
+        type: String,
+        default: ''
     },
     title: {
         type: String,
@@ -104,6 +130,7 @@ const props = defineProps({
     }
 })
 
+const slots = useSlots()
 const { t } = useI18n()
 const store = globalStore()
 const { langCode } = storeToRefs(store)
@@ -200,6 +227,16 @@ const filePath = computed(() => {
     const suffix = getRp2LangSuffix(langCode.value)
     return suffix === 'EN' ? props.enFile : props.cnFile
 })
+const downloadUrl = computed(() => buildIgvTaskFileUrl(props.taskRootDir, filePath.value))
+const downloadFileName = computed(() => getTaskFileDownloadName(filePath.value))
+const hasActionsSlot = computed(() => Boolean(slots.actions))
+const showToolbar = computed(() =>
+    shouldShowTableToolbar({
+        title: props.title,
+        showDownload: Boolean(downloadUrl.value),
+        hasActionsSlot: hasActionsSlot.value
+    })
+)
 
 const matrixStartHeader = computed(
     () => findHeaderByAliases(baseHeaders.value, props.matrixStartAfterAliases || []) || ''
@@ -437,6 +474,21 @@ const loadTable = async () => {
     }
 }
 
+const downloadSourceFile = () => {
+    if (!downloadUrl.value) {
+        errorMessage(t('DownloadFailed'))
+        return
+    }
+
+    const link = document.createElement('a')
+    link.href = downloadUrl.value
+    link.download = downloadFileName.value
+    link.target = '_blank'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+
 watch(
     () => [props.taskId, props.cnFile, props.enFile, props.hasHeader, langCode.value],
     () => {
@@ -539,5 +591,28 @@ div :deep(.rp2-matrix-table .ant-table-tbody > tr > td.rp2-matrix-hover-col) {
 div :deep(.rp2-matrix-table .ant-table-tbody > tr > td.rp2-matrix-hover-cell) {
     background: #dbeafe !important;
     font-weight: 700 !important;
+}
+
+.rp2-table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.rp2-table-toolbar-btn {
+    border: 1px solid #b8c7dc;
+    border-radius: 2px;
+    color: #245ea8;
+    background: #f7fbff;
+    font-size: 12px;
+    height: 28px;
+    padding: 0 6px;
+}
+
+.rp2-table-toolbar-btn:hover {
+    border-color: #8fb0d9;
+    background: #eef6ff;
 }
 </style>

@@ -10,23 +10,23 @@
 
         <q-tab-panels v-model="tab" animated class="rp2-batch-pathogen-stats__panels">
             <q-tab-panel name="positive">
-                <BatchPositiveStatsTab :task-id="taskId" :active="tab === 'positive'" />
+                <BatchPositiveStatsTab :task-id="taskId" :task-root-dir="taskRootDir" :active="tab === 'positive'" />
             </q-tab-panel>
 
             <q-tab-panel name="species">
-                <BatchSpeciesStatsTab :task-id="taskId" :active="tab === 'species'" />
+                <BatchSpeciesStatsTab :task-id="taskId" :task-root-dir="taskRootDir" :active="tab === 'species'" />
             </q-tab-panel>
 
             <q-tab-panel name="pathogenType">
-                <BatchPathogenTypeStatsTab :task-id="taskId" :active="tab === 'pathogenType'" />
+                <BatchPathogenTypeStatsTab :task-id="taskId" :task-root-dir="taskRootDir" :active="tab === 'pathogenType'" />
             </q-tab-panel>
 
             <q-tab-panel name="ncOverlap">
-                <BatchNcOverlapStatsTab :task-id="taskId" />
+                <BatchNcOverlapStatsTab :task-id="taskId" :task-root-dir="taskRootDir" />
             </q-tab-panel>
 
             <q-tab-panel name="similarity">
-                <BatchSimilarityStatsTab :task-id="taskId" :active="tab === 'similarity'" />
+                <BatchSimilarityStatsTab :task-id="taskId" :task-root-dir="taskRootDir" :active="tab === 'similarity'" />
             </q-tab-panel>
         </q-tab-panels>
     </div>

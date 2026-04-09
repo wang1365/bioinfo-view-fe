@@ -31,7 +31,7 @@
         <q-tab-panels v-model="tab" animated class="rp2-tab-panels">
             <q-tab-panel name="sampleList">
                 <div class="rp2-tab-wrap rp2-tab-wrap--no-intro">
-                    <SampleList :task-id="taskId" :intro-content="sampleListIntro" />
+                    <SampleList :task-id="taskId" :task-root-dir="taskRootDir" :intro-content="sampleListIntro" />
                 </div>
             </q-tab-panel>
             <q-tab-panel

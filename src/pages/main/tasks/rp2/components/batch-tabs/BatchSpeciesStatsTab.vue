@@ -2,6 +2,7 @@
     <div>
         <TextFileTable
             :task-id="taskId"
+            :task-root-dir="taskRootDir"
             cn-file="menu/analysis_pathogen_summary.CN.txt"
             en-file="menu/analysis_pathogen_summary.EN.txt"
             :column-widths="[120, 120, 480]"
@@ -44,6 +45,7 @@ import TextFileTable from '../TextFileTable.vue'
 
 const props = defineProps({
     taskId: { type: [String, Number], required: true },
+    taskRootDir: { type: String, default: '' },
     active: { type: Boolean, default: false }
 })
 

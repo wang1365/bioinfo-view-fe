@@ -1,5 +1,17 @@
 ﻿<template>
     <div ref="containerRef" :class="['pathogen-table-container', { 'selectable-mode': selectable }]">
+        <div v-if="downloadUrl" class="pathogen-toolbar q-mb-sm">
+            <q-space />
+            <q-btn
+                flat
+                dense
+                no-caps
+                icon="download"
+                class="pathogen-toolbar-btn"
+                :label="t('Download')"
+                @click="downloadTableFile"
+            />
+        </div>
         <div v-if="errorText" ref="bannerRef">
             <q-banner dense class="bg-orange-1 text-orange-9 q-mb-sm">
                 {{ errorText }}
@@ -83,6 +95,7 @@ import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { readTaskFile } from 'src/api/task'
 import { getRp2LangSuffix, parseTabText } from './rp2File'
+const { buildIgvTaskFileUrl, getTaskFileDownloadName } = require('./textFileTableToolbar')
 
 const props = defineProps({
     taskId: {
@@ -94,6 +107,10 @@ const props = defineProps({
         required: true
     },
     sampleIdentifier: {
+        type: String,
+        default: ''
+    },
+    taskRootDir: {
         type: String,
         default: ''
     },
@@ -204,6 +221,8 @@ const buildFilePath = (sampleName) => {
 }
 
 const filePath = computed(() => buildFilePath(props.sampleName))
+const downloadUrl = computed(() => buildIgvTaskFileUrl(props.taskRootDir, filePath.value))
+const downloadFileName = computed(() => getTaskFileDownloadName(filePath.value))
 
 const getMergedResultFilePath = () => `menu/merged_results.${getRp2LangSuffix(langCode.value)}.add.txt`
 
@@ -722,6 +741,19 @@ const emitSelectionChange = () => {
     })
 }
 
+const downloadTableFile = () => {
+    if (!downloadUrl.value) {
+        return
+    }
+    const link = document.createElement('a')
+    link.href = downloadUrl.value
+    link.download = downloadFileName.value
+    link.target = '_blank'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+
 const loadData = async () => {
     loading.value = true
     errorText.value = ''
@@ -856,6 +888,27 @@ watch(
     min-height: 0;
     display: flex;
     flex-direction: column;
+}
+
+.pathogen-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pathogen-toolbar-btn {
+    border: 1px solid #b8c7dc;
+    border-radius: 2px;
+    color: #245ea8;
+    background: #f7fbff;
+    font-size: 12px;
+    height: 28px;
+    padding: 0 6px;
+}
+
+.pathogen-toolbar-btn:hover {
+    border-color: #8fb0d9;
+    background: #eef6ff;
 }
 
 .table-region {

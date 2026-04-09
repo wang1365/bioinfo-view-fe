@@ -54,6 +54,7 @@
                         :task-id="taskId"
                         :sample-name="sampleName"
                         :sample-identifier="sampleIdentifier"
+                        :task-root-dir="taskRootDir"
                         category="bacteria"
                     />
                 </q-tab-panel>
@@ -62,6 +63,7 @@
                         :task-id="taskId"
                         :sample-name="sampleName"
                         :sample-identifier="sampleIdentifier"
+                        :task-root-dir="taskRootDir"
                         category="fungus"
                     />
                 </q-tab-panel>
@@ -70,6 +72,7 @@
                         :task-id="taskId"
                         :sample-name="sampleName"
                         :sample-identifier="sampleIdentifier"
+                        :task-root-dir="taskRootDir"
                         category="virus"
                     />
                 </q-tab-panel>
@@ -118,6 +121,10 @@ const sampleName = computed(() => decodeURIComponent(route.params.sampleId || ''
 const sampleIdentifier = computed(() => decodeURIComponent(route.query.sampleIdentifier || ''))
 const taskName = ref('')
 const taskDetail = ref({ id: taskId.value })
+const taskRootDir = computed(() => {
+    const resultDir = String(taskDetail.value?.result_dir || '').replace(/\\/g, '/')
+    return resultDir ? resultDir.replace(/\/result\/?$/, '') : ''
+})
 const customModules = ref([])
 const customModulesError = ref('')
 const introContent = ref('')
