@@ -2,38 +2,28 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Application (Backend Local 8000)",
-            "type": "pwa-chrome",
-            "request": "launch",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "npm: dev (backend local 8000)",
-            "sourceMaps": true,
-            "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-local",
-            "runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-        },
-        {
-            "name": "Debug Application (Backend 10.10.0.208:8080)",
-            "type": "pwa-chrome",
-            "request": "launch",
-            "url": "http://localhost:8080",
-            "webRoot": "${workspaceFolder}",
-            "preLaunchTask": "npm: dev (backend 10.10.0.208:8080)",
-            "sourceMaps": true,
-            "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-remote",
-            "runtimeExecutable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
-        },
-        {
-            "name": "Debug Tests",
+            "name": "Run Dev (Backend Local 8000)",
             "type": "node",
             "request": "launch",
             "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "test"],
-            "port": 9229,
-            "console": "externalTerminal",
-            "terminalOptions": {
-                "shellPath": "cmd.exe"
-            }
+            "runtimeArgs": ["run", "dev"],
+            "env": {
+                "host": "http://localhost:8000",
+                "igv": "http://localhost:8000"
+            },
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Run Dev (Backend 10.10.0.208:8080)",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "env": {
+                "host": "http://10.10.0.208:8080",
+                "igv": "http://10.10.0.208"
+            },
+            "console": "integratedTerminal"
         }
     ]
 }

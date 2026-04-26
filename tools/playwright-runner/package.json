@@ -1,0 +1,17 @@
+{
+  "name": "codex-playwright-runner",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "check:tasks": "node login-and-check-tasks.js",
+    "test": "npm run check:tasks"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "",
+  "dependencies": {
+    "playwright": "^1.59.1"
+  }
+}
