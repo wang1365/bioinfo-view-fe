@@ -1,7 +1,20 @@
 <template>
     <div ref="tableWrapRef" @mouseleave="clearMatrixHover">
-        <div class="row items-center q-mb-sm" v-if="title">
-            <div class="text-subtitle1 text-weight-medium">{{ title }}</div>
+        <div v-if="showToolbar" class="row items-center justify-between q-col-gutter-sm q-mb-sm">
+            <div v-if="title" class="col text-subtitle1 text-weight-medium">{{ title }}</div>
+            <q-space v-else />
+            <div class="col-auto">
+                <div class="rp2-table-toolbar">
+                    <slot name="actions" />
+                    <AppActionButton
+                        v-if="downloadUrl"
+                        icon="download"
+                        variant="primary"
+                        :label="t('Download')"
+                        @click="downloadSourceFile"
+                    />
+                </div>
+            </div>
         </div>
 
         <q-banner v-if="errorText" dense class="bg-orange-1 text-orange-9 q-mb-sm">
@@ -15,6 +28,7 @@
             :loading="loading"
             :pagination="pagination"
             :scroll="tableScroll"
+            @change="handleTableChange"
             :show-sorter-tooltip="false"
             :table-layout="compactFirstTwoColumns || hasColumnWidths || fixedLeftColumnCount > 0 ? 'fixed' : undefined"
             :row-class-name="rowClassName"
@@ -29,12 +43,19 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
-import { computed, ref, watch } from 'vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import { computed, ref, useSlots, watch } from 'vue'
 import { readTaskFile } from 'src/api/task'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { useI18n } from 'vue-i18n'
 import { getRp2LangSuffix, parseTabText } from './rp2File'
+import { errorMessage } from 'src/utils/notify'
+const {
+    buildIgvTaskFileUrl,
+    getTaskFileDownloadName,
+    shouldShowTableToolbar
+} = require('./textFileTableToolbar')
 
 const props = defineProps({
     taskId: {
@@ -48,6 +69,10 @@ const props = defineProps({
     enFile: {
         type: String,
         required: true
+    },
+    taskRootDir: {
+        type: String,
+        default: ''
     },
     title: {
         type: String,
@@ -103,6 +128,7 @@ const props = defineProps({
     }
 })
 
+const slots = useSlots()
 const { t } = useI18n()
 const store = globalStore()
 const { langCode } = storeToRefs(store)
@@ -114,6 +140,10 @@ const errorText = ref('')
 const tableWrapRef = ref(null)
 const hoveredRowKey = ref('')
 const hoveredColumnKey = ref('')
+const paginationState = ref({
+    current: 1,
+    pageSize: 10
+})
 const hasColumnWidths = computed(() => Array.isArray(props.columnWidths) && props.columnWidths.length > 0)
 const hasFixedColumns = computed(() => Number(props.fixedLeftColumnCount || 0) > 0)
 const hiddenHeaderSet = computed(() => new Set((props.hiddenHeaderAliases || []).map((item) => String(item || '').trim().toLowerCase())))
@@ -159,11 +189,35 @@ const compareCellValue = (left, right) => {
     return String(a.value).localeCompare(String(b.value), undefined, { numeric: true })
 }
 
+const updatePagination = (current, pageSize) => {
+    paginationState.value = {
+        current: Number(current) > 0 ? Number(current) : paginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : paginationState.value.pageSize
+    }
+}
+
+const handlePageChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handlePageSizeChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handleTableChange = (pagination) => {
+    if (pagination) {
+        updatePagination(pagination.current, pagination.pageSize)
+    }
+}
+
 const pagination = computed(() => ({
-    pageSize: 10,
+    current: paginationState.value.current,
+    pageSize: paginationState.value.pageSize,
     showSizeChanger: true,
     pageSizeOptions: ['10', '20', '50', '100'],
     showQuickJumper: true,
+    onChange: handlePageChange,
+    onShowSizeChange: handlePageSizeChange,
     showTotal: (total) => t('PaginationTotal', { total })
 }))
 
@@ -171,6 +225,16 @@ const filePath = computed(() => {
     const suffix = getRp2LangSuffix(langCode.value)
     return suffix === 'EN' ? props.enFile : props.cnFile
 })
+const downloadUrl = computed(() => buildIgvTaskFileUrl(props.taskRootDir, filePath.value))
+const downloadFileName = computed(() => getTaskFileDownloadName(filePath.value))
+const hasActionsSlot = computed(() => Boolean(slots.actions))
+const showToolbar = computed(() =>
+    shouldShowTableToolbar({
+        title: props.title,
+        showDownload: Boolean(downloadUrl.value),
+        hasActionsSlot: hasActionsSlot.value
+    })
+)
 
 const matrixStartHeader = computed(
     () => findHeaderByAliases(baseHeaders.value, props.matrixStartAfterAliases || []) || ''
@@ -408,9 +472,27 @@ const loadTable = async () => {
     }
 }
 
+const downloadSourceFile = () => {
+    if (!downloadUrl.value) {
+        errorMessage(t('DownloadFailed'))
+        return
+    }
+
+    const link = document.createElement('a')
+    link.href = downloadUrl.value
+    link.download = downloadFileName.value
+    link.target = '_blank'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+
 watch(
     () => [props.taskId, props.cnFile, props.enFile, props.hasHeader, langCode.value],
-    loadTable,
+    () => {
+        paginationState.value.current = 1
+        loadTable()
+    },
     { immediate: true }
 )
 </script>
@@ -508,4 +590,13 @@ div :deep(.rp2-matrix-table .ant-table-tbody > tr > td.rp2-matrix-hover-cell) {
     background: #dbeafe !important;
     font-weight: 700 !important;
 }
+
+.rp2-table-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 </style>

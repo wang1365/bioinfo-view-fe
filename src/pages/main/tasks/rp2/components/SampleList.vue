@@ -14,19 +14,31 @@
                     <q-icon name="search" />
                 </template>
             </q-input>
-            <IntroHelpButton :title="t('Rp2SampleList')" :disable-float="true" />
+            <div class="list-toolbar-actions">
+                <AppActionButton
+                    v-if="mergedResultDownloadUrl"
+                    icon="download"
+                    variant="primary"
+                    :label="t('Download')"
+                    @click="downloadMergedResult"
+                />
+                <IntroHelpButton :title="t('Rp2SampleList')" :content="props.introContent" :disable-float="true" />
+            </div>
         </div>
 
-        <AppDataTable
-            class="rp2-grid-table"
-            :data-source="filteredRows"
-            :columns="columns"
-            :pagination="paginationConfig"
-            :loading="loading"
-            :row-key="rowKey"
-            bordered
-            size="small"
-        >
+        <div ref="tableRegionRef" class="table-region">
+            <AppDataTable
+                class="rp2-grid-table"
+                :data-source="filteredRows"
+                :columns="columns"
+                :pagination="paginationConfig"
+                :loading="loading"
+                :row-key="rowKey"
+                :scroll="{ y: tableScrollY }"
+                @change="handleTableChange"
+                bordered
+                size="small"
+            >
             <template #bodyCell="{ record, column }">
                 <template v-if="column.dataIndex === 'patientInfo'">
                     <div class="patient-info-cell">
@@ -104,7 +116,8 @@
                     </div>
                 </template>
             </template>
-        </AppDataTable>
+            </AppDataTable>
+        </div>
 
         <CustomReportDialog
             v-model="customReportVisible"
@@ -144,7 +157,8 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
-import { computed, ref, watch } from 'vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
@@ -153,6 +167,7 @@ import { getRp2SampleReports, readTaskFile } from 'src/api/task'
 import { api } from 'src/boot/axios'
 import { infoMessage, warnMessage } from 'src/utils/notify'
 import { getRp2LangSuffix, isDetected, parseTabText } from './rp2File'
+const { buildIgvTaskFileUrl, getTaskFileDownloadName } = require('./textFileTableToolbar')
 import CustomReportDialog from './CustomReportDialog.vue'
 import IntroHelpButton from './IntroHelpButton.vue'
 import PatientInfo from '../../../patients/PatientInfo.vue'
@@ -163,6 +178,14 @@ const props = defineProps({
     taskId: {
         type: [String, Number],
         required: true
+    },
+    taskRootDir: {
+        type: String,
+        default: ''
+    },
+    introContent: {
+        type: String,
+        default: ''
     }
 })
 
@@ -173,6 +196,9 @@ const { langCode } = storeToRefs(store)
 const configCustomReportText = computed(() =>
     langCode.value === 'en' ? 'Configure Custom Report' : '配置自定义报告'
 )
+const mergedResultFilePath = computed(() => `menu/merged_results.${getRp2LangSuffix(langCode.value)}.add.txt`)
+const mergedResultDownloadUrl = computed(() => buildIgvTaskFileUrl(props.taskRootDir, mergedResultFilePath.value))
+const mergedResultDownloadName = computed(() => getTaskFileDownloadName(mergedResultFilePath.value))
 
 const rows = ref([])
 const tableHeaders = ref([])
@@ -197,6 +223,13 @@ const patientInfoId = ref(0)
 const sampleInfoId = ref(0)
 const dataInfoId = ref(0)
 const reportStateMap = ref({})
+const tableRegionRef = ref(null)
+const tableScrollY = ref(360)
+const paginationState = ref({
+    current: 1,
+    pageSize: 10
+})
+let tableResizeObserver = null
 
 const normalizeKey = (value) => String(value || '').replace(/\s+/g, '').replace(/[_-]/g, '').toLowerCase()
 
@@ -302,12 +335,45 @@ const columns = computed(() => {
     return dynamicColumns
 })
 
+const updatePagination = (current, pageSize) => {
+    paginationState.value = {
+        current: Number(current) > 0 ? Number(current) : paginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : paginationState.value.pageSize
+    }
+}
+
+const handlePageChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+    nextTick(() => {
+        syncTableScrollY()
+    })
+}
+
+const handlePageSizeChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+    nextTick(() => {
+        syncTableScrollY()
+    })
+}
+
+const handleTableChange = (pagination) => {
+    if (pagination) {
+        updatePagination(pagination.current, pagination.pageSize)
+    }
+    nextTick(() => {
+        syncTableScrollY()
+    })
+}
+
 const paginationConfig = computed(() => ({
-    pageSize: 10,
+    current: paginationState.value.current,
+    pageSize: paginationState.value.pageSize,
     showLessItems: false,
     showSizeChanger: true,
     pageSizeOptions: ['10', '20', '50', '100'],
     showQuickJumper: true,
+    onChange: handlePageChange,
+    onShowSizeChange: handlePageSizeChange,
     showTotal: (total) => t('PaginationTotal', { total })
 }))
 
@@ -397,10 +463,44 @@ const loadData = async () => {
         reportStateMap.value = {}
     } finally {
         loading.value = false
+        await nextTick()
+        syncTableScrollY()
     }
 }
 
+const syncTableScrollY = () => {
+    const region = tableRegionRef.value
+    if (!region) {
+        return
+    }
+
+    const tableHeader = region.querySelector('.ant-table-header')
+    const tableThead = region.querySelector('.ant-table-thead')
+    const tablePagination = region.querySelector('.ant-pagination')
+    const headerHeight = tableHeader?.offsetHeight || tableThead?.offsetHeight || 44
+    const paginationHeight = tablePagination?.offsetHeight || 52
+    const regionStyle = window.getComputedStyle(region)
+    const paddingTop = Number.parseFloat(regionStyle.paddingTop || '0') || 0
+    const paddingBottom = Number.parseFloat(regionStyle.paddingBottom || '0') || 0
+    const reserved = headerHeight + paginationHeight + paddingTop + paddingBottom + 18
+
+    tableScrollY.value = Math.max(Math.floor(region.clientHeight - reserved), 180)
+}
+
 const rowKey = (record) => record.dataIdentifier || record.__rowKey
+
+const downloadMergedResult = () => {
+    if (!mergedResultDownloadUrl.value) {
+        return
+    }
+    const link = document.createElement('a')
+    link.href = mergedResultDownloadUrl.value
+    link.download = mergedResultDownloadName.value
+    link.target = '_blank'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
 
 const viewResult = (record) => {
     const encoded = encodeURIComponent(record.dataIdentifier || '')
@@ -616,14 +716,57 @@ const openDataDetail = async (record) => {
 
 watch(
     () => [props.taskId, langCode.value],
-    loadData,
+    () => {
+        paginationState.value.current = 1
+        loadData()
+    },
     { immediate: true }
 )
+
+watch(
+    () => searchKeyword.value,
+    () => {
+        paginationState.value.current = 1
+    }
+)
+
+watch(
+    () => [filteredRows.value.length, columns.value.length, loading.value],
+    async () => {
+        await nextTick()
+        syncTableScrollY()
+    }
+)
+
+onMounted(async () => {
+    await nextTick()
+    syncTableScrollY()
+    if (!window.ResizeObserver) {
+        return
+    }
+    tableResizeObserver = new window.ResizeObserver(() => {
+        syncTableScrollY()
+    })
+    if (tableRegionRef.value) {
+        tableResizeObserver.observe(tableRegionRef.value)
+    }
+})
+
+onBeforeUnmount(() => {
+    if (tableResizeObserver) {
+        tableResizeObserver.disconnect()
+        tableResizeObserver = null
+    }
+})
 </script>
 
 <style lang="scss" scoped>
 .sample-list {
     padding: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .list-toolbar {
@@ -633,9 +776,27 @@ watch(
     gap: 12px;
 }
 
+.list-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .search-input {
     width: 25%;
     min-width: 240px;
+}
+
+.table-region {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.table-region :deep(.ant-table-wrapper),
+.table-region :deep(.ant-spin-nested-loading),
+.table-region :deep(.ant-spin-container) {
+    height: 100%;
 }
 
 .operation-buttons {

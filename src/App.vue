@@ -28,9 +28,9 @@ export default defineComponent({
         };
     },
     computed: {
-        antLocale: () => {
-            const store = globalStore();
-            return store.lang === 'zh-CN' ? cn : en;
+        antLocale() {
+            const lang = String(this.store?.langConfig?.lang || '').toLowerCase();
+            return lang === 'en' || lang === 'en-us' ? en : cn;
         }
     },
     mounted() {

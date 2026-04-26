@@ -1,5 +1,5 @@
 <template>
-    <q-page style="padding: 10px; overflow: auto; height: 90vh">
+    <q-page class="rp2-page">
         <div class="row items-center">
             <h6>{{ pageTitle }}</h6>
             <q-space />
@@ -31,7 +31,7 @@
         <q-tab-panels v-model="tab" animated class="rp2-tab-panels">
             <q-tab-panel name="sampleList">
                 <div class="rp2-tab-wrap rp2-tab-wrap--no-intro">
-                    <SampleList :task-id="taskId" />
+                    <SampleList :task-id="taskId" :task-root-dir="taskRootDir" :intro-content="sampleListIntro" />
                 </div>
             </q-tab-panel>
             <q-tab-panel
@@ -40,6 +40,7 @@
                 :name="customTabName(index)"
             >
                 <CommonModuleVue
+                    class="rp2-common-module"
                     :view-config="moduleItem"
                     :task="taskForCommonModule"
                     :enable-pagination="true"
@@ -47,12 +48,12 @@
                     :enhanced-table-border="true"
                 />
             </q-tab-panel>
-            <q-tab-panel name="batchStats">
-                <div class="rp2-tab-wrap">
+            <q-tab-panel name="batchStats" class="rp2-tab-panel-batch-stats">
+                <div class="rp2-tab-wrap rp2-tab-wrap--scrollable">
                     <div class="rp2-tab-intro">
-                        <IntroHelpButton :title="$t('Rp2BatchStats')" :disable-float="true" />
+                        <IntroHelpButton :title="$t('Rp2BatchStats')" :content="batchStatsIntro" :disable-float="true" />
                     </div>
-                    <BatchPathogenStats :task-id="taskId" :task-root-dir="taskRootDir" />
+                    <BatchPathogenStats class="rp2-batch-stats-content" :task-id="taskId" :task-root-dir="taskRootDir" />
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -82,6 +83,8 @@ const taskRootDir = ref('')
 const taskName = ref('')
 const taskDetail = ref({ id: taskId })
 const customModules = ref([])
+const sampleListIntro = ref('')
+const batchStatsIntro = ref('')
 const tab = ref('sampleList')
 const pageTitle = computed(() => {
     return taskName.value ? `"${taskName.value}" ${t('Rp2SummaryTitleSuffix')}` : t('Rp2PageTitle')
@@ -145,6 +148,31 @@ const extractCustomModules = (rawConfig) => {
     return fallback
 }
 
+const toText = (value) => (typeof value === 'string' ? value : '')
+
+const readIntroText = async (filePath) => {
+    const normalizedPath = String(filePath || '').trim()
+    if (!normalizedPath) {
+        return ''
+    }
+
+    try {
+        const content = await readTaskFile(taskId, normalizedPath, true)
+        if (toText(content)) {
+            return toText(content)
+        }
+    } catch (error) {
+        // no-op, fallback to from_task_root
+    }
+
+    try {
+        const content = await readTaskFile(taskId, normalizedPath, true, true)
+        return toText(content)
+    } catch (error) {
+        return ''
+    }
+}
+
 const loadCustomModules = async () => {
     const suffix = langCode.value === 'en' ? 'EN' : 'CN'
     let configText = ''
@@ -165,6 +193,15 @@ const loadCustomModules = async () => {
 
     const configJson = tryParseJson(typeof configText === 'string' ? configText : '')
     customModules.value = extractCustomModules(configJson)
+
+    const sampleListDescPath = String(configJson?.['样本列表']?.descriptionFile || '').trim()
+    const batchStatsDescPath = String(configJson?.['批次病原统计']?.descriptionFile || '').trim()
+    const [sampleIntroText, batchIntroText] = await Promise.all([
+        readIntroText(sampleListDescPath),
+        readIntroText(batchStatsDescPath)
+    ])
+    sampleListIntro.value = sampleIntroText
+    batchStatsIntro.value = batchIntroText
 }
 
 onMounted(async () => {
@@ -188,8 +225,23 @@ watch(
 </script>
 
 <style scoped>
+.rp2-page {
+    padding: 10px;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
 .rp2-tab-wrap {
     position: relative;
+    height: 100%;
+}
+
+.rp2-tab-wrap--scrollable {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .rp2-tab-wrap--no-intro {
@@ -207,6 +259,24 @@ watch(
     padding-top: 10px;
     padding-left: 0;
     padding-right: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.rp2-tab-panels :deep(.rp2-common-module) {
+    height: 100%;
+    min-height: 0;
+}
+
+.rp2-tab-panels :deep(.rp2-tab-panel-batch-stats) {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.rp2-batch-stats-content {
+    flex: 1;
+    min-height: 0;
 }
 
 .rp2-tab-wrap :deep(.rp2-stats-tabs) {
@@ -216,5 +286,11 @@ watch(
 .rp2-tab-wrap :deep(.ant-table-wrapper),
 .rp2-tab-wrap :deep(.ant-table) {
     width: 100%;
+}
+
+.rp2-tab-panels {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
 }
 </style>

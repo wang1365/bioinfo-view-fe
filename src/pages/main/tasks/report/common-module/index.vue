@@ -1,5 +1,5 @@
 <template>
-    <div class="common-module-root">
+    <div class="common-module-root" :class="{ 'common-module-root--full': enhancedTableBorder }">
         <q-dialog v-model="dlgVisible">
             <q-card style="width: 75%; max-width: 2000px">
                 <q-bar class="bg-primary text-white">{{ viewConfig.title }}</q-bar>
@@ -57,7 +57,7 @@
                 />
             </div>
         </div>
-        <q-tab-panels v-model="tab" animated>
+        <q-tab-panels v-model="tab" animated class="common-tab-panels">
             <q-tab-panel v-for="table in tables" :name="table.name" :key="table.name">
                 <q-toolbar class="text-primary search-toolbar">
                     <q-input
@@ -90,7 +90,7 @@
                         target="_blank"
                     />
                 </q-toolbar>
-                <div style="position:relative">
+                <div class="table-host" style="position:relative">
                     <q-icon
                         v-if="showRowSelection"
                         color="accent"
@@ -100,20 +100,22 @@
                     >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
-<AppDataTable
-  :class="{ 'rp2-grid-table': enhancedTableBorder }"
-  style="z-index:1"
-  class="col-5"
-  size="middle"
-  rowKey="lineNumber"
-  bordered
-  :scroll="{ x: table.columns.length * 100, y: 600 }"
-  :data-source="table.filteredRows"
-  :columns="table.columns"
-  :sticky="true"
-  :row-selection="rowSelectionConfig(table)"
-  :pagination="paginationConfig"
->
+                    <div class="table-region" :ref="setTableRegionRef(table.name)">
+                        <AppDataTable
+                            :class="{ 'rp2-grid-table': enhancedTableBorder }"
+                            style="z-index:1"
+                            class="col-5"
+                            size="middle"
+                            rowKey="lineNumber"
+                            bordered
+                            :scroll="{ x: table.columns.length * 100, y: getTableScrollY(table.name) }"
+                            :data-source="table.filteredRows"
+                            :columns="table.columns"
+                            :sticky="true"
+                            :row-selection="rowSelectionConfig(table)"
+                            :pagination="getPaginationConfig(table.name)"
+                            @change="(pagination) => handleTableChange(table.name, pagination)"
+                        >
                         <template #bodyCell="{ column, record }">
                             <TableActionButton
                                 variant="primary"
@@ -167,7 +169,8 @@
                                 </template>
                             </template>
                         </template>
-                    </AppDataTable>
+                        </AppDataTable>
+                    </div>
                 </div>
             </q-tab-panel>
         </q-tab-panels>
@@ -253,7 +256,7 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
-import {computed, onMounted, ref, toRef, watch} from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { readTaskFile, readTaskMuFile } from 'src/api/task'
 import { getCsvHeader, getCsvData, getCsvDataAndSetLineNumber } from 'src/utils/csv'
@@ -328,23 +331,72 @@ const resolveFilePath = (filePath) => {
 const readTextFile = (filePath, includeErrors = true) =>
     readTaskFile(props.task.id, resolveFilePath(filePath), includeErrors, props.fromTaskRoot)
 
-// Pagination config for RP2 usage: bind only when enabled
-const paginationConfig = computed(() => {
-  if (props.enablePagination) {
-    return {
-      pageSize: 10,
-      showSizeChanger: true,
-      showTotal: (total) => t('PaginationTotal', { total })
+const getPaginationState = (tableName) => {
+    if (!paginationStateMap.value[tableName]) {
+        paginationStateMap.value[tableName] = {
+            current: 1,
+            pageSize: 10
+        }
     }
-  }
-  return undefined
-})
+    return paginationStateMap.value[tableName]
+}
+
+const updatePagination = (tableName, current, pageSize) => {
+    const state = getPaginationState(tableName)
+    paginationStateMap.value = {
+        ...paginationStateMap.value,
+        [tableName]: {
+            current: Number(current) > 0 ? Number(current) : state.current,
+            pageSize: Number(pageSize) > 0 ? Number(pageSize) : state.pageSize
+        }
+    }
+}
+
+const handleTablePaginationChange = (tableName, current, pageSize) => {
+    updatePagination(tableName, current, pageSize)
+    nextTick(() => {
+        syncTableScrollY(tableName)
+    })
+}
+
+const handleTableChange = (tableName, pagination) => {
+    if (pagination) {
+        updatePagination(tableName, pagination.current, pagination.pageSize)
+    }
+    nextTick(() => {
+        syncTableScrollY(tableName)
+    })
+}
+
+const getPaginationConfig = (tableName) => {
+    if (!props.enablePagination) {
+        return undefined
+    }
+    const state = getPaginationState(tableName)
+    const table = tables.value.find((item) => item.name === tableName)
+    const total = Array.isArray(table?.filteredRows) ? table.filteredRows.length : 0
+    return {
+        current: state.current,
+        pageSize: state.pageSize,
+        total,
+        showSizeChanger: true,
+        pageSizeOptions: ['10', '20', '50', '100'],
+        showQuickJumper: true,
+        onChange: (current, pageSize) => handleTablePaginationChange(tableName, current, pageSize),
+        onShowSizeChange: (current, pageSize) => handleTablePaginationChange(tableName, current, pageSize),
+        showTotal: (total) => t('PaginationTotal', { total })
+    }
+}
 
 const tab = ref('')
 const stepData = toRef(props, 'stepData')
 const unsortedTables = ref([])
 const intro = ref('')
 const images = ref([])
+const tableRegionRefs = ref({})
+const tableScrollYMap = ref({})
+const paginationStateMap = ref({})
+let tableResizeObserver = null
 
 const tables = computed( () => {
     const sortedTables = [...unsortedTables.value];
@@ -355,6 +407,38 @@ const tables = computed( () => {
 })
 
 const files = computed(() => props.viewConfig.files || [])
+const setTableRegionRef = (tableName) => (element) => {
+    if (element) {
+        tableRegionRefs.value[tableName] = element
+    } else {
+        delete tableRegionRefs.value[tableName]
+    }
+}
+
+const getTableScrollY = (tableName) => tableScrollYMap.value[tableName] || 360
+
+const syncTableScrollY = (tableName = tab.value) => {
+    const region = tableRegionRefs.value[tableName]
+    if (!region) {
+        return
+    }
+
+    const tableHeader = region.querySelector('.ant-table-header')
+    const tableThead = region.querySelector('.ant-table-thead')
+    const tablePagination = region.querySelector('.ant-pagination')
+    const headerHeight = tableHeader?.offsetHeight || tableThead?.offsetHeight || 44
+    const paginationHeight = tablePagination?.offsetHeight || 52
+    const regionStyle = window.getComputedStyle(region)
+    const paddingTop = Number.parseFloat(regionStyle.paddingTop || '0') || 0
+    const paddingBottom = Number.parseFloat(regionStyle.paddingBottom || '0') || 0
+    const reserved = headerHeight + paginationHeight + paddingTop + paddingBottom + 18
+    const nextY = Math.max(Math.floor(region.clientHeight - reserved), 180)
+
+    tableScrollYMap.value = {
+        ...tableScrollYMap.value,
+        [tableName]: nextY
+    }
+}
 
 const clearKeyword = (table) => {
     table.filteredRows = table.rows
@@ -375,12 +459,40 @@ const searchKeyword = (table) => {
         table.filteredRows = table.rows
     }
     if (tableData.value[table.name]) { tableData.value[table.name].selectedRows = [] }
+    if (props.enablePagination) {
+        updatePagination(table.name, 1, getPaginationState(table.name).pageSize)
+    }
+    nextTick(() => {
+        syncTableScrollY(table.name)
+    })
 }
 
 onMounted(() => {
     initIntro()
     initTable()
     initImages()
+})
+
+onMounted(async () => {
+    await nextTick()
+    syncTableScrollY(tab.value)
+    if (!window.ResizeObserver) {
+        return
+    }
+    tableResizeObserver = new window.ResizeObserver(() => {
+        syncTableScrollY(tab.value)
+    })
+    const currentRegion = tableRegionRefs.value[tab.value]
+    if (currentRegion) {
+        tableResizeObserver.observe(currentRegion)
+    }
+})
+
+onBeforeUnmount(() => {
+    if (tableResizeObserver) {
+        tableResizeObserver.disconnect()
+        tableResizeObserver = null
+    }
 })
 
 // 这个组件内不能通过监听语言变化来重新加载数据，因为数据文件的路径是从父组件传递来的
@@ -393,6 +505,21 @@ watch(() => props.viewConfig,
     initTable()
     initImages()
 })
+
+watch(
+    () => [tab.value, tables.value.length],
+    async () => {
+        await nextTick()
+        if (tableResizeObserver) {
+            tableResizeObserver.disconnect()
+            const currentRegion = tableRegionRefs.value[tab.value]
+            if (currentRegion) {
+                tableResizeObserver.observe(currentRegion)
+            }
+        }
+        syncTableScrollY(tab.value)
+    }
+)
 
 // ctr
 const showImage = ref(false)
@@ -424,6 +551,7 @@ const initTable = () => {
       $q.loading.show({ delay: 100 })
     }
     unsortedTables.value = []
+    paginationStateMap.value = {}
 
     // const tmpTables = []
     tableList.forEach((table, i) => {
@@ -522,6 +650,10 @@ const initTable = () => {
                     }
                 }
             }
+
+            nextTick(() => {
+                syncTableScrollY(tab.value || table.name)
+            })
 
             $q.loading.hide()
         })
@@ -624,6 +756,27 @@ const showHtmlDialg = (record, column) => {
     position: relative;
 }
 
+.common-module-root--full {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.common-module-root--full .common-tab-panels {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.common-module-root--full .common-tab-panels :deep(.q-tab-panel) {
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
 .tabs-header {
     display: flex;
     align-items: center;
@@ -700,6 +853,31 @@ const showHtmlDialg = (record, column) => {
 .search-toolbar {
     padding-left: 0;
     padding-right: 0;
+}
+
+.table-host {
+    min-height: 0;
+}
+
+.common-module-root--full .table-host {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.table-region {
+    min-height: 0;
+}
+
+.common-module-root--full .table-region {
+    flex: 1;
+    overflow: hidden;
+}
+
+.common-module-root--full .table-region :deep(.ant-table-wrapper),
+.common-module-root--full .table-region :deep(.ant-spin-nested-loading),
+.common-module-root--full .table-region :deep(.ant-spin-container) {
+    height: 100%;
 }
 
 .search-input :deep(.q-field__control) {

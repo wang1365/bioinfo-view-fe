@@ -1,5 +1,15 @@
 ﻿<template>
     <div ref="containerRef" :class="['pathogen-table-container', { 'selectable-mode': selectable }]">
+        <div v-if="downloadUrl || !!$slots.actions" class="pathogen-toolbar q-mb-sm">
+            <AppActionButton
+                v-if="downloadUrl"
+                icon="download"
+                variant="primary"
+                :label="t('Download')"
+                @click="downloadTableFile"
+            />
+            <slot name="actions" />
+        </div>
         <div v-if="errorText" ref="bannerRef">
             <q-banner dense class="bg-orange-1 text-orange-9 q-mb-sm">
                 {{ errorText }}
@@ -15,6 +25,7 @@
                 :row-selection="rowSelection"
                 :scroll="tableScroll"
                 :row-class-name="rowClassName"
+                @change="handleTableChange"
                 row-key="__rowKey"
                 bordered
                 size="middle"
@@ -59,11 +70,9 @@
                         row-key="sample"
                         :columns="compareColumns"
                         :data-source="compareRows"
-                        :pagination="{
-                            pageSize: 10,
-                            showSizeChanger: true,
-                            showTotal: (total) => t('PaginationTotal', { total })
-                        }"
+                        :row-class-name="compareRowClassName"
+                        :pagination="comparePagination"
+                        @change="handleCompareTableChange"
                         bordered
                         size="small"
                     />
@@ -78,13 +87,14 @@
 
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
+import AppActionButton from 'src/components/button/AppActionButton.vue'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 import { readTaskFile } from 'src/api/task'
-import { getRelatedTasks } from 'src/api/report'
 import { getRp2LangSuffix, parseTabText } from './rp2File'
+const { buildIgvTaskFileUrl, getTaskFileDownloadName } = require('./textFileTableToolbar')
 
 const props = defineProps({
     taskId: {
@@ -96,6 +106,10 @@ const props = defineProps({
         required: true
     },
     sampleIdentifier: {
+        type: String,
+        default: ''
+    },
+    taskRootDir: {
         type: String,
         default: ''
     },
@@ -132,6 +146,14 @@ const compareRows = ref([])
 const containerRef = ref(null)
 const bannerRef = ref(null)
 const tableScrollY = ref(420)
+const paginationState = ref({
+    current: 1,
+    pageSize: 10
+})
+const comparePaginationState = ref({
+    current: 1,
+    pageSize: 10
+})
 let resizeObserver = null
 
 const categoryDirMap = {
@@ -145,13 +167,27 @@ const pagination = computed(() => {
         return false
     }
     return {
-        pageSize: 10,
+        current: paginationState.value.current,
+        pageSize: paginationState.value.pageSize,
         showSizeChanger: true,
         pageSizeOptions: ['10', '20', '50', '100'],
         showQuickJumper: true,
+        onChange: handlePageChange,
+        onShowSizeChange: handlePageSizeChange,
         showTotal: (total) => t('PaginationTotal', { total })
     }
 })
+
+const comparePagination = computed(() => ({
+    current: comparePaginationState.value.current,
+    pageSize: comparePaginationState.value.pageSize,
+    showSizeChanger: true,
+    pageSizeOptions: ['10', '20', '50', '100'],
+    showQuickJumper: true,
+    onChange: handleComparePageChange,
+    onShowSizeChange: handleComparePageSizeChange,
+    showTotal: (total) => t('PaginationTotal', { total })
+}))
 
 const rowSelection = computed(() => {
     if (!props.selectable) {
@@ -184,11 +220,15 @@ const buildFilePath = (sampleName) => {
 }
 
 const filePath = computed(() => buildFilePath(props.sampleName))
+const downloadUrl = computed(() => buildIgvTaskFileUrl(props.taskRootDir, filePath.value))
+const downloadFileName = computed(() => getTaskFileDownloadName(filePath.value))
+
+const getMergedResultFilePath = () => `menu/merged_results.${getRp2LangSuffix(langCode.value)}.add.txt`
 
 const compareColumns = computed(() => [
     { title: t('Sample'), dataIndex: 'sample', key: 'sample', width: 180 },
     { title: props.category === 'virus' ? t('Virus') : t('Zhong'), dataIndex: 'speciesName', key: 'speciesName' },
-    { title: t('TotalProportion'), dataIndex: 'totalProportion', key: 'totalProportion', width: 140 },
+    { title: 'RPM', dataIndex: 'rpm', key: 'rpm', width: 120 },
     { title: t('ReadsCount'), dataIndex: 'readsCount', key: 'readsCount', width: 120 }
 ])
 
@@ -248,6 +288,55 @@ const getCompareSpeciesName = (row) => {
     return String((speciesKey && row?.[speciesKey]) || '').trim()
 }
 
+const normalizeSpeciesName = (value) =>
+    String(value || '')
+        .trim()
+        .replace(/\s+/g, '')
+        .replace(/[()（）\[\]【】]/g, '')
+        .toLowerCase()
+
+const updatePagination = (current, pageSize) => {
+    paginationState.value = {
+        current: Number(current) > 0 ? Number(current) : paginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : paginationState.value.pageSize
+    }
+}
+
+const handlePageChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handlePageSizeChange = (current, pageSize) => {
+    updatePagination(current, pageSize)
+}
+
+const handleTableChange = (paginationConfig) => {
+    if (paginationConfig) {
+        updatePagination(paginationConfig.current, paginationConfig.pageSize)
+    }
+}
+
+const updateComparePagination = (current, pageSize) => {
+    comparePaginationState.value = {
+        current: Number(current) > 0 ? Number(current) : comparePaginationState.value.current,
+        pageSize: Number(pageSize) > 0 ? Number(pageSize) : comparePaginationState.value.pageSize
+    }
+}
+
+const handleComparePageChange = (current, pageSize) => {
+    updateComparePagination(current, pageSize)
+}
+
+const handleComparePageSizeChange = (current, pageSize) => {
+    updateComparePagination(current, pageSize)
+}
+
+const handleCompareTableChange = (paginationConfig) => {
+    if (paginationConfig) {
+        updateComparePagination(paginationConfig.current, paginationConfig.pageSize)
+    }
+}
+
 const toIgvPath = (rawPath) => {
     const path = String(rawPath || '').trim()
     if (!path) {
@@ -265,18 +354,13 @@ const getFileName = (rawPath) => {
     return normalized.substring(normalized.lastIndexOf('/') + 1)
 }
 
-const extractCompareMatchFromFile = (headers, row, sampleLabel) => {
+const extractCompareMatchFromFile = (headers, row, sampleLabel, reported = '') => {
     const speciesKey = findHeaderByAliasList(headers, ['中文种名', '种名', 'speciesname', 'species', 'virusspeciesname', 'virusname'])
-    const totalProportionKey = findHeaderByAliasList(headers, [
-        '总占比',
-        'totalproportion',
-        'abundance(%)',
-        'abundance',
-        'relativeabundance'
-    ])
+    const rpmKey = findHeaderByAliasList(headers, ['rpm'])
     const readsCountKey = findHeaderByAliasList(headers, [
         '种count',
         '种_count',
+        '序列数',
         'speciescount',
         'readscount',
         'count'
@@ -285,12 +369,65 @@ const extractCompareMatchFromFile = (headers, row, sampleLabel) => {
     return {
         sample: sampleLabel || '-',
         speciesName: speciesKey ? row?.[speciesKey] || '-' : '-',
-        totalProportion: totalProportionKey ? row?.[totalProportionKey] || '-' : '-',
-        readsCount: readsCountKey ? row?.[readsCountKey] || '-' : '-'
+        reported: reported || '-',
+        rpm: rpmKey ? row?.[rpmKey] || '-' : '-',
+        readsCount: readsCountKey ? row?.[readsCountKey] || '-' : '-',
+        __reported: String(reported || '')
+            .trim()
+            .toUpperCase() === 'Y'
     }
 }
 
-const buildCompareResultFromRelatedTasks = async () => {
+const loadCurrentTaskOtherSampleNames = async () => {
+    const response = await readTaskFile(props.taskId, getMergedResultFilePath(), true, true)
+    const text = typeof response === 'string' ? response : ''
+    if (!text) {
+        return []
+    }
+
+    const { headers, rows: parsedRows } = parseTabText(text, { hasHeader: true })
+    if (!headers.length || !parsedRows.length) {
+        return []
+    }
+
+    const currentSampleName = String(props.sampleName || '').trim()
+    const dataIdentifierAliases = [
+        '数据识别号',
+        'dataidentifier',
+        'data id',
+        'dataid',
+        'data_id',
+        'sampleid',
+        'sample id',
+        'sample_id'
+    ]
+    let sampleHeader = findHeaderByAliasList(headers, dataIdentifierAliases)
+    const headerByCurrentSample = headers.find((header) =>
+        parsedRows.some((row) => String(row?.[header] || '').trim() === currentSampleName)
+    )
+    if (!sampleHeader || !parsedRows.some((row) => String(row?.[sampleHeader] || '').trim() === currentSampleName)) {
+        sampleHeader = headerByCurrentSample || sampleHeader || ''
+    }
+    if (!sampleHeader) {
+        return []
+    }
+
+    const currentPrefix = (currentSampleName.match(/^[A-Za-z]+/) || [''])[0].toUpperCase()
+    const sampleNames = parsedRows
+        .map((row) => String(row?.[sampleHeader] || '').trim())
+        .filter((sampleName) => sampleName && sampleName !== currentSampleName)
+        .filter((sampleName) => {
+            if (!currentPrefix) {
+                return true
+            }
+            const samplePrefix = (sampleName.match(/^[A-Za-z]+/) || [''])[0].toUpperCase()
+            return samplePrefix === currentPrefix
+        })
+
+    return Array.from(new Set(sampleNames))
+}
+
+const buildCompareResultFromCurrentTask = async () => {
     rows.value.forEach((row) => {
         row.__compareResult = []
         row.__compareCount = 0
@@ -300,7 +437,7 @@ const buildCompareResultFromRelatedTasks = async () => {
     rows.value.forEach((row) => {
         const speciesName = getCompareSpeciesName(row)
         if (speciesName) {
-            targetSpeciesMap.set(row.__rowKey, speciesName)
+            targetSpeciesMap.set(row.__rowKey, normalizeSpeciesName(speciesName))
         }
     })
 
@@ -308,30 +445,15 @@ const buildCompareResultFromRelatedTasks = async () => {
         return
     }
 
-    const relatedTasks = await getRelatedTasks(props.taskId)
-    const tasks = Array.isArray(relatedTasks) ? relatedTasks : []
+    const otherSampleNames = await loadCurrentTaskOtherSampleNames()
+    if (!otherSampleNames.length) {
+        return
+    }
 
     await Promise.all(
-        tasks.map(async (task) => {
-            const taskId = task?.id
-            if (!taskId) {
-                return
-            }
-
+        otherSampleNames.map(async (sampleLabel) => {
             try {
-                const matchedSample = Array.isArray(task?.samples)
-                    ? task.samples.find(
-                          (sample) =>
-                              String(sample?.sample_identifier || '').trim() ===
-                              String(props.sampleIdentifier || '').trim()
-                      )
-                    : null
-                const sampleLabel = String(matchedSample?.identifier || '').trim()
-                if (!sampleLabel) {
-                    return
-                }
-
-                const response = await readTaskFile(taskId, buildFilePath(sampleLabel), true, true)
+                const response = await readTaskFile(props.taskId, buildFilePath(sampleLabel), true, true)
                 const text = typeof response === 'string' ? response : ''
                 if (!text) {
                     return
@@ -350,21 +472,37 @@ const buildCompareResultFromRelatedTasks = async () => {
                     'virusspeciesname',
                     'virusname'
                 ])
+                const reportedHeader = findReportedHeader(headers)
                 if (!speciesKey) {
                     return
                 }
+                const speciesRowMap = new Map()
+                parsedRows.forEach((item) => {
+                    const normalizedSpecies = normalizeSpeciesName(item?.[speciesKey])
+                    if (!normalizedSpecies || speciesRowMap.has(normalizedSpecies)) {
+                        return
+                    }
+                    speciesRowMap.set(normalizedSpecies, item)
+                })
+
                 rows.value.forEach((row) => {
                     const targetSpecies = targetSpeciesMap.get(row.__rowKey)
                     if (!targetSpecies) {
                         return
                     }
-                    const match = parsedRows.find(
-                        (item) => String(item?.[speciesKey] || '').trim() === targetSpecies
-                    )
+                    const match = speciesRowMap.get(targetSpecies)
                     if (!match) {
                         return
                     }
-                    row.__compareResult.push(extractCompareMatchFromFile(headers, match, sampleLabel))
+                    const reportedValue = reportedHeader ? String(match?.[reportedHeader] ?? '').trim() : ''
+                    row.__compareResult.push(
+                        extractCompareMatchFromFile(
+                            headers,
+                            match,
+                            sampleLabel,
+                            reportedValue
+                        )
+                    )
                     row.__compareCount = row.__compareResult.length
                 })
             } catch (error) {
@@ -373,6 +511,8 @@ const buildCompareResultFromRelatedTasks = async () => {
         })
     )
 }
+
+const compareRowClassName = (record) => (record?.__reported ? 'rp2-reported-row' : '')
 
 const displayHeader = (header) => {
     const normalized = normalizeHeader(header)
@@ -600,6 +740,19 @@ const emitSelectionChange = () => {
     })
 }
 
+const downloadTableFile = () => {
+    if (!downloadUrl.value) {
+        return
+    }
+    const link = document.createElement('a')
+    link.href = downloadUrl.value
+    link.download = downloadFileName.value
+    link.target = '_blank'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+}
+
 const loadData = async () => {
     loading.value = true
     errorText.value = ''
@@ -660,7 +813,7 @@ const loadData = async () => {
         columns.value = buildColumns(keptHeaders)
 
         if (props.showVerification) {
-            await buildCompareResultFromRelatedTasks()
+            await buildCompareResultFromCurrentTask()
         }
     } catch (error) {
         rows.value = []
@@ -676,6 +829,7 @@ const loadData = async () => {
 const showCompareDialog = (record) => {
     const compareResult = Array.isArray(record?.__compareResult) ? record.__compareResult : []
     compareRows.value = compareResult
+    comparePaginationState.value.current = 1
     compareDialogTitle.value = `${t('Verification')} - ${getPathogenKeyword(record) || '-'}`
     compareDialogVisible.value = true
 }
@@ -735,6 +889,14 @@ watch(
     flex-direction: column;
 }
 
+.pathogen-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
 .table-region {
     flex: 1;
     min-height: 0;
@@ -755,7 +917,7 @@ watch(
     overflow: visible !important;
 }
 
-.pathogen-table-container :deep(.rp2-reported-row > td) {
+:deep(.rp2-reported-row > td) {
     background-color: #fff7e6;
 }
 

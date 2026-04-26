@@ -1,5 +1,6 @@
 export function getRp2LangSuffix(langCode) {
-    return langCode === 'en' ? 'EN' : 'CN'
+    const normalizedLang = String(langCode || '').trim().toLowerCase()
+    return normalizedLang.startsWith('en') ? 'EN' : 'CN'
 }
 
 export function parseTabText(rawText, { hasHeader = true } = {}) {
