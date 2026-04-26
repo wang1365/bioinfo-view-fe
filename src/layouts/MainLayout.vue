@@ -16,6 +16,9 @@
                 <q-space />
                 <div class="toolbar-actions row items-center no-wrap">
                     <SelectLanguage dark v-if="store.langConfig.langSwitch" />
+                    <q-btn dense flat round icon="smart_toy" class="toolbar-icon-btn" @click="toggleAgentPanel">
+                        <q-tooltip>AI 助手</q-tooltip>
+                    </q-btn>
                     <Fullscreen />
                     <q-btn dense flat no-caps class="user-entry">
                         <q-icon name="person_pin" size="20px" />
@@ -131,6 +134,21 @@ const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+
+function toggleAgentPanel() {
+    if (typeof window.__initPageAgent === 'function') {
+        // togglePanel 通过 window 上挂载的方法或直接操作
+        const agent = window.__pageAgentInstance
+        if (agent?.panel) {
+            if (agent.panel.wrapper.style.display === 'none') {
+                agent.panel.show()
+                agent.panel.expand()
+            } else {
+                agent.panel.hide()
+            }
+        }
+    }
 }
 
 function showProfile() {
