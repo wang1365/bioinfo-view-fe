@@ -2,6 +2,8 @@ import { boot } from 'quasar/wrappers'
 import { PageAgent } from 'page-agent'
 import { usePageAgentStore } from 'src/stores/pageAgent'
 import { listConfig } from 'src/api/config'
+import { bioAgentTools } from 'src/boot/agentTools'
+import { SYSTEM_INSTRUCTION, getPageInstruction, getPageContext } from 'src/boot/agentInstructions'
 
 const CONFIG_NAME = 'page_agent_config'
 
@@ -295,6 +297,20 @@ export default boot(({ app }) => {
                 baseURL: store.baseURL,
                 apiKey: store.apiKey,
                 language: store.language,
+                // 生信领域自定义工具集
+                customTools: bioAgentTools,
+                // 领域指令系统
+                instructions: {
+                    system: SYSTEM_INSTRUCTION,
+                    getPageInstructions: (url) => {
+                        const pageInstruction = getPageInstruction(url)
+                        const pageContext = getPageContext()
+                        const parts = []
+                        if (pageInstruction) parts.push(pageInstruction)
+                        if (pageContext) parts.push(`当前页面上下文:\n${pageContext}`)
+                        return parts.length > 0 ? parts.join('\n\n') : undefined
+                    },
+                },
             })
             app.config.globalProperties.$pageAgent = pageAgentInstance
             window.__pageAgentInstance = pageAgentInstance

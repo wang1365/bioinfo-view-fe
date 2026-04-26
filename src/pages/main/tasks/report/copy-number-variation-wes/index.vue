@@ -441,7 +441,7 @@
                                 </div>
                             </template>
                             <template v-if="column.dataIndex === 'plot'">
-                                <div class="row">
+                                <div class="row items-center q-gutter-xs">
                                     <img
                                         :src="'/igv' + record.Plot.replace('//', '/')"
                                         alt="."
@@ -449,6 +449,17 @@
                                         style="width: 100px;height: 100px;"
                                         @click="clickDetail(record)"
                                     />
+                                    <q-btn
+                                        icon="auto_awesome"
+                                        color="primary"
+                                        size="sm"
+                                        flat
+                                        round
+                                        dense
+                                        @click="clickAIAnalysis(record)"
+                                    >
+                                        <q-tooltip>AI 解读</q-tooltip>
+                                    </q-btn>
                                 </div>
                             </template>
                             <!-- <template v-if="column.key === 'operation'">
@@ -588,6 +599,11 @@
             <Igv :taskId="props.task.id" :file="igvFile" />
         </q-card>
     </q-dialog>
+    <MutationAIAnalysisDialog
+        v-model="aiDialogVisible"
+        :record="aiCurrentRow"
+        type="cnv-wes"
+    />
 </template>
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
@@ -605,6 +621,7 @@ import {listVerdictByPatient} from 'src/api/verdict'
 import {globalStore} from 'src/stores/global'
 import {useQuasar} from "quasar";
 import AppActionButton from 'src/components/button/AppActionButton.vue'
+import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 
 
 const store = globalStore()
@@ -937,6 +954,15 @@ const reset = () => {
 function clickDetail(record) {
     currentRow.value = record
     dialogVisible.value = true
+}
+
+// AI 分析
+const aiDialogVisible = ref(false)
+const aiCurrentRow = ref(null)
+
+function clickAIAnalysis(record) {
+    aiCurrentRow.value = record
+    aiDialogVisible.value = true
 }
 
 const onSelectChange = (selectedRowKeys) => {

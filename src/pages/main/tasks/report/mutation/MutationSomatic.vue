@@ -284,6 +284,17 @@
                                         padding="xs"
                                         @click="clickIgv(record)"
                                     />
+                                    <q-btn
+                                        icon="auto_awesome"
+                                        color="primary"
+                                        size="sm"
+                                        flat
+                                        round
+                                        dense
+                                        @click="clickAIAnalysis(record)"
+                                    >
+                                        <q-tooltip>AI 解读</q-tooltip>
+                                    </q-btn>
                                 </div>
                             </template>
                             <template v-else>
@@ -378,6 +389,12 @@
             <Igv :taskId="props.task.id" :file="igvFile" :chr="igvChr" :position="igvPosition"/>
         </q-card>
     </q-dialog>
+    <MutationAIAnalysisDialog
+        v-model="aiDialogVisible"
+        :record="aiCurrentRow"
+        type="somatic"
+        :header="props.header"
+    />
 </template>
 
 <script setup>
@@ -397,6 +414,7 @@ import { filterOption } from 'ant-design-vue/lib/vc-mentions/src/util'
 import Igv from './Igv'
 import Cmp from './Comparator'
 import { getDualIdentifiers } from "src/utils/samples"
+import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 import { useComparator } from 'src/utils/comparator'
 import { useI18n } from 'vue-i18n'
 import { useCustomCell } from './index'
@@ -697,7 +715,7 @@ const fixedColumns = computed(() => {
     })
 
     // 添加操作列
-    result.push({ title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 120 })
+    result.push({ title: '操作列', key: 'operation', align: 'center', fixed: 'right', width: 130 })
 
     return result
 })
@@ -838,6 +856,15 @@ function clickIgv(record) {
     igvPosition.value = Number(record.col3)
     igvFile.value = `Mut_somatic/${record.col1}-${record.col2}.igv`
     igvVisible.value = true
+}
+
+// AI 分析
+const aiDialogVisible = ref(false)
+const aiCurrentRow = ref(null)
+
+function clickAIAnalysis(record) {
+    aiCurrentRow.value = record
+    aiDialogVisible.value = true
 }
 
 const searchFilterRows = (searchParams) => {

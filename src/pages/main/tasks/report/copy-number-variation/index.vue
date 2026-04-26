@@ -210,7 +210,20 @@
                         <span v-else>{{ record[column.dataIndex] }}</span>
                     </template>
                     <template v-else>
-                        <TableActionButton variant="primary" :label="$t('View')" @click="clickView(record)" />
+                        <div class="row q-gutter-xs items-center justify-center">
+                            <TableActionButton variant="primary" :label="$t('View')" @click="clickView(record)" />
+                            <q-btn
+                                icon="auto_awesome"
+                                color="primary"
+                                size="sm"
+                                flat
+                                round
+                                dense
+                                @click="clickAIAnalysis(record)"
+                            >
+                                <q-tooltip>AI 解读</q-tooltip>
+                            </q-btn>
+                        </div>
                     </template>
                 </template>
             </AppDataTable>
@@ -224,6 +237,12 @@
             </q-card-section>
         </q-card>
     </q-dialog>
+
+    <MutationAIAnalysisDialog
+        v-model="aiDialogVisible"
+        :record="aiCurrentRow"
+        type="cnv"
+    />
 
     <q-dialog v-model="dlgVisible">
         <q-card style="width: 75%; max-width: 2000px">
@@ -253,6 +272,7 @@ import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
 import AppActionButton from 'src/components/button/AppActionButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
+import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 import { globalStore } from 'src/stores/global'
 import { storeToRefs } from 'pinia'
 
@@ -348,7 +368,7 @@ const columns = computed(()=> [
     { key: 'Rank', title: 'Rank', dataIndex: 'Rank', align: 'center', width: 50 },
     { key: 'Phenotypes', title: 'Phenotypes', dataIndex: 'Phenotypes', align: 'left', width: 200 },
     { key: 'Drugs', title: 'Drugs', dataIndex: 'Drugs', align: 'center', width: 80 },
-    { key: 'Operation', title: 'Plot', dataIndex: 'Operation', align: 'center', width: 50 },
+    { key: 'Operation', title: 'Plot', dataIndex: 'Operation', align: 'center', width: 80 },
 ].map(t => {
     t.customCell = customCell
     return t
@@ -369,6 +389,15 @@ const handleChange = (pagination, filters) => {
 const clickView = (record) => {
     showImage.value = true
     imageUrl.value = `/igv${record.Plot}`
+}
+
+// AI 分析
+const aiDialogVisible = ref(false)
+const aiCurrentRow = ref(null)
+
+function clickAIAnalysis(record) {
+    aiCurrentRow.value = record
+    aiDialogVisible.value = true
 }
 
 watch(langCode, v => loadData())

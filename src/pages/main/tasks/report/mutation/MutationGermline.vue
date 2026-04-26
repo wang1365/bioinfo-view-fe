@@ -236,6 +236,17 @@
                                         padding="xs"
                                         @click="clickIgv(record)"
                                     />
+                                    <q-btn
+                                        icon="auto_awesome"
+                                        color="primary"
+                                        size="sm"
+                                        flat
+                                        round
+                                        dense
+                                        @click="clickAIAnalysis(record)"
+                                    >
+                                        <q-tooltip>AI 解读</q-tooltip>
+                                    </q-btn>
                                 </div>
                             </template>
                             <template v-else>
@@ -327,6 +338,12 @@
             <Igv :taskId="props.task.id" :file="igvFile" :chr="igvChr" :position="igvPosition"/>
         </q-card>
     </q-dialog>
+    <MutationAIAnalysisDialog
+        v-model="aiDialogVisible"
+        :record="aiCurrentRow"
+        type="germline"
+        :header="props.header"
+    />
 </template>
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
@@ -348,6 +365,7 @@ import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
 import { useCustomCell } from './index'
 import * as XLSX from "xlsx";
+import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 import AppActionButton from 'src/components/button/AppActionButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
 
@@ -604,7 +622,7 @@ const baseFixedColumns = [
     // { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
 
     // {i: 0, key: 'operation', title: '操作', dataIndex: 'operation', align: 'center', fixed: 'right', width: 75},
-    { title: '操作列',  key: 'operation', align: 'center', fixed: 'right', width: 120 }
+    { title: '操作列',  key: 'operation', align: 'center', fixed: 'right', width: 130 }
 ]
 
 // 动态计算固定列，包括基础固定列和来自props.header的特定列
@@ -722,6 +740,15 @@ function clickIgv (record) {
     igvVisible.value = true
 
     console.log('xxxxxxxxxxxxxxxxx click igv germiline', record, igvChr.value, igvPosition.value)
+}
+
+// AI 分析
+const aiDialogVisible = ref(false)
+const aiCurrentRow = ref(null)
+
+function clickAIAnalysis(record) {
+    aiCurrentRow.value = record
+    aiDialogVisible.value = true
 }
 
 const customRow = (record, index) => {

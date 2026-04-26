@@ -17,8 +17,23 @@
             <AppDataTable style="z-index:1" size="middle" bordered rowKey="0" :data-source="filteredRows1" :columns="columns1"
                 :sticky="true" :row-selection="rowSelection1">
                 <template #bodyCell="{ column, record }">
-                    <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
-                        @click="clickView(record)" />
+                    <template v-if="column.title === 'IGV'">
+                        <div class="row q-gutter-xs items-center justify-center">
+                            <TableActionButton variant="primary" label="IGV"
+                                @click="clickView(record)" />
+                            <q-btn
+                                icon="auto_awesome"
+                                color="primary"
+                                size="sm"
+                                flat
+                                round
+                                dense
+                                @click="clickAIAnalysis(record, 'qt')"
+                            >
+                                <q-tooltip>AI 解读</q-tooltip>
+                            </q-btn>
+                        </div>
+                    </template>
                     <template v-else>
                         <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]"
                             :overlay-style="{ maxWidth: '1200px' }">
@@ -50,8 +65,23 @@
             <AppDataTable style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
                 :sticky="true" rowKey="0" :row-selection="rowSelection2">
                 <template #bodyCell="{ column, record }">
-                    <TableActionButton v-if="column.title === 'IGV'" variant="primary" label="IGV"
-                        @click="clickView(record)" />
+                    <template v-if="column.title === 'IGV'">
+                        <div class="row q-gutter-xs items-center justify-center">
+                            <TableActionButton variant="primary" label="IGV"
+                                @click="clickView(record)" />
+                            <q-btn
+                                icon="auto_awesome"
+                                color="primary"
+                                size="sm"
+                                flat
+                                round
+                                dense
+                                @click="clickAIAnalysis(record, 'qn')"
+                            >
+                                <q-tooltip>AI 解读</q-tooltip>
+                            </q-btn>
+                        </div>
+                    </template>
                     <template v-else>
                         <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]"
                             :overlay-style="{ maxWidth: '1200px' }">
@@ -69,6 +99,12 @@
             <IGV :taskId="route.params.id" :file="selectedFile"></IGV>
         </q-card>
     </q-dialog>
+    <MutationAIAnalysisDialog
+        v-model="aiDialogVisible"
+        :record="aiCurrentRow"
+        :type="aiType"
+        :header="aiHeader"
+    />
 </template>
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
@@ -83,6 +119,7 @@ import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
 import AppActionButton from 'src/components/button/AppActionButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
+import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 
 const { t } = useI18n();
 const props = defineProps({
@@ -288,6 +325,19 @@ const clearKeyword2 = () => {
 const clickView = (record) => {
     selectedFile.value = record[9]
     igvVisible.value = true
+}
+
+// AI 分析
+const aiDialogVisible = ref(false)
+const aiCurrentRow = ref(null)
+const aiType = ref('fusion-single')
+const aiHeader = computed(() => qtHeader.value || props.qtHeader || [])
+
+function clickAIAnalysis(record, source) {
+    aiCurrentRow.value = record
+    aiType.value = source === 'qn' ? 'fusion-single' : 'fusion-single'
+    aiHeader.value = source === 'qn' ? (qnHeader.value || props.qnHeader || []) : (qtHeader.value || props.qtHeader || [])
+    aiDialogVisible.value = true
 }
 
 const { qtRows, qtHeader, qtSearchParam, qtSelectedRows, qnRows, qnHeader, qnSelectedRows, qnSearchParam } =

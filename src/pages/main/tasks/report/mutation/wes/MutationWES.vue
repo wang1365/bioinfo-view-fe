@@ -344,6 +344,17 @@
                                     padding="xs"
                                     @click="clickIgv(record)"
                                 />
+                                <q-btn
+                                    icon="auto_awesome"
+                                    color="primary"
+                                    size="sm"
+                                    flat
+                                    round
+                                    dense
+                                    @click="clickAIAnalysis(record)"
+                                >
+                                    <q-tooltip>AI 解读</q-tooltip>
+                                </q-btn>
                             </template>
                             <!--                            <template v-else>-->
                             <!--                                <a-tooltip v-if="column.ellipsis" color="#3b4146" :title="record[column.dataIndex]">-->
@@ -408,6 +419,11 @@
             </template>
         </div>
     </a-drawer>
+    <MutationAIAnalysisDialog
+        v-model="aiDialogVisible"
+        :record="aiCurrentRow"
+        type="wes"
+    />
 </template>
 <script setup>
 import AppDataTable from 'src/components/table/AppDataTable.vue'
@@ -429,6 +445,7 @@ import { getCurrentUsername } from 'src/utils/user'
 import GenesetDialog from 'pages/main/tasks/report/common-module/GenesetDialog.vue'
 import SearchControl from 'pages/main/tasks/report/mutation/wes/SearchControl.vue'
 import { useCustomCell } from '../index'
+import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 
 const { t } = useI18n()
 const { options: comparatorOptions, compare } = useComparatorOptions()
@@ -582,6 +599,15 @@ function clickIgv(record) {
     currentRow.value = record
     igvFile.value = `Mut_WES/igv/${record.Chr}_${record.Start}_${record.End}.igv`
     igvVisible.value = true
+}
+
+// AI 分析
+const aiDialogVisible = ref(false)
+const aiCurrentRow = ref(null)
+
+function clickAIAnalysis(record) {
+    aiCurrentRow.value = record
+    aiDialogVisible.value = true
 }
 
 const customRow = (record, index) => {
