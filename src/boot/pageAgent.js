@@ -319,13 +319,12 @@ export default boot(({ app }) => {
             // 拦截 Panel 关闭行为，使其只隐藏不销毁
             interceptPanelClose()
 
-            // 创建浮动 AI 图标按钮
-            createFabButton()
+            // 不再创建浮动 FAB 按钮，统一通过工具栏 AI 问答按钮唤起
 
-            // 默认隐藏 Panel，用户通过 FAB 按钮唤起
+            // 默认隐藏 Panel
             panelVisible = false
 
-            console.log('[PageAgent] 初始化成功，点击右下角 AI 图标开始使用')
+            console.log('[PageAgent] 初始化成功，点击工具栏 AI 问答按钮开始使用')
         } catch (e) {
             console.error('[PageAgent] 初始化失败:', e)
             store.setInitialized(false)

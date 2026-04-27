@@ -16,9 +16,22 @@
                 <q-space />
                 <div class="toolbar-actions row items-center no-wrap">
                     <SelectLanguage dark v-if="store.langConfig.langSwitch" />
-                    <q-btn dense flat round icon="smart_toy" class="toolbar-icon-btn" @click="toggleAgentPanel">
-                        <q-tooltip>AI 助手</q-tooltip>
-                    </q-btn>
+                    <div
+                        class="ai-bio-btn"
+                        @click="aiChatOpen = !aiChatOpen"
+                        :class="{ 'ai-bio-btn--active': aiChatOpen }"
+                    >
+                        <!-- 旋转渐变背景 -->
+                        <span class="ai-bio-btn__glow"></span>
+                        <!-- 轨道粒子 -->
+                        <span class="ai-bio-btn__orbit"></span>
+                        <span class="ai-bio-btn__dot ai-bio-btn__dot--1"></span>
+                        <span class="ai-bio-btn__dot ai-bio-btn__dot--2"></span>
+                        <span class="ai-bio-btn__dot ai-bio-btn__dot--3"></span>
+                        <!-- 图标 -->
+                        <q-icon name="smart_toy" class="ai-bio-btn__icon" />
+                        <q-tooltip>AI 生信助手</q-tooltip>
+                    </div>
                     <Fullscreen />
                     <q-btn dense flat no-caps class="user-entry">
                         <q-icon name="person_pin" size="20px" />
@@ -112,12 +125,15 @@
                 <router-view />
             </div>
         </q-page-container>
+
+        <AiChatDrawer v-model="aiChatOpen" />
     </q-layout>
 </template>
 
 <script setup>
 import Fullscreen from "./Fullscreen.vue"
 import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue"
+import AiChatDrawer from "src/components/AiChatDrawer.vue"
 import { onBeforeMount, ref } from "vue"
 import { useRouter } from "vue-router"
 import { globalStore } from "src/stores/global"
@@ -131,24 +147,10 @@ const menuList = getAuthMenu(store.currentUser)
 
 const router = useRouter();
 const leftDrawerOpen = ref(false);
+const aiChatOpen = ref(false);
 
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-
-function toggleAgentPanel() {
-    if (typeof window.__initPageAgent === 'function') {
-        // togglePanel 通过 window 上挂载的方法或直接操作
-        const agent = window.__pageAgentInstance
-        if (agent?.panel) {
-            if (agent.panel.wrapper.style.display === 'none') {
-                agent.panel.show()
-                agent.panel.expand()
-            } else {
-                agent.panel.hide()
-            }
-        }
-    }
 }
 
 function showProfile() {
@@ -254,6 +256,186 @@ onBeforeMount(() => {
 .toolbar-icon-btn {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+// ---- AI 生信助手按钮（科技感，默认常亮）----
+.ai-bio-btn {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    z-index: 1;
+
+    // 底层背景 — 默认渐变
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(57, 182, 255, 0.14), rgba(189, 69, 251, 0.10));
+        border: 1px solid rgba(57, 182, 255, 0.28);
+        transition: all 0.35s ease;
+        z-index: -2;
+    }
+
+    &:hover::before {
+        background: linear-gradient(135deg, rgba(57, 182, 255, 0.22), rgba(189, 69, 251, 0.18));
+        border-color: rgba(57, 182, 255, 0.5);
+    }
+
+    // 旋转渐变光晕 — 默认常亮
+    &__glow {
+        position: absolute;
+        inset: -3px;
+        border-radius: 50%;
+        background: conic-gradient(
+            from var(--angle, 0deg),
+            transparent 40%,
+            rgba(57, 182, 255, 0.65) 55%,
+            rgba(189, 69, 251, 0.55) 70%,
+            transparent 85%
+        );
+        opacity: 1;
+        --angle: 0deg;
+        animation: aiBtnSpin 2.2s linear infinite;
+        z-index: -1;
+    }
+
+    &:hover &__glow {
+        opacity: 1;
+        animation-duration: 1.6s;
+    }
+
+    // 轨道环 — 默认常亮
+    &__orbit {
+        position: absolute;
+        inset: 2px;
+        border-radius: 50%;
+        border: 1px solid transparent;
+        border-top-color: rgba(57, 182, 255, 0.45);
+        border-right-color: rgba(189, 69, 251, 0.28);
+        opacity: 1;
+        transform: scale(1);
+        animation: aiBtnOrbitSpin 3.2s linear infinite reverse;
+    }
+
+    &:hover &__orbit {
+        transform: scale(1.08);
+        animation-duration: 2.4s;
+    }
+
+    // 轨道粒子 — 默认常亮
+    &__dot {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        opacity: 1;
+
+        &--1 {
+            top: 0;
+            left: 50%;
+            margin-left: -1.5px;
+            background: #39b6ff;
+            box-shadow: 0 0 6px #39b6ff;
+            animation: aiDotFloat1 2.6s ease-in-out infinite;
+        }
+
+        &--2 {
+            right: 0;
+            top: 50%;
+            margin-top: -1.5px;
+            background: #bd45fb;
+            box-shadow: 0 0 6px #bd45fb;
+            animation: aiDotFloat2 2.9s ease-in-out infinite;
+        }
+
+        &--3 {
+            bottom: 0;
+            left: 50%;
+            margin-left: -1.5px;
+            background: #39b6ff;
+            box-shadow: 0 0 6px #39b6ff;
+            animation: aiDotFloat3 2.6s ease-in-out infinite;
+        }
+    }
+
+    &:hover &__dot--1 { animation-duration: 2s; }
+    &:hover &__dot--2 { animation-duration: 2.2s; }
+    &:hover &__dot--3 { animation-duration: 2s; }
+
+    // 图标 — 默认脉冲发光
+    &__icon {
+        position: relative;
+        width: 24px;
+        height: 24px;
+        font-size: 22px;
+        color: #fff;
+        filter: drop-shadow(0 0 8px rgba(57, 182, 255, 0.55));
+        animation: aiIconPulse 2s ease-in-out infinite;
+        transition: all 0.3s ease;
+    }
+
+    &:hover &__icon {
+        filter: drop-shadow(0 0 12px rgba(57, 182, 255, 0.8));
+        transform: scale(1.08) rotate(-4deg);
+        animation-duration: 1.4s;
+    }
+
+    // 点击波纹
+    &:active &__icon {
+        transform: scale(0.9) rotate(-2deg);
+    }
+
+    // 激活状态增强
+    &--active::before {
+        background: linear-gradient(135deg, rgba(57, 182, 255, 0.22), rgba(189, 69, 251, 0.18));
+        border-color: rgba(57, 182, 255, 0.5);
+    }
+}
+
+@keyframes aiBtnSpin {
+    from { --angle: 0deg; }
+    to { --angle: 360deg; }
+}
+
+@property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes aiBtnOrbitSpin {
+    to { transform: scale(1.08) rotate(360deg); }
+}
+
+@keyframes aiDotFloat1 {
+    0%, 100% { top: 0; left: 50%; opacity: 1; }
+    33%      { top: 30%; left: 90%; opacity: .5; }
+    66%      { top: 60%; left: 65%; opacity: .8; }
+}
+
+@keyframes aiDotFloat2 {
+    0%, 100% { right: 0; top: 50%; opacity: 1; }
+    33%      { right: 30%; top: 10%; opacity: .5; }
+    66%      { right: 60%; top: 75%; opacity: .8; }
+}
+
+@keyframes aiDotFloat3 {
+    0%, 100% { bottom: 0; left: 50%; opacity: 1; }
+    33%      { bottom: 25%; left: 10%; opacity: .5; }
+    66%      { bottom: 55%; left: 80%; opacity: .8; }
+}
+
+@keyframes aiIconPulse {
+    0%, 100% { filter: drop-shadow(0 0 10px rgba(57, 182, 255, 0.7)); }
+    50%      { filter: drop-shadow(0 0 16px rgba(189, 69, 251, 0.6)); }
 }
 
 .toolbar-brand {
