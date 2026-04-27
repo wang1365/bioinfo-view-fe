@@ -51,19 +51,20 @@ export async function streamChat(userInput, history, callbacks, enableReasoning 
     const body = {
         model: store.model,
         messages,
+        temperature: 0.3,
+        max_tokens: 2000,
         stream: true,
     }
 
-    // 推理模式：让模型启用 thinking（通义千问 qwen3 系列支持）
-    if (enableReasoning) {
-        body.enable_thinking = true
-    }
+    // 推理模式控制（通义千问 qwen3 系列）
+    // 必须明确传值：true=返回reasoning_content, false=禁用推理直接输出
+    body.enable_thinking = !!enableReasoning
 
     const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${store.apiKey}`,
+            'Authorization': `Bearer ${store.apiKey}`,
         },
         body: JSON.stringify(body),
         signal,
@@ -84,22 +85,24 @@ export async function streamChat(userInput, history, callbacks, enableReasoning 
         const { done, value } = await reader.read()
         if (done) break
 
-        buffer += decoder.decode(value, { stream: true })
+        // 立即解码当前 chunk
+        const chunk = decoder.decode(value, { stream: true })
+        buffer += chunk
         const lines = buffer.split('\n')
         buffer = lines.pop() || ''
 
         for (const line of lines) {
             const trimmed = line.trim()
-            if (!trimmed || !trimmed.startsWith('data: ')) continue
-            const data = trimmed.slice(6)
+            if (!trimmed || !trimmed.startsWith('data:')) continue
+            const data = trimmed.slice(5).trim()
             if (data === '[DONE]') break
 
             try {
                 const parsed = JSON.parse(data)
                 const delta = parsed.choices?.[0]?.delta
 
-                // 推理内容（thinking）
-                if (delta?.reasoning_content && callbacks.onThinking) {
+                // 推理内容（thinking）—— 仅在用户主动开启推理模式时处理
+                if (enableReasoning && delta?.reasoning_content && callbacks.onThinking) {
                     fullThinking += delta.reasoning_content
                     callbacks.onThinking(delta.reasoning_content)
                 }

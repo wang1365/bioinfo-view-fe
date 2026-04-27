@@ -170,6 +170,72 @@ const drawerWidth = ref(420)
 let abortController = null
 let isResizing = false
 
+// ---- 打字机匀速输出队列 ----
+// 解决 qwen3 等高速模型在 <300ms 内全量返回导致无流式效果的问题
+let contentQueue = []      // 待显示的内容片段队列
+let thinkingQueue = []
+let contentTimer = null    // 内容打字机定时器（独立）
+let thinkingTimer = null   // 推理打字机定时器（独立）
+
+/** 打字机帧间隔（ms），越小越快 */
+const TYPEWRITER_INTERVAL = 18
+
+/** 启动内容打字机 */
+function startContentTypewriter() {
+    if (contentTimer) return // 已在运行
+    contentTimer = setInterval(() => {
+        if (contentQueue.length === 0) {
+            clearInterval(contentTimer)
+            contentTimer = null
+            return
+        }
+        const chunk = contentQueue.shift()
+        assistantMsg.content += chunk
+        scrollToBottom()
+    }, TYPEWRITER_INTERVAL)
+}
+
+/** 启动推理打字机 */
+function startThinkingTypewriter() {
+    if (thinkingTimer) return
+    thinkingTimer = setInterval(() => {
+        if (thinkingQueue.length === 0) {
+            clearInterval(thinkingTimer)
+            thinkingTimer = null
+            return
+        }
+        const chunk = thinkingQueue.shift()
+        assistantMsg.thinking += chunk
+        if (!assistantMsg.thinkingExpanded) {
+            assistantMsg.thinkingExpanded = true
+        }
+        scrollToBottom()
+    }, TYPEWRITER_INTERVAL)
+}
+
+/** 入队内容片段 */
+function enqueueContent(chunk) {
+    contentQueue.push(chunk)
+    if (!contentTimer) startContentTypewriter()
+}
+
+/** 入队推理片段 */
+function enqueueThinking(chunk) {
+    thinkingQueue.push(chunk)
+    if (!thinkingTimer) startThinkingTypewriter()
+}
+
+/** 停止所有打字机，立即刷新剩余内容 */
+function flushTypewriter() {
+    if (contentTimer) { clearInterval(contentTimer); contentTimer = null; }
+    if (thinkingTimer) { clearInterval(thinkingTimer); thinkingTimer = null; }
+    while (contentQueue.length > 0) { assistantMsg.content += contentQueue.shift(); }
+    while (thinkingQueue.length > 0) { assistantMsg.thinking += thinkingQueue.shift(); }
+}
+
+// 当前正在生成的助手消息引用（供闭包使用）
+let assistantMsg = null
+
 // ---- 抽屉拖拽调整宽度 ----
 function startResize() {
     isResizing = true
@@ -216,13 +282,18 @@ async function sendMessage(text) {
     if (!text.trim() || loading.value) return
     error.value = ''
 
+    // 重置打字机队列
+    flushTypewriter()
+    contentQueue = []
+    thinkingQueue = []
+
     // 添加用户消息
     messages.value.push({ role: 'user', content: text.trim() })
     inputText.value = ''
     scrollToBottom()
 
     // 添加助手占位消息
-    const assistantMsg = {
+    assistantMsg = {
         role: 'assistant',
         content: '',
         thinking: '',
@@ -244,35 +315,27 @@ async function sendMessage(text) {
 
         const currentQuestion = text.trim()
 
-        const result = await streamChat(
+        await streamChat(
             currentQuestion,
             history,
             {
-                onContent: (chunk) => {
-                    assistantMsg.content += chunk
-                    scrollToBottom()
-                },
-                onThinking: (chunk) => {
-                    assistantMsg.thinking += chunk
-                    // 收到 thinking 时自动展开
-                    if (!assistantMsg.thinkingExpanded) {
-                        assistantMsg.thinkingExpanded = true
-                    }
-                    scrollToBottom()
-                },
+                onContent: (chunk) => { enqueueContent(chunk) },
+                onThinking: (chunk) => { enqueueThinking(chunk) },
             },
             reasoningEnabled.value,
             abortController.signal,
         )
 
-        assistantMsg.content = result.content
-        assistantMsg.thinking = result.thinking
+        // 流结束 — 停止打字机定时器，将队列中剩余内容一次性写入
+        // 注意：不使用 result 覆盖 content，因为打字机已经逐步写入了
+        flushTypewriter()
         assistantMsg.loading = false
-        // thinking 结束后默认收起
         if (assistantMsg.thinking) {
             assistantMsg.thinkingExpanded = false
         }
     } catch (e) {
+        // 出错/中止 — 也需刷新队列
+        flushTypewriter()
         if (e.name === 'AbortError') {
             assistantMsg.loading = false
             if (!assistantMsg.content && !assistantMsg.thinking) {
@@ -676,25 +739,45 @@ function escapeHtml(str) {
 
 /* ===== 输入区 ===== */
 .ai-chat-input-area {
-    padding: 14px 18px 18px;
-    background: linear-gradient(180deg, rgba(15,23,42,.88), rgba(12,18,34,.95));
-    border-top: 1px solid rgba(57,182,255,.06);
+    padding: 16px 18px 20px;
+    background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(12,18,34,.98));
+    border-top: 1px solid rgba(57,182,255,.1);
+    position: relative;
+
+    /* 顶部微光分割线 */
+    &::before {
+        content: '';
+        position: absolute;
+        top: -1px; left: 24px; right: 24px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(57,182,255,.25), transparent);
+    }
 }
 
 .ai-chat-input-wrap {
     display: flex; align-items: center; gap: 8px;
-    border: 1px solid rgba(71,85,105,.3);
+    border: 1.5px solid rgba(71,85,105,.45);
     border-radius: 26px;
-    padding: 5px 7px 5px 18px;
+    padding: 6px 8px 6px 20px;
     transition: all .3s cubic-bezier(.4,0,.2,1);
-    background: rgba(30,41,59,.5);
+    background: linear-gradient(135deg, rgba(30,41,59,.7), rgba(41,55,78,.5));
+    box-shadow:
+        0 2px 12px rgba(0,0,0,.2),
+        inset 0 1px 0 rgba(255,255,255,.03);
 
     &:focus-within {
-        border-color: rgba(57,182,255,.45);
+        border-color: rgba(57,182,255,.6);
         box-shadow:
-            0 0 0 3px rgba(57,182,255,.08),
-            0 0 24px rgba(57,182,255,.06);
-        background: rgba(30,41,59,.7);
+            0 0 0 3px rgba(57,182,255,.12),
+            0 0 28px rgba(57,182,255,.08),
+            0 4px 16px rgba(0,0,0,.25),
+            inset 0 1px 0 rgba(255,255,255,.05);
+        background: linear-gradient(135deg, rgba(30,41,59,.82), rgba(41,55,78,.62));
+    }
+
+    &:hover:not(:focus-within) {
+        border-color: rgba(100,116,139,.5);
+        background: linear-gradient(135deg, rgba(30,41,59,.75), rgba(41,55,78,.55));
     }
 }
 
@@ -702,27 +785,27 @@ function escapeHtml(str) {
     flex: 1;
 
     :deep(.q-field__control) {
-        height: 38px;
+        height: 40px;
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
     }
 
     :deep(.q-field__native) {
-        font-size: 0.88rem; color: #e2e8f0;
+        font-size: 0.9rem; color: #f1f5f9;
 
-        &::placeholder { color: #475569; }
+        &::placeholder { color: #64748b; }
     }
 
     :deep(.q-field--float .q-field__label),
     :deep(.q-field__marginal + .q-field__control .q-field__native::placeholder) {
-        color: #475569;
+        color: #64748b;
     }
 
     /* 发送按钮增强 */
     + .q-btn {
         &.text-primary :deep(.q-icon) { color: #39b6ff !important; }
-        &:hover { background: rgba(57,182,255,.1) !important; }
+        &:hover { background: rgba(57,182,255,.12) !important; }
     }
 }
 </style>
