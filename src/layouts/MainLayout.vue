@@ -18,7 +18,7 @@
                     <SelectLanguage dark v-if="store.langConfig.langSwitch" />
                     <div
                         class="ai-bio-btn"
-                        @click="aiChatOpen = !aiChatOpen"
+                        @click="toggleAiChat"
                         :class="{ 'ai-bio-btn--active': aiChatOpen }"
                     >
                         <!-- 旋转渐变背景 -->
@@ -108,6 +108,8 @@
             show-if-above
             elevated
             :width="208"
+            :mini="aiChatOpen"
+            :mini-width="58"
         >
             <div class="full-height drawer_normal">
                 <q-scroll-area class="fit">
@@ -134,7 +136,7 @@
 import Fullscreen from "./Fullscreen.vue"
 import SideBarLeftItem from "./SideBarLeft/SideBarLeftItem.vue"
 import AiChatDrawer from "src/components/AiChatDrawer.vue"
-import { onBeforeMount, ref } from "vue"
+import { onBeforeMount, ref, watch } from "vue"
 import { useRouter } from "vue-router"
 import { globalStore } from "src/stores/global"
 import { getAuthMenu } from './menu'
@@ -152,6 +154,19 @@ const aiChatOpen = ref(false);
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+
+function toggleAiChat() {
+    aiChatOpen.value = !aiChatOpen.value
+    if (aiChatOpen.value) {
+        leftDrawerOpen.value = false
+    }
+}
+
+watch(aiChatOpen, (open) => {
+    if (open) {
+        leftDrawerOpen.value = false
+    }
+})
 
 function showProfile() {
     router.push("/main/profile");

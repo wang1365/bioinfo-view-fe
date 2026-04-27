@@ -16,6 +16,8 @@
             <div class="ai-chat-resize-handle__line"></div>
         </div>
 
+        <div class="ai-chat-shell">
+
         <!-- 头部 -->
         <div class="ai-chat-header">
             <div class="ai-chat-header__title">
@@ -70,6 +72,7 @@
                     <button
                         v-for="(hint, i) in quickHints"
                         :key="hint"
+                        class="ai-chat-hint-btn"
                         @click="sendMessage(hint)"
                     >
                         <span class="ai-chat-hint-btn__dot">{{ i + 1 }}</span>
@@ -143,11 +146,13 @@
                 </q-btn>
             </div>
         </div>
+        </div>
     </q-drawer>
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from 'vue'
+import MarkdownIt from 'markdown-it'
+import { ref, nextTick, onBeforeUnmount, onMounted, watch } from 'vue'
 import { streamChat } from 'src/api/chat'
 
 const props = defineProps({
@@ -165,10 +170,56 @@ const loading = ref(false)
 const error = ref('')
 const messages = ref([])
 const reasoningEnabled = ref(false)
-const drawerWidth = ref(420)
+
+const MIN_DRAWER_WIDTH = 360
+const markdownRenderer = new MarkdownIt({
+    html: false,
+    linkify: true,
+    breaks: true,
+    typographer: true,
+})
+
+const defaultLinkOpen = markdownRenderer.renderer.rules.link_open || ((tokens, idx, options, _env, self) => {
+    return self.renderToken(tokens, idx, options)
+})
+
+markdownRenderer.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const token = tokens[idx]
+    token.attrSet('target', '_blank')
+    token.attrSet('rel', 'noopener noreferrer')
+    return defaultLinkOpen(tokens, idx, options, env, self)
+}
+
+function getDefaultDrawerWidth() {
+    if (typeof window === 'undefined') return 560
+    return Math.max(MIN_DRAWER_WIDTH, Math.round(window.innerWidth / 3))
+}
+
+function getMaxDrawerWidth() {
+    if (typeof window === 'undefined') return 960
+    return Math.max(MIN_DRAWER_WIDTH, Math.round(window.innerWidth * 0.8))
+}
+
+const drawerWidth = ref(getDefaultDrawerWidth())
 
 let abortController = null
 let isResizing = false
+let hasCustomDrawerWidth = false
+
+function syncDrawerWidth() {
+    if (!hasCustomDrawerWidth) {
+        drawerWidth.value = getDefaultDrawerWidth()
+    }
+}
+
+onMounted(() => {
+    syncDrawerWidth()
+    window.addEventListener('resize', syncDrawerWidth)
+})
+
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', syncDrawerWidth)
+})
 
 // ---- 打字机匀速输出队列 ----
 // 解决 qwen3 等高速模型在 <300ms 内全量返回导致无流式效果的问题
@@ -251,8 +302,9 @@ function startResize() {
 
     const onMove = (ev) => {
         if (!isResizing) return
+        hasCustomDrawerWidth = true
         const newWidth = window.innerWidth - ev.clientX
-        drawerWidth.value = Math.max(320, Math.min(newWidth, 800))
+        drawerWidth.value = Math.max(MIN_DRAWER_WIDTH, Math.min(newWidth, getMaxDrawerWidth()))
     }
 
     const onUp = () => {
@@ -387,20 +439,7 @@ function onHide() {
  * 简易 Markdown 渲染：代码块、加粗、换行
  */
 function renderMarkdown(text) {
-    if (!text) return ''
-    let html = escapeHtml(text)
-    html = html.replace(/```(\w*)\n?([\s\S]*?)```/g, '<pre class="ai-chat-code-block"><code>$2</code></pre>')
-    html = html.replace(/`([^`]+)`/g, '<code class="ai-chat-code-inline">$1</code>')
-    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    html = html.replace(/\n/g, '<br/>')
-    return html
-}
-
-function escapeHtml(str) {
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
+    return text ? markdownRenderer.render(text) : ''
 }
 </script>
 
@@ -410,14 +449,35 @@ function escapeHtml(str) {
     display: flex;
     flex-direction: column;
     position: relative;
+    height: 100%;
+    max-height: 100%;
     background:
-        radial-gradient(ellipse 60% 50% at 70% 10%, rgba(57, 182, 255, 0.06), transparent),
-        radial-gradient(ellipse 40% 40% at 30% 90%, rgba(189, 69, 251, 0.04), transparent),
-        linear-gradient(180deg, #0c1222 0%, #111827 40%, #0c1222 100%);
-    box-shadow: -6px 0 32px rgba(0, 0, 0, 0.3);
+        linear-gradient(135deg, rgba(56, 189, 248, 0.12), transparent 28%),
+        radial-gradient(circle at 18% 16%, rgba(16, 185, 129, 0.12), transparent 26%),
+        radial-gradient(circle at 88% 78%, rgba(129, 140, 248, 0.12), transparent 30%),
+        linear-gradient(180deg, #07111f 0%, #0c1628 48%, #08111e 100%);
+    box-shadow: -12px 0 42px rgba(2, 6, 23, 0.42);
+
+    :deep(.q-drawer__content) {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+    }
 }
 
 /* ===== 拖拽手柄 ===== */
+.ai-chat-shell {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
+}
+
 .ai-chat-resize-handle {
     position: absolute; left: 0; top: 0; bottom: 0;
     width: 8px; z-index: 10; cursor: col-resize;
@@ -440,11 +500,14 @@ function escapeHtml(str) {
 
 /* ===== 头部 ===== */
 .ai-chat-header {
+    flex: 0 0 auto;
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 20px;
-    background: linear-gradient(180deg, rgba(15,23,42,.98), rgba(17,24,39,.85));
-    border-bottom: 1px solid rgba(57, 182, 255, 0.08);
-    backdrop-filter: blur(10px);
+    background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.12), transparent 42%),
+        rgba(8, 17, 34, 0.92);
+    border-bottom: 1px solid rgba(125, 211, 252, 0.16);
+    backdrop-filter: blur(14px);
 
     &__title {
         display: flex; align-items: center; gap: 8px;
@@ -484,8 +547,10 @@ function escapeHtml(str) {
 
 /* ===== 消息列表（滚动区域）===== */
 .ai-chat-messages {
-    flex: 1; overflow-y: auto;
-    padding: 24px 18px 12px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 26px 18px 18px;
     scroll-behavior: smooth;
 
     &::-webkit-scrollbar { width: 4px; }
@@ -500,16 +565,16 @@ function escapeHtml(str) {
 .ai-chat-empty {
     display: flex; flex-direction: column; align-items: center;
     justify-content: center;
-    height: 100%; min-height: 280px;
+    min-height: 100%;
     position: relative;
 
     /* 背景装饰 */
     &__glow {
         position: absolute;
-        width: 200px; height: 200px;
+        width: 220px; height: 220px;
         top: 50%; left: 50%;
         transform: translate(-50%, -55%);
-        background: radial-gradient(circle, rgba(57,182,255,.08) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(56,189,248,.18) 0%, rgba(56,189,248,.04) 48%, transparent 72%);
         pointer-events: none;
     }
 
@@ -521,7 +586,7 @@ function escapeHtml(str) {
             width: 160px; height: 160px;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            border: 1px solid rgba(57,182,255,.08);
+            border: 1px solid rgba(125,211,252,.16);
             animation: emptyRingRotate 12s linear infinite;
         }
 
@@ -529,7 +594,7 @@ function escapeHtml(str) {
             width: 200px; height: 200px;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            border: 1px dashed rgba(189,69,251,.06);
+            border: 1px dashed rgba(52,211,153,.14);
             animation: emptyRingRotate 18s linear infinite reverse;
         }
     }
@@ -551,7 +616,7 @@ function escapeHtml(str) {
         position: relative; z-index: 1;
         font-size: 1.05rem; font-weight: 700;
         letter-spacing: 1px;
-        background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+        background: linear-gradient(135deg, #f8fafc, #38bdf8 58%, #34d399);
         -webkit-background-clip: text; background-clip: text;
         color: transparent;
         margin-bottom: 6px;
@@ -560,7 +625,7 @@ function escapeHtml(str) {
     &__desc {
         position: relative; z-index: 1;
         font-size: 0.78rem;
-        color: #475569;
+        color: #93c5fd;
         letter-spacing: 2px;
     }
 }
@@ -585,21 +650,23 @@ function escapeHtml(str) {
 .ai-chat-hint-btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 7px 14px;
-    border-radius: 20px;
+    border-radius: 18px;
     font-size: 0.82rem;
-    color: #94a3b8;
-    background: rgba(51,65,85,.45);
-    border: 1px solid rgba(71,85,105,.35);
+    font-weight: 600;
+    color: #2563eb;
+    background: rgba(240,249,255,.86);
+    border: 1px solid rgba(56,189,248,.38);
     cursor: pointer;
     transition: all .25s cubic-bezier(.4, 0, .2, 1);
     white-space: nowrap;
     user-select: none;
+    box-shadow: 0 4px 14px rgba(14,165,233,.1);
 
     &:hover {
-        color: #e2e8f0;
-        background: rgba(57,182,255,.1);
-        border-color: rgba(57,182,255,.3);
-        box-shadow: 0 2px 12px rgba(57,182,255,.1);
+        color: #0f172a;
+        background: #ffffff;
+        border-color: rgba(14,165,233,.72);
+        box-shadow: 0 10px 24px rgba(14,165,233,.2);
         transform: translateY(-1px);
     }
 
@@ -612,8 +679,9 @@ function escapeHtml(str) {
         width: 18px; height: 18px; min-width: 18px;
         border-radius: 50%;
         font-size: 0.68rem; font-weight: 700;
-        background: linear-gradient(135deg, #39b6ff, #bd45fb);
+        background: linear-gradient(135deg, #38bdf8, #34d399);
         color: #fff;
+        box-shadow: 0 0 12px rgba(56,189,248,.3);
     }
 }
 
@@ -628,55 +696,164 @@ function escapeHtml(str) {
 .ai-chat-avatar {
     width: 30px; height: 30px; min-width: 30px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #39b6ff 0%, #8b5cf6 60%, #bd45fb 100%);
+    background: linear-gradient(135deg, #38bdf8 0%, #2563eb 55%, #34d399 100%);
     display: flex; align-items: center; justify-content: center;
     margin-top: 3px;
-    box-shadow: 0 2px 10px rgba(57,182,255,.25);
+    box-shadow: 0 0 18px rgba(56,189,248,.28);
 }
 
 /* ===== 气泡 ===== */
 .ai-chat-bubble {
     max-width: 84%;
-    padding: 11px 15px;
+    padding: 12px 16px;
     border-radius: 16px;
     font-size: 0.88rem;
-    line-height: 1.7;
+    line-height: 1.72;
     word-break: break-word;
 
     &--user {
-        background: linear-gradient(135deg, #1e49b7, #1652a8);
+        max-width: 76%;
+        background: linear-gradient(135deg, #0ea5e9, #2563eb);
         color: #fff;
         border-bottom-right-radius: 4px;
-        box-shadow: 0 2px 14px rgba(22,82,168,.22);
+        box-shadow: 0 8px 24px rgba(37,99,235,.24);
     }
 
     &--assistant {
-        background: rgba(30,41,59,.75);
-        color: #cbd5e1;
-        border: 1px solid rgba(57,182,255,.07);
+        max-width: 90%;
+        background:
+            linear-gradient(180deg, rgba(248,250,252,.98), rgba(239,246,255,.96));
+        color: #26364a;
+        border: 1px solid rgba(37,99,235,.16);
         border-bottom-left-radius: 4px;
-        backdrop-filter: blur(10px);
+        box-shadow:
+            0 10px 26px rgba(15,23,42,.12),
+            inset 0 1px 0 rgba(255,255,255,.9);
     }
 }
 
 /* ===== 气泡内容 / 代码块 ===== */
 .ai-chat-bubble__content {
-    :deep(pre.ai-chat-code-block) {
-        background: rgba(0,0,0,.45);
-        color: #e2e8f0; border-radius: 8px;
+    :deep(*) {
+        max-width: 100%;
+    }
+
+    :deep(p) {
+        margin: 0 0 10px;
+
+        &:last-child { margin-bottom: 0; }
+    }
+
+    :deep(h1),
+    :deep(h2),
+    :deep(h3),
+    :deep(h4),
+    :deep(h5),
+    :deep(h6) {
+        color: #0f172a;
+        font-weight: 700;
+        line-height: 1.35;
+        margin: 14px 0 8px;
+
+        &:first-child { margin-top: 0; }
+    }
+
+    :deep(h1) { font-size: 1.18rem; }
+    :deep(h2) { font-size: 1.08rem; }
+    :deep(h3) { font-size: 1rem; }
+    :deep(h4),
+    :deep(h5),
+    :deep(h6) { font-size: 0.94rem; }
+
+    :deep(ul),
+    :deep(ol) {
+        margin: 8px 0 10px;
+        padding-left: 22px;
+    }
+
+    :deep(li) {
+        margin: 4px 0;
+        padding-left: 2px;
+    }
+
+    :deep(blockquote) {
+        margin: 10px 0;
+        padding: 8px 12px;
+        color: #1e3a8a;
+        background: rgba(59, 130, 246, 0.08);
+        border-left: 3px solid rgba(37, 99, 235, 0.72);
+        border-radius: 0 8px 8px 0;
+    }
+
+    :deep(a) {
+        color: #2563eb;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(125, 211, 252, 0.36);
+
+        &:hover {
+            color: #1d4ed8;
+            border-bottom-color: rgba(37, 99, 235, 0.72);
+        }
+    }
+
+    :deep(pre) {
+        background: #0f172a;
+        color: #dbeafe; border-radius: 8px;
         padding: 11px 13px; margin: 8px 0;
         overflow-x: auto;
         font-size: 0.81rem; line-height: 1.55;
-        border: 1px solid rgba(57,182,255,.06);
+        border: 1px solid rgba(37,99,235,.18);
     }
 
-    :deep(code.ai-chat-code-inline) {
-        background: rgba(57,182,255,.12);
-        color: #7dd3fc; padding: 2px 6px;
+    :deep(pre code) {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        border-radius: 0;
+        font-size: inherit;
+    }
+
+    :deep(code) {
+        background: rgba(37,99,235,.1);
+        color: #1d4ed8; padding: 2px 6px;
         border-radius: 4px; font-size: 0.83rem;
     }
 
-    :deep(strong) { color: #f1f5f9; }
+    :deep(table) {
+        width: 100%;
+        margin: 10px 0;
+        border-collapse: collapse;
+        overflow: hidden;
+        border: 1px solid rgba(125,211,252,.16);
+        border-radius: 8px;
+    }
+
+    :deep(th),
+    :deep(td) {
+        padding: 8px 10px;
+        border: 1px solid rgba(37,99,235,.12);
+        text-align: left;
+        vertical-align: top;
+    }
+
+    :deep(th) {
+        color: #0f172a;
+        background: rgba(59,130,246,.1);
+        font-weight: 700;
+    }
+
+    :deep(td) {
+        background: rgba(255,255,255,.68);
+    }
+
+    :deep(hr) {
+        border: 0;
+        border-top: 1px solid rgba(37,99,235,.18);
+        margin: 14px 0;
+    }
+
+    :deep(strong) { color: #0f172a; font-weight: 700; }
+    :deep(em) { color: #334155; }
 }
 
 /* ===== 推理过程 ===== */
@@ -747,10 +924,16 @@ function escapeHtml(str) {
 
 /* ===== 输入区 ===== */
 .ai-chat-input-area {
-    padding: 16px 18px 20px;
-    background: linear-gradient(180deg, rgba(15,23,42,.92), rgba(12,18,34,.98));
-    border-top: 1px solid rgba(57,182,255,.1);
-    position: relative;
+    flex: 0 0 auto;
+    padding: 14px 18px 18px;
+    background:
+        linear-gradient(180deg, rgba(8,17,34,.74), rgba(7,17,31,.98)),
+        linear-gradient(90deg, rgba(56,189,248,.08), rgba(52,211,153,.06));
+    border-top: 1px solid rgba(125,211,252,.16);
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    box-shadow: 0 -18px 34px rgba(2,6,23,.2);
 
     /* 顶部微光分割线 */
     &::before {
@@ -758,34 +941,34 @@ function escapeHtml(str) {
         position: absolute;
         top: -1px; left: 24px; right: 24px;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(57,182,255,.25), transparent);
+        background: linear-gradient(90deg, transparent, rgba(56,189,248,.38), rgba(52,211,153,.26), transparent);
     }
 }
 
 .ai-chat-input-wrap {
     display: flex; align-items: center; gap: 8px;
-    border: 1.5px solid rgba(71,85,105,.45);
+    border: 1px solid rgba(125,211,252,.22);
     border-radius: 26px;
     padding: 6px 8px 6px 20px;
     transition: all .3s cubic-bezier(.4,0,.2,1);
-    background: linear-gradient(135deg, rgba(30,41,59,.7), rgba(41,55,78,.5));
+    background: rgba(15,23,42,.72);
     box-shadow:
-        0 2px 12px rgba(0,0,0,.2),
-        inset 0 1px 0 rgba(255,255,255,.03);
+        0 10px 28px rgba(2,6,23,.28),
+        inset 0 1px 0 rgba(255,255,255,.06);
 
     &:focus-within {
-        border-color: rgba(57,182,255,.6);
+        border-color: rgba(56,189,248,.78);
         box-shadow:
-            0 0 0 3px rgba(57,182,255,.12),
-            0 0 28px rgba(57,182,255,.08),
+            0 0 0 3px rgba(56,189,248,.14),
+            0 0 32px rgba(14,165,233,.14),
             0 4px 16px rgba(0,0,0,.25),
-            inset 0 1px 0 rgba(255,255,255,.05);
-        background: linear-gradient(135deg, rgba(30,41,59,.82), rgba(41,55,78,.62));
+            inset 0 1px 0 rgba(255,255,255,.08);
+        background: rgba(15,23,42,.88);
     }
 
     &:hover:not(:focus-within) {
-        border-color: rgba(100,116,139,.5);
-        background: linear-gradient(135deg, rgba(30,41,59,.75), rgba(41,55,78,.55));
+        border-color: rgba(125,211,252,.38);
+        background: rgba(15,23,42,.8);
     }
 }
 
@@ -812,8 +995,8 @@ function escapeHtml(str) {
 
     /* 发送按钮增强 */
     + .q-btn {
-        &.text-primary :deep(.q-icon) { color: #39b6ff !important; }
-        &:hover { background: rgba(57,182,255,.12) !important; }
+        &.text-primary :deep(.q-icon) { color: #38bdf8 !important; }
+        &:hover { background: rgba(56,189,248,.12) !important; }
     }
 }
 </style>

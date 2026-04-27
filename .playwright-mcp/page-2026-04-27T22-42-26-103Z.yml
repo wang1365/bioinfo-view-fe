@@ -1,0 +1,24 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e5]:
+    - generic [ref=e9]: Nanodigmbio Bioinformatics Analysis System（v1.4）
+    - generic [ref=e12]:
+      - generic [ref=e17]:
+        - textbox [ref=e22]:
+          - /placeholder: 用户名
+        - generic [ref=e26]:
+          - textbox [ref=e28]:
+            - /placeholder: 密码
+          - generic [ref=e30] [cursor=pointer]: visibility_off
+        - generic [ref=e32]:
+          - checkbox "记住我" [checked] [ref=e33] [cursor=pointer]:
+            - img [ref=e36]
+            - generic [ref=e38]: 记住我
+          - generic [ref=e42] [cursor=pointer]:
+            - generic [ref=e44]:
+              - generic [ref=e45]: 简体中文
+              - combobox "简体中文" [ref=e46]
+            - generic [ref=e48]: arrow_drop_down
+        - button "登录" [ref=e50] [cursor=pointer]:
+          - generic [ref=e52]: 登录
+      - separator [ref=e53]
+  - progressbar [ref=e54]
