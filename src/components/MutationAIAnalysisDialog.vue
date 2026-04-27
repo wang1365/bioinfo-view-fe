@@ -160,6 +160,7 @@
 </template>
 
 <script setup>
+import MarkdownIt from 'markdown-it'
 import { ref, computed, watch, nextTick } from 'vue'
 import { useQuasar } from 'quasar'
 import {
@@ -183,6 +184,23 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const $q = useQuasar()
+const markdownRenderer = new MarkdownIt({
+    html: false,
+    linkify: true,
+    breaks: true,
+    typographer: true,
+})
+
+const defaultLinkOpen = markdownRenderer.renderer.rules.link_open || ((tokens, idx, options, _env, self) => {
+    return self.renderToken(tokens, idx, options)
+})
+
+markdownRenderer.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const token = tokens[idx]
+    token.attrSet('target', '_blank')
+    token.attrSet('rel', 'noopener noreferrer')
+    return defaultLinkOpen(tokens, idx, options, env, self)
+}
 
 const visible = computed({
     get: () => props.modelValue,
@@ -317,21 +335,8 @@ const clinvarColor = computed(() => {
     return 'grey'
 })
 
-// 简单 Markdown → HTML
 function markdownToHtml(text) {
-    return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/^### (.+)$/gm, '<h4>$1</h4>')
-        .replace(/^## (.+)$/gm, '<h3>$1</h3>')
-        .replace(/^# (.+)$/gm, '<h2>$1</h2>')
-        .replace(/^---/gm, '<hr class="q-mb-md q-mt-md" style="border-color:#e0e0e0"/>')
-        .replace(/^(\d+)\. (.+)$/gm, '<div class="q-ml-md">$1. $2</div>')
-        .replace(/^- (.+)$/gm, '<div class="q-ml-md">• $1</div>')
-        .replace(/\n\n/g, '<br/><br/>')
-        .replace(/\n/g, '<br/>')
+    return text ? markdownRenderer.render(text) : ''
 }
 
 const formattedThinking = computed(() => markdownToHtml(thinking.value))
@@ -458,10 +463,35 @@ function retry() {
 
 async function copyResult() {
     try {
-        await navigator.clipboard.writeText(content.value)
+        await copyText(content.value)
         $q.notify({ message: '已复制到剪贴板', type: 'positive' })
     } catch {
-        $q.notify({ message: '复制失败', type: 'negative' })
+        $q.notify({ message: '复制失败，请手动选择内容复制', type: 'negative' })
+    }
+}
+
+async function copyText(text) {
+    if (!text) return
+
+    if (navigator.clipboard?.writeText && window.isSecureContext) {
+        await navigator.clipboard.writeText(text)
+        return
+    }
+
+    const textarea = document.createElement('textarea')
+    textarea.value = text
+    textarea.setAttribute('readonly', '')
+    textarea.style.position = 'fixed'
+    textarea.style.left = '-9999px'
+    textarea.style.top = '0'
+    document.body.appendChild(textarea)
+    textarea.select()
+
+    try {
+        const ok = document.execCommand('copy')
+        if (!ok) throw new Error('copy command failed')
+    } finally {
+        document.body.removeChild(textarea)
     }
 }
 </script>
@@ -491,33 +521,153 @@ async function copyResult() {
     overflow-y: auto;
 }
 
-.ai-result-content {
+.ai-result-content,
+.thinking-content {
     line-height: 1.8;
     font-size: 14px;
 }
 
-.ai-result-content :deep(h2) {
+.ai-result-content :deep(p),
+.thinking-content :deep(p) {
+    margin: 0 0 10px;
+}
+
+.ai-result-content :deep(p:last-child),
+.thinking-content :deep(p:last-child) {
+    margin-bottom: 0;
+}
+
+.ai-result-content :deep(h1),
+.ai-result-content :deep(h2),
+.ai-result-content :deep(h3),
+.ai-result-content :deep(h4),
+.ai-result-content :deep(h5),
+.ai-result-content :deep(h6),
+.thinking-content :deep(h1),
+.thinking-content :deep(h2),
+.thinking-content :deep(h3),
+.thinking-content :deep(h4),
+.thinking-content :deep(h5),
+.thinking-content :deep(h6) {
+    font-weight: bold;
+    line-height: 1.35;
+    margin: 14px 0 8px;
+    color: #1976d2;
+}
+
+.ai-result-content :deep(h1),
+.thinking-content :deep(h1) {
+    font-size: 20px;
+}
+
+.ai-result-content :deep(h2),
+.thinking-content :deep(h2) {
     font-size: 18px;
-    font-weight: bold;
-    margin: 12px 0 8px;
-    color: #1976d2;
 }
 
-.ai-result-content :deep(h3) {
+.ai-result-content :deep(h3),
+.thinking-content :deep(h3) {
     font-size: 16px;
-    font-weight: bold;
-    margin: 10px 0 6px;
-    color: #1976d2;
 }
 
-.ai-result-content :deep(h4) {
+.ai-result-content :deep(h4),
+.ai-result-content :deep(h5),
+.ai-result-content :deep(h6),
+.thinking-content :deep(h4),
+.thinking-content :deep(h5),
+.thinking-content :deep(h6) {
     font-size: 15px;
-    font-weight: bold;
-    margin: 8px 0 4px;
     color: #333;
 }
 
-.ai-result-content :deep(strong) {
+.ai-result-content :deep(ul),
+.ai-result-content :deep(ol),
+.thinking-content :deep(ul),
+.thinking-content :deep(ol) {
+    margin: 8px 0 10px;
+    padding-left: 22px;
+}
+
+.ai-result-content :deep(li),
+.thinking-content :deep(li) {
+    margin: 4px 0;
+}
+
+.ai-result-content :deep(blockquote),
+.thinking-content :deep(blockquote) {
+    margin: 10px 0;
+    padding: 8px 12px;
+    color: #1e3a8a;
+    background: rgba(25, 118, 210, 0.08);
+    border-left: 3px solid #1976d2;
+    border-radius: 0 8px 8px 0;
+}
+
+.ai-result-content :deep(pre),
+.thinking-content :deep(pre) {
+    margin: 10px 0;
+    padding: 12px 14px;
+    overflow-x: auto;
+    color: #e2e8f0;
+    background: #0f172a;
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+.ai-result-content :deep(code),
+.thinking-content :deep(code) {
+    padding: 2px 6px;
+    color: #1d4ed8;
+    background: rgba(25, 118, 210, 0.1);
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.ai-result-content :deep(pre code),
+.thinking-content :deep(pre code) {
+    padding: 0;
+    color: inherit;
+    background: transparent;
+}
+
+.ai-result-content :deep(table),
+.thinking-content :deep(table) {
+    width: 100%;
+    margin: 10px 0;
+    border-collapse: collapse;
+}
+
+.ai-result-content :deep(th),
+.ai-result-content :deep(td),
+.thinking-content :deep(th),
+.thinking-content :deep(td) {
+    padding: 8px 10px;
+    border: 1px solid #dbeafe;
+    text-align: left;
+    vertical-align: top;
+}
+
+.ai-result-content :deep(th),
+.thinking-content :deep(th) {
+    background: #eff6ff;
+    font-weight: 700;
+}
+
+.ai-result-content :deep(a),
+.thinking-content :deep(a) {
+    color: #1976d2;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(25, 118, 210, 0.35);
+}
+
+.ai-result-content :deep(a:hover),
+.thinking-content :deep(a:hover) {
+    color: #0d47a1;
+    border-bottom-color: rgba(13, 71, 161, 0.75);
+}
+
+.ai-result-content :deep(strong),
+.thinking-content :deep(strong) {
     color: #1a1a1a;
 }
 

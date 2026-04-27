@@ -14,6 +14,7 @@
             @mousedown.prevent="startResize"
         >
             <div class="ai-chat-resize-handle__line"></div>
+            <q-tooltip anchor="center left" self="center right">拖动调整助手宽度</q-tooltip>
         </div>
 
         <div class="ai-chat-shell">
@@ -486,22 +487,84 @@ function renderMarkdown(text) {
 
 .ai-chat-resize-handle {
     position: absolute; left: 0; top: 0; bottom: 0;
-    width: 8px; z-index: 10; cursor: col-resize;
+    width: 14px; z-index: 10; cursor: col-resize;
+    background:
+        linear-gradient(90deg, rgba(37,99,235,.22), rgba(37,99,235,.06) 38%, transparent);
+    transition: background .2s ease;
 
     &::before {
-        content: ''; position: absolute; left: 3px; top: 12%; bottom: 12%;
-        width: 2px; border-radius: 1px;
+        content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+        width: 3px; border-radius: 0 2px 2px 0;
         background: linear-gradient(180deg,
-            transparent 5%,
-            rgba(57,182,255,.25) 20%,
-            rgba(57,182,255,.4) 50%,
-            rgba(189,69,251,.25) 80%,
-            transparent 95%
+            rgba(14,165,233,.46),
+            rgba(37,99,235,.62) 48%,
+            rgba(20,184,166,.48)
         );
-        opacity: 0; transition: opacity .35s ease;
+        opacity: .9;
+        box-shadow: 0 0 12px rgba(37,99,235,.24);
+        transition: width .2s ease, opacity .2s ease, box-shadow .2s ease;
     }
-    &:hover::before { opacity: 1; }
-    &__line { display: none; }
+
+    &::after {
+        content: '⋮';
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        width: 18px;
+        height: 46px;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #2563eb;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 1;
+        background: rgba(255,255,255,.92);
+        border: 1px solid rgba(37,99,235,.2);
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(15,23,42,.14);
+        opacity: .9;
+        transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+    }
+
+    &:hover {
+        background:
+            linear-gradient(90deg, rgba(37,99,235,.34), rgba(37,99,235,.1) 52%, transparent);
+
+        &::before {
+            width: 4px;
+            opacity: 1;
+            box-shadow: 0 0 18px rgba(37,99,235,.42);
+        }
+
+        &::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(2px);
+            box-shadow: 0 10px 24px rgba(37,99,235,.24);
+        }
+
+        .ai-chat-resize-handle__line {
+            opacity: 1;
+        }
+    }
+
+    &__line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        border-radius: 0 2px 2px 0;
+        background: linear-gradient(
+            180deg,
+            rgba(14,165,233,.44),
+            rgba(37,99,235,.64) 48%,
+            rgba(20,184,166,.44)
+        );
+        opacity: .7;
+        pointer-events: none;
+    }
 }
 
 /* ===== 头部 ===== */
