@@ -247,16 +247,19 @@
                      <span v-else>{{record[column.dataIndex]}}</span>
                      </template>
                      </AppDataTable> -->
-                <div style="position:relative" class="q-ml-xs mutation-table-wrap">
+                <div class="row items-center justify-end q-mb-xs q-ml-xs">
                     <q-icon
                         v-if="isDefineReport"
                         color="accent"
                         name="question_mark"
                         size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px"
+                        class="q-mr-sm"
                     >
                         <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
                     </q-icon>
+                    <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                </div>
+                <div style="position:relative" class="q-ml-xs mutation-table-wrap">
                     <AppDataTable
                         style="z-index:1"
                         size="small"
@@ -392,6 +395,7 @@
     <MutationAIAnalysisDialog
         v-model="aiDialogVisible"
         :record="aiCurrentRow"
+        :records="aiRecords"
         type="somatic"
         :header="props.header"
     />
@@ -417,12 +421,15 @@ import { getDualIdentifiers } from "src/utils/samples"
 import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 import { useComparator } from 'src/utils/comparator'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 import { useCustomCell } from './index'
 import * as XLSX from "xlsx";
 import AppActionButton from 'src/components/button/AppActionButton.vue'
+import BatchAIAnalysisButton from 'src/components/button/BatchAIAnalysisButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n()
+const $q = useQuasar()
 const customCell = useCustomCell('col254')
 const splitterModel = ref(250)
 const leftPanelOpen = ref(true)
@@ -726,9 +733,6 @@ const selectedExpandColIdx = ref([])
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
         return {
             selectedRowKeys: selectedRows,
             onChange: onSelectChange,
@@ -861,9 +865,22 @@ function clickIgv(record) {
 // AI 分析
 const aiDialogVisible = ref(false)
 const aiCurrentRow = ref(null)
+const aiRecords = ref(null)
 
 function clickAIAnalysis(record) {
     aiCurrentRow.value = record
+    aiRecords.value = null
+    aiDialogVisible.value = true
+}
+
+function clickBatchAIAnalysis() {
+    const selected = filteredRows.value.filter(r => selectedRows.value.includes(r.lineNumber))
+    if (selected.length < 1) {
+        $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+        return
+    }
+    aiCurrentRow.value = null
+    aiRecords.value = selected
     aiDialogVisible.value = true
 }
 

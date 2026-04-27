@@ -449,13 +449,69 @@ export function buildMutationPrompt(fields, type) {
 }
 
 /**
+ * 构建批量分析的 prompt（多条记录合并）
+ * @param {Array<Object>} fieldsList - 多条记录的可读字段数组
+ * @param {string} type - 分析类型
+ * @returns {string} prompt
+ */
+export function buildBatchPrompt(fieldsList, type) {
+    const typeLabel = {
+        somatic: '体细胞突变',
+        germline: '胚系突变',
+        wes: 'WES全外显子突变',
+        'fusion-single': '融合基因',
+        'fusion-somatic': '融合基因',
+        cnv: '拷贝数变异',
+        'cnv-wes': '拷贝数变异',
+    }
+    const lines = []
+    const label = typeLabel[type] || '变异'
+    lines.push(`请解读以下 ${fieldsList.length} 个${label}的临床意义，逐个进行分析：`)
+    lines.push('')
+
+    fieldsList.forEach((fields, idx) => {
+        lines.push(`--- 变异 ${idx + 1} ---`)
+        for (const [k, v] of Object.entries(fields)) {
+            lines.push(`${k}: ${v}`)
+        }
+        lines.push('')
+    })
+
+    lines.push('请对每个变异分别从以下维度进行解读：')
+
+    if (type.startsWith('fusion')) {
+        lines.push('1. 融合基因的致癌机制')
+        lines.push('2. 临床意义')
+        lines.push('3. 用药指导')
+        lines.push('4. 可信度评估')
+    } else if (type.startsWith('cnv')) {
+        lines.push('1. 致病性评估（基于ACMG-CNV指南证据）')
+        lines.push('2. 临床意义')
+        lines.push('3. 用药指导')
+        lines.push('4. 变异特征评估')
+    } else {
+        lines.push('1. 致病性评估（基于ClinVar/ACMG证据）')
+        lines.push('2. 临床意义')
+        lines.push('3. 用药指导')
+        lines.push('4. 数据质量评估')
+    }
+
+    lines.push('')
+    lines.push('请用清晰的格式逐个编号解读，最后给出总体摘要。')
+    return lines.join('\n')
+}
+
+/**
  * 流式调用 LLM 分析
- * @param {Object} fields - 提取后的可读字段
+ * @param {Object} fields - 提取后的可读字段（单条）或 fieldsList（批量时由外部构建 prompt）
  * @param {string} type - 'somatic' | 'germline' | 'wes' | 'fusion-single' | 'fusion-somatic' | 'cnv' | 'cnv-wes'
  * @param {Object} callbacks - 回调函数集
+ * @param {Object} [options] - 可选参数
+ * @param {string} [options.customPrompt] - 自定义 prompt（批量模式时使用）
+ * @param {string} [options.customHint] - 自定义系统提示
  * @returns {AbortController} 可通过 .abort() 取消请求
  */
-export function analyzeMutationWithAI(fields, type, callbacks = {}) {
+export function analyzeMutationWithAI(fields, type, callbacks = {}, options = {}) {
     const store = usePageAgentStore()
     const { onThinking, onContent, onDone, onError } = callbacks
 
@@ -465,16 +521,18 @@ export function analyzeMutationWithAI(fields, type, callbacks = {}) {
     }
 
     // 根据 type 选择 prompt 构建器
-    let prompt
-    if (type.startsWith('fusion')) {
-        const subType = type === 'fusion-somatic' ? 'somatic' : 'single'
-        prompt = buildFusionPrompt(fields, subType)
-    } else if (type === 'cnv') {
-        prompt = buildCNVPrompt(fields, 'basic')
-    } else if (type === 'cnv-wes') {
-        prompt = buildCNVPrompt(fields, 'wes')
-    } else {
-        prompt = buildMutationPrompt(fields, type)
+    let prompt = options.customPrompt
+    if (!prompt) {
+        if (type.startsWith('fusion')) {
+            const subType = type === 'fusion-somatic' ? 'somatic' : 'single'
+            prompt = buildFusionPrompt(fields, subType)
+        } else if (type === 'cnv') {
+            prompt = buildCNVPrompt(fields, 'basic')
+        } else if (type === 'cnv-wes') {
+            prompt = buildCNVPrompt(fields, 'wes')
+        } else {
+            prompt = buildMutationPrompt(fields, type)
+        }
     }
 
     // 系统提示根据类型调整
@@ -483,9 +541,11 @@ export function analyzeMutationWithAI(fields, type, callbacks = {}) {
         fusion: '专注于基因融合（gene fusion）的致癌机制和靶向治疗解读',
         cnv: '专注于拷贝数变异（CNV）的致病性评估和临床意义解读',
     }
-    let hint = systemHints.mutation
-    if (type.startsWith('fusion')) hint = systemHints.fusion
-    else if (type.startsWith('cnv')) hint = systemHints.cnv
+    let hint = options.customHint || systemHints.mutation
+    if (!options.customHint) {
+        if (type.startsWith('fusion')) hint = systemHints.fusion
+        else if (type.startsWith('cnv')) hint = systemHints.cnv
+    }
     const controller = new AbortController()
 
     const doStream = async () => {
@@ -509,7 +569,7 @@ export function analyzeMutationWithAI(fields, type, callbacks = {}) {
                         },
                     ],
                     temperature: 0.3,
-                    max_tokens: 2000,
+                    max_tokens: options.maxTokens || 2000,
                     stream: true,
                 }),
                 signal: controller.signal,

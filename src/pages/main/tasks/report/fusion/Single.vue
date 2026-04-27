@@ -7,13 +7,14 @@
             :disable="showSticky && stickDone" />
         <AppActionButton variant="primary" :href="props.qt.url" :label="$t('Download')" icon="download" target="_blank"
             class="q-ml-sm" />
+        <q-space />
+        <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs" class="q-mr-sm">
+            <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
+        </q-icon>
+        <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis('qt')" />
     </q-toolbar>
     <div class="bio-data-table q-py-sm">
         <div style="position:relative">
-            <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px">
-                <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
-            </q-icon>
             <AppDataTable style="z-index:1" size="middle" bordered rowKey="0" :data-source="filteredRows1" :columns="columns1"
                 :sticky="true" :row-selection="rowSelection1">
                 <template #bodyCell="{ column, record }">
@@ -56,12 +57,13 @@
                 :disable="showSticky && stickDone" />
             <AppActionButton variant="primary" :href="props.qn.url" :label="$t('Download')" icon="download" target="_blank"
                 class="q-ml-sm" />
-        </q-toolbar>
-        <div style="position:relative">
-            <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs"
-                style="position:absolute;z-index:100;left:0px;top:0px">
+            <q-space />
+            <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs" class="q-mr-sm">
                 <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
             </q-icon>
+            <BatchAIAnalysisButton :count="selectedRows2.length" @click="clickBatchAIAnalysis('qn')" />
+        </q-toolbar>
+        <div style="position:relative">
             <AppDataTable style="z-index:1" size="middle" bordered :data-source="filteredRows2" :columns="columns2"
                 :sticky="true" rowKey="0" :row-selection="rowSelection2">
                 <template #bodyCell="{ column, record }">
@@ -102,6 +104,7 @@
     <MutationAIAnalysisDialog
         v-model="aiDialogVisible"
         :record="aiCurrentRow"
+        :records="aiRecords"
         :type="aiType"
         :header="aiHeader"
     />
@@ -117,11 +120,14 @@ import { getCsvData } from 'src/utils/csv'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
+import { useQuasar } from 'quasar'
 import AppActionButton from 'src/components/button/AppActionButton.vue'
+import BatchAIAnalysisButton from 'src/components/button/BatchAIAnalysisButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
 import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 
 const { t } = useI18n();
+const $q = useQuasar()
 const props = defineProps({
     intro: {
         type: String,
@@ -330,13 +336,40 @@ const clickView = (record) => {
 // AI 分析
 const aiDialogVisible = ref(false)
 const aiCurrentRow = ref(null)
+const aiRecords = ref(null)
 const aiType = ref('fusion-single')
 const aiHeader = computed(() => qtHeader.value || props.qtHeader || [])
 
 function clickAIAnalysis(record, source) {
     aiCurrentRow.value = record
+    aiRecords.value = null
     aiType.value = source === 'qn' ? 'fusion-single' : 'fusion-single'
     aiHeader.value = source === 'qn' ? (qnHeader.value || props.qnHeader || []) : (qtHeader.value || props.qtHeader || [])
+    aiDialogVisible.value = true
+}
+
+function clickBatchAIAnalysis(source) {
+    if (source === 'qn') {
+        const selected = filteredRows2.value.filter(r => selectedRows2.value.includes(r[0]))
+        if (selected.length < 1) {
+            $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+            return
+        }
+        aiCurrentRow.value = null
+        aiRecords.value = selected
+        aiType.value = 'fusion-single'
+        aiHeader.value = qnHeader.value || props.qnHeader || []
+    } else {
+        const selected = filteredRows1.value.filter(r => selectedRows.value.includes(r[0]))
+        if (selected.length < 1) {
+            $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+            return
+        }
+        aiCurrentRow.value = null
+        aiRecords.value = selected
+        aiType.value = 'fusion-single'
+        aiHeader.value = qtHeader.value || props.qtHeader || []
+    }
     aiDialogVisible.value = true
 }
 
@@ -536,9 +569,6 @@ defineExpose({ getChangedData, reset })
 
 // 表格1的勾选列配置
 const rowSelection1 = computed(() => {
-    if (!isDefineReport.value) {
-        return null
-    }
     return {
         selectedRowKeys: selectedRows,
         onChange: onSelectChange,
@@ -550,9 +580,6 @@ const rowSelection1 = computed(() => {
 
 // 表格2的勾选列配置
 const rowSelection2 = computed(() => {
-    if (!isDefineReport.value) {
-        return null
-    }
     return {
         selectedRowKeys: selectedRows2,
         onChange: onSelectChange2,

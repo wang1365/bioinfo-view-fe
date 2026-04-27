@@ -200,16 +200,19 @@
             </template>
 
             <template v-slot:after>
-                <div class="mutation-table-wrap" style="position:relative">
-                    <q-icon
-                        v-if="isDefineReport"
-                        color="accent"
-                        name="question_mark"
-                        size="xs"
-                        style="position:absolute;z-index:100;left:0px;top:0px"
-                    >
-                        <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
-                    </q-icon>
+                <div class="mutation-table-wrap">
+                    <div class="row items-center justify-end q-mb-xs">
+                        <q-icon
+                            v-if="isDefineReport"
+                            color="accent"
+                            name="question_mark"
+                            size="xs"
+                            class="q-mr-sm"
+                        >
+                            <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
+                        </q-icon>
+                        <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                    </div>
                     <AppDataTable
                         style="z-index:1"
                         bordered
@@ -341,6 +344,7 @@
     <MutationAIAnalysisDialog
         v-model="aiDialogVisible"
         :record="aiCurrentRow"
+        :records="aiRecords"
         type="germline"
         :header="props.header"
     />
@@ -363,13 +367,16 @@ import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from "src/utils/samples"
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 import { useCustomCell } from './index'
 import * as XLSX from "xlsx";
 import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 import AppActionButton from 'src/components/button/AppActionButton.vue'
+import BatchAIAnalysisButton from 'src/components/button/BatchAIAnalysisButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
 
 const { t } = useI18n()
+const $q = useQuasar()
 const customCell = useCustomCell('col250')
 const splitterModel = ref(250)
 const leftPanelOpen = ref(true)
@@ -567,9 +574,6 @@ onMounted(() => {
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
         return {
             selectedRowKeys: selectedRows,
             onChange: onSelectChange,
@@ -745,9 +749,22 @@ function clickIgv (record) {
 // AI 分析
 const aiDialogVisible = ref(false)
 const aiCurrentRow = ref(null)
+const aiRecords = ref(null)
 
 function clickAIAnalysis(record) {
     aiCurrentRow.value = record
+    aiRecords.value = null
+    aiDialogVisible.value = true
+}
+
+function clickBatchAIAnalysis() {
+    const selected = filteredRows.value.filter(r => selectedRows.value.includes(r.lineNumber))
+    if (selected.length < 1) {
+        $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+        return
+    }
+    aiCurrentRow.value = null
+    aiRecords.value = selected
     aiDialogVisible.value = true
 }
 

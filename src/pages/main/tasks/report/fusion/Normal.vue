@@ -7,13 +7,14 @@
                 :disable="showSticky && stickDone" />
             <AppActionButton variant="primary" :href="props.url" :label="$t('Download')" icon="download" target="_blank"
                 class="q-ml-sm" />
+            <q-space />
+            <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs" class="q-mr-sm">
+                <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
+            </q-icon>
+            <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
         </q-toolbar>
         <div class="bio-data-table q-py-sm">
             <div style="position:relative">
-                <q-icon v-if="isDefineReport" color="accent" name="question_mark" size="xs"
-                    style="position:absolute;z-index:100;left:0px;top:0px">
-                    <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
-                </q-icon>
                 <AppDataTable style="z-index:1" size="middle" bordered :data-source="filteredRows" :columns="columns" :sticky="true"
                     rowKey="0" :row-selection="rowSelection">
                     <template #bodyCell="{ column, record }">
@@ -47,6 +48,7 @@
     <MutationAIAnalysisDialog
         v-model="aiDialogVisible"
         :record="aiCurrentRow"
+        :records="aiRecords"
         type="fusion-somatic"
         :header="header"
     />
@@ -57,13 +59,16 @@ import { errorMessage, infoMessage } from 'src/utils/notify';
 import { ref, onMounted, toRef, watch, onUnmounted, defineExpose, computed, onDeactivated } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from "vue-i18n"
+import { useQuasar } from 'quasar'
 import IGV from './Igv.vue'
 import AppActionButton from 'src/components/button/AppActionButton.vue'
+import BatchAIAnalysisButton from 'src/components/button/BatchAIAnalysisButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
 import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 
 
 const { t } = useI18n()
+const $q = useQuasar()
 const route = useRoute()
 const columns = ref([])
 
@@ -181,9 +186,22 @@ const clickView = (record) => {
 // AI 分析
 const aiDialogVisible = ref(false)
 const aiCurrentRow = ref(null)
+const aiRecords = ref(null)
 
 function clickAIAnalysis(record) {
     aiCurrentRow.value = record
+    aiRecords.value = null
+    aiDialogVisible.value = true
+}
+
+function clickBatchAIAnalysis() {
+    const selected = filteredRows.value.filter(r => selectedRows.value.includes(r[0]))
+    if (selected.length < 1) {
+        $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+        return
+    }
+    aiCurrentRow.value = null
+    aiRecords.value = selected
     aiDialogVisible.value = true
 }
 const rows = toRef(props, 'rows')
@@ -197,9 +215,6 @@ const showSticky = toRef(props, 'showSticky')
 const stickDone = toRef(props, 'stickDone')
 const isDefineReport = computed(() => route.name === 'defineReport')
 const rowSelection = computed(() => {
-    if (!isDefineReport.value) {
-        return null
-    }
     return {
         selectedRowKeys: selectedRows,
         onChange: onSelectChange,

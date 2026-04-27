@@ -42,16 +42,19 @@
             </template>
 
             <template v-slot:after>
-                <div style="position:relative">
+                <div class="row items-center justify-end q-mb-xs">
                     <q-icon
                         v-if="isDefineReport"
                         color="accent"
                         name="question_mark"
                         size="xs"
-                        style="position:absolute;z-index:100;left:0;top:0"
+                        class="q-mr-sm"
                     >
                         <q-tooltip>{{ $t('OnlySelectAllThisPageFilterResult') }}</q-tooltip>
                     </q-icon>
+                    <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                </div>
+                <div style="position:relative">
                     <AppDataTable
                         style="z-index:1"
                         :loading="loading"
@@ -422,6 +425,7 @@
     <MutationAIAnalysisDialog
         v-model="aiDialogVisible"
         :record="aiCurrentRow"
+        :records="aiRecords"
         type="wes"
     />
 </template>
@@ -437,6 +441,7 @@ import { useRoute } from 'vue-router'
 import { errorMessage, infoMessage } from 'src/utils/notify'
 import { getDualIdentifiers } from 'src/utils/samples'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 import { populations } from '../index'
 import {verdictOptions, WES_PARAMS} from './wes.js'
 import WesRadar from '../components/WesRadar.vue'
@@ -446,8 +451,10 @@ import GenesetDialog from 'pages/main/tasks/report/common-module/GenesetDialog.v
 import SearchControl from 'pages/main/tasks/report/mutation/wes/SearchControl.vue'
 import { useCustomCell } from '../index'
 import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
+import BatchAIAnalysisButton from 'src/components/button/BatchAIAnalysisButton.vue'
 
 const { t } = useI18n()
+const $q = useQuasar()
 const { options: comparatorOptions, compare } = useComparatorOptions()
 const splitterModel = ref(300)
 const emit = defineEmits(['filterChange'])
@@ -541,9 +548,6 @@ const currentRow = ref({})
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
         return {
             selectedRowKeys: selectedRows,
             onChange: onSelectChange,
@@ -604,9 +608,22 @@ function clickIgv(record) {
 // AI 分析
 const aiDialogVisible = ref(false)
 const aiCurrentRow = ref(null)
+const aiRecords = ref(null)
 
 function clickAIAnalysis(record) {
     aiCurrentRow.value = record
+    aiRecords.value = null
+    aiDialogVisible.value = true
+}
+
+function clickBatchAIAnalysis() {
+    const selected = filteredRows.value.filter(r => selectedRows.value.includes(r.lineNumber))
+    if (selected.length < 1) {
+        $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+        return
+    }
+    aiCurrentRow.value = null
+    aiRecords.value = selected
     aiDialogVisible.value = true
 }
 

@@ -5,6 +5,9 @@
                 <div class="text-h6">
                     <q-icon name="auto_awesome" color="primary" class="q-mr-sm" />
                     AI {{ titleLabel }}
+                    <q-badge v-if="isBatch" color="primary" class="q-ml-sm">
+                        {{ records.length }} 条
+                    </q-badge>
                 </div>
                 <q-space />
                 <q-btn flat round dense icon="close" v-close-popup @click="cancelStream" />
@@ -14,34 +17,55 @@
             <q-card-section class="q-pt-none">
                 <q-card flat bordered class="bg-grey-1">
                     <q-card-section class="q-pa-sm">
-                        <div class="row q-gutter-md">
-                            <div v-if="summary.gene" class="col-auto">
-                                <span class="text-grey-7">基因:</span>
-                                <span class="text-weight-bold text-primary q-ml-xs">{{ summary.gene }}</span>
+                        <!-- 单条模式 -->
+                        <template v-if="!isBatch">
+                            <div class="row q-gutter-md">
+                                <div v-if="summary.gene" class="col-auto">
+                                    <span class="text-grey-7">基因:</span>
+                                    <span class="text-weight-bold text-primary q-ml-xs">{{ summary.gene }}</span>
+                                </div>
+                                <div v-if="summary.variant" class="col-auto">
+                                    <span class="text-grey-7">变异:</span>
+                                    <span class="text-weight-bold q-ml-xs">{{ summary.variant }}</span>
+                                </div>
+                                <div v-if="summary.position" class="col-auto">
+                                    <span class="text-grey-7">位置:</span>
+                                    <span class="q-ml-xs">{{ summary.position }}</span>
+                                </div>
+                                <div v-if="summary.clinvar" class="col-auto">
+                                    <q-badge
+                                        :color="clinvarColor"
+                                        :label="summary.clinvar"
+                                        class="q-ml-xs"
+                                    />
+                                </div>
+                                <div v-if="summary.cnvType" class="col-auto">
+                                    <q-badge
+                                        :color="summary.cnvType === 'DUP' ? 'blue' : 'red'"
+                                        :label="summary.cnvType === 'DUP' ? '扩增 DUP' : '缺失 DEL'"
+                                        class="q-ml-xs"
+                                    />
+                                </div>
                             </div>
-                            <div v-if="summary.variant" class="col-auto">
-                                <span class="text-grey-7">变异:</span>
-                                <span class="text-weight-bold q-ml-xs">{{ summary.variant }}</span>
+                        </template>
+                        <!-- 批量模式 -->
+                        <template v-else>
+                            <div class="text-caption text-grey-7 q-mb-xs">
+                                已选择 {{ records.length }} 条记录进行批量解读
                             </div>
-                            <div v-if="summary.position" class="col-auto">
-                                <span class="text-grey-7">位置:</span>
-                                <span class="q-ml-xs">{{ summary.position }}</span>
+                            <div class="row q-gutter-xs" style="flex-wrap: wrap;">
+                                <q-chip
+                                    v-for="(item, idx) in batchSummaries"
+                                    :key="idx"
+                                    dense
+                                    size="sm"
+                                    :color="item.color"
+                                    text-color="white"
+                                >
+                                    {{ item.label }}
+                                </q-chip>
                             </div>
-                            <div v-if="summary.clinvar" class="col-auto">
-                                <q-badge
-                                    :color="clinvarColor"
-                                    :label="summary.clinvar"
-                                    class="q-ml-xs"
-                                />
-                            </div>
-                            <div v-if="summary.cnvType" class="col-auto">
-                                <q-badge
-                                    :color="summary.cnvType === 'DUP' ? 'blue' : 'red'"
-                                    :label="summary.cnvType === 'DUP' ? '扩增 DUP' : '缺失 DEL'"
-                                    class="q-ml-xs"
-                                />
-                            </div>
-                        </div>
+                        </template>
                     </q-card-section>
                 </q-card>
             </q-card-section>
@@ -145,11 +169,13 @@ import {
     extractCNVFields,
     extractCNVWESFields,
     analyzeMutationWithAI,
+    buildBatchPrompt,
 } from 'src/boot/mutationAIAnalysis'
 
 const props = defineProps({
     modelValue: { type: Boolean, default: false },
     record: { type: [Object, Array], default: null },
+    records: { type: Array, default: null },
     type: { type: String, default: 'somatic' },
     header: { type: Array, default: null },
 })
@@ -172,6 +198,8 @@ const abortController = ref(null)
 const thinkingRef = ref(null)
 const scrollContainer = ref(null)
 
+const isBatch = computed(() => props.records && props.records.length > 1)
+
 // 类型标签
 const titleLabel = computed(() => {
     const map = {
@@ -183,14 +211,14 @@ const titleLabel = computed(() => {
         cnv: 'CNV解读',
         'cnv-wes': 'CNV解读',
     }
-    return map[props.type] || '解读'
+    const base = map[props.type] || '解读'
+    return isBatch.value ? `批量${base}` : base
 })
 
-// 概要信息
+// 单条概要信息
 const summary = computed(() => {
     if (!props.record) return {}
 
-    // 突变类型
     if (props.type === 'wes') {
         return {
             gene: props.record['Gene.refGene'] || '',
@@ -200,11 +228,9 @@ const summary = computed(() => {
         }
     }
 
-    // Fusion 类型 - record 是数组
     if (props.type.startsWith('fusion')) {
         const r = props.record
         const h = props.header || []
-        // 尝试从 header 中找基因列
         let gene = ''
         let variant = ''
         let position = ''
@@ -221,7 +247,6 @@ const summary = computed(() => {
         return { gene, variant, position }
     }
 
-    // CNV 类型 - record 是对象
     if (props.type === 'cnv') {
         return {
             gene: props.record.Gene || '',
@@ -237,7 +262,6 @@ const summary = computed(() => {
         }
     }
 
-    // Somatic / Germline
     const colMap = props.type === 'somatic'
         ? { gene: 15, variant: 20, chr: 1, start: 2, clinvar: 25 }
         : { gene: 11, variant: 16, chr: 1, start: 2, clinvar: 21 }
@@ -249,6 +273,39 @@ const summary = computed(() => {
             : '',
         clinvar: props.record[`col${colMap.clinvar}`] || '',
     }
+})
+
+// 批量模式概要
+const batchSummaries = computed(() => {
+    if (!isBatch.value) return []
+    return props.records.map((record, idx) => {
+        let label = `#${idx + 1}`
+        let color = 'grey'
+
+        if (props.type === 'wes') {
+            label = record['Gene.refGene'] || label
+        } else if (props.type.startsWith('fusion')) {
+            const h = props.header || []
+            for (let i = 0; i < h.length; i++) {
+                const hLow = (h[i] || '').toLowerCase()
+                if (hLow.includes('gene') || hLow.includes('fusion')) {
+                    label = record[i + 1] || label
+                    break
+                }
+            }
+        } else if (props.type === 'cnv') {
+            label = record.Gene || label
+            color = record.Type === 'DUP' ? 'blue' : record.Type === 'DEL' ? 'red' : 'grey'
+        } else if (props.type === 'cnv-wes') {
+            label = record.Gene || label
+            color = record.CNV_Type === 'DUP' ? 'blue' : record.CNV_Type === 'DEL' ? 'red' : 'grey'
+        } else {
+            const geneCol = props.type === 'somatic' ? 'col15' : 'col11'
+            label = record[geneCol] || label
+        }
+
+        return { label, color }
+    })
 })
 
 const clinvarColor = computed(() => {
@@ -270,6 +327,7 @@ function markdownToHtml(text) {
         .replace(/^### (.+)$/gm, '<h4>$1</h4>')
         .replace(/^## (.+)$/gm, '<h3>$1</h3>')
         .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^---/gm, '<hr class="q-mb-md q-mt-md" style="border-color:#e0e0e0"/>')
         .replace(/^(\d+)\. (.+)$/gm, '<div class="q-ml-md">$1. $2</div>')
         .replace(/^- (.+)$/gm, '<div class="q-ml-md">• $1</div>')
         .replace(/\n\n/g, '<br/><br/>')
@@ -301,7 +359,7 @@ function autoScrollMain() {
 watch(
     () => props.modelValue,
     (val) => {
-        if (val && props.record) {
+        if (val) {
             runAnalysis()
         } else {
             cancelStream()
@@ -326,44 +384,71 @@ function cancelStream() {
     streaming.value = false
 }
 
-function extractFields() {
-    const r = props.record
+function extractFields(record) {
     const t = props.type
-
-    if (t === 'wes') return extractWESMutationFields(r)
-    if (t.startsWith('fusion')) return extractFusionFields(r, props.header)
-    if (t === 'cnv') return extractCNVFields(r)
-    if (t === 'cnv-wes') return extractCNVWESFields(r)
-    return extractMutationFields(r, t, props.header)
+    if (t === 'wes') return extractWESMutationFields(record)
+    if (t.startsWith('fusion')) return extractFusionFields(record, props.header)
+    if (t === 'cnv') return extractCNVFields(record)
+    if (t === 'cnv-wes') return extractCNVWESFields(record)
+    return extractMutationFields(record, t, props.header)
 }
 
 function runAnalysis() {
     resetState()
     streaming.value = true
 
-    const fields = extractFields()
+    if (isBatch.value) {
+        // 批量模式
+        const fieldsList = props.records.map(r => extractFields(r))
+        const prompt = buildBatchPrompt(fieldsList, props.type)
+        const maxTokens = Math.min(2000 + fieldsList.length * 800, 8000)
 
-    abortController.value = analyzeMutationWithAI(fields, props.type, {
-        onThinking(chunk) {
-            thinking.value += chunk
-            if (content.value) thinkingExpanded.value = false
-            autoScrollThinking()
-        },
-        onContent(chunk) {
-            content.value += chunk
-            if (thinking.value) thinkingExpanded.value = false
-            autoScrollMain()
-        },
-        onDone() {
-            streaming.value = false
-            abortController.value = null
-        },
-        onError(err) {
-            streaming.value = false
-            error.value = err.message || '分析失败，请稍后重试'
-            abortController.value = null
-        },
-    })
+        abortController.value = analyzeMutationWithAI({}, props.type, {
+            onThinking(chunk) {
+                thinking.value += chunk
+                if (content.value) thinkingExpanded.value = false
+                autoScrollThinking()
+            },
+            onContent(chunk) {
+                content.value += chunk
+                if (thinking.value) thinkingExpanded.value = false
+                autoScrollMain()
+            },
+            onDone() {
+                streaming.value = false
+                abortController.value = null
+            },
+            onError(err) {
+                streaming.value = false
+                error.value = err.message || '分析失败，请稍后重试'
+                abortController.value = null
+            },
+        }, { customPrompt: prompt, maxTokens })
+    } else {
+        // 单条模式
+        const fields = extractFields(props.record)
+        abortController.value = analyzeMutationWithAI(fields, props.type, {
+            onThinking(chunk) {
+                thinking.value += chunk
+                if (content.value) thinkingExpanded.value = false
+                autoScrollThinking()
+            },
+            onContent(chunk) {
+                content.value += chunk
+                if (thinking.value) thinkingExpanded.value = false
+                autoScrollMain()
+            },
+            onDone() {
+                streaming.value = false
+                abortController.value = null
+            },
+            onError(err) {
+                streaming.value = false
+                error.value = err.message || '分析失败，请稍后重试'
+                abortController.value = null
+            },
+        })
+    }
 }
 
 function retry() {

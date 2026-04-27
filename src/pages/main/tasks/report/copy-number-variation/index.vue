@@ -18,7 +18,6 @@
         @click="stickFilter()"
         :label="$t('ReportStickData')"
     />
-
     <q-btn
         icon="help_outline"
         size="small"
@@ -103,7 +102,7 @@
 
         <div v-if="props.viewConfig.showCNVtable">
             <q-separator class="q-my-lg" size="2px" color="primary" />
-            <div class="row q-gutter-sm items-start q-py-md">
+            <div class="row q-gutter-sm items-center q-py-md">
                 <q-input
                     v-model="searchParams.gene"
                     stack-label
@@ -171,6 +170,8 @@
                     class="q-ml-sm"
                     :download="tableFileName"
                 />
+                <q-space />
+                <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
             </div>
         </div>
 
@@ -241,6 +242,7 @@
     <MutationAIAnalysisDialog
         v-model="aiDialogVisible"
         :record="aiCurrentRow"
+        :records="aiRecords"
         type="cnv"
     />
 
@@ -270,7 +272,9 @@ import * as echarts from 'echarts'
 import { pieOption } from './index'
 import { errorMessage } from 'src/utils/notify'
 import { useI18n } from "vue-i18n"
+import { useQuasar } from 'quasar'
 import AppActionButton from 'src/components/button/AppActionButton.vue'
+import BatchAIAnalysisButton from 'src/components/button/BatchAIAnalysisButton.vue'
 import TableActionButton from 'src/components/button/TableActionButton.vue'
 import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 import { globalStore } from 'src/stores/global'
@@ -279,6 +283,7 @@ import { storeToRefs } from 'pinia'
 const store = globalStore()
 const { langCode } = storeToRefs(store)
 const { t } = useI18n()
+const $q = useQuasar()
 const getCheckboxProps = (record) => {
     return {
         disabled: viewConfig.value.showStick && viewConfig.value.stickDone, // Column configuration not to be checked
@@ -394,9 +399,22 @@ const clickView = (record) => {
 // AI 分析
 const aiDialogVisible = ref(false)
 const aiCurrentRow = ref(null)
+const aiRecords = ref(null)
 
 function clickAIAnalysis(record) {
     aiCurrentRow.value = record
+    aiRecords.value = null
+    aiDialogVisible.value = true
+}
+
+function clickBatchAIAnalysis() {
+    const selected = filteredRows.value.filter(r => selectedRows.value.includes(r.lineNumber))
+    if (selected.length < 1) {
+        $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+        return
+    }
+    aiCurrentRow.value = null
+    aiRecords.value = selected
     aiDialogVisible.value = true
 }
 
@@ -425,9 +443,6 @@ const searchParams = ref({
 })
 
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
         return {
             selectedRowKeys: selectedRows,
             onChange: onSelectChange,

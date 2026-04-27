@@ -16,11 +16,10 @@
                 size="small"
                 outline
                 color="primary"
-                class="relative-position  q-mr-md"
+                class="relative-position q-mr-md"
                 @click="stickFilter()"
                 :label="$t('ReportStickData')"
             />
-
             <q-btn
                 icon="help_outline"
                 size="small"
@@ -265,6 +264,9 @@
             </template>
 
             <template v-slot:after>
+                <div class="row items-center justify-end q-mb-xs">
+                    <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                </div>
                 <div style="position:relative">
                     <AppDataTable
                         style="z-index:1"
@@ -602,6 +604,7 @@
     <MutationAIAnalysisDialog
         v-model="aiDialogVisible"
         :record="aiCurrentRow"
+        :records="aiRecords"
         type="cnv-wes"
     />
 </template>
@@ -621,6 +624,7 @@ import {listVerdictByPatient} from 'src/api/verdict'
 import {globalStore} from 'src/stores/global'
 import {useQuasar} from "quasar";
 import AppActionButton from 'src/components/button/AppActionButton.vue'
+import BatchAIAnalysisButton from 'src/components/button/BatchAIAnalysisButton.vue'
 import MutationAIAnalysisDialog from 'src/components/MutationAIAnalysisDialog.vue'
 
 
@@ -959,9 +963,22 @@ function clickDetail(record) {
 // AI 分析
 const aiDialogVisible = ref(false)
 const aiCurrentRow = ref(null)
+const aiRecords = ref(null)
 
 function clickAIAnalysis(record) {
     aiCurrentRow.value = record
+    aiRecords.value = null
+    aiDialogVisible.value = true
+}
+
+function clickBatchAIAnalysis() {
+    const selected = filteredRows.value.filter(r => selectedRows.value.includes(r.lineNumber))
+    if (selected.length < 1) {
+        $q.notify({ message: '请至少选择 1 条记录进行解读', type: 'warning' })
+        return
+    }
+    aiCurrentRow.value = null
+    aiRecords.value = selected
     aiDialogVisible.value = true
 }
 
@@ -996,9 +1013,6 @@ const getCheckboxProps = (record) => {
 
 const isDefineReport = computed(() => useRoute().name === 'defineReport')
 const rowSelection = computed(() => {
-        if (!isDefineReport.value) {
-            return null
-        }
         return {
             selectedRowKeys: selectedRows,
             onChange: onSelectChange,
