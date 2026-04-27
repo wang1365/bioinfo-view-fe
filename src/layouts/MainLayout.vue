@@ -108,7 +108,7 @@
             show-if-above
             elevated
             :width="208"
-            :mini="aiChatOpen"
+            :mini="isMini"
             :mini-width="58"
         >
             <div class="full-height drawer_normal">
@@ -150,21 +150,28 @@ const menuList = getAuthMenu(store.currentUser)
 const router = useRouter();
 const leftDrawerOpen = ref(false);
 const aiChatOpen = ref(false);
+const isMini = ref(false);
 
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value;
+    // 用户主动切换菜单时，取消 mini 模式
+    if (leftDrawerOpen.value && isMini.value) {
+        isMini.value = false;
+    }
 }
 
 function toggleAiChat() {
     aiChatOpen.value = !aiChatOpen.value
     if (aiChatOpen.value) {
         leftDrawerOpen.value = false
+        isMini.value = true
     }
 }
 
 watch(aiChatOpen, (open) => {
     if (open) {
         leftDrawerOpen.value = false
+        isMini.value = true
     }
 })
 

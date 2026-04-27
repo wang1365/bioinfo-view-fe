@@ -452,11 +452,13 @@ function renderMarkdown(text) {
     height: 100%;
     max-height: 100%;
     background:
-        linear-gradient(135deg, rgba(56, 189, 248, 0.12), transparent 28%),
-        radial-gradient(circle at 18% 16%, rgba(16, 185, 129, 0.12), transparent 26%),
-        radial-gradient(circle at 88% 78%, rgba(129, 140, 248, 0.12), transparent 30%),
-        linear-gradient(180deg, #07111f 0%, #0c1628 48%, #08111e 100%);
-    box-shadow: -12px 0 42px rgba(2, 6, 23, 0.42);
+        radial-gradient(circle at 8% 0%, rgba(56,189,248,.18), transparent 26%),
+        radial-gradient(circle at 92% 100%, rgba(52,211,153,.12), transparent 30%),
+        linear-gradient(180deg, #f8fbff 0%, #eef6ff 46%, #f8fbff 100%);
+    border-left: 1px solid rgba(37,99,235,.18);
+    box-shadow:
+        -22px 0 48px rgba(15,23,42,.22),
+        -1px 0 0 rgba(255,255,255,.75) inset;
 
     :deep(.q-drawer__content) {
         display: flex;
@@ -464,6 +466,7 @@ function renderMarkdown(text) {
         height: 100%;
         overflow: hidden;
         position: relative;
+        background: transparent;
     }
 }
 
@@ -476,6 +479,9 @@ function renderMarkdown(text) {
     max-height: 100%;
     min-height: 0;
     overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.9), rgba(239,246,255,.72)),
+        radial-gradient(circle at 50% 0%, rgba(37,99,235,.08), transparent 34%);
 }
 
 .ai-chat-resize-handle {
@@ -502,45 +508,55 @@ function renderMarkdown(text) {
 .ai-chat-header {
     flex: 0 0 auto;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px;
+    padding: 12px 18px;
     background:
-        linear-gradient(90deg, rgba(56, 189, 248, 0.12), transparent 42%),
-        rgba(8, 17, 34, 0.92);
-    border-bottom: 1px solid rgba(125, 211, 252, 0.16);
-    backdrop-filter: blur(14px);
+        linear-gradient(135deg, rgba(30,64,175,.96), rgba(14,116,144,.92) 58%, rgba(13,148,136,.88)),
+        linear-gradient(90deg, rgba(56,189,248,.18), rgba(52,211,153,.14));
+    border-bottom: 1px solid rgba(14,165,233,.28);
+    box-shadow:
+        0 12px 28px rgba(15,23,42,.16),
+        inset 0 -1px 0 rgba(255,255,255,.18);
+    backdrop-filter: blur(12px);
 
     &__title {
         display: flex; align-items: center; gap: 8px;
         font-size: 0.92rem; font-weight: 700;
         letter-spacing: 0.3px;
-        color: #f1f5f9;
+        color: #f8fafc;
 
         :deep(.q-icon) {
-            background: linear-gradient(135deg, #39b6ff, #a78bfa);
-            -webkit-background-clip: text; background-clip: text;
-            filter: drop-shadow(0 0 6px rgba(57,182,255,.35));
+            color: #e0f2fe;
+            filter: drop-shadow(0 0 8px rgba(125,211,252,.48));
         }
     }
 
     &__actions {
         gap: 4px; align-items: center;
 
-        :deep(.q-btn) { color: #94a3b8; }
+        :deep(.q-btn) {
+            color: #e0f2fe !important;
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.16);
+        }
 
-        :deep(.q-btn:hover) { color: #e2e8f0; }
+        :deep(.q-btn:hover) {
+            color: #fff !important;
+            background: rgba(255,255,255,.18) !important;
+            border-color: rgba(255,255,255,.26);
+        }
     }
 }
 
 .ai-chat-reasoning-toggle {
     display: flex; align-items: center; gap: 5px;
-    padding: 2px 8px 2px 4px;
+    padding: 3px 8px 3px 7px;
     border-radius: 16px;
-    background: rgba(57,182,255,.06);
-    border: 1px solid rgba(57,182,255,.08);
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.18);
 
     &__label {
-        font-size: 0.72rem; font-weight: 500;
-        color: #7dd3fc; white-space: nowrap;
+        font-size: 0.72rem; font-weight: 700;
+        color: #e0f2fe; white-space: nowrap;
         letter-spacing: 0.5px;
     }
 }
@@ -552,6 +568,9 @@ function renderMarkdown(text) {
     overflow-y: auto;
     padding: 26px 18px 18px;
     scroll-behavior: smooth;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,.62), rgba(248,250,252,.38)),
+        radial-gradient(circle at 50% 0%, rgba(56,189,248,.08), transparent 30%);
 
     &::-webkit-scrollbar { width: 4px; }
     &::-webkit-scrollbar-track { background: transparent; }
@@ -925,15 +944,17 @@ function renderMarkdown(text) {
 /* ===== 输入区 ===== */
 .ai-chat-input-area {
     flex: 0 0 auto;
-    padding: 14px 18px 18px;
+    padding: 14px 18px 16px;
     background:
-        linear-gradient(180deg, rgba(8,17,34,.74), rgba(7,17,31,.98)),
-        linear-gradient(90deg, rgba(56,189,248,.08), rgba(52,211,153,.06));
-    border-top: 1px solid rgba(125,211,252,.16);
+        linear-gradient(180deg, rgba(239,246,255,.94), rgba(255,255,255,.98)),
+        linear-gradient(90deg, rgba(56,189,248,.1), rgba(52,211,153,.06));
+    border-top: 1px solid rgba(37,99,235,.16);
     position: sticky;
     bottom: 0;
     z-index: 2;
-    box-shadow: 0 -18px 34px rgba(2,6,23,.2);
+    box-shadow:
+        0 -16px 32px rgba(15,23,42,.08),
+        inset 0 1px 0 rgba(255,255,255,.86);
 
     /* 顶部微光分割线 */
     &::before {
@@ -941,34 +962,33 @@ function renderMarkdown(text) {
         position: absolute;
         top: -1px; left: 24px; right: 24px;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(56,189,248,.38), rgba(52,211,153,.26), transparent);
+        background: linear-gradient(90deg, transparent, rgba(37,99,235,.26), rgba(52,211,153,.2), transparent);
     }
 }
 
 .ai-chat-input-wrap {
     display: flex; align-items: center; gap: 8px;
-    border: 1px solid rgba(125,211,252,.22);
+    border: 1px solid rgba(37,99,235,.16);
     border-radius: 26px;
     padding: 6px 8px 6px 20px;
     transition: all .3s cubic-bezier(.4,0,.2,1);
-    background: rgba(15,23,42,.72);
+    background: rgba(255,255,255,.9);
     box-shadow:
-        0 10px 28px rgba(2,6,23,.28),
-        inset 0 1px 0 rgba(255,255,255,.06);
+        0 10px 26px rgba(15,23,42,.1),
+        inset 0 1px 0 rgba(255,255,255,.9);
 
     &:focus-within {
-        border-color: rgba(56,189,248,.78);
+        border-color: rgba(37,99,235,.48);
         box-shadow:
-            0 0 0 3px rgba(56,189,248,.14),
-            0 0 32px rgba(14,165,233,.14),
-            0 4px 16px rgba(0,0,0,.25),
-            inset 0 1px 0 rgba(255,255,255,.08);
-        background: rgba(15,23,42,.88);
+            0 0 0 3px rgba(37,99,235,.1),
+            0 12px 30px rgba(37,99,235,.14),
+            inset 0 1px 0 rgba(255,255,255,.95);
+        background: #fff;
     }
 
     &:hover:not(:focus-within) {
-        border-color: rgba(125,211,252,.38);
-        background: rgba(15,23,42,.8);
+        border-color: rgba(37,99,235,.28);
+        background: #fff;
     }
 }
 
@@ -983,20 +1003,23 @@ function renderMarkdown(text) {
     }
 
     :deep(.q-field__native) {
-        font-size: 0.9rem; color: #f1f5f9;
+        font-size: 0.9rem; color: #0f172a;
 
-        &::placeholder { color: #64748b; }
+        &::placeholder { color: #94a3b8; }
     }
 
     :deep(.q-field--float .q-field__label),
     :deep(.q-field__marginal + .q-field__control .q-field__native::placeholder) {
-        color: #64748b;
+        color: #94a3b8;
     }
 
     /* 发送按钮增强 */
     + .q-btn {
-        &.text-primary :deep(.q-icon) { color: #38bdf8 !important; }
-        &:hover { background: rgba(56,189,248,.12) !important; }
+        background: rgba(37,99,235,.08);
+        border: 1px solid rgba(37,99,235,.1);
+
+        &.text-primary :deep(.q-icon) { color: #2563eb !important; }
+        &:hover { background: rgba(37,99,235,.14) !important; }
     }
 }
 </style>
