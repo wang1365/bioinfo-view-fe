@@ -233,6 +233,13 @@ function flushTypewriter() {
     while (thinkingQueue.length > 0) { assistantMsg.thinking += thinkingQueue.shift(); }
 }
 
+/** 等待打字机自然输出完队列，避免正常流结束时一次性刷屏 */
+async function waitForTypewriterIdle() {
+    while (contentTimer || thinkingTimer || contentQueue.length > 0 || thinkingQueue.length > 0) {
+        await new Promise(resolve => setTimeout(resolve, TYPEWRITER_INTERVAL))
+    }
+}
+
 // 当前正在生成的助手消息引用（供闭包使用）
 let assistantMsg = null
 
@@ -293,14 +300,15 @@ async function sendMessage(text) {
     scrollToBottom()
 
     // 添加助手占位消息
-    assistantMsg = {
+    const pendingAssistantMsg = {
         role: 'assistant',
         content: '',
         thinking: '',
         thinkingExpanded: false,
         loading: true,
     }
-    messages.value.push(assistantMsg)
+    messages.value.push(pendingAssistantMsg)
+    assistantMsg = messages.value[messages.value.length - 1]
     scrollToBottom()
 
     loading.value = true
@@ -326,9 +334,9 @@ async function sendMessage(text) {
             abortController.signal,
         )
 
-        // 流结束 — 停止打字机定时器，将队列中剩余内容一次性写入
+        // 流结束 — 等待打字机自然排空，避免高速响应在最后一次性刷屏
         // 注意：不使用 result 覆盖 content，因为打字机已经逐步写入了
-        flushTypewriter()
+        await waitForTypewriterIdle()
         assistantMsg.loading = false
         if (assistantMsg.thinking) {
             assistantMsg.thinkingExpanded = false
