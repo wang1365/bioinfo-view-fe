@@ -60,7 +60,7 @@
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
-                        :scroll="{ x: scrollX, y: 550 }"
+                        :scroll="{ x: scrollX, y: 480 }"
                         :custom-row="customRow"
                         :sticky="true"
                         rowKey="lineNumber"
@@ -559,13 +559,13 @@ const rowSelection = computed(() => {
 
 
 const scrollX = computed(() => {
-    return 2200
+    return 3000
 })
 
 const columns = computed(() => {
     const result = [
         { title: '', dataIndex: 'expand', width: 30, align: 'left', fixed: 'left' },
-        { title: 'Gene Info', dataIndex: `geneInfo`, width: 180, align: 'center', ellipsis: true },
+        { title: 'Gene Info', dataIndex: `geneInfo`, width: 185, align: 'center', ellipsis: true },
         { title: 'Genotype & Quality', dataIndex: `genoTypeQuality`, width: 170, ellipsis: true,
           sorter: (a, b) => Number(a.Mutation_Rate_) - Number(b.Mutation_Rate_),
         },

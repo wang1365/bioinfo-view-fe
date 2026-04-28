@@ -1,5 +1,4 @@
 <template>
-    <q-page>
         <q-splitter
             v-model="splitterModel"
             unit="px"
@@ -177,45 +176,50 @@
                             @click="reset"
                             :disable="showSticky && stickDone"
                         />
-                        <AppActionButton
-                            variant="primary"
-                            :label="$t('MoreColumns')"
-                            padding="sm"
-                            icon="last_page"
-                            @click="showDrawer = !showDrawer"
-                            :disable="showSticky && stickDone"
-                        />
-                        <AppActionButton variant="primary" icon="download" :label="$t('Download')">
-                            <q-menu>
-                                <q-list>
-                                    <q-item clickable
-                                        ><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item
-                                    >
-                                    <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
-                                </q-list>
-                            </q-menu>
-                        </AppActionButton>
                     </div>
                 </div>
             </template>
 
             <template v-slot:after>
-                <div class="mutation-table-wrap">
-                    <div class="row items-center justify-end q-mb-xs">
-                        <q-icon
-                            v-if="isDefineReport"
-                            color="accent"
-                            name="question_mark"
-                            size="xs"
-                            class="q-mr-sm"
-                        >
-                            <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
-                        </q-icon>
-                        <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                <div class="mutation-table-wrap  q-pl-xs">
+                    <div class="row items-center justify-between q-mb-xs">
+                        <div class="row q-gutter-xs">
+                            <AppActionButton
+                                variant="primary"
+                                :label="$t('MoreColumns')"
+                                padding="sm"
+                                icon="last_page"
+                                @click="showDrawer = !showDrawer"
+                                :disable="showSticky && stickDone"
+                            />
+                            <AppActionButton variant="primary" icon="download" :label="$t('Download')">
+                                <q-menu>
+                                    <q-list>
+                                        <q-item clickable
+                                            ><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item
+                                        >
+                                        <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
+                                    </q-list>
+                                </q-menu>
+                            </AppActionButton>
+                        </div>
+                        <div class="row items-center">
+                            <q-icon
+                                v-if="isDefineReport"
+                                color="accent"
+                                name="question_mark"
+                                size="xs"
+                                class="q-mr-sm"
+                            >
+                                <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
+                            </q-icon>
+                            <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                        </div>
                     </div>
                     <AppDataTable
                         style="z-index:1"
                         bordered
+                        size="small"
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
@@ -292,7 +296,6 @@
             </q-card>
         </q-dialog>
         <q-separator class="q-my-lg" size="2px" color="primary" />
-    </q-page>
 
     <div class="q-my-sm" v-if="!isDefineReport">
         <div class="row q-mb-sm">
@@ -584,44 +587,44 @@ const rowSelection = computed(() => {
 )
 
 const baseFixedColumns = [
-    { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 60, fixed: 'left' }, // Chr
-    { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 100, fixed: 'left' }, // Start
+    { i: 1, title: '', dataIndex: 'col1', align: 'center', width: 80, fixed: 'left' }, // Chr
+    { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 120, fixed: 'left' }, // Start
     { i: 11, title: '', dataIndex: 'col11', align: 'center', width: 110, fixed: 'left' }, // Gene.refGene
     { i: 14, title: '', dataIndex: 'col14', align: 'center', width: 80, fixed: 'left' }, // exon
-    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 100, fixed: 'left' }, // NUChange
+    { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 160, fixed: 'left' }, // NUChange
     { i: 16, title: '', dataIndex: 'col16', align: 'center', width: 100, fixed: 'left' }, // AAChange
-    { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 100 }, // End
-    { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
-    { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70 }, // Alt
-    { i: 6, title: '', dataIndex: 'col6', align: 'center', width: 120 }, // Geno_Type
-    { i: 7, title: '', dataIndex: 'col7', align: 'center', width: 125 }, // Allelic_depths
-    { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 120 }, // Seq_depths
-    { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 130 }, // Mutation_Rate
-    { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105 }, // Func.refGene
+    { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 100, ellipsis: true }, // End
+    { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70, ellipsis: true }, // Ref
+    { i: 5, title: '', dataIndex: 'col5', align: 'center', width: 70, ellipsis: true }, // Alt
+    { i: 6, title: '', dataIndex: 'col6', align: 'center', width: 120, ellipsis: true }, // Geno_Type
+    { i: 7, title: '', dataIndex: 'col7', align: 'center', width: 125, ellipsis: true }, // Allelic_depths
+    { i: 8, title: '', dataIndex: 'col8', align: 'center', width: 120 , ellipsis: true}, // Seq_depths
+    { i: 9, title: '', dataIndex: 'col9', align: 'center', width: 130, ellipsis: true }, // Mutation_Rate
+    { i: 10, title: '', dataIndex: 'col10', align: 'center', width: 105 , ellipsis: true}, // Func.refGene
 
-    { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160 }, // ExoniFunc.refGene
+    { i: 13, title: '', dataIndex: 'col13', align: 'center', width: 160, ellipsis: true }, // ExoniFunc.refGene
 
     { i: 18, title: '', dataIndex: 'col18', align: 'left', width: 200, ellipsis: true }, // CLNDN
     { i: 19, title: '', dataIndex: 'col19', align: 'left', width: 200, ellipsis: true }, // CLNDISDB
     { i: 20, title: '', dataIndex: 'col20', align: 'left', width: 280, ellipsis: true }, // CLNREVSTAT
     { i: 21, title: '', dataIndex: 'col21', align: 'center', width: 120, ellipsis: true }, //CLNSIG
     { i: 22, title: '', dataIndex: 'col22', align: 'center', width: 200, ellipsis: true }, // cosmic70
-    { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 100 }, // ExAC_ALL
+    { i: 23, title: '', dataIndex: 'col23', align: 'center', width: 100 , ellipsis: true}, // ExAC_ALL
     // { i: 24, title: '', dataIndex: 'col24', align: 'center', width: 100 }, // ExAC_AFR
     // { i: 25, title: '', dataIndex: 'col25', align: 'center', width: 105 }, // ExAC_AMR
     // { i: 26, title: '', dataIndex: 'col26', align: 'center', width: 100 }, // ExAC_EAS
 
-    { i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100 },
+    { i: 31, title: '', dataIndex: 'col31', align: 'center', width: 100 , ellipsis: true},
     // { i: 32, title: '', dataIndex: 'col32', align: 'center', width: 100 },
 
     // { i: 34, title: '', dataIndex: 'col34', align: 'center', width: 100 }, // avsnp150
     // { i: 35, title: '', dataIndex: 'col35', align: 'center', width: 120 },
 
-    { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 120 },
+    { i: 38, title: '', dataIndex: 'col38', align: 'center', width: 120 , ellipsis: true},
     // { i: 39, title: '', dataIndex: 'col39', align: 'center', width: 120 },
 
     // { i: 56, title: '', dataIndex: 'col56', align: 'center', width: 100 },
-    { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100 },
+    { i: 60, title: '', dataIndex: 'col60', align: 'center', width: 100, ellipsis: true },
 
     // { i: 144, title: '', dataIndex: 'col144', align: 'center', width: 100 },
 
@@ -674,7 +677,7 @@ const fixedColumns = computed(() => {
 
 
 const scrollX = computed(() => {
-    return 2200 + (fixedColumns.value.length - 33) * 100
+    return 3500 + (fixedColumns.value.length - 33) * 100
 })
 
 const selectedExpandColIdx = ref([])
@@ -1161,8 +1164,20 @@ const downloadExcel = () => {
     overflow: hidden;
 }
 
+:deep(.ant-table-wrapper .ant-table) {
+    height: auto !important;
+}
+
+:deep(.ant-table-wrapper .ant-table-container) {
+    max-height: calc(100vh - 200px);
+}
+
+:deep(.ant-table-wrapper .ant-table-body) {
+    max-height: 550px !important;
+}
+
 .mutation-splitter {
-    height: 780px;
+    height: 650px;
     overflow: hidden;
 }
 
