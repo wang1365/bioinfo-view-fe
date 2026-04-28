@@ -88,31 +88,32 @@
                         </template>
                     </q-input>
 
-                    <q-select
-                        v-model="innerSearchParams.mutationType"
-                        clearable
-                        multiple
-                        hide-dropdown-icon
-                        :options="props.options.mutationType"
-                        :label="$t('MutationType')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
-
-                    <q-select
-                        v-model="innerSearchParams.mutationPosition"
-                        clearable
-                        multiple
-                        hide-dropdown-icon
-                        :options="props.options.mutationPosition"
-                        :label="$t('MutationPosition')"
-                        stack-label
-                        label-color="primary"
-                        class="full-width"
-                        :disable="showSticky && stickDone"
-                    />
+                    <div class="row q-gutter-sm">
+                        <q-select
+                            v-model="innerSearchParams.mutationType"
+                            clearable
+                            multiple
+                            hide-dropdown-icon
+                            :options="props.options.mutationType"
+                            :label="$t('MutationType')"
+                            stack-label
+                            label-color="primary"
+                            class="col"
+                            :disable="showSticky && stickDone"
+                        />
+                        <q-select
+                            v-model="innerSearchParams.mutationPosition"
+                            clearable
+                            multiple
+                            hide-dropdown-icon
+                            :options="props.options.mutationPosition"
+                            :label="$t('MutationPosition')"
+                            stack-label
+                            label-color="primary"
+                            class="col"
+                            :disable="showSticky && stickDone"
+                        />
+                    </div>
                     <q-select
                         clearable
                         hide-dropdown-icon
@@ -202,24 +203,6 @@
                             padding="sm"
                             :disable="showSticky && stickDone"
                         />
-                        <AppActionButton
-                            variant="primary"
-                            :label="$t('MoreColumns')"
-                            padding="sm"
-                            icon="last_page"
-                            @click="showDrawer = !showDrawer"
-                            :disable="showSticky && stickDone"
-                        />
-                        <AppActionButton variant="primary" icon="download" :label="$t('Download')">
-                            <q-menu>
-                                <q-list>
-                                    <q-item clickable
-                                        ><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item
-                                    >
-                                    <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
-                                </q-list>
-                            </q-menu>
-                        </AppActionButton>
                     </div>
                 </div>
             </template>
@@ -247,17 +230,39 @@
                      <span v-else>{{record[column.dataIndex]}}</span>
                      </template>
                      </AppDataTable> -->
-                <div class="row items-center justify-end q-mb-xs q-ml-xs">
-                    <q-icon
-                        v-if="isDefineReport"
-                        color="accent"
-                        name="question_mark"
-                        size="xs"
-                        class="q-mr-sm"
-                    >
-                        <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
-                    </q-icon>
-                    <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                <div class="row items-center justify-between q-mb-xs q-ml-xs">
+                    <div class="row q-gutter-xs">
+                        <AppActionButton
+                            variant="primary"
+                            :label="$t('MoreColumns')"
+                            padding="sm"
+                            icon="last_page"
+                            @click="showDrawer = !showDrawer"
+                            :disable="showSticky && stickDone"
+                        />
+                        <AppActionButton variant="primary" icon="download" :label="$t('Download')">
+                            <q-menu>
+                                <q-list>
+                                    <q-item clickable
+                                        ><a :href="tableFile" target="_blank">{{$t('OriginalFile')}}</a></q-item
+                                    >
+                                    <q-item clickable class="text-primary" @click="downloadExcel()">Excel</q-item>
+                                </q-list>
+                            </q-menu>
+                        </AppActionButton>
+                    </div>
+                    <div class="row items-center">
+                        <q-icon
+                            v-if="isDefineReport"
+                            color="accent"
+                            name="question_mark"
+                            size="xs"
+                            class="q-mr-sm"
+                        >
+                            <q-tooltip>{{$t('OnlySelectAllThisPageFilterResult')}}</q-tooltip>
+                        </q-icon>
+                        <BatchAIAnalysisButton :count="selectedRows.length" @click="clickBatchAIAnalysis" />
+                    </div>
                 </div>
                 <div style="position:relative" class="q-ml-xs mutation-table-wrap">
                     <AppDataTable
@@ -267,7 +272,7 @@
                         :loading="loading"
                         :data-source="filteredRows"
                         :columns="columns"
-                        :scroll="{ x: 2200, y: 650 }"
+                        :scroll="{ x: 2500, y: 600 }"
                         :custom-row="customRow"
                         rowKey="lineNumber"
                         :row-selection="rowSelection"
@@ -647,7 +652,7 @@ const baseFixedColumns = [
     { i: 2, title: '', dataIndex: 'col2', align: 'center', width: 85, fixed: 'left' }, // Start
     { i: 15, title: '', dataIndex: 'col15', align: 'center', width: 110, fixed: 'left' }, // Gene.refGene
     { i: 18, title: '', dataIndex: 'col18', align: 'center', width: 90, fixed: 'left' }, // exon
-    { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 100, fixed: 'left' }, // NUChange
+    { i: 19, title: '', dataIndex: 'col19', align: 'center', width: 130, fixed: 'left' }, // NUChange
     { i: 20, title: '', dataIndex: 'col20', align: 'center', width: 100, fixed: 'left' }, // AAChange
     { i: 3, title: '', dataIndex: 'col3', align: 'center', width: 85 }, // End
     { i: 4, title: '', dataIndex: 'col4', align: 'center', width: 70 }, // Ref
@@ -1202,7 +1207,7 @@ const downloadExcel = () => {
 
 <style scoped lang="scss">
 .mutation-splitter {
-    height: 780px;
+    height: 700px;
     width: 100%;
     overflow: hidden;
 }
