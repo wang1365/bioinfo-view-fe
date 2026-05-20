@@ -72,13 +72,13 @@
                             {{ format(record.create_time) }}
                         </template>
                         <template v-else-if="column.key === 'status'">
-                            <span v-if="record.status === '鍒涘缓鎴愬姛'">{{ $t('Success') }}</span>
-                            <span v-else-if="record.status === '鍒涘缓澶辫触'">{{ $t('Failed') }}</span>
+                            <span v-if="isReportCreatedSuccess(record)">{{ $t('Success') }}</span>
+                            <span v-else-if="isReportCreatedFailed(record)">{{ $t('Failed') }}</span>
                             <span v-else>{{ record.status || '-' }}</span>
                         </template>
                         <template v-else-if="column.key === 'actions'">
                             <div class="table-operation-buttons">
-                                <a :href="getreportPath(record)" download v-if="record.status === '鍒涘缓鎴愬姛'">
+                                <a :href="getreportPath(record)" download v-if="isReportCreatedSuccess(record)">
                                     <TableActionButton
                                         variant="primary"
                                         :label="$t('Download')"
@@ -130,6 +130,9 @@ const rows = ref([])
 const loading = ref(false)
 const intId = ref('')
 
+const REPORT_STATUS_CREATED_SUCCESS = '创建成功'
+const REPORT_STATUS_CREATED_FAILED = '创建失败'
+
 const pagination = ref({
     current: 1,
     pageSize: 15,
@@ -171,6 +174,9 @@ const joinSampleValues = (row, getter) => {
 const getPatientIdentifiers = (row) => joinSampleValues(row, (item) => item.sample_meta?.patient?.identifier)
 const getDataIdentifiers = (row) => joinSampleValues(row, (item) => item.identifier)
 const getSampleIdentifiers = (row) => joinSampleValues(row, (item) => item.sample_meta?.identifier)
+
+const isReportCreatedSuccess = (row) => row.status === REPORT_STATUS_CREATED_SUCCESS
+const isReportCreatedFailed = (row) => row.status === REPORT_STATUS_CREATED_FAILED
 
 const columns = computed(() => [
     {
