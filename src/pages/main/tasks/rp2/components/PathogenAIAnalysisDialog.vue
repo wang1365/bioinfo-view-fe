@@ -308,21 +308,55 @@ function buildSummaryHtml() {
 function buildReportStyles(selector = 'body') {
     return `
         ${selector} {
+            box-sizing: border-box;
             color: #1f2937;
             font-family: "Microsoft YaHei", Arial, sans-serif;
+            font-size: 14px;
             line-height: 1.75;
             padding: 28px;
         }
-        ${selector} h1 {
-            color: #1d4ed8;
-            font-size: 22px;
-            margin: 0 0 18px;
+        ${selector} *,
+        ${selector} *::before,
+        ${selector} *::after {
+            box-sizing: border-box;
         }
-        ${selector} h2,
-        ${selector} h3,
-        ${selector} h4 {
+        ${selector} .report-title {
             color: #1d4ed8;
-            margin: 18px 0 8px;
+            font-size: 20px;
+            line-height: 1.4;
+            margin: 0 0 16px;
+        }
+        ${selector} .analysis-content h1,
+        ${selector} .analysis-content h2 {
+            color: #1d4ed8;
+            font-size: 18px;
+            line-height: 1.45;
+            margin: 18px 0 10px;
+        }
+        ${selector} .analysis-content h3 {
+            color: #1d4ed8;
+            font-size: 16px;
+            line-height: 1.45;
+            margin: 16px 0 8px;
+        }
+        ${selector} .analysis-content h4,
+        ${selector} .analysis-content h5,
+        ${selector} .analysis-content h6 {
+            color: #1d4ed8;
+            font-size: 15px;
+            line-height: 1.45;
+            margin: 14px 0 8px;
+        }
+        ${selector} p {
+            margin: 0 0 10px;
+        }
+        ${selector} ul,
+        ${selector} ol {
+            margin: 8px 0 12px;
+            padding-left: 24px;
+        }
+        ${selector} li {
+            margin: 4px 0;
         }
         ${selector} table {
             width: 100%;
@@ -366,13 +400,13 @@ function buildReportStyles(selector = 'body') {
 function buildReportBodyHtml() {
     const generatedAt = new Date().toLocaleString()
     return `
-    <h1>AI 病原检测解读</h1>
+    <h1 class="report-title">AI 病原检测解读</h1>
     <div class="meta">生成时间：${escapeHtml(generatedAt)}</div>
     <div class="disclaimer">以下解读由 AI 生成，仅供参考，临床决策需由专业医生结合患者情况、指南和药敏试验结果作出。</div>
     <table>
         <tbody>${buildSummaryHtml()}</tbody>
     </table>
-    <main>${formattedContent.value}</main>
+    <main class="analysis-content">${formattedContent.value}</main>
 `
 }
 
@@ -435,20 +469,37 @@ async function downloadPdf() {
         const pageWidth = pdf.internal.pageSize.getWidth()
         const pageHeight = pdf.internal.pageSize.getHeight()
         const margin = 10
-        const imgWidth = pageWidth - margin * 2
-        const imgHeight = (canvas.height * imgWidth) / canvas.width
-        const imgData = canvas.toDataURL('image/png')
+        const contentWidth = pageWidth - margin * 2
+        const contentHeight = pageHeight - margin * 2
+        const pageCanvasHeight = Math.floor((contentHeight * canvas.width) / contentWidth)
+        let renderedHeight = 0
+        let pageIndex = 0
 
-        let remainingHeight = imgHeight
-        let offsetY = margin
-        pdf.addImage(imgData, 'PNG', margin, offsetY, imgWidth, imgHeight)
-        remainingHeight -= pageHeight - margin * 2
+        while (renderedHeight < canvas.height) {
+            const sliceHeight = Math.min(pageCanvasHeight, canvas.height - renderedHeight)
+            const pageCanvas = document.createElement('canvas')
+            pageCanvas.width = canvas.width
+            pageCanvas.height = sliceHeight
+            const ctx = pageCanvas.getContext('2d')
+            ctx.fillStyle = '#ffffff'
+            ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height)
+            ctx.drawImage(
+                canvas,
+                0,
+                renderedHeight,
+                canvas.width,
+                sliceHeight,
+                0,
+                0,
+                pageCanvas.width,
+                sliceHeight
+            )
 
-        while (remainingHeight > 0) {
-            pdf.addPage()
-            offsetY = margin - (imgHeight - remainingHeight)
-            pdf.addImage(imgData, 'PNG', margin, offsetY, imgWidth, imgHeight)
-            remainingHeight -= pageHeight - margin * 2
+            if (pageIndex > 0) pdf.addPage()
+            const pageImageHeight = (sliceHeight * contentWidth) / canvas.width
+            pdf.addImage(pageCanvas.toDataURL('image/png'), 'PNG', margin, margin, contentWidth, pageImageHeight)
+            renderedHeight += sliceHeight
+            pageIndex += 1
         }
 
         pdf.save(`${reportFileBaseName.value}.pdf`)
