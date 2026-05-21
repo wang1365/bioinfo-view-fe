@@ -28,15 +28,23 @@ export const DEFAULT_BATCH_MUTATION_PROMPT = `请基于以下多条变异信息�
 3. 最后给出总体摘要
 4. 所有临床建议仅供参考，临床决策需由专业医生做出`
 
-export const DEFAULT_PATHOGEN_PROMPT = `请基于病原检测结果进行专业解读。
+export const DEFAULT_PATHOGEN_PROMPT = `请基于以下 RP 病原检测结果进行专业解读。
 
-可重点关注：
-1. 病原体检出可信度和丰度水平
-2. 与样本类型、感染部位和临床表现的相关性
-3. 可能的定植、污染或背景微生物风险
-4. 复核、补充检测或临床沟通建议
+样本信息：
+{sampleName}
 
-所有临床建议仅供参考，临床决策需由专业医生做出。`
+检测结果：
+{fields}
+
+解读要求：
+1. 分别概述细菌、真菌、病毒的检出情况，优先关注明确检出的阳性病原体
+2. 结合 RPM/reads/丰度、阴性对照或表格中已有质量信息，评估检出可信度
+3. 重点分析检测出的病原体与耐药基因之间的可能关系：耐药基因可能来源于哪些检出病原，是否与该病原常见耐药机制一致，是否存在来源不明确或需谨慎解释的情况
+4. 给出患者用药建议：结合检出病原、耐药基因、常见治疗原则提出可考虑和应避免的药物方向；必须说明建议需结合感染部位、临床表现、既往用药、当地指南和药敏试验确认，不能替代医生处方
+5. 提醒可能的定植、污染、背景菌或低丰度假阳性风险
+6. 给出复核、补充检测、临床沟通或报告关注建议
+
+请使用结构化小标题输出。所有临床建议仅供参考，临床决策需由专业医生做出。`
 
 export function getLanguageInstruction(language) {
     return AI_LANGUAGE_OPTIONS.find(item => item.value === language)?.instruction || AI_LANGUAGE_OPTIONS[0].instruction
@@ -91,17 +99,42 @@ export function stringifyFields(fields) {
         .join('\n')
 }
 
+function stringifyValue(value) {
+    if (value === null || value === undefined) return ''
+    return Array.isArray(value) ? value.join('; ') : String(value)
+}
+
 export function applyPromptTemplate(template, context = {}) {
+    const fields = context.fields && typeof context.fields === 'object' ? context.fields : {}
+    const fieldReplacements = Object.fromEntries(
+        Object.entries(fields).map(([key, value]) => [key, stringifyValue(value)])
+    )
     const replacements = {
+        ...fieldReplacements,
         defaultPrompt: context.defaultPrompt || '',
         fields: stringifyFields(context.fields),
         analysisType: context.analysisType || '',
         recordCount: context.recordCount || '',
+        sampleName: context.sampleName || fields.dataIdentifier || fields.sampleIdentifier || '',
+        patientName: fields.patientName || '',
+        patientIdentifier: fields.patientIdentifier || '',
+        sampleIdentifier: fields.sampleIdentifier || '',
+        dataIdentifier: fields.dataIdentifier || '',
+        bacteria: fields.bacteria || '',
+        fungus: fields.fungus || '',
+        virus: fields.virus || '',
+        resistance: fields.resistance || '',
+        resistanceGenes: fields.resistance || fields.resistanceGenes || '',
     }
 
     let prompt = template || '{defaultPrompt}'
     for (const [key, value] of Object.entries(replacements)) {
         prompt = prompt.replaceAll(`{${key}}`, value)
     }
-    return prompt
+    return prompt.replace(/\{([^{}]+)\}/g, (match, key) => {
+        if (Object.prototype.hasOwnProperty.call(replacements, key)) {
+            return replacements[key]
+        }
+        return match
+    })
 }

@@ -113,6 +113,15 @@
                                 </q-item>
                             </q-list>
                         </q-btn-dropdown>
+                            <q-btn
+                                flat
+                                dense
+                                class="operation-icon-btn"
+                                icon="auto_awesome"
+                                @click="openAiAnalysis(record)"
+                            >
+                            <q-tooltip>AI 解读</q-tooltip>
+                        </q-btn>
                     </div>
                 </template>
             </template>
@@ -124,6 +133,11 @@
             :task-id="taskId"
             :sample-name="customReportSampleName"
             @submitted="handleCustomReportSubmitted"
+        />
+        <PathogenAIAnalysisDialog
+            v-model="aiDialogVisible"
+            :record="aiCurrentRecord"
+            :fields="aiCurrentFields"
         />
 
         <q-dialog v-model="showPatientInfo">
@@ -169,6 +183,7 @@ import { infoMessage, warnMessage } from 'src/utils/notify'
 import { getRp2LangSuffix, isDetected, parseTabText } from './rp2File'
 const { buildIgvTaskFileUrl, getTaskFileDownloadName } = require('./textFileTableToolbar')
 import CustomReportDialog from './CustomReportDialog.vue'
+import PathogenAIAnalysisDialog from './PathogenAIAnalysisDialog.vue'
 import IntroHelpButton from './IntroHelpButton.vue'
 import PatientInfo from '../../../patients/PatientInfo.vue'
 import SampleInfo from '../../../samples/SampleInfo.vue'
@@ -207,6 +222,7 @@ const ncColumnKey = ref('')
 const bacteriaColumnKey = ref('')
 const fungusColumnKey = ref('')
 const virusColumnKey = ref('')
+const resistanceColumnKey = ref('')
 const patientIdentifierKey = ref('')
 const sampleIdentifierKey = ref('')
 const patientIdKey = ref('')
@@ -216,6 +232,9 @@ const loading = ref(false)
 const searchKeyword = ref('')
 const customReportVisible = ref(false)
 const customReportSampleName = ref('')
+const aiDialogVisible = ref(false)
+const aiCurrentRecord = ref(null)
+const aiCurrentFields = ref({})
 const showPatientInfo = ref(false)
 const showSampleInfo = ref(false)
 const showDataInfo = ref(false)
@@ -328,7 +347,7 @@ const columns = computed(() => {
         title: t('Rp2Operation'),
         dataIndex: 'operation',
         key: 'operation',
-        width: 180,
+        width: 250,
         align: 'center'
     })
 
@@ -427,6 +446,7 @@ const loadData = async () => {
         bacteriaColumnKey.value = findHeaderByAliases(headers, ['细菌', 'Bacteria']) || headers[2] || ''
         fungusColumnKey.value = findHeaderByAliases(headers, ['真菌', 'Fungus']) || headers[3] || ''
         virusColumnKey.value = findHeaderByAliases(headers, ['病毒', 'Virus']) || headers[4] || ''
+        resistanceColumnKey.value = findHeaderByAliases(headers, ['耐药基因', 'Resistance Gene', 'ResistanceGene', 'AMR'])
 
         const baseRows = parsedRows.map((row) => {
             const sampleName = sampleColumnKey.value ? row[sampleColumnKey.value] : row.__rowKey
@@ -511,6 +531,41 @@ const viewResult = (record) => {
 const openCustomReportDialog = (record) => {
     customReportSampleName.value = record.dataIdentifier || ''
     customReportVisible.value = true
+}
+
+const getAiFieldValue = (record, key) => {
+    if (!key) return ''
+    const value = record?.[key]
+    return value === null || value === undefined ? '' : String(value).trim()
+}
+
+const buildPathogenAiFields = (record) => {
+    const fields = {
+        patientName: record.patientName || '',
+        patientIdentifier: record.patientIdentifier || '',
+        sampleIdentifier: record.sampleIdentifier || '',
+        dataIdentifier: record.dataIdentifier || '',
+        bacteria: getAiFieldValue(record, bacteriaColumnKey.value),
+        fungus: getAiFieldValue(record, fungusColumnKey.value),
+        virus: getAiFieldValue(record, virusColumnKey.value),
+        resistance: getAiFieldValue(record, resistanceColumnKey.value),
+    }
+
+    for (const header of tableHeaders.value) {
+        if (!header || fields[header]) continue
+        const value = getAiFieldValue(record, header)
+        if (value && !['-', '.', '无', 'none', 'null'].includes(value.toLowerCase())) {
+            fields[header] = value
+        }
+    }
+
+    return fields
+}
+
+const openAiAnalysis = (record) => {
+    aiCurrentRecord.value = record
+    aiCurrentFields.value = buildPathogenAiFields(record)
+    aiDialogVisible.value = true
 }
 
 const mergeReportState = (sourceRows) => {
@@ -846,6 +901,20 @@ onBeforeUnmount(() => {
 
 .report-dropdown :deep(.q-btn-dropdown__arrow) {
     margin-left: 2px;
+}
+
+    .operation-icon-btn {
+        width: 28px;
+        height: 28px;
+        min-height: 28px;
+        color: #245ea8;
+        background: transparent;
+        border: 0;
+        border-radius: 3px;
+    }
+
+.operation-icon-btn:hover {
+    background: #eef6ff;
 }
 
 .report-menu-list {
