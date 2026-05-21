@@ -3,6 +3,27 @@
  * 从行数据中提取关键字段，构建 prompt，调用 LLM 生成解读
  */
 import { usePageAgentStore } from 'src/stores/pageAgent'
+import { listConfig } from 'src/api/config'
+import {
+    AI_PROMPT_CONFIG_NAME,
+    applyPromptTemplate,
+    getLanguageInstruction,
+    parseAiPromptConfig,
+} from 'src/boot/aiPromptConfig'
+
+let aiPromptConfigCache = null
+
+async function getAiPromptConfig() {
+    if (aiPromptConfigCache) return aiPromptConfigCache
+    try {
+        const res = await listConfig({ name: AI_PROMPT_CONFIG_NAME })
+        const cfg = (res.results || []).find(item => item.name === AI_PROMPT_CONFIG_NAME)
+        aiPromptConfigCache = parseAiPromptConfig(cfg?.data)
+    } catch {
+        aiPromptConfigCache = parseAiPromptConfig(null)
+    }
+    return aiPromptConfigCache
+}
 
 /**
  * Somatic 列映射（colN → 语义名）
@@ -550,6 +571,17 @@ export function analyzeMutationWithAI(fields, type, callbacks = {}, options = {}
 
     const doStream = async () => {
         try {
+            const aiPromptConfig = await getAiPromptConfig()
+            const isBatch = Boolean(options.customPrompt)
+            const promptConfig = isBatch ? aiPromptConfig.batchMutation : aiPromptConfig.mutation
+            prompt = applyPromptTemplate(promptConfig.prompt, {
+                defaultPrompt: prompt,
+                fields,
+                analysisType: type,
+                recordCount: options.recordCount,
+            })
+            const languageInstruction = getLanguageInstruction(promptConfig.language)
+
             const response = await fetch(`${store.baseURL}/chat/completions`, {
                 method: 'POST',
                 headers: {
@@ -561,7 +593,7 @@ export function analyzeMutationWithAI(fields, type, callbacks = {}, options = {}
                     messages: [
                         {
                             role: 'system',
-                            content: `你是纳昂达生物信息分析云平台的 AI 助手，${hint}。请用中文回答，专业术语保留英文原文。所有用药建议仅供参考，临床决策需由专业医生做出。`,
+                            content: `你是纳昂达生物信息分析云平台的 AI 助手，${hint}。${languageInstruction} 所有用药建议仅供参考，临床决策需由专业医生做出。`,
                         },
                         {
                             role: 'user',

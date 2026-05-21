@@ -3,6 +3,7 @@
  * 使用 OpenAI 兼容接口（通义千问等），支持流式响应和推理模式
  */
 import { usePageAgentStore } from 'src/stores/pageAgent'
+import { getLanguageInstruction } from 'src/boot/aiPromptConfig'
 
 /** 生信专家系统提示词 */
 const SYSTEM_INSTRUCTION = `你是一位资深的生物信息学（Bioinformatics）专家，具备深厚的基因组学、转录组学、蛋白质组学和生物数据分析背景。
@@ -42,8 +43,9 @@ export async function streamChat(userInput, history, callbacks, enableReasoning 
     const url = `${store.baseURL.replace(/\/+$/, '')}/chat/completions`
 
     // 组装消息：系统提示词 + 历史对话 + 当前问题
+    const systemInstruction = store.globalPrompt || SYSTEM_INSTRUCTION
     const messages = [
-        { role: 'system', content: SYSTEM_INSTRUCTION },
+        { role: 'system', content: `${systemInstruction}\n\n${getLanguageInstruction(store.language)}` },
         ...history.map((m) => ({ role: m.role, content: m.content })),
         { role: 'user', content: userInput },
     ]

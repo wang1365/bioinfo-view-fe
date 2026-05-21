@@ -4,6 +4,7 @@ import { usePageAgentStore } from 'src/stores/pageAgent'
 import { listConfig } from 'src/api/config'
 import { bioAgentTools } from 'src/boot/agentTools'
 import { SYSTEM_INSTRUCTION, getPageInstruction, getPageContext } from 'src/boot/agentInstructions'
+import { getLanguageInstruction } from 'src/boot/aiPromptConfig'
 
 const CONFIG_NAME = 'page_agent_config'
 
@@ -292,6 +293,7 @@ export default boot(({ app }) => {
         }
 
         try {
+            const systemInstruction = store.globalPrompt || SYSTEM_INSTRUCTION
             pageAgentInstance = new PageAgent({
                 model: store.model,
                 baseURL: store.baseURL,
@@ -301,7 +303,7 @@ export default boot(({ app }) => {
                 customTools: bioAgentTools,
                 // 领域指令系统
                 instructions: {
-                    system: SYSTEM_INSTRUCTION,
+                    system: `${systemInstruction}\n\n${getLanguageInstruction(store.language)}`,
                     getPageInstructions: (url) => {
                         const pageInstruction = getPageInstruction(url)
                         const pageContext = getPageContext()

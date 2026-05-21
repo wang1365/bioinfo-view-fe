@@ -286,6 +286,7 @@ export default {
     PanelFlow: 'Panel分析流程',
     GeneBrowser: '基因组浏览器',
     SystemSetting: '系统配置',
+    AiSetting: 'AI配置',
     FlowManage: '流程管理',
     UiSetting: 'UI配置',
 

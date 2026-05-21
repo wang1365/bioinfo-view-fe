@@ -258,6 +258,7 @@ export default {
     GeneBrowser: 'Genome Browser',
     CustomReferenceGenome: 'Custom Reference Genome',
     SystemSetting: 'SYS Setting',
+    AiSetting: 'AI Setting',
     FlowManage: 'Flow Management',
     UiSetting: 'UI Setting',
 

@@ -428,7 +428,7 @@ function runAnalysis() {
                 error.value = err.message || '分析失败，请稍后重试'
                 abortController.value = null
             },
-        }, { customPrompt: prompt, maxTokens })
+        }, { customPrompt: prompt, maxTokens, recordCount: fieldsList.length })
     } else {
         // 单条模式
         const fields = extractFields(props.record)

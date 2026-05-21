@@ -7,6 +7,7 @@ const DEFAULTS = {
     baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     language: 'zh-CN',
     enabled: true,
+    globalPrompt: '',
 }
 
 export const usePageAgentStore = defineStore('pageAgent', {
@@ -17,6 +18,7 @@ export const usePageAgentStore = defineStore('pageAgent', {
         baseURL: DEFAULTS.baseURL,
         language: DEFAULTS.language,
         enabled: DEFAULTS.enabled,
+        globalPrompt: DEFAULTS.globalPrompt,
         // 运行时状态
         initialized: false,
     }),
@@ -27,6 +29,7 @@ export const usePageAgentStore = defineStore('pageAgent', {
             baseURL: state.baseURL,
             apiKey: state.apiKey,
             language: state.language,
+            globalPrompt: state.globalPrompt,
         }),
         defaults: () => DEFAULTS,
     },
@@ -46,14 +49,18 @@ export const usePageAgentStore = defineStore('pageAgent', {
         setEnabled(val) {
             this.enabled = val
         },
+        setGlobalPrompt(prompt) {
+            this.globalPrompt = prompt
+        },
         setInitialized(val) {
             this.initialized = val
         },
-        updateConfig({ apiKey, model, baseURL, language }) {
+        updateConfig({ apiKey, model, baseURL, language, globalPrompt }) {
             if (apiKey !== undefined) this.apiKey = apiKey
             if (model !== undefined) this.model = model
             if (baseURL !== undefined) this.baseURL = baseURL
             if (language !== undefined) this.language = language
+            if (globalPrompt !== undefined) this.globalPrompt = globalPrompt
         },
         /**
          * 从后端配置数据同步到 store（含 apiKey）
@@ -64,6 +71,7 @@ export const usePageAgentStore = defineStore('pageAgent', {
             if (data.baseURL !== undefined) this.baseURL = data.baseURL
             if (data.language !== undefined) this.language = data.language
             if (data.enabled !== undefined) this.enabled = data.enabled
+            if (data.globalPrompt !== undefined) this.globalPrompt = data.globalPrompt
         },
         /**
          * 导出全部配置（用于保存到后端）
@@ -75,6 +83,7 @@ export const usePageAgentStore = defineStore('pageAgent', {
                 baseURL: this.baseURL,
                 language: this.language,
                 enabled: this.enabled,
+                globalPrompt: this.globalPrompt,
             }
         },
         clearConfig() {
@@ -83,6 +92,7 @@ export const usePageAgentStore = defineStore('pageAgent', {
             this.baseURL = DEFAULTS.baseURL
             this.language = DEFAULTS.language
             this.enabled = DEFAULTS.enabled
+            this.globalPrompt = DEFAULTS.globalPrompt
             this.initialized = false
         },
     },

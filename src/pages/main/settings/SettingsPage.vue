@@ -171,113 +171,6 @@
                         </q-form>
                     </q-card>
                 </q-expansion-item>
-
-                <!-- PageAgent AI 助手配置 -->
-                <q-expansion-item
-                    expand-separator
-                    default-opened
-                    icon="smart_toy"
-                    label="AI 助手配置"
-                    header-class="bg-primary text-white"
-                >
-                    <q-card>
-                        <q-card-section>
-                            <q-toggle
-                                v-model="agentForm.enabled"
-                                label="启用 PageAgent AI 助手"
-                                color="primary"
-                            />
-
-                            <template v-if="agentForm.enabled">
-                                <div class="row q-col-gutter-md">
-                                    <q-select
-                                        class="col-4"
-                                        v-model="agentForm.model"
-                                        :options="agentModelOptions"
-                                        label="LLM 模型"
-                                        outlined
-                                        dense
-                                        emit-value
-                                        map-options
-                                    />
-
-                                    <q-input
-                                        class="col-4"
-                                        v-model="agentForm.baseURL"
-                                        label="API Base URL"
-                                        outlined
-                                        dense
-                                        hint="兼容 OpenAI 接口格式的 API 地址"
-                                    />
-
-                                    <q-input
-                                        class="col-4"
-                                        v-model="agentForm.apiKey"
-                                        label="API Key"
-                                        outlined
-                                        dense
-                                        :type="agentShowKey ? 'text' : 'password'"
-                                        hint="LLM 服务的 API Key，存储在系统后端"
-                                    >
-                                        <template v-slot:append>
-                                            <q-icon
-                                                :name="agentShowKey ? 'visibility_off' : 'visibility'"
-                                                class="cursor-pointer"
-                                                @click="agentShowKey = !agentShowKey"
-                                            />
-                                        </template>
-                                    </q-input>
-                                </div>
-
-                                <div class="row q-col-gutter-md">
-                                    <q-select
-                                        class="col-4"
-                                        v-model="agentForm.language"
-                                        :options="agentLanguageOptions"
-                                        label="语言"
-                                        outlined
-                                        dense
-                                        emit-value
-                                        map-options
-                                    />
-                                </div>
-
-                                <q-banner class="bg-blue-1 text-blue-9" rounded>
-                                    <template v-slot:avatar>
-                                        <q-icon name="info" />
-                                    </template>
-                                    <div class="text-body2">
-                                        <strong>安全提示：</strong>API Key 与模型配置一起存储在系统后端，请确保后端服务访问权限受控。API Key 不会存储在浏览器本地。
-                                    </div>
-                                </q-banner>
-
-                                <q-banner v-if="agentStore.isConfigured && agentStore.initialized" class="bg-green-1 text-green-9" rounded>
-                                    <template v-slot:avatar>
-                                        <q-icon name="check_circle" />
-                                    </template>
-                                    PageAgent 已初始化并正常运行
-                                </q-banner>
-
-                                <q-banner v-if="agentStore.isConfigured && !agentStore.initialized" class="bg-orange-1 text-orange-9" rounded>
-                                    <template v-slot:avatar>
-                                        <q-icon name="warning" />
-                                    </template>
-                                    PageAgent 已配置但未初始化，保存后将重新初始化
-                                </q-banner>
-                            </template>
-                        </q-card-section>
-                        <q-card-actions align="right">
-                            <q-btn flat label="重置" color="grey" @click="agentResetForm" />
-                            <AppActionButton
-                                class="q-mr-lg"
-                                variant="primary"
-                                icon="save_as"
-                                label="保存"
-                                @click="agentSave"
-                            />
-                        </q-card-actions>
-                    </q-card>
-                </q-expansion-item>
             </q-list>
         </div>
     </q-page>
@@ -286,11 +179,10 @@
 <script setup>
 import PageTitle from "components/page-title/PageTitle.vue";
 import AppActionButton from 'src/components/button/AppActionButton.vue'
-import {ref, reactive, onMounted, computed} from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import {useQuasar} from 'quasar'
 import {createConfig, listConfig, updateConfig} from 'src/api/config'
 import { amISuper } from 'src/utils/user'
-import { usePageAgentStore } from 'src/stores/pageAgent'
 
 const form = ref(null)
 const max_task = ref({})
@@ -362,7 +254,6 @@ const formatDateTime = (dateTimeStr) => {
 
 onMounted(() => {
     refresh()
-    agentRefresh()
 })
 
 const submit = () => {
@@ -414,123 +305,6 @@ const refresh = () => {
                 refGenomeDockerImage.value = cfg
             }
         }
-    })
-}
-
-// ========== PageAgent AI 助手配置 ==========
-const agentStore = usePageAgentStore()
-const agentShowKey = ref(false)
-const agentBackendId = ref(null) // 后端配置记录 id
-
-const agentModelOptions = [
-    { label: 'Qwen3.5 Plus (推荐)', value: 'qwen3.5-plus' },
-    { label: 'Qwen3 Plus', value: 'qwen3-plus' },
-    { label: 'Qwen3 235B A22B', value: 'qwen3-235b-a22b' },
-    { label: 'Qwen Max', value: 'qwen-max' },
-    { label: 'Qwen Plus', value: 'qwen-plus' },
-    { label: 'Qwen Turbo', value: 'qwen-turbo' },
-    { label: 'DeepSeek Chat', value: 'deepseek-chat' },
-    { label: 'DeepSeek Reasoner', value: 'deepseek-reasoner' },
-    { label: 'GPT-4o', value: 'gpt-4o' },
-    { label: 'GPT-4o Mini', value: 'gpt-4o-mini' },
-    { label: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-20241022' },
-]
-
-const agentLanguageOptions = [
-    { label: '简体中文', value: 'zh-CN' },
-    { label: 'English', value: 'en-US' },
-]
-
-const defaults = agentStore.defaults
-
-const agentForm = reactive({
-    enabled: agentStore.enabled,
-    apiKey: agentStore.apiKey,
-    model: agentStore.model || defaults.model,
-    baseURL: agentStore.baseURL || defaults.baseURL,
-    language: agentStore.language || defaults.language,
-})
-
-// 从后端加载 AI 助手配置
-function agentRefresh() {
-    listConfig().then(res => {
-        const cfg = (res.results || []).find(c => c.name === 'page_agent_config')
-        if (cfg && cfg.data) {
-            agentBackendId.value = cfg.id
-            const data = typeof cfg.data === 'string' ? JSON.parse(cfg.data) : cfg.data
-            // 后端配置覆盖表单
-            if (data.apiKey !== undefined) agentForm.apiKey = data.apiKey
-            if (data.model !== undefined) agentForm.model = data.model
-            if (data.baseURL !== undefined) agentForm.baseURL = data.baseURL
-            if (data.language !== undefined) agentForm.language = data.language
-            if (data.enabled !== undefined) agentForm.enabled = data.enabled
-        } else {
-            // 后端无配置，使用前端兜底默认值（apiKey 无默认值）
-            agentBackendId.value = null
-            agentForm.apiKey = ''
-            agentForm.model = defaults.model
-            agentForm.baseURL = defaults.baseURL
-            agentForm.language = defaults.language
-            agentForm.enabled = defaults.enabled
-        }
-    }).catch(() => {
-        // 接口失败，保持本地默认值
-    })
-}
-
-function agentResetForm() {
-    agentForm.enabled = defaults.enabled
-    agentForm.apiKey = ''
-    agentForm.model = defaults.model
-    agentForm.baseURL = defaults.baseURL
-    agentForm.language = defaults.language
-}
-
-async function agentSave() {
-    // 1. 保存全部配置到后端
-    const backendData = JSON.stringify({
-        apiKey: agentForm.apiKey,
-        model: agentForm.model,
-        baseURL: agentForm.baseURL,
-        language: agentForm.language,
-        enabled: agentForm.enabled,
-    })
-
-    try {
-        if (agentBackendId.value) {
-            await updateConfig({
-                id: agentBackendId.value,
-                name: 'page_agent_config',
-                data: backendData,
-            })
-        } else {
-            const res = await createConfig({
-                name: 'page_agent_config',
-                data: backendData,
-            })
-            agentBackendId.value = res.id
-        }
-    } catch (e) {
-        console.warn('[PageAgent] 保存后端配置失败:', e)
-    }
-
-    // 2. 同步到本地 store（apiKey 仅存本地）
-    agentStore.updateConfig({
-        apiKey: agentForm.apiKey,
-        model: agentForm.model,
-        baseURL: agentForm.baseURL,
-        language: agentForm.language,
-    })
-    agentStore.setEnabled(agentForm.enabled)
-
-    // 3. 通知 boot 重新初始化
-    if (typeof window.__initPageAgent === 'function') {
-        window.__initPageAgent()
-    }
-
-    $q.notify({
-        message: 'AI 助手配置已保存',
-        type: 'positive',
     })
 }
 </script>

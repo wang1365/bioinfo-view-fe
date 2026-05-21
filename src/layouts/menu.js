@@ -116,6 +116,12 @@ const menu = [
                 path: '/main/settings/system',
             },
             {
+                icon: 'smart_toy',
+                label: 'AiSetting',
+                separator: false,
+                path: '/main/settings/ai',
+            },
+            {
                 icon: 'wallpaper',
                 label: 'UiSetting',
                 separator: false,

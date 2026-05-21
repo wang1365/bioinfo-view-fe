@@ -107,6 +107,10 @@ const routes = [
                         component: () => import('pages/main/settings/SettingsPage.vue'),
                     },
                     {
+                        path: 'ai',
+                        component: () => import('pages/main/settings/AiSettingsPage.vue'),
+                    },
+                    {
                         path: 'ui',
                         component: () => import('pages/main/settings/UiSettingsPage.vue'),
                     },
