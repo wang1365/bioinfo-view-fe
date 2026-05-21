@@ -35,46 +35,48 @@
                             <div class="panel-caption">配置所有 AI 功能共用的模型服务连接。</div>
                         </div>
                     </div>
-                    <div class="row q-col-gutter-md q-mt-sm">
-                        <q-select
-                            class="col-12 col-md-4"
-                            v-model="agentForm.model"
-                            :options="filteredModelOptions"
-                            label="LLM 模型"
-                            outlined
-                            dense
-                            emit-value
-                            map-options
-                            use-input
-                            input-debounce="200"
-                            :loading="loadingModels"
-                            @filter="filterModels"
-                        />
-                        <q-input
-                            class="col-12 col-md-4"
-                            v-model="agentForm.baseURL"
-                            label="API Base URL"
-                            outlined
-                            dense
-                            hint="兼容 OpenAI 接口格式的 API 地址"
-                        />
-                        <q-input
-                            class="col-12 col-md-4"
-                            v-model="agentForm.apiKey"
-                            label="API Key"
-                            outlined
-                            dense
-                            :type="agentShowKey ? 'text' : 'password'"
-                            hint="保存到系统后端配置表"
-                        >
-                            <template v-slot:append>
-                                <q-icon
-                                    :name="agentShowKey ? 'visibility_off' : 'visibility'"
-                                    class="cursor-pointer"
-                                    @click="agentShowKey = !agentShowKey"
-                                />
-                            </template>
-                        </q-input>
+                    <div class="settings-form-block">
+                        <div class="row q-col-gutter-md">
+                            <q-select
+                                class="col-12 col-md-4 ai-form-control"
+                                v-model="agentForm.model"
+                                :options="filteredModelOptions"
+                                label="LLM 模型"
+                                outlined
+                                dense
+                                emit-value
+                                map-options
+                                use-input
+                                input-debounce="200"
+                                :loading="loadingModels"
+                                @filter="filterModels"
+                            />
+                            <q-input
+                                class="col-12 col-md-4 ai-form-control"
+                                v-model="agentForm.baseURL"
+                                label="API Base URL"
+                                outlined
+                                dense
+                                hint="兼容 OpenAI 接口格式的 API 地址"
+                            />
+                            <q-input
+                                class="col-12 col-md-4 ai-form-control"
+                                v-model="agentForm.apiKey"
+                                label="API Key"
+                                outlined
+                                dense
+                                :type="agentShowKey ? 'text' : 'password'"
+                                hint="保存到系统后端配置表"
+                            >
+                                <template v-slot:append>
+                                    <q-icon
+                                        :name="agentShowKey ? 'visibility_off' : 'visibility'"
+                                        class="cursor-pointer"
+                                        @click="agentShowKey = !agentShowKey"
+                                    />
+                                </template>
+                            </q-input>
+                        </div>
                     </div>
 
                     <q-banner class="config-note q-mt-md" rounded>
@@ -107,26 +109,28 @@
                         <q-toggle v-model="agentForm.enabled" label="启用" color="primary" />
                     </div>
 
-                    <div class="row q-col-gutter-md q-mt-sm">
-                        <q-select
-                            class="col-12 col-md-4"
-                            v-model="agentForm.language"
-                            :options="languageOptions"
-                            label="输出语言"
+                    <div class="settings-form-block">
+                        <div class="row q-col-gutter-md">
+                            <q-select
+                                class="col-12 col-md-4 ai-form-control"
+                                v-model="agentForm.language"
+                                :options="languageOptions"
+                                label="输出语言"
+                                outlined
+                                dense
+                                emit-value
+                                map-options
+                            />
+                        </div>
+                        <q-input
+                            v-model="agentForm.globalPrompt"
+                            type="textarea"
+                            autogrow
                             outlined
-                            dense
-                            emit-value
-                            map-options
+                            class="q-mt-md ai-form-control ai-form-control--textarea"
+                            label="AI助手提示词"
                         />
                     </div>
-                    <q-input
-                        v-model="agentForm.globalPrompt"
-                        type="textarea"
-                        autogrow
-                        outlined
-                        class="q-mt-md"
-                        label="AI助手提示词"
-                    />
 
                     <q-banner class="config-note q-mt-md" rounded>
                         <template v-slot:avatar>
@@ -148,27 +152,29 @@
                             <div class="panel-caption">{{ section.hint }}</div>
                         </div>
                     </div>
-                    <div class="row q-col-gutter-md">
-                        <q-select
-                            class="col-12 col-md-4"
-                            v-model="promptForm[section.key].language"
-                            :options="languageOptions"
-                            label="输出语言"
+                    <div class="settings-form-block">
+                        <div class="row q-col-gutter-md">
+                            <q-select
+                                class="col-12 col-md-4 ai-form-control"
+                                v-model="promptForm[section.key].language"
+                                :options="languageOptions"
+                                label="输出语言"
+                                outlined
+                                dense
+                                emit-value
+                                map-options
+                            />
+                        </div>
+                        <q-input
+                            v-model="promptForm[section.key].prompt"
+                            type="textarea"
+                            autogrow
                             outlined
-                            dense
-                            emit-value
-                            map-options
+                            class="q-mt-md ai-form-control ai-form-control--textarea"
+                            :label="section.label"
+                            :hint="section.hint"
                         />
                     </div>
-                    <q-input
-                        v-model="promptForm[section.key].prompt"
-                        type="textarea"
-                        autogrow
-                        outlined
-                        class="q-mt-md"
-                        :label="section.label"
-                        :hint="section.hint"
-                    />
 
                     <div class="row justify-end q-gutter-sm q-mt-lg">
                         <q-btn flat label="重置" color="grey" @click="resetPrompt(section.key)" />
@@ -585,6 +591,34 @@ async function optimizePrompt(key) {
     font-size: 13px;
     line-height: 1.5;
     margin-top: 2px;
+}
+
+.settings-form-block {
+    padding: 18px;
+    background: #f9fafb;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+}
+
+.ai-form-control :deep(.q-field__control) {
+    background: #fff;
+}
+
+.ai-form-control :deep(.q-field__control::before) {
+    border-color: #94a3b8;
+}
+
+.ai-form-control :deep(.q-field__control:hover::before) {
+    border-color: #64748b;
+}
+
+.ai-form-control :deep(.q-field--focused .q-field__control::after),
+.ai-form-control :deep(.q-field__control::after) {
+    border-width: 2px;
+}
+
+.ai-form-control--textarea :deep(textarea) {
+    min-height: 220px;
 }
 
 .config-note {
