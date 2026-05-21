@@ -39,12 +39,16 @@
                         <q-select
                             class="col-12 col-md-4"
                             v-model="agentForm.model"
-                            :options="agentModelOptions"
+                            :options="filteredModelOptions"
                             label="LLM 模型"
                             outlined
                             dense
                             emit-value
                             map-options
+                            use-input
+                            input-debounce="200"
+                            :loading="loadingModels"
+                            @filter="filterModels"
                         />
                         <q-input
                             class="col-12 col-md-4"
@@ -77,10 +81,18 @@
                         <template v-slot:avatar>
                             <q-icon name="info" />
                         </template>
-                        模型、Base URL 和 API Key 会保存到系统配置表，供 AI 助手、突变分析和提示词优化共同使用。
+                        模型列表通过当前 Base URL 的 /models 接口查询，仅展示大语言模型；模型、Base URL 和 API Key 会保存到系统配置表。
                     </q-banner>
 
                     <div class="row justify-end q-gutter-sm q-mt-lg">
+                        <q-btn
+                            flat
+                            color="primary"
+                            icon="refresh"
+                            label="检索模型"
+                            :loading="loadingModels"
+                            @click="loadModelOptions"
+                        />
                         <q-btn flat label="重置" color="grey" @click="baseResetForm" />
                         <AppActionButton variant="primary" icon="save_as" label="保存" @click="agentSave" />
                     </div>
@@ -202,20 +214,6 @@ const languageOptions = AI_LANGUAGE_OPTIONS.map(item => ({
     value: item.value,
 }))
 
-const agentModelOptions = [
-    { label: 'Qwen3.5 Plus (推荐)', value: 'qwen3.5-plus' },
-    { label: 'Qwen3 Plus', value: 'qwen3-plus' },
-    { label: 'Qwen3 235B A22B', value: 'qwen3-235b-a22b' },
-    { label: 'Qwen Max', value: 'qwen-max' },
-    { label: 'Qwen Plus', value: 'qwen-plus' },
-    { label: 'Qwen Turbo', value: 'qwen-turbo' },
-    { label: 'DeepSeek Chat', value: 'deepseek-chat' },
-    { label: 'DeepSeek Reasoner', value: 'deepseek-reasoner' },
-    { label: 'GPT-4o', value: 'gpt-4o' },
-    { label: 'GPT-4o Mini', value: 'gpt-4o-mini' },
-    { label: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-20241022' },
-]
-
 const promptSections = [
     {
         key: 'mutation',
@@ -239,6 +237,9 @@ const agentBackendId = ref(null)
 const promptBackendId = ref(null)
 const optimizingKey = ref('')
 const activeTab = ref('base')
+const loadingModels = ref(false)
+const modelOptions = ref([])
+const filteredModelOptions = ref([])
 
 const agentForm = reactive({
     enabled: defaults.enabled,
@@ -254,6 +255,119 @@ const promptForm = reactive(createDefaultAiPromptConfig())
 onMounted(() => {
     refresh()
 })
+
+function normalizeModelOption(model) {
+    const id = typeof model === 'string' ? model : (model?.id || model?.name || '')
+    if (!id) return null
+    return {
+        label: id,
+        value: id,
+    }
+}
+
+function isLargeLanguageModel(model) {
+    const id = String(typeof model === 'string' ? model : (model?.id || model?.name || '')).toLowerCase()
+    const type = String(model?.type || model?.object || model?.model_type || model?.task || '').toLowerCase()
+    if (!id) return false
+
+    const excluded = [
+        'embedding',
+        'embed',
+        'rerank',
+        'ranker',
+        'text-to-image',
+        'image',
+        'stable-diffusion',
+        'diffusion',
+        'tts',
+        'speech',
+        'audio',
+        'whisper',
+        'video',
+        'moderation',
+        'ocr',
+        'asr',
+    ]
+    if (excluded.some(keyword => id.includes(keyword) || type.includes(keyword))) return false
+
+    const included = [
+        'qwen',
+        'deepseek',
+        'gpt',
+        'claude',
+        'glm',
+        'llama',
+        'mistral',
+        'mixtral',
+        'gemini',
+        'ernie',
+        'yi-',
+        'moonshot',
+        'kimi',
+        'baichuan',
+        'doubao',
+        'minimax',
+    ]
+    return included.some(keyword => id.includes(keyword))
+}
+
+function ensureCurrentModelOption(options) {
+    if (!agentForm.model) return options
+    if (options.some(item => item.value === agentForm.model)) return options
+    return [{ label: `${agentForm.model}（当前配置）`, value: agentForm.model }, ...options]
+}
+
+function filterModels(val, update) {
+    update(() => {
+        const keyword = String(val || '').toLowerCase()
+        filteredModelOptions.value = modelOptions.value.filter(option =>
+            option.label.toLowerCase().includes(keyword)
+        )
+    })
+}
+
+async function loadModelOptions({ silent = false } = {}) {
+    if (!agentForm.baseURL) {
+        if (!silent) $q.notify({ message: '请先填写 API Base URL', type: 'warning' })
+        return
+    }
+
+    loadingModels.value = true
+    try {
+        const response = await fetch(`${agentForm.baseURL.replace(/\/+$/, '')}/models`, {
+            method: 'GET',
+            headers: {
+                ...(agentForm.apiKey ? { Authorization: `Bearer ${agentForm.apiKey}` } : {}),
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error(await response.text())
+        }
+
+        const result = await response.json()
+        const rawModels = Array.isArray(result?.data) ? result.data : Array.isArray(result) ? result : []
+        const options = rawModels
+            .filter(isLargeLanguageModel)
+            .map(normalizeModelOption)
+            .filter(Boolean)
+            .sort((a, b) => a.label.localeCompare(b.label))
+
+        modelOptions.value = ensureCurrentModelOption(options)
+        filteredModelOptions.value = modelOptions.value
+        if (!silent) {
+            $q.notify({ message: `已检索到 ${options.length} 个大语言模型`, type: 'positive' })
+        }
+    } catch (e) {
+        modelOptions.value = ensureCurrentModelOption([])
+        filteredModelOptions.value = modelOptions.value
+        if (!silent) {
+            $q.notify({ message: e.message || '模型列表检索失败', type: 'negative' })
+        }
+    } finally {
+        loadingModels.value = false
+    }
+}
 
 function safeParseJson(data, fallback = {}) {
     if (!data) return fallback
@@ -295,12 +409,16 @@ async function refresh() {
     } else {
         fillPromptForm(null)
     }
+
+    await loadModelOptions({ silent: true })
 }
 
 function baseResetForm() {
     agentForm.apiKey = ''
     agentForm.model = defaults.model
     agentForm.baseURL = defaults.baseURL
+    modelOptions.value = ensureCurrentModelOption([])
+    filteredModelOptions.value = modelOptions.value
 }
 
 function assistantResetForm() {
